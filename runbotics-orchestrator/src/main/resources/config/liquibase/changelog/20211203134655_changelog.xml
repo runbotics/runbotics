@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="szymczakm (generated)" id="1638535624639-4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="global_variable"/>
+            </not>
+        </preConditions>
+        <createTable tableName="global_variable">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="global_variablePK"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="last_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="szymczakm (generated)" id="1638535624639-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKbgeem12f1de73tsvbf4m1ldjr"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="global_variable" constraintName="FKbgeem12f1de73tsvbf4m1ldjr" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

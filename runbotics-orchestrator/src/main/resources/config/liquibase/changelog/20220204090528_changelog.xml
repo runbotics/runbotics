@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="szymczakm" id="1643961934939-1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM jhi_user WHERE id = 3</sqlCheck>
+        </preConditions>
+        <insert tableName="jhi_user">
+            <column name="id">3</column>
+            <column name="login">scheduler</column>
+            <column name="password_hash">$2a$10$acB7bIYAgJNOo8xqpWzVKOznRaqFhXwcCzPZLFAZUYTIg2uITyTJS</column>
+            <column name="first_name">Scheduler</column>
+            <column name="last_name">Scheduler</column>
+            <column name="email">scheduler@localhost</column>
+            <column name="activated">true</column>
+            <column name="lang_key">en</column>
+            <column name="created_by">system</column>
+            <column name="last_modified_by">system</column>
+        </insert>
+        <insert tableName="jhi_authority">
+            <column name="name">ROLE_SCHEDULER</column>
+        </insert>
+        <insert tableName="jhi_user_authority">
+            <column name="user_id">3</column>
+            <column name="authority_name">ROLE_SCHEDULER</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

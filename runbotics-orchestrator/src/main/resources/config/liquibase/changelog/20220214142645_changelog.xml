@@ -1,0 +1,137 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="szymczakm" id="1853961934940-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="bot_type"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="bot_type">
+            <column name="type" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="bot_type">
+            <column name="type">PRIVATE</column>
+        </insert>
+        <insert tableName="bot_type">
+            <column name="type">PUBLIC</column>
+        </insert>
+        <insert tableName="bot_type">
+            <column name="type">LINUX</column>
+        </insert>
+        <insert tableName="bot_type">
+            <column name="type">WINDOWS</column>
+        </insert>
+
+        <createTable tableName="bot_type_bot">
+            <column name="bot_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="bot_type" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="bot_id, bot_type" tableName="bot_type_bot"/>
+
+        <addForeignKeyConstraint baseColumnNames="bot_id"
+                                 baseTableName="bot_type_bot"
+                                 constraintName="fk_bot_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot"/>
+
+        <addForeignKeyConstraint baseColumnNames="bot_type"
+                                 baseTableName="bot_type_bot"
+                                 constraintName="fk_bot_type"
+                                 referencedColumnNames="type"
+                                 referencedTableName="bot_type"/>
+    </changeSet>
+
+    <changeSet author="szymczakm" id="1853961934940-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_bot_type"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="process_bot_type">
+            <column name="process_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="bot_type" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="process_id, bot_type" tableName="process_bot_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="process_id"
+                                 baseTableName="process_bot_type"
+                                 constraintName="fk_process_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process"/>
+
+        <addForeignKeyConstraint baseColumnNames="bot_type"
+                                 baseTableName="process_bot_type"
+                                 constraintName="fk_bot_type"
+                                 referencedColumnNames="type"
+                                 referencedTableName="bot_type"/>
+    </changeSet>
+
+    <changeSet author="szymczakm" id="1853961934940-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="schedule_process" columnName="user_id"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="schedule_process">
+            <column name="user_id" type="bigint" defaultValue="1" />
+        </addColumn>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="schedule_process"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+    </changeSet>
+
+    <changeSet author="szymczakm" id="1853961934940-4">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="process_instance" columnName="run_by"/>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="fk_process_instance_run_by"/>
+                </not>
+            </and>
+        </preConditions>
+
+        <dropColumn tableName="process_instance" columnName="run_by"/>
+
+        <addColumn tableName="process_instance">
+            <column name="user_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="process_instance"
+                                 constraintName="fk_process_instance_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="1853961934940-5">
+        <preConditions>
+            <not>
+                <columnExists tableName="bot" columnName="status"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="bot">
+            <column name="status" type="varchar(50)" defaultValue="DISCONNECTED"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

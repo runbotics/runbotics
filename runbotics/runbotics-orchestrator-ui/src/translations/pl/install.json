@@ -1,0 +1,18 @@
+{
+    "Install.Tooltip.Title": "How to start bot",
+    "Install.Dialog.Steps.Install": "Install",
+    "Install.Dialog.Steps.Connect": "Connect",
+    "Install.Dialog.Steps.RunFirstProcess": "Run first process",
+    "Install.Dialog.Title": "How to run RunBotics",
+    "Install.StepInstall.Title": "Install RunBotics",
+    "Install.StepInstall.Download": "Download and install client.",
+    "Install.StepInstall.AfterInstallation": "After installation is complete, configure .env file and start RunBotics.exe client.",
+    "Install.RunStep.Title": "Run first process",
+    "Install.RunStep.Run": "Run first process",
+    "Install.ConnectStep.Title": "Connect",
+    "Install.ConnectStep.ConnectingMessage": "Connecting to RunBotics...",
+    "Install.CompletedStep.Title": "Completed",
+    "Install.CompletedStep.Completed": "Completed",
+    "Install.Errors.NotInstalled": "RunBotics is not installed",
+    "Install.Errors.ProcessNotFound": "Hello Process not found"
+}

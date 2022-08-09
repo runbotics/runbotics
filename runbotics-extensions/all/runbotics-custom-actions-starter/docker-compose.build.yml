@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+    runbotics-custom-actions-starter:
+        build:
+            context: "."
+            dockerfile: "./Dockerfile"
+            args:
+                EXTENSION_NAME: "runbotics-custom-actions-starter"
+        volumes:
+            - "~/volumes/runbotics/runbotics-extensions/:/runbotics-extensions"

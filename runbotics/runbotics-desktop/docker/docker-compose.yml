@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+    runbotics-desktop:
+        image: 'runbotics/runbotics:devspower-platform-api_1_0_0'
+        environment:
+            RUNBOTICS_ENTRYPOINT_URL: 'http://host.docker.internal:3000'
+            RUNBOTICS_INSTALLATION_ID: 'admin'
+            RUNBOTICS_USERNAME: 'admin'
+            RUNBOTICS_PASSWORD: 'admin'
+            RUNBOTICS_EXTENSION_DIR: '/runbotics-extensions'
+            MAIL_HOST: ''
+            MAIL_PORT: ''
+            MAIL_USERNAME: ''
+            MAIL_PASSWORD: ''
+            GOOGLE_AUTHORIZATION_CODE: ''
+            GOOGLE_REFRESH_TOKEN: ''
+            BEE_PASS: ''
+            RUNBOTICS_LOGGER: 'electron'
+            RUNBOTICS_LOGGER_LEVEL: 'info'
+            GITEA_ACCESS_TOKEN: '3d13d977b1c4004b781650d858c0362d25bfc204'
+            RUNBOTICS_BOT_COLLECTION: '30bdfb61-841b-519b-ce54-1d0e56877f73'
+            RUNBOTICS_BOT_SYSTEM: 'LINUX'
+        volumes:
+            - '~/volumes/runbotics/runbotics-desktop/logs/:/usr/src/app/runbotics-desktop/logs'
+            - '~/volumes/runbotics/runbotics-extensions/:/runbotics-extensions'
+        depends_on:
+            - snp-rb-custom-actions
+    snp-rb-custom-actions:
+        image: 'runbotics/runbotics:snp-rb-custom-actions'
+        volumes:
+            - '~/volumes/runbotics/runbotics-extensions/:/runbotics-extensions'

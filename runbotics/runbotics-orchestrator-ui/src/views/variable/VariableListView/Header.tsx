@@ -1,0 +1,76 @@
+import React from 'react';
+import styled from 'styled-components';
+import type { FC } from 'react';
+import clsx from 'clsx';
+import {
+    Button, Grid, SvgIcon, Typography,
+} from '@mui/material';
+import {
+    PlusCircle as PlusIcon,
+} from 'react-feather';
+import useTranslations from 'src/hooks/useTranslations';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import { FeatureKey } from 'runbotics-common';
+import If from 'src/components/utils/If';
+
+const PREFIX = 'Header';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    action: `${PREFIX}-action`,
+};
+
+const StyledGrid = styled(Grid)(({ theme }) => ({
+    [`&.${classes.root}`]: {},
+
+    [`& .${classes.action}`]: {
+        marginBottom: theme.spacing(1),
+        '& + &': {
+            marginLeft: theme.spacing(1),
+        },
+    },
+}));
+
+interface HeaderProps {
+    className?: string;
+    onVariableCreate: () => void;
+}
+
+const Header: FC<HeaderProps> = ({ className, onVariableCreate, ...rest }) => {
+    const { translate } = useTranslations();
+    const hasAccessToVariableAdd = useFeatureKey([FeatureKey.GLOBAL_VARIABLE_ADD]);
+
+    return (
+        <StyledGrid
+            container
+            spacing={3}
+            justifyContent="space-between"
+            className={clsx(classes.root, className)}
+            {...rest}
+        >
+            <Grid item>
+                <Typography variant="h3" color="textPrimary">
+                    {translate('Variables.Header.Title')}
+                </Typography>
+            </Grid>
+            <If condition={hasAccessToVariableAdd}>
+                <Grid item>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        startIcon={(
+                            <SvgIcon fontSize="small">
+                                <PlusIcon />
+                            </SvgIcon>
+                        )}
+                        onClick={onVariableCreate}
+                    >
+                        {translate('Variables.Header.AddGlobalVariable')}
+                    </Button>
+                </Grid>
+            </If>
+        </StyledGrid>
+    );
+};
+
+export default Header;

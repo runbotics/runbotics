@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="gontareka (generated)" id="1616949926651-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_instance"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_instance">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_instancePK"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="external_id" type="VARCHAR(255)"/>
+            <column name="input" type="TEXT"/>
+            <column name="output" type="TEXT"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="bot_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="process_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1616949926651-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_instance_event"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_instance_event">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_instance_eventPK"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="log" type="TEXT"/>
+            <column name="process_instance_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1616949926651-4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK2gdkasch5mc74enn7r95jlndn"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="process_id" baseTableName="process_instance" constraintName="FK2gdkasch5mc74enn7r95jlndn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="process" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1616949926651-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="bot_id" baseTableName="process_instance" constraintName="FKbo6xcfy1pnm3kydjoqbtyg9d5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="bot" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1616949926651-6">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKklppb2pc4c2napi3vg2jawdk0"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="process_instance_id" baseTableName="process_instance_event" constraintName="FKklppb2pc4c2napi3vg2jawdk0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="process_instance" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

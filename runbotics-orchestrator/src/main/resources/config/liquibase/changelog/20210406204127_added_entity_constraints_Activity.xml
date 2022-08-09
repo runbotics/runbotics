@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Activity.
+    -->
+    <changeSet id="20210406204127-2" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_activity__process_instance_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="process_instance_id"
+                                 baseTableName="activity"
+                                 constraintName="fk_activity__process_instance_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process_instance"/>
+
+    </changeSet>
+</databaseChangeLog>

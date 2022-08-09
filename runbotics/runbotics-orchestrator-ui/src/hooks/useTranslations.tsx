@@ -1,0 +1,48 @@
+import React from 'react';
+import i18next from 'i18next';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
+import { sanitize } from 'dompurify';
+import { TranslationsDescriptors, Language } from '../translations/translations';
+
+const useTranslations = () => {
+    const { t, i18n } = useTranslation();
+
+    const translate = (
+        key: keyof TranslationsDescriptors,
+        values?: { [key: string]: string | number },
+    ) => t(key, values);
+
+    const translateHTML = (
+        key: keyof TranslationsDescriptors,
+        values?: { [key: string]: string | number },
+    ) => {
+        const translation = translate(key, values);
+
+        return translation && <span dangerouslySetInnerHTML={{ __html: sanitize(translation) }} />;
+    };
+
+    const switchLanguage = (lang: Language) => {
+        i18n.changeLanguage(lang);
+        moment.locale(lang);
+    };
+
+    return {
+        translate,
+        translateHTML,
+        switchLanguage,
+    };
+};
+
+export const isNamespaceLoaded = () => new Promise((resolve) => {
+    if (i18next.hasLoadedNamespace(i18next.language)) {
+        resolve(true);
+    }
+});
+
+export const translate = (
+    key: keyof TranslationsDescriptors,
+    values?: { [key: string]: string | number },
+) => i18next.t(key, values);
+
+export default useTranslations;

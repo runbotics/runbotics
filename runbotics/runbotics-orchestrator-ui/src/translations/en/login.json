@@ -1,0 +1,9 @@
+{
+    "Login.SignIn": "Sign in",
+    "Login.Form.Action": "Login",
+    "Login.Form.Email.Label": "Email Address",
+    "Login.Form.Email.Required": "Email is required",
+    "Login.Form.Password.Label": "Password",
+    "Login.Form.Password.Required": "Password is required",
+    "Login.SwitchToRegisterMessage": "Don't have an account? Sign up"
+}

@@ -1,0 +1,71 @@
+{
+    "name": "runbotics-custom-actions-starter",
+    "version": "1.0.0",
+    "license": "UNLICENSED",
+    "type": "commonjs",
+    "main": "dist/index.js",
+    "module": "./dist/index.js",
+    "source": "src/index.ts",
+    "exports": {
+        ".": "./dist/index.js",
+        "./CustomAutomation": "./dist/CustomAutomation.js"
+    },
+    "scripts": {
+        "build": "microbundle src/**/*.ts --no-compress --format cjs",
+        "start": "microbundle watch src/**/*.ts --no-compress --format cjs",
+        "postinstall": "electron-builder install-app-deps"
+    },
+
+    "devDependencies": {
+        "microbundle": "0.13.3",
+        "typescript": "3.9.9",
+        "tslib": "2.3.0",
+        "runbotics-sdk": "1.0.0-SNAPSHOT.1",
+        "@nestjs/common": "^7.6.15",
+        "lodash": "4.17.21"
+    },
+    "dependencies": {
+        "electron-builder": "22.11.7"
+    },
+    "peerDependencies": {
+        "runbotics-sdk": "1.0.0-SNAPSHOT.1",
+        "@nestjs/common": "^7.6.15",
+        "axios": "0.21.1",
+        "winax": "3.1.5"
+    },
+    "optionalDependencies": {
+        "winax": "3.1.5"
+    },
+    "files": [
+        "dist"
+    ],
+    "build": {
+        "productName": "RunBotics",
+        "electronVersion": "8.2.0",
+        "appId": "com.runbotics.runbotics-desktop",
+        "mac": {
+            "category": "utility"
+        },
+        "directories": {
+            "output": "release"
+        },
+        "files": [
+            "dist/",
+            "node_modules/",
+            "package.json",
+            "driver"
+        ],
+        "extraFiles": [
+            ".env",
+            "driver/"
+        ],
+        "linux": {
+            "target": "deb"
+        },
+        "nsis": {
+            "allowToChangeInstallationDirectory": true,
+            "oneClick": false,
+            "runAfterFinish": false
+        }
+    }
+}

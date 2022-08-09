@@ -1,0 +1,32 @@
+{
+  "runboticsApp": {
+    "processInstance": {
+      "home": {
+        "title": "Process Instances",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Process Instance",
+        "createOrEditLabel": "Create or edit a Process Instance",
+        "notFound": "No Process Instances found"
+      },
+      "created": "A new Process Instance is created with identifier {{ param }}",
+      "updated": "A Process Instance is updated with identifier {{ param }}",
+      "deleted": "A Process Instance is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Process Instance {{ id }}?"
+      },
+      "detail": {
+        "title": "Process Instance"
+      },
+      "id": "Id",
+      "orchestratorProcessInstanceId": "Orchestrator Process Instance Id",
+      "status": "Status",
+      "created": "Created",
+      "updated": "Updated",
+      "input": "Input",
+      "output": "Output",
+      "step": "Step",
+      "process": "Process",
+      "bot": "Bot"
+    }
+  }
+}

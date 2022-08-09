@@ -1,0 +1,39 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+services:
+  runbotics-postgresql:
+    image: postgres:13.2
+    # volumes:
+    #   - ~/volumes/jhipster/runbotics/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=runbotics
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:5432:5432
+
+  runbotics-scheduler:
+    image: runbotics/runbotics:runbotics-scheduler_2.0.2
+    environment:
+      - RUNBOTICS_SCHEDULER_REDIS_HOST=runbotics-redis
+      - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
+      - RUNBOTICS_DB_HOST=runbotics-postgresql
+      - RUNBOTICS_DB_PORT=5432
+      - RUNBOTICS_DB_USER=runbotics
+      - RUNBOTICS_DB_PASSWORD=runbotics
+      - RUNBOTICS_DB_DATABASE=runbotics
+      - BOT_LOGS_DIRECTORY=./bot_logs
+      - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
+    ports:
+      - 4000:4000
+    depends_on:
+      - runbotics-redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  runbotics-redis:
+    image: redis:6
+    ports:
+      - 6379:6379

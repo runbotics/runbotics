@@ -1,0 +1,51 @@
+import React, { VFC } from 'react';
+import {
+    Box, Grid, LinearProgress, Typography,
+} from '@mui/material';
+import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+import Label from 'src/components/Label';
+import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
+import If from 'src/components/utils/If';
+import { formatTimeDiff } from 'src/utils/utils';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+interface Props {
+    processInstance: IProcessInstance;
+}
+
+const isProcessInstanceActive = (
+    status: ProcessInstanceStatus,
+) => status === ProcessInstanceStatus.INITIALIZING
+    || status === ProcessInstanceStatus.IN_PROGRESS;
+
+const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => (
+    <Grid container spacing={2}>
+        <Grid item xs={12}>
+            <Typography variant="h4">
+                {processInstance.process.name}
+            </Typography>
+        </Grid>
+        <Grid item>
+            <Typography>
+                <Label color={getProcessInstanceStatusColor(processInstance.status)}>
+                    {processInstance.status.replace('_', ' ')}
+                </Label>
+            </Typography>
+        </Grid>
+        <If condition={!!processInstance.updated}>
+            <Grid item>
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: '0.3125rem' }}>
+                    <AccessTimeIcon />
+                    {formatTimeDiff(processInstance.created, processInstance.updated)}
+                </Typography>
+            </Grid>
+        </If>
+        <If condition={isProcessInstanceActive(processInstance.status)} else={<Box height="20px" width="100%" />}>
+            <Grid item xs={12}>
+                <LinearProgress />
+            </Grid>
+        </If>
+    </Grid>
+);
+
+export default ProcessInstanceDetailsHeader;

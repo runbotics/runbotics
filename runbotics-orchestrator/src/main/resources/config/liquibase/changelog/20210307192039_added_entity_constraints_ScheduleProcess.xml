@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity ScheduleProcess.
+    -->
+    <changeSet id="20210307192039-2" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <and>
+                    <foreignKeyConstraintExists foreignKeyName="fk_schedule_process__process_id"/>
+                    <foreignKeyConstraintExists foreignKeyName="fk_schedule_process__bot_id"/>
+                </and>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="process_id"
+                                 baseTableName="schedule_process"
+                                 constraintName="fk_schedule_process__process_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process"/>
+
+        <addForeignKeyConstraint baseColumnNames="bot_id"
+                                 baseTableName="schedule_process"
+                                 constraintName="fk_schedule_process__bot_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot"/>
+
+    </changeSet>
+</databaseChangeLog>

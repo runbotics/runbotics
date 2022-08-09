@@ -1,0 +1,38 @@
+{
+  "name": "Action",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String",
+      "options": {
+        "autoGenerate": "false",
+        "id": true
+      }
+    },
+    {
+      "fieldName": "label",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "script",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "form",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "action",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210708164758",
+  "incrementalChangelog": true
+}

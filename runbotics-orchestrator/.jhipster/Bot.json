@@ -1,0 +1,39 @@
+{
+  "name": "Bot",
+  "fields": [
+    {
+      "fieldName": "installationId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastConnected",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "bot",
+      "relationshipName": "user",
+      "otherEntityField": "login"
+    }
+  ],
+  "changelogDate": "20210307151552",
+  "entityTableName": "bot",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "incrementalChangelog": true
+}

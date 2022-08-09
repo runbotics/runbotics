@@ -1,0 +1,43 @@
+{
+  "name": "Activity",
+  "fields": [
+    {
+      "fieldName": "executionId",
+      "fieldType": "String",
+      "options": {
+        "autoGenerate": "false",
+        "id": true
+      }
+    },
+    {
+      "fieldName": "input",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "output",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "processInstance",
+      "otherEntityRelationshipName": "activity",
+      "relationshipName": "processInstance",
+      "otherEntityField": "id"
+    }
+  ],
+  "entityTableName": "activity",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210406204127",
+  "incrementalChangelog": true
+}

@@ -1,0 +1,25 @@
+import { PageRequestParams } from '../../../utils/types/page';
+import { CollectionsDisplayMode, DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
+import { IBotCollectionWithFilters } from './BotCollectionView.types';
+
+export const ROWS_PER_PAGE_LIST_VIEW = [5, 10, 25];
+
+export const getBotCollectionPageParams = (
+    page: number, size: number, searchTerm = '', searchField = '',
+): PageRequestParams<Partial<IBotCollectionWithFilters>> => ({
+    page,
+    size,
+    sort: {
+        by: 'updated',
+        order: 'desc',
+    },
+    filter: {
+        contains: {
+            ...(searchTerm.trim() && { [searchField === 'createdBy' ? 'createdByName' : 'name']: searchTerm.trim() }),
+        },
+    },
+});
+
+export const getLimitByDisplayMode = (mode: CollectionsDisplayMode) => (mode === CollectionsDisplayMode.LIST
+    ? DefaultPageSize.TABLE
+    : DefaultPageSize.GRID);

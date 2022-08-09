@@ -1,0 +1,31 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { IProcess } from 'runbotics-common';
+import { Repository } from 'typeorm';
+import { ScheduleProcessEntity } from './schedule-process.entity';
+
+const relations = ['process', 'user'];
+
+@Injectable()
+export class ScheduleProcessService {
+    constructor(
+        @InjectRepository(ScheduleProcessEntity)
+        private scheduleProcessRepository: Repository<ScheduleProcessEntity>,
+    ) {}
+
+    save(scheduleProcess: ScheduleProcessEntity) {
+        return this.scheduleProcessRepository.save(scheduleProcess);
+    }
+
+    delete(scheduleProcessId: number) {
+        return this.scheduleProcessRepository.delete({ id: scheduleProcessId });
+    }
+
+    findAll() {
+        return this.scheduleProcessRepository.find({ relations });
+    }
+
+    findAllByProcess(processId: IProcess['id']) {
+        return this.scheduleProcessRepository.find({ where: { process: processId }, relations });
+    }
+}

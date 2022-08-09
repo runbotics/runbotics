@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="jarmuszczaks" id="20220421154223-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance" columnName="error"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="process_instance">
+            <column name="error" type="text"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="jarmuszczaks" id="20220421154223-2">
+            <preConditions onFail="MARK_RAN">
+                <not>
+                    <columnExists tableName="process_instance_event" columnName="error"/>
+                </not>
+            </preConditions>
+            <addColumn tableName="process_instance_event">
+                <column name="error" type="text"/>
+            </addColumn>
+    </changeSet>
+    <changeSet author="jarmuszczaks" id="20220421154223-3">
+         <preConditions onFail="MARK_RAN">
+           <sqlCheck expectedResult="1">
+                SELECT  count(is_nullable) From information_schema.columns WHERE table_name = 'process_instance' AND column_name = 'bot_id';
+           </sqlCheck>
+        </preConditions>
+        <dropNotNullConstraint tableName="process_instance" columnName="bot_id"/>
+    </changeSet>
+</databaseChangeLog>
