@@ -6,9 +6,11 @@ PACKAGE_VERSION=$(cat ./runbotics-orchestrator-ui/package.json \
   | sed 's/[",]//g' \
   | tr -d '[[:space:]]')
 echo Version is: $PACKAGE_VERSION
+
 echo "[INFO] runbotics-orchestrator-ui - Docker build started";
-docker build -t docker.clouddc.eu/runbotics-orchestrator-ui:${PACKAGE_VERSION} .
+docker build -t runbotics/runbotics-orchestrator-ui:${PACKAGE_VERSION} .
 echo "[INFO] runbotics-orchestrator-ui - Docker build completed";
+
 echo "[INFO] runbotics-orchestrator-ui - Docker push started";
-docker push "docker.clouddc.eu/runbotics-orchestrator-ui:${PACKAGE_VERSION}"
+docker push runbotics/runbotics-orchestrator-ui:${PACKAGE_VERSION}
 echo "[INFO] runbotics-orchestrator-ui - Docker push completed";

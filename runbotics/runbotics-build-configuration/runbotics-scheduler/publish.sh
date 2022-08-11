@@ -7,9 +7,11 @@ PACKAGE_VERSION=$(cat ./runbotics-scheduler/package.json \
   | sed 's/[",]//g' \
   | tr -d '[[:space:]]')
 echo Version is: $PACKAGE_VERSION
+
 echo "[INFO] runbotics-scheduler - Docker build started";
-docker build -t docker.clouddc.eu/runbotics-scheduler:${PACKAGE_VERSION} .
+docker build -t runbotics/runbotics-scheduler:${PACKAGE_VERSION} .
 echo "[INFO] runbotics-scheduler - Docker build completed";
+
 echo "[INFO] runbotics-scheduler - Docker push started";
-docker push "docker.clouddc.eu/runbotics-scheduler:${PACKAGE_VERSION}"
+docker push runbotics/runbotics-scheduler:${PACKAGE_VERSION}
 echo "[INFO] runbotics-scheduler - Docker push completed";
