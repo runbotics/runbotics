@@ -1,8 +1,8 @@
 #!/bin/sh
-PACKAGE_VERSION="2.0.23"
-echo "[INFO] runbotics-orchestrator - Gradle build started";
-./gradlew bootJar -Pprod jibDockerBuild
-echo "[INFO] runbotics-orchestrator - Gradle build completed";
+PACKAGE_VERSION=$(./gradlew properties \
+    | grep ^version: \
+    | cut -c10-)
+echo Version is: $PACKAGE_VERSION
 
 echo "[INFO] runbotics-orchestrator - Docker build started";
 docker tag runbotics:latest runbotics/runbotics-orchestrator:${PACKAGE_VERSION}

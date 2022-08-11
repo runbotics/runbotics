@@ -1,3 +1,9 @@
-docker-compose -f docker-compose.build.yml build
-docker tag runbotics-orchestrator-ui_runbotics-orchestrator-ui  runbotics/runbotics:runbotics-orchestrator-ui_1_0_0
-docker push runbotics/runbotics:runbotics-orchestrator-ui_1_0_0
+#!/bin/sh
+mkdir -p ../common/deploy/runbotics-orchestrator-ui;
+echo "[INFO] runbotics-orchestrator-ui - Build started";
+rushx build;
+echo "[INFO] runbotics-orchestrator-ui - Build completed";
+
+echo "[INFO] runbotics-orchestrator-ui - Rush deploy started";
+rush deploy --scenario runbotics-orchestrator-ui --overwrite --target-folder ../common/deploy/runbotics-orchestrator-ui;
+echo "[INFO] runbotics-orchestrator-ui - Rush deploy completed";
