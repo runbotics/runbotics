@@ -18,31 +18,37 @@ jobs:
       api: ${{ steps.filter.outputs.api }}
 
     steps:
-    - name: Assign paths to scenarios
-      uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          ui:
-            - 'runbotics/runbotics-orchestrator-ui/**'
-            - 'runbotics/runboticskit/**'
-            - 'runbotics/runbotics-common/**'
-          scheduler:
-            - 'runbotics/runbotics-scheduler/**'
-            - 'runbotics/runbotics-common/**'
-          bot:
-            - 'runbotics/runbotics-desktop/**'
-            - 'runbotics/runbotics-common/**'
-            - 'runbotics/runbotics-actions-windows/**'
-            - 'runbotics/runbotics-sdk/**'
-          api:
-            - 'runbotics-orchestrator/**'
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Assign paths to scenarios
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            ui:
+              - 'runbotics/runbotics-orchestrator-ui/**'
+              - 'runbotics/runboticskit/**'
+              - 'runbotics/runbotics-common/**'
+            scheduler:
+              - 'runbotics/runbotics-scheduler/**'
+              - 'runbotics/runbotics-common/**'
+            bot:
+              - 'runbotics/runbotics-desktop/**'
+              - 'runbotics/runbotics-common/**'
+              - 'runbotics/runbotics-actions-windows/**'
+              - 'runbotics/runbotics-sdk/**'
+            api:
+              - 'runbotics-orchestrator/**'
 
 
 
   build-ui:
     needs: changes-detection
-    if: ${{ needs.changes-detection.outputs.ui == 'true' }}
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.ui == 'true'
 
     runs-on: ubuntu-latest
 
@@ -55,7 +61,7 @@ jobs:
         node-version: ['14.x']     
 
     steps:
-      - name: Clone repo
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Install Node ${{ matrix.node-version }}
@@ -75,7 +81,10 @@ jobs:
 
   build-scheduler:
     needs: changes-detection
-    if: ${{ needs.changes-detection.outputs.scheduler == 'true' }}
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.scheduler == 'true'
 
     runs-on: ubuntu-latest
 
@@ -88,7 +97,7 @@ jobs:
         node-version: ['14.x']     
 
     steps:
-      - name: Clone repo
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Install Node ${{ matrix.node-version }}
@@ -108,7 +117,10 @@ jobs:
 
   # build-bot:
   #   needs: changes-detection
-  #   if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+  #  if: |
+  #      github.ref == 'refs/heads/develop'
+  #      || github.ref == 'refs/heads/master'
+  #      || needs.changes-detection.outputs.bot == 'true'
 
   #   runs-on: windows-latest # ubuntu-latest
 
@@ -121,7 +133,7 @@ jobs:
   #       node-version: ['14.x']
 
   #   steps:
-  #     - name: Clone repo
+  #     - name: Checkout
   #       uses: actions/checkout@v3
 
   #     - name: Install Node ${{ matrix.node-version }}
@@ -144,7 +156,10 @@ jobs:
 
   build-api:
     needs: changes-detection
-    if: ${{ needs.changes-detection.outputs.api == 'true' }}
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.api == 'true'
 
     runs-on: ubuntu-latest
 
@@ -159,7 +174,7 @@ jobs:
         gradle-version: ['6.8.3']
 
     steps:
-      - name: Clone repo
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Install Java JDK
