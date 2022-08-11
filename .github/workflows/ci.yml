@@ -1,0 +1,177 @@
+name: CI
+
+on:
+  push:
+    branches: ["develop", "master"]
+  pull_request:
+    branches: ["develop", "master"]
+  workflow_dispatch:
+        
+jobs:
+  changes-detection:
+    runs-on: ubuntu-latest
+
+    outputs:
+      ui: ${{ steps.filter.outputs.ui }}
+      scheduler: ${{ steps.filter.outputs.scheduler }}
+      bot: ${{ steps.filter.outputs.bot }}
+      api: ${{ steps.filter.outputs.api }}
+
+    steps:
+    - name: Assign paths to scenarios
+      uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          ui:
+            - 'runbotics/runbotics-orchestrator-ui/**'
+            - 'runbotics/runboticskit/**'
+            - 'runbotics/runbotics-common/**'
+          scheduler:
+            - 'runbotics/runbotics-scheduler/**'
+            - 'runbotics/runbotics-common/**'
+          bot:
+            - 'runbotics/runbotics-desktop/**'
+            - 'runbotics/runbotics-common/**'
+            - 'runbotics/runbotics-actions-windows/**'
+            - 'runbotics/runbotics-sdk/**'
+          api:
+            - 'runbotics-orchestrator/**'
+
+
+
+  build-ui:
+    needs: changes-detection
+    if: ${{ needs.changes-detection.outputs.ui == 'true' }}
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-orchestrator-ui
+
+    strategy:
+      matrix:
+        node-version: ['14.x']     
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: |
+          node ../common/scripts/install-run-rush.js install -t .
+
+      - name: Build
+        run: |
+          node ../common/scripts/install-run-rush.js build -t .
+
+
+
+  build-scheduler:
+    needs: changes-detection
+    if: ${{ needs.changes-detection.outputs.scheduler == 'true' }}
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-scheduler
+
+    strategy:
+      matrix:
+        node-version: ['14.x']     
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: |
+          node ../common/scripts/install-run-rush.js install -t .
+
+      - name: Build
+        run: |
+          node ../common/scripts/install-run-rush.js build -t .
+
+
+
+  # build-bot:
+  #   needs: changes-detection
+  #   if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+
+  #   runs-on: windows-latest # ubuntu-latest
+
+  #   defaults:
+  #     run:
+  #       working-directory: ./runbotics/runbotics-desktop
+
+  #   strategy:
+  #     matrix:
+  #       node-version: ['14.x']
+
+  #   steps:
+  #     - name: Clone repo
+  #       uses: actions/checkout@v3
+
+  #     - name: Install Node ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+
+  #     - name: ws build tools
+  #       run: npm install --global --production windows-build-tools --vs2015
+
+  #     - name: Install dependencies
+  #       run: |
+  #         node ../common/scripts/install-run-rush.js install -t .
+
+  #     - name: Build
+  #       run: |
+  #         node ../common/scripts/install-run-rush.js build -t .
+
+
+
+  build-api:
+    needs: changes-detection
+    if: ${{ needs.changes-detection.outputs.api == 'true' }}
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics-orchestrator
+
+    strategy:
+      matrix:
+        java-version: [11]
+        java-distribution: ['adopt']
+        gradle-version: ['6.8.3']
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v3
+
+      - name: Install Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: ${{ matrix.java-distribution }}
+
+      - name: Install gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: ${{ matrix.gradle-version }}
+
+      - name: Build
+        run: gradle clean build -x test
