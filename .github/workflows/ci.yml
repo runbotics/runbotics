@@ -189,4 +189,4 @@ jobs:
           gradle-version: ${{ matrix.gradle-version }}
 
       - name: Build
-        run: gradle clean build -x test
+        run: gradle build -x test
