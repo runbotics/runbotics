@@ -10,6 +10,7 @@ import com.runbotics.IntegrationTest;
 import com.runbotics.domain.Bot;
 import com.runbotics.domain.Process;
 import com.runbotics.domain.ProcessInstance;
+import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.service.criteria.ProcessInstanceCriteria;
 import com.runbotics.service.dto.ProcessInstanceDTO;
@@ -42,8 +43,8 @@ class ProcessInstanceResourceIT {
     private static final String DEFAULT_ORCHESTRATOR_PROCESS_INSTANCE_ID = "AAAAAAAAAA";
     private static final String UPDATED_ORCHESTRATOR_PROCESS_INSTANCE_ID = "BBBBBBBBBB";
 
-    private static final String DEFAULT_STATUS = "AAAAAAAAAA";
-    private static final String UPDATED_STATUS = "BBBBBBBBBB";
+    private static final ProcessInstanceStatus DEFAULT_STATUS = ProcessInstanceStatus.INITIALIZING;
+    private static final ProcessInstanceStatus UPDATED_STATUS = ProcessInstanceStatus.IN_PROGRESS;
 
     private static final ZonedDateTime DEFAULT_CREATED = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);

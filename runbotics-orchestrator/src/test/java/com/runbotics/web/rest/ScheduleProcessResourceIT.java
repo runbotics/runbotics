@@ -84,7 +84,6 @@ class ScheduleProcessResourceIT {
         } else {
             bot = TestUtil.findAll(em, Bot.class).get(0);
         }
-        scheduleProcess.setBot(bot);
         return scheduleProcess;
     }
 
@@ -115,7 +114,6 @@ class ScheduleProcessResourceIT {
         } else {
             bot = TestUtil.findAll(em, Bot.class).get(0);
         }
-        scheduleProcess.setBot(bot);
         return scheduleProcess;
     }
 
@@ -337,7 +335,6 @@ class ScheduleProcessResourceIT {
         Bot bot = BotResourceIT.createEntity(em);
         em.persist(bot);
         em.flush();
-        scheduleProcess.setBot(bot);
         scheduleProcessRepository.saveAndFlush(scheduleProcess);
         Long botId = bot.getId();
 
