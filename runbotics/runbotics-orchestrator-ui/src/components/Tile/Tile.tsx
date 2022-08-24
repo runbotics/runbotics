@@ -1,0 +1,26 @@
+import { Card } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import React, { FunctionComponent } from 'react';
+import styled from 'styled-components';
+
+const Wrapper = styled(Card)<TileProps>`
+    && {
+        box-shadow: 0 .25rem .5rem 0 ${alpha('#8d8c8c', 0.4)};
+    }
+
+    &:hover {
+        ${({ hoverstyles }) => hoverstyles && `box-shadow: 0 .25rem 1rem 0 ${alpha('#8d8c8c', 0.4)}`};
+    }
+`;
+
+interface TileProps {
+    hoverstyles?: boolean;
+}
+
+const Tile: FunctionComponent<TileProps> = ({ children, hoverstyles }) => (
+    <Wrapper hoverstyles={hoverstyles}>
+        {children}
+    </Wrapper>
+);
+
+export default Tile;

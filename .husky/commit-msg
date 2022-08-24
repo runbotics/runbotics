@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# -----------
+# IF YOU WANT TO DISABLE FUNCTIONALITY OF COMMIT-MSG HOOK PLEASE CHANGE VALUE OF HUSKY VARIABLE TO 0: 
+# HUSKY=0
+# -----------
+HUSKY=1
+
+if [ "$HUSKY" = "0" ]; then
+    debug "HUSKY variable is set to 0, skipping hook"
+    exit 0
+fi
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+BRANCH_PATTERN='^(feature|bugfix|hotfix)\/[A-Z]+\-[0-9]+'
+PROTECTED_BRANCHES='^(master|develop)'
+
+if ! [[ $BRANCH =~ $PROTECTED_BRANCHES || $BRANCH =~ $BRANCH_PATTERN ]]; then
+    echo "Every branch in this project must match following pattern: $BRANCH_PATTERN, for example: feature/RPA-12345. Please rename your branch."
+    exit 1
+fi
+
+exit 0

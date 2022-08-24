@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="gorecznyp"  id="20220719085542-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO feature_key(name) VALUES
+            ('SCHEDULER_JOBS_READ'),
+            ('SCHEDULER_JOBS_DELETE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="gorecznyp"  id="20220719085542-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN','SCHEDULER_JOBS_READ'),
+            ('ROLE_ADMIN','SCHEDULER_JOBS_DELETE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="gorecznyp"  id="20220719085542-4">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="feature_key"/>
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            UPDATE feature_key SET name = 'PROCESS_START' WHERE name = 'PROCESS_EXECUTE';
+            UPDATE authority_feature_key SET feature_key = 'PROCESS_START' WHERE feature_key = 'PROCESS_EXECUTE';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

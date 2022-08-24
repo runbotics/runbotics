@@ -1,0 +1,143 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="gorecznyp"  id="20220713132051-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="feature_key"/>
+            </not>
+        </preConditions>
+        <sql>
+            CREATE TABLE feature_key (
+            name varchar(50),
+            CONSTRAINT feature_key_PK
+            PRIMARY KEY (name)
+            );
+            INSERT INTO feature_key(name) VALUES
+            ('PROCESS_READ'),
+            ('PROCESS_ADD'),
+            ('PROCESS_EDIT_INFO'),
+            ('PROCESS_DELETE'),
+            ('PROCESS_EXECUTE'),
+            ('PROCESS_EDIT_STRUCTURE'),
+            ('PROCESS_BOT_COLLECTION_EDIT'),
+            ('PROCESS_BOT_COLLECTION_READ'),
+            ('PROCESS_BOT_SYSTEM_EDIT'),
+            ('PROCESS_BOT_SYSTEM_READ'),
+            ('PROCESS_INSTANCE_READ'),
+            ('PROCESS_INSTANCE_TERMINATE'),
+            ('PROCESS_INSTANCE_HISTORY_READ'),
+            ('PROCESS_INSTANCE_EVENT_READ'),
+            ('SCHEDULE_READ'),
+            ('SCHEDULE_ADD'),
+            ('SCHEDULE_DELETE'),
+            ('BOT_READ'),
+            ('BOT_HISTORY_READ'),
+            ('BOT_LOG_READ'),
+            ('BOT_DELETE'),
+            ('BOT_COLLECTION_READ'),
+            ('BOT_COLLECTION_EDIT'),
+            ('BOT_COLLECTION_ADD'),
+            ('BOT_COLLECTION_DELETE'),
+            ('EXTERNAL_ACTION_READ'),
+            ('EXTERNAL_ACTION_EDIT'),
+            ('EXTERNAL_ACTION_ADD'),
+            ('EXTERNAL_ACTION_DELETE'),
+            ('GLOBAL_VARIABLE_READ'),
+            ('GLOBAL_VARIABLE_EDIT'),
+            ('GLOBAL_VARIABLE_ADD'),
+            ('GLOBAL_VARIABLE_DELETE'),
+            ('SCHEDULER_PAGE_READ'),
+            ('HISTORY_READ'),
+            ('BASIC_USER_READ');
+        </sql>
+    </changeSet>
+    <changeSet id="20220713132051-2" author="gorecznyp">
+        <preConditions  onFail="MARK_RAN">
+            <and>
+                <not>
+                    <tableExists tableName="authority_feature_key"/>
+                </not>
+                <tableExists tableName="feature_key"/>
+                <tableExists tableName="jhi_authority"/>
+            </and>
+        </preConditions>
+        <sql>
+            CREATE TABLE authority_feature_key (
+            authority varchar(50),
+            feature_key varchar(50)
+            );
+            CREATE INDEX feature_key_authority_index ON authority_feature_key(authority);
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_USER', 'PROCESS_READ'),
+            ('ROLE_USER', 'PROCESS_EDIT_INFO'),
+            ('ROLE_USER','PROCESS_DELETE'),
+            ('ROLE_USER','PROCESS_EXECUTE'),
+            ('ROLE_USER','PROCESS_EDIT_STRUCTURE'),
+            ('ROLE_USER','PROCESS_BOT_COLLECTION_EDIT'),
+            ('ROLE_USER','PROCESS_BOT_COLLECTION_READ'),
+            ('ROLE_USER','PROCESS_BOT_SYSTEM_EDIT'),
+            ('ROLE_USER','PROCESS_BOT_SYSTEM_READ'),
+            ('ROLE_USER','PROCESS_INSTANCE_READ'),
+            ('ROLE_USER','PROCESS_INSTANCE_TERMINATE'),
+            ('ROLE_USER','PROCESS_INSTANCE_HISTORY_READ'),
+            ('ROLE_USER','PROCESS_INSTANCE_EVENT_READ'),
+            ('ROLE_USER','SCHEDULE_READ'),
+            ('ROLE_USER','SCHEDULE_ADD'),
+            ('ROLE_USER','SCHEDULE_DELETE'),
+            ('ROLE_USER','BOT_READ'),
+            ('ROLE_USER','BOT_HISTORY_READ'),
+            ('ROLE_USER','BOT_LOG_READ'),
+            ('ROLE_USER','BOT_DELETE'),
+            ('ROLE_USER','BOT_COLLECTION_READ'),
+            ('ROLE_USER','BOT_COLLECTION_EDIT'),
+            ('ROLE_USER','BOT_COLLECTION_ADD'),
+            ('ROLE_USER','BOT_COLLECTION_DELETE'),
+            ('ROLE_USER','EXTERNAL_ACTION_READ'),
+            ('ROLE_USER','EXTERNAL_ACTION_EDIT'),
+            ('ROLE_USER','EXTERNAL_ACTION_ADD'),
+            ('ROLE_USER','EXTERNAL_ACTION_DELETE'),
+            ('ROLE_USER','GLOBAL_VARIABLE_READ'),
+            ('ROLE_USER','GLOBAL_VARIABLE_EDIT'),
+            ('ROLE_USER','GLOBAL_VARIABLE_ADD'),
+            ('ROLE_USER','GLOBAL_VARIABLE_DELETE'),
+            ('ROLE_ADMIN', 'PROCESS_READ'),
+            ('ROLE_ADMIN', 'PROCESS_EDIT_INFO'),
+            ('ROLE_ADMIN','PROCESS_DELETE'),
+            ('ROLE_ADMIN','PROCESS_EXECUTE'),
+            ('ROLE_ADMIN','PROCESS_EDIT_STRUCTURE'),
+            ('ROLE_ADMIN','PROCESS_BOT_COLLECTION_EDIT'),
+            ('ROLE_ADMIN','PROCESS_BOT_COLLECTION_READ'),
+            ('ROLE_ADMIN','PROCESS_BOT_SYSTEM_EDIT'),
+            ('ROLE_ADMIN','PROCESS_BOT_SYSTEM_READ'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_READ'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_TERMINATE'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_HISTORY_READ'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_EVENT_READ'),
+            ('ROLE_ADMIN','SCHEDULE_READ'),
+            ('ROLE_ADMIN','SCHEDULE_ADD'),
+            ('ROLE_ADMIN','SCHEDULE_DELETE'),
+            ('ROLE_ADMIN','BOT_READ'),
+            ('ROLE_ADMIN','BOT_HISTORY_READ'),
+            ('ROLE_ADMIN','BOT_LOG_READ'),
+            ('ROLE_ADMIN','BOT_DELETE'),
+            ('ROLE_ADMIN','BOT_COLLECTION_READ'),
+            ('ROLE_ADMIN','BOT_COLLECTION_EDIT'),
+            ('ROLE_ADMIN','BOT_COLLECTION_ADD'),
+            ('ROLE_ADMIN','BOT_COLLECTION_DELETE'),
+            ('ROLE_ADMIN','EXTERNAL_ACTION_READ'),
+            ('ROLE_ADMIN','EXTERNAL_ACTION_EDIT'),
+            ('ROLE_ADMIN','EXTERNAL_ACTION_ADD'),
+            ('ROLE_ADMIN','EXTERNAL_ACTION_DELETE'),
+            ('ROLE_ADMIN','GLOBAL_VARIABLE_READ'),
+            ('ROLE_ADMIN','GLOBAL_VARIABLE_EDIT'),
+            ('ROLE_ADMIN','GLOBAL_VARIABLE_ADD'),
+            ('ROLE_ADMIN','GLOBAL_VARIABLE_DELETE'),
+            ('ROLE_ADMIN','SCHEDULER_PAGE_READ'),
+            ('ROLE_ADMIN','HISTORY_READ'),
+            ('ROLE_USER','PROCESS_ADD'),
+            ('ROLE_USER','BASIC_USER_READ'),
+            ('ROLE_ADMIN','PROCESS_ADD'),
+            ('ROLE_ADMIN','BASIC_USER_READ');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

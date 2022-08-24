@@ -1,0 +1,8 @@
+{
+    "trailingComma": "all",
+    "singleQuote": true,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "endOfLine": "lf",
+    "react/jsx-max-props-per-line": [1, { "when": "always" }]
+}

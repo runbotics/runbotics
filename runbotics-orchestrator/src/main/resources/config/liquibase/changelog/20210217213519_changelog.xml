@@ -1,0 +1,145 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="gontareka (generated)" id="1613594125985-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="extension_instance"/>
+            </not>
+        </preConditions>
+        <createTable tableName="extension_instance">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="extension_instancePK"/>
+            </column>
+            <column name="auth_uri" type="VARCHAR(255)"/>
+            <column name="client_id" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_extension_instance_name"/>
+            </column>
+            <column name="project_id" type="VARCHAR(255)"/>
+            <column name="token_uri" type="VARCHAR(255)"/>
+            <column name="x_509_cert_url" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="extension_instance_users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="extension_instance_users">
+            <column name="extension_instance_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="users_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="extension_version"/>
+            </not>
+        </preConditions>
+        <createTable tableName="extension_version">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="extension_versionPK"/>
+            </column>
+            <column name="bugfix_version" type="INTEGER"/>
+            <column name="commit_id" type="VARCHAR(255)"/>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="main_version" type="INTEGER"/>
+            <column name="minor_version" type="INTEGER"/>
+            <column name="name" type="VARCHAR(255)">
+                <!--do we need this ? unique="true" uniqueConstraintName="ux_extension_version_name"-->
+                <constraints nullable="false" />
+            </column>
+            <column name="repo_url" type="VARCHAR(255)"/>
+            <column name="extension_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_publication"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_publication">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="process_publicationPK"/>
+            </column>
+            <column name="active" type="BOOLEAN"/>
+            <column name="commit_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="definition" type="${clobType}"/>
+            <column name="ext_version_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="process_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-6">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process" columnName="commit_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="process">
+            <column name="commit_id" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-7">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKdcjrvmj7buivwrq8p6djfduil"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="process_id" baseTableName="process_publication" constraintName="FKdcjrvmj7buivwrq8p6djfduil" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="process" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-8">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKhpusxji5jb5jcl9kfac2h7s8y"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="users_id" baseTableName="extension_instance_users" constraintName="FKhpusxji5jb5jcl9kfac2h7s8y" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-9">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKogdbk7k7p425ain6m8ipy9bf7"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="ext_version_id" baseTableName="process_publication" constraintName="FKogdbk7k7p425ain6m8ipy9bf7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="extension_version" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-10">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKpmmdhbcgbp7t2ng635iqvc7y5"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="extension_instance_id" baseTableName="extension_instance_users" constraintName="FKpmmdhbcgbp7t2ng635iqvc7y5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="extension_instance" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-11">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKtjm07hvrgxawhqxrksjppurhg"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="extension_id" baseTableName="extension_version" constraintName="FKtjm07hvrgxawhqxrksjppurhg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="extension_instance" validate="true"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1613594125985-12">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="ux_process_name"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint tableName="process" columnNames="name" constraintName="ux_process_name"/>
+    </changeSet>
+</databaseChangeLog>

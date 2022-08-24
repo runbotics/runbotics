@@ -1,0 +1,65 @@
+{
+  "name": "Process",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "definition",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "isPublic",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "updated",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "executionsCount",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "successExecutionsCount",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "failureExecutionsCount",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "process",
+      "relationshipName": "createdBy",
+      "otherEntityField": "login"
+    }
+  ],
+  "changelogDate": "20200618194033",
+  "entityTableName": "process",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "incrementalChangelog": false
+}

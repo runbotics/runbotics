@@ -1,0 +1,27 @@
+{
+  "runboticsApp": {
+    "processInstanceEvent": {
+      "home": {
+        "title": "Process Instance Events",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Process Instance Event",
+        "createOrEditLabel": "Create or edit a Process Instance Event",
+        "notFound": "No Process Instance Events found"
+      },
+      "created": "A new Process Instance Event is created with identifier {{ param }}",
+      "updated": "A Process Instance Event is updated with identifier {{ param }}",
+      "deleted": "A Process Instance Event is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Process Instance Event {{ id }}?"
+      },
+      "detail": {
+        "title": "Process Instance Event"
+      },
+      "id": "ID",
+      "created": "Created",
+      "log": "Log",
+      "step": "Step",
+      "processInstance": "Process Instance"
+    }
+  }
+}

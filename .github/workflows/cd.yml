@@ -1,0 +1,227 @@
+name: CD
+
+on:
+  push:
+    branches: ["develop", "master"]
+  workflow_dispatch:
+
+jobs:
+  push-ui:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-orchestrator-ui
+
+    strategy:
+      matrix:
+        node-version: ['14.x']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Install dependencies
+        run: node ../common/scripts/install-run-rush.js install -t .
+
+      - name: Build
+        run: node ../common/scripts/install-run-rush.js build -t .
+
+      - name: Rush deploy
+        run: |
+          mkdir -p ../common/deploy/runbotics-orchestrator-ui
+          node ../common/scripts/install-run-rush.js deploy --scenario runbotics-orchestrator-ui --overwrite  --target-folder ../common/deploy/runbotics-orchestrator-ui;
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-orchestrator-ui/package.json'
+
+      - name: Build and push image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./runbotics/common/deploy/runbotics-orchestrator-ui
+          file: ./runbotics/common/deploy/runbotics-orchestrator-ui/Dockerfile
+          push: true
+          tags: |
+            runbotics/runbotics-orchestrator-ui:latest
+            runbotics/runbotics-orchestrator-ui:${{ env.PACKAGE_VERSION }}
+
+
+
+  push-scheduler:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-scheduler
+
+    strategy:
+      matrix:
+        node-version: ['14.x']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      - name: Install dependencies
+        run: node ../common/scripts/install-run-rush.js install -t .
+
+      - name: Build
+        run: node ../common/scripts/install-run-rush.js build -t .
+
+      - name: Rush deploy
+        run: |
+          mkdir -p ../common/deploy/runbotics-scheduler
+          node ../common/scripts/install-run-rush.js deploy --scenario runbotics-scheduler --overwrite  --target-folder ../common/deploy/runbotics-scheduler
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-scheduler/package.json'
+
+      - name: Build and push image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./runbotics/common/deploy/runbotics-scheduler
+          file: ./runbotics/common/deploy/runbotics-scheduler/Dockerfile
+          push: true
+          tags: |
+            runbotics/runbotics-scheduler:latest
+            runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
+
+
+
+  # push-bot:
+  #   runs-on: windows-latest
+
+  #   defaults:
+  #     run:
+  #       working-directory: ./runbotics/runbotics-desktop
+
+  #   strategy:
+  #     matrix:
+  #       node-version: ['14.x']
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Install Node ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+  #     - name: Choco install build tools
+  #       run: choco install python visualcpp-build-tools -y
+
+  #     - name: Set npm config VS version
+  #       run: npm config set msvs_version 2017
+
+  #     - name: Install dependencies
+  #       run: node ../common/scripts/install-run-rush.js install -t .
+
+  #     - name: Build
+  #       run: node ../common/scripts/install-run-rush.js build -t .
+
+  #     - name: Rush deploy
+  #       run: |
+  #         mkdir -p ../common/deploy/runbotics-desktop
+  #         node ../common/scripts/install-run-rush.js deploy --overwrite  --target-folder ../common/deploy/runbotics-desktop
+      
+  #     - name: Assign package version
+  #       uses: nyaa8/package-version@v1
+  #       with:
+  #         path: './runbotics/runbotics-desktop/package.json'
+
+  #     - name: Build and push image
+  #       run: |
+  #         cd ../common/deploy/runbotics-desktop
+  #         docker build -t "runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}" -t runbotics/runbotics-desktop:latest .
+  #         docker push --all-tags runbotics/runbotics-desktop
+
+  #     - uses: docker/build-push-action@v2
+  #       with:
+  #         context: ./runbotics/common/deploy/runbotics-desktop
+  #         file: ./runbotics/common/deploy/runbotics-desktop/Dockerfile
+  #         push: true
+  #         tags: |
+  #           runbotics/runbotics-desktop:latest
+  #           runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}
+
+
+
+  push-api:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics-orchestrator
+
+    strategy:
+      matrix:
+        java-version: [11]
+        java-distribution: ['adopt']
+        gradle-version: ['6.8.3']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Install Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: ${{ matrix.java-distribution }}
+
+      - name: Install gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: ${{ matrix.gradle-version }}
+
+      - name: Build
+        run: gradle bootJar -Pprod jibDockerBuild
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics-orchestrator/package.json'
+
+      - name: Push image
+        run: |
+          docker tag runbotics/runbotics-orchestrator:latest "runbotics/runbotics-orchestrator:${{ env.PACKAGE_VERSION }}"
+          docker push --all-tags runbotics/runbotics-orchestrator

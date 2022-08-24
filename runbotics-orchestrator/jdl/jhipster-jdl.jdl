@@ -1,0 +1,104 @@
+entity Process {
+  name String required unique
+  description TextBlob
+  definition TextBlob
+  isPublic Boolean
+  created ZonedDateTime
+  updated ZonedDateTime
+  executionsCount Long
+  successExecutionsCount Long
+  failureExecutionsCount Long
+}
+
+entity Bot{
+	installationId String required unique
+    created ZonedDateTime
+    lastConnected ZonedDateTime
+}
+
+entity ProcessInstance {
+    id UUID
+	orchestratorProcessInstanceId String
+	status String
+    created ZonedDateTime
+    updated ZonedDateTime
+    input TextBlob
+    output TextBlob
+    step String
+}
+
+entity Activity {
+    @AutoGenerate(false) @Id executionId String
+    input TextBlob
+    output TextBlob
+}
+
+entity ProcessInstanceEvent {
+    created ZonedDateTime
+    log TextBlob
+    step String
+}
+
+entity GlobalVariable {
+	name String
+    description String
+    type String
+    value String
+    lastModified ZonedDateTime
+}
+
+relationship ManyToOne {
+    ProcessInstance{process(name) required} to Process
+    ProcessInstance{bot(installationId) required} to Bot
+}
+
+relationship ManyToOne {
+    ProcessInstanceEvent{processInstance(id)} to ProcessInstance
+    Activity{processInstance(id)} to ProcessInstance
+}
+
+relationship ManyToOne {
+    Bot{user(login)} to User
+}
+
+relationship ManyToOne {
+	GlobalVariable{user(login)} to User
+}
+
+entity ScheduleProcess {
+  cron String required
+}
+
+relationship ManyToOne {
+    ScheduleProcess{process(name) required} to Process
+}
+
+relationship ManyToOne {
+    ScheduleProcess{bot(installationId) required} to Bot
+}
+
+relationship ManyToOne {
+    Process{createdBy(login)} to User
+}
+
+
+
+
+entity Action {
+    @AutoGenerate(false) @Id id String
+    label String
+    script String
+    form TextBlob
+}
+
+
+entity DocumentationPage {
+	title String
+    content TextBlob
+}
+
+
+dto * with mapstruct
+paginate * with pagination
+filter *
+service * with serviceImpl

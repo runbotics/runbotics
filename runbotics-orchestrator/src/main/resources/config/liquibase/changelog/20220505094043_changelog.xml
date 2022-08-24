@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet  author="jarmuszczaks"  id="20220505094043-1">
+        <preConditions onFail="MARK_RAN">
+                <foreignKeyConstraintExists foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"/>
+        </preConditions>
+        <dropForeignKeyConstraint  baseTableCatalogName="bot_id"
+                                   baseTableName="process_instance"
+                                   baseTableSchemaName="public"
+                                   constraintName="FKbo6xcfy1pnm3kydjoqbtyg9d5"/>
+    </changeSet>
+    <changeSet  author="jarmuszczaks"  id="20220505094043-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="bot_id"
+                                 baseTableName="process_instance"
+                                 constraintName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
+                                 deferrable="false"
+                                 onDelete="SET NULL"
+                                 initiallyDeferred="false"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot"
+                                 validate="true"/>
+    </changeSet>
+</databaseChangeLog>

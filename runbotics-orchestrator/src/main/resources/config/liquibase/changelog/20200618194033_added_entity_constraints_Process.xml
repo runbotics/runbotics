@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Process.
+    -->
+    <changeSet id="20200618194033-2" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_created_by_id"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_subscribers_process_id"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_subscribers_subscribers_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseColumnNames="created_by_id"
+                                 baseTableName="process"
+                                 constraintName="fk_process_created_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="process_id"
+                                 baseTableName="process_subscribers"
+                                 constraintName="fk_process_subscribers_process_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process"/>
+
+        <addForeignKeyConstraint baseColumnNames="subscribers_id"
+                                 baseTableName="process_subscribers"
+                                 constraintName="fk_process_subscribers_subscribers_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+    </changeSet>
+</databaseChangeLog>

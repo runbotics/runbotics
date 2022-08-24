@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--<changeSet author="gontareka (generated)" id="1603915735118-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process" columnName="default_subscription"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="process">
+            <column name="default_subscription" type="boolean"/>
+        </addColumn>
+    </changeSet>-->
+    <changeSet author="gontareka (generated)" id="1603915735118-3">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_user_persistent_token"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="jhi_persistent_token" constraintName="fk_user_persistent_token"/>
+    </changeSet>
+    <changeSet author="gontareka (generated)" id="1603915735118-4">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="jhi_persistent_token"/>
+        </preConditions>
+        <dropTable tableName="jhi_persistent_token"/>
+    </changeSet>
+</databaseChangeLog>

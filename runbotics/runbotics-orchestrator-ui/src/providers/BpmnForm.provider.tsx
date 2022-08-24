@@ -1,0 +1,44 @@
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { IBpmnAction } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
+import { BPMNElement } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
+import BpmnModelerType from 'bpmn-js/lib/Modeler';
+import { IProcess } from 'runbotics-common';
+import extractNestedSchemaKeys from 'src/components/utils/extractNestedSchemaKeys';
+
+export interface BpmnFormContext {
+    element?: BPMNElement;
+    modeler?: BpmnModelerType;
+    action?: IBpmnAction;
+    passedInVariables?: string[];
+    setAction?: (action: IBpmnAction) => void;
+}
+
+const BpmnFormContext = React.createContext<BpmnFormContext>(null);
+export const useBpmnFormContext = () => {
+    const context = React.useContext<BpmnFormContext>(BpmnFormContext);
+    return context;
+};
+
+interface BpmnFormProviderProps {
+    element?: BPMNElement;
+    modeler?: BpmnModelerType;
+    process?: IProcess;
+}
+
+const BpmnFormProvider: FC<BpmnFormProviderProps> = ({ modeler, element, children, process }) => {
+    const [action, setAction] = useState<IBpmnAction>(null);
+    const [passedInVariables, setPassedInVariables] = useState<string[]>([]);
+    useEffect(() => {
+        if (process && process.isAttended && process.executionInfo) {
+            setPassedInVariables(extractNestedSchemaKeys(JSON.parse(process.executionInfo).schema) ?? []);
+        }
+    }, [process]);
+
+    return (
+        <BpmnFormContext.Provider value={{ modeler, element, action, setAction, passedInVariables }}>
+            {children}
+        </BpmnFormContext.Provider>
+    );
+};
+
+export default BpmnFormProvider;

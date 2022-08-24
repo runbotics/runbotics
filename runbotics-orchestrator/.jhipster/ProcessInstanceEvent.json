@@ -1,0 +1,39 @@
+{
+  "name": "ProcessInstanceEvent",
+  "fields": [
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "log",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "step",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "processInstance",
+      "otherEntityRelationshipName": "processInstanceEvent",
+      "relationshipName": "processInstance",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210326175724",
+  "entityTableName": "process_instance_event",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*",
+  "incrementalChangelog": true
+}

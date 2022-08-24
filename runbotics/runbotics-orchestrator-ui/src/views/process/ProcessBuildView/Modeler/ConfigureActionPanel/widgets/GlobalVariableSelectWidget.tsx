@@ -1,0 +1,54 @@
+import React, { FC, useMemo } from 'react';
+import { WidgetProps } from '@rjsf/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { globalVariableSelector } from 'src/store/slices/GlobalVariable';
+
+interface GlobalVariableOption {
+    id: number;
+    name: string;
+}
+
+const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
+    const { globalVariables } = useSelector(globalVariableSelector);
+
+    const options = useMemo(() => globalVariables
+        .map<GlobalVariableOption>((variable) => ({ id: variable.id, name: variable.name })),
+    [globalVariables]);
+
+    const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
+
+    const onChange = (event: any, newValue: GlobalVariableOption) => {
+        props.onChange(newValue ? newValue.id : undefined);
+    };
+
+    const getValue = () => {
+        const globalVariable = globalVariables
+            .find((variable) => variable.id === props.value);
+        return globalVariable
+            ? { id: globalVariable.id, name: globalVariable.name }
+            : undefined;
+    };
+
+    return (
+        <Autocomplete
+            value={getValue()}
+            disabled={props.disabled}
+            options={options}
+            getOptionLabel={(option) => option.name}
+            onChange={onChange}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="outlined"
+                    label={label}
+                    InputLabelProps={{ shrink: true }}
+                    error={!!props.rawErrors}
+                />
+            )}
+        />
+    );
+};
+
+export default GlobalVariableSelectWidget;

@@ -1,0 +1,26 @@
+{
+  "runboticsApp": {
+    "action": {
+      "home": {
+        "title": "Actions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Action",
+        "createOrEditLabel": "Create or edit a Action",
+        "notFound": "No Actions found"
+      },
+      "created": "A new Action is created with identifier {{ param }}",
+      "updated": "A Action is updated with identifier {{ param }}",
+      "deleted": "A Action is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Action {{ id }}?"
+      },
+      "detail": {
+        "title": "Action"
+      },
+      "id": "Id",
+      "label": "Label",
+      "script": "Script",
+      "form": "Form"
+    }
+  }
+}
