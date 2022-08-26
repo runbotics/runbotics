@@ -7,10 +7,12 @@ import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-component
 import GlobalStyles from 'src/components/utils/GlobalStyles';
 import useSettings from 'src/hooks/useSettings';
 import createTheme from 'src/theme';
+import { useTranslation } from 'react-i18next';
 
 const StylesProvider: FC = ({ children }) => {
     const { settings } = useSettings();
-    const theme = createTheme(settings);
+    const { i18n } = useTranslation();
+    const theme = createTheme(settings, i18n.language);
 
     return (
         <StyledComponentsThemeProvider theme={theme}>

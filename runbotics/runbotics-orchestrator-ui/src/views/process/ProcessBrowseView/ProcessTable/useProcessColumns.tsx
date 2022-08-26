@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { getGridStringOperators, GridCellParams, GridColDef, GridFilterOperator } from '@mui/x-data-grid';
+import { getGridStringOperators, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import moment from 'moment';
 import React, { ReactNode } from 'react';
 import { ProcessTileActions } from 'src/components/Tile/ProcessTile';
@@ -9,7 +9,8 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import { red } from '@mui/material/colors';
 import { IProcess } from 'runbotics-common';
 
-const filterOperators = getGridStringOperators().filter(({ value }) => value === 'contains');
+const filterOperators = getGridStringOperators()
+    .filter(({ value }) => value === 'contains');
 
 const useProcessColumns = (): GridColDef[] => [
     {
