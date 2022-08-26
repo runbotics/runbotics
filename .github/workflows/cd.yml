@@ -6,7 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
+  changes-detection:
+    runs-on: ubuntu-latest
+
+    outputs:
+      ui: ${{ steps.filter.outputs.ui }}
+      scheduler: ${{ steps.filter.outputs.scheduler }}
+      bot: ${{ steps.filter.outputs.bot }}
+      api: ${{ steps.filter.outputs.api }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Assign paths to scenarios
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            ui:
+              - 'runbotics/runbotics-orchestrator-ui/package.json'
+            scheduler:
+              - 'runbotics/runbotics-scheduler/package.json'
+            bot:
+              - 'runbotics/runbotics-desktop/package.json'
+            api:
+              - 'runbotics-orchestrator/package.json'
+
+
+
   push-ui:
+    needs: changes-detection
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.ui == 'true'
+    
     runs-on: ubuntu-latest
 
     defaults:
@@ -61,6 +96,12 @@ jobs:
 
 
   push-scheduler:
+    needs: changes-detection
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.scheduler == 'true'
+      
     runs-on: ubuntu-latest
 
     defaults:
@@ -115,6 +156,12 @@ jobs:
 
 
   # push-bot:
+  #   needs: changes-detection
+  #   if: |
+  #     github.ref == 'refs/heads/develop'
+  #     || github.ref == 'refs/heads/master'
+  #     || needs.changes-detection.outputs.bot == 'true'
+
   #   runs-on: windows-latest
 
   #   defaults:
@@ -180,6 +227,12 @@ jobs:
 
 
   push-api:
+    needs: changes-detection
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.api == 'true'
+      
     runs-on: ubuntu-latest
 
     defaults:
