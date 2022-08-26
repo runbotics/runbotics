@@ -260,16 +260,19 @@ export class SchedulerService implements OnApplicationBootstrap {
     return process;
   }
 
-  async validateProcessAccess({ process, user, triggerable = false }: ValidateProcessAccessProps) {
-    const hasAccess = (!process.isPublic && !(process.createdBy.id === user?.id))
-    const isTriggerable = triggerable && process?.isTriggerable;
-    if (!isTriggerable) {
-      this.logger.error(`Process ${process?.name} is not triggerable`);
-      throw new ForbiddenException(`Process ${process?.name} is not triggerable`);
-    }
-    if (!hasAccess) {
+  async validateProcessAccess({ process, user, triggered = false }: ValidateProcessAccessProps) {
+    const hasAccess = (process.createdBy.id === user?.id)
+    const isPublic = process.isPublic;
+    const isTriggerable = process?.isTriggerable;
+
+    if (!hasAccess && !isPublic) {
       this.logger.error(`User ${user?.login} does not have access to process ${process?.name}`);
       throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name}`);
+    }
+
+    if (triggered && !isTriggerable) {
+      this.logger.error(`Process ${process?.name} is not triggerable`);
+      throw new ForbiddenException(`Process ${process?.name} is not triggerable`);
     }
   }
 }

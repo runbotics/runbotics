@@ -32,6 +32,9 @@ export class ProcessEntity implements IProcess {
     @Column({ name: 'is_attended' })
         isAttended?: boolean;
 
+    @Column({ name: 'is_triggerable' })
+        isTriggerable?: boolean;
+
     @Column({ name: 'executions_count' })
         executionsCount: number;
 

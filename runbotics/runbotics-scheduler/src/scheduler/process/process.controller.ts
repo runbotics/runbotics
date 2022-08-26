@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, InternalServerErrorException, Param, Post, Request, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, InternalServerErrorException, Param, Post, Request, UsePipes } from '@nestjs/common';
 import { AuthRequest, ProcessInput } from 'src/types';
 import { SchedulerService } from '../scheduler.service';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
@@ -24,12 +24,15 @@ export class ProcessController {
         try {
             this.logger.log(`=> Starting process ${processInfo}`);
             const process = await this.schedulerService.getProcessByInfo(processInfo)
-            this.schedulerService.validateProcessAccess({ process: process, user: request.user })
+            await this.schedulerService.validateProcessAccess({ process: process, user: request.user })
 
             return await this.schedulerService.addNewInstantJob({ process, input, user: request.user })
         } catch (err) {
             this.logger.error(`<= Process ${processInfo} failed to start`);
-            throw new HttpException({ message: err?.message ?? 'Internal server error' }, err?.status ?? 500);
+            throw new HttpException({
+                message: err?.message ?? 'Internal server error',
+                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
+            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         } finally {
             this.logger.log(`<= Process ${processInfo} successfully started`);
         }
