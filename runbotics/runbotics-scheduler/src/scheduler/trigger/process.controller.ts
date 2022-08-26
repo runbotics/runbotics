@@ -7,16 +7,16 @@ import { Logger } from 'src/utils/logger';
 import { FeatureKeys } from 'src/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 
-@Controller('scheduler/processes')
-export class ProcessController {
-    private readonly logger = new Logger(ProcessController.name);
+@Controller('scheduler/trigger')
+export class TriggerController {
+    private readonly logger = new Logger(TriggerController.name);
 
     constructor(private schedulerService: SchedulerService) { }
 
-    @FeatureKeys(FeatureKey.PROCESS_START)
-    @Post(':processInfo/start')
+    @FeatureKeys(FeatureKey.PROCESS_IS_TRIGGERABLE_EXECUTE)
+    @Post(':processInfo')
     @UsePipes(new SchemaValidationPipe(startProcessSchema))
-    async startProcess(
+    async triggerProcess(
         @Param('processInfo') processInfo: string,
         @Body() input: ProcessInput,
         @Request() request: AuthRequest,
@@ -24,7 +24,7 @@ export class ProcessController {
         try {
             this.logger.log(`=> Starting process ${processInfo}`);
             const process = await this.schedulerService.getProcessByInfo(processInfo)
-            this.schedulerService.validateProcessAccess({ process: process, user: request.user })
+            await this.schedulerService.validateProcessAccess({ process: process, user: request.user, triggerable: true })
 
             return await this.schedulerService.addNewInstantJob({ process, input, user: request.user })
         } catch (err) {

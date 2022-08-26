@@ -1,8 +1,8 @@
-import { IUser } from 'runbotics-common';
+import { IProcess, IUser } from 'runbotics-common';
 import { ProcessInput } from './instant-process';
 
 export interface StartProcessRequest {
-    processInfo: string;
+    process: IProcess;
     input: ProcessInput;
     user: IUser;
 }

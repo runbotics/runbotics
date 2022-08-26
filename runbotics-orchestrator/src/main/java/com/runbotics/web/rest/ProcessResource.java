@@ -143,7 +143,7 @@ public class ProcessResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ProcessDTO processDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update bot collection used in Process {} to {}", processDTO, processDTO.getIsAttended());
+        log.debug("REST request to update is attended used in Process {} to {}", processDTO, processDTO.getIsAttended());
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateIsAttended(processDTO);
 
@@ -152,7 +152,23 @@ public class ProcessResource {
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
         );
     }
-    
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_TRIGGERABLE_EDIT + "')")
+    @PatchMapping(value = "/processes/{id}/is-triggerable")
+    public ResponseEntity<ProcessDTO> processSetIsTriggerable(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody ProcessDTO processDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getIsTriggerable());
+        checkProcessForEdit(id, processDTO);
+        Optional<ProcessDTO> result = processService.updateIsTriggerable(processDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+        );
+    }
+
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_BOT_COLLECTION_EDIT + "')")
     @PatchMapping(value = "/processes/{id}/bot-collection")
     public ResponseEntity<ProcessDTO> processSetBotCollection(

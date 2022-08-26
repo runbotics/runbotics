@@ -8,6 +8,7 @@ export interface IProcess {
   definition?: string | null;
   isPublic?: boolean | null;
   isAttended?: boolean | null;
+  isTriggerable?: boolean | null;
   created?: string | null;
   updated?: string | null;
   executionsCount?: number | null;

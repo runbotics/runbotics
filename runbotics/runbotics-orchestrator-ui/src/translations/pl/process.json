@@ -24,7 +24,8 @@
     "Process.Edit.Form.Fields.Description.Label": "Description",
     "Process.Edit.Form.Fields.Public.Label": "Public:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Is process attended",
-
+    "Process.Edit.Form.Fields.IsTriggerable.Label": "Is process triggerable",
+    
     "Process.Delete.ActionName": "Delete",
     "Process.Delete.Title": "Delete process {{ name }}",
     "Process.Delete.SuccessMessage": "Process {{ name }} deleted successfully",

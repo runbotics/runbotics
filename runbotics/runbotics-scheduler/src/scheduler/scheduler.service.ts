@@ -3,13 +3,14 @@ import { ProcessService } from "../database/process/process.service";
 import { InjectQueue } from "@nestjs/bull";
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   OnApplicationBootstrap,
 } from "@nestjs/common";
 import { Job, JobInformation, JobStatus, Queue } from "bull";
 import { v4 as uuidv4 } from "uuid";
-import { ScheduledProcess } from "src/types/scheduled-process";
+import { ScheduledProcess, ValidateProcessAccessProps } from "src/types/scheduled-process";
 import { Logger } from "src/utils/logger";
 import {
   InstantProcess,
@@ -94,8 +95,8 @@ export class SchedulerService implements OnApplicationBootstrap {
     };
   }
 
-  async addNewInstantJob({ processInfo, ...rest }: StartProcessRequest) {
-    const process = await this.getProcessByInfo(processInfo);
+
+  async addNewInstantJob({ process, ...rest }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
 
     this.handleAttededProcess(process, rest.input);
@@ -257,5 +258,18 @@ export class SchedulerService implements OnApplicationBootstrap {
     }
 
     return process;
+  }
+
+  async validateProcessAccess({ process, user, triggerable = false }: ValidateProcessAccessProps) {
+    const hasAccess = (!process.isPublic && !(process.createdBy.id === user?.id))
+    const isTriggerable = triggerable && process?.isTriggerable;
+    if (!isTriggerable) {
+      this.logger.error(`Process ${process?.name} is not triggerable`);
+      throw new ForbiddenException(`Process ${process?.name} is not triggerable`);
+    }
+    if (!hasAccess) {
+      this.logger.error(`User ${user?.login} does not have access to process ${process?.name}`);
+      throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name}`);
+    }
   }
 }
