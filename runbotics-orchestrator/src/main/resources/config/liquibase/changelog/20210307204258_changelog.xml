@@ -23,11 +23,22 @@
     </changeSet>
     <changeSet author="gontareka (generated)" id="1615146184224-3">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FKk0f7t916vrjrcd64dse4walh3"/>
-            </not>
+            <and>
+                <columnExists tableName="schedule_process" columnName="bot_id" />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="FKk0f7t916vrjrcd64dse4walh3"/>
+                </not>
+            </and>
         </preConditions>
-        <addForeignKeyConstraint baseColumnNames="bot_id" baseTableName="schedule_process" constraintName="FKk0f7t916vrjrcd64dse4walh3" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="bot" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="bot_id"
+                                 baseTableName="schedule_process"
+                                 constraintName="FKk0f7t916vrjrcd64dse4walh3"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot"
+                                 validate="true"
+        />
     </changeSet>
     <changeSet author="gontareka (generated)" id="1615146184224-4">
         <preConditions onFail="MARK_RAN">
