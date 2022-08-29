@@ -266,13 +266,13 @@ export class SchedulerService implements OnApplicationBootstrap {
     const isTriggerable = process?.isTriggerable;
 
     if (!hasAccess && !isPublic) {
-      this.logger.error(`User ${user?.login} does not have access to process ${process?.name}`);
-      throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name}`);
+      this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
+      throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
     }
 
     if (triggered && !isTriggerable) {
-      this.logger.error(`Process ${process?.name} is not triggerable`);
-      throw new ForbiddenException(`Process ${process?.name} is not triggerable`);
+      this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);
+      throw new ForbiddenException(`Process ${process?.name} (${process?.id}) is not triggerable`);
     }
   }
 }

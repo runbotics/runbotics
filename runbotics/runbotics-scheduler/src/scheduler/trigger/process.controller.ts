@@ -26,15 +26,16 @@ export class TriggerController {
             const process = await this.schedulerService.getProcessByInfo(processInfo)
             await this.schedulerService.validateProcessAccess({ process: process, user: request.user, triggered: true })
 
-            return await this.schedulerService.addNewInstantJob({ process, input, user: request.user })
+            const response = await this.schedulerService.addNewInstantJob({ process, input, user: request.user })
+            this.logger.log(`<= Process ${processInfo} successfully started`);
+
+            return response;
         } catch (err) {
             this.logger.error(`<= Process ${processInfo} failed to start`);
             throw new HttpException({
                 message: err?.message ?? 'Internal server error',
                 statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
             }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
-        } finally {
-            this.logger.log(`<= Process ${processInfo} successfully started`);
         }
     }
 }

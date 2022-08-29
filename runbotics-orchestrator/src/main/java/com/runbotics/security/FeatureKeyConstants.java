@@ -15,7 +15,7 @@ public final class FeatureKeyConstants {
     public static final String PROCESS_IS_ATTENDED_EDIT = "PROCESS_IS_ATTENDED_EDIT";
     public static final String PROCESS_IS_ATTENDED_READ = "PROCESS_IS_ATTENDED_READ";
 
-    public static final String PROCESS_IS_TRIGGERABLE_EXECUTE = "PROCESS_IS_TRIGGERABLE_EDIT";
+    public static final String PROCESS_IS_TRIGGERABLE_EXECUTE = "PROCESS_IS_TRIGGERABLE_EXECUTE";
     public static final String PROCESS_IS_TRIGGERABLE_EDIT = "PROCESS_IS_TRIGGERABLE_EDIT";
     public static final String PROCESS_IS_TRIGGERABLE_READ = "PROCESS_IS_TRIGGERABLE_READ";
     public static final String PROCESS_INSTANCE_READ = "PROCESS_INSTANCE_READ";

@@ -156,7 +156,7 @@ public class ProcessResource {
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_TRIGGERABLE_EDIT + "')")
     @PatchMapping(value = "/processes/{id}/is-triggerable")
     public ResponseEntity<ProcessDTO> processSetIsTriggerable(
-        @PathVariable(value = "id", required = false) final Long id,
+        @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody ProcessDTO processDTO
     ) throws URISyntaxException {
         log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getIsTriggerable());
