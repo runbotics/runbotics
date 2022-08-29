@@ -14,10 +14,11 @@ import { ProcessInstanceController } from './process-instance/process-instance.c
 import { ConfigModule } from 'src/config/config.module';
 import { ServerConfigService } from 'src/config/serverConfig.service';
 import { Logger } from 'src/utils/logger';
-import {ProcessInstanceSchedulerService} from './process-instance/process-instance.scheduler.service';
+import { ProcessInstanceSchedulerService } from './process-instance/process-instance.scheduler.service';
 import { ProcessSchedulerService } from './process/process.scheduler.service';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
+import { TriggerController } from './trigger/process.controller';
 
 @Module({
     imports: [
@@ -48,11 +49,11 @@ import { BotSchedulerService } from './bot/bot.scheduler.service';
         })
     ],
     controllers: [
-        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController
+        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController
     ],
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
         ProcessInstanceSchedulerService, BotSchedulerService
     ]
 })
-export class SchedulerModule {}
+export class SchedulerModule { }

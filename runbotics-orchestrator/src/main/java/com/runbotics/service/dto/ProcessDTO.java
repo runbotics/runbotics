@@ -41,6 +41,8 @@ public class ProcessDTO implements Serializable {
 
     private Boolean isAttended;
 
+    private Boolean isTriggerable;
+
     private UserDTO createdBy;
 
     private BotSystem system;
@@ -133,6 +135,10 @@ public class ProcessDTO implements Serializable {
         return isAttended;
     }
 
+    public Boolean getIsTriggerable() {
+        return isTriggerable;
+    }
+
     public void setFailureExecutionsCount(Long failureExecutionsCount) {
         this.failureExecutionsCount = failureExecutionsCount;
     }
@@ -143,6 +149,10 @@ public class ProcessDTO implements Serializable {
 
     public void setIsAttended(Boolean isAttended) {
         this.isAttended = isAttended;
+    }
+
+    public void setIsTriggerable(Boolean isTriggerable) {
+        this.isTriggerable = isTriggerable;
     }
 
     public UserDTO getCreatedBy() {
@@ -215,6 +225,7 @@ public class ProcessDTO implements Serializable {
             ", failureExecutionsCount=" + failureExecutionsCount +
             ", executionInfo=" + executionInfo +
             ", isAttended=" + isAttended +
+            ", isTriggerable=" + isTriggerable +
             ", createdBy=" + createdBy +
             ", system=" + system +
             ", schedules=" + schedules +

@@ -50,6 +50,20 @@ export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { reject
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
+export const updateAttendedance = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/is-attended',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-attended`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
+export const updateTriggerable = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/is-triggerable',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-triggerable`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
 export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/bot-system',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/bot-system`, process)

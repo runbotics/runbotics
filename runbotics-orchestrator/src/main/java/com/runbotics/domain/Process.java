@@ -41,6 +41,9 @@ public class Process implements Serializable {
     @Column(name = "is_attended")
     private Boolean isAttended;
 
+    @Column(name = "is_triggerable")
+    private Boolean isTriggerable;
+
     @Column(name = "created")
     private ZonedDateTime created;
 
@@ -134,7 +137,9 @@ public class Process implements Serializable {
     public Boolean getIsAttended() {
         return this.isAttended;
     }
-
+    public Boolean getIsTriggerable() {
+        return this.isTriggerable;
+    }
     public Process isPublic(Boolean isPublic) {
         this.isPublic = isPublic;
         return this;
@@ -145,12 +150,20 @@ public class Process implements Serializable {
         return this;
     }
 
+    public Process isTriggerable(Boolean isTriggerable) {
+        this.isTriggerable = isTriggerable;
+        return this;
+    }
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }
 
     public void setIsAttended(Boolean isAttended) {
         this.isAttended = isAttended;
+    }
+
+    public void setIsTriggerable(Boolean isTriggerable) {
+        this.isTriggerable = isTriggerable;
     }
 
     public ZonedDateTime getCreated() {
@@ -310,6 +323,7 @@ public class Process implements Serializable {
             ", definition='" + definition + '\'' +
             ", isPublic=" + isPublic +
             ", isAttended=" + isAttended +
+            ", isTriggerable=" + isTriggerable +
             ", created=" + created +
             ", updated=" + updated +
             ", executionsCount=" + executionsCount +
