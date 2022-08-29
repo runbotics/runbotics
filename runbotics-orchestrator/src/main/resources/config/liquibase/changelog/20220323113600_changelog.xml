@@ -208,8 +208,11 @@
     </changeSet>
 
     <changeSet author="litwind" id="1853961934952-112" context="!dev">
-        <preConditions>
-            <tableExists tableName="bot_collection"/>
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="bot_collection"/>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM bot_collection WHERE name='public'</sqlCheck>
+            </and>
         </preConditions>
         <insert tableName="bot_collection">
             <column name="name">public</column>
@@ -239,8 +242,11 @@
 
     <!-- 13. add ROLE for bots -->
     <changeSet author="litwind" id="1853961934952-14">
-        <preConditions>
-            <tableExists tableName="jhi_authority"/>
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="jhi_authority"/>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM jhi_authority WHERE name='ROLE_BOT'</sqlCheck>
+            </and>
         </preConditions>
         <insert tableName="jhi_authority">
             <column name="name">ROLE_BOT</column>

@@ -15,6 +15,9 @@
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FKklppb2pc4c2napi3vg2jawdk0" />
             </not>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_instance_event_process_instance_id" />
+            </not>
         </preConditions>
         <addForeignKeyConstraint
             constraintName="fk_process_instance_event_process_instance_id"
