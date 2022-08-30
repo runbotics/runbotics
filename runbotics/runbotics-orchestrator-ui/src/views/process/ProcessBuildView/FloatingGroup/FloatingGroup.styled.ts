@@ -25,7 +25,7 @@ export const StyledFloatingGroup = styled('div')<FloatingGroupProps>(({
         > :not(:last-child)::after {
             display: block;
             position: absolute;
-            right: 0;
+            right: -${theme.spacing(1)};
             top: -50px;
             
             width: 1px;
@@ -37,16 +37,20 @@ export const StyledFloatingGroup = styled('div')<FloatingGroupProps>(({
         }
 
         > :not(:first-child):not(:last-child) {
-            padding-left: ${theme.spacing(2)};
-            padding-right: ${theme.spacing(2)};
+            padding-left: ${theme.spacing(1)};
+            padding-right: ${theme.spacing(1)};
+            margin-right: ${theme.spacing(1)};
+            margin-left: ${theme.spacing(1)};
         }
 
         > :first-child {
-            padding-right: ${theme.spacing(2)};
+            padding-right: ${theme.spacing(1)};
+            margin-right: ${theme.spacing(1)};
         }
 
         > :last-child {
-            padding-left: ${theme.spacing(2)};
+            padding-left: ${theme.spacing(1)};
+            margin-left: ${theme.spacing(1)};
         }
     `}
 `);
