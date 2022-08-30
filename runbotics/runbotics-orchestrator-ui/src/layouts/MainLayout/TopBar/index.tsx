@@ -58,7 +58,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     </RouterLink>
                 </Hidden>
                 <Box ml={2} flexGrow={1} />
-                {/* <LangSwitcher /> */}
+                <LangSwitcher />
                 {isAuthenticated && <HowToRun />}
                 <Box ml={2}>
                     <Account />
