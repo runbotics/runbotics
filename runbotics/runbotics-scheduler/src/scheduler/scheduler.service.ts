@@ -143,16 +143,25 @@ export class SchedulerService implements OnApplicationBootstrap {
       .catch((err) => this.logger.error("Failed to clear the queue", err));
   }
 
-  async addProcessToScheduledJobs(scheduledJobs: JobInformation[]) {
-    return Promise.all(scheduledJobs.map(async (scheduledJob) => {
-      const processData = scheduledJob.key.split(':');
-      const processId = processData[3];
-      const process = await this.processService.findById(Number(processId));
-      return {
-        ...scheduledJob,
-        process
-      };
-    }));
+  async addAdditionalInfoToScheduledJobs(scheduledJobs: JobInformation[]) {
+    return Promise.all(
+      scheduledJobs.map(async (scheduledJob) => {
+        const scheduledJobId = scheduledJob.id;
+        const additionalInfo = await this.scheduleProcessService.findById(
+          Number(scheduledJobId)
+        );
+
+        const processData = scheduledJob.key.split(":");
+        const processId = processData[3];
+        const process = await this.processService.findById(Number(processId));
+        return {
+          ...scheduledJob,
+          process,
+          cron: additionalInfo.cron,
+          user: additionalInfo.user,
+        };
+      })
+    );
   }
 
   async getJobById(id: number | string) {
@@ -163,11 +172,15 @@ export class SchedulerService implements OnApplicationBootstrap {
   }
 
   async getScheduledJobs() {
-    this.logger.log('Getting scheduled jobs');
+    this.logger.log("Getting scheduled jobs");
     const scheduledJobs = await this.processQueue.getRepeatableJobs();
-    const extendedScheduledJobs = await this.addProcessToScheduledJobs(scheduledJobs);
+    const extendedScheduledJobs = await this.addAdditionalInfoToScheduledJobs(
+      scheduledJobs
+    );
 
-    this.logger.log(`Successfully got ${extendedScheduledJobs.length} scheduled job(s)`);
+    this.logger.log(
+      `Successfully got ${extendedScheduledJobs.length} scheduled job(s)`
+    );
     return extendedScheduledJobs;
   }
 
@@ -211,8 +224,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   async updateProcessForScheduledJob(jobs: Job[]) {
     return Promise.all(jobs.map(async (job) => {
       const process = await this.processService.findById(Number(job.data.process.id));
-      job.data.process = { ...process };
-      return job;
+        job.data.process = { ...process };
+        return job;
     }));
   }
 
@@ -268,7 +281,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     if (!hasAccess && !isPublic) {
       this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
       throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-    }
+}
 
     if (triggered && !isTriggerable) {
       this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);
