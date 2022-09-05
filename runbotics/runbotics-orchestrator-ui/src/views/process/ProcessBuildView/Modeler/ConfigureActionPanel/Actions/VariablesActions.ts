@@ -75,7 +75,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
             formData: {
                 input: {
                     variable: undefined,
-                    value: undefined,
+                    value: [''],
                 },
             },
         },

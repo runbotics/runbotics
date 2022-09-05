@@ -119,22 +119,32 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
             </If>
             <If condition={hasRunProcessAccess}>
-                <StyledRunButton
-                    className={className}
-                    disabled={isRunButtonDisabled}
-                    onClick={isProcessAttended ? openModal : handleRun}
-                    color={color}
-                    loading={loading}
-                    loadingPosition="start"
-                    startIcon={
-                        <SvgIcon fontSize="small">
-                            <PlayIcon />
-                        </SvgIcon>
+                <Tooltip
+                    title={
+                        isRunButtonDisabled
+                            ? translate('Process.MainView.Tooltip.Run.Disabled')
+                            : translate('Process.MainView.Tooltip.Run.Enabled')
                     }
-                    variant={variant}
                 >
-                    {translate('Component.BotProcessRunner.Run')}
-                </StyledRunButton>
+                    <span>
+                        <StyledRunButton
+                            className={className}
+                            disabled={isRunButtonDisabled}
+                            onClick={isProcessAttended ? openModal : handleRun}
+                            color={color}
+                            loading={loading}
+                            loadingPosition="start"
+                            startIcon={
+                                <SvgIcon fontSize="small">
+                                    <PlayIcon />
+                                </SvgIcon>
+                            }
+                            variant={variant}
+                        >
+                            {translate('Component.BotProcessRunner.Run')}
+                        </StyledRunButton>
+                    </span>
+                </Tooltip>
             </If>
         </>
     );
