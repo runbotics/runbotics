@@ -105,6 +105,7 @@ export class SchedulerService implements OnApplicationBootstrap {
       process,
       ...rest,
     };
+
     const job = await this.processQueue
       .add(instantProcess, {
         jobId: `${process.name}:${process.id}:${uuidv4()}`,

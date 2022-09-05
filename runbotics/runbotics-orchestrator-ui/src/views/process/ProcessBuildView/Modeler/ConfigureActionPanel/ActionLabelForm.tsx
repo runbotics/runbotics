@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { useEffect, useState, VFC } from 'react';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DoneIcon from '@mui/icons-material/Done';
@@ -15,9 +15,13 @@ type Props = {
 };
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
-    const { element } = useBpmnFormContext();
+    const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const { translate } = useTranslations();
+
+    useEffect(() => {
+        setFormState({ editing: false, label: element.businessObject.label });
+    }, [element, action]);
 
     const handleChangeEditing = (editing: boolean) => {
         setFormState((prevState) => ({
@@ -56,9 +60,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">
-                {formState.label}
-            </Typography>
+            <Typography variant="h4">{formState.label}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>
