@@ -76,12 +76,13 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
     let data = {
         input: {
             ...getInputParameters(element),
-            ...additionalParameters?.input,
+            ...(additionalParameters?.input ?? []),
         },
         output: {
-            ...(additionalParameters?.output ? additionalParameters?.output : getOutputParameters(element)),
+            ...(additionalParameters?.output ?? getOutputParameters(element)),
         },
     };
+
     const inputParams = actionToBPMNElement.formDataToParameters(
         ParameterDestination.Input,
         data.input,
@@ -105,7 +106,7 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
 
                 data.output[output] = value;
             }
-            delete data.output[key];
+
         });
     }
 

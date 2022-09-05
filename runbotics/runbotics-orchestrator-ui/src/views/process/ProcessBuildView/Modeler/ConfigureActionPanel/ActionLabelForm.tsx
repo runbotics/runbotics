@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { useEffect, useState, VFC } from 'react';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DoneIcon from '@mui/icons-material/Done';
@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
 import If from 'src/components/utils/If';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import useTranslations from 'src/hooks/useTranslations';
@@ -15,9 +16,13 @@ type Props = {
 };
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
-    const { element } = useBpmnFormContext();
+    const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const { translate } = useTranslations();
+
+    useEffect(() => {
+        setFormState({ editing: false, label: element.businessObject.label });
+    }, [element, action]);
 
     const handleChangeEditing = (editing: boolean) => {
         setFormState((prevState) => ({
@@ -54,20 +59,28 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         );
     };
 
-    const ActionLabel = () => (
+    const ActionNameLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">
-                {formState.label}
-            </Typography>
+            <Typography variant="h4">{formState.label}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>
         </Stack>
     );
 
+    const ActionSystemLabel = () => (
+        <>
+            {action && action.system && (
+                <Alert severity="warning">
+                    {translate('Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title', { system: action.system })}
+                </Alert>
+            )}
+        </>
+    );
+
     return (
         <>
-            <If condition={formState.editing} else={<ActionLabel />}>
+            <If condition={formState.editing} else={<ActionNameLabel />}>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label={translate('Process.Details.Modeler.ActionPanel.Form.ActionName.Title')}
@@ -81,6 +94,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                     />
                 </form>
             </If>
+            <ActionSystemLabel />
         </>
     );
 };

@@ -1,5 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, ActionSystem } from './types';
 
 const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
     'desktop.powerpoint.open': {
@@ -7,6 +7,7 @@ const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
         label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label'),
         script: 'desktop.powerpoint.open',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         output: {
             assignVariables: false,
             outputMethods: {},
@@ -50,6 +51,7 @@ const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
         label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Label'),
         script: 'desktop.powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         output: {
             assignVariables: false,
             outputMethods: {},
@@ -95,6 +97,7 @@ const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
         label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Label'),
         script: 'desktop.powerpoint.save',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         output: {
             assignVariables: false,
             outputMethods: {},
@@ -131,6 +134,7 @@ const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
         label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label'),
         script: 'desktop.powerpoint.close',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         output: {
             assignVariables: false,
             outputMethods: {},
