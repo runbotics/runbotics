@@ -196,8 +196,13 @@
 
     <!-- 11. insert public bot collection -->
     <changeSet author="litwind" id="1853961934952-11" context="dev">
-        <preConditions>
-            <tableExists tableName="bot_collection"/>
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="bot_collection"/>
+                <sqlCheck expectedResult="0">
+                    SELECT COUNT(*) FROM bot_collection WHERE id = '30bdfb61-841b-519b-ce54-1d0e56877f73';
+                </sqlCheck>
+            </and>
         </preConditions>
         <insert tableName="bot_collection">
             <column name="id">30bdfb61-841b-519b-ce54-1d0e56877f73</column>
@@ -211,11 +216,11 @@
         <preConditions onFail="MARK_RAN">
             <and>
                 <tableExists tableName="bot_collection"/>
-                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM bot_collection WHERE name='public'</sqlCheck>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM bot_collection WHERE name='Public'</sqlCheck>
             </and>
         </preConditions>
         <insert tableName="bot_collection">
-            <column name="name">public</column>
+            <column name="name">Public</column>
             <column name="public_bots_included">true</column>
             <column name="created_by">1</column>
         </insert>
