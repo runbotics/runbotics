@@ -63,11 +63,7 @@ const ProcessList: VFC = () => {
             }}
             >
                 <If condition={displayMode === ProcessListDisplayMode.GRID}>
-                    <If condition={showLoading}>
-                        <LoadingScreen />
-                    </If>
-
-                    <If condition={!showLoading}>
+                    <If condition={!showLoading} else={<LoadingScreen />}>
                         <GridView />    
                     </If>
                 </If>
