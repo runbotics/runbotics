@@ -132,6 +132,14 @@ const StyledResizableDrawer = styled(ResizableDrawer)(({ theme }) => ({
     },
 }));
 
+const StyledPanelBox = styled(Box)`
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+`;
+
 const ConfigureActionPanel: FC = () => {
     const { element, setAction, action } = useBpmnFormContext();
 
@@ -163,7 +171,7 @@ const ConfigureActionPanel: FC = () => {
                 paperAnchorDockedRight: !element && classes.paperAnchorDockedRight,
             }}
         >
-            <Box sx={{ ml: '3px' }}>
+            <StyledPanelBox sx={{ ml: '3px' }}>
                 {element && (
                     <Grid container>
                         {action && CustomRenderer && (
@@ -179,7 +187,7 @@ const ConfigureActionPanel: FC = () => {
                         )}
                     </Grid>
                 )}
-            </Box>
+            </StyledPanelBox>
         </StyledResizableDrawer>
     );
 };
