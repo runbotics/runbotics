@@ -19,10 +19,10 @@
     "Scheduler.ActiveProcess.Table.Header.Initiator": "Inicjator",
     "Scheduler.ActiveProcess.Table.Rows.Bot.Deleted": "Usunięty",
     "Scheduler.ActiveProcess.Table.Rows.Initiator.Login": "Dodano harmonogram ({{ login }})",
-    "Scheduler.ActiveProcess.Terminate.Success": "Process instance of {{ processName }} has been terminated",
-    "Scheduler.ActiveProcess.Terminate.Failed": "Failed to terminate process instance of {{ processName }}",
-    "Scheduler.ActiveProcess.Terminate.Dialog.Title": "Terminate {{ processName }} process instance",
-    "Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message": "Are you sure you want to terminate {{ processName }} process instance?",
+    "Scheduler.ActiveProcess.Terminate.Success": "Działanie instancji {{ processName }} procesu została zakończona",
+    "Scheduler.ActiveProcess.Terminate.Failed": "Nie udało się zakończyć instancji {{ processName }} procesu",
+    "Scheduler.ActiveProcess.Terminate.Dialog.Title": "Zakończ działanie instancji {{ processName }} procesu",
+    "Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message": "Czy na pewno chcesz zakończyć działanie instancji {{ processName }} procesu?",
 
     "Scheduler.WaitingProcess.Table.Header.JobId": "Id zadania",
     "Scheduler.WaitingProcess.Table.Header.Process": "Proces",
@@ -37,5 +37,5 @@
     "Scheduler.ScheduledProcess.Table.Header.BotSystem": "Typ bota",
     "Scheduler.ScheduledProcess.Table.Header.Initiator": "Inicjator",
     "Scheduler.ScheduledProcess.Table.Rows.Initiator.Login": "Dodano harmonogram({{ login }})",
-    "Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable": "Run {{ cron }}"
+    "Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable": "Uruchom {{ cron }}"
 }

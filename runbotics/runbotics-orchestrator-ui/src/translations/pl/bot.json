@@ -10,7 +10,7 @@
     "Bot.Collection.Actions.Identifier": "Identyfikator",
     "Bot.Collection.Actions.Modify": "Edycja",
     "Bot.Collection.Dialog.Delete.Title": "Usuń zbiór {{ name }}",
-    "Bot.Collection.Dialog.Delete.Message": "Jesteś pewny, że chcesz usunąć zbiór botów: {{ name }}?",
+    "Bot.Collection.Dialog.Delete.Message": "Czy na pewno chcesz usunąć zbiór botów: {{ name }}?",
     "Bot.Collection.Dialog.Identifier.Title": "Identyfikator",
     "Bot.Collection.Dialog.Identifier.Message": "Identyfikator zbioru <b>{{ name }}</b>",
     "Bot.Collection.Dialog.Modify.CreateButton": "Dodaj nowy zbiór",
@@ -50,7 +50,7 @@
 
     "Bot.Actions.Delete.Title": "Usuń",
     "Bot.Actions.Delete.TitleWithName": "Usuń {{ name }}",
-    "Bot.Actions.Delete.Confirmation.Question": "Jesteś pewny że chcesz usunąć bota {{ name }}?",
+    "Bot.Actions.Delete.Confirmation.Question": "Czy na pewno chcesz usunąć {{ name }}?",
     "Bot.Actions.DeletionSuccessMessage": "Bot {{ name }} usunięty",
     "Bot.Actions.DeletionFailedMessage": "Usunięcie bota {{ name }} nie powiodło się"
 }

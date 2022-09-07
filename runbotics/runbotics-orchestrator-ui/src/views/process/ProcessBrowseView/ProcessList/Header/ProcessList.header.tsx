@@ -33,7 +33,6 @@ interface ProcessListHeaderProps {
 const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
     displayMode, onDisplayModeChange, processesLength, search, onSearchChange,
 }) => {
-
     const { translate } = useTranslations();
     
     return (

@@ -17,6 +17,7 @@ import {
     getDrawerStyles, Wrapper, StyledIcon, StyledText,
 } from './Navbar.styles';
 import { Section } from './Navbar.types';
+import moment from 'moment'
 
 interface NavbarProps {
     showMenu: boolean;
@@ -47,7 +48,7 @@ const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) =
 
     useEffect(() => {
         preparePublicSections();
-    }, [user]);
+    }, [user, moment.locale()]); 
 
     return (
         <Drawer sx={getDrawerStyles(mobile, showMenu)} anchor="left" open variant="persistent">

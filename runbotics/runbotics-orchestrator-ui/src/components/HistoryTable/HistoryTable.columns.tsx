@@ -9,9 +9,10 @@ import { RowCustomExpandedSpan } from '../Table';
 import Label from '../Label';
 import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
 
+
 const processInstanceColumns: Column<IProcessInstance>[] = [
     {
-        Header: ' ',
+        Header: "",
         id: 'expander',
         Cell: ({ row }) => (row.original.subProcesses && row.original.subProcesses.length > 0 ? (
             <RowCustomExpandedSpan isExpanded={row.isExpanded}>

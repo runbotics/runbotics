@@ -23,6 +23,8 @@ import Table from '../Table';
 import If from '../utils/If';
 import { processInstanceColumns } from '.';
 import { Wrapper } from './HistoryTable.styles';
+import moment from 'moment'
+import { Column } from 'react-table';
 
 interface PanelInfoState {
     show: boolean;
@@ -47,7 +49,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
 
     const columns = React.useMemo(() => processInstanceColumns, []);
-
+    
     const history = useHistory();
     const query = useQuery();
     const pageFromUrl = query.get('page');

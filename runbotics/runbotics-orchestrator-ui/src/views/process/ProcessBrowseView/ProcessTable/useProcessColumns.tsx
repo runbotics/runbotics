@@ -76,7 +76,7 @@ const useProcessColumns = (): GridColDef[] => {
         disableColumnMenu: true,
         renderCell: (params: GridCellParams) => (
             <Typography color="textPrimary" variant="h6">
-                {moment(params.row.updated).locale('en').fromNow()}
+                {moment(params.row.updated).fromNow()}
             </Typography>
         ),
         valueGetter: (params) => moment(params.row.updated).format('x'),
