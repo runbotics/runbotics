@@ -49,7 +49,7 @@ const ProcessList: VFC = () => {
                     const newPageSize = mode === ProcessListDisplayMode.GRID
                         ? DefaultPageSize.GRID : DefaultPageSize.TABLE;
                     setPageSize(newPageSize);
-                    setDisplayMode(mode);
+                    if (mode) setDisplayMode(mode);
                     history.replace(getSearchParams({
                         page, pageSize: newPageSize, search, searchField,
                     }));
