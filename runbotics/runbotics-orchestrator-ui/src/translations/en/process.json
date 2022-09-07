@@ -579,5 +579,14 @@
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess": "Start Process",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess.Name": "Provide example name",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartThread": "Start Thread",
-    "Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread": "End Thread"
+    "Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread": "End Thread",
+    "Process.List.Header.Solutions": "See the latest solutions",
+    "Process.List.Header.Showing": "Showing {{ count }} processes",
+    "Process.List.Search": "Search",
+    "Process.List.Table.Header.Name": "Name",
+    "Process.List.Table.Header.Created": "Created",
+    "Process.List.Table.Header.Creator": "Creator",
+    "Process.List.Table.Header.Updated": "Updated",
+    "Process.List.Table.Header.Scheduled": "Scheduled",
+    "Process.List.Table.Header.Actions": "Actions"
 }

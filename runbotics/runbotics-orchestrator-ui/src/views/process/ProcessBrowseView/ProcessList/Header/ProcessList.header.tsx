@@ -7,6 +7,7 @@ import Toc from '@mui/icons-material/Toc';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import If from 'src/components/utils/If';
 import { ProcessListDisplayMode } from '../ProcessList.utils';
+import useTranslations from 'src/hooks/useTranslations';
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',
@@ -31,10 +32,14 @@ interface ProcessListHeaderProps {
 
 const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
     displayMode, onDisplayModeChange, processesLength, search, onSearchChange,
-}) => (
+}) => {
+
+    const { translate } = useTranslations();
+    
+    return (
     <Box display="flex" alignItems="center" justifyContent="space-between">
         <StyledTypography variant="h5" color="textPrimary">
-            {`Showing ${processesLength} processes`}
+        {translate('Process.List.Header.Showing', { count: processesLength })}
         </StyledTypography>
         <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
             <If condition={displayMode === ProcessListDisplayMode.GRID}>
@@ -62,6 +67,6 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
             </ToggleButtonGroup>
         </Box>
     </Box>
-);
+)}
 
 export default ProcessListHeader;

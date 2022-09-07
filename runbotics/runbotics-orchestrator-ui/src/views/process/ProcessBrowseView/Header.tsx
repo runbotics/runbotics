@@ -6,6 +6,7 @@ import { Grid, Typography } from '@mui/material';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
 import If from 'src/components/utils/If';
+import useTranslations from 'src/hooks/useTranslations';
 import AddProcess from '../AddProcess';
 
 const PREFIX = 'Header';
@@ -23,6 +24,7 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
+    const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
 
     return (
@@ -36,7 +38,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
-                    See the latest solutions
+                {translate('Process.List.Header.Solutions')}
                 </Typography>
             </Grid>
             <Grid item>

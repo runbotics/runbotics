@@ -1,3 +1,4 @@
+import { start } from 'repl';
 import englishTranslations from './en';
 import polishTranslations from './pl';
 
@@ -7,7 +8,7 @@ export const DEFAULT_LANG = 'en';
 
 export type Language = (typeof languages)[number];
 
-export type TranslationsDescriptors = typeof englishTranslations;
+export type TranslationsDescriptors = typeof englishTranslations | typeof polishTranslations ;
 
 const translations: Record<Language, { translation: TranslationsDescriptors }> = {
     en: {

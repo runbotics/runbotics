@@ -1,9 +1,9 @@
 {
-    "Login.SignIn": "Sign in",
+    "Login.SignIn": "Zaloguj się",
     "Login.Form.Action": "Login",
-    "Login.Form.Email.Label": "Email Address",
-    "Login.Form.Email.Required": "Email is required",
-    "Login.Form.Password.Label": "Password",
-    "Login.Form.Password.Required": "Password is required",
-    "Login.SwitchToRegisterMessage": "Don't have an account? Sign up"
+    "Login.Form.Email.Label": "Adres Email",
+    "Login.Form.Email.Required": "Adres email jest wymagany",
+    "Login.Form.Password.Label": "Hasło",
+    "Login.Form.Password.Required": "Hasło jest wymagane",
+    "Login.SwitchToRegisterMessage": "Nie masz konta? Zapisz się"
 }
