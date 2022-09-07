@@ -14,6 +14,7 @@ import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
 import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode } from './ProcessList.utils';
+import If from 'src/components/utils/If';
 
 const ProcessList: VFC = () => {
     const { page: processesPage, loading } = useSelector((state) => state.process.all);
@@ -25,7 +26,7 @@ const ProcessList: VFC = () => {
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.GRID);
-    const { handleSearch, search, handleAdvancedSearch, searchField } = useProcessSearch(pageSize, page);
+    const { handleSearch, search, handleAdvancedSearch, searchField, clearSearch } = useProcessSearch(pageSize, page);
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;
@@ -36,7 +37,6 @@ const ProcessList: VFC = () => {
             }));
         }
     }, [processesPage]);
-    if (!processesPage || loading) return <LoadingScreen />;
 
     return (
         <Box display="flex" flexDirection="column" gap="1.5rem">
@@ -53,15 +53,26 @@ const ProcessList: VFC = () => {
                     history.replace(getSearchParams({
                         page, pageSize: newPageSize, search, searchField,
                     }));
+                    clearSearch();
                 }}
             />
             <ProcessPageProvider {...{
                 pageSize, setPageSize, search, searchField, page, setPage
             }}
             >
-                {displayMode === ProcessListDisplayMode.GRID
-                    ? <GridView />
-                    : <ProcessTable onAdvancedSearchChange={handleAdvancedSearch} />}
+                <If condition={displayMode === ProcessListDisplayMode.GRID}>
+                    <If condition={loading}>
+                        <LoadingScreen />
+                    </If>
+
+                    <If condition={!loading}>
+                        <GridView />    
+                    </If>
+                </If>
+
+                <If condition={displayMode === ProcessListDisplayMode.LIST}>
+                    <ProcessTable onAdvancedSearchChange={handleAdvancedSearch} />
+                </If>
             </ProcessPageProvider>
         </Box>
     );
