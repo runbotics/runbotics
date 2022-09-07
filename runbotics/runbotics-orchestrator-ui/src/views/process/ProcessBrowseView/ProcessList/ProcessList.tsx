@@ -13,14 +13,16 @@ import { getSearchParams } from 'src/utils/SearchParamsUtils';
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
 import ProcessListHeader from './Header/ProcessList.header';
-import { DefaultPageSize, ProcessListDisplayMode } from './ProcessList.utils';
+import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
 import If from 'src/components/utils/If';
+import useLoading from 'src/hooks/useLoading';
 
 const ProcessList: VFC = () => {
-    const { page: processesPage, loading } = useSelector((state) => state.process.all);
+    const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
     const [displayMode, setDisplayMode] = useState(ProcessListDisplayMode.GRID);
+    const showLoading = useLoading(isStoreLoading, LOADING_DEBOUNCE);
     const history = useHistory();
-    const query = useQuery();
+    const query = useQuery();    
 
     const pageFromUrl = query.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
@@ -61,11 +63,11 @@ const ProcessList: VFC = () => {
             }}
             >
                 <If condition={displayMode === ProcessListDisplayMode.GRID}>
-                    <If condition={loading}>
+                    <If condition={showLoading}>
                         <LoadingScreen />
                     </If>
 
-                    <If condition={!loading}>
+                    <If condition={!showLoading}>
                         <GridView />    
                     </If>
                 </If>
