@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { LOADING_DEBOUNCE } from "src/views/process/ProcessBrowseView/ProcessList/ProcessList.utils";
+import React, { useEffect, useState } from 'react';
+import { LOADING_DEBOUNCE } from 'src/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 
 const useLoading = (isLoading: boolean, delay = LOADING_DEBOUNCE) => {
     const [isDelayPassed, setIsDelayPassed] = useState(!isLoading);
@@ -17,21 +17,14 @@ const useLoading = (isLoading: boolean, delay = LOADING_DEBOUNCE) => {
         const id = setTimeout(() => {
             setIsDelayPassed(true);
             clearTimeout(id);
-            console.log('timeout');
-            
         }, delay);
-
-        console.log('1', isLoading, delay);
-        
     }, [isLoading, delay]);
 
     useEffect(() => {
         setShowLoading(isLoading);
-
-        console.log('2', isDelayPassed);
     }, [isDelayPassed]);
 
     return showLoading;
-}
+};
 
 export default useLoading;
