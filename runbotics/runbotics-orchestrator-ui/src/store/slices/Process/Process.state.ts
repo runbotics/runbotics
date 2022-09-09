@@ -7,9 +7,9 @@ export interface CommandStackInfo {
     commandStackIdx: number
 }
 
-export interface ModelerState extends CommandStackInfo {
-    isDirty: boolean;
+export interface ModelerState {
     appliedActivities: string[];
+    isSaveDisabled: boolean;
 }
 
 export interface ProcessState {

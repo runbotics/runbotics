@@ -10,7 +10,7 @@ import 'react-resizable/css/styles.css';
 import { RunboticModdleDescriptor } from 'runbotics-common';
 import useAsyncEffect from 'src/hooks/useAsyncEffect';
 import { useDispatch, useSelector } from 'src/store';
-import { processActions } from 'src/store/slices/Process';
+import { CommandStackInfo, processActions } from 'src/store/slices/Process';
 import { ProcessBuildTab } from 'src/types/sidebar';
 import InfoPanel from 'src/components/InfoPanel';
 import useUpdateEffect from 'src/hooks/useUpdateEffect';
@@ -41,10 +41,12 @@ import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
-import ModelerProvider from 'src/providers/Modeler.provider';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
-
+const initialCommandStackInfo: CommandStackInfo = {
+    commandStackIdx: -1,
+    commandStackSize: 0,
+};
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     (
         { readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process },
@@ -53,18 +55,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const dispatch = useDispatch();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const [selectedElement, setSelectedElement] = useState<BPMNElement>(null);
+        const [commandStack, setCommandStack] = useState<CommandStackInfo>(initialCommandStackInfo);
+        const [imported, setImported] = useState(false);
         const modelerRef = useRef<BpmnIoModeler>(modeler);
         const externalBpmnActions = useSelector((state) => state.action.bpmnActions.byId);
-
-        const toggleIsModelerDirty = (() => {
-            let isDirty = false;
-            return () => {
-                if (!isDirty) {
-                    dispatch(processActions.setModelerDirty(true));
-                }
-            };
-        })();
-
+        const appliedActivities = useSelector((state) => state.process.modeler.appliedActivities);
         useEffect(() => {
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
@@ -104,12 +99,19 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             eventBus.on('commandStack.changed', (e) => {
                 const { _stackIdx, _stack } = bpmnModeler.get('commandStack');
-                dispatch(
-                    processActions.setModelerCommandStack({
-                        commandStackIdx: _stackIdx,
-                        commandStackSize: Object.keys(_stack).length,
-                    }),
-                );
+                const isLastIndex = parseInt(_stackIdx) >= 0;
+
+                setCommandStack({
+                    commandStackIdx: _stackIdx,
+                    commandStackSize: _stack.length,
+                });
+
+                if (isLastIndex || imported) {
+                    dispatch(processActions.setSaveDisabled(false));
+                    setImported(false);
+                } else {
+                    dispatch(processActions.setSaveDisabled(true));
+                }
             });
 
             eventBus.on('commandStack.shape.delete.preExecute', (e) => {
@@ -127,17 +129,20 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
                     const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
                     applyModelerElement({ modeler: bpmnModeler, element, action });
-                    dispatch(processActions.addAppliedAction(element.id));
+                    if (element.id.includes('Activity')) {
+                        dispatch(processActions.addAppliedAction(element.id));
+                    }
                 }
                 if (event.context.elements.length > 1) {
                     event.context.elements.forEach((element) => {
                         const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
                         const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
                         applyModelerElement({ modeler: bpmnModeler, element, action });
-                        dispatch(processActions.addAppliedAction(element.id));
+                        if (element.id.includes('Activity')) {
+                            dispatch(processActions.addAppliedAction(element.id));
+                        }
                     });
                 }
-                toggleIsModelerDirty();
             });
 
             eventBus.on('element.click', (event: any) => {
@@ -151,25 +156,30 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             eventBus.on('connection.removed', (event: any) => {
                 onTabChange(ProcessBuildTab.PROPERTIES);
-                toggleIsModelerDirty();
             });
 
             eventBus.on('shape.removed', (event: any) => {
                 onTabChange(ProcessBuildTab.PROPERTIES);
-                toggleIsModelerDirty();
                 dispatch(processActions.removeAppliedAction(event.element.id));
-            });
-
-            eventBus.on('connection.changed', (e) => {
-                toggleIsModelerDirty();
-            });
-
-            eventBus.on('connection.created', (e) => {
-                toggleIsModelerDirty();
             });
 
             setModeler(bpmnModeler);
         }, [readOnly, offsetTop]);
+
+        useEffect(() => {
+            if (!modeler) return;
+            const { _elements } = modeler.get('elementRegistry');
+            const { _stackIdx } = modeler.get('commandStack');
+            const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
+
+            const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
+            if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported) {
+                dispatch(processActions.setSaveDisabled(false));
+                setImported(false);
+            } else {
+                dispatch(processActions.setSaveDisabled(true));
+            }
+        }, [appliedActivities, modeler]);
 
         useImperativeHandle(
             ref,
@@ -188,11 +198,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             try {
                 await modeler.importXML(xml);
                 const elementRegistry = modeler.get('elementRegistry');
-                // eslint-disable-next-line no-underscore-dangle
                 const elementIds = Object.keys(elementRegistry._elements);
                 const activityIds = elementIds.filter((elm) => elm.split('_')[0] === 'Activity');
-                dispatch(processActions.clearModelerState());
                 dispatch(processActions.setAppliedActions(activityIds));
+                if (!imported) {
+                    dispatch(processActions.clearModelerState());
+                } else {
+                    dispatch(processActions.setSaveDisabled(false));
+                    setImported(false);
+                }
 
                 const canvas = modeler.get('canvas');
                 canvas.zoom('fit-viewport', 'auto');
@@ -237,33 +251,51 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             modeler?.get('zoomScroll').stepZoom(step);
         };
 
+        const canRedo = commandStack.commandStackIdx + 1 === commandStack.commandStackSize;
+
+        const canUndo = !(commandStack.commandStackIdx + 1 > 0);
+
         const onUndo = () => {
-            modeler?.get('commandStack').undo();
+            modeler?.get('commandStack')?.undo();
         };
 
         const onRedo = () => {
-            modeler?.get('commandStack').redo();
+            modeler?.get('commandStack')?.redo();
         };
 
+        console.log(modeler?.get('commandStack'));
         return (
             <Hotkeys keyName="command+c,ctrl+c" disabled={selectedElement == null} onKeyDown={onCopy}>
                 <Hotkeys keyName="command+b,ctrl+b" disabled={selectedElement == null} onKeyDown={onPaste}>
                     <Wrapper offsetTop={offsetTop}>
                         <ActionListPanel modeler={modeler} offsetTop={offsetTop} />
                         <ModelerArea>
-                            <ModelerProvider modeler={modeler}>
-                                <ModelerContainer id="bpmn-modeler" />
-                                <RunSavePanel process={process} onSave={onSave} onRunClick={onRunClick} />
-                                <ImportExportPanel onExport={onExport} onImport={onImport} />
-                                <ModelerToolboxPanel
-                                    onCenter={onCenter}
-                                    onZoomIn={() => onZoom(1)}
-                                    onZoomOut={() => onZoom(-1)}
-                                    onUndo={onUndo}
-                                    onRedo={onRedo}
-                                />
-                                <LeavePromt />
-                            </ModelerProvider>
+                            <ModelerContainer id="bpmn-modeler" />
+                            <RunSavePanel
+                                process={process}
+                                onSave={() => {
+                                    onSave();
+                                    setCommandStack(initialCommandStackInfo);
+                                }}
+                                onRunClick={onRunClick}
+                            />
+                            <ImportExportPanel
+                                onExport={onExport}
+                                onImport={(e) => {
+                                    onImport(e);
+                                    setImported(true);
+                                }}
+                            />
+                            <ModelerToolboxPanel
+                                onCenter={onCenter}
+                                onZoomIn={() => onZoom(1)}
+                                onZoomOut={() => onZoom(-1)}
+                                onUndo={onUndo}
+                                onRedo={onRedo}
+                                canUndo={canUndo}
+                                canRedo={canRedo}
+                            />
+                            <LeavePromt />
                         </ModelerArea>
                         <BpmnFormProvider element={selectedElement} modeler={modeler}>
                             <ConfigureActionPanel />

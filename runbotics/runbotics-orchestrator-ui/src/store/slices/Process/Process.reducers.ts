@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
 import { initialModelerState } from './Process.slice';
-import { CommandStackInfo, ProcessState } from './Process.state';
+import { ProcessState } from './Process.state';
 
 export const updateProcess = (state: ProcessState, action: PayloadAction<IProcess>) => {
     state.all.byId[action.payload.id] = action.payload;
@@ -25,19 +25,10 @@ export const removeAppliedAction = (state: ProcessState, action: PayloadAction<s
     }
 };
 
-export const setModelerDirty = (state: ProcessState, action: PayloadAction<boolean>) => {
-    state.modeler.isDirty = action.payload;
-};
-
-export const setModelerCommandStack = (
-    state: ProcessState,
-    action: PayloadAction<CommandStackInfo>,
-) => {
-    const { commandStackSize, commandStackIdx } = action.payload;
-    state.modeler.commandStackSize = commandStackSize;
-    state.modeler.commandStackIdx = commandStackIdx;
-};
-
 export const clearModelerState = (state: ProcessState) => {
     state.modeler = initialModelerState;
 }
+
+export const setSaveDisabled = (state: ProcessState, action: PayloadAction<boolean>) => {
+    state.modeler.isSaveDisabled = action.payload;
+};

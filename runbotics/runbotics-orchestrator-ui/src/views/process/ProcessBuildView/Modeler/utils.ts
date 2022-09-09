@@ -120,16 +120,3 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
     }
     bpmnHelper.updateBusinessObject(element);
 };
-
-export const isSaveDisabled = (ProcessModelerStore: ProcessState['modeler'], modeler: BpmnModeler) => {
-    if (!modeler) return true;
-
-    const { appliedActivities, commandStackIdx, isDirty: isModelerDirty } = ProcessModelerStore;
-    const elementRegistry = modeler.get('elementRegistry');
-    const modelerActivities = Object.keys(elementRegistry._elements).filter(
-        (elm) => elm.split('_')[0] === 'Activity',
-    );
-    const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
-    const isCommandStackAtBottom = commandStackIdx === -1;
-    return isCommandStackAtBottom || !isModelerDirty || !isModelerInSync;
-}

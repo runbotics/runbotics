@@ -6,10 +6,8 @@ import Secured from 'src/components/utils/Secured';
 import useTranslations from 'src/hooks/useTranslations';
 import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
-import { isSaveDisabled } from '../Modeler/utils';
 import { useSelector } from 'src/store';
 import _ from 'lodash';
-import { useModelerContext } from 'src/providers/Modeler.provider';
 
 interface RunSavePanelProps {
     process: IProcess;
@@ -19,9 +17,7 @@ interface RunSavePanelProps {
 
 const RunSavePanel: FC<RunSavePanelProps> = ({ onRunClick, onSave, process }) => {
     const { translate } = useTranslations();
-    const { modeler } = useModelerContext();
-    const processModelerStore = useSelector((state) => state.process.modeler);
-    const saveDisabled = isSaveDisabled(processModelerStore, modeler);
+    const { isSaveDisabled } = useSelector((state) => state.process.modeler);
 
     return (
         <FloatingGroup horizontalPosition="right" verticalPosition="top">
@@ -40,7 +36,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({ onRunClick, onSave, process }) =>
                                 onClick={onSave}
                                 variant="contained"
                                 color="secondary"
-                                disabled={saveDisabled}
+                                disabled={isSaveDisabled}
                                 startIcon={
                                     <SvgIcon fontSize="small">
                                         <SendIcon />

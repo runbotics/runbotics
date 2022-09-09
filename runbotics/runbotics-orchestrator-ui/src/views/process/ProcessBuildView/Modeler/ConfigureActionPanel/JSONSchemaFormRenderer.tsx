@@ -49,30 +49,22 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
             setIsFormError(node.state.errors.length > 0);
         }
     };
-    const isModelerDirty = useSelector((state) => state.process.modeler.isDirty);
     const [editMode, setEditMode] = useState(false);
     const [appliedFormState, setAppliedFormState] = useState(props.formData);
     const [formState, setFormState] = useState<FormState>(initialFormState);
-
     // Reference to the form state used in component cleanup
     const formValueRef = useRef<FormState>(initialFormState);
 
     const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
-    const isFormDirty = React.useMemo(
-        () => !_.isEqual(formState.formData, appliedFormState),
-        [formState, appliedFormState],
-    );
+    const isFormDirty = !_.isEqual(formState.formData, appliedFormState);
     const isFormDirtyRef = useRef(isFormDirty);
 
     useEffect(() => {
         formValueRef.current = formState;
         isFormDirtyRef.current = isFormDirty;
-    }, [formState]);
+    }, [formState, appliedFormState]);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
-        if (!isModelerDirty) {
-            dispatch(processActions.setModelerDirty(true));
-        }
         setAppliedFormState(formState.formData);
         setEditMode(false);
         return props.onSubmit ? props.onSubmit(e, nativeEvent) : null;
@@ -98,13 +90,11 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
             handleSubmit(formState);
         }
     }, [debouncedForm]);
-
     useEffect(() => {
         return () => {
             if (isFormDirtyRef.current) handleSubmit(formValueRef.current);
         };
     }, []);
-
     return (
         <Grid item xs={12}>
             <Box px={1}>

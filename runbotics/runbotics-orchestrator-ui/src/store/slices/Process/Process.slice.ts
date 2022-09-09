@@ -9,9 +9,7 @@ import * as reducers from './Process.reducers';
 
 export const initialModelerState = {
     appliedActivities: [],
-    isDirty: false,
-    commandStackSize: 0,
-    commandStackIdx: -1,
+    isSaveDisabled: true,
 };
 
 export const initialState: ProcessState = {

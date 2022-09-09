@@ -9,9 +9,7 @@ import { processActions } from 'src/store/slices/Process';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import {
-    BPMNHelper, getInputParameters, getOutputParameters,
-} from '../BPMN';
+import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
 import customWidgets from './widgets';
 import ActionLabelForm from './ActionLabelForm';
 import { applyModelerElement } from '../utils';
