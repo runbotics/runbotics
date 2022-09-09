@@ -38,9 +38,9 @@ jobs:
   push-ui:
     needs: changes-detection
     if: |
-      github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || needs.changes-detection.outputs.ui == 'true'
+      (github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master')
+      && needs.changes-detection.outputs.ui == 'true'
     
     runs-on: ubuntu-latest
 
@@ -98,9 +98,9 @@ jobs:
   push-scheduler:
     needs: changes-detection
     if: |
-      github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || needs.changes-detection.outputs.scheduler == 'true'
+      (github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master')
+      && needs.changes-detection.outputs.scheduler == 'true'
       
     runs-on: ubuntu-latest
 
@@ -158,9 +158,9 @@ jobs:
   # push-bot:
   #   needs: changes-detection
   #   if: |
-  #     github.ref == 'refs/heads/develop'
-  #     || github.ref == 'refs/heads/master'
-  #     || needs.changes-detection.outputs.bot == 'true'
+  #     (github.ref == 'refs/heads/develop'
+  #     || github.ref == 'refs/heads/master')
+  #     && needs.changes-detection.outputs.bot == 'true'
 
   #   runs-on: windows-latest
 
@@ -229,9 +229,9 @@ jobs:
   push-api:
     needs: changes-detection
     if: |
-      github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || needs.changes-detection.outputs.api == 'true'
+      (github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master')
+      && needs.changes-detection.outputs.api == 'true'
       
     runs-on: ubuntu-latest
 

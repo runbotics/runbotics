@@ -47,8 +47,13 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
         setSearch(filterModel.items[0].value ? filterModel.items[0].value : '');
     };
 
+    const clearSearch = () => {
+        setSearchField('');
+        setSearch('');
+    }
+
     return {
-        handleSearch, search, handleAdvancedSearch, searchField,
+        handleSearch, search, handleAdvancedSearch, searchField, clearSearch
     };
 };
 
