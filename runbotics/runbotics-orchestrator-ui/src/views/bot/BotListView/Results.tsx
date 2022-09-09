@@ -21,7 +21,7 @@ import If from 'src/components/utils/If';
 import { capitalizeFirstLetter } from 'src/utils/text';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useBotStatusSocket from 'src/hooks/useBotStatusSocket';
-import useTranslations from 'src/hooks/useTranslations';
+import useTranslations, { convertToPascalCase } from 'src/hooks/useTranslations';
 import useQuery from 'src/hooks/useQuery';
 import { getSearchParams } from 'src/utils/SearchParamsUtils';
 import { classes, StyledCard } from './Results.styles';
@@ -143,7 +143,10 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {getPageContent().map((bot) => (
+                            {getPageContent().map((bot) => {
+                                const convertedKey = convertToPascalCase(bot.status)
+                                
+                                return(
                                 <TableRow hover key={bot.installationId}>
                                     <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                         {bot.installationId}
@@ -152,7 +155,10 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                         {bot.user?.login}
                                     </TableCell>
                                     <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        <Label color={getBotStatusColor(bot.status)}>{bot.status}</Label>
+                                        <Label color={getBotStatusColor(bot.status)}>
+                                            {/* @ts-ignore */}
+                                            {translate(`Bot.ListView.Results.Table.Status.${convertedKey}`)}
+                                        </Label>
                                     </TableCell>
                                     <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                         {bot.collection?.name}
@@ -168,7 +174,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                         <ActionBotButton bot={bot} />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )})}
                         </TableBody>
                     </Table>
                 </If>

@@ -1,4 +1,4 @@
-import { translate } from 'src/hooks/useTranslations';
+import { isNamespaceLoaded, translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 const variablesActions: Readonly<Record<string, IBpmnAction>> = {

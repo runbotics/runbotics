@@ -5,7 +5,7 @@
     "Bot.Browse.Tabs.Collections.Meta.Title": "Zbiory bota",
 
     "Bot.Collection.Header.ShowingAmountOfCollections": "Pokaż {{ count }} zbiory",
-    "Bot.Collection.Header.Search.Label": "Wyszukaj",
+    "Bot.Collection.Header.Search.Label": "Szukaj",
     "Bot.Collection.Actions.Delete": "Usuń",
     "Bot.Collection.Actions.Identifier": "Identyfikator",
     "Bot.Collection.Actions.Modify": "Edycja",
@@ -52,5 +52,9 @@
     "Bot.Actions.Delete.TitleWithName": "Usuń {{ name }}",
     "Bot.Actions.Delete.Confirmation.Question": "Czy na pewno chcesz usunąć {{ name }}?",
     "Bot.Actions.DeletionSuccessMessage": "Bot {{ name }} usunięty",
-    "Bot.Actions.DeletionFailedMessage": "Usunięcie bota {{ name }} nie powiodło się"
+    "Bot.Actions.DeletionFailedMessage": "Usunięcie bota {{ name }} nie powiodło się",
+
+    "Bot.ListView.Results.Table.Status.Disconnected": "ROZŁĄCZONY",
+    "Bot.ListView.Results.Table.Status.Connected": "POŁĄCZONY",
+    "Bot.ListView.Results.Table.Status.Busy": "ZAJĘTY"
 }

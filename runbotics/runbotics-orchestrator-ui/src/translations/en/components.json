@@ -52,6 +52,16 @@
     "Component.HistoryTable.Header.Initiator": "Initiator",
     "Component.HistoryTable.Rows.Initiator": "Scheduler({{ login }})",
 
+    "Component.HistoryTable.Step.StartEvent": "Start event",
+    "Component.HistoryTable.Step.EndEvent": "End event",
+    
+    "Component.HistoryTable.Status.Completed": "COMPLETED",
+    "Component.HistoryTable.Status.InProgress": "IN PROGRESS",
+    "Component.HistoryTable.Status.Initializing": "INITIALIZING",
+    "Component.HistoryTable.Status.Errored": "ERRORED",
+    "Component.HistoryTable.Status.Stopped": "STOPPED",
+    "Component.HistoryTable.Status.Terminated": "TERMINATED",
+
     "Component.Cron.Locale.Every": "every",
     "Component.Cron.Locale.EveryMonth": "every month",
     "Component.Cron.Locale.EveryDayOfMonth": "every day of the month",

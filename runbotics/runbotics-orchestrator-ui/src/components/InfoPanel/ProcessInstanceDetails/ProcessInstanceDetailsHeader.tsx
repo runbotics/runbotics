@@ -8,6 +8,7 @@ import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatu
 import If from 'src/components/utils/If';
 import { formatTimeDiff } from 'src/utils/utils';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import {checkIfKeyExists, convertToPascalCase, translate} from '../../../hooks/useTranslations'
 
 interface Props {
     processInstance: IProcessInstance;
@@ -18,7 +19,10 @@ const isProcessInstanceActive = (
 ) => status === ProcessInstanceStatus.INITIALIZING
     || status === ProcessInstanceStatus.IN_PROGRESS;
 
-const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => (
+const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
+    const convertedKey = convertToPascalCase(processInstance.status)
+
+    return (
     <Grid container spacing={2}>
         <Grid item xs={12}>
             <Typography variant="h4">
@@ -28,7 +32,8 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => (
         <Grid item>
             <Typography>
                 <Label color={getProcessInstanceStatusColor(processInstance.status)}>
-                    {processInstance.status.replace('_', ' ')}
+                    {/* @ts-ignore */}
+                {translate(`Component.HistoryTable.Status.${convertedKey}`)}
                 </Label>
             </Typography>
         </Grid>
@@ -46,6 +51,6 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => (
             </Grid>
         </If>
     </Grid>
-);
+)};
 
 export default ProcessInstanceDetailsHeader;

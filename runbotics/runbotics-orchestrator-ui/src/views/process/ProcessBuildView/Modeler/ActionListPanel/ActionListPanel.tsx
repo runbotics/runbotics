@@ -24,11 +24,12 @@ import ListGroup, { Item } from '../ListGroup';
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
-import { defaultActionGroups, defaultTemplatesGroups } from '../ConfigureActionPanel/DefaultGroups';
+import { defaultActionGroups, defaultTemplatesGroups, getActionGroups } from '../ConfigureActionPanel/DefaultGroups';
 import { internalTemplates } from '../ConfigureActionPanel/Templates';
 import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
 import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
+import moment from 'moment'
 
 const filterModalInitialState: FilterModalState = {
     anchorElement: null,
@@ -72,9 +73,18 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         }
     }, [external, byId]);
 
+    const prepareActionGroups = async () => {
+        const groups = await getActionGroups()
+        setActionGroups(groups)
+    }
+
     useEffect(() => {
         updateActionGroups();
     }, [updateActionGroups]);
+
+    useEffect(()=>{
+        prepareActionGroups()
+    },[moment.locale()])
 
     const handleAction = (event, action: IBpmnAction) => {
         const actionToBPMNElement = ActionToBPMNElement.from(props.modeler);

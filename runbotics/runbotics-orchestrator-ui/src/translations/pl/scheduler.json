@@ -36,6 +36,6 @@
     "Scheduler.ScheduledProcess.Table.Header.BotCollection": "Kolekcja botów",
     "Scheduler.ScheduledProcess.Table.Header.BotSystem": "Typ bota",
     "Scheduler.ScheduledProcess.Table.Header.Initiator": "Inicjator",
-    "Scheduler.ScheduledProcess.Table.Rows.Initiator.Login": "Dodano harmonogram({{ login }})",
+    "Scheduler.ScheduledProcess.Table.Rows.Initiator.Login": "Dodano harmonogram ({{ login }})",
     "Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable": "Uruchom {{ cron }}"
 }

@@ -14,5 +14,9 @@
     "Action.Details.Form": "Formularz",
     "Action.Details.ExternalScript.Error": "Zewnętrzny skrypt musi zaczynać się od external.",
     "Action.Details.Dialog.SaveAction": "Zapisz akcję: {{ script }}",
-    "Action.Details.Dialog.LiveView": "PODGLĄD NA ŻYWO"
+    "Action.Details.Dialog.LiveView": "PODGLĄD NA ŻYWO",
+
+    
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Przypisz dane wyjściowe do zmiennej",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.Error": "Ta właściwość jest wymagana"
 }

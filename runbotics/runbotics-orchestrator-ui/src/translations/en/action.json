@@ -14,5 +14,9 @@
     "Action.Details.Form": "Form",
     "Action.Details.ExternalScript.Error": "External script needs to start with external.",
     "Action.Details.Dialog.SaveAction": "Save action: {{ script }}",
-    "Action.Details.Dialog.LiveView": "LIVE VIEW"
+    "Action.Details.Dialog.LiveView": "LIVE VIEW",
+
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Assign the output to variable",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.Error": "is a required property"
+
 }

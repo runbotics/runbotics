@@ -44,7 +44,7 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
             <If condition={displayMode === ProcessListDisplayMode.GRID}>
                 <TextField
                     id="outlined-search"
-                    label="Search"
+                    label={translate('Bot.Collection.Header.Search.Label')}
                     onChange={onSearchChange}
                     value={search}
                     size="small"

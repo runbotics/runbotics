@@ -24,28 +24,37 @@ import JSONSchemaFormRenderer from
     'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
 import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
 import ErrorBoundary from 'src/components/utils/ErrorBoundary';
-import useTranslations, { translate as t } from 'src/hooks/useTranslations';
+import useTranslations, { translate, isNamespaceLoaded } from 'src/hooks/useTranslations';
+import moment from 'moment'
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
-const schema: JSONSchema7 = {
-    type: 'object',
-    properties: {
-        script: {
-            type: 'string',
-            title: t('Action.Details.Script'),
+const getSchema = async (): Promise<JSONSchema7> => {
+    try{
+        await isNamespaceLoaded()
+
+    return ({
+        type: 'object',
+        properties: {
+            script: {
+                type: 'string',
+                title: translate('Action.Details.Script'),
+            },
+            label: {
+                type: 'string',
+                title: translate('Action.Details.Label'),
+            },
+            form: {
+                type: 'string',
+                title: translate('Action.Details.Form'),
+            },
         },
-        label: {
-            type: 'string',
-            title: t('Action.Details.Label'),
-        },
-        form: {
-            type: 'string',
-            title: t('Action.Details.Form'),
-        },
-    },
-    required: ['script', 'label', 'form'],
-};
+        required: ['script', 'label', 'form'],
+    })
+    } catch(err){
+        throw new Error(err)
+    }
+}
 
 const uiSchema: UiSchema = {
     form: {
@@ -63,6 +72,7 @@ export const Index = () => {
     const [draft, setDraft] = useState<any>({});
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
+    const [schema, setSchema] = React.useState<JSONSchema7> ({})
     const showEditModal = useSelector((state) => state.action.showEditModal);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -87,6 +97,16 @@ export const Index = () => {
             clearTimeout(handler);
         };
     }, [draft.form]);
+
+    const prepareSchema = async () => {
+        const schema = await getSchema()
+        setSchema(schema)
+    }
+
+    useEffect(() => {
+        prepareSchema()
+    }, [moment.locale()]); 
+
     const handleSubmit = (e: ISubmitEvent<IAction>) => {
         if (!e.formData.script.startsWith('external.')) {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
@@ -97,9 +117,11 @@ export const Index = () => {
             dispatch(setShowEditModal({ show: false }));
         }
     };
+
     const handleChange = (e: IChangeEvent<IAction>) => {
         setDraft(e.formData);
     };
+
     return (
         <>
             <Dialog open={showEditModal} onClose={() => { }} fullWidth maxWidth="xl">

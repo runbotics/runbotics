@@ -43,13 +43,20 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
 }, ref) => {
     const dispatch = useDispatch();
     const tableRef = useRef<HTMLDivElement>(null);
-
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
+    const [columns, setColumns] = React.useState<Column<IProcessInstance>[] >([]);
 
-    const columns = React.useMemo(() => processInstanceColumns, []);
-    
+    const prepareProcessInstanceColumns = async () => {
+        const instanceColumns = await processInstanceColumns();
+        setColumns(instanceColumns)
+    };
+
+    useEffect(() => {
+        prepareProcessInstanceColumns();
+    }, [moment.locale()]);  
+
     const history = useHistory();
     const query = useQuery();
     const pageFromUrl = query.get('page');

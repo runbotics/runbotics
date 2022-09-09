@@ -7,6 +7,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
+import { translate } from 'src/hooks/useTranslations';
+import moment from 'moment'
 
 import WrapIfAdditional from './WrapIfAdditional';
 
@@ -41,14 +43,14 @@ const FieldTemplate = ({
             {children}
             {displayLabel && rawDescription ? (
                 <Typography variant="caption" color="textSecondary">
-                    {rawDescription}
+                    {moment.locale() === "en" ? rawDescription : translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable`)}
                 </Typography>
             ) : null}
             {rawErrors.length > 0 && (
                 <List dense disablePadding>
                     {rawErrors.map((error) => (
                             <ListItem key={error} disableGutters>
-                                <FormHelperText id={id}>{error}</FormHelperText>
+                                <FormHelperText id={id}>{moment.locale() === "en" ? error : translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.Error`)}</FormHelperText>
                             </ListItem>
                     ))}
                 </List>

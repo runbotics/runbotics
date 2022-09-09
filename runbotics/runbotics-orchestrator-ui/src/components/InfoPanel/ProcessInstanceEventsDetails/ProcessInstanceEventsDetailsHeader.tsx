@@ -9,12 +9,16 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
+import {checkIfKeyExists, convertToPascalCase, translate} from '../../../hooks/useTranslations'
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
 }
 
-const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => (
+const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
+    const convertedKey = convertToPascalCase(processInstanceEvent.status)
+    
+    return (
     <GridContainer>
         <GridItem width="100%">
             <Typography variant="h5">
@@ -24,7 +28,8 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
         <GridItem>
             <Typography>
                 <Label color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
-                    {processInstanceEvent.status.replace('_', ' ')}
+                    {/* @ts-ignore */}
+                {translate(`Component.HistoryTable.Status.${convertedKey}`)}
                 </Label>
             </Typography>
         </GridItem>
@@ -37,6 +42,6 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
             </GridItem>
         </If>
     </GridContainer>
-);
+)};
 
 export default ProcessInstanceEventsDetailsHeader;
