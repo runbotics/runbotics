@@ -51,7 +51,7 @@ export class FileActionHandler extends StatelessActionHandler {
 
     async appendFile(input: FileAppendFileActionInput): Promise<FileAppendFileActionOutput> {
         try {
-            fs.appendFileSync(input.path, input.separator + input.content);
+            fs.appendFileSync(input.path, input?.separator ?? '' + input.content);
         } catch (err) {
             throw Error(err);
         }
