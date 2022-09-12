@@ -1,5 +1,5 @@
 import { Dictionary } from '@reduxjs/toolkit';
-import { IAuthority } from 'runbotics-common';
+import { FeatureKey, IAuthority } from 'runbotics-common';
 
 export interface User {
     id: string;
@@ -12,6 +12,8 @@ export interface User {
     activated?: boolean;
     langKey?: string;
     authorities?: IAuthority[];
+    roles?: string[];
+    featureKeys?: FeatureKey[];
     authoritiesById?: Dictionary<any>;
     createdBy?: string;
     createdDate?: Date | null;

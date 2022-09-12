@@ -96,6 +96,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    public Set<String> getRoles() {
+        return new HashSet<String>();
+    }
+
+    public Set<String> getFeatureKeys() {
+        return new HashSet<String>();
+    }
 
     public String getLogin() {
         return login;
