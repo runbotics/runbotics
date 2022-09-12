@@ -23,13 +23,13 @@ export const hasAuthorities = (user: User, authorities: any[]) => {
     return true;
 };
 
-export const hasAccessByFeatureKey = (user: User, featureKeys: any[]) => {
-    if (!user || !user.authorities) {
+export const hasAccessByFeatureKey = (user: User, featureKeys: FeatureKey[]) => {
+    if (!user || !user.featureKeys || !user.roles) {
         return false;
     }
 
     for (const featureKey of featureKeys) {
-        if (!user.authorities[0].featureKeys.includes(featureKey)) {
+        if (!user.featureKeys.includes(featureKey)) {
             return false;
         }
     }

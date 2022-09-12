@@ -263,7 +263,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             modeler?.get('commandStack')?.redo();
         };
 
-        console.log(modeler?.get('commandStack'));
         return (
             <Hotkeys keyName="command+c,ctrl+c" disabled={selectedElement == null} onKeyDown={onCopy}>
                 <Hotkeys keyName="command+b,ctrl+b" disabled={selectedElement == null} onKeyDown={onPaste}>

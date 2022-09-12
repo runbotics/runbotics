@@ -161,11 +161,10 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
-        if (userDTO.getAuthorities() != null) {
+        if (userDTO.getRoles() != null) {
             Set<Authority> authorities = userDTO
-                .getAuthorities()
+                .getRoles()
                 .stream()
-                .map(AuthorityDTO::getName)
                 .map(authorityRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -202,9 +201,8 @@ public class UserService {
                     Set<Authority> managedAuthorities = user.getAuthorities();
                     managedAuthorities.clear();
                     userDTO
-                        .getAuthorities()
+                        .getRoles()
                         .stream()
-                        .map(AuthorityDTO::getName)
                         .map(authorityRepository::findById)
                         .filter(Optional::isPresent)
                         .map(Optional::get)

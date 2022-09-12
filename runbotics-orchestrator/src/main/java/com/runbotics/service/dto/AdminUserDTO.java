@@ -45,8 +45,11 @@ public class AdminUserDTO {
 
     private Instant lastModifiedDate;
 
-    private Set<AuthorityDTO> authorities;
 
+    private Set<String> roles;
+
+    private Set<String> featureKeys;
+    
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -64,7 +67,8 @@ public class AdminUserDTO {
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
-        this.authorities = user.getAuthorities().stream().map(AuthorityDTO::new).collect(Collectors.toSet());
+        this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
+        this.featureKeys = user.getAuthorities().stream().flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName())).collect(Collectors.toSet());
     }
 
     public AdminUserDTO(String login) {
@@ -167,12 +171,20 @@ public class AdminUserDTO {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<AuthorityDTO> getAuthorities() {
-        return authorities;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setAuthorities(Set<AuthorityDTO> authorities) {
-        this.authorities = authorities;
+    public Set<String> getFeatureKeys() {
+        return featureKeys;
+    }
+
+    public void setFeatureKeys(Set<String> featureKeys) {
+        this.featureKeys = featureKeys;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     // prettier-ignore
@@ -190,7 +202,8 @@ public class AdminUserDTO {
             ", createdDate=" + createdDate +
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
-            ", authorities=" + authorities +
+            ", roles=" + roles +
+            ", featureKeys=" + featureKeys +
             "}";
     }
 }
