@@ -192,4 +192,4 @@ jobs:
           gradle-version: ${{ matrix.gradle-version }}
 
       - name: Build
-        run: gradle build -x test -x integrationTest
+        run: gradle build -x test -x integrationTest -x compileTestJava
