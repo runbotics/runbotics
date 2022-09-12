@@ -296,7 +296,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             />
                             <LeavePromt />
                         </ModelerArea>
-                        <BpmnFormProvider element={selectedElement} modeler={modeler}>
+                        <BpmnFormProvider element={selectedElement} modeler={modeler} process={process}>
                             <ConfigureActionPanel />
                         </BpmnFormProvider>
                         <InfoDrawer
