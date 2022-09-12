@@ -20,7 +20,10 @@ const ManageProcessForm: FC<AddProcessFormProps> = ({}) => {
 
     const handleSubmit = async (executionInfoSchema: string) => {
         try {
-            await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: executionInfoSchema }));
+            await dispatch(
+                processActions.partialUpdateProcess({ ...process, executionInfo: executionInfoSchema }),
+            ).unwrap();
+
             enqueueSnackbar(
                 translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success', {
                     name: process.name,

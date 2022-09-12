@@ -70,7 +70,6 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
     const isDeleteDisabled = !process?.executionInfo;
 
     useEffect(() => {
-        console.log(process.executionInfo);
         if (process) {
             setDraft({ form: process?.executionInfo ? process.executionInfo : defaultForm });
         }
