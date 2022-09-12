@@ -108,6 +108,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
                 if (isLastIndex || imported) {
                     dispatch(processActions.setSaveDisabled(false));
+                    setImported(false);
                 } else {
                     dispatch(processActions.setSaveDisabled(true));
                 }
@@ -174,6 +175,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
             if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported) {
                 dispatch(processActions.setSaveDisabled(false));
+                setImported(false);
             } else {
                 dispatch(processActions.setSaveDisabled(true));
             }
@@ -198,11 +200,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 const elementRegistry = modeler.get('elementRegistry');
                 const elementIds = Object.keys(elementRegistry._elements);
                 const activityIds = elementIds.filter((elm) => elm.split('_')[0] === 'Activity');
+                dispatch(processActions.setAppliedActions(activityIds));
                 if (!imported) {
                     dispatch(processActions.clearModelerState());
-                    dispatch(processActions.setAppliedActions(activityIds));
                 } else {
-                    dispatch(processActions.setAppliedActions(activityIds));
+                    dispatch(processActions.setSaveDisabled(false));
                     setImported(false);
                 }
 
