@@ -19,51 +19,55 @@ const ManageProcessForm: FC<AddProcessFormProps> = ({}) => {
     const closeModal = () => setModalOpen(false);
 
     const handleSubmit = async (executionInfoSchema: string) => {
-        try {
-            await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: executionInfoSchema }));
-            enqueueSnackbar(
-                translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success', {
-                    name: process.name,
-                }),
-                {
-                    variant: 'success',
-                },
-            );
-            closeModal();
-        } catch (e) {
-            enqueueSnackbar(
-                translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed', {
-                    name: process.name,
-                }),
-                {
-                    variant: 'error',
-                },
-            );
-        }
+        await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: executionInfoSchema }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar(
+                    translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success', {
+                        name: process.name,
+                    }),
+                    {
+                        variant: 'success',
+                    },
+                );
+                closeModal();
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed', {
+                        name: process.name,
+                    }),
+                    {
+                        variant: 'error',
+                    },
+                );
+            });
     };
 
     const handleDelete = async () => {
-        try {
-            await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: '' }));
-            enqueueSnackbar(
-                translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success', {
-                    name: process.name,
-                }),
-                {
-                    variant: 'success',
-                },
-            );
-            closeModal();
-        } catch (e) {
-            enqueueSnackbar(
-                translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Failed', {
-                    name: process.name,
-                }),
-                {
-                    variant: 'error',
-                },
-            );
-        }
+        await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: '' }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar(
+                    translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success', {
+                        name: process.name,
+                    }),
+                    {
+                        variant: 'success',
+                    },
+                );
+                closeModal();
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Failed', {
+                        name: process.name,
+                    }),
+                    {
+                        variant: 'error',
+                    },
+                );
+            });
     };
 
     return (
