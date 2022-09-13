@@ -183,7 +183,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             ref,
             () => ({
                 export: async () => {
-                    const result = await modelerRef.current.saveXML({ format: true });
+                    const result = await modelerRef.current.saveXML({ format: true }); // FIXME: <--
+                    
                     const { xml } = result;
                     return xml;
                 },
@@ -271,6 +272,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             <RunSavePanel
                                 process={process}
                                 onSave={() => {
+                                    console.log(modeler.get('elementRegistry'));
+                                    debugger;
+                                    
                                     onSave();
                                     setCommandStack(initialCommandStackInfo);
                                 }}

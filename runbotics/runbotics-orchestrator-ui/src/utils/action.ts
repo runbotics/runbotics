@@ -21,6 +21,7 @@ export const CustomActionDescription: Record<string, (element: BPMNElement, supp
         if (!supplementarySource || !supplementarySource.length) return '';
 
         const inputParameters = getInputParameters(element);
+        debugger;
 
         return (supplementarySource as IGlobalVariable[])
             .find((variable) => variable.id === inputParameters.globalVariable)?.name ?? '';

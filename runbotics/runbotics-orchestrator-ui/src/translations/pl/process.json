@@ -366,6 +366,7 @@
     "Process.Details.Modeler.Actions.Variable.AssignList.List": "List",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Label": "Assign global variable",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Input": "Input",
+    "Process.Details.Modeler.Actions.Variable.AssignGlobal.Name": "Name",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable": "Global variable",
 
     "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Connect",

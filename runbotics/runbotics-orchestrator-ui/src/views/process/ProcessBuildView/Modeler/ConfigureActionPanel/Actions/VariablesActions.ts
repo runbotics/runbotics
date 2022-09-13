@@ -93,27 +93,31 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
                         title: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Input'),
                         type: 'object',
                         properties: {
-                            globalVariable: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable',
-                                ),
-                                type: 'number',
+                            variables: {
+                                title: '',
+                                type: 'array',
+                                items: {
+                                    // title: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Name'),
+                                    type: 'number',
+                                },
                             },
                         },
-                        required: ['globalVariable'],
+                        required: ['variables'],
                     },
                 },
             },
             uiSchema: {
                 input: {
-                    globalVariable: {
-                        'ui:widget': 'GlobalVariableSelectWidget',
+                    variables: {
+                        items: {
+                            'ui:widget': 'GlobalVariableSelectWidget',
+                        },
                     },
                 },
             },
             formData: {
                 input: {
-                    globalVariable: undefined,
+                    variables: [''],
                 },
             },
         },
