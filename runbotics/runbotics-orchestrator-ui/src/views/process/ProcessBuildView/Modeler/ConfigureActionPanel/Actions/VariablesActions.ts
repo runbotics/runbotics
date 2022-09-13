@@ -54,7 +54,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
                         type: 'object',
                         properties: {
                             variable: {
-                                title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Name'),
                                 type: 'string',
                             },
                             value: {
