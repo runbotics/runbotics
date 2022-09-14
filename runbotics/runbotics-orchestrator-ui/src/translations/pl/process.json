@@ -35,6 +35,8 @@
     "Process.Add.Title": "Add new process",
     "Process.Add.Form.Fields.Name": "Name",
 
+    "Process.Error.NameNotAvailable": "This name is already taken",
+
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Cron.HumanReadable": "Run {{ cron }}",
     "Process.Schedule.Cron.At": "at",

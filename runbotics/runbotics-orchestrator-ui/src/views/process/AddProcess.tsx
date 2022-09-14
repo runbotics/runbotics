@@ -10,8 +10,10 @@ import { JSONSchema7 } from 'json-schema';
 import Axios from 'axios';
 import { BotSystem, IProcess } from 'runbotics-common';
 import { ProcessTab } from 'src/utils/process-tab';
-import useTranslations, { translate as t } from 'src/hooks/useTranslations';
+import useTranslations, { translate } from 'src/hooks/useTranslations';
 import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
+import { useDispatch } from 'src/store';
+import { processActions } from 'src/store/slices/Process';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
@@ -20,7 +22,7 @@ const schema: JSONSchema7 = {
     properties: {
         name: {
             type: 'string',
-            title: t('Process.Add.Form.Fields.Name'),
+            title: translate('Process.Add.Form.Fields.Name'),
             pattern: '[A-z0-9]',
         },
     },
@@ -34,6 +36,14 @@ const formData: IProcess = {
     definition: emptyBpmn,
 };
 
+enum ErrorType {
+    NAME_NOT_AVAILABLE = 0,
+}
+
+const errorMessages: Record<ErrorType, string> = {
+    [ErrorType.NAME_NOT_AVAILABLE]: translate('Process.Error.NameNotAvailable'),
+};
+
 type AddProcessDialogProps = {
     open?: boolean;
     onClose: () => void;
@@ -43,18 +53,40 @@ type AddProcessDialogProps = {
 const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
     const ref = React.useRef<any>();
     const submitFormRef = React.useRef<any>();
+    const [errorType, setErrorType] = useState<ErrorType | null>(null);
     const { translate } = useTranslations();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e: ISubmitEvent<IProcess>) => {
+        const isAvailable = await dispatch(processActions.isProcessAvailable({ processName: e.formData.name }));
+        if (isAvailable.meta.requestStatus === 'rejected') {
+            setErrorType(ErrorType.NAME_NOT_AVAILABLE);
+            return;
+        }
+        setErrorType(null);
+
         const result = await Axios.post<IProcess>('/api/processes', e.formData);
         props.onAdd(result.data);
     };
+
+    const extraErrors = errorType !== null ? {
+        name: {
+            __errors: [ errorMessages[errorType] ],
+        },
+    } : undefined;
 
     return (
         <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="lg">
             <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
             <DialogContent>
-                <Form ref={ref} schema={schema} formData={formData} onSubmit={handleSubmit}>
+                <Form
+                    ref={ref}
+                    schema={schema}
+                    formData={formData}
+                    onSubmit={handleSubmit}
+                    showErrorList={false}
+                    extraErrors={extraErrors}
+                >
                     <button
                         ref={submitFormRef}
                         type="submit"
@@ -87,7 +119,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
 };
 
 const AddProcess = () => {
-    const [show, setShow] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
     const history = useHistory();
     const { translate } = useTranslations();
 
@@ -100,16 +132,16 @@ const AddProcess = () => {
             <Button
                 color="primary"
                 variant="contained"
-                onClick={() => setShow(true)}
-                startIcon={(
+                onClick={() => setShowDialog(true)}
+                startIcon={
                     <SvgIcon fontSize="small">
                         <PlusIcon />
                     </SvgIcon>
-                )}
+                }
             >
                 {translate('Process.Add.ActionName')}
             </Button>
-            {show && <AddProcessDialog open={show} onClose={() => setShow(false)} onAdd={handleAdd} />}
+            {showDialog && <AddProcessDialog open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} />}
         </>
     );
 };
