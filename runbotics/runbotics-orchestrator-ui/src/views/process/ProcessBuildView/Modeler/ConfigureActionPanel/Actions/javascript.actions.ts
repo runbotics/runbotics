@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const javascriptActions: Readonly<Record<string, IBpmnAction>> = {
+const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
         id: 'typescript.run',
         label: translate('Process.Details.Modeler.Actions.Javascript.RunTypescript.Label'),
@@ -159,6 +159,6 @@ const javascriptActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default javascriptActions;
+export default getJavascriptActions;

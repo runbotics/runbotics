@@ -11,8 +11,7 @@ import {
 import useTranslations from 'src/hooks/useTranslations';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
-import {getCurrentLocale} from '../../../components/cron/getCurrentLocale'
-import moment from 'moment'
+import {useCurrentLocale} from '../../../components/cron/useCurrentLocale'
 
 const SubmitButton = styled(Button)(({ theme }) => `
     && {
@@ -59,23 +58,14 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         const splitted = _.split(props.value, ' ');
         const cron5Digit = _.join(splitted.slice(1), ' ');
 
-        const[CURRENT_LOCALE, SET_CURRENT_LOCALE]= useState({})
-        
-        const prepareCurrentLocale = async () => {
-            const locale = await getCurrentLocale()
-            SET_CURRENT_LOCALE(locale)
-        }
-    
-        useEffect(() => {
-            prepareCurrentLocale()
-        }, [moment.locale()]); 
+        const currentLocale = useCurrentLocale()
 
         return (
             <Cron
                 value={cron5Digit}
                 setValue={(cron) => props.onChange(`${splitted[0]} ${cron}`)}
                 clearButton={false}
-                locale={CURRENT_LOCALE}
+                locale={currentLocale}
             />
         );
     };

@@ -17,7 +17,7 @@ services:
 
   runbotics-orchestrator:
     container_name: runbotics-orchestrator
-    image: docker.clouddc.eu/runbotics-orchestrator:2.0.23
+    image: runbotics/runbotics-orchestrator:latest
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:postgresql://runbotics-postgresql:5432/runbotics
@@ -34,7 +34,7 @@ services:
 
   runbotics-scheduler:
     container_name: runbotics-scheduler
-    image: docker.clouddc.eu/runbotics-scheduler:2.0.23
+    image: runbotics/runbotics-scheduler:latest
     environment:
       - RUNBOTICS_SCHEDULER_REDIS_HOST=runbotics-redis
       - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
@@ -61,7 +61,7 @@ services:
 
   runbotics-desktop:
     container_name: runbotics-desktop
-    image: docker.clouddc.eu/runbotics-desktop:2.0.23
+    image: runbotics/runbotics-desktop:latest
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:3000
       - RUNBOTICS_INSTALLATION_ID=admin

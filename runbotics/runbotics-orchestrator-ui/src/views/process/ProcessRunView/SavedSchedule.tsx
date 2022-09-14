@@ -12,7 +12,7 @@ import useTranslations from 'src/hooks/useTranslations';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
 import If from 'src/components/utils/If';
-import moment from 'moment'
+import i18n from 'i18next';
 
 const PREFIX = 'SavedSchedule';
 
@@ -80,7 +80,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
         'Process.Schedule.Cron.HumanReadable',
         {
             cron: cronstrue
-                .toString(cronExpression, {locale: moment.locale()}).toLowerCase()
+                .toString(cronExpression, {locale: i18n.language}).toLowerCase()
         },
     ))
 

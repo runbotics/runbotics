@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const sapActions: Readonly<Record<string, IBpmnAction>> = {
+const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
         id: 'sap.connect',
         label: translate('Process.Details.Modeler.Actions.SAP.Connect.Label'),
@@ -460,6 +460,6 @@ const sapActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default sapActions;
+export default getSapActions;

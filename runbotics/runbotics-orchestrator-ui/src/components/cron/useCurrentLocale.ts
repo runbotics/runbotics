@@ -1,12 +1,10 @@
-import { translate, isNamespaceLoaded } from 'src/hooks/useTranslations';
+import useTranslations from 'src/hooks/useTranslations';
 import { DefaultLocale } from './types';
 
-export const getCurrentLocale = async (): Promise<DefaultLocale> => {
-    try{
+export const useCurrentLocale = (): DefaultLocale => {
+    const {translate} = useTranslations();
 
-        await isNamespaceLoaded()
-
-    return ({
+    return {
         everyText: translate('Component.Cron.Locale.Every'),
         emptyMonths: translate('Component.Cron.Locale.EveryMonth'),
         emptyMonthDays: translate('Component.Cron.Locale.EveryDayOfMonth'),
@@ -84,9 +82,5 @@ export const getCurrentLocale = async (): Promise<DefaultLocale> => {
             translate('Component.Cron.Locale.AltMonths.November'),
             translate('Component.Cron.Locale.AltMonths.December'),
         ],
-    })
-    } catch(err) {
-        throw new Error(err)
-    }
-    
-}
+    };
+};

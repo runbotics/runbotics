@@ -45,31 +45,8 @@ export const translate = (
     values?: { [key: string]: string | number },
 ) => i18next.t(key, values);
 
-export const checkIfKeyExists = (keyPath: string, key: string ) => {
-    const { t, i18n } = useTranslation();
-
-    const exist = i18n.exists(keyPath + key)
-
-    return exist
-}
-
-export const convertToPascalCase = (rawText: string) => {
-    const text = rawText.toLowerCase().replace('_', ' ')
-
-    let pascalCaseKey = ""
-
-    for(let i = 0; i<text.length; i++){
-        if(text[i]===" ") {
-            pascalCaseKey += text[i+1].toUpperCase()
-            i++
-        } else if (i===0) {
-            pascalCaseKey += text[i].toUpperCase()
-        } else {
-            pascalCaseKey+=text[i]
-        }
-    }
-
-    return pascalCaseKey
-}
+export const checkIfKeyExists = (keyPath: string, key: string ) => (
+    i18next.exists(keyPath + key)
+)
 
 export default useTranslations;

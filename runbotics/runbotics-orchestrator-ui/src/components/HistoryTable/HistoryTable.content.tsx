@@ -1,5 +1,5 @@
 import React, {
-    forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState,
+    forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState
 } from 'react';
 import {
     Box, SxProps,
@@ -21,10 +21,8 @@ import {
 import { DefaultPageSize } from '../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 import Table from '../Table';
 import If from '../utils/If';
-import { processInstanceColumns } from '.';
 import { Wrapper } from './HistoryTable.styles';
-import moment from 'moment'
-import { Column } from 'react-table';
+import useProcessInstanceColumns from './HistoryTable.columns';
 
 interface PanelInfoState {
     show: boolean;
@@ -46,16 +44,8 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
-    const [columns, setColumns] = React.useState<Column<IProcessInstance>[] >([]);
-
-    const prepareProcessInstanceColumns = async () => {
-        const instanceColumns = await processInstanceColumns();
-        setColumns(instanceColumns)
-    };
-
-    useEffect(() => {
-        prepareProcessInstanceColumns();
-    }, [moment.locale()]);  
+    const processInstanceColumns = useProcessInstanceColumns();
+    
 
     const history = useHistory();
     const query = useQuery();
@@ -124,7 +114,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
             <Box sx={{ display: 'flex', gap: '0.75rem' }}>
                 <Box ref={tableRef} sx={{ ...sx, width: '100%' }}>
                     <Table
-                        columns={columns}
+                        columns={processInstanceColumns}
                         data={processInstancePage?.content ?? []}
                         totalPages={processInstancePage?.totalPages ?? 1}
                         onRowClick={handleOnClick}

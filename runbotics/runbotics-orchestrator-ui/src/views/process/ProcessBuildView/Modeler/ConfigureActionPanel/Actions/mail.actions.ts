@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const mailActions: Readonly<Record<string, IBpmnAction>> = {
+const getMailActions: () => Record<string, IBpmnAction> = () => ({
     'mail.send': {
         id: 'mail.send',
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),
@@ -59,6 +59,6 @@ const mailActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default mailActions;
+export default getMailActions;

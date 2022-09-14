@@ -4,26 +4,27 @@ import { IProcessInstance } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { translate, isNamespaceLoaded, convertToPascalCase } from 'src/hooks/useTranslations';
 import { RowCustomExpandedSpan } from '../Table';
 import Label from '../Label';
 import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
+import { convertToPascalCase } from 'src/utils/text';
+import useTranslations from 'src/hooks/useTranslations';
 
-const processInstanceColumns = async (): Promise<Column<IProcessInstance>[]> => {
-try {
-    await isNamespaceLoaded();
+const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
+    const { translate } = useTranslations();
 
     return [
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) => (row.original.subProcesses && row.original.subProcesses.length > 0 ? (
-                <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                    <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                        <ArrowForwardIosIcon fontSize="small" />
-                    </IconButton>
-                </RowCustomExpandedSpan>
-            ) : null),
+            Cell: ({ row }) =>
+                row.original.subProcesses && row.original.subProcesses.length > 0 ? (
+                    <RowCustomExpandedSpan isExpanded={row.isExpanded}>
+                        <IconButton {...row.getToggleRowExpandedProps()} size="small">
+                            <ArrowForwardIosIcon fontSize="small" />
+                        </IconButton>
+                    </RowCustomExpandedSpan>
+                ) : null,
             width: '20px',
         },
         {
@@ -35,10 +36,14 @@ try {
             Header: translate('Component.HistoryTable.Header.Status'),
             accessor: 'status',
             Cell: ({ value }) => {
-                const convertedKey = convertToPascalCase(value)
-            {/*@ts-ignore*/}
-            return (<Label color={getProcessInstanceStatusColor(value)}>{translate(`Component.HistoryTable.Status.${convertedKey}`)}</Label>)
-        },
+                const formattedStatus = convertToPascalCase(value);
+                return (
+                    <Label color={getProcessInstanceStatusColor(value)}>
+                        {/*@ts-ignore*/}
+                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                    </Label>
+                );
+            },
         },
         {
             Header: translate('Component.HistoryTable.Header.Started'),
@@ -56,14 +61,10 @@ try {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, scheduled }) => (scheduled
-                ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login })
-                : user?.login),
+            accessor: ({ user, scheduled }) =>
+                scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login,
         },
     ];
-} catch (err) {
-    throw new Error(err);
-}
 };
 
-export default processInstanceColumns;
+export default useProcessInstanceColumns;

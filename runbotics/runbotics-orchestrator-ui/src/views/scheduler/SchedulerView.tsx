@@ -14,18 +14,16 @@ import useTranslations from 'src/hooks/useTranslations';
 import { IProcessInstance } from 'runbotics-common';
 import Header from './Header';
 import SchedulerTableContainer from './SchedulerTable.container';
-import { activeProcessColumns, scheduledProcessColumns, waitingProcessColumns } from './SchedulerTable.columns';
+import { useActiveProcessColumns, useScheduledProcessColumns, useWaitingProcessColumns } from './SchedulerTable.columns';
 import { Column } from 'react-table';
 import moment from 'moment'
+import i18n from 'i18next';
 
 const SchedulerView = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const { translate } = useTranslations();
     const { scheduledJobs, activeJobs, waitingJobs } = useSelector(schedulerSelector);
-    const [columnsActive, setColumnsActive] = React.useState<Column<IProcessInstance>[] >([])
-    const [columnsWaiting, setColumnsWaiting] = React.useState<Column<SchedulerJob>[] >([])
-    const [columnsScheduled, setColumnsScheduled] = React.useState<Column<ScheduledJob>[] >([])
     useScheduledStatusSocket();
 
     useEffect(() => {
@@ -34,26 +32,9 @@ const SchedulerView = () => {
         dispatch(schedulerActions.getWaitingJobs());
     }, []);
 
-    const prepareActiveProcessColumns = async () => {
-        const columns = await activeProcessColumns()
-        setColumnsActive(columns)
-    }
-
-    const prepareWaitingProcessColumns = async () => {
-        const columns = await waitingProcessColumns()
-        setColumnsWaiting(columns)
-    }
-    
-    const prepareScheduledProcessColumns = async () => {
-        const columns = await scheduledProcessColumns()
-        setColumnsScheduled(columns)
-    }
-
-    useEffect(() => {
-        prepareActiveProcessColumns()
-        prepareWaitingProcessColumns();
-        prepareScheduledProcessColumns()
-    }, [moment.locale()]); 
+    const activeProcessColumns = useActiveProcessColumns();
+    const waitingProcessColumns = useWaitingProcessColumns();
+    const scheduledProcessColumns = useScheduledProcessColumns();
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
         if (rowData.process) {
@@ -75,7 +56,7 @@ const SchedulerView = () => {
         const humanReadableCron = (cronExpression: string) =>
             translate('Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
                 cron: cronstrue
-                .toString(cronExpression, {locale: moment.locale()}).toLowerCase()
+                .toString(cronExpression, {locale: i18n.language}).toLowerCase()
             });
 
         return (
@@ -93,19 +74,19 @@ const SchedulerView = () => {
             <Header />
             <Stack spacing={3}>
                 <SchedulerTableContainer<IProcessInstance>
-                    columns={columnsActive}
+                    columns={activeProcessColumns}
                     title={translate('Scheduler.View.ActiveProcesses.Title')}
                     processes={activeJobs}
                     onRedirect={handleProcessInstanceRedirect}
                 />
                 <SchedulerTableContainer<SchedulerJob>
-                    columns={columnsWaiting}
+                    columns={waitingProcessColumns}
                     title={translate('Scheduler.View.PendingProcesses.Title')}
                     processes={waitingJobs}
                     onRedirect={handleSchedulerJobRedirect}
                 />
                 <SchedulerTableContainer<ScheduledJob>
-                    columns={columnsScheduled}
+                    columns={scheduledProcessColumns}
                     title={translate('Scheduler.View.ScheduledProcesses.Title')}
                     processes={scheduledJobs}
                     onRedirect={handleScheduledJobRedirect}

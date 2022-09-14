@@ -31,6 +31,9 @@
     "Process.Delete.SuccessMessage": "Proces {{ name }} został pomyślnie usunięty",
     "Process.Delete.ConfirmationQuestion": "Czy na pewno chcesz usunąć proces {{ name }}",
 
+    "Process.Add.ActionName": "Add new process",
+    "Process.Add.Title": "Add new process",
+    "Process.Add.Form.Fields.Name": "Name",
     "Process.Add.Form.Error.General": "Podczas tworzenia procesu wystąpił błąd",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
@@ -53,9 +56,27 @@
     "Process.MainView.Tabs.Configure.Title": "Konfiguruj",
     "Process.MainView.Meta.Title": "Szczegóły procesu",
 
+    "Process.MainView.Sidebar.RunInfo": "Informacje",
+    "Process.MainView.Toast.Save.Success": "Pomyślnie zapisano proces",
+    "Process.MainView.Toast.Save.Failed": "Nie udało się zapisać procesu",
+    "Process.MainView.Tooltip.Save.Enabled": "Zapisz proces w bazie danych",
+    "Process.MainView.Tooltip.Save.Disabled": "Nie wykryto żadnych zmian lub trwa zastosowywanie wprowadzonych zmian",
+    "Process.MainView.Tooltip.Run.Enabled": "Uruchom ten proces",
+    "Process.MainView.Tooltip.Run.Disabled": "Nie można teraz uruchomić procesu",
+    "Process.MainView.Tooltip.Import": "Zaimportuj proces z pliku xml",
+    "Process.MainView.Tooltip.Export": "Pobierz ten proces w formacie xml",
+    "Process.MainView.Tooltip.Undo": "Cofnij ostatnią zmianę",
+    "Process.MainView.Tooltip.Redo": "Ponów ostatnią zmianę",
+    "Process.MainView.Tooltip.Center": "Wycentruj widok na model",
+    "Process.MainView.Tooltip.ZoomIn": "Przybliż widok modelu",
+    "Process.MainView.Tooltip.ZoomOut": "Oddal widok modelu",
+
     "Process.Details.Options.ByValue.ContentScript": "Skrypt treści",
     "Process.Details.Options.ByValue.Desktop": "Pulpit",
     "Process.Details.Options.ByValue.BackgroundPage": "Strona w tle",
+    "Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label": "Akcje",
+    "Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label": "Szablony",
+    "Process.Details.Modeler.ActionListPanel.Search.Label": "Szukaj",
     "Process.Details.Options.ByValue.HiddenContentScript": "Skrypt ukrytych treści",
     "Process.Details.Modeler.ActionListPanel.Error": "Nie można obsłużyć akcji",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Wyczyść filtry",
@@ -63,12 +84,12 @@
 
     "Process.Details.Modeler.Actions.Api.Label": "Prośba API",
     "Process.Details.Modeler.Actions.Api.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.Api.Output.VariableName": "Nazwa zmiennej",
+    "Process.Details.Modeler.Actions.Api.Output.VariableMessage": "Przypisz dane wyjściowe do zmiennej",
     "Process.Details.Modeler.Actions.Api.Url": "Adres URL",
     "Process.Details.Modeler.Actions.Api.Headers": "Nagłówki",
     "Process.Details.Modeler.Actions.Api.Method": "Metody",
     "Process.Details.Modeler.Actions.Api.Output": "Dane wyjściowe",
-    "Process.Details.Modeler.Actions.Api.Output.VariableName": "Nazwa zmiennej",
-    "Process.Details.Modeler.Actions.Api.Output.VariableMessage": "Przypisz dane wyjściowe do zmiennej",
 
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Aplikacja: Uruchom",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Dane wejściowe",
@@ -351,6 +372,7 @@
     "Process.Details.Modeler.Actions.Variable.Assign.Variable": "Zmienna",
     "Process.Details.Modeler.Actions.Variable.Assign.Value": "Wartość",
     "Process.Details.Modeler.Actions.Variable.AssignList.Label": "Przypisz listę do zmiennej",
+    "Process.Details.Modeler.Actions.Variable.AssignList.Name": "Nazwa",
     "Process.Details.Modeler.Actions.Variable.AssignList.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Variable.AssignList.Variable": "Zmienna",
     "Process.Details.Modeler.Actions.Variable.AssignList.List": "Lista",
@@ -360,6 +382,7 @@
 
     "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Łączenie",
     "Process.Details.Modeler.Actions.SAP.Connect.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.SAP.Connect.ConnectionName": "Nazwa połączenia",
     "Process.Details.Modeler.Actions.SAP.Connect.SID": "Określony Identyfikator Systemu",
     "Process.Details.Modeler.Actions.SAP.Connect.User": "Użytkownik [env property]",
     "Process.Details.Modeler.Actions.SAP.Connect.Password": "Hasło [env property]",
@@ -569,5 +592,7 @@
     "Process.List.Table.Header.Creator": "Twórca",
     "Process.List.Table.Header.Updated": "Aktualizowano",
     "Process.List.Table.Header.Scheduled": "Zaplanowanego",
-    "Process.List.Table.Header.Actions": "Akcje"
+    "Process.List.Table.Header.Actions": "Akcje",
+
+    "Process.List.Table.Step.StartEvent": "Zdarzenie początkowe"
 }

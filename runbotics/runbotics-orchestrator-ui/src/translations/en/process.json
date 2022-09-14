@@ -371,6 +371,7 @@
     "Process.Details.Modeler.Actions.Variable.Assign.Value": "value",
     "Process.Details.Modeler.Actions.Variable.AssignList.Label": "Assign list variable",
     "Process.Details.Modeler.Actions.Variable.AssignList.Input": "Input",
+    "Process.Details.Modeler.Actions.Variable.AssignList.Variable": "Variable",
     "Process.Details.Modeler.Actions.Variable.AssignList.Name": "Name",
     "Process.Details.Modeler.Actions.Variable.AssignList.List": "List",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Label": "Assign global variable",
@@ -588,5 +589,7 @@
     "Process.List.Table.Header.Creator": "Creator",
     "Process.List.Table.Header.Updated": "Updated",
     "Process.List.Table.Header.Scheduled": "Scheduled",
-    "Process.List.Table.Header.Actions": "Actions"
+    "Process.List.Table.Header.Actions": "Actions",
+
+    "Process.List.Table.Step.StartEvent": "Start event"
 }

@@ -1,5 +1,5 @@
 import React, {
-    FC, memo, useEffect, useRef, useState,
+    FC, memo, useRef, useState,
 } from 'react';
 import clsx from 'clsx';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -24,12 +24,13 @@ import ListGroup, { Item } from '../ListGroup';
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
-import { defaultActionGroups, defaultTemplatesGroups, getActionGroups } from '../ConfigureActionPanel/DefaultGroups';
+import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
+import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
 import { internalTemplates } from '../ConfigureActionPanel/Templates';
 import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
 import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
-import moment from 'moment'
+import i18n from 'src/translations/i18n';
 
 const filterModalInitialState: FilterModalState = {
     anchorElement: null,
@@ -37,54 +38,46 @@ const filterModalInitialState: FilterModalState = {
 };
 
 const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
-    const [actionGroups, setActionGroups] = useState(defaultActionGroups);
+    const internalActionsGroups = useInternalActionsGroups();
+    const templatesGroups = useTemplatesGroups()
     const [currentTab, setCurrentTab] = useState<ListPanelTab>(ListPanelTab.ACTIONS);
     const [filterModal, setFilterModal] = useState<FilterModalState>(filterModalInitialState);
     const filterModalAnchorRef = useRef<Element>(null);
-    const templateGroupsList = Object.entries(defaultTemplatesGroups);
+    const templatesGroupsList = Object.entries(templatesGroups);
     const { byId, external } = useSelector((state) => state.action.bpmnActions);
-
+    
     const [open, setOpen] = useState(true);
     const { translate } = useTranslations();
-    const actionGroupsList = React.useMemo(() => Object.entries(actionGroups), [actionGroups]);
+
+    const actionsGroupsList = React.useMemo(() => {
+        const externalActionsGroup = external.map((externalId) => byId[externalId]);
+        const completeActionsGroups = {
+            ...internalActionsGroups,
+            external: {
+                ...internalActionsGroups.external,
+                items: [...externalActionsGroup],
+            },
+        };
+        return Object.entries(completeActionsGroups);
+    }, [external, i18n.language]);
+
     const actionSearchValues = React.useMemo(
-        () => actionGroupsList.flatMap((element) => element[1].items),
-        [actionGroupsList],
+        () => actionsGroupsList.flatMap((element) => element[1].items),
+        [actionsGroupsList],
     );
     const templatesSearchValues = React.useMemo(
-        () => templateGroupsList.flatMap((element) => element[1].items),
-        [actionGroupsList],
+        () => templatesGroupsList.flatMap((element) => element[1].items),
+        [actionsGroupsList],
     );
 
     const isFiltered = React.useMemo(() => filterModal.filters.length > 0, [filterModal.filters]);
 
     const actionsToFilter = React.useMemo(() => {
         if (currentTab === ListPanelTab.ACTIONS) {
-            return actionGroupsList;
+            return actionsGroupsList;
         }
-        return templateGroupsList;
+        return templatesGroupsList;
     }, [currentTab]);
-
-    const updateActionGroups = React.useCallback(() => {
-        if (external.length > 0) {
-            const newActionsGroups = { ...actionGroups };
-            newActionsGroups.external.items = external.map((externalId) => byId[externalId]);
-            setActionGroups(newActionsGroups);
-        }
-    }, [external, byId]);
-
-    const prepareActionGroups = async () => {
-        const groups = await getActionGroups()
-        setActionGroups(groups)
-    }
-
-    useEffect(() => {
-        updateActionGroups();
-    }, [updateActionGroups]);
-
-    useEffect(()=>{
-        prepareActionGroups()
-    },[moment.locale()])
 
     const handleAction = (event, action: IBpmnAction) => {
         const actionToBPMNElement = ActionToBPMNElement.from(props.modeler);
@@ -146,10 +139,10 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     });
 
     const actionsList = currentTab === ListPanelTab.ACTIONS
-        ? actionGroupsList.map(([key, value]) => (
+        ? actionsGroupsList.map(([key, value]) => (
                   <ListGroup key={key} group={value} items={value.items} onItemClick={handleItemClick} />
         ))
-        : templateGroupsList.map(([key, value]) => (
+        : templatesGroupsList.map(([key, value]) => (
                   <ListGroup key={key} group={value} items={value.items} isTemplate onItemClick={handleItemClick} />
         ));
 

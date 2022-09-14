@@ -9,39 +9,39 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
-import {checkIfKeyExists, convertToPascalCase, translate} from '../../../hooks/useTranslations'
+import {translate} from '../../../hooks/useTranslations'
+import { convertToPascalCase } from 'src/utils/text';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
 }
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
-    const convertedKey = convertToPascalCase(processInstanceEvent.status)
-    
+    const formattedStatus = convertToPascalCase(processInstanceEvent.status);
+
     return (
-    <GridContainer>
-        <GridItem width="100%">
-            <Typography variant="h5">
-                {processInstanceEvent.step}
-            </Typography>
-        </GridItem>
-        <GridItem>
-            <Typography>
-                <Label color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
-                    {/* @ts-ignore */}
-                {translate(`Component.HistoryTable.Status.${convertedKey}`)}
-                </Label>
-            </Typography>
-        </GridItem>
-        <If condition={!!processInstanceEvent.created && !!processInstanceEvent.finished}>
+        <GridContainer>
+            <GridItem width="100%">
+                <Typography variant="h5">{processInstanceEvent.step}</Typography>
+            </GridItem>
             <GridItem>
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: '0.3125rem' }}>
-                    <AccessTimeIcon />
-                    {formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished)}
+                <Typography>
+                    <Label color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
+                        {/* @ts-ignore */}
+                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                    </Label>
                 </Typography>
             </GridItem>
-        </If>
-    </GridContainer>
-)};
+            <If condition={!!processInstanceEvent.created && !!processInstanceEvent.finished}>
+                <GridItem>
+                    <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: '0.3125rem' }}>
+                        <AccessTimeIcon />
+                        {formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished)}
+                    </Typography>
+                </GridItem>
+            </If>
+        </GridContainer>
+    );
+};
 
 export default ProcessInstanceEventsDetailsHeader;
