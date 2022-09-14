@@ -85,7 +85,13 @@
     "Process.Details.Modeler.Actions.Api.Output": "Output",
     "Process.Details.Modeler.Actions.Api.Output.VariableName": "Variable name",
     "Process.Details.Modeler.Actions.Api.Output.VariableMessage": "Assign the output to variable",
-
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Label": "Download file",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Input": "Input",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Url": "URL to a file (e.g. https://www.runbotics.com/example.pdf)",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Output",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Variable name",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Assign file path to variable",
+   
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Application: Launch",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Input",
     "Process.Details.Modeler.Actions.Application.Launch.Location": "Location (e.g. C:\\Program Files (x86)\\calculator.exe)",
@@ -289,7 +295,7 @@
     "Process.Details.Modeler.Actions.File.WriteFile.Output": "Output",
     "Process.Details.Modeler.Actions.File.WriteFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.File.WriteFile.VariableText": "Assign the output to variable",
-
+ 
     "Process.Details.Modeler.Actions.General.ConsoleLog.Label": "Console Log",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Input": "Input",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Variables",

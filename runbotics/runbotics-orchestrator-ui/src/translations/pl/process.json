@@ -85,7 +85,13 @@
     "Process.Details.Modeler.Actions.Api.Output": "Output",
     "Process.Details.Modeler.Actions.Api.Output.VariableName": "Variable name",
     "Process.Details.Modeler.Actions.Api.Output.VariableMessage": "Assign the output to variable",
-
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Label": "Pobierz plik",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Url": "Link do pliku (np. https://www.runbotics.com/example.pdf)",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Dane wyjściowe",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Nazwa zmiennej",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Przypisz ścieżkę zapisanego pliku do zmiennej",
+   
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Application: Launch",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Input",
     "Process.Details.Modeler.Actions.Application.Launch.Location": "Location (e.g. C:\\Program Files (x86)\\calculator.exe)",
@@ -241,7 +247,7 @@
     "Process.Details.Modeler.Actions.CSV.WriteFile.Output": "Output",
     "Process.Details.Modeler.Actions.CSV.WriteFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.CSV.WriteFile.VariableText": "Assign the output to variable",
-
+ 
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Desktop PowerPoint: Open Application",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input": "Input",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath": "Specific file path",
