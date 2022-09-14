@@ -83,6 +83,7 @@ importers:
       jest: ^27.2.5
       jexl: ^2.3.0
       lodash: ^4.17.19
+      mime-types: ~2.1.35
       moddle-context-serializer: ^0.16.0
       moment: ^2.27.0
       nestjs-io-client: 0.1.0
@@ -135,6 +136,7 @@ importers:
       googleapis: 73.0.0
       jexl: 2.3.0
       lodash: 4.17.21
+      mime-types: 2.1.35
       moddle-context-serializer: 0.16.1_bpmn-moddle@7.1.2
       moment: 2.29.1
       nestjs-io-client: 0.1.0
@@ -369,7 +371,7 @@ importers:
       '@mui/icons-material': 5.8.0_527f378d5852b58af37346a06289b128
       '@mui/lab': 5.0.0-alpha.68_2cb7012b58d280fe8787cbf04abee612
       '@mui/material': 5.4.1_28a8dc63c43f26055d540fb7e4059e51
-      '@mui/styled-engine': /@mui/styled-engine-sc/5.10.1_1b8e88d64736e9108eccfcbdc84d63af
+      '@mui/styled-engine': /@mui/styled-engine-sc/5.10.3_1b8e88d64736e9108eccfcbdc84d63af
       '@mui/styled-engine-sc': 5.4.2_1b8e88d64736e9108eccfcbdc84d63af
       '@mui/system': 5.4.1_df54bda9a69abe1ee43c2302afe21983
       '@mui/x-data-grid': 5.5.0_cb47c7e14db85098d561483455a0b6a1
@@ -3803,6 +3805,13 @@ packages:
     dependencies:
       regenerator-runtime: 0.13.9
 
+  /@babel/runtime/7.19.0:
+    resolution: {integrity: sha512-eR8Lo9hnDS7tqkO7NsV+mKvCmv5boaXFSZ70DnfhcgiEne8hv9oCEd36Klw74EtizEqLsy4YnW8UWwpBVolHZA==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.9
+    dev: false
+
   /@babel/template/7.14.5:
     resolution: {integrity: sha512-6Z3Po85sfxRGachLULUhOmvAaOo7xCvqGQtxINai2mEGPFm6pQ4z5QInFnUrRpfoSV60BnjyF5F3c+15fxFV1g==}
     engines: {node: '>=6.9.0'}
@@ -5186,8 +5195,8 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
 
-  /@mui/styled-engine-sc/5.10.1_1b8e88d64736e9108eccfcbdc84d63af:
-    resolution: {integrity: sha512-SCaZYUUofRDsA35zRIyDy7yzF7M1efaPeTo/TtyZIgVq5raWuiOXvKOo4Bus+mnpT/3H+I5tsR2rlozWL5tQdA==}
+  /@mui/styled-engine-sc/5.10.3_1b8e88d64736e9108eccfcbdc84d63af:
+    resolution: {integrity: sha512-IHcNTnGEcFCQgghHqBo6BXOzMOpqGXxSu5JEoVCncPVxVZ3/CEtFTyUqnMaiFkpK5DY1Qx1YnqdNBSMhzP1IhQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/styled-components': ^5.1.14
@@ -5196,7 +5205,7 @@ packages:
       '@types/styled-components':
         optional: true
     dependencies:
-      '@babel/runtime': 7.18.0
+      '@babel/runtime': 7.19.0
       '@types/styled-components': 5.1.22
       prop-types: 15.8.1
       styled-components: 5.3.3_react-dom@17.0.2+react@17.0.2

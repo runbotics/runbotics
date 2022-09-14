@@ -1,10 +1,13 @@
 import Axios from 'axios';
+import fs from 'fs';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import mimeTypes from 'mime-types';
 import { ApiResource } from './ApiResource';
 import { orchestratorAxios } from './axios-configuration';
 import { StorageService } from './StorageService';
 import { RunboticsLogger } from '../logger/RunboticsLogger';
 import { DesktopRunRequest, DesktopRunResponse, StatelessActionHandler } from 'runbotics-sdk';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class BackgroundPageApiRequestHandler extends StatelessActionHandler implements OnApplicationBootstrap {
@@ -76,12 +79,34 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
         };
     };
 
+    private download = async (input: ApiRequestInput): Promise<ApiDownloadFileOutput> => {
+        const url = input.url;
+        let fileName: string;
+        try {
+            const response = await Axios.get(url, {
+                responseType: 'stream'
+            });
+            const mimeType = mimeTypes.extension(response.headers['content-type']);
+            fileName = `${process.cwd()}\\temp\\${uuid()}.${mimeType}`.replace(/\\\\/g, '\\');
+            await new Promise((resolve, reject) =>
+                response.data.pipe(fs.createWriteStream(fileName)
+                    .on('finish', () => resolve(true)))
+                    .on('error', (e) => reject(e))
+            );
+        } catch (e) {
+            throw e;
+        }
+
+        return fileName;
+    }
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
         let output = {};
         switch (request.script) {
             case 'api.request':
                 output = await this.request(request.input);
                 break;
+            case 'api.downloadFile':
+                output = await this.download(request.input);
         }
 
         return {
@@ -89,12 +114,6 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
             output: output,
         };
     }
-
-    // public apiRequest = async (data: ScriptData<ApiRequestInput>, executionContext: Readonly<IExecutionContext>): Promise<ApiRequestOutput<any>> => {
-    //     const apiRequestScriptData: ApiRequestScriptData = data as ApiRequestScriptData
-    //     const response = await this.request(apiRequestScriptData.input)
-    //     return response
-    // }
 }
 
 export type ApiRequestInput = ApiResource & {
@@ -106,3 +125,9 @@ export type ApiRequestOutput<T> = {
     status: number;
     statusText: string;
 };
+
+export type ApiDownloadFileOutput = string;
+
+export type ApiDownloadFileInput = {
+    url: string;
+}
