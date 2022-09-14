@@ -136,22 +136,33 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
                 ?.get('elementRegistry')
                 .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
                 .filter(
-                    (element: BPMNElement) =>
-                        element.businessObject.actionId === 'variables.assign' ||
-                        element.businessObject.actionId === 'variables.assignList',
+                    (element: BPMNElement) => element.businessObject.actionId === 'variables.assign'
+                        || element.businessObject.actionId === 'variables.assignList',
                 );
 
             const variables = assignVariablesElements
-                .map((assignVariablesElement) => {
+                .flatMap((assignVariablesElement) => {
                     const inputOutput: CamundaInputOutputElement = assignVariablesElement.businessObject
                         ?.extensionElements?.values[0] as CamundaInputOutputElement;
                     if (inputOutput) {
-                        const [variable] = inputOutput.inputParameters.filter(
-                            (inputParameter) => inputParameter.name === 'variable',
+                        const [filteredInputParameter] = inputOutput.inputParameters.filter(
+                            (inputParameter) => inputParameter.name === 'variable' 
+                                || inputParameter.name === 'variables',
                         );
+
+                        if (filteredInputParameter.name === 'variables') {
+                            return filteredInputParameter.definition?.items.map((variable) => ({
+                                label: variable.value['name'],
+                                value: variable.value['name'],
+                                group: translate(
+                                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
+                                ),
+                            }
+                            ));
+                        }
                         return {
-                            label: variable.value,
-                            value: variable.value,
+                            label: filteredInputParameter.value,
+                            value: filteredInputParameter.value,
                             group: translate(
                                 'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
                             ),

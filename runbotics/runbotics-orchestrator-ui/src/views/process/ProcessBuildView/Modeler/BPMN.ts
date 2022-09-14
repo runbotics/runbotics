@@ -10,7 +10,7 @@ interface CamundaEntry {
 
 interface CamundaValue {
     $type: 'camunda:Value';
-    value: string;
+    value: string | Record<string, any>;
 }
 
 interface CamundaParameterDefinition {

@@ -15,17 +15,27 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
                         title: translate('Process.Details.Modeler.Actions.Variable.Assign.Input'),
                         type: 'object',
                         properties: {
-                            variable: {
-                                title: translate('Process.Details.Modeler.Actions.Variable.Assign.Variable'),
-                                type: 'string',
-                            },
-
-                            value: {
-                                type: 'string',
-                                title: translate('Process.Details.Modeler.Actions.Variable.Assign.Value'),
+                            variables: {
+                                title: translate('Process.Details.Modeler.Actions.Variable.Assign.Variables'),
+                                type: 'array',
+                                minItems: 1,
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        name: {
+                                            title: translate('Process.Details.Modeler.Actions.Variable.Assign.Name'),
+                                            type: 'string',
+                                        },
+                                        value: {
+                                            type: 'string',
+                                            title: translate('Process.Details.Modeler.Actions.Variable.Assign.Value'),
+                                        },
+                                    },
+                                    required: ['name', 'value'],
+                                },
                             },
                         },
-                        required: ['variable', 'value'],
+                        required: ['variables'],
                     },
                 },
             },
@@ -34,8 +44,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
             },
             formData: {
                 input: {
-                    variable: undefined,
-                    value: undefined,
+                    variables: undefined,
                 },
             },
         },
@@ -53,7 +62,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
                         title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Input'),
                         type: 'object',
                         properties: {
-                            variable: {
+                            name: {
                                 title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Name'),
                                 type: 'string',
                             },
@@ -65,7 +74,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
                                 },
                             },
                         },
-                        required: ['variable', 'value'],
+                        required: ['name', 'value'],
                     },
                 },
             },
@@ -74,7 +83,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
             },
             formData: {
                 input: {
-                    variable: undefined,
+                    name: undefined,
                     value: [''],
                 },
             },
