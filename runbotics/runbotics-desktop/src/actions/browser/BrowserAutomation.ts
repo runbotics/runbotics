@@ -5,11 +5,12 @@ import { DesktopRunResponse } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
-import * as firefox from 'selenium-webdriver/firefox';
+import * as chrome from 'selenium-webdriver/chrome';
 import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
+require('chromedriver');
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -92,29 +93,18 @@ class BrowserAutomation extends StatefulActionHandler {
                 this.session = null;
             }
         }
-        const driversPath = process.cwd();
-        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
-        const isWin = process.platform === 'win32';
-        this.logger.log('geckoDriver', geckoDriver);
-        this.logger.log('isWin', isWin);
 
-        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
-        this.logger.log('Path', process.env['PATH']);
-        let optionsFF = new firefox.Options()
-            .setPreference('xpinstall.signatures.required', false)
-            .setPreference('devtools.console.stdout.content', true)
-            .setBinary(process.env['CFG_FIREFOX_BIN']);
-
+        let optionsChrome = new chrome.Options()
         if (input.headless) {
-            optionsFF = optionsFF.headless();
+            optionsChrome = optionsChrome.headless();
         }
 
         this.session = await new Builder()
-            .forBrowser('firefox')
-            .setFirefoxOptions(optionsFF)
-            .setFirefoxService(
-                new firefox.ServiceBuilder()
-                    //.enableVerboseLogging()
+            .forBrowser('chrome')
+            .setChromeOptions(optionsChrome)
+            .setChromeService(
+                new chrome.ServiceBuilder()
+                    // .enableVerboseLogging()
                     .setStdio('inherit'),
             )
             .build();
