@@ -53,11 +53,12 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
     };
 
     useEffect(() => {
-        if (open) {
-            setName(null);
-            setErrorType(null);
-        }
+        if (open) setName(null);
     }, [open]);
+
+    useEffect(() => {
+        setErrorType(null);
+    }, [name]);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
