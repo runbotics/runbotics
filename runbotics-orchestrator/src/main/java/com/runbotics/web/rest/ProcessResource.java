@@ -260,23 +260,23 @@ public class ProcessResource {
     }
 
     /**
-     * {@code GET  /processes/name/:processName/is-available} : check if process of given name is available
+     * {@code GET  /processes/name/:processName/is-available} : check if given process name is available
      * 
-     * @param processName the name of the processDTO to check if available
+     * @param processName the prcess name to check if available
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} or with status {@code 409 (Conflict)}.
      */
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_READ + "')")
     @GetMapping("/processes/name/{processName}/is-available")
     public ResponseEntity<Void> checkIfProcessExists(@PathVariable String processName) {
-        log.debug("REST request to check if Process of given name is available : {}", processName);
+        log.debug("=> REST request to check if given process name is available : {}", processName);
         Optional<ProcessDTO> processDTO = processService.findByName(processName);
         
         if (processDTO.isPresent()) {
-            log.debug("Process of name {} is not available", processName);
+            log.debug("<= Given process name is not available : {}", processName);
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        log.debug("Process of name {} is available", processName);
+        log.debug("<= Given process name is available : {}", processName);
         return ResponseEntity.ok().build();
     }
 
