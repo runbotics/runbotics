@@ -84,6 +84,7 @@ importers:
       jest: ^27.2.5
       jexl: ^2.3.0
       lodash: ^4.17.19
+      mime-types: ~2.1.35
       moddle-context-serializer: ^0.16.0
       moment: ^2.27.0
       nestjs-io-client: 0.1.0
@@ -137,6 +138,7 @@ importers:
       googleapis: 73.0.0
       jexl: 2.3.0
       lodash: 4.17.21
+      mime-types: 2.1.35
       moddle-context-serializer: 0.16.1_bpmn-moddle@7.1.2
       moment: 2.29.1
       nestjs-io-client: 0.1.0
