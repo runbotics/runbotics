@@ -106,5 +106,7 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
 
 export const isProcessAvailable = createAsyncThunk<void, { processName: string }>(
     'processes/name/is-available',
-    async ({ processName }) => Axios.get<void>(`/api/processes/name/${processName}/is-available`).then(response => response.data),
+    ({ processName }) =>
+        Axios.get<void>(`/api/processes/name/${processName}/is-available`)
+            .then((response) => response.data),
 );
