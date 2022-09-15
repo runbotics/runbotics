@@ -34,8 +34,7 @@
     "Process.Add.ActionName": "Add new process",
     "Process.Add.Title": "Add new process",
     "Process.Add.Form.Fields.Name": "Name",
-
-    "Process.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
+    "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
 
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Cron.HumanReadable": "Run {{ cron }}",

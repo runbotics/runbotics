@@ -16,7 +16,7 @@ enum ErrorType {
 }
 
 const errorMessages: Record<ErrorType, string> = {
-    [ErrorType.NAME_NOT_AVAILABLE]: translate('Process.Error.NameNotAvailable'),
+    [ErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
 };
 
 const defaultProcessInfo: IProcess = {
