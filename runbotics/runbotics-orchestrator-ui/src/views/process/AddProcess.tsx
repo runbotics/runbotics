@@ -52,13 +52,15 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
         onAdd(result.payload);
     };
 
-    const handleClose = () => {
-        setName(null);
-        onClose();
-    }
+    useEffect(() => {
+        if (open) {
+            setName(null);
+            setErrorType(null);
+        }
+    }, [open]);
 
     return (
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
             <DialogContent>
                 <Box sx={{ pt: 1, pb: 3 }}>
@@ -76,7 +78,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
             <DialogActions>
                 <Button
                     color="primary"
-                    onClick={handleClose}
+                    onClick={onClose}
                 >
                     {translate('Common.Cancel')}
                 </Button>
