@@ -37,7 +37,7 @@ const formData: IProcess = {
 };
 
 enum ErrorType {
-    NAME_NOT_AVAILABLE,
+    NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
 }
 
 const errorMessages: Record<ErrorType, string> = {
