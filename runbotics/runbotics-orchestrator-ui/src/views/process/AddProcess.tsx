@@ -141,7 +141,7 @@ const AddProcess = () => {
             >
                 {translate('Process.Add.ActionName')}
             </Button>
-            {showDialog && <AddProcessDialog open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} />}
+            <AddProcessDialog open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} />
         </>
     );
 };
