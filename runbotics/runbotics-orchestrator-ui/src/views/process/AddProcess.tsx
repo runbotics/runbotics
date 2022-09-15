@@ -32,7 +32,7 @@ type AddProcessDialogProps = {
     onAdd: (process: IProcess) => void;
 };
 
-const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
+const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) => {
     const [name, setName] = useState<string | null>(null);
     const [errorType, setErrorType] = useState<ErrorType | null>(null);
     const { translate } = useTranslations();
@@ -48,12 +48,12 @@ const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
 
         const processInfo: IProcess = { ...defaultProcessInfo, name };
         const result = await dispatch(processActions.createProcess(processInfo));
-
-        props.onAdd(result.payload);
+        
+        onAdd(result.payload);
     };
 
     return (
-        <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="lg">
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
             <DialogContent>
                 <Box sx={{ pt: 1, pb: 3 }}>
@@ -71,7 +71,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
             <DialogActions>
                 <Button
                     color="primary"
-                    onClick={props.onClose}
+                    onClick={onClose}
                 >
                     {translate('Common.Cancel')}
                 </Button>
