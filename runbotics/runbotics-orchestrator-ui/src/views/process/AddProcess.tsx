@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
     Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box,
 } from '@mui/material';
@@ -10,13 +10,14 @@ import useTranslations, { translate } from 'src/hooks/useTranslations';
 import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
+import { useSnackbar } from 'notistack';
 
-enum ErrorType {
+enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
 }
 
-const errorMessages: Record<ErrorType, string> = {
-    [ErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
+const inputErrorMessages: Record<InputErrorType, string> = {
+    [InputErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
 };
 
 const defaultProcessInfo: IProcess = {
@@ -34,22 +35,26 @@ type AddProcessDialogProps = {
 
 const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) => {
     const [name, setName] = useState<string | null>(null);
-    const [errorType, setErrorType] = useState<ErrorType | null>(null);
+    const [inputErrorType, setInputErrorType] = useState<InputErrorType | null>(null);
     const { translate } = useTranslations();
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleSubmit = async () => {
         const isAvailable = await dispatch(processActions.isProcessAvailable({ processName: name }));
         if (isAvailable.meta.requestStatus === 'rejected') {
-            setErrorType(ErrorType.NAME_NOT_AVAILABLE);
+            setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
             return;
         }
-        setErrorType(null);
+        setInputErrorType(null);
 
-        const processInfo: IProcess = { ...defaultProcessInfo, name };
-        const result = await dispatch(processActions.createProcess(processInfo));
-        
-        onAdd(result.payload);
+        try {
+            const processInfo: IProcess = { ...defaultProcessInfo, name };
+            const result = await dispatch(processActions.createProcess(processInfo));
+            onAdd(result.payload);
+        } catch (e) {
+            enqueueSnackbar(translate('Process.Add.Form.Error.General'), { variant: 'error' });
+        }
     };
 
     useEffect(() => {
@@ -57,7 +62,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
     }, [open]);
 
     useEffect(() => {
-        setErrorType(null);
+        setInputErrorType(null);
     }, [name]);
 
     return (
@@ -67,8 +72,8 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
                 <Box sx={{ pt: 1, pb: 3 }}>
                     <TextField
                         label={translate('Process.Add.Form.Fields.Name')}
-                        error={errorType !== null} 
-                        helperText={errorMessages[errorType]}
+                        error={inputErrorType !== null} 
+                        helperText={inputErrorMessages[inputErrorType]}
                         fullWidth
                         value={name}
                         onChange={(e) => setName(e.target.value)}
