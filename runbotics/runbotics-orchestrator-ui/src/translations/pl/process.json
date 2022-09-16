@@ -36,6 +36,7 @@
     "Process.Add.Form.Fields.Name": "Name",
     "Process.Add.Form.Error.General": "Podczas tworzenia procesu wystąpił błąd",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
+    "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
 
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Cron.HumanReadable": "Run {{ cron }}",

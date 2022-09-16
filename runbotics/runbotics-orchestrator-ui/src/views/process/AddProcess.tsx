@@ -14,10 +14,12 @@ import { useSnackbar } from 'notistack';
 
 enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
+    REQUIRED = 'REQUIRED',
 }
 
 const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
+    [InputErrorType.REQUIRED]: translate('Process.Add.Form.Error.Required'),
 };
 
 const defaultProcessInfo: IProcess = {
@@ -41,11 +43,17 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
     const { enqueueSnackbar } = useSnackbar();
 
     const handleSubmit = async () => {
+        if (!name) {
+            setInputErrorType(InputErrorType.REQUIRED);
+            return;
+        }
+
         const isAvailable = await dispatch(processActions.isProcessAvailable({ processName: name }));
         if (isAvailable.meta.requestStatus === 'rejected') {
             setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
             return;
         }
+        
         setInputErrorType(null);
 
         try {
