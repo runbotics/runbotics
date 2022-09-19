@@ -1,5 +1,6 @@
-export type Entries = Record<string, object>;
-export type InheritedEntryKeys = (keyof Entries)[];
+import _ from 'lodash';
+import { translate } from 'src/hooks/useTranslations';
+import { BpmnEntries, Entries, InheritedEntries } from './ModelerPalette.types';
 
 export default class ModelerPalette {
     constructor(palette) {
@@ -8,41 +9,51 @@ export default class ModelerPalette {
 
     /**
      * Pick from default palette entries and/or add custom ones
-     * 
+     *
      * Use this method to quickly generate custom `entries` object
      * for `getPaletteEntries` callback
+     *
+     * Use `options.inheritedEntries` to include and optionally overwrite
+     * default bpmn's palette entries. Use `options.additionalEntries` to
+     * add new custom entries.
      */
     private static createCustomEntries(
-        entries: Entries,
+        entries: BpmnEntries,
         options: {
-            inheritedEntryKeys?: InheritedEntryKeys;
+            inheritedEntries?: InheritedEntries;
             additionalEntries?: Entries;
         },
     ): Entries {
-        const { inheritedEntryKeys, additionalEntries } = options;
+        const { inheritedEntries, additionalEntries } = options;
 
-        if (!inheritedEntryKeys?.length) return { ...entries, ...additionalEntries };
+        if (!inheritedEntries) return { ...entries, ...additionalEntries };
 
-        const inheritedEntries = Object.fromEntries(
-            Object.entries(entries).filter(([key]) => inheritedEntryKeys.includes(key)),
+        const pickedEntries = Object.fromEntries(
+            Object.entries(entries).filter(([key]) => Object.keys(inheritedEntries).includes(key)),
         );
-        return { ...inheritedEntries, ...additionalEntries };
+
+        return {
+            // prettier-ignore
+            ...(_.defaultsDeep(inheritedEntries, pickedEntries)),
+            ...additionalEntries,
+        };
     }
 
     getPaletteEntries(element) {
         return function (entries) {
             const customEntries = ModelerPalette.createCustomEntries(entries, {
-                inheritedEntryKeys: [
-                    'hand-tool',
-                    'lasso-tool',
-                    'space-tool',
-                    'global-connect-tool',
-                    'tool-separator',
-                    'create.start-event',
-                    'create.end-event',
-                    'create.exclusive-gateway',
-                    'create.group',
-                ],
+                // prettier-ignore
+                inheritedEntries: {
+                    'hand-tool':                { title: translate('Palette.HandTool') },
+                    'lasso-tool':               { title: translate('Palette.LassoTool') },
+                    'space-tool':               { title: translate('Palette.SpaceTool') },
+                    'global-connect-tool':      { title: translate('Palette.GlobalConnectTool') },
+                    'tool-separator':           {},
+                    'create.start-event':       { title: translate('Palette.Create.StartEvent') },
+                    'create.end-event':         { title: translate('Palette.Create.EndEvent') },
+                    'create.exclusive-gateway': { title: translate('Palette.Create.ExclusiveGateway') },
+                    'create.group':             { title: translate('Palette.Create.Group') },
+                },
             });
 
             return customEntries;
@@ -50,5 +61,4 @@ export default class ModelerPalette {
     }
 }
 
-// @ts-ignore
-ModelerPalette.$inject = ['palette'];
+(ModelerPalette as any).$inject = ['palette'];
