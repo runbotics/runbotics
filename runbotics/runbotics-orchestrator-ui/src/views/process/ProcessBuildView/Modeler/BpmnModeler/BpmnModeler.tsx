@@ -20,7 +20,6 @@ import emptyBpmn from '../empty.bpmn';
 import BasicModelerModule from '../Modeler.module';
 import ActionListPanel from '../ActionListPanel';
 import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
-import propertiesProviderModule from '../providers/bpmn-js-properties-provider/provider/camunda';
 import Clipboard from '../extensions/Clipboard';
 import ZoomScrollModule from '../extensions/zoomscroll';
 import {
@@ -41,6 +40,7 @@ import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
+import modelerPalette from '../modeler-panel';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -74,8 +74,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 bpmnModeler = new BpmnIoModeler({
                     container: '#bpmn-modeler',
                     additionalModules: [
+                        modelerPalette,
                         propertiesPanelModule,
-                        propertiesProviderModule,
                         BasicModelerModule,
                         { clipboard: ['value', clipboard] },
                         ZoomScrollModule,
