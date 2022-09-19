@@ -15,8 +15,8 @@ const sapActions: Readonly<Record<string, IBpmnAction>> = {
                         title: translate('Process.Details.Modeler.Actions.SAP.Connect.Input'),
                         type: 'object',
                         properties: {
-                            sid: {
-                                title: translate('Process.Details.Modeler.Actions.SAP.Connect.SID'),
+                            connectionName: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.Connect.ConnectionName'),
                                 type: 'string',
                             },
                             user: {
@@ -37,7 +37,7 @@ const sapActions: Readonly<Record<string, IBpmnAction>> = {
             },
             formData: {
                 input: {
-                    sid: '',
+                    connectionName: '',
                     user: 'SAP_USERNAME',
                     password: 'SAP_PASSWORD',
                 },

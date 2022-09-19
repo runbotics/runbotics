@@ -25,7 +25,7 @@
     "Process.Edit.Form.Fields.Public.Label": "Public:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Is process attended",
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Is process triggerable",
-    
+
     "Process.Delete.ActionName": "Delete",
     "Process.Delete.Title": "Delete process {{ name }}",
     "Process.Delete.SuccessMessage": "Process {{ name }} deleted successfully",
@@ -65,7 +65,7 @@
     "Process.MainView.Tooltip.Center": "Center modeler view",
     "Process.MainView.Tooltip.ZoomIn": "Zoom in modeler view",
     "Process.MainView.Tooltip.ZoomOut": "Zoom out modeler view",
-    
+
     "Process.Details.Options.ByValue.ContentScript": "Content Script",
     "Process.Details.Options.ByValue.Desktop": "Desktop",
     "Process.Details.Options.ByValue.BackgroundPage": "Background Page",
@@ -91,7 +91,7 @@
     "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Przypisz ścieżkę zapisanego pliku do zmiennej",
-   
+
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Application: Launch",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Input",
     "Process.Details.Modeler.Actions.Application.Launch.Location": "Location (e.g. C:\\Program Files (x86)\\calculator.exe)",
@@ -247,7 +247,7 @@
     "Process.Details.Modeler.Actions.CSV.WriteFile.Output": "Output",
     "Process.Details.Modeler.Actions.CSV.WriteFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.CSV.WriteFile.VariableText": "Assign the output to variable",
- 
+
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Desktop PowerPoint: Open Application",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input": "Input",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath": "Specific file path",
@@ -374,11 +374,11 @@
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Input": "Input",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable": "Global variable",
 
-    "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Connect",
-    "Process.Details.Modeler.Actions.SAP.Connect.Input": "Input",
-    "Process.Details.Modeler.Actions.SAP.Connect.SID": "SID",
-    "Process.Details.Modeler.Actions.SAP.Connect.User": "User [env property]",
-    "Process.Details.Modeler.Actions.SAP.Connect.Password": "Password [env property]",
+    "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Połączenie",
+    "Process.Details.Modeler.Actions.SAP.Connect.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.SAP.Connect.ConnectionName": "Nazwa połączenia",
+    "Process.Details.Modeler.Actions.SAP.Connect.User": "Użytkownik (zmienna środowiskowa)",
+    "Process.Details.Modeler.Actions.SAP.Connect.Password": "Hasło (zmienna środowiskowa)",
     "Process.Details.Modeler.Actions.SAP.Disconnect.Label": "SAP: Disconnect",
     "Process.Details.Modeler.Actions.SAP.Disconnect.Input": "Input",
     "Process.Details.Modeler.Actions.SAP.StartTransaction.Label": "SAP: Start Transaction",

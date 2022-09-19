@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
+} from 'react';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
@@ -49,7 +51,9 @@ const initialCommandStackInfo: CommandStackInfo = {
 };
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     (
-        { readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process },
+        {
+            readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process,
+        },
         ref,
     ) => {
         const dispatch = useDispatch();

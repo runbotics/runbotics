@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
 import { DesktopRunResponse } from 'runbotics-sdk';
 import child from 'child_process';
-import { Expressions } from 'bpmn-elements';
+import { promisify } from 'util';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 
 export type ApplicationActionRequest<I> = DesktopRunRequest<any> & {
@@ -11,11 +10,11 @@ export type ApplicationActionRequest<I> = DesktopRunRequest<any> & {
 };
 
 export type ApplicationLaunchActionInput = {
-    sid: string;
+    location: string;
 };
 export type ApplicationLaunchActionOutput = {};
 
-export class ApplicationAutomation extends StatefulActionHandler {
+class ApplicationAutomation extends StatefulActionHandler {
     private sessions: Record<string, child.ChildProcess> = {};
     private readonly logger = new RunboticsLogger(ApplicationAutomation.name);
 
@@ -24,25 +23,30 @@ export class ApplicationAutomation extends StatefulActionHandler {
     }
 
     async launch(input: ApplicationLaunchActionInput): Promise<ApplicationLaunchActionOutput> {
-        const replacedPath = '"' + input.sid + '"';
+        let command = '';
 
-        const session: child.ChildProcess = child.exec(replacedPath, (error, stdout, stderr) => {
-            if (error != null) {
-                this.logger.log(stderr);
-                // error handling & exit
-            }
+        if (input.location.includes('"', 0) && input.location.includes('"', -1)) {
+            command = input.location;
+        } else {
+            command = '"' + input.location + '"';
+        }
 
-            // normal
-        });
+        const asyncExec = promisify(child.exec);
 
-        this.sessions['session'] = session;
+        const execPromise = asyncExec(command);
+        this.sessions['session'] = execPromise.child;
+        
+        execPromise
+            .catch((error) => {
+                throw new Error(error.stderr);
+            });
 
         return {};
     }
 
     async close(input: ApplicationLaunchActionInput): Promise<ApplicationLaunchActionOutput> {
         this.logger.error('Close action is not supported yet');
-        // process.kill(this.sessions["session"].pid)
+        // this.sessions["session"].kill('SIGKILL');
         delete this.sessions['session'];
 
         return {};
@@ -73,3 +77,5 @@ export class ApplicationAutomation extends StatefulActionHandler {
         delete this.sessions;
     }
 }
+
+export default ApplicationAutomation;
