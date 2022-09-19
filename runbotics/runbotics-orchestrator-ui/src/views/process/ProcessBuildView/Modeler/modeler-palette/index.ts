@@ -1,4 +1,4 @@
-import ModelerPalette from './ModelerPanel';
+import ModelerPalette from './ModelerPalette';
 
 export default {
     __init__: ['customPaletteProvider'],
