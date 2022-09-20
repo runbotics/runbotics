@@ -17,7 +17,7 @@ export default class ModelerPalette {
      * default bpmn's palette entries. Use `options.additionalEntries` to
      * add new custom entries.
      */
-    private static createCustomEntries(
+    protected static createCustomEntries(
         entries: BpmnEntries,
         options: {
             inheritedEntries?: InheritedEntries;
@@ -28,13 +28,13 @@ export default class ModelerPalette {
 
         if (!inheritedEntries) return { ...entries, ...additionalEntries };
 
-        const pickedEntries = Object.fromEntries(
+        const pickedDefaultEntries = Object.fromEntries(
             Object.entries(entries).filter(([key]) => Object.keys(inheritedEntries).includes(key)),
         );
 
         return {
             // prettier-ignore
-            ...(_.defaultsDeep(inheritedEntries, pickedEntries)),
+            ...(_.defaultsDeep(inheritedEntries, pickedDefaultEntries)),
             ...additionalEntries,
         };
     }
