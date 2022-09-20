@@ -1,0 +1,4 @@
+body[data-dragmode] * {
+    cursor: ew-resize !important;
+    user-select: none;
+}
