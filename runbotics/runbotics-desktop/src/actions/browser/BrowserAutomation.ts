@@ -10,7 +10,8 @@ import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
-require('chromedriver');
+import chromedriver from 'chromedriver';
+const binChromePath = chromedriver.path;
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -98,15 +99,12 @@ class BrowserAutomation extends StatefulActionHandler {
         if (input.headless) {
             optionsChrome = optionsChrome.headless();
         }
-
+        this.logger.log('Launching browser', binChromePath);
+        const service = new chrome.ServiceBuilder(binChromePath).setStdio('inherit');
         this.session = await new Builder()
             .forBrowser('chrome')
+            .setChromeService(service)
             .setChromeOptions(optionsChrome)
-            .setChromeService(
-                new chrome.ServiceBuilder()
-                    // .enableVerboseLogging()
-                    .setStdio('inherit'),
-            )
             .build();
     }
 
