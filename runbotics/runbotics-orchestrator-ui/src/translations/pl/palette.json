@@ -3,9 +3,8 @@
     "Palette.LassoTool": "Lasso",
     "Palette.SpaceTool": "Dodaj/usuń przestrzeń",
     "Palette.GlobalConnectTool": "Globalne połączenie",
-    "Palette.Create.StartEvent": "Utwórz zdarzenie początkowe",
-    "Palette.Create.EndEvent": "Utwórz zdarzenie końcowe",
-    "Palette.Create.ExclusiveGateway": "Utwórz bramkę logiczną",
-    "Palette.Create.Group": "Utwórz grupę"
-
+    "Palette.Create.StartEvent": "Utwórz Zdarzenie Początkowe",
+    "Palette.Create.EndEvent": "Utwórz Zdarzenie Końcowe",
+    "Palette.Create.ExclusiveGateway": "Utwórz Bramkę Logiczną",
+    "Palette.Create.Group": "Utwórz Grupę"
 }
