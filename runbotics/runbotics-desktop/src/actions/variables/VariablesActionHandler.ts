@@ -11,8 +11,11 @@ export type VariablesActionRequest<I> = DesktopRunRequest<any> & {
 };
 
 export type AssignVariableActionInput = {
-    variable: string;
+    name: string;
     value: string | string[] | boolean;
+};
+export type AssignVariablesActionInput = {
+    variables: AssignVariableActionInput[];
 };
 export type AssignVariableActionOutput = {};
 
@@ -29,7 +32,25 @@ export class VariablesActionHandler extends StatelessActionHandler {
         request: VariablesActionRequest<AssignVariableActionInput>,
     ): Promise<AssignVariableActionOutput> {
         const variables = {};
-        variables[input.variable] = input.value;
+        variables[input.name] = input.value;
+        // assign to local scope
+        const setVariables = { ...request.executionContext.environment.variables, ...variables };
+        request.executionContext.environment.assignVariables(setVariables);
+
+        // assign to global scope
+        await this.runtimeService.assignVariables(request.processInstanceId, variables);
+        return {};
+    }
+
+    async assignVariables(
+        input: AssignVariablesActionInput,
+        request: VariablesActionRequest<AssignVariablesActionInput>,
+    ): Promise<AssignVariableActionOutput> {
+        const variables = {};
+        input.variables.forEach((variable) => {
+            variables[variable.name] = variable.value;
+        })
+        
         // assign to local scope
         const setVariables = { ...request.executionContext.environment.variables, ...variables };
         request.executionContext.environment.assignVariables(setVariables);
@@ -40,7 +61,7 @@ export class VariablesActionHandler extends StatelessActionHandler {
     }
 
     private mapGlobalVariableToActionInput(globalVariable: IGlobalVariable): AssignVariableActionInput {
-        const actionInput: AssignVariableActionInput = { variable: globalVariable.name, value: globalVariable.value };
+        const actionInput: AssignVariableActionInput = { name: globalVariable.name, value: globalVariable.value };
         if (globalVariable.type === GlobalVariableType.LIST) {
             const value = JSON.parse(globalVariable.value);
             return { ...actionInput, value };
@@ -64,6 +85,8 @@ export class VariablesActionHandler extends StatelessActionHandler {
         let output: any = {};
         switch (action.script) {
             case 'variables.assign':
+                output = await this.assignVariables(action.input, action);
+                break;
             case 'variables.assignList':
                 output = await this.assignVariable(action.input, action);
                 break;

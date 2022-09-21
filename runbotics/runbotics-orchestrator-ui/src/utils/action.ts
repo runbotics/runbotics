@@ -9,8 +9,11 @@ export const CustomActionDescription: Record<string, (element: BPMNElement, supp
     },
     'variables.assign': (element) => {
         const inputParameters = getInputParameters(element);
-
-        return `Assign to var: ${inputParameters.variable}`;
+        
+        if (Array.isArray(inputParameters.variables)) {
+            return `Assign to var: ${inputParameters.variables[0].name}`
+        }
+        return `Assign to var: ${inputParameters.variables}`;
     },
     'variables.assignList': (element) => {
         const inputParameters = getInputParameters(element);
