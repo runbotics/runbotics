@@ -124,7 +124,8 @@
         "jexl": "^2.3.0",
         "use-debounce": "7.0.0",
         "styled-components": "^5.3.3",
-        "cronstrue": "^1.123.0"
+        "cronstrue": "^1.123.0",
+        "react-dropzone": "~14.2.2"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",

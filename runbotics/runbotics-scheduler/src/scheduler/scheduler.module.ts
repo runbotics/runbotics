@@ -19,6 +19,7 @@ import { ProcessSchedulerService } from './process/process.scheduler.service';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
 import { TriggerController } from './trigger/process.controller';
+import { UploadFilesService } from './upload/upload-files.service';
 
 @Module({
     imports: [
@@ -53,7 +54,7 @@ import { TriggerController } from './trigger/process.controller';
     ],
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
-        ProcessInstanceSchedulerService, BotSchedulerService
+        ProcessInstanceSchedulerService, BotSchedulerService, UploadFilesService
     ]
 })
 export class SchedulerModule { }

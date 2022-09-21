@@ -19,10 +19,13 @@ import {
   StartProcessResponse,
 } from "src/types";
 import { ScheduleProcessService } from "src/database/schedule-process/schedule-process.service";
+import { MicrosoftSession } from "src/auth/microsoft.session";
 import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
 import getVariablesFromSchema from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
+import { UploadFilesService } from "./upload/upload-files.service";
+import _ from "lodash";
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
   "waiting",
@@ -40,7 +43,9 @@ export class SchedulerService implements OnApplicationBootstrap {
     private readonly processService: ProcessService,
     private readonly scheduleProcessService: ScheduleProcessService,
     private readonly botSchedulerService: BotSchedulerService,
-    private readonly uiGateway: UiGateway
+    private readonly uiGateway: UiGateway,
+    private readonly microsoftSession: MicrosoftSession,
+    private readonly uploadFilesService: UploadFilesService
   ) { }
 
   async onApplicationBootstrap() {
@@ -77,6 +82,22 @@ export class SchedulerService implements OnApplicationBootstrap {
         .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
   }
 
+  private async handleUploadedFiles(process: IProcess, input: ProcessInput) {
+    const uiSchema = JSON.parse(process.executionInfo).uiSchema;
+    const fileKeys = this.uploadFilesService.getFileKeysFromSchema(uiSchema);
+
+    if (fileKeys.length < 0) return null;
+
+    const token = await this.microsoftSession.getToken()
+
+    for (const key of fileKeys) {
+      const file = _.get(input.variables, key);
+      const downloadLink = await this.uploadFilesService.uploadFile(token.token, 'file', file);
+      _.set(input.variables, key, downloadLink);
+    }
+
+  };
+
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
       if (!input.variables) {
@@ -92,6 +113,7 @@ export class SchedulerService implements OnApplicationBootstrap {
         this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
         throw new BadRequestException(err);
       }
+      await this.handleUploadedFiles(process, input);
     };
   }
 
@@ -225,8 +247,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   async updateProcessForScheduledJob(jobs: Job[]) {
     return Promise.all(jobs.map(async (job) => {
       const process = await this.processService.findById(Number(job.data.process.id));
-        job.data.process = { ...process };
-        return job;
+      job.data.process = { ...process };
+      return job;
     }));
   }
 
@@ -282,7 +304,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     if (!hasAccess && !isPublic) {
       this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
       throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-}
+    }
 
     if (triggered && !isTriggerable) {
       this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);

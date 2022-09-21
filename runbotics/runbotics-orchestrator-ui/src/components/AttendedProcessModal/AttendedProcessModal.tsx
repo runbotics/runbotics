@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { IProcess } from 'runbotics-common';
 import { useDispatch } from 'src/store';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,6 +13,7 @@ import ErrorBoundary from '../utils/ErrorBoundary';
 import _ from 'lodash';
 import FormRenderer from './FormRenderer';
 import { translate } from 'src/hooks/useTranslations';
+import useAsyncEffect from 'src/hooks/useAsyncEffect';
 
 interface UserModalProps {
     open: boolean;
@@ -39,11 +40,11 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
             return null;
         }
     }, [process]);
-
     const handleSubmit = (e: ISubmitEvent<any>) => {
         onSubmit(e.formData);
         setOpen(false);
     };
+    useAsyncEffect(async () => {}, []);
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>

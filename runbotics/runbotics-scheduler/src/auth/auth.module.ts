@@ -12,6 +12,7 @@ import { BotSystemModule } from '../database/bot_system/bot_system.module';
 import { BotCollectionModule } from '../database/bot_collection/bot_collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';
+import { MicrosoftSession } from './microsoft.session';
 
 const GlobalRoleGuard = {
     provide: APP_GUARD,
@@ -31,6 +32,7 @@ const GlobalFeatureKeyGuard = {
         BotCollectionModule,
         BotSystemModule,
         PassportModule,
+        MicrosoftSession,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ServerConfigService],
@@ -42,7 +44,7 @@ const GlobalFeatureKeyGuard = {
             })
         }),
     ],
-    providers: [AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard],
-    exports: [AuthService, PassportModule],
+    providers: [AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard, MicrosoftSession],
+    exports: [AuthService, PassportModule, MicrosoftSession],
 })
 export class AuthModule { }
