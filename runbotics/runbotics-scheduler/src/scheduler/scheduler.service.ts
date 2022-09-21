@@ -89,10 +89,11 @@ export class SchedulerService implements OnApplicationBootstrap {
 
     if (fileKeys.length < 0) return;
 
-    const token = await this.microsoftSession.getToken().catch(err => {
-      this.logger.error('Failed to get token', err);
-      throw new BadRequestException(err);
-    });
+    const token = await this.microsoftSession.getToken()
+      .catch(err => {
+        this.logger.error('Failed to get token', err);
+        throw new BadRequestException(err);
+      });
 
     for (const key of fileKeys) {
       const file = _.get(input.variables, key);
@@ -128,10 +129,11 @@ export class SchedulerService implements OnApplicationBootstrap {
 
   async addNewInstantJob({ process, input, user }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
-    await this.handleAttededProcess(process, input).catch(err => {
-      this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
-      throw new BadRequestException(err);
-    });
+    await this.handleAttededProcess(process, input)
+      .catch(err => {
+        this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
+        throw new BadRequestException(err);
+      });
 
     const instantProcess: InstantProcess = {
       process,
