@@ -312,7 +312,6 @@ importers:
       numeral: ^2.0.6
       prettier: ^2.2.1
       prop-types: ^15.7.2
-      qs: ~6.11.0
       react: ^17.0.2
       react-app-polyfill: ^1.0.6
       react-beautiful-dnd: ^13.0.0
@@ -327,7 +326,6 @@ importers:
       react-json-tree: ^0.15.0
       react-json-view: ^1.21.3
       react-modal-image: ^2.5.0
-      react-mui-dropzone: ~4.0.6
       react-redux: ^7.2.0
       react-refresh: ^0.13.0
       react-resizable: ^1.11.0
@@ -374,7 +372,7 @@ importers:
       '@mui/icons-material': 5.8.0_527f378d5852b58af37346a06289b128
       '@mui/lab': 5.0.0-alpha.68_2cb7012b58d280fe8787cbf04abee612
       '@mui/material': 5.4.1_28a8dc63c43f26055d540fb7e4059e51
-      '@mui/styled-engine': /@mui/styled-engine-sc/5.10.3_1b8e88d64736e9108eccfcbdc84d63af
+      '@mui/styled-engine': /@mui/styled-engine-sc/5.10.6_1b8e88d64736e9108eccfcbdc84d63af
       '@mui/styled-engine-sc': 5.4.2_1b8e88d64736e9108eccfcbdc84d63af
       '@mui/system': 5.4.1_df54bda9a69abe1ee43c2302afe21983
       '@mui/x-data-grid': 5.5.0_cb47c7e14db85098d561483455a0b6a1
@@ -422,7 +420,6 @@ importers:
       node-sass: 4.14.1
       notistack: 2.0.3_827018a13d94f02ad252a2e8ea84d515
       prop-types: 15.7.2
-      qs: 6.11.0
       react: 17.0.2
       react-app-polyfill: 1.0.6
       react-beautiful-dnd: 13.1.0_react-dom@17.0.2+react@17.0.2
@@ -437,7 +434,6 @@ importers:
       react-json-tree: 0.15.0_@types+react@17.0.0+react@17.0.2
       react-json-view: 1.21.3_daa3703f283d8b2e1edbae835dfde6c7
       react-modal-image: 2.5.0_react@17.0.2
-      react-mui-dropzone: 4.0.6_7eb641fb5c88cb0e58676682f842a686
       react-redux: 7.2.4_react-dom@17.0.2+react@17.0.2
       react-resizable: 1.11.1_react-dom@17.0.2+react@17.0.2
       react-router: 5.2.0_react@17.0.2
@@ -5205,8 +5201,8 @@ packages:
       prop-types: 15.8.1
       react: 17.0.2
 
-  /@mui/styled-engine-sc/5.10.3_1b8e88d64736e9108eccfcbdc84d63af:
-    resolution: {integrity: sha512-IHcNTnGEcFCQgghHqBo6BXOzMOpqGXxSu5JEoVCncPVxVZ3/CEtFTyUqnMaiFkpK5DY1Qx1YnqdNBSMhzP1IhQ==}
+  /@mui/styled-engine-sc/5.10.6_1b8e88d64736e9108eccfcbdc84d63af:
+    resolution: {integrity: sha512-AQIa478w3UI8gmlht7orp96tEJbEN26FiEs9Aee6E+iVTnoyT3b6V/JapgKlITo6rn7tYTSX9iJYwnDTMhbzTg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/styled-components': ^5.1.14
@@ -11989,13 +11985,6 @@ packages:
     resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
     dev: false
 
-  /file-selector/0.1.19:
-    resolution: {integrity: sha512-kCWw3+Aai8Uox+5tHCNgMFaUdgidxvMnLWO6fM5sZ0hA2wlHP5/DHGF0ECe84BiB95qdJbKNEJhWKVDvMN+JDQ==}
-    engines: {node: '>= 10'}
-    dependencies:
-      tslib: 2.3.1
-    dev: false
-
   /file-selector/0.6.0:
     resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}
     engines: {node: '>= 12'}
@@ -14256,7 +14245,7 @@ packages:
       pretty-format: 27.5.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.5.0_9e956d5432231eda64473d692f2ab891
+      ts-node: 10.5.0_2348912ddc0425f988fea66975383b90
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -18831,18 +18820,6 @@ packages:
       prop-types: 15.7.2
     dev: false
 
-  /react-dropzone/10.2.2_react@17.0.2:
-    resolution: {integrity: sha512-U5EKckXVt6IrEyhMMsgmHQiWTGLudhajPPG77KFSvgsMqNEHSyGpqWvOMc5+DhEah/vH4E1n+J5weBNLd5VtyA==}
-    engines: {node: '>= 8'}
-    peerDependencies:
-      react: '>= 16.8'
-    dependencies:
-      attr-accept: 2.2.2
-      file-selector: 0.1.19
-      prop-types: 15.8.1
-      react: 17.0.2
-    dev: false
-
   /react-dropzone/14.2.2_react@17.0.2:
     resolution: {integrity: sha512-5oyGN/B5rNhop2ggUnxztXBQ6q6zii+OMEftPzsxAR2hhpVWz0nAV+3Ktxo2h5bZzdcCKrpd8bfWAVsveIBM+w==}
     engines: {node: '>= 10.13'}
@@ -18983,31 +18960,6 @@ packages:
       react: 16.x
     dependencies:
       react: 17.0.2
-    dev: false
-
-  /react-mui-dropzone/4.0.6_7eb641fb5c88cb0e58676682f842a686:
-    resolution: {integrity: sha512-1rRlI+1wVydoL1tFx5LXt7k/CSXKmWYFn7bm5TUqiq/WnBnE8VI+tShSqqG7yJwSbvncpZXAn9Lnjgrcvxvy8Q==}
-    engines: {node: '>=8', yarn: '>=1'}
-    peerDependencies:
-      '@emotion/react': ^11.4.1
-      '@emotion/styled': ^11.3.0
-      '@mui/icons-material': ^5.0.1
-      '@mui/material': ^5.0.2
-      '@mui/styles': ^5.0.1
-      prop-types: ^15.7.2
-      react: ^17.0.2
-      react-dom: ^17.0.2
-    dependencies:
-      '@babel/runtime': 7.18.0
-      '@emotion/react': 11.8.1_e7436a6b8ce7d53f42d682b752ba108d
-      '@emotion/styled': 11.8.1_e133a771ae82e8f6c4dd047426fc2857
-      '@mui/icons-material': 5.8.0_527f378d5852b58af37346a06289b128
-      '@mui/material': 5.4.1_28a8dc63c43f26055d540fb7e4059e51
-      clsx: 1.1.1
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      react-dropzone: 10.2.2_react@17.0.2
     dev: false
 
   /react-redux/7.2.4_react-dom@17.0.2+react@17.0.2:
