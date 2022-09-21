@@ -5,6 +5,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   OnApplicationBootstrap,
 } from "@nestjs/common";
@@ -88,11 +89,19 @@ export class SchedulerService implements OnApplicationBootstrap {
 
     if (fileKeys.length < 0) return;
 
-    const token = await this.microsoftSession.getToken()
+    const token = await this.microsoftSession.getToken().catch(err => {
+      this.logger.error('Failed to get token', err);
+      throw new BadRequestException(err);
+    });
 
     for (const key of fileKeys) {
       const file = _.get(input.variables, key);
-      const downloadLink = await this.uploadFilesService.uploadFile(token.token, `${key}_${uuidv4()}`, file);
+      const downloadLink = await this.uploadFilesService.uploadFile(token.token, `${key}_${uuidv4()}`, file)
+        .catch(err => {
+          this.logger.error('Failed to upload file', err);
+          throw new InternalServerErrorException(err);
+        });
+
       input.variables = _.set(input.variables, key, downloadLink);
     }
   };
@@ -119,7 +128,10 @@ export class SchedulerService implements OnApplicationBootstrap {
 
   async addNewInstantJob({ process, input, user }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
-    await this.handleAttededProcess(process, input);
+    await this.handleAttededProcess(process, input).catch(err => {
+      this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
+      throw new BadRequestException(err);
+    });
 
     const instantProcess: InstantProcess = {
       process,
