@@ -53,7 +53,7 @@ export type SAPSendVKeyActionOutput = {};
 
 // --- action
 export type SAPConnectActionInput = {
-    sid: string;
+    connectionName: string;
     user: string;
     password: string;
 };
@@ -81,14 +81,21 @@ class SAPAutomation extends StatefulActionHandler {
     }
 
     async connect(input: SAPConnectActionInput): Promise<SAPConnectActionOutput> {
-        const app = new ActiveXObject('SapROTWr.SapROTWrapper');
-        const scriptingEngine = app.GetROTEntry('SAPGUI').GetScriptingEngine();
-
-        const result = scriptingEngine.OpenConnection(input.sid, true);
-        this.sessions['session'] = result.children[0];
-        this.sessions['session'].FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
-        this.sessions['session'].FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
-        this.sessions['session'].FindById('wnd[0]').SendVKey(0);
+        try {
+            const app = new ActiveXObject('SapROTWr.SapROTWrapper');
+            const sapGuiAuto = app.GetROTEntry('SAPGUI');
+            if (!sapGuiAuto) {
+                throw new Error('SAP application is not running');
+            }
+            const scriptingEngine = sapGuiAuto.GetScriptingEngine();
+            const result = scriptingEngine.OpenConnection(input.connectionName, true);
+            this.sessions['session'] = result.children[0];
+            this.sessions['session'].FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
+            this.sessions['session'].FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
+            this.sessions['session'].FindById('wnd[0]').SendVKey(0);
+        } catch (e) {
+            throw new Error(e?.description ?? e.message);
+        }
 
         return {};
     }

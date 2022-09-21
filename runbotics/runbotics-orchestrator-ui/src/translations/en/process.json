@@ -34,6 +34,9 @@
     "Process.Add.ActionName": "Add new process",
     "Process.Add.Title": "Add new process",
     "Process.Add.Form.Fields.Name": "Name",
+    "Process.Add.Form.Error.General": "An error occured while creating new process",
+    "Process.Add.Form.Error.NameNotAvailable": "This name is already taken",
+    "Process.Add.Form.Error.Required": "Process name is required",
 
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Cron.HumanReadable": "Run {{ cron }}",
@@ -65,7 +68,7 @@
     "Process.MainView.Tooltip.Center": "Center modeler view",
     "Process.MainView.Tooltip.ZoomIn": "Zoom in modeler view",
     "Process.MainView.Tooltip.ZoomOut": "Zoom out modeler view",
-    
+
     "Process.Details.Options.ByValue.ContentScript": "Content Script",
     "Process.Details.Options.ByValue.Desktop": "Desktop",
     "Process.Details.Options.ByValue.BackgroundPage": "Background Page",
@@ -85,6 +88,12 @@
     "Process.Details.Modeler.Actions.Api.Output": "Output",
     "Process.Details.Modeler.Actions.Api.Output.VariableName": "Variable name",
     "Process.Details.Modeler.Actions.Api.Output.VariableMessage": "Assign the output to variable",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Label": "Download file",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Input": "Input",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Url": "URL to a file (e.g. https://www.runbotics.com/example.pdf)",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Output",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Variable name",
+    "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Assign file path to variable",
 
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Application: Launch",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Input",
@@ -370,9 +379,9 @@
 
     "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Connect",
     "Process.Details.Modeler.Actions.SAP.Connect.Input": "Input",
-    "Process.Details.Modeler.Actions.SAP.Connect.SID": "SID",
-    "Process.Details.Modeler.Actions.SAP.Connect.User": "User [env property]",
-    "Process.Details.Modeler.Actions.SAP.Connect.Password": "Password [env property]",
+    "Process.Details.Modeler.Actions.SAP.Connect.ConnectionName": "Connection name",
+    "Process.Details.Modeler.Actions.SAP.Connect.User": "User (env property)",
+    "Process.Details.Modeler.Actions.SAP.Connect.Password": "Password (env property)",
     "Process.Details.Modeler.Actions.SAP.Disconnect.Label": "SAP: Disconnect",
     "Process.Details.Modeler.Actions.SAP.Disconnect.Input": "Input",
     "Process.Details.Modeler.Actions.SAP.StartTransaction.Label": "SAP: Start Transaction",
@@ -574,4 +583,3 @@
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartThread": "Start Thread",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread": "End Thread"
 }
-
