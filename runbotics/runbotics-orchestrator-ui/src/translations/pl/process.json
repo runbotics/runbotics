@@ -494,6 +494,8 @@
 
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Remove item",
 
+    "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik",
+
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Disabled",
     "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Run from here",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Action name",

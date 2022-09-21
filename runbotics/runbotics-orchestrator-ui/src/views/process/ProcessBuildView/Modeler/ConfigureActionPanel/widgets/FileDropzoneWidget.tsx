@@ -3,6 +3,7 @@ import Paper from '@mui/material/Paper';
 import { WidgetProps } from '@rjsf/core';
 import React, { FC, useCallback, useEffect } from 'react';
 import { useDropzone, Accept, FileRejection, DropEvent } from 'react-dropzone';
+import { translate } from 'src/hooks/useTranslations';
 import styled from 'styled-components';
 interface FileDropzoneWidgetProps {
     label: string;
@@ -41,11 +42,23 @@ const StyledPaper = styled(Paper)`
     transition: border 0.2s;
     cursor: pointer;
 `;
+const StyledLabel = styled(Typography)(
+    ({ theme }) => `    
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(10px) scale(0.75);
+    font-size: 1rem;
+    transform-origin: top left;
+    background-color: ${theme.palette.background.paper};
+    padding: 0 4px;
+`,
+);
 
 const FileDropzoneWidget: FC<WidgetProps> = (props) => {
     const [file, setFile] = React.useState(null);
-
     const handleDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => {
+        if (acceptedFiles.length <= 0) return;
         acceptedFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -54,18 +67,29 @@ const FileDropzoneWidget: FC<WidgetProps> = (props) => {
             reader.readAsDataURL(file);
         });
     }, []);
-    const { getInputProps, getRootProps } = useDropzone({ onDrop: handleDrop, maxFiles: 1 });
 
+    const { getInputProps, getRootProps, acceptedFiles } = useDropzone({ onDrop: handleDrop, maxFiles: 1 });
+
+    const files = acceptedFiles.map((file) => (
+        <Typography>
+            {file.name} -{' '}
+            {file.size / 1024 > 1024
+                ? (file.size / 1024 / 1024).toFixed(2) + ' mb'
+                : (file.size / 1024).toFixed(2) + ' kb'}
+        </Typography>
+    ));
     useEffect(() => {
         props.onChange(file);
     }, [file]);
 
     return (
         <div>
+            <StyledLabel>{props.label}</StyledLabel>
             <StyledPaper {...getRootProps()}>
                 <input {...getInputProps()} />
-                <Typography>Text</Typography>
+                <Typography>{translate('Process.Details.Modeler.Widgets.FileDropzone.InnerText')}</Typography>
             </StyledPaper>
+            {files}
         </div>
     );
 };

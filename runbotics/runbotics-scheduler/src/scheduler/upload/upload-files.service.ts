@@ -7,10 +7,7 @@ export class UploadFilesService {
 
     private readonly logger = new Logger(UploadFilesService.name);
     private TOKEN: string = '';
-    private fileName: string = '';
     private fileId: string = '';
-    private siteId: string = '';
-    private driveId: string = '';
 
     private getAuthHeader() {
         return {
@@ -83,7 +80,7 @@ export class UploadFilesService {
 
     async getDownloadFileLink(token: string, sharepointFileId: string) {
         this.TOKEN = token;
-        const url = `https://graph.microsoft.com/v1.0/me/drive/items/${this.fileId}`;
+        const url = `https://graph.microsoft.com/v1.0/me/drive/items/${sharepointFileId}`;
 
         const authHeaders = this.getAuthHeader();
         const { data } = await UploadFilesService.makeRequest().get<APICell>(url, {
@@ -95,10 +92,10 @@ export class UploadFilesService {
         return downloadLink;
     }
 
-    async uploadFile(token: string, sharepointFileName: string, content) {
+    async uploadFile(token: string, sharepointFileName: string, content: string) {
         this.TOKEN = token;
         const fileInfo = this.getFileInfo(content);
-        let url = `https://graph.microsoft.com/v1.0/me/drive/root:/${sharepointFileName}.${fileInfo.extension}:/content`;
+        let url = `https://graph.microsoft.com/v1.0/me/drive/root:/temp/${sharepointFileName}.${fileInfo.extension}:/content`;
 
         const authHeaders = this.getAuthHeader();
         const { data } = await UploadFilesService.makeRequest().put<any>(url, {
@@ -110,10 +107,10 @@ export class UploadFilesService {
         });
 
         this.fileId = data.id;
-        this.fileName = sharepointFileName + fileInfo.extension;
-        //return download link
+
         return this.getDownloadFileLink(token, this.fileId);
     }
+
 }
 
 interface APICell {

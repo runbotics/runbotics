@@ -65,12 +65,12 @@ export type SharepointSiteConnectionActionOutput = any;
 
 export type FileActionRequest<I> = DesktopRunRequest<any> & {
     script:
-        | 'sharepointFile.downloadFile'
-        | 'sharepointFile.downloadFile2'
-        | 'sharepointFile.downloadFileFromSite'
-        | 'sharepointFile.uploadFile'
-        | 'sharepointFile.getSharepointSiteConnection'
-        | 'sharepointFile.downloadFiles';
+    | 'sharepointFile.downloadFile'
+    | 'sharepointFile.downloadFile2'
+    | 'sharepointFile.downloadFileFromSite'
+    | 'sharepointFile.uploadFile'
+    | 'sharepointFile.getSharepointSiteConnection'
+    | 'sharepointFile.downloadFiles';
 };
 
 @Injectable()

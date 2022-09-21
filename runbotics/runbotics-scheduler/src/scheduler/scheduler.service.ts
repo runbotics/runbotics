@@ -86,16 +86,15 @@ export class SchedulerService implements OnApplicationBootstrap {
     const uiSchema = JSON.parse(process.executionInfo).uiSchema;
     const fileKeys = this.uploadFilesService.getFileKeysFromSchema(uiSchema);
 
-    if (fileKeys.length < 0) return null;
+    if (fileKeys.length < 0) return;
 
     const token = await this.microsoftSession.getToken()
 
     for (const key of fileKeys) {
       const file = _.get(input.variables, key);
-      const downloadLink = await this.uploadFilesService.uploadFile(token.token, 'file', file);
-      _.set(input.variables, key, downloadLink);
+      const downloadLink = await this.uploadFilesService.uploadFile(token.token, `${key}_${uuidv4()}`, file);
+      input.variables = _.set(input.variables, key, downloadLink);
     }
-
   };
 
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
@@ -118,16 +117,15 @@ export class SchedulerService implements OnApplicationBootstrap {
   }
 
 
-  async addNewInstantJob({ process, ...rest }: StartProcessRequest) {
+  async addNewInstantJob({ process, input, user }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
-
-    this.handleAttededProcess(process, rest.input);
+    await this.handleAttededProcess(process, input);
 
     const instantProcess: InstantProcess = {
       process,
-      ...rest,
+      user,
+      input
     };
-
     const job = await this.processQueue
       .add(instantProcess, {
         jobId: `${process.name}:${process.id}:${uuidv4()}`,
