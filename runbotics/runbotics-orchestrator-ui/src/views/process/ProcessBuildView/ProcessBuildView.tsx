@@ -52,7 +52,10 @@ const ProcessBuildView: FC = () => {
 
     const onSave = async () => {
         try {
-            const definition = await BpmnModelerRef.current.export();
+            const definition = await BpmnModelerRef.current.export(); // FIXME: <--
+
+            console.log(definition);
+            
 
             await dispatch(
                 processActions.saveProcess({
