@@ -5,7 +5,7 @@ import { ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-com
 
 @Injectable()
 export class ConsultantLoggerService {
-    private readonly logger = new RunboticsLogger(RuntimeService.name);
+    private readonly logger = new RunboticsLogger(ConsultantLoggerService.name);
 
     constructor(private runtimeService: RuntimeService) {
         runtimeService.activityChange().subscribe((event) => {
