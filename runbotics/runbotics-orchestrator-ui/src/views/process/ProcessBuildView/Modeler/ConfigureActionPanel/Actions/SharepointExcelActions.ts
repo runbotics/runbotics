@@ -216,7 +216,7 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
                                 type: 'string',
                             },
                         },
-                        required: [],
+                        required: ['variableName'],
                     },
                 },
             },
@@ -225,8 +225,8 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
             },
             formData: {
                 input: {
-                    range: 'A1:B2',
-                    values: '#{variable}',
+                    range: '',
+                    values: '',
                 },
                 output: {
                     variableName: '',
@@ -234,10 +234,10 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-    'sharepointExcel.open': {
-        id: 'sharepointExcel.open',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.Label'),
-        script: 'sharepointExcel.open',
+    'sharepointExcel.openFileFromSite': {
+        id: 'sharepointExcel.openFileFromSite',
+        label: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Label'),
+        script: 'sharepointExcel.openFileFromSite',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -250,32 +250,52 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.Input'),
+                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Input'),
                         type: 'object',
                         properties: {
+                            siteName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteName',
+                                ),
+                                type: 'string',
+                            },
+                            listName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+                                ),
+                                type: 'string',
+                            },
                             fileName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.FileName'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FileName',
+                                ),
                                 type: 'string',
                             },
                             worksheetName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.WorksheetName'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                ),
                                 type: 'string',
                             },
                             persistChanges: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.PersistChanges'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+                                ),
                                 type: 'boolean',
                             },
                         },
-                        required: ['fileName', 'worksheetName'],
+                        required: ['siteName', 'listName', 'fileName', 'worksheetName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.Output'),
+                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.Open.Variable'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Variable',
+                                ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.Open.VariableText',
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.VariableText',
                                 ),
                                 type: 'string',
                             },
@@ -289,7 +309,82 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
             },
             formData: {
                 input: {
+                    siteName: '',
+                    listName: '',
                     fileName: '',
+                    worksheetName: '',
+                    persistChanges: true,
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+    'sharepointExcel.openFileFromRoot': {
+        id: 'sharepointExcel.openFileFromRoot',
+        label: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Label'),
+        script: 'sharepointExcel.openFileFromRoot',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Input'),
+                        type: 'object',
+                        properties: {
+                            filePath: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+                                ),
+                                type: 'string',
+                            },
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+                                ),
+                                type: 'string',
+                            },
+                            persistChanges: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges',
+                                ),
+                                type: 'boolean',
+                            },
+                        },
+                        required: ['filePath', 'worksheetName'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Variable',
+                                ),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.VariableText',
+                                ),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    filePath: '',
                     worksheetName: '',
                     persistChanges: true,
                 },
