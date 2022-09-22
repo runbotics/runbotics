@@ -12,6 +12,7 @@ import variablesTranslations from './variables.json';
 import installTranslations from './install.json';
 import navTranslations from './nav.json';
 import componentsTranslations from './components.json';
+import paletteTranslations from './palette.json';
 
 export default {
     ...commonTranslations,
@@ -28,4 +29,5 @@ export default {
     ...variablesTranslations,
     ...installTranslations,
     ...componentsTranslations,
+    ...paletteTranslations,
 };
