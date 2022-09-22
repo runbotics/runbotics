@@ -1,4 +1,8 @@
-body[data-dragmode] * {
+body[data-dragmode] {
     cursor: ew-resize !important;
     user-select: none;
+
+    > * {
+        pointer-events: none;
+    }
 }
