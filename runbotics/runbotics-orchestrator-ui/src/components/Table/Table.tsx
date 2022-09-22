@@ -13,14 +13,12 @@ import {
     Grid,
     Box,
 } from '@mui/material';
-import useTranslations, { translate as t } from 'src/hooks/useTranslations';
+import useTranslations, { translate } from 'src/hooks/useTranslations';
 import { DataTableProps } from './Table.types';
 import { DataTableRow, DataTableWrapper } from './Table.styles';
 import DataTableFooter from './Table.footer';
 import If from '../utils/If';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT } from './Table.utils';
-
-const NO_CONTENT_MESSAGE = t('Component.Table.NoDataFound');
 
 const Table = <T extends object>({
     columns,
@@ -150,7 +148,7 @@ const Table = <T extends object>({
         <TableRow>
             <TableCell colSpan={6} align="center">
                 <Grid item xs={12}>
-                    {NO_CONTENT_MESSAGE}
+                    {translate('Component.Table.NoDataFound')}
                 </Grid>
             </TableCell>
         </TableRow>

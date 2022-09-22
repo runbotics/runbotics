@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import type { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
@@ -11,12 +11,13 @@ import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
 import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
 import If from 'src/components/utils/If';
-import { getPublicSections } from './Navbar.sections';
 import NavbarList from './NavbarList';
 import {
     getDrawerStyles, Wrapper, StyledIcon, StyledText,
 } from './Navbar.styles';
 import { Section } from './Navbar.types';
+import i18n from 'i18next';
+import { usePublicSections } from './usePublicSections';
 
 interface NavbarProps {
     showMenu: boolean;
@@ -27,14 +28,11 @@ interface NavbarProps {
 const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) => {
     const location = useLocation();
     const { user } = useAuth();
-    const [sections, setSections] = useState<Section[]>([]);
     const { translate } = useTranslations();
+    const publicSections= usePublicSections();
 
-    const preparePublicSections = async () => {
-        const publicSections = await getPublicSections();
-        const accessToSections = publicSections;
-
-        for (const accessToSection of accessToSections) {
+    const sections= useMemo(() => {
+        for (const accessToSection of publicSections) {
             accessToSection.items = accessToSection.items.filter((item) => {
                 if (item.featureKeys) {
                     return hasAccessByFeatureKey(user, item.featureKeys);
@@ -42,12 +40,9 @@ const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) =
                 return true;
             });
         }
-        setSections(accessToSections);
-    };
 
-    useEffect(() => {
-        preparePublicSections();
-    }, [user]);
+        return publicSections;
+    }, [user, i18n.language]);
 
     return (
         <Drawer sx={getDrawerStyles(mobile, showMenu)} anchor="left" open variant="persistent">

@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const fileActions: Readonly<Record<string, IBpmnAction>> = {
+const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.appendFile': {
         id: 'file.appendFile',
         label: translate('Process.Details.Modeler.Actions.File.AppendFile.Label'),
@@ -299,6 +299,6 @@ const fileActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default fileActions;
+export default getFileActions;

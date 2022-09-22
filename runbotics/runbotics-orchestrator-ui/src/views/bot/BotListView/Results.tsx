@@ -18,7 +18,7 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'src/store';
 import { BotStatus } from 'runbotics-common';
 import If from 'src/components/utils/If';
-import { capitalizeFirstLetter } from 'src/utils/text';
+import { capitalizeFirstLetter, convertToPascalCase } from 'src/utils/text';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useBotStatusSocket from 'src/hooks/useBotStatusSocket';
 import useTranslations from 'src/hooks/useTranslations';
@@ -143,32 +143,39 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {getPageContent().map((bot) => (
-                                <TableRow hover key={bot.installationId}>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        {bot.installationId}
-                                    </TableCell>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        {bot.user?.login}
-                                    </TableCell>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        <Label color={getBotStatusColor(bot.status)}>{bot.status}</Label>
-                                    </TableCell>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        {bot.collection?.name}
-                                    </TableCell>
-                                    <TableCell>{capitalizeFirstLetter(bot.system?.name ?? '')}</TableCell>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        {bot.version}
-                                    </TableCell>
-                                    <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                        {moment(bot.lastConnected).format('YYYY-MM-DD HH:mm')}
-                                    </TableCell>
-                                    <TableCell>
-                                        <ActionBotButton bot={bot} />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {getPageContent().map((bot) => {
+                                const formattedStatus = convertToPascalCase(bot.status);
+
+                                return (
+                                    <TableRow hover key={bot.installationId}>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            {bot.installationId}
+                                        </TableCell>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            {bot.user?.login}
+                                        </TableCell>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            <Label color={getBotStatusColor(bot.status)}>
+                                                {/* @ts-ignore */}
+                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`,)}
+                                            </Label>
+                                        </TableCell>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            {bot.collection?.name}
+                                        </TableCell>
+                                        <TableCell>{capitalizeFirstLetter(bot.system?.name ?? '')}</TableCell>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            {bot.version}
+                                        </TableCell>
+                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
+                                            {moment(bot.lastConnected).format('YYYY-MM-DD HH:mm')}
+                                        </TableCell>
+                                        <TableCell>
+                                            <ActionBotButton bot={bot} />
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 </If>

@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { PlusCircle as PlusIcon } from 'react-feather';
-import { BotSystem, IProcess } from 'runbotics-common';
+import { IProcess } from 'runbotics-common';
 import { ProcessTab } from 'src/utils/process-tab';
 import useTranslations, { translate } from 'src/hooks/useTranslations';
 import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';

@@ -20,7 +20,7 @@ const ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 const BotCollectionTable: VFC<TableProps> = ({
     page, pageSize, onPageSizeChange, onPageChange, onFilterModelChange,
 }) => {
-    const columns = useBotCollectionColumns();
+    const botCollectionColumns = useBotCollectionColumns();
     const history = useHistory();
     const { byPage, loading } = useSelector(botCollectionSelector);
 
@@ -34,7 +34,7 @@ const BotCollectionTable: VFC<TableProps> = ({
                 <Grid item xs={12} md={12}>
                     <DataGrid
                         autoHeight
-                        columns={columns}
+                        columns={botCollectionColumns}
                         rows={byPage?.content ?? []}
                         rowCount={byPage?.totalElements ?? 0}
                         disableSelectionOnClick

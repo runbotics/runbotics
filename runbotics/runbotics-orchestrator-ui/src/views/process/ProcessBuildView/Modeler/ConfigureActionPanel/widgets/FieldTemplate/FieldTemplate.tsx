@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FieldTemplateProps } from '@rjsf/core';
 
@@ -7,6 +7,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
+import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
+import { convertToPascalCase } from 'src/utils/text';
 
 import WrapIfAdditional from './WrapIfAdditional';
 
@@ -25,37 +27,72 @@ const FieldTemplate = ({
     rawHelp,
     rawDescription,
     schema,
-}: FieldTemplateProps) => (
-    <WrapIfAdditional
-        classNames={classNames}
-        disabled={disabled}
-        id={id}
-        label={label}
-        onDropPropertyClick={onDropPropertyClick}
-        onKeyChange={onKeyChange}
-        readonly={readonly}
-        required={required}
-        schema={schema}
-    >
-        <FormControl fullWidth error={!!rawErrors.length} required={required}>
-            {children}
-            {displayLabel && rawDescription ? (
-                <Typography variant="caption" color="textSecondary">
-                    {rawDescription}
-                </Typography>
-            ) : null}
-            {rawErrors.length > 0 && (
-                <List dense disablePadding>
-                    {rawErrors.map((error) => (
-                            <ListItem key={error} disableGutters>
+}: FieldTemplateProps) => {
+    const [description, setDescription] = useState(rawDescription);
+    const [errors, setErrors] = useState(rawErrors);
+
+    useEffect(() => {
+        if (typeof rawDescription !== 'undefined') {
+            if (
+                checkIfKeyExists(
+                    'Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawDescription)
+                )
+            ) {
+                {/*@ts-ignore*/}
+                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
+            }
+        }
+
+        if (rawErrors.length > 0) {
+            const localRawErrors = [];
+
+            rawErrors.forEach((rawError) => {
+                if (
+                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawError))
+                ) {
+                    {/*@ts-ignore*/}
+                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
+                } else {
+                    localRawErrors.push(rawError);
+                }
+            });
+
+            setErrors(localRawErrors);
+        }
+    }, [rawDescription, rawErrors]);
+
+    return (
+        <WrapIfAdditional
+            classNames={classNames}
+            disabled={disabled}
+            id={id}
+            label={label}
+            onDropPropertyClick={onDropPropertyClick}
+            onKeyChange={onKeyChange}
+            readonly={readonly}
+            required={required}
+            schema={schema}
+        >
+            <FormControl fullWidth error={!!rawErrors.length} required={required}>
+                {children}
+                {displayLabel && rawDescription ? (
+                    <Typography variant="caption" color="textSecondary">
+                        {description}
+                    </Typography>
+                ) : null}
+                {rawErrors.length > 0 && (
+                    <List dense disablePadding>
+                        {errors.map((error) => (
+                            <ListItem key={rawErrors[errors.indexOf(error)]} disableGutters>
                                 <FormHelperText id={id}>{error}</FormHelperText>
                             </ListItem>
-                    ))}
-                </List>
-            )}
-            {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
-        </FormControl>
-    </WrapIfAdditional>
-);
+                        ))}
+                    </List>
+                )}
+                {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
+            </FormControl>
+        </WrapIfAdditional>
+    );
+};
 
 export default FieldTemplate;

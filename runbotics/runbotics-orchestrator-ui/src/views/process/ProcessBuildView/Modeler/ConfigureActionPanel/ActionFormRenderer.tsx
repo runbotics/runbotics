@@ -13,6 +13,7 @@ import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
 import customWidgets from './widgets';
 import ActionLabelForm from './ActionLabelForm';
 import { applyModelerElement } from '../utils';
+import i18n from 'i18next';
 
 const ActionFormRenderer: FC = () => {
     const { element, modeler, action } = useBpmnFormContext();
@@ -42,7 +43,7 @@ const ActionFormRenderer: FC = () => {
                 ...action.form.schema.properties,
             },
         }),
-        [action.form.schema],
+        [action.form.schema, i18n.language],
     );
     const defaultFormData = React.useMemo(() => {
         const defaultParameters = {

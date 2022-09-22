@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const beeOfficeActions: Readonly<Record<string, IBpmnAction>> = {
+const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: 'beeOffice.createNewTimetableActivity',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Label'),
@@ -469,6 +469,6 @@ const beeOfficeActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default beeOfficeActions;
+export default getBeeOfficeActions;

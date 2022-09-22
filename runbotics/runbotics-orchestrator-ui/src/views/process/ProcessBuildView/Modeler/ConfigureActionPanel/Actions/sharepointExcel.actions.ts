@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
+const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointExcel.getCell': {
         id: 'sharepointExcel.getCell',
         label: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label'),
@@ -299,6 +299,6 @@ const sharepointExcelActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+}) 
 
-export default sharepointExcelActions;
+export default getSharepointExcelActions;

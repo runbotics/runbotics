@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import {
     Avatar,
@@ -10,18 +10,17 @@ import {
     StepConnector,
     StepLabel,
     Stepper,
-    Dialog, DialogContent, DialogTitle, SvgIcon,
+    Dialog, DialogContent, DialogTitle, 
 } from '@mui/material';
 import clsx from 'clsx';
-import ExtensionIcon from '@mui/icons-material/Extension';
-import ContactlessIcon from '@mui/icons-material/Contactless';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import useLocalStorage from 'src/hooks/useLocalStorage';
-import useTranslations, { isNamespaceLoaded, translate as t } from 'src/hooks/useTranslations';
+import useTranslations from 'src/hooks/useTranslations';
 import InstallStep from './InstallStep';
 import RunStep from './RunStep';
 import CompleteStep from './CompleteStep';
 import ConnectStep from './ConnectStep';
+import useInstallSteps from './useInstallSteps';
+import { CustomStepIconProps } from './CustomSteps.types';
 
 const DIALOG_PREFIX = 'HowToRunDialog';
 const ICON_PREFIX = 'CustomStepIcon';
@@ -61,37 +60,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         borderColor: theme.palette.divider,
     },
 }));
-
-interface CustomStep {
-    label: string;
-    icon: typeof SvgIcon;
-}
-
-interface CustomStepIconProps {
-    active?: boolean;
-    completed?: boolean;
-    icon: number;
-    steps: CustomStep[];
-}
-
-const prepareSteps = async (): Promise<CustomStep[]> => {
-    await isNamespaceLoaded();
-
-    return [
-        {
-            label: t('Install.Dialog.Steps.Install'),
-            icon: ExtensionIcon,
-        },
-        {
-            label: t('Install.Dialog.Steps.Connect'),
-            icon: ContactlessIcon,
-        },
-        {
-            label: t('Install.Dialog.Steps.RunFirstProcess'),
-            icon: PlayArrowIcon,
-        },
-    ];
-};
 
 const CustomStepConnector = StepConnector;
 
@@ -134,8 +102,8 @@ interface HowToRunDialogProps {
 
 const HowToRunDialog: FC<HowToRunDialogProps> = ({ open, onClose }) => {
     const [activeStep, setActiveStep] = useLocalStorage('HowToRunDialog', 0);
-    const [steps, setSteps] = useState<CustomStep[]>([]);
     const { translate } = useTranslations();
+    const steps =  useInstallSteps();
 
     const handleNext = (): void => {
         setActiveStep(+activeStep + 1);
@@ -147,15 +115,6 @@ const HowToRunDialog: FC<HowToRunDialogProps> = ({ open, onClose }) => {
             setActiveStep(0);
         }, 0);
     };
-
-    const getSteps = async () => {
-        const preparedSteps = await prepareSteps();
-        setSteps(preparedSteps);
-    };
-
-    useEffect(() => {
-        getSteps();
-    }, []);
 
     return (
         <StyledDialog maxWidth="md" open={open} onClose={onClose} fullWidth>

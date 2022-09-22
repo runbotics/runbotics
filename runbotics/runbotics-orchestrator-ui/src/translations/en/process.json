@@ -39,7 +39,7 @@
     "Process.Add.Form.Error.Required": "Process name is required",
 
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
-    "Process.Schedule.Cron.HumanReadable": "Run {{ cron }}",
+    "Process.Schedule.Cron.HumanReadable": "Run: {{cron}}",
     "Process.Schedule.Cron.At": "at",
     "Process.Schedule.Title": "Schedules",
 
@@ -63,8 +63,8 @@
     "Process.MainView.Tooltip.Run.Disabled": "Cannot run process now",
     "Process.MainView.Tooltip.Import": "Import process from xml file",
     "Process.MainView.Tooltip.Export": "Download this process as xml file",
-    "Process.MainView.Tooltip.Undo": "Undo last chnage",
-    "Process.MainView.Tooltip.Redo": "Redo last chnage",
+    "Process.MainView.Tooltip.Undo": "Undo last change",
+    "Process.MainView.Tooltip.Redo": "Redo last change",
     "Process.MainView.Tooltip.Center": "Center modeler view",
     "Process.MainView.Tooltip.ZoomIn": "Zoom in modeler view",
     "Process.MainView.Tooltip.ZoomOut": "Zoom out modeler view",
@@ -80,7 +80,7 @@
     "Process.Details.Modeler.ActionListPanel.Filter.Label": "Filter by groups",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Clear filters",
 
-    "Process.Details.Modeler.Actions.Api.Label": "Api Request",
+    "Process.Details.Modeler.Actions.Api.Label": "API Request",
     "Process.Details.Modeler.Actions.Api.Input": "Input",
     "Process.Details.Modeler.Actions.Api.Url": "URL",
     "Process.Details.Modeler.Actions.Api.Headers": "Headers",
@@ -371,6 +371,7 @@
     "Process.Details.Modeler.Actions.Variable.Assign.Value": "value",
     "Process.Details.Modeler.Actions.Variable.AssignList.Label": "Assign list variable",
     "Process.Details.Modeler.Actions.Variable.AssignList.Input": "Input",
+    "Process.Details.Modeler.Actions.Variable.AssignList.Variable": "Variable",
     "Process.Details.Modeler.Actions.Variable.AssignList.Name": "Name",
     "Process.Details.Modeler.Actions.Variable.AssignList.List": "List",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Label": "Assign global variable",
@@ -579,5 +580,18 @@
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess": "Start Process",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess.Name": "Provide example name",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartThread": "Start Thread",
-    "Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread": "End Thread"
+    "Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread": "End Thread",
+    "Process.List.Header.Solutions": "See the latest solutions",
+    "Process.List.Header.Showing": "Showing {{ count }} processes",
+    "Process.List.Search": "Search",
+    "Process.List.Table.Header.Name": "Name",
+    "Process.List.Table.Header.Created": "Created",
+    "Process.List.Table.Header.Creator": "Creator",
+    "Process.List.Table.Header.Updated": "Updated",
+    "Process.List.Table.Header.Scheduled": "Scheduled",
+    "Process.List.Table.Header.Actions": "Actions",
+
+    "Process.List.Table.Step.StartEvent": "Start event",
+
+    "Process.Modeler.LeavePrompt": "You haven't save changes, are you sure u want to leave? All unsaved changes will be lost."
 }
