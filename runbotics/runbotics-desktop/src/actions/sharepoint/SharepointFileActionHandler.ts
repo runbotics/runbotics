@@ -4,7 +4,7 @@ import { DesktopRunResponse } from 'runbotics-sdk';
 
 import { Injectable } from '@nestjs/common';
 import { MicrosoftSession } from '../microsoft/microsoft.session';
-import { MicrosoftService } from '../microsoft/microsoft.service';
+import { MicrosoftService, CloudPath } from '../microsoft/microsoft.service';
 import path from 'path';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 
@@ -12,29 +12,18 @@ import fs, { createWriteStream } from 'fs';
 import { externalAxios } from '../../config/axios-configuration';
 
 // ----
-export type SharepointDownloadActionInput = {
-    fileName: string;
-    path: string;
-};
-export type SharepointDownloadActionOutput = any;
-
-// ----
-export type SharepointDownloadActionInput2 = {
+export type SharepointDownloadFromRootActionInput = {
     filePath: string;
     localPath: string;
 };
-
-export type SharepointDownloadActionOutput2 = any;
-
-// ----
 export type SharepointDownloadFromSiteActionInput = {
-    sitePath: string;
+    siteName: string;
     listName: string;
     folderPath: string;
     fileName: string;
     localPath: string;
 };
-export type SharepointDownloadFromSiteActionOutput = any;
+export type SharepointDownloadActionOutput = any;
 
 // ----
 export type SharepointDownloadFilesInput = {
@@ -50,7 +39,7 @@ export type SharepointDownloadFilesOutput = string[];
 export type SharepointUploadActionInput = {
     siteName: string;
     listName: string;
-    fileName: string;
+    filePath: string;
     localPath: string;
     cloudPath: string;
 };
@@ -65,8 +54,7 @@ export type SharepointSiteConnectionActionOutput = any;
 
 export type FileActionRequest<I> = DesktopRunRequest<any> & {
     script:
-        | 'sharepointFile.downloadFile'
-        | 'sharepointFile.downloadFile2'
+        | 'sharepointFile.downloadFileFromRoot'
         | 'sharepointFile.downloadFileFromSite'
         | 'sharepointFile.uploadFile'
         | 'sharepointFile.getSharepointSiteConnection'
@@ -84,10 +72,10 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async download(input: SharepointDownloadActionInput): Promise<SharepointDownloadActionOutput> {
+    async downloadFromRoot(input: SharepointDownloadFromRootActionInput): Promise<SharepointDownloadActionOutput> {
         const token = await this.microsoftSession.getToken();
-        const fileId = await this.microsoftService.getFileId(token.token, input.fileName);
-        const downloadLink = await this.microsoftService.getDownloadFileLink(token.token, fileId);
+        await this.microsoftService.getRootFileIdByPath(token.token, input.filePath);
+        const downloadLink = await this.microsoftService.getDownloadFileLink(token.token);
 
         // const downloadFile = (uri, filename) => {
         //     return new Promise((resolve, reject) => {
@@ -97,32 +85,28 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
         //     })
         // };
 
-        await this.downloadFile(downloadLink, path.join(input.path, input.fileName));
-    }
-
-    async download2(input: SharepointDownloadActionInput2): Promise<SharepointDownloadActionOutput2> {
-        const token = await this.microsoftSession.getToken();
-        const fileId = await this.microsoftService.getFileIdA41SP(token.token, input.filePath);
-        const downloadLink = await this.microsoftService.getDownloadFileLink(token.token, fileId);
-
         const temp = input.filePath.split('/');
         const fileName = temp[temp.length - 1];
         await this.downloadFile(downloadLink, path.join(input.localPath, fileName));
+    
+        return 'File downloaded successfully';
     }
 
     async downloadFromSite(
         input: SharepointDownloadFromSiteActionInput,
-    ): Promise<SharepointDownloadFromSiteActionOutput> {
+    ): Promise<SharepointDownloadActionOutput> {
         const token = await this.microsoftSession.getToken();
-        const siteId = await this.microsoftService.getSiteIdA41SP(token.token, input.sitePath);
-        const driveId = await this.microsoftService.getDriveId(token.token, siteId, input.listName);
-        const downloadLink = await this.microsoftService.getDownloadFileLinkFromSite(input.folderPath, input.fileName);
+        const siteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        await this.microsoftService.getDriveId(token.token, siteId, input.listName);
+        const downloadLink = await this.microsoftService.getDownloadFileLinkFromSite(token.token, input.fileName, input.folderPath);
 
         await this.downloadFile(downloadLink, path.join(input.localPath, input.fileName));
+        
+        return 'File downloaded successfully';
     }
 
     async upload(input: SharepointUploadActionInput): Promise<SharepointUploadActionOutput> {
-        const fileName = input.fileName;
+        const filePath = input.filePath;
         const cloudPath = input.cloudPath;
         const content = fs.readFileSync(input.localPath);
         const allContentTypes = [
@@ -134,19 +118,18 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
             { key: '.pptx', value: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' },
             { key: '.xlsm', value: 'application/vnd.ms-excel.sheet.macroEnabled.12' },
         ];
-        const extension = path.extname(fileName);
+        const extension = path.extname(filePath);
         if (!extension) {
-            throw new Error('fileName needs to specify extension, e.g. file.pptx');
+            throw new Error('filePath needs to specify extension, e.g. file.pptx');
         }
         const contentType = allContentTypes.find((t) => t.key === extension).value;
         const token = await this.microsoftSession.getToken();
-        if (cloudPath === 'site') {
-            const sharepointSiteId = await this.microsoftService.getSiteId(token.token, input.siteName);
-            const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
-            const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
+        if (cloudPath === CloudPath.Site) {
+            const siteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+            await this.microsoftService.getDriveId(token.token, siteId, input.listName);
         }
 
-        await this.microsoftService.uploadFile(token.token, fileName, contentType, content, cloudPath);
+        await this.microsoftService.uploadFile(token.token, filePath, cloudPath, contentType, content);
 
         return 'File uploaded successfully';
     }
@@ -155,7 +138,7 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
         input: SharepointSiteConnectionActionInput,
     ): Promise<SharepointSiteConnectionActionOutput> {
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteId(token.token, input.siteName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
         const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         return { siteId: sharepointSiteId, driveId: sharepointDriveId, listId: sharepointListId };
@@ -188,13 +171,13 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
 
     async downloadFiles(input: SharepointDownloadFilesInput): Promise<SharepointDownloadFilesOutput> {
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteId(token.token, input.siteName);
-        const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
-        const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
+        const siteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        await this.microsoftService.getListId(token.token, siteId, input.listName);
+        await this.microsoftService.getDriveId(token.token, siteId, input.listName);
 
         const fileNames = await this.microsoftService.getItemListByField(input.fieldName, input.fieldValue);
         for (const fileName of fileNames) {
-            const downloadLink = await this.microsoftService.getDownloadFileLinkFromSite('', fileName);
+            const downloadLink = await this.microsoftService.getDownloadFileLinkFromSite(token.token, fileName);
 
             // const downloadFile = (uri, filename) => {
             //     return new Promise((resolve, reject) => {
@@ -221,23 +204,20 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
     async run(request: FileActionRequest<any>): Promise<DesktopRunResponse<any>> {
         let output = {};
         switch (request.script) {
-            case 'sharepointFile.downloadFile':
-                output = await this.download(request.input);
-                break;
-            case 'sharepointFile.downloadFile2':
-                output = await this.download2(request.input);
+            case 'sharepointFile.downloadFileFromRoot':
+                output = await this.downloadFromRoot(request.input);
                 break;
             case 'sharepointFile.downloadFileFromSite':
                 output = await this.downloadFromSite(request.input);
+                break;
+            case 'sharepointFile.downloadFiles':
+                output = await this.downloadFiles(request.input);
                 break;
             case 'sharepointFile.uploadFile':
                 output = await this.upload(request.input);
                 break;
             case 'sharepointFile.getSharepointSiteConnection':
                 output = await this.getSharepointSiteConnection(request.input);
-                break;
-            case 'sharepointFile.downloadFiles':
-                output = await this.downloadFiles(request.input);
                 break;
         }
         return {
