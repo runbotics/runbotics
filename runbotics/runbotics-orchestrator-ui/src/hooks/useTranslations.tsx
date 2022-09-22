@@ -45,4 +45,8 @@ export const translate = (
     values?: { [key: string]: string | number },
 ) => i18next.t(key, values);
 
+export const checkIfKeyExists = (keyPath: string, key: string ) => (
+    i18next.exists(keyPath + key)
+)
+
 export default useTranslations;

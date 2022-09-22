@@ -1,9 +1,9 @@
 {
-    "Nav.Items.Processes": "Processes",
-    "Nav.Items.Bots": "Bots",
-    "Nav.Items.Actions": "Actions",
-    "Nav.Items.GlobalVariables": "Global variables",
-    "Nav.Items.Scheduler": "Scheduler",
-    "Nav.Items.History": "History",
-    "Nav.Hide": "Hide"
+    "Nav.Items.Processes": "Procesy",
+    "Nav.Items.Bots": "Boty",
+    "Nav.Items.Actions": "Akcje",
+    "Nav.Items.GlobalVariables": "Zmienne globalne",
+    "Nav.Items.Scheduler": "Harmonogram",
+    "Nav.Items.History": "Historia",
+    "Nav.Hide": "Ukryj"
 }

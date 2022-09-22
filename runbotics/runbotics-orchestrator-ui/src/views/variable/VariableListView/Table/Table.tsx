@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'src/store';
 import { globalVariableActions, globalVariableSelector } from 'src/store/slices/GlobalVariable';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
 import { VariableDetailState } from '../../Variable.types';
-import useColumns from './useColumns';
+import useGlobalVariablesColumns from './useGlobalVariablesColumns';
 import DeleteGlobalVariableDialog from './DeleteGlobalVariableDialog';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
@@ -49,7 +49,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         setVariableDetailState({ show: true, variable, readOnly: true });
     };
 
-    const columns = useColumns({
+    const globalVariablesColumns = useGlobalVariablesColumns({
         onDelete, onEdit, hasDeleteVariableAccess, hasEditVariableAccess,
     });
 
@@ -65,7 +65,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                         <DataGrid
                             loading={loading}
                             rows={globalVariables}
-                            columns={columns}
+                            columns={globalVariablesColumns}
                             autoHeight
                             disableSelectionOnClick
                             onCellClick={(param) => {

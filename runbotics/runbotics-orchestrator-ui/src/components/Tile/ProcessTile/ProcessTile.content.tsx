@@ -35,7 +35,7 @@ const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) =>
                     {translate('Component.Tile.Process.Content.Updated')}
                 </Typography>
                 <Typography color="textPrimary" variant="h6">
-                    {moment(process.updated).locale('en').fromNow()}
+                    {moment(process.updated).fromNow()}
                 </Typography>
             </Box>
             <Box>

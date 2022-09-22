@@ -1,22 +1,22 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
-import beeOfficeActions from './BeeOfficeActions';
-import sapActions from './SAPActions';
-import applicationActions from './ApplicationActions';
-import generalActions from './GeneralActions';
-import variablesActions from './VariablesActions';
-import fileActions from './FileActions';
-import csvActions from './CsvActions';
-import sharepointExcelActions from './SharepointExcelActions';
-import desktopOfficeActions from './DesktopOfficeActions';
-import sharepointFileActions from './SharepointFileActions';
-import browserActions from './BrowserActions';
-import javascriptActions from './JavascriptActions';
-import mailActions from './MailActions';
-import asanaActions from './AsanaActions';
-import googleSheetsActions from './GoogleSheetsActions';
-import jiraActions from './JiraActions';
-import apiActions from './ApiActions';
+import getBeeOfficeActions from './beeOffice.actions';
+import getSapActions from './sap.actions';
+import getApplicationActions from './application.actions';
+import getGeneralActions from './general.actions';
+import getVariablesActions from './variables.actions';
+import getFileActions from './file.actions';
+import getCsvActions from './csv.actions';
+import getSharepointExcelActions from './sharepointExcel.actions';
+import getDesktopOfficeActions from './desktopOffice.actions';
+import getSharepointFileActions from './sharepointFile.actions';
+import getBrowserActions from './browser.actions';
+import getJavascriptActions from './javascript.actions';
+import getMailActions from './mail.actions';
+import getAsanaActions from './asana.actions';
+import getGoogleSheetsActions from './googleSheets.actions';
+import getJiraActions from './jira.actions';
+import getApiActions from './api.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     'loop.init': {
@@ -161,23 +161,23 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-    ...beeOfficeActions,
-    ...sapActions,
-    ...applicationActions,
-    ...generalActions,
-    ...variablesActions,
-    ...fileActions,
-    ...csvActions,
-    ...sharepointExcelActions,
-    ...sharepointFileActions,
-    ...desktopOfficeActions,
-    ...browserActions,
-    ...javascriptActions,
-    ...mailActions,
-    ...asanaActions,
-    ...googleSheetsActions,
-    ...jiraActions,
-    ...apiActions,
+    ...getBeeOfficeActions(),
+    ...getSapActions(),
+    ...getApplicationActions(),
+    ...getGeneralActions(),
+    ...getVariablesActions(),
+    ...getFileActions(),
+    ...getCsvActions(),
+    ...getSharepointExcelActions(),
+    ...getSharepointFileActions(),
+    ...getDesktopOfficeActions(),
+    ...getBrowserActions(),
+    ...getJavascriptActions(),
+    ...getMailActions(),
+    ...getAsanaActions(),
+    ...getGoogleSheetsActions(),
+    ...getJiraActions(),
+    ...getApiActions(),
 };
 
 export default internalBpmnActions;

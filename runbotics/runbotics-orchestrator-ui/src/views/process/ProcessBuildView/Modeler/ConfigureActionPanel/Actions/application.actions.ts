@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const applicationActions: Readonly<Record<string, IBpmnAction>> = {
+const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
     'application.launch': {
         id: 'application.launch',
         label: translate('Process.Details.Modeler.Actions.Application.Launch.Label'),
@@ -59,6 +59,6 @@ const applicationActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default applicationActions;
+export default getApplicationActions;

@@ -52,5 +52,9 @@
     "Bot.Actions.Delete.TitleWithName": "Delete {{ name }}",
     "Bot.Actions.Delete.Confirmation.Question": "Are you sure you want to delete bot {{ name }}?",
     "Bot.Actions.DeletionSuccessMessage": "Bot {{ name }} deleted",
-    "Bot.Actions.DeletionFailedMessage": "Bot {{ name }} deletion failed"
+    "Bot.Actions.DeletionFailedMessage": "Bot {{ name }} deletion failed",
+    
+    "Bot.ListView.Results.Table.Status.Disconnected": "DISCONNECTED",
+    "Bot.ListView.Results.Table.Status.Connected": "CONNECTED",
+    "Bot.ListView.Results.Table.Status.Busy": "BUSY"
 }
