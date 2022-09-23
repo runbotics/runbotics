@@ -11,7 +11,6 @@ import { processActions } from 'src/store/slices/Process';
 import { useParams } from 'react-router-dom';
 import { ProcessParams } from 'src/utils/types/ProcessParams';
 import BpmnModeler, { ModelerImperativeHandle } from './Modeler/BpmnModeler';
-import Sidebar from './Sidebar/Sidebar';
 import { StyledCard } from './ProcessBuildView.styled';
 import _ from 'lodash';
 import { useSnackbar } from 'notistack';
@@ -26,7 +25,6 @@ const ProcessBuildView: FC = () => {
     const { translate } = useTranslations();
     const { id } = useParams<ProcessParams>();
     const BpmnModelerRef = useRef<ModelerImperativeHandle>(null);
-    const [currentTab, setCurrentTab] = useState<ProcessBuildTab>(ProcessBuildTab.PROPERTIES);
     const [offSet, setOffSet] = useState<number>(null);
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
@@ -36,19 +34,6 @@ const ProcessBuildView: FC = () => {
             setOffSet(node.offsetTop + BORDER_SIZE);
         }
     }, []);
-
-    useEffect(() => {
-        dispatch(getActions());
-        dispatch(globalVariableActions.getGlobalVariables());
-    }, [id]);
-
-    const handleTabToggle = (tab: ProcessBuildTab) => {
-        setCurrentTab((prevState) =>
-            prevState === ProcessBuildTab.RUN_INFO && tab === ProcessBuildTab.RUN_INFO
-                ? ProcessBuildTab.PROPERTIES
-                : tab,
-        );
-    };
 
     const onSave = async () => {
         try {
@@ -105,16 +90,12 @@ const ProcessBuildView: FC = () => {
                     <BpmnModeler
                         ref={BpmnModelerRef}
                         definition={process.definition}
-                        currentTab={currentTab}
-                        onTabChange={handleTabToggle}
                         offsetTop={offSet}
                         onSave={onSave}
                         onExport={handleExport}
                         onImport={handleImport}
-                        onRunClick={() => setCurrentTab(ProcessBuildTab.RUN_INFO)}
                         process={process}
                     />
-                    <Sidebar selectedTab={currentTab} onTabToggle={handleTabToggle} />
                 </Box>
             </DialogContent>
         </StyledCard>

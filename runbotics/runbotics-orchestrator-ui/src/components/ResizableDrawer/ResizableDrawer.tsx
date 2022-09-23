@@ -19,7 +19,7 @@ const Dragger = styled('div')(({ theme }) => ({
     },
 }));
 
-const ResizableDrawer = ({ children, ...other }: DrawerProps) => {
+const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
     const [width, setWidth] = useState(INITIAL_WIDTH);
 
     const handleMousemove = (event: MouseEvent) => {
@@ -39,15 +39,29 @@ const ResizableDrawer = ({ children, ...other }: DrawerProps) => {
 
     return (
         <Drawer
+            variant="persistent"
+            anchor="right"
+            open={open}
             {...other}
             PaperProps={{
-                style: {
-                    maxWidth: '1000px',
-                    minWidth: '10px',
-                    width,
+                sx: {
                     transition: 'none',
+                    position: 'relative',
                 },
             }}
+            sx={[
+                {
+                    width,
+                    maxWidth: '600px',
+                    minWidth: '250px',
+                    transition: ({ transitions: { easing, duration } }) =>
+                        `margin ${duration.enteringScreen}ms ${easing.easeOut} 0ms`,
+                    overflowX: 'hidden',
+                },
+                !open && {
+                    marginLeft: `-${width}px`,
+                },
+            ]}
         >
             <Dragger onMouseDown={handleDragStart} />
             {children}
