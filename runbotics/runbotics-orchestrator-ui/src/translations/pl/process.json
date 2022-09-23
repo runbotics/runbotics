@@ -420,6 +420,9 @@
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Label": "SAP: Podwójny Klik",
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Target": "Cel",
+    "Process.Details.Modeler.Actions.SAP.Select.Label": "SAP: Wybór",
+    "Process.Details.Modeler.Actions.SAP.Select.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.SAP.Select.Target": "Cel",
 
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label": "Sharepoint Excel: Pobierz zawartość z komórki",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Input": "Dane wejściowe",

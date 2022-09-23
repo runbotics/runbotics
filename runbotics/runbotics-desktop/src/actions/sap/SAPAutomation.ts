@@ -5,72 +5,7 @@ import { DesktopRunResponse } from 'runbotics-sdk';
 import 'winax';
 import { SendVKeyMapper } from './SendVKeyMapper';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
-
-export type SAPActionRequest<I> = DesktopRunRequest<any> & {
-    script:
-        | 'sap.connect'
-        | 'sap.startTransaction'
-        | 'sap.endTransaction'
-        | 'sap.type'
-        | 'sap.disconnect'
-        | 'sap.sendVKey'
-        | 'sap.readText'
-        | 'sap.click'
-        | 'sap.doubleClick'
-        | 'sap.index'
-        | 'sap.focus';
-};
-
-// --- action
-export type SAPClickActionInput = {
-    target: string;
-};
-export type SAPClickActionOutput = any;
-
-// --- action
-export type SAPIndexActionInput = {
-    target: string;
-};
-export type SAPIndexActionOutput = any;
-
-// --- action
-export type SAPFocusActionInput = {
-    target: string;
-};
-export type SAPFocusActionOutput = any;
-
-// --- action
-export type SAPReadTextActionInput = {
-    target: string;
-};
-export type SAPReadTextActionOutput = any;
-
-// --- action
-export type SAPSendVKeyActionInput = {
-    virtualKey: string;
-};
-export type SAPSendVKeyActionOutput = {};
-
-// --- action
-export type SAPConnectActionInput = {
-    connectionName: string;
-    user: string;
-    password: string;
-};
-export type SAPConnectActionOutput = {};
-
-// --- action
-export type SAPStartTransactionActionInput = {
-    transaction: string;
-};
-export type SAPStartTransactionActionOutput = {};
-
-// --- action
-export type SAPTypeActionInput = {
-    target: string;
-    value: string;
-};
-export type SAPTypeActionOutput = {};
+import * as SapTypes from './SAPAutomation.types';
 
 @Injectable()
 class SAPAutomation extends StatefulActionHandler {
@@ -80,7 +15,7 @@ class SAPAutomation extends StatefulActionHandler {
         super();
     }
 
-    async connect(input: SAPConnectActionInput): Promise<SAPConnectActionOutput> {
+    async connect(input: SapTypes.SAPConnectActionInput): Promise<SapTypes.SAPConnectActionOutput> {
         try {
             const app = new ActiveXObject('SapROTWr.SapROTWrapper');
             const sapGuiAuto = app.GetROTEntry('SAPGUI');
@@ -100,33 +35,33 @@ class SAPAutomation extends StatefulActionHandler {
         return {};
     }
 
-    async startTransaction(input: SAPStartTransactionActionInput): Promise<SAPStartTransactionActionOutput> {
+    async startTransaction(input: SapTypes.SAPStartTransactionActionInput): Promise<SapTypes.SAPStartTransactionActionOutput> {
         this.sessions['session'].StartTransaction(input.transaction);
         return {};
     }
 
-    async endTransaction(input: SAPStartTransactionActionInput): Promise<SAPStartTransactionActionOutput> {
+    async endTransaction(input: SapTypes.SAPStartTransactionActionInput): Promise<SapTypes.SAPStartTransactionActionOutput> {
         const result = this.sessions['session'].EndTransaction();
         return {};
     }
 
-    async type(input: SAPTypeActionInput): Promise<SAPTypeActionOutput> {
+    async type(input: SapTypes.SAPTypeActionInput): Promise<SapTypes.SAPTypeActionOutput> {
         const result = (this.sessions['session'].FindById(input.target).text = input.value);
         return {};
     }
 
-    async click(input: SAPClickActionInput): Promise<SAPClickActionOutput> {
+    async click(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.sessions['session'].FindById(input.target).press();
         return {};
     }
 
-    async doubleClick(input: SAPClickActionInput): Promise<SAPClickActionOutput> {
+    async doubleClick(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         await this.focus(input);
         await this.sendVKey({ virtualKey: 'F2' });
         return {};
     }
 
-    async index(input: SAPIndexActionInput): Promise<SAPIndexActionOutput> {
+    async index(input: SapTypes.SAPIndexActionInput): Promise<SapTypes.SAPIndexActionOutput> {
         const table = this.sessions['session'].FindById(input.target);
         const rowsCount = table.Rows.Count.__value;
         const columnsCount = table.Columns.Count.__value;
@@ -148,7 +83,7 @@ class SAPAutomation extends StatefulActionHandler {
         return array;
     }
 
-    async focus(input: SAPFocusActionInput): Promise<SAPFocusActionOutput> {
+    async focus(input: SapTypes.SAPFocusActionInput): Promise<SapTypes.SAPFocusActionOutput> {
         this.sessions['session'].FindById(input.target).setFocus();
         return {};
     }
@@ -158,18 +93,23 @@ class SAPAutomation extends StatefulActionHandler {
         return {};
     }
 
-    async sendVKey(input: SAPSendVKeyActionInput): Promise<SAPSendVKeyActionOutput> {
+    async sendVKey(input: SapTypes.SAPSendVKeyActionInput): Promise<SapTypes.SAPSendVKeyActionOutput> {
         this.sessions['session'].FindById('wnd[0]').SendVKey(SendVKeyMapper[input.virtualKey]);
         return {};
     }
 
-    async readText(input: SAPReadTextActionInput): Promise<SAPReadTextActionOutput> {
+    async readText(input: SapTypes.SAPReadTextActionInput): Promise<SapTypes.SAPReadTextActionOutput> {
         const result = this.sessions['session'].FindById(input.target).text;
         return result ? result.__value : null;
     }
 
+    async select(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
+        this.sessions['session'].FindById(input.target).select();
+        return {};
+    }
+
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
-        const action: SAPActionRequest<any> = request as SAPActionRequest<any>;
+        const action: SapTypes.SAPActionRequest<any> = request as SapTypes.SAPActionRequest<any>;
         let output: any = {};
         switch (action.script) {
             case 'sap.connect':
@@ -204,6 +144,9 @@ class SAPAutomation extends StatefulActionHandler {
                 break;
             case 'sap.index':
                 output = await this.index(action.input);
+                break;
+            case 'sap.select':
+                output = await this.select(action.input);
                 break;
             default:
                 throw new Error('Action not found');
