@@ -29,6 +29,11 @@ const ProcessBuildView: FC = () => {
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
 
+    useEffect(() => {
+        dispatch(getActions());
+        dispatch(globalVariableActions.getGlobalVariables());
+    }, [id]);
+
     const onRefChange = useCallback((node: HTMLDivElement) => {
         if (node) {
             setOffSet(node.offsetTop + BORDER_SIZE);
