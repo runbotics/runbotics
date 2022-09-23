@@ -1,17 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Grid,
-    LinearProgress,
-} from '@mui/material';
-import {
-    FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme,
-} from '@rjsf/core';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, LinearProgress } from '@mui/material';
+import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,32 +9,13 @@ import { useSnackbar } from 'notistack';
 import { IAction } from 'src/types/model/action.model';
 import { saveAction, setShowEditModal } from 'src/store/slices/Action/Action.thunks';
 import { useDispatch, useSelector } from 'src/store';
-import JSONSchemaFormRenderer from
-    'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
+import JSONSchemaFormRenderer from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
 import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
 import ErrorBoundary from 'src/components/utils/ErrorBoundary';
-import useTranslations, { translate as t } from 'src/hooks/useTranslations';
+import useTranslations from 'src/hooks/useTranslations';
+import useActionDetailsSchema from './useActionDetailsSchema';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
-
-const schema: JSONSchema7 = {
-    type: 'object',
-    properties: {
-        script: {
-            type: 'string',
-            title: t('Action.Details.Script'),
-        },
-        label: {
-            type: 'string',
-            title: t('Action.Details.Label'),
-        },
-        form: {
-            type: 'string',
-            title: t('Action.Details.Form'),
-        },
-    },
-    required: ['script', 'label', 'form'],
-};
 
 const uiSchema: UiSchema = {
     form: {
@@ -65,14 +35,15 @@ export const Index = () => {
     const [loading, setLoading] = useState(false);
     const showEditModal = useSelector((state) => state.action.showEditModal);
     const { enqueueSnackbar } = useSnackbar();
-
+    const schema = useActionDetailsSchema();
+    
     const draftState = useSelector((state) => state.action.draft);
     const { translate } = useTranslations();
-
+    
     useEffect(() => {
         setDraft(draftState.action);
     }, [draftState.action]);
-
+    
     useEffect(() => {
         setLoading(true);
         const handler = setTimeout(() => {
@@ -80,13 +51,14 @@ export const Index = () => {
                 id: uuidv4(),
                 definition: JSON.parse(draft.form),
             });
-
+            
             setLoading(false);
         }, 1500);
         return () => {
             clearTimeout(handler);
         };
     }, [draft.form]);
+
     const handleSubmit = (e: ISubmitEvent<IAction>) => {
         if (!e.formData.script.startsWith('external.')) {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
@@ -97,15 +69,15 @@ export const Index = () => {
             dispatch(setShowEditModal({ show: false }));
         }
     };
+    
     const handleChange = (e: IChangeEvent<IAction>) => {
         setDraft(e.formData);
     };
+    
     return (
         <>
-            <Dialog open={showEditModal} onClose={() => { }} fullWidth maxWidth="xl">
-                <DialogTitle>
-                    {translate('Action.Details.Dialog.SaveAction', { script: draft.script })}
-                </DialogTitle>
+            <Dialog open={showEditModal} onClose={() => {}} fullWidth maxWidth="xl">
+                <DialogTitle>{translate('Action.Details.Dialog.SaveAction', { script: draft.script })}</DialogTitle>
                 <DialogContent>
                     <Grid container>
                         <Grid item xs={8}>

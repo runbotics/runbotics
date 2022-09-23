@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const csvActions: Readonly<Record<string, IBpmnAction>> = {
+const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     'import.csv': {
         id: 'import.csv',
         label: translate('Process.Details.Modeler.Actions.CSV.Import.Label'),
@@ -238,6 +238,6 @@ const csvActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default csvActions;
+export default getCsvActions;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row } from 'react-table';
-import cronstrue from 'cronstrue';
+import cronstrue from 'cronstrue/i18n';
 import { Stack, TableCell } from '@mui/material';
 import { useSelector, useDispatch } from 'src/store';
 import {
@@ -14,7 +14,10 @@ import useTranslations from 'src/hooks/useTranslations';
 import { IProcessInstance } from 'runbotics-common';
 import Header from './Header';
 import SchedulerTableContainer from './SchedulerTable.container';
-import { activeProcessColumns, scheduledProcessColumns, waitingProcessColumns } from './SchedulerTable.columns';
+import { useActiveProcessColumns, useScheduledProcessColumns, useWaitingProcessColumns } from './SchedulerTable.columns';
+import { Column } from 'react-table';
+import moment from 'moment'
+import i18n from 'i18next';
 
 const SchedulerView = () => {
     const dispatch = useDispatch();
@@ -28,6 +31,10 @@ const SchedulerView = () => {
         dispatch(schedulerActions.getScheduledJobs());
         dispatch(schedulerActions.getWaitingJobs());
     }, []);
+
+    const activeProcessColumns = useActiveProcessColumns();
+    const waitingProcessColumns = useWaitingProcessColumns();
+    const scheduledProcessColumns = useScheduledProcessColumns();
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
         if (rowData.process) {
@@ -48,7 +55,8 @@ const SchedulerView = () => {
     const renderScheduledJobSubRow = (row: Row<ScheduledJob>) => {
         const humanReadableCron = (cronExpression: string) =>
             translate('Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
-                cron: cronstrue.toString(cronExpression).replace('At', translate('Process.Schedule.Cron.At')),
+                cron: cronstrue
+                .toString(cronExpression, {locale: i18n.language}).toLowerCase()
             });
 
         return (

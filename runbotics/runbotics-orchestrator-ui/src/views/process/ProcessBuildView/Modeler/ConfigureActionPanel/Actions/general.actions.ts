@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const generalActions: Readonly<Record<string, IBpmnAction>> = {
+const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
         id: 'general.console.log',
         label: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Label'),
@@ -145,6 +145,6 @@ const generalActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default generalActions;
+export default getGeneralActions;
