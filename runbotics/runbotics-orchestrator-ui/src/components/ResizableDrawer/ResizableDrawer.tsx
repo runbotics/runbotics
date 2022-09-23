@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Drawer } from '@mui/material';
 import { DrawerProps } from '@mui/material/Drawer/Drawer';
+import useWrappedState from 'src/hooks/useWrappedState';
 
 const INITIAL_WIDTH = 300;
+const MIN_WIDTH = 250;
+const MAX_WIDTH = 600;
 
 const Dragger = styled('div')(({ theme }) => ({
     width: '3px',
@@ -20,7 +23,7 @@ const Dragger = styled('div')(({ theme }) => ({
 }));
 
 const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
-    const [width, setWidth] = useState(INITIAL_WIDTH);
+    const [width, setWidth] = useWrappedState(INITIAL_WIDTH, { min: MIN_WIDTH, max: MAX_WIDTH });
 
     const handleMousemove = (event: MouseEvent) => {
         setWidth(window.innerWidth - event.clientX);
@@ -52,8 +55,6 @@ const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
             sx={[
                 {
                     width,
-                    maxWidth: '600px',
-                    minWidth: '250px',
                     transition: ({ transitions: { easing, duration } }) =>
                         `margin ${duration.enteringScreen}ms ${easing.easeOut} 0ms`,
                     overflowX: 'hidden',
