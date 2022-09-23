@@ -31,9 +31,9 @@
     "Process.Delete.SuccessMessage": "Proces {{ name }} został pomyślnie usunięty",
     "Process.Delete.ConfirmationQuestion": "Czy na pewno chcesz usunąć proces {{ name }}",
 
-    "Process.Add.ActionName": "Add new process",
-    "Process.Add.Title": "Add new process",
-    "Process.Add.Form.Fields.Name": "Name",
+    "Process.Add.ActionName": "Dodaj nowy proces",
+    "Process.Add.Title": "Dodaj nowy proces",
+    "Process.Add.Form.Fields.Name": "Nazwa",
     "Process.Add.Form.Error.General": "Podczas tworzenia procesu wystąpił błąd",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
@@ -253,18 +253,18 @@
     "Process.Details.Modeler.Actions.CSV.WriteFile.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.CSV.WriteFile.VariableText": "Przypisz daną wyjściową do zmiennej",
 
-    "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Desktop PowerPoint: Otwórz aplikację",
+    "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Lokalny PowerPoint: Otwórz aplikację",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath": "Określona ścieżka pliku",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Output": "Dane wyjściowe",
-    "Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Label": "Desktop PowerPoint: Kopiuj slajd",
+    "Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Label": "PowerPoint: Kopiuj slajd",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.FilePath": "Określona ścieżka pliku",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Output": "Dane wyjściowe",
-    "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Label": "Desktop PowerPoint: Zapisz prezentację",
+    "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Label": "PowerPoint: Zapisz prezentację",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Output": "Dane wyjściowe",
-    "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label": "Desktop PowerPoint: Zamknij aplikację",
+    "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label": "PowerPoint: Zamknij aplikację",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Input": "Dane wejściowe",
 
     "Process.Details.Modeler.Actions.File.AppendFile.Label": "Plik: Dodaj zawartość do pliku",
@@ -362,7 +362,7 @@
     "Process.Details.Modeler.Actions.Mail.Send.Label": "Wyślij emaila",
     "Process.Details.Modeler.Actions.Mail.Send.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Mail.Send.To": "Do",
-    "Process.Details.Modeler.Actions.Mail.Send.CC": "Do wiadomści",
+    "Process.Details.Modeler.Actions.Mail.Send.CC": "Wyślij kopię maila do:",
     "Process.Details.Modeler.Actions.Mail.Send.Subject": "Temat",
     "Process.Details.Modeler.Actions.Mail.Send.Attachment": "Załącznik (Pełna ścieżka lokalna)",
     "Process.Details.Modeler.Actions.Mail.Send.Content": "Zawartość",
@@ -597,5 +597,7 @@
     "Process.List.Table.Header.Scheduled": "Zaplanowanego",
     "Process.List.Table.Header.Actions": "Akcje",
 
-    "Process.List.Table.Step.StartEvent": "Zdarzenie początkowe"
+    "Process.List.Table.Step.StartEvent": "Zdarzenie początkowe",
+
+    "Process.Modeler.LeavePrompt": "Czy na pewno chcesz wyjść? Niezapisane zmiany zostaną utracone."
 }
