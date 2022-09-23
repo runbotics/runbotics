@@ -12,6 +12,7 @@ import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import { Container, AttendancePaper, StyledPaper } from './ProcessConfigureView.styles';
+import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,8 @@ const ProcessConfigureView: VFC = () => {
 
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(process?.system);
     const [selectedBotCollection, setSelectedBotCollection] = useState<IBotCollection>(process?.botCollection);
-    const [isAttended, setIsAttended] = useState(process?.isAttended);
+    const [attended, setAttended] = useState(process?.isAttended);
+    const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
@@ -36,7 +38,10 @@ const ProcessConfigureView: VFC = () => {
             setSelectedBotCollection(process.botCollection);
         }
         if (process?.isAttended) {
-            setIsAttended(process.isAttended);
+            setAttended(process.isAttended);
+        }
+        if (process?.isTriggerable) {
+            setTriggerable(process.isTriggerable);
         }
     }, [process]);
 
@@ -51,8 +56,13 @@ const ProcessConfigureView: VFC = () => {
     };
 
     const handleAttendanceChange = async (isAttended: boolean) => {
-        await dispatch(processActions.partialUpdateProcess({ ...process, isAttended }));
-        setIsAttended(isAttended);
+        await dispatch(processActions.updateAttendedance({ ...process, isAttended }));
+        setAttended(isAttended);
+    };
+
+    const handleTriggerableChange = async (isTriggerable: boolean) => {
+        await dispatch(processActions.updateTriggerable({ ...process, isTriggerable }));
+        setTriggerable(isTriggerable);
     };
 
     return (
@@ -75,12 +85,17 @@ const ProcessConfigureView: VFC = () => {
             </Box>
             <Box width="fit-content">
                 <AttendancePaper>
-                    <ProcessAttendedComponent
-                        isProcessAttended={isAttended}
-                        onAttendedChange={handleAttendanceChange}
-                    />
+                    <ProcessAttendedComponent isProcessAttended={attended} onAttendedChange={handleAttendanceChange} />
                     <ManageProcessForm />
                 </AttendancePaper>
+            </Box>
+            <Box width="fit-content">
+                <StyledPaper>
+                    <ProcessTriggerableComponent
+                        isProcessTriggerable={triggerable}
+                        onTriggerableChange={handleTriggerableChange}
+                    />
+                </StyledPaper>
             </Box>
         </Container>
     );

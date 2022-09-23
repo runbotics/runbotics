@@ -9,6 +9,11 @@ export enum Runner {
     NO_RUNNER = '',
 }
 
+export enum ActionSystem {
+    WINDOWS = 'Windows',
+    LINUX = 'Linux',
+}
+
 export type IActionField = {
     id: string;
     label: string;
@@ -38,6 +43,7 @@ export type IBpmnAction = {
     runner: Runner;
     script: string;
     label: string;
+    system?: ActionSystem;
     input?: IActionInput;
     output?: IActionOutput;
     form?: IForm;

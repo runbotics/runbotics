@@ -3,13 +3,14 @@ import { ProcessService } from "../database/process/process.service";
 import { InjectQueue } from "@nestjs/bull";
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
   OnApplicationBootstrap,
 } from "@nestjs/common";
 import { Job, JobInformation, JobStatus, Queue } from "bull";
 import { v4 as uuidv4 } from "uuid";
-import { ScheduledProcess } from "src/types/scheduled-process";
+import { ScheduledProcess, ValidateProcessAccessProps } from "src/types/scheduled-process";
 import { Logger } from "src/utils/logger";
 import {
   InstantProcess,
@@ -94,8 +95,8 @@ export class SchedulerService implements OnApplicationBootstrap {
     };
   }
 
-  async addNewInstantJob({ processInfo, ...rest }: StartProcessRequest) {
-    const process = await this.getProcessByInfo(processInfo);
+
+  async addNewInstantJob({ process, ...rest }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
 
     this.handleAttededProcess(process, rest.input);
@@ -104,6 +105,7 @@ export class SchedulerService implements OnApplicationBootstrap {
       process,
       ...rest,
     };
+
     const job = await this.processQueue
       .add(instantProcess, {
         jobId: `${process.name}:${process.id}:${uuidv4()}`,
@@ -142,16 +144,25 @@ export class SchedulerService implements OnApplicationBootstrap {
       .catch((err) => this.logger.error("Failed to clear the queue", err));
   }
 
-  async addProcessToScheduledJobs(scheduledJobs: JobInformation[]) {
-    return Promise.all(scheduledJobs.map(async (scheduledJob) => {
-      const processData = scheduledJob.key.split(':');
-      const processId = processData[3];
-      const process = await this.processService.findById(Number(processId));
-      return {
-        ...scheduledJob,
-        process
-      };
-    }));
+  async addAdditionalInfoToScheduledJobs(scheduledJobs: JobInformation[]) {
+    return Promise.all(
+      scheduledJobs.map(async (scheduledJob) => {
+        const scheduledJobId = scheduledJob.id;
+        const additionalInfo = await this.scheduleProcessService.findById(
+          Number(scheduledJobId)
+        );
+
+        const processData = scheduledJob.key.split(":");
+        const processId = processData[3];
+        const process = await this.processService.findById(Number(processId));
+        return {
+          ...scheduledJob,
+          process,
+          cron: additionalInfo.cron,
+          user: additionalInfo.user,
+        };
+      })
+    );
   }
 
   async getJobById(id: number | string) {
@@ -162,11 +173,15 @@ export class SchedulerService implements OnApplicationBootstrap {
   }
 
   async getScheduledJobs() {
-    this.logger.log('Getting scheduled jobs');
+    this.logger.log("Getting scheduled jobs");
     const scheduledJobs = await this.processQueue.getRepeatableJobs();
-    const extendedScheduledJobs = await this.addProcessToScheduledJobs(scheduledJobs);
+    const extendedScheduledJobs = await this.addAdditionalInfoToScheduledJobs(
+      scheduledJobs
+    );
 
-    this.logger.log(`Successfully got ${extendedScheduledJobs.length} scheduled job(s)`);
+    this.logger.log(
+      `Successfully got ${extendedScheduledJobs.length} scheduled job(s)`
+    );
     return extendedScheduledJobs;
   }
 
@@ -210,8 +225,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   async updateProcessForScheduledJob(jobs: Job[]) {
     return Promise.all(jobs.map(async (job) => {
       const process = await this.processService.findById(Number(job.data.process.id));
-      job.data.process = { ...process };
-      return job;
+        job.data.process = { ...process };
+        return job;
     }));
   }
 
@@ -257,5 +272,21 @@ export class SchedulerService implements OnApplicationBootstrap {
     }
 
     return process;
+  }
+
+  async validateProcessAccess({ process, user, triggered = false }: ValidateProcessAccessProps) {
+    const hasAccess = (process.createdBy.id === user?.id)
+    const isPublic = process.isPublic;
+    const isTriggerable = process?.isTriggerable;
+
+    if (!hasAccess && !isPublic) {
+      this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
+      throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
+}
+
+    if (triggered && !isTriggerable) {
+      this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);
+      throw new ForbiddenException(`Process ${process?.name} (${process?.id}) is not triggerable`);
+    }
   }
 }

@@ -28,6 +28,8 @@ public interface ProcessService {
 
     Optional<ProcessDTO> updateIsAttended(ProcessDTO processDTO);
 
+    Optional<ProcessDTO> updateIsTriggerable(ProcessDTO processDTO);
+
     Optional<ProcessDTO> updateBotCollection(ProcessDTO processDTO);
 
     Optional<ProcessDTO> updateBotSystem(ProcessDTO processDTO);

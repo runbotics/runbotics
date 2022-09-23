@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -143,7 +144,7 @@ public class ProcessResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ProcessDTO processDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update bot collection used in Process {} to {}", processDTO, processDTO.getIsAttended());
+        log.debug("REST request to update is attended used in Process {} to {}", processDTO, processDTO.getIsAttended());
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateIsAttended(processDTO);
 
@@ -152,7 +153,23 @@ public class ProcessResource {
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
         );
     }
-    
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_TRIGGERABLE_EDIT + "')")
+    @PatchMapping(value = "/processes/{id}/is-triggerable")
+    public ResponseEntity<ProcessDTO> processSetIsTriggerable(
+        @PathVariable(value = "id", required = true) final Long id,
+        @NotNull @RequestBody ProcessDTO processDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getIsTriggerable());
+        checkProcessForEdit(id, processDTO);
+        Optional<ProcessDTO> result = processService.updateIsTriggerable(processDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+        );
+    }
+
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_BOT_COLLECTION_EDIT + "')")
     @PatchMapping(value = "/processes/{id}/bot-collection")
     public ResponseEntity<ProcessDTO> processSetBotCollection(
@@ -240,6 +257,27 @@ public class ProcessResource {
         log.debug("REST request to get Process : {}", id);
         Optional<ProcessDTO> processDTO = processService.findOne(id);
         return ResponseUtil.wrapOrNotFound(processDTO);
+    }
+
+    /**
+     * {@code GET  /processes/name/:processName/is-available} : check if given process name is available
+     * 
+     * @param processName the prcess name to check if available
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} or with status {@code 409 (Conflict)}.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_READ + "')")
+    @GetMapping("/processes/name/{processName}/is-available")
+    public ResponseEntity<Void> checkIfProcessExists(@PathVariable String processName) {
+        log.debug("=> REST request to check if given process name is available : {}", processName);
+        Optional<ProcessDTO> processDTO = processService.findByName(processName);
+        
+        if (processDTO.isPresent()) {
+            log.debug("<= Given process name is not available : {}", processName);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        log.debug("<= Given process name is available : {}", processName);
+        return ResponseEntity.ok().build();
     }
 
     /**

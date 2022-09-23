@@ -25,7 +25,7 @@ export const login = createAsyncThunk('auth/login', async (payload: { email: str
     setAccessToken(id_token);
     const responseUser = await Axios.get<User>('/api/account');
     const user = responseUser.data;
-    return { ...user, authoritiesById: objFromArray(user.authorities, 'name') };
+    return { ...user, authoritiesById: user?.roles };
 });
 
 export const logout = createAsyncThunk('auth/logout', () => {
@@ -55,7 +55,7 @@ export const initialize = createAsyncThunk<{
             const user = response.data;
             return {
                 isAuthenticated: true,
-                user: { ...user, authoritiesById: objFromArray(user.authorities, 'name') },
+                user: { ...user, authoritiesById: user?.roles },
             };
         }
         return {

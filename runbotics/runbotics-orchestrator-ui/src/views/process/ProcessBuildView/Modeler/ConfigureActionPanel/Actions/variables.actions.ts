@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const variablesActions: Readonly<Record<string, IBpmnAction>> = {
+const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assign': {
         id: 'variables.assign',
         label: translate('Process.Details.Modeler.Actions.Variable.Assign.Label'),
@@ -75,7 +75,7 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
             formData: {
                 input: {
                     variable: undefined,
-                    value: undefined,
+                    value: [''],
                 },
             },
         },
@@ -118,6 +118,6 @@ const variablesActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default variablesActions;
+export default getVariablesActions;

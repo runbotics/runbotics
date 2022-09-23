@@ -13,4 +13,5 @@ echo "[INFO] runbotics-desktop - Docker build completed";
 
 echo "[INFO] runbotics-desktop - Docker push started";
 docker push runbotics/runbotics-desktop:${PACKAGE_VERSION}
+docker push runbotics/runbotics-desktop:latest
 echo "[INFO] runbotics-desktop - Docker push completed";

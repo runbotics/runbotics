@@ -1,4 +1,4 @@
-import { Body, Controller, InternalServerErrorException, Param, Post, Request, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, InternalServerErrorException, Param, Post, Request, UsePipes } from '@nestjs/common';
 import { AuthRequest, ProcessInput } from 'src/types';
 import { SchedulerService } from '../scheduler.service';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
@@ -11,7 +11,7 @@ import { FeatureKey } from 'runbotics-common';
 export class ProcessController {
     private readonly logger = new Logger(ProcessController.name);
 
-    constructor(private schedulerService: SchedulerService) {}
+    constructor(private schedulerService: SchedulerService) { }
 
     @FeatureKeys(FeatureKey.PROCESS_START)
     @Post(':processInfo/start')
@@ -21,13 +21,21 @@ export class ProcessController {
         @Body() input: ProcessInput,
         @Request() request: AuthRequest,
     ) {
-        this.logger.log(`=> Starting process ${processInfo}`);
-        const response = await this.schedulerService.addNewInstantJob({ processInfo, input, user: request.user })
-            .catch((err) => {
-                this.logger.error(`<= Process ${processInfo} failed to start`);
-                throw new InternalServerErrorException(err.message);
-            });
-        this.logger.log(`<= Process ${processInfo} successfully started`);
-        return response;
+        try {
+            this.logger.log(`=> Starting process ${processInfo}`);
+            const process = await this.schedulerService.getProcessByInfo(processInfo)
+            await this.schedulerService.validateProcessAccess({ process: process, user: request.user })
+
+            const response = await this.schedulerService.addNewInstantJob({ process, input, user: request.user });
+            this.logger.log(`<= Process ${processInfo} successfully started`);
+
+            return response;
+        } catch (err) {
+            this.logger.error(`<= Process ${processInfo} failed to start`);
+            throw new HttpException({
+                message: err?.message ?? 'Internal server error',
+                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
+            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

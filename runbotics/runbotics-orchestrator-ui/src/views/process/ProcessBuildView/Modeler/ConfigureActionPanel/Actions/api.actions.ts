@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const apiActions: Readonly<Record<string, IBpmnAction>> = {
+const getApiActions: () => Record<string, IBpmnAction> = () => ({
     'api.request': {
         id: 'api.request',
         label: translate('Process.Details.Modeler.Actions.Api.Label'),
@@ -103,6 +103,61 @@ const apiActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+    'api.downloadFile': {
+        id: 'api.downloadFile',
+        label: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Label'),
+        script: 'api.downloadFile',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Input'),
+                        type: 'object',
+                        properties: {
+                            url: {
+                                title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Url'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['url'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Variable'),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.Api.DownloadFile.VariableText',
+                                ),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    url: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+});
 
-export default apiActions;
+export default getApiActions;

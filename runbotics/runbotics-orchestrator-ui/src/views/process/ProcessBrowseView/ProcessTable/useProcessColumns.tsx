@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { getGridStringOperators, GridCellParams, GridColDef, GridFilterOperator } from '@mui/x-data-grid';
+import { getGridStringOperators, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import moment from 'moment';
 import React, { ReactNode } from 'react';
 import { ProcessTileActions } from 'src/components/Tile/ProcessTile';
@@ -8,10 +8,14 @@ import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutli
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import { red } from '@mui/material/colors';
 import { IProcess } from 'runbotics-common';
+import useTranslations from 'src/hooks/useTranslations';
 
-const filterOperators = getGridStringOperators().filter(({ value }) => value === 'contains');
+const filterOperators = getGridStringOperators()
+    .filter(({ value }) => value === 'contains');
 
-const useProcessColumns = (): GridColDef[] => [
+const useProcessColumns = (): GridColDef[] => {
+    const { translate } = useTranslations();
+    return [
     {
         field: 'avatar',
         width: 50,
@@ -26,7 +30,7 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'name',
-        headerName: 'Name',
+        headerName: translate('Process.List.Table.Header.Name'),
         flex: 1,
         filterable: true,
         filterOperators,
@@ -39,7 +43,7 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'date',
-        headerName: 'Created',
+        headerName: translate('Process.List.Table.Header.Created'),
         flex: 1,
         filterable: false,
         disableColumnMenu: true,
@@ -53,7 +57,7 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'createdBy',
-        headerName: 'Creator',
+        headerName: translate('Process.List.Table.Header.Creator'),
         flex: 1,
         filterable: true,
         filterOperators,
@@ -66,13 +70,13 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'updated',
-        headerName: 'Updated',
+        headerName: translate('Process.List.Table.Header.Updated'),
         flex: 1,
         filterable: false,
         disableColumnMenu: true,
         renderCell: (params: GridCellParams) => (
             <Typography color="textPrimary" variant="h6">
-                {moment(params.row.updated).locale('en').fromNow()}
+                {moment(params.row.updated).fromNow()}
             </Typography>
         ),
         valueGetter: (params) => moment(params.row.updated).format('x'),
@@ -80,7 +84,7 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'scheduled',
-        headerName: 'Scheduled',
+        headerName: translate('Process.List.Table.Header.Scheduled'),
         flex: 1,
         filterable: false,
         disableColumnMenu: true,
@@ -92,12 +96,12 @@ const useProcessColumns = (): GridColDef[] => [
     },
     {
         field: 'actions',
-        headerName: 'Actions',
+        headerName: translate('Process.List.Table.Header.Actions'),
         filterable: false,
         disableColumnMenu: true,
         sortable: false,
         renderCell: (params: GridCellParams) => <ProcessTileActions process={params.row} />,
     },
-];
+]}
 
 export default useProcessColumns;

@@ -76,12 +76,13 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
     let data = {
         input: {
             ...getInputParameters(element),
-            ...additionalParameters?.input,
+            ...(additionalParameters?.input ?? []),
         },
         output: {
-            ...(additionalParameters?.output ? additionalParameters?.output : getOutputParameters(element)),
+            ...(additionalParameters?.output ?? getOutputParameters(element)),
         },
     };
+
     const inputParams = actionToBPMNElement.formDataToParameters(
         ParameterDestination.Input,
         data.input,
@@ -105,7 +106,7 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
 
                 data.output[output] = value;
             }
-            delete data.output[key];
+
         });
     }
 
@@ -119,16 +120,3 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
     }
     bpmnHelper.updateBusinessObject(element);
 };
-
-export const isSaveDisabled = (ProcessModelerStore: ProcessState['modeler'], modeler: BpmnModeler) => {
-    if (!modeler) return true;
-
-    const { appliedActivities, commandStackIdx, isDirty: isModelerDirty } = ProcessModelerStore;
-    const elementRegistry = modeler.get('elementRegistry');
-    const modelerActivities = Object.keys(elementRegistry._elements).filter(
-        (elm) => elm.split('_')[0] === 'Activity',
-    );
-    const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
-    const isCommandStackAtBottom = commandStackIdx === -1;
-    return isCommandStackAtBottom || !isModelerDirty || !isModelerInSync;
-}

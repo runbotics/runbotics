@@ -1,19 +1,17 @@
-import React, { FC, useMemo } from 'react';
+import React from 'react';
 import { useSelector } from 'src/store';
-import { isSaveDisabled } from '../utils';
 import { Prompt } from 'react-router-dom';
-import { useModelerContext } from 'src/providers/Modeler.provider';
+import useTranslations from 'src/hooks/useTranslations';
 
 const LeavePromt = () => {
-    const { modeler } = useModelerContext();
-    const ProcessModelerStore = useSelector((state) => state.process.modeler);
-
+    const { isSaveDisabled } = useSelector((state) => state.process.modeler);
+    const { translate } = useTranslations();
     return (
         <Prompt
-            when={!isSaveDisabled(ProcessModelerStore, modeler)}
+            when={!isSaveDisabled}
             message={(location) =>
                 !location.pathname.includes('build')
-                    ? `You haven't save changes, are you sure u want to leave? All unsaved changes will be lost.`
+                    ? translate('Process.Modeler.LeavePrompt')
                     : false
             }
         />

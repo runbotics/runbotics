@@ -100,20 +100,29 @@
     </changeSet>
 
     <changeSet author="szymczakm" id="1853961934940-4">
+       <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance" columnName="user_id"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="process_instance">
+            <column name="user_id" type="bigint"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet author="szymczakm" id="1853961934940-5">
         <preConditions onFail="MARK_RAN">
             <and>
                 <columnExists tableName="process_instance" columnName="run_by"/>
                 <not>
-                    <foreignKeyConstraintExists foreignKeyName="fk_process_instance_run_by"/>
+                    <foreignKeyConstraintExists foreignKeyName="fk_process_instance_user_id"/>
                 </not>
             </and>
         </preConditions>
 
         <dropColumn tableName="process_instance" columnName="run_by"/>
-
-        <addColumn tableName="process_instance">
-            <column name="user_id" type="bigint"/>
-        </addColumn>
 
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="process_instance"
@@ -123,8 +132,8 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="1853961934940-5">
-        <preConditions>
+    <changeSet author="szymczakm" id="1853961934940-6">
+        <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="bot" columnName="status"/>
             </not>

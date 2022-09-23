@@ -1,9 +1,19 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="jablonskim" id="1639335624229-6">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <columnExists tableName="process_instance" columnName="root_process_instance_id"/>
+                </not>
+                <not>
+                    <columnExists tableName="process_instance" columnName="run_by"/>
+                </not>
+            </and>
+        </preConditions>
         <addColumn tableName="process_instance">
             <column name="root_process_instance_id" type="UUID"/>
-            <column name="run_by" type="VARCHAR(255)" />
+            <column name="run_by" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

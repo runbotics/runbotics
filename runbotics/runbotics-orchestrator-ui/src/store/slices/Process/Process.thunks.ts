@@ -50,6 +50,20 @@ export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { reject
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
+export const updateAttendedance = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/is-attended',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-attended`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
+export const updateTriggerable = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/is-triggerable',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-triggerable`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
 export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/bot-system',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/bot-system`, process)
@@ -62,6 +76,16 @@ export const saveProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: a
     (process, { rejectWithValue }) => Axios.put<IProcess>(`/api/processes/${process.id}`, process)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data)),
+);
+
+export const createProcess = createAsyncThunk<IProcess, IProcess>(
+    'processes/create',
+    (processInfo) =>
+        Axios.post<IProcess>('/api/processes', processInfo)
+            .then((response) => response.data)
+            .catch((error) => {
+                throw error;
+            }),
 );
 
 export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], executionInfo?: Record<string, any> }>(
@@ -88,4 +112,11 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     async ({ processId }) => {
         await Axios.delete(`/api/processes/${processId}`);
     },
+);
+
+export const isProcessAvailable = createAsyncThunk<void, { processName: string }>(
+    'processes/name/is-available',
+    ({ processName }) =>
+        Axios.get<void>(`/api/processes/name/${processName}/is-available`)
+            .then((response) => response.data),
 );
