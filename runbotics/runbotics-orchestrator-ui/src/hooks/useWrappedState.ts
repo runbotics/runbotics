@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
-export type Options = {
+export type Range = {
     min?: number;
     max?: number;
 };
 
-const useWrappedState = (initialValue: number, { min, max }: Options = {}) => {
+/**
+ * Wrap state in given range
+ */
+const useWrappedState = (initialValue: number, { min, max }: Range = undefined) => {
     const [wrappedValue, setWrappedValue] = useState(initialValue);
 
     const updateValue = (value: number) => {

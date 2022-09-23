@@ -1,3 +1,3 @@
-import PanelNavigation from './PanelNavigation';
+import SidebarNavigationPanel from './PanelNavigation';
 
-export default PanelNavigation;
+export default SidebarNavigationPanel;

@@ -40,8 +40,9 @@ import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
 import ResizableDrawer from 'src/components/ResizableDrawer';
-import PanelNavigation from '../../PanelNavigation';
+import SidebarNavigationPanel from '../../PanelNavigation';
 import modelerPalette from '../modeler-palette';
+import If from 'src/components/utils/If';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -294,18 +295,21 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canRedo={canRedo}
                             />
                             <LeavePromt />
-                            <PanelNavigation
+                            <SidebarNavigationPanel
                                 selectedTab={currentTab}
                                 onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}
                             />
                         </ModelerArea>
                         <ResizableDrawer open={currentTab !== null}>
-                            {currentTab === ProcessBuildTab.CONFIGURE_ACTION && (
+                            <If condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}>
                                 <BpmnFormProvider element={selectedElement} modeler={modeler} process={process}>
                                     <ConfigureActionPanel />
                                 </BpmnFormProvider>
-                            )}
-                            {currentTab === ProcessBuildTab.RUN_INFO && <InfoPanel />}
+                            </If>
+
+                            <If condition={currentTab === ProcessBuildTab.RUN_INFO}>
+                                <InfoPanel />
+                            </If>
                         </ResizableDrawer>
                     </Wrapper>
                 </Hotkeys>

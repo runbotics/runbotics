@@ -4,14 +4,19 @@ import { ProcessBuildTab, SidebarProps } from 'src/types/sidebar';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
 import useTranslations from 'src/hooks/useTranslations';
-import { Button, Root } from './Siderbar.styled';
+import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
 
-const PanelNavigation: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedTab }) => {
+interface TabInfo {
+    value: ProcessBuildTab;
+    label: string;
+}
+
+const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedTab }) => {
     const hasReadProcessInfoAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_READ]);
     const { translate } = useTranslations();
 
     const sidebarTabs = useMemo(() => {
-        const tabs: { value: ProcessBuildTab; label: string }[] = [];
+        const tabs: TabInfo[] = [];
         if (hasReadProcessInfoAccess) {
             tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') });
         }
@@ -19,19 +24,14 @@ const PanelNavigation: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedT
     }, [hasReadProcessInfoAccess]);
 
     return (
-        <Root>
+        <SidebarNavigationWrapper>
             {sidebarTabs.map(({ label, value }) => (
-                <Button
-                    type="button"
-                    key={value}
-                    onClick={() => onTabChange(value)}
-                    selected={value === selectedTab}
-                >
+                <SidebarNavigationButton type="button" key={value} onClick={() => onTabChange(value)} selected={value === selectedTab}>
                     {label}
-                </Button>
+                </SidebarNavigationButton>
             ))}
-        </Root>
+        </SidebarNavigationWrapper>
     );
 };
 
-export default PanelNavigation;
+export default SidebarNavigationPanel;

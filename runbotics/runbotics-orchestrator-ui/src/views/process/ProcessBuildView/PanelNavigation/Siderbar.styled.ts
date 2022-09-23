@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Root = styled('div')({
+export const SidebarNavigationWrapper = styled('div')({
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -10,20 +10,20 @@ export const Root = styled('div')({
     justifyContent: 'center',
 });
 
-export const Button = styled('button')<{ selected: boolean }>(({ theme, selected }) => ({
-    padding: `${theme.typography.pxToRem(26)} ${theme.typography.pxToRem(2)}`,
+export const SidebarNavigationButton = styled('button')<{ selected: boolean }>(({ theme, selected }) => ({
     border: `${theme.typography.pxToRem(1)} solid ${theme.palette.grey[300]}`,
     borderRadius: `${theme.typography.pxToRem(15)} 0 0 ${theme.typography.pxToRem(15)}`,
     borderRight: `none`,
+    width: `calc(1.5em)`,
+    padding: `${theme.typography.pxToRem(26)} ${theme.typography.pxToRem(2)}`,
     background: selected ? theme.palette.primary.main : theme.palette.grey[100],
     color: selected ? theme.palette.common.white : theme.palette.primary.main,
     fontFamily: theme.typography.fontFamily,
-    writingMode: 'vertical-lr',
     fontSize: theme.typography.body1.fontSize,
-    cursor: 'pointer',
     transition: theme.transitions.create('right', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
     }),
-    width: `calc(1.5em)`,
+    cursor: 'pointer',
+    writingMode: 'vertical-lr',
 }));
