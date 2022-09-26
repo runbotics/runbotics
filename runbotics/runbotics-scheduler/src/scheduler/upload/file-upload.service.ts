@@ -1,17 +1,17 @@
 import Axios, { Method, AxiosResponse } from 'axios';
 import mime from "mime-types"
+import { APICell } from 'src/types/FileUpload';
 import { Logger } from '../../utils/logger';
 
-export class UploadFilesService {
+export class FileUploadService {
     constructor() { }
 
-    private readonly logger = new Logger(UploadFilesService.name);
-    private TOKEN: string = '';
+    private token: string = '';
     private fileId: string = '';
 
     private getAuthHeader() {
         return {
-            Authorization: `Bearer ${this.TOKEN}`,
+            Authorization: `Bearer ${this.token}`,
         };
     }
 
@@ -29,27 +29,30 @@ export class UploadFilesService {
 
     }
 
-    public static flattenObject(object: Record<string, any>, parent?: string) {
+    public static flattenObject(object: Record<string, any>, parent?: string): any[] {
         let results = [];
         for (let key in object) {
             const value = object[key];
             const thisKey = parent ? `${parent}.${key}` : `${key}`;
+            if (this.isObject(value)) {
+                results.push(...this.flattenObject(value, thisKey));
+            } else {
+                results.push(`${thisKey}=${value}`)
+            }
 
-            results = results.concat(
-                this.isObject(value) ? this.flattenObject(value, thisKey) : `${thisKey}=${value}`
-            );
         }
 
         return results;
     }
 
     getFileKeysFromSchema(uiSchema: Record<string, any>) {
-        return UploadFilesService.flattenObject(uiSchema)
+        return FileUploadService.flattenObject(uiSchema)
             .map((item: string) => {
                 return item.includes("FileDropzone") ? item.substring(0, item.indexOf(".ui:widget")) : null;
             })
             .filter((item) => item !== null);
     }
+
     static makeRequest() {
         async function performRequest<T>(url: string, method: Method, config): Promise<AxiosResponse<T>> {
             try {
@@ -79,11 +82,11 @@ export class UploadFilesService {
     }
 
     async getDownloadFileLink(token: string, sharepointFileId: string) {
-        this.TOKEN = token;
+        this.token = token;
         const url = `https://graph.microsoft.com/v1.0/me/drive/items/${sharepointFileId}`;
 
         const authHeaders = this.getAuthHeader();
-        const { data } = await UploadFilesService.makeRequest().get<APICell>(url, {
+        const { data } = await FileUploadService.makeRequest().get<APICell>(url, {
             headers: {
                 ...authHeaders,
             },
@@ -93,12 +96,12 @@ export class UploadFilesService {
     }
 
     async uploadFile(token: string, sharepointFileName: string, content: string) {
-        this.TOKEN = token;
+        this.token = token;
         const fileInfo = this.getFileInfo(content);
         let url = `https://graph.microsoft.com/v1.0/me/drive/root:/temp/${sharepointFileName}.${fileInfo.extension}:/content`;
 
         const authHeaders = this.getAuthHeader();
-        const { data } = await UploadFilesService.makeRequest().put<any>(url, {
+        const { data } = await FileUploadService.makeRequest().put<any>(url, {
             headers: {
                 ...authHeaders,
                 'Content-Type': fileInfo.contentType,
@@ -111,15 +114,4 @@ export class UploadFilesService {
         return this.getDownloadFileLink(token, this.fileId);
     }
 
-}
-
-interface APICell {
-    value?: any;
-    values: string[][];
-}
-
-interface SingleResponse {
-    id: string;
-    name: string;
-    webUrl: string;
 }

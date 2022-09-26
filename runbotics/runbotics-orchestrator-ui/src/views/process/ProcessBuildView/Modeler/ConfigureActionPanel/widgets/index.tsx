@@ -4,7 +4,7 @@ import JsonViewWidget from './JsonViewWidget';
 import EditorWidget from './EditorWidget';
 import DraftJSEditor from './DraftJSWidget';
 import ProcessNameSuggestionWidget from './SuggestProcessesNameWidget';
-import FileDropzoneWidget from './FileDropzoneWidget';
+import FileDropzoneWidget from './FileDropzone';
 
 const customWidgets = {
     ElementAwareAutocomplete: ElementAwareAutocompleteWidget,

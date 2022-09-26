@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import IORedis from 'ioredis';
-
 import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
@@ -18,8 +17,8 @@ import { ProcessInstanceSchedulerService } from './process-instance/process-inst
 import { ProcessSchedulerService } from './process/process.scheduler.service';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
-import { TriggerController } from './trigger/process.controller';
-import { UploadFilesService } from './upload/upload-files.service';
+import { TriggerController } from './trigger/trigger.controller';
+import { FileUploadService } from './upload/file-upload.service';
 
 @Module({
     imports: [
@@ -54,7 +53,7 @@ import { UploadFilesService } from './upload/upload-files.service';
     ],
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
-        ProcessInstanceSchedulerService, BotSchedulerService, UploadFilesService
+        ProcessInstanceSchedulerService, BotSchedulerService, FileUploadService
     ]
 })
 export class SchedulerModule { }

@@ -44,7 +44,6 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
         onSubmit(e.formData);
         setOpen(false);
     };
-    useAsyncEffect(async () => {}, []);
 
     return (
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>

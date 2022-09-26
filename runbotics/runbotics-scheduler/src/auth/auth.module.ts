@@ -32,7 +32,6 @@ const GlobalFeatureKeyGuard = {
         BotCollectionModule,
         BotSystemModule,
         PassportModule,
-        MicrosoftSession,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ServerConfigService],

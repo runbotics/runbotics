@@ -1,21 +1,15 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { Logger } from '../utils/logger';
 import Axios from 'axios';
-export interface AuthData {
-    token: string;
-    refreshToken: string;
-    expires: number;
-}
+import { ServerConfigService } from 'src/config/serverConfig.service';
+import { APIToken, AuthData } from 'src/types/FileUpload';
 
-interface APIToken {
-    access_token: string;
-    refresh_token: string;
-    expires_on: number;
-}
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable()
 export class MicrosoftSession {
-    constructor() { }
+    constructor(
+        private serverConfigService: ServerConfigService,
+    ) { }
     private readonly logger = new Logger(MicrosoftSession.name);
     private session: AuthData = {
         token: undefined,
@@ -23,10 +17,10 @@ export class MicrosoftSession {
         expires: undefined,
     };
 
-    private readonly TENANT_ID = process.env.SHAREPOINT_TENANT_ID;
-    private readonly CLIENT_ID = process.env.SHAREPOINT_CLIENT_ID;
-    private readonly USERNAME = process.env.SHAREPOINT_USERNAME;
-    private readonly PASSWORD = process.env.SHAREPOINT_PASSWORD;
+    private readonly TENANT_ID = this.serverConfigService.sharepointTenantId;
+    private readonly CLIENT_ID = this.serverConfigService.sharepointClientId;
+    private readonly USERNAME = this.serverConfigService.sharepointUsername;
+    private readonly PASSWORD = this.serverConfigService.sharepointPassword;
     private readonly RESOURCE = 'https://graph.microsoft.com';
     private readonly CALLBACK_URL = 'http://localhost:3000';
     private readonly GRANT_TYPE = 'password';

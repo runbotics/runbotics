@@ -25,7 +25,7 @@ import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
 import getVariablesFromSchema from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
-import { UploadFilesService } from "./upload/upload-files.service";
+import { FileUploadService } from "./upload/file-upload.service";
 import _ from "lodash";
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
@@ -46,7 +46,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     private readonly botSchedulerService: BotSchedulerService,
     private readonly uiGateway: UiGateway,
     private readonly microsoftSession: MicrosoftSession,
-    private readonly uploadFilesService: UploadFilesService
+    private readonly fileUploadService: FileUploadService
   ) { }
 
   async onApplicationBootstrap() {
@@ -85,19 +85,19 @@ export class SchedulerService implements OnApplicationBootstrap {
 
   private async handleUploadedFiles(process: IProcess, input: ProcessInput) {
     const uiSchema = JSON.parse(process.executionInfo).uiSchema;
-    const fileKeys = this.uploadFilesService.getFileKeysFromSchema(uiSchema);
+    const fileKeys = this.fileUploadService.getFileKeysFromSchema(uiSchema);
 
     if (fileKeys.length < 0) return;
 
     const token = await this.microsoftSession.getToken()
       .catch(err => {
-        this.logger.error('Failed to get token', err);
+        this.logger.error('Failed to get microsoft bearer token', err);
         throw new BadRequestException(err);
       });
 
     for (const key of fileKeys) {
       const file = _.get(input.variables, key);
-      const downloadLink = await this.uploadFilesService.uploadFile(token.token, `${key}_${uuidv4()}`, file)
+      const downloadLink = await this.fileUploadService.uploadFile(token.token, `${key}_${uuidv4()}`, file)
         .catch(err => {
           this.logger.error('Failed to upload file', err);
           throw new InternalServerErrorException(err);
