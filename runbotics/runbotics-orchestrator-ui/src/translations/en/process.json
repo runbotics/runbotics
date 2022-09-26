@@ -417,6 +417,9 @@
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Label": "SAP: Double Click",
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Input": "Input",
     "Process.Details.Modeler.Actions.SAP.DoubleClick.Target": "Target",
+    "Process.Details.Modeler.Actions.SAP.Select.Label": "SAP: Select",
+    "Process.Details.Modeler.Actions.SAP.Select.Input": "Input",
+    "Process.Details.Modeler.Actions.SAP.Select.Target": "Target",
 
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label": "Sharepoint Excel: Get content from cell",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Input": "Input",
@@ -591,5 +594,7 @@
     "Process.List.Table.Header.Scheduled": "Scheduled",
     "Process.List.Table.Header.Actions": "Actions",
 
-    "Process.List.Table.Step.StartEvent": "Start event"
+    "Process.List.Table.Step.StartEvent": "Start event",
+
+    "Process.Modeler.LeavePrompt": "You haven't saved changes, are you sure u want to leave? All unsaved changes will be lost."
 }

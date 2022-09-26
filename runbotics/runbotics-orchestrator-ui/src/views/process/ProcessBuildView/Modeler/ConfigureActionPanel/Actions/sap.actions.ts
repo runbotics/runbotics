@@ -460,6 +460,38 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+    'sap.select': {
+        id: 'sap.select',
+        label: translate('Process.Details.Modeler.Actions.SAP.Select.Label'),
+        script: 'sap.select',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SAP.Select.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.Select.Target'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['target'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]',
+                },
+            },
+        },
+    },
+});
 
 export default getSapActions;
