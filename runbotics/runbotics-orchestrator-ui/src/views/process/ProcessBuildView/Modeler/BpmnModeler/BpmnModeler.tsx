@@ -40,7 +40,7 @@ import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
 import ResizableDrawer from 'src/components/ResizableDrawer';
-import SidebarNavigationPanel from '../../PanelNavigation';
+import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import modelerPalette from '../modeler-palette';
 import If from 'src/components/utils/If';
 
