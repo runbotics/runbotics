@@ -1,38 +1,33 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
-    Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button,
+    Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box,
 } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { PlusCircle as PlusIcon } from 'react-feather';
-import { FormProps, ISubmitEvent, withTheme } from '@rjsf/core';
-import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import { JSONSchema7 } from 'json-schema';
-import Axios from 'axios';
 import { BotSystem, IProcess } from 'runbotics-common';
 import { ProcessTab } from 'src/utils/process-tab';
-import useTranslations, { translate as t } from 'src/hooks/useTranslations';
+import useTranslations, { translate } from 'src/hooks/useTranslations';
 import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
+import { useDispatch } from 'src/store';
+import { processActions } from 'src/store/slices/Process';
+import { useSnackbar } from 'notistack';
 
-const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
+enum InputErrorType {
+    NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
+    REQUIRED = 'REQUIRED',
+}
 
-const schema: JSONSchema7 = {
-    type: 'object',
-    properties: {
-        name: {
-            type: 'string',
-            title: t('Process.Add.Form.Fields.Name'),
-            pattern: '[A-z0-9]',
-        },
-    },
-    required: ['name'],
+const inputErrorMessages: Record<InputErrorType, string> = {
+    [InputErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
+    [InputErrorType.REQUIRED]: translate('Process.Add.Form.Error.Required'),
 };
 
-const formData: IProcess = {
+const defaultProcessInfo: IProcess = {
     isPublic: false,
     name: '',
     description: '',
     definition: emptyBpmn,
-};
+}
 
 type AddProcessDialogProps = {
     open?: boolean;
@@ -40,33 +35,64 @@ type AddProcessDialogProps = {
     onAdd: (process: IProcess) => void;
 };
 
-const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
-    const ref = React.useRef<any>();
-    const submitFormRef = React.useRef<any>();
+const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) => {
+    const [name, setName] = useState<string | null>(null);
+    const [inputErrorType, setInputErrorType] = useState<InputErrorType | null>(null);
     const { translate } = useTranslations();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const handleSubmit = async (e: ISubmitEvent<IProcess>) => {
-        const result = await Axios.post<IProcess>('/api/processes', e.formData);
-        props.onAdd(result.data);
+    const handleSubmit = async () => {
+        if (!name) {
+            setInputErrorType(InputErrorType.REQUIRED);
+            return;
+        }
+
+        const isAvailable = await dispatch(processActions.isProcessAvailable({ processName: name }));
+        if (isAvailable.meta.requestStatus === 'rejected') {
+            setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
+            return;
+        }
+        
+        setInputErrorType(null);
+
+        try {
+            const processInfo: IProcess = { ...defaultProcessInfo, name };
+            const result = await dispatch(processActions.createProcess(processInfo));
+            onAdd(result.payload);
+        } catch (e) {
+            enqueueSnackbar(translate('Process.Add.Form.Error.General'), { variant: 'error' });
+        }
     };
 
+    useEffect(() => {
+        if (open) setName(null);
+    }, [open]);
+
+    useEffect(() => {
+        setInputErrorType(null);
+    }, [name]);
+
     return (
-        <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="lg">
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
             <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
             <DialogContent>
-                <Form ref={ref} schema={schema} formData={formData} onSubmit={handleSubmit}>
-                    <button
-                        ref={submitFormRef}
-                        type="submit"
-                        style={{ display: 'none' }}
-                        aria-label={translate('Common.Submit')}
+                <Box sx={{ pt: 1, pb: 3 }}>
+                    <TextField
+                        label={translate('Process.Add.Form.Fields.Name')}
+                        error={inputErrorType !== null} 
+                        helperText={inputErrorMessages[inputErrorType]}
+                        fullWidth
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
                     />
-                </Form>
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button
                     color="primary"
-                    onClick={props.onClose}
+                    onClick={onClose}
                 >
                     {translate('Common.Cancel')}
                 </Button>
@@ -75,9 +101,8 @@ const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
                     variant="contained"
                     color="primary"
                     autoFocus
-                    onClick={() => {
-                        submitFormRef.current.click();
-                    }}
+                    onClick={handleSubmit}
+                    aria-label={translate('Common.Submit')}
                 >
                     {translate('Common.Save')}
                 </Button>
@@ -87,7 +112,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = (props) => {
 };
 
 const AddProcess = () => {
-    const [show, setShow] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
     const history = useHistory();
     const { translate } = useTranslations();
 
@@ -100,16 +125,16 @@ const AddProcess = () => {
             <Button
                 color="primary"
                 variant="contained"
-                onClick={() => setShow(true)}
-                startIcon={(
+                onClick={() => setShowDialog(true)}
+                startIcon={
                     <SvgIcon fontSize="small">
                         <PlusIcon />
                     </SvgIcon>
-                )}
+                }
             >
                 {translate('Process.Add.ActionName')}
             </Button>
-            {show && <AddProcessDialog open={show} onClose={() => setShow(false)} onAdd={handleAdd} />}
+            <AddProcessDialog open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} />
         </>
     );
 };

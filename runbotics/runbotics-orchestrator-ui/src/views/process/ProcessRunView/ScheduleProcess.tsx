@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,6 +11,7 @@ import {
 import useTranslations from 'src/hooks/useTranslations';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
+import {useCurrentLocale} from '../../../components/cron/useCurrentLocale'
 
 const SubmitButton = styled(Button)(({ theme }) => `
     && {
@@ -56,11 +57,15 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     const renderCronComponent = (props) => {
         const splitted = _.split(props.value, ' ');
         const cron5Digit = _.join(splitted.slice(1), ' ');
+
+        const currentLocale = useCurrentLocale()
+
         return (
             <Cron
                 value={cron5Digit}
                 setValue={(cron) => props.onChange(`${splitted[0]} ${cron}`)}
                 clearButton={false}
+                locale={currentLocale}
             />
         );
     };

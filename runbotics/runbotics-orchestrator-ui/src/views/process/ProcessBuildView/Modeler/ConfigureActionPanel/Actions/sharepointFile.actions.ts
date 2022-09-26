@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
+const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFile': {
         id: 'sharepointFile.downloadFile',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.Download.Label'),
@@ -380,6 +380,6 @@ const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
     //         }
     //     }
     // },
-};
+})
 
-export default sharepointFileActions;
+export default getSharepointFileActions;

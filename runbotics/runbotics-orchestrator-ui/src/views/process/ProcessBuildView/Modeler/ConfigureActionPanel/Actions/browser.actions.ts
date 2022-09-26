@@ -17,7 +17,7 @@ const exampleJsonConfiguration = {
         },
     },
 };
-const browserActions: Readonly<Record<string, IBpmnAction>> = {
+const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.open': {
         id: 'browser.selenium.open',
         label: translate('Process.Details.Modeler.Actions.Browser.Open.Label'),
@@ -645,6 +645,6 @@ const browserActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     }
-};
+})
 
-export default browserActions;
+export default getBrowserActions;

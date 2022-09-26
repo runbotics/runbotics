@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
-const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
+const getDesktopOfficeActions:  () => Record<string, IBpmnAction> = () => ({
     'desktop.powerpoint.open': {
         id: 'desktop.powerpoint.open',
         label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label'),
@@ -159,6 +159,6 @@ const desktopOfficeActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default desktopOfficeActions;
+export default getDesktopOfficeActions;

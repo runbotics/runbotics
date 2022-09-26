@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const googleSheetsActions: Readonly<Record<string, IBpmnAction>> = {
+const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     'google.sheets.write': {
         id: 'google.sheets.write',
         label: translate('Process.Details.Modeler.Actions.GoogleSheets.Write.Label'),
@@ -34,6 +34,6 @@ const googleSheetsActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+}) 
 
-export default googleSheetsActions;
+export default getGoogleSheetsActions;

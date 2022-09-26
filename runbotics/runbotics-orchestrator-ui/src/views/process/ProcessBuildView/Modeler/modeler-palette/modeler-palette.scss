@@ -1,0 +1,13 @@
+.djs-palette .entry {
+    cursor: pointer;
+    transition: 0.15s background-color;
+
+    &:hover {
+        color: initial;
+        background-color: #f1f1f3;
+    }
+
+    &.highlighted-entry {
+        color: initial !important;
+    }
+}

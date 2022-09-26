@@ -1,7 +1,7 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
-const asanaActions: Readonly<Record<string, IBpmnAction>> = {
+const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: 'asana.test',
         label: translate('Process.Details.Modeler.Actions.Asana.Label'),
@@ -48,6 +48,6 @@ const asanaActions: Readonly<Record<string, IBpmnAction>> = {
             },
         },
     },
-};
+})
 
-export default asanaActions;
+export default getAsanaActions;

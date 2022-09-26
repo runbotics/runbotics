@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
+} from 'react';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
@@ -20,7 +22,6 @@ import emptyBpmn from '../empty.bpmn';
 import BasicModelerModule from '../Modeler.module';
 import ActionListPanel from '../ActionListPanel';
 import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
-import propertiesProviderModule from '../providers/bpmn-js-properties-provider/provider/camunda';
 import Clipboard from '../extensions/Clipboard';
 import ZoomScrollModule from '../extensions/zoomscroll';
 import {
@@ -41,6 +42,7 @@ import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
+import modelerPalette from '../modeler-palette';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -49,7 +51,9 @@ const initialCommandStackInfo: CommandStackInfo = {
 };
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     (
-        { readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process },
+        {
+            readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process,
+        },
         ref,
     ) => {
         const dispatch = useDispatch();
@@ -74,8 +78,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 bpmnModeler = new BpmnIoModeler({
                     container: '#bpmn-modeler',
                     additionalModules: [
+                        modelerPalette,
                         propertiesPanelModule,
-                        propertiesProviderModule,
                         BasicModelerModule,
                         { clipboard: ['value', clipboard] },
                         ZoomScrollModule,
