@@ -10,8 +10,7 @@ import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
-import chromedriver from 'chromedriver';
-const binChromePath = chromedriver.path;
+
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -96,11 +95,17 @@ class BrowserAutomation extends StatefulActionHandler {
         }
 
         let optionsChrome = new chrome.Options()
+            .setChromeBinaryPath(process.env['CFG_CHROME_BIN'])
+            .excludeSwitches("enable-logging");
+
         if (input.headless) {
             optionsChrome = optionsChrome.headless();
         }
-        this.logger.log('Launching browser', binChromePath);
-        const service = new chrome.ServiceBuilder(binChromePath).setStdio('inherit');
+
+        const service = new chrome
+            .ServiceBuilder(process.env["CFG_CHROME_DRIVER"])
+            .setStdio('inherit');
+
         this.session = await new Builder()
             .forBrowser('chrome')
             .setChromeService(service)
@@ -114,9 +119,6 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     async openSite(input: BrowserOpenActionInput): Promise<BrowserOpenActionOutput> {
-        // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
-        //
-        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
