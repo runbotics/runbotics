@@ -1,43 +1,28 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { Drawer } from '@mui/material';
 import { DrawerProps } from '@mui/material/Drawer/Drawer';
 import useWrappedState from 'src/hooks/useWrappedState';
+import { Dragger, EventCatcher } from './ResizableDrawer.styled';
+import { createPortal } from 'react-dom';
 
 const INITIAL_WIDTH = 300;
 const MIN_WIDTH = 250;
 const MAX_WIDTH = 600;
 
-const Dragger = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: '3px',
-    cursor: 'ew-resize',
-    pointerEvents: 'all',
-
-    ':hover, [data-dragmode] &': {
-        backgroundColor: `${theme.palette.primary.light}`,
-    },
-}));
-
 const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
     const [width, setWidth] = useWrappedState(INITIAL_WIDTH, { min: MIN_WIDTH, max: MAX_WIDTH });
+    const [dragmode, setDragmode] = useState(false);
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleDragStart = () => {
+        setDragmode(true);
+    };
+
+    const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         setWidth(window.innerWidth - event.clientX);
     };
 
     const handleDragEnd = () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        delete document.body.dataset.dragmode;
-    };
-
-    const handleDragStart = () => {
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleDragEnd, { once: true });
-        document.body.dataset.dragmode = '';
+        setDragmode(false);
     };
 
     return (
@@ -64,7 +49,12 @@ const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
                 },
             ]}
         >
-            <Dragger onMouseDown={handleDragStart} />
+            <Dragger active={dragmode} onMouseDown={handleDragStart} />
+            {createPortal(
+                <EventCatcher active={dragmode} onMouseMove={handleMouseMove} onMouseUp={handleDragEnd} />,
+                document.body,
+            )}
+
             {children}
         </Drawer>
     );
