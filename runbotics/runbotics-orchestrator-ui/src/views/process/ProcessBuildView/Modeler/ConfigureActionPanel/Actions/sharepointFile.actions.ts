@@ -2,54 +2,6 @@ import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner, CloudPath } from './types';
 
 const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
-    'sharepointFile.downloadFile': {
-        id: 'sharepointFile.downloadFile',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.Download.Label'),
-        script: 'sharepointFile.downloadFile',
-        runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: false,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.Input'),
-                        type: 'object',
-                        properties: {
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.FileName'),
-                                type: 'string',
-                            },
-                            path: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.SaveTo'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['fileName', 'path'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {
-                input: {
-                    fileName: '',
-                    path: '',
-                },
-            },
-        },
-    },
-    'sharepointFile.downloadFile2': {
-        id: 'sharepointFile.downloadFile2',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.Download2.Label'),
-        script: 'sharepointFile.downloadFile2',
-const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
     'sharepointFile.downloadFileFromRoot': {
         id: 'sharepointFile.downloadFileFromRoot',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label'),
