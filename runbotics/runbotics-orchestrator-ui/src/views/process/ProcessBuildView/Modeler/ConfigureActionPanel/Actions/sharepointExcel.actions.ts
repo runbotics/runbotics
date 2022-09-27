@@ -216,7 +216,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: [],
+                        required: ['variableName'],
                     },
                 },
             },
@@ -225,8 +225,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    range: 'A1:B2',
-                    values: '#{variable}',
+                    range: '',
+                    values: '',
                 },
                 output: {
                     variableName: '',
@@ -265,9 +265,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
-                            fileName: {
+                            filePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FileName',
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
                                 ),
                                 type: 'string',
                             },
@@ -284,7 +284,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'boolean',
                             },
                         },
-                        required: ['siteName', 'listName', 'fileName', 'worksheetName'],
+                        required: ['siteName', 'listName', 'filePath', 'worksheetName'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Output'),
@@ -311,7 +311,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     siteName: '',
                     listName: '',
-                    fileName: '',
+                    filePath: '',
                     worksheetName: '',
                     persistChanges: true,
                 },
@@ -388,6 +388,49 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                     worksheetName: '',
                     persistChanges: true,
                 },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+    'sharepointExcel.closeSession': {
+        id: 'sharepointExcel.closeSession',
+        label: translate('Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Label'),
+        script: 'sharepointExcel.closeSession',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Variable',
+                                ),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.SharePointExcel.CloseSession.VariableText',
+                                ),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['output'],
+            },
+            formData: {
                 output: {
                     variableName: '',
                 },
