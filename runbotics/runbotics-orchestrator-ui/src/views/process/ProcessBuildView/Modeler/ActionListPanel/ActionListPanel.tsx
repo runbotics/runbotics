@@ -31,6 +31,7 @@ import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler
 import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
 import i18n from 'src/translations/i18n';
+import ActionSearch from './ActionSearch';
 
 const filterModalInitialState: FilterModalState = {
     anchorElement: null,
@@ -187,23 +188,13 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                         />
                     </Tabs>
                     <Box display="flex" ref={filterModalAnchorRef}>
-                        <Autocomplete
-                            multiple={false}
-                            disabled={false}
+                        <ActionSearch
                             options={currentTab === ListPanelTab.ACTIONS ? actionSearchValues : templatesSearchValues}
-                            getOptionLabel={(action) => (currentTab === ListPanelTab.ACTIONS ? action.label : action.name)}
-                            isOptionEqualToValue={(action, value) => value.label === action.label}
+                            getOptionLabel={(action) =>
+                                currentTab === ListPanelTab.ACTIONS ? action.label : action.name
+                            }
                             className={classes.autocomplete}
                             onChange={handleItemClick}
-                            size="small"
-                            sx={{ width: 'calc(100% - 40px)' }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
-                                    variant="outlined"
-                                />
-                            )}
                         />
                         <IconButton onClick={openFilterModal}>
                             <FilterAltOutlinedIcon />
