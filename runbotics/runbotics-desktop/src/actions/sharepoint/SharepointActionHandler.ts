@@ -15,7 +15,7 @@ export type SharepointOpenFromRootActionInput = {
 export type SharepointOpenFromSiteActionInput = {
     siteName: string;
     listName: string;
-    fileName: string;
+    filePath: string;
     worksheetName: string;
     persistChanges: boolean;
 };
@@ -41,10 +41,16 @@ export type SharepointGetExcelCellActionInput = {
 };
 export type SharepointExcelGetCellActionOutput = any;
 
+// ----
 export type SharepointExcelGetRangeActionInput = {
     range: string;
 };
 export type SharepointExcelGetRangeActionOutput = any;
+
+// ----
+export type SharepointExcelCloseSessionActionInput = any;
+
+export type SharepointExcelCloseSessionActionOutput = any;
 
 export type FileActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -52,6 +58,7 @@ export type FileActionRequest<I> = DesktopRunRequest<any> & {
         | 'sharepointExcel.getCell'
         | 'sharepointExcel.openFileFromSite'
         | 'sharepointExcel.openFileFromRoot'
+        | 'sharepointExcel.closeSession'
         | 'sharepointExcel.updateRange'
         | 'sharepointExcel.getRange';
 };
@@ -66,21 +73,25 @@ export class SharepointExcelActionHandler extends StatelessActionHandler {
     }
 
     async openFileFromSite(input: SharepointOpenFromSiteActionInput): Promise<SharepointOpenActionOutput> {
-        const cloudPath = CloudPath.Site;
+        const cloudPath = CloudPath.SITE;
         const token = await this.microsoftSession.getToken();
-        const siteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
-        await this.microsoftService.getDriveId(token.token, siteId, input.listName);
-        await this.microsoftService.getFileIdBySearch(token.token, cloudPath, input.fileName);
-        await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
+        const sharepointsiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointsiteId, input.listName);
+        const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
+        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
         return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
     }
 
     async openFileFromRoot(input: SharepointOpenFromRootActionInput): Promise<SharepointOpenActionOutput> {
-        const cloudPath = CloudPath.Root;
+        const cloudPath = CloudPath.ROOT;
         const token = await this.microsoftSession.getToken();
-        await this.microsoftService.getRootFileIdByPath(token.token, input.filePath);
-        await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
+        const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
+        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
         return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
+    }
+
+    async closeSession(input: SharepointExcelCloseSessionActionInput): Promise<SharepointExcelCloseSessionActionOutput> {
+        return await this.microsoftService.closeSession();
     }
 
     async getCell(input: SharepointGetExcelCellActionInput): Promise<SharepointExcelGetCellActionOutput> {
@@ -119,6 +130,9 @@ export class SharepointExcelActionHandler extends StatelessActionHandler {
                 break;
             case 'sharepointExcel.updateRange':
                 output = await this.updateRange(request.input);
+                break;
+            case 'sharepointExcel.closeSession':
+                output = await this.closeSession(request.input);
                 break;
         }
         return {

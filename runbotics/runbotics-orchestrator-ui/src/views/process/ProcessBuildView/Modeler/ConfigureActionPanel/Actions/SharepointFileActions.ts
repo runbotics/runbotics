@@ -1,5 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, CloudPath } from './types';
 
 const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
     'sharepointFile.downloadFileFromRoot': {
@@ -234,8 +234,8 @@ const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
                             cloudPath: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.CloudPath'),
                                 type: 'string',
-                                enum: ['root', 'site'],
-                                default: 'site',
+                                enum: [CloudPath.ROOT, CloudPath.SITE],
+                                default: CloudPath.SITE,
                             },
                         },
                         required: ['filePath', 'localPath'],
@@ -245,14 +245,14 @@ const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
                                     {
                                         properties: {
                                             cloudPath: {
-                                                enum: ['root'],
+                                                enum: [CloudPath.ROOT],
                                             },
                                         },
                                     },
                                     {
                                         properties: {
                                             cloudPath: {
-                                                enum: ['site'],
+                                                enum: [CloudPath.SITE],
                                             },
                                         },
                                     },
@@ -271,7 +271,91 @@ const sharepointFileActions: Readonly<Record<string, IBpmnAction>> = {
                     listName: '',
                     filePath: '',
                     localPath: '',
-                    cloudPath: 'site',
+                    cloudPath: CloudPath.SITE,
+                },
+            },
+        },
+    },
+    'sharepointFile.createFolder': {
+        id: 'sharepointFile.createFolder',
+        label: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Label'),
+        script: 'sharepointFile.createFolder',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Input'),
+                        type: 'object',
+                        properties: {
+                            siteName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.SiteName',
+                                ),
+                                type: 'string',
+                            },
+                            listName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ListName',
+                                ),
+                                type: 'string',
+                            },
+                            folderName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.FolderName',
+                                ),
+                                type: 'string',
+                            },
+                            parentFolder: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ParentFolder',
+                                ),
+                                type: 'string',
+                            },
+                            cloudPath: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.CloudPath',
+                                ),
+                                type: 'string',
+                                enum: [CloudPath.ROOT, CloudPath.SITE],
+                                default: CloudPath.SITE,
+                            },
+                        },
+                        required: ['folderName'],
+                        dependencies: {
+                            cloudPath: {
+                                oneOf: [
+                                    {
+                                        properties: {
+                                            cloudPath: {
+                                                enum: [CloudPath.ROOT],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        properties: {
+                                            cloudPath: {
+                                                enum: [CloudPath.SITE],
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    siteName: '',
+                    listName: '',
+                    folderName: '',
+                    parentFolder: '',
+                    cloudPath: CloudPath.SITE,
                 },
             },
         },
