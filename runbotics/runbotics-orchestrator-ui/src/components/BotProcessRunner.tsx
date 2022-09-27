@@ -79,7 +79,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         setLoading(true);
         setSubmitting(true);
-        closeModal();
 
         dispatch(
             processActions.startProcess({
@@ -89,10 +88,11 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         )
             .then(unwrapResult)
             .then(async (response: StartProcessResponse) => {
-                onRunClick?.();
                 await dispatch(
                     processInstanceActions.updateOrchestratorProcessInstanceId(response.orchestratorProcessInstanceId),
                 );
+                closeModal();
+                onRunClick?.();
                 setStarted(true);
             })
             .catch(() => {
@@ -115,9 +115,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const runButton = (
         <>
-            <If condition={modalOpen}>
-                <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
-            </If>
             <If condition={hasRunProcessAccess}>
                 <Tooltip
                     title={
@@ -150,11 +147,16 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     );
 
     return (
-        <If condition={isRunButtonDisabled} else={runButton}>
-            <Tooltip title={tooltipTitle} placement="top">
-                <span>{runButton}</span>
-            </Tooltip>
-        </If>
+        <>
+            <If condition={isRunButtonDisabled} else={runButton}>
+                <Tooltip title={tooltipTitle} placement="top">
+                    <span>{runButton}</span>
+                </Tooltip>
+            </If>
+            <If condition={modalOpen}>
+                <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
+            </If>
+        </>
     );
 };
 

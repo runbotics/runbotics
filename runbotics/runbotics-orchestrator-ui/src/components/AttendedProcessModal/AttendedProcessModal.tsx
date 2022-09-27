@@ -13,7 +13,6 @@ import ErrorBoundary from '../utils/ErrorBoundary';
 import _ from 'lodash';
 import FormRenderer from './FormRenderer';
 import { translate } from 'src/hooks/useTranslations';
-import useAsyncEffect from 'src/hooks/useAsyncEffect';
 
 interface UserModalProps {
     open: boolean;
@@ -39,10 +38,10 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
         } else {
             return null;
         }
-    }, [process]);
+    }, [process.id]);
+
     const handleSubmit = (e: ISubmitEvent<any>) => {
         onSubmit(e.formData);
-        setOpen(false);
     };
 
     return (
