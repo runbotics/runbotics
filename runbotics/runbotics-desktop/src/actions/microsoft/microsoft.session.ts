@@ -5,9 +5,9 @@ import Axios from 'axios';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 
 export interface AuthData {
-    token?: string;
-    refreshToken?: string;
-    expires?: number;
+    token: string;
+    refreshToken: string;
+    expires: number;
 }
 
 interface APIToken {
@@ -16,7 +16,7 @@ interface APIToken {
     expires_on: number;
 }
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export class MicrosoftSession {
     constructor() { }
     private readonly logger = new RunboticsLogger(MicrosoftSession.name);
@@ -57,17 +57,17 @@ export class MicrosoftSession {
     }
 
     public static async authorize(url: string, params: { [key: string]: string }) {
-        const cancelToken = Axios.CancelToken.source();
-        const token = await MicrosoftService.makeRequest()
+        const CancelToken = Axios.CancelToken.source();
+        const tokens = await MicrosoftService.makeRequest()
             .post<APIToken>(url, {
                 data: this.encodeParams(params),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                cancelToken: cancelToken.token,
+                cancelToken: CancelToken.token,
             })
             .then(({ data }) => this.deserializeToken(data));
-        return token;
+        return tokens;
     }
 
     private static encodeParams(params: { [key: string]: string }) {
