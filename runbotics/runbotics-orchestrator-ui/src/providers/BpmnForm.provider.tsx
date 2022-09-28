@@ -4,6 +4,8 @@ import { BPMNElement } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
 import BpmnModelerType from 'bpmn-js/lib/Modeler';
 import { IProcess } from 'runbotics-common';
 import extractNestedSchemaKeys from 'src/components/utils/extractNestedSchemaKeys';
+import If from 'src/components/utils/If';
+import { Box, Typography } from '@mui/material';
 
 export interface BpmnFormContext {
     element?: BPMNElement;
@@ -35,9 +37,18 @@ const BpmnFormProvider: FC<BpmnFormProviderProps> = ({ modeler, element, childre
     }, [process]);
 
     return (
-        <BpmnFormContext.Provider value={{ modeler, element, action, setAction, passedInVariables }}>
-            {children}
-        </BpmnFormContext.Provider>
+        <If
+            condition={Boolean(element)}
+            else={
+                <Box pt={4}>
+                    <Typography color="gray" align="center">No element selected</Typography>
+                </Box>
+            }
+        >
+            <BpmnFormContext.Provider value={{ modeler, element, action, setAction, passedInVariables }}>
+                {children}
+            </BpmnFormContext.Provider>
+        </If>
     );
 };
 
