@@ -75,8 +75,8 @@ export class SharepointExcelActionHandler extends StatelessActionHandler {
     async openFileFromSite(input: SharepointOpenFromSiteActionInput): Promise<SharepointOpenActionOutput> {
         const cloudPath = CloudPath.SITE;
         const token = await this.microsoftSession.getToken();
-        const sharepointsiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
-        const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointsiteId, input.listName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
         const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
         return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
