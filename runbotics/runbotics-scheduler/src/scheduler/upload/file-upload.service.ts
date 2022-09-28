@@ -95,10 +95,11 @@ export class FileUploadService {
         return downloadLink;
     }
 
-    async uploadFile(token: string, sharepointFileName: string, content: string) {
+    async uploadFile(token: string, sharepointFileName: string, content: string, orchestratorProcessInstanceId: string) {
         this.token = token;
+        const spPath = `RunboticsTemp/${orchestratorProcessInstanceId}`
         const fileInfo = this.getFileInfo(content);
-        let url = `https://graph.microsoft.com/v1.0/me/drive/root:/temp/${sharepointFileName}.${fileInfo.extension}:/content`;
+        let url = `https://graph.microsoft.com/v1.0/me/drive/root:/${spPath}/${sharepointFileName}.${fileInfo.extension}:/content`;
 
         const authHeaders = this.getAuthHeader();
         const { data } = await FileUploadService.makeRequest().put<any>(url, {
@@ -110,8 +111,8 @@ export class FileUploadService {
         });
 
         this.fileId = data.id;
-
-        return this.getDownloadFileLink(token, this.fileId);
+        console.log('File uploaded successfully', data);
+        return spPath + '/' + data.name;
     }
 
 }

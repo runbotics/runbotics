@@ -12,7 +12,7 @@ import { BotSystemModule } from '../database/bot_system/bot_system.module';
 import { BotCollectionModule } from '../database/bot_collection/bot_collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';
-import { MicrosoftSession } from './microsoft.session';
+import { MicrosoftSessionService } from './microsoft.session';
 
 const GlobalRoleGuard = {
     provide: APP_GUARD,
@@ -43,7 +43,7 @@ const GlobalFeatureKeyGuard = {
             })
         }),
     ],
-    providers: [AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard, MicrosoftSession],
-    exports: [AuthService, PassportModule, MicrosoftSession],
+    providers: [AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard, MicrosoftSessionService],
+    exports: [AuthService, PassportModule, MicrosoftSessionService],
 })
 export class AuthModule { }

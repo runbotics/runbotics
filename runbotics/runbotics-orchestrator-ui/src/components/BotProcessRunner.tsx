@@ -91,9 +91,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 await dispatch(
                     processInstanceActions.updateOrchestratorProcessInstanceId(response.orchestratorProcessInstanceId),
                 );
-                closeModal();
                 onRunClick?.();
                 setStarted(true);
+                closeModal();
             })
             .catch(() => {
                 setStarted(false);

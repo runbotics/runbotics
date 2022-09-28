@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 import { IProcess } from 'runbotics-common';
-import { useDispatch } from 'src/store';
-import { v4 as uuidv4 } from 'uuid';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -53,7 +51,6 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
                 <ErrorBoundary key={process.id}>
                     {processForm && (
                         <FormRenderer
-                            id={uuidv4()}
                             schema={processForm.schema}
                             uiSchema={processForm.uiSchema}
                             submitFormRef={submitFormRef}

@@ -5,7 +5,6 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   OnApplicationBootstrap,
 } from "@nestjs/common";
@@ -20,12 +19,10 @@ import {
   StartProcessResponse,
 } from "src/types";
 import { ScheduleProcessService } from "src/database/schedule-process/schedule-process.service";
-import { MicrosoftSession } from "src/auth/microsoft.session";
 import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
 import getVariablesFromSchema from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
-import { FileUploadService } from "./upload/file-upload.service";
 import _ from "lodash";
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
@@ -45,8 +42,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     private readonly scheduleProcessService: ScheduleProcessService,
     private readonly botSchedulerService: BotSchedulerService,
     private readonly uiGateway: UiGateway,
-    private readonly microsoftSession: MicrosoftSession,
-    private readonly fileUploadService: FileUploadService
+
   ) { }
 
   async onApplicationBootstrap() {
@@ -83,29 +79,7 @@ export class SchedulerService implements OnApplicationBootstrap {
         .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
   }
 
-  private async handleUploadedFiles(process: IProcess, input: ProcessInput) {
-    const uiSchema = JSON.parse(process.executionInfo).uiSchema;
-    const fileKeys = this.fileUploadService.getFileKeysFromSchema(uiSchema);
 
-    if (fileKeys.length < 0) return;
-
-    const token = await this.microsoftSession.getToken()
-      .catch(err => {
-        this.logger.error('Failed to get microsoft bearer token', err);
-        throw new BadRequestException(err);
-      });
-
-    for (const key of fileKeys) {
-      const file = _.get(input.variables, key);
-      const downloadLink = await this.fileUploadService.uploadFile(token.token, `${key}_${uuidv4()}`, file)
-        .catch(err => {
-          this.logger.error('Failed to upload file', err);
-          throw new InternalServerErrorException(err);
-        });
-
-      input.variables = _.set(input.variables, key, downloadLink);
-    }
-  };
 
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
@@ -122,7 +96,6 @@ export class SchedulerService implements OnApplicationBootstrap {
         this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
         throw new BadRequestException(err);
       }
-      await this.handleUploadedFiles(process, input);
     };
   }
 

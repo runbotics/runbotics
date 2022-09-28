@@ -6,11 +6,11 @@ import { APIToken, AuthData } from 'src/types/FileUpload';
 
 
 @Injectable()
-export class MicrosoftSession {
+export class MicrosoftSessionService {
     constructor(
         private serverConfigService: ServerConfigService,
     ) { }
-    private readonly logger = new Logger(MicrosoftSession.name);
+    private readonly logger = new Logger(MicrosoftSessionService.name);
     private session: AuthData = {
         token: undefined,
         refreshToken: undefined,
@@ -41,7 +41,7 @@ export class MicrosoftSession {
             return this.session;
         } else {
             this.logger.log(`Getting new token...`);
-            return MicrosoftSession.authorize(this.TOKEN_URL, this.params);
+            return MicrosoftSessionService.authorize(this.TOKEN_URL, this.params);
         }
     }
 
