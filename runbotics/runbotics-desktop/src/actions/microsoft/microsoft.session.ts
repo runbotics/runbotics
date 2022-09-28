@@ -18,7 +18,7 @@ interface APIToken {
 
 @Injectable({ scope: Scope.DEFAULT })
 export class MicrosoftSession {
-    constructor() { }
+    constructor() {}
     private readonly logger = new RunboticsLogger(MicrosoftSession.name);
     private session: AuthData = {
         token: undefined,
