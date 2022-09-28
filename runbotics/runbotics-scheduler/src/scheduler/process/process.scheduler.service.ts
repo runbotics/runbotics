@@ -26,7 +26,7 @@ export class ProcessSchedulerService {
         const token = await this.microsoftSessionService.getToken()
             .catch(err => {
                 this.logger.error('Failed to get microsoft bearer token', err);
-                throw new BadRequestException(err);
+                throw new BadRequestException("Failed authenticating with sharepoint");
             });
 
         for (const key of fileKeys) {
@@ -34,7 +34,7 @@ export class ProcessSchedulerService {
             const downloadLink = await this.fileUploadService.uploadFile(token.token, `${key}_${uuidv4()}`, file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload file', err);
-                    throw new InternalServerErrorException(err);
+                    throw new InternalServerErrorException("Failed uploading file to sharepoint");
                 });
             this.logger.log(`Uploaded file ${key} to ${downloadLink}`);
             input.variables = _.set(input.variables, key, downloadLink);

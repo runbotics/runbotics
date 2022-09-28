@@ -95,9 +95,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 setStarted(true);
                 closeModal();
             })
-            .catch(() => {
+            .catch((error) => {
                 setStarted(false);
-                enqueueSnackbar(translate('Component.BotProcessRunner.Error'), { variant: 'error' });
+                enqueueSnackbar(error?.message ?? translate('Component.BotProcessRunner.Error'), { variant: 'error' });
             })
             .finally(() => {
                 setSubmitting(false);
