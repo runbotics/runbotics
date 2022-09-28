@@ -1,6 +1,6 @@
 import React from 'react';
 import { Column } from 'react-table';
-import { IProcessInstance } from 'runbotics-common';
+import { FeatureKey, IProcessInstance } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -10,7 +10,11 @@ import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceSta
 import { convertToPascalCase } from 'src/utils/text';
 import useTranslations from 'src/hooks/useTranslations';
 
-const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
+type ProcessInstanceColumn<D extends object = {}> = Column<D> & {
+    featureKeys?: FeatureKey[];
+};
+
+const useProcessInstanceColumns = (): ProcessInstanceColumn<IProcessInstance>[] => {
     const { translate } = useTranslations();
 
     return [
@@ -58,6 +62,7 @@ const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Component.HistoryTable.Header.Bot'),
             accessor: ({ bot }) => bot?.installationId,
+            featureKeys: [FeatureKey.PROCESS_INSTANCE_HISTORY_DETAIL_VIEW],
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),

@@ -4,7 +4,7 @@ import React, {
 import {
     Box, SxProps,
 } from '@mui/material';
-import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
 import { Theme } from '@mui/system';
 import { processInstanceEventActions } from 'src/store/slices/ProcessInstanceEvent';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -23,6 +23,9 @@ import Table from '../Table';
 import If from '../utils/If';
 import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import { hasAccessByFeatureKey } from '../utils/Secured';
+import useAuth from 'src/hooks/useAuth';
 
 interface PanelInfoState {
     show: boolean;
@@ -45,14 +48,18 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
     const { page: processInstancePage, loadingPage } = processInstances.all;
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const processInstanceColumns = useProcessInstanceColumns();
-    
-
     const history = useHistory();
     const query = useQuery();
     const pageFromUrl = query.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
+    const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
+    const { user } = useAuth()
+
+    const accessedColumns = processInstanceColumns.filter((column) =>
+        column.featureKeys ? hasAccessByFeatureKey(user, column.featureKeys) : true,
+    );
 
     useEffect(() => {
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
@@ -114,10 +121,10 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
             <Box sx={{ display: 'flex', gap: '0.75rem' }}>
                 <Box ref={tableRef} sx={{ ...sx, width: '100%' }}>
                     <Table
-                        columns={processInstanceColumns}
+                        columns={accessedColumns}
                         data={processInstancePage?.content ?? []}
                         totalPages={processInstancePage?.totalPages ?? 1}
-                        onRowClick={handleOnClick}
+                        onRowClick={hasProcessInstanceEventReadAccess ? handleOnClick : undefined}
                         setPage={setPage}
                         page={page}
                         pageSize={pageSize}
@@ -127,7 +134,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
                         singleSelect
                     />
                 </Box>
-                <If condition={panelInfoState.show}>
+                <If condition={panelInfoState.show && hasProcessInstanceEventReadAccess}>
                     <InfoPanel
                         processInstanceId={panelInfoState.processInstanceId}
                         onClose={handleCloseButton}

@@ -42,11 +42,11 @@ const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) =>
                 <Typography color="textSecondary" variant="body2">
                     {translate('Component.Tile.Process.Content.Scheduled')}
                 </Typography>
-                {
-                    process.schedules && process.schedules.length > 0
-                        ? <CheckCircleOutlineOutlinedIcon color="success" />
-                        : <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
-                }
+                {process.schedules && process.schedules.length > 0 ? (
+                    <CheckCircleOutlineOutlinedIcon color="success" />
+                ) : (
+                    <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
+                )}
             </Box>
         </StyledContent>
     );

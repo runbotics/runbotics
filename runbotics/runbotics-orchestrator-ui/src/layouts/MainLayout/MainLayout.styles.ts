@@ -3,13 +3,14 @@ import styled from 'styled-components';
 
 interface MainProps {
     mobile?: boolean;
-    showMenu: boolean;
+    isShrinked: boolean;
+    isNavbarVisible?: boolean;
 }
 
-const getNavbarWidth = ({ mobile, showMenu }: MainProps) => {
-    if (mobile) return showMenu ? NAVBAR_WIDTH : 0;
+const getNavbarWidth = ({ mobile, isShrinked }: MainProps) => {
+    if (mobile) return isShrinked ? NAVBAR_WIDTH : 0;
 
-    return showMenu ? NAVBAR_WIDTH : NAVBAR_MOBILE_WIDTH;
+    return isShrinked ? NAVBAR_WIDTH : NAVBAR_MOBILE_WIDTH;
 };
 
 // eslint-disable no-nested-ternary
@@ -18,7 +19,7 @@ export const Main = styled.main<MainProps>`
     flex: 1 1 auto;
     height: 100%;
     padding-top: ${HEADER_HEIGHT}px;
-    padding-left: ${getNavbarWidth}px;
+    padding-left: ${({isNavbarVisible}) => isNavbarVisible ? getNavbarWidth : 0}px;
     transition: padding 0.3s ease-in-out;
     overflow: hidden;
 `;

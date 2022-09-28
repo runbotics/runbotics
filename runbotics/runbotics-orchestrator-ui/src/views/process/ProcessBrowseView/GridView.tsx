@@ -18,6 +18,8 @@ const Root = styled.div(() => ({
     [`& .${classes.cardsWrapper}`]: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
+        gridAutoRows: '1fr',
+        minHeight: '23rem',
         gap: '1rem',
     },
 }));

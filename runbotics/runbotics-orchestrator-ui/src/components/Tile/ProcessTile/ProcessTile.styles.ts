@@ -1,4 +1,4 @@
-import { CardContent, SvgIcon } from '@mui/material';
+import { CardContent, SvgIcon, CardActionArea, Typography } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledSvg = styled(SvgIcon)(({ theme }) => `
@@ -8,14 +8,15 @@ export const StyledSvg = styled(SvgIcon)(({ theme }) => `
 
 export const StyledContent = styled(CardContent)`
     display: grid;
+    width: 100%;
     grid-template-columns: 1fr 1.5fr;
     grid-template-rows: repeat(2, auto);
     justify-items: start;
     justify-content: space-evenly;
     padding: 0 1.5rem 1rem 1.5rem;
     gap: 1rem;
-`;
-
+    `;
+    
 export const Footer = styled.div`
     display: flex;
     justify-content: flex-end;
@@ -31,3 +32,27 @@ export const IconsWrapper = styled.div`
     display: flex;
     align-items: center;
 `;
+
+export const DescriptionWrapper = styled.div`
+    width: 90%;
+    margin-top: auto;
+    margin-right: auto;
+    margin-bottom: 1.125rem;
+    margin-left: auto;
+`
+
+export const StyledCardActionArea = styled(CardActionArea)`
+    && {
+        height: 100%;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+`
+
+export const Description = styled(Typography)`
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+`
