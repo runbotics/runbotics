@@ -130,7 +130,7 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
             headers: this.getAuthHeader(),
         });
-        const siteId = data.value.find((site) => site.displayName === siteName)?.id;
+        const siteId = data.value.find((site) => site.name === siteName)?.id;
         this.siteId = siteId;
         return siteId;
     }
