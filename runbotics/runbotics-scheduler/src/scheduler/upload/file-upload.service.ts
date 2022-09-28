@@ -1,13 +1,11 @@
 import Axios, { Method, AxiosResponse } from 'axios';
 import mime from "mime-types"
 import { APICell } from 'src/types/FileUpload';
-import { Logger } from '../../utils/logger';
 
 export class FileUploadService {
     constructor() { }
 
     private token: string = '';
-    private fileId: string = '';
 
     private getAuthHeader() {
         return {
@@ -110,9 +108,22 @@ export class FileUploadService {
             data: this.bufferFromBase64(content),
         });
 
-        this.fileId = data.id;
         console.log('File uploaded successfully', data);
         return spPath + '/' + data.name;
     }
 
+    async deleteTempFolder(token: string, orchestratorProcessInstanceId: string) {
+        this.token = token;
+        const spPath = `RunboticsTemp/${orchestratorProcessInstanceId}`
+        let url = `https://graph.microsoft.com/v1.0/me/drive/root:/${spPath}`;
+
+        const authHeaders = this.getAuthHeader();
+        const { data } = await FileUploadService.makeRequest().delete<any>(url, {
+            headers: {
+                ...authHeaders,
+            },
+        });
+
+        console.log('Temp folder deleted successfully', data);
+    }
 }
