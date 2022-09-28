@@ -14,6 +14,11 @@ export enum ActionSystem {
     LINUX = 'Linux',
 }
 
+export enum CloudPath {
+    ROOT = 'root',
+    SITE = 'site',
+}
+
 export type IActionField = {
     id: string;
     label: string;

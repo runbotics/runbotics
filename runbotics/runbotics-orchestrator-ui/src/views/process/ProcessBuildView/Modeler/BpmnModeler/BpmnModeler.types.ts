@@ -1,5 +1,4 @@
 import { IProcess } from 'runbotics-common';
-import { ProcessBuildTab } from 'src/types/sidebar';
 
 export interface ModelerImperativeHandle {
     export: () => Promise<string>;
@@ -8,11 +7,8 @@ export interface ModelerImperativeHandle {
 export interface ModelerProps {
     definition: string;
     readOnly?: boolean;
-    currentTab: ProcessBuildTab;
-    onTabChange: (tab: ProcessBuildTab) => void;
     offsetTop: number | null;
     process: IProcess;
-    onRunClick: () => void;
     onSave: () => void;
     onImport: (definition: string) => void;
     onExport: () => void;
