@@ -1,49 +1,40 @@
-import React, { useState } from 'react';
-import { Autocomplete, TextField, AutocompleteProps } from '@mui/material';
-import { translate } from 'src/hooks/useTranslations';
-import { Item } from '../ListGroup';
+import React, { useEffect, useState, VFC } from 'react';
+import { TextField, TextFieldProps, IconButton } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 
-export type SearchBarProps = Omit<AutocompleteProps<Item, false, false, false>, 'renderInput'> & {};
+export type SearchBarProps = TextFieldProps & {
+    onSearchPhraseChange: (value: string) => void;
+};
 
-const ActionSearch = ({ ...other }: SearchBarProps) => {
-    const [inputValue, setInputValue] = useState('');
-    const [highlightedValue, setHighlightedValue] = useState<Item>();
-    const [value, setValue] = useState<Item>(null);
+const ActionSearch: VFC<SearchBarProps> = ({ onSearchPhraseChange, ...other }) => {
+    const [value, setValue] = useState('');
 
-    const handleKeyDown: React.KeyboardEventHandler = (event) => {
-        if (event.key === 'Enter') {
-            event.stopPropagation();
-            setInputValue(highlightedValue.label);
-        }
+    const clear = () => setValue('');
+
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        setValue(event.target.value);
     };
 
-    const handleBlur = () => {
-        setInputValue('');
-        setValue(null);
-    };
+    useEffect(() => {
+        onSearchPhraseChange(value);
+    }, [value]);
 
     return (
-        <Autocomplete
+        <TextField
             {...other}
             value={value}
-            inputValue={inputValue}
-            onBlur={handleBlur}
-            onInputChange={(_, value) => setInputValue(value)}
-            onHighlightChange={(_, value) => setHighlightedValue(value)}
-            isOptionEqualToValue={(action, value) => value.label === action.label}
+            onChange={handleChange}
             size="small"
-            sx={{ width: 'calc(100% - 40px)' }}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    inputProps={{
-                        ...params.inputProps,
-                        onKeyDown: handleKeyDown,
-                    }}
-                    label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
-                    variant="outlined"
-                />
-            )}
+            sx={{
+                margin: (theme) => theme.spacing(1)
+            }}
+            InputProps={{
+                endAdornment: (
+                    <IconButton sx={{ visibility: value ? 'visible' : 'hidden' }} onClick={clear}>
+                        <ClearIcon />
+                    </IconButton>
+                ),
+            }}
         />
     );
 };

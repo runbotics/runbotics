@@ -1,6 +1,4 @@
-import React, {
-    FC, memo, useRef, useState,
-} from 'react';
+import React, { FC, memo, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
@@ -10,16 +8,13 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import TextField from '@mui/material/TextField';
 import _ from 'lodash';
-import Autocomplete from '@mui/material/Autocomplete';
+import Highlighter from 'react-highlight-words';
 import { useSelector } from 'src/store';
 import useTranslations from 'src/hooks/useTranslations';
-import If from 'src/components/utils/If';
-import {
-    classes, Root, drawerWidth, ActionPanelToggler,
-} from './ActionListPanel.styles';
-import { ActionListPanelProps, FilterModalState, ListPanelTab } from './ActionListPanel.types';
+import { classes, Root, drawerWidth, ActionPanelToggler } from './ActionListPanel.styles';
+import { ActionListPanelProps, FilterModalState, GroupProperties, ListPanelTab } from './ActionListPanel.types';
+import useGroupReducer, { groupActions } from './useGroupsReducer';
 import ListGroup, { Item } from '../ListGroup';
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
@@ -32,25 +27,28 @@ import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
 import i18n from 'src/translations/i18n';
 import ActionSearch from './ActionSearch';
+import { ListItem, ListItemText } from '@mui/material';
+import If from 'src/components/utils/If';
+import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 
 const filterModalInitialState: FilterModalState = {
     anchorElement: null,
-    filters: [],
+    groupNames: [],
+    actionName: null,
 };
 
 const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     const internalActionsGroups = useInternalActionsGroups();
-    const templatesGroups = useTemplatesGroups()
+    const templatesGroups = useTemplatesGroups();
     const [currentTab, setCurrentTab] = useState<ListPanelTab>(ListPanelTab.ACTIONS);
     const [filterModal, setFilterModal] = useState<FilterModalState>(filterModalInitialState);
     const filterModalAnchorRef = useRef<Element>(null);
-    const templatesGroupsList = Object.entries(templatesGroups);
+    const templatesGroupsList: GroupProperties[] = Object.entries(templatesGroups);
     const { byId, external } = useSelector((state) => state.action.bpmnActions);
-    
     const [open, setOpen] = useState(true);
     const { translate } = useTranslations();
 
-    const actionsGroupsList = React.useMemo(() => {
+    const actionsGroupsList: GroupProperties[] = React.useMemo(() => {
         const externalActionsGroup = external.map((externalId) => byId[externalId]);
         const completeActionsGroups = {
             ...internalActionsGroups,
@@ -62,18 +60,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         return Object.entries(completeActionsGroups);
     }, [external, i18n.language]);
 
-    const actionSearchValues = React.useMemo(
-        () => actionsGroupsList.flatMap((element) => element[1].items),
-        [actionsGroupsList],
-    );
-    const templatesSearchValues = React.useMemo(
-        () => templatesGroupsList.flatMap((element) => element[1].items),
-        [actionsGroupsList],
-    );
-
-    const isFiltered = React.useMemo(() => filterModal.filters.length > 0, [filterModal.filters]);
-
-    const actionsToFilter = React.useMemo(() => {
+    const groupsToFilter = React.useMemo(() => {
         if (currentTab === ListPanelTab.ACTIONS) {
             return actionsGroupsList;
         }
@@ -117,6 +104,15 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         }
     };
 
+    const handleSearchPhrasechange = (value: string) => {
+        dispatchGroupsOpenState(value.length ? groupActions.openAll() : groupActions.closeAll());
+
+        setFilterModal((filterModal) => ({
+            ...filterModal,
+            actionName: value || null,
+        }));
+    };
+
     const handleDrawerAction = () => {
         setOpen((prevState) => !prevState);
     };
@@ -133,19 +129,40 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         setFilterModal(filterModalInitialState);
     };
 
-    const filteredActions = actionsToFilter.map(([key, value]) => {
-        if (filterModal.filters.includes(value?.label)) {
-            return <ListGroup key={key} group={value} items={value.items} onItemClick={handleItemClick} />;
-        }
-    });
+    const filteredGroups: GroupProperties[] = useMemo(
+        () =>
+            groupsToFilter
+                .map((group) => {
+                    const [key, value] = group;
+                    const { groupNames, actionName } = filterModal;
 
-    const actionsList = currentTab === ListPanelTab.ACTIONS
-        ? actionsGroupsList.map(([key, value]) => (
-                  <ListGroup key={key} group={value} items={value.items} onItemClick={handleItemClick} />
-        ))
-        : templatesGroupsList.map(([key, value]) => (
-                  <ListGroup key={key} group={value} items={value.items} isTemplate onItemClick={handleItemClick} />
-        ));
+                    // filter group by name
+                    if (groupNames.length && !groupNames.includes(value.label)) return;
+
+                    // filter group's actions
+                    const filteredItems = actionName
+                        ? (value.items as IBpmnAction[]).filter(({ label }) =>
+                              label.toLowerCase().includes(actionName.toLowerCase()),
+                          )
+                        : (value.items as TemplatesSchema[]);
+
+                    // remove group if empty
+                    if (!filteredItems.length) return;
+
+                    return [key, { ...value, items: filteredItems }] as GroupProperties;
+                })
+                .filter((el) => el),
+        [groupsToFilter, filterModal],
+    );
+
+    const [groupsOpenState, dispatchGroupsOpenState] = useGroupReducer(
+        Object.fromEntries(filteredGroups.map(([_, { label }]) => [label, false])),
+    );
+
+    useEffect(() => {
+        console.log(groupsOpenState);
+    }, [groupsOpenState]);
+    console.log(groupsOpenState);
 
     return (
         <Root>
@@ -189,12 +206,8 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                     </Tabs>
                     <Box display="flex" ref={filterModalAnchorRef}>
                         <ActionSearch
-                            options={currentTab === ListPanelTab.ACTIONS ? actionSearchValues : templatesSearchValues}
-                            getOptionLabel={(action) =>
-                                currentTab === ListPanelTab.ACTIONS ? action.label : action.name
-                            }
-                            className={classes.autocomplete}
-                            onChange={handleItemClick}
+                            onSearchPhraseChange={handleSearchPhrasechange}
+                            label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
                         />
                         <IconButton onClick={openFilterModal}>
                             <FilterAltOutlinedIcon />
@@ -203,12 +216,49 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                     <FilterModal
                         filterModalState={filterModal}
                         setFilterModalState={setFilterModal}
-                        filterOptions={actionsToFilter}
+                        filterOptions={groupsToFilter}
                     />
                     <List className={clsx(classes.list)}>
-                        <If condition={!isFiltered} else={filteredActions}>
-                            {actionsList}
-                        </If>
+                        {filteredGroups.map(([key, { label, items }]) => (
+                            <ListGroup
+                                key={key}
+                                label={label}
+                                open={groupsOpenState[label]}
+                                onToggle={(open) => {
+                                    dispatchGroupsOpenState(groupActions.updateGroup(label, open));
+                                }}
+                            >
+                                <List component="div" disablePadding>
+                                    {items.map((item: Item) => (
+                                        <ListItem
+                                            key={item.id}
+                                            button
+                                            className={classes.nested}
+                                            onClick={(event) => handleItemClick(event, item)}
+                                        >
+                                            <ListItemText>
+                                                <If
+                                                    condition={Boolean(filterModal.actionName)}
+                                                    else={
+                                                        currentTab === ListPanelTab.TEMPLATES ? item.name : item.label
+                                                    }
+                                                >
+                                                    <Highlighter
+                                                        searchWords={filterModal.actionName?.split(' ')}
+                                                        textToHighlight={
+                                                            currentTab === ListPanelTab.TEMPLATES
+                                                                ? item.name
+                                                                : item.label
+                                                        }
+                                                        highlightClassName={classes.highlight}
+                                                    />
+                                                </If>
+                                            </ListItemText>
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </ListGroup>
+                        ))}
                     </List>
                 </Box>
             </Drawer>

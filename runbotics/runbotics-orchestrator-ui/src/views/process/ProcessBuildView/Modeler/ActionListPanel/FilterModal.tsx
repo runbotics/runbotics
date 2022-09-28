@@ -12,12 +12,12 @@ import Box from '@mui/material/Box';
 import React, { FC, useMemo } from 'react';
 import { translate } from 'src/hooks/useTranslations';
 import styled from 'styled-components';
-import { FilterModalState } from './ActionListPanel.types';
+import { FilterModalState, GroupProperties } from './ActionListPanel.types';
 
 interface FilterModalProps {
     filterModalState: FilterModalState;
     setFilterModalState: (value: React.SetStateAction<FilterModalState>) => void;
-    filterOptions: [string, { label: string; items: any }][];
+    filterOptions: GroupProperties[];
 }
 
 const StyledContainer = styled(Box)`
@@ -37,18 +37,18 @@ const FilterModal: FC<FilterModalProps> = ({ filterModalState, setFilterModalSta
         const { checked, name } = event.target;
         if (checked) {
             setFilterModalState((prevState: FilterModalState) => {
-                return { ...prevState, filters: [...prevState.filters, name] };
+                return { ...prevState, groupNames: [...prevState.groupNames, name] };
             });
         } else {
             setFilterModalState((prevState: FilterModalState) => {
-                return { ...prevState, filters: prevState.filters.filter((filter) => filter !== name) };
+                return { ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) };
             });
         }
     };
 
     const clearFilters = () => {
         setFilterModalState((prevState: FilterModalState) => {
-            return { ...prevState, filters: [] };
+            return { ...prevState, groupNames: [] };
         });
     };
 
@@ -79,7 +79,7 @@ const FilterModal: FC<FilterModalProps> = ({ filterModalState, setFilterModalSta
                                 control={
                                     <Checkbox
                                         name={label}
-                                        checked={Boolean(filterModalState.filters.includes(label))}
+                                        checked={Boolean(filterModalState.groupNames.includes(label))}
                                         onChange={handleChange}
                                     />
                                 }
