@@ -1,14 +1,14 @@
 import { translate } from 'src/hooks/useTranslations';
 import { IBpmnAction, Runner, CloudPath } from './types';
 
-const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
+const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromRoot': {
         id: 'sharepointFile.downloadFileFromRoot',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label'),
         script: 'sharepointFile.downloadFileFromRoot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
-            assignVariables: false,
+            assignVariables: true,
             outputMethods: {
                 variableName: '${content.output[0]}',
             },
@@ -34,18 +34,35 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['filePath', 'localPath'],
+                        required: ['filePath'],
                     },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Variable'),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.VariableText',
+                                ),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    }
                 },
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input', 'output'],
             },
             formData: {
                 input: {
                     filePath: '',
                     localPath: '',
                 },
+                output: {
+                    variableName: '',
+                }
             },
         },
     },
@@ -99,8 +116,22 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['siteName', 'listName', 'fileName', 'localPath'],
+                        required: ['siteName', 'listName', 'fileName'],
                     },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Variable'),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.VariableText',
+                                ),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    }
                 },
             },
             uiSchema: {
@@ -114,6 +145,9 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                     fileName: '',
                     localPath: '',
                 },
+                output: {
+                    variableName: '',
+                }
             },
         },
     },
