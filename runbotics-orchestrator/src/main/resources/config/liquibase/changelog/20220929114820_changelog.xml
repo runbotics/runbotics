@@ -1,0 +1,61 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="jarockis"  id="20220929114820-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO feature_key(name) VALUES
+            ('PROCESS_LIST_READ'),
+            ('PROCESS_LIST_TABLE_VIEW'),
+            ('PROCESS_LIST_DETAIL_VIEW'),
+            ('PROCESS_INSTANCE_HISTORY_DETAIL_VIEW'),
+            ('PROCESS_BUILD_VIEW'),
+            ('PROCESS_CONFIGURE_VIEW')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="jarockis"  id="20220929114820-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN','PROCESS_LIST_READ'),
+            ('ROLE_ADMIN','PROCESS_LIST_TABLE_VIEW'),
+            ('ROLE_ADMIN','PROCESS_LIST_DETAIL_VIEW'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_HISTORY_DETAIL_VIEW'),
+            ('ROLE_ADMIN','PROCESS_BUILD_VIEW'),
+            ('ROLE_ADMIN','PROCESS_CONFIGURE_VIEW'),
+            ('ROLE_USER','PROCESS_LIST_READ'),
+            ('ROLE_USER','PROCESS_LIST_TABLE_VIEW'),
+            ('ROLE_USER','PROCESS_LIST_DETAIL_VIEW'),
+            ('ROLE_USER','PROCESS_INSTANCE_HISTORY_DETAIL_VIEW'),
+            ('ROLE_USER','PROCESS_BUILD_VIEW'),
+            ('ROLE_USER','PROCESS_CONFIGURE_VIEW')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="jarockis"  id="20220929114820-3">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="jhi_user_authority"/>
+        </preConditions>
+        <sql>
+            INSERT INTO jhi_user_authority(user_id, authority_name) VALUES
+            ('3','ROLE_EXTERNAL_USER')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="jarockis"  id="20220929114820-4">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN','PROCESS_READ'),
+            ('ROLE_ADMIN','PROCESS_LIST_READ'),
+            ('ROLE_ADMIN','PROCESS_INSTANCE_HISTORY_READ'),
+            ('ROLE_ADMIN','PROCESS_START')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
