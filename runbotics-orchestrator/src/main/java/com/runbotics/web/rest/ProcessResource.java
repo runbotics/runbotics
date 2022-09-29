@@ -265,7 +265,7 @@ public class ProcessResource {
      * @param processName the prcess name to check if available
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} or with status {@code 409 (Conflict)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_LIST_READ + "')")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_READ + "')")
     @GetMapping("/processes/name/{processName}/is-available")
     public ResponseEntity<Void> checkIfProcessExists(@PathVariable String processName) {
         log.debug("=> REST request to check if given process name is available : {}", processName);

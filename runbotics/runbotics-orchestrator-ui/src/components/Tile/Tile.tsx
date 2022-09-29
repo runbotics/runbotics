@@ -4,11 +4,11 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled(Card)<TileProps>`
-    box-sizing: border-box;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box;
+    height: 100%;
 
     && {
         box-shadow: 0 .25rem .5rem 0 ${alpha('#8d8c8c', 0.4)};

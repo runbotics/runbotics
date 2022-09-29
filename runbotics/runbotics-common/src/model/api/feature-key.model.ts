@@ -26,31 +26,31 @@ export enum FeatureKey {
     // Allow editing process structure in modeler (without it - only viewer mode & no access to panel info actions) [ Processes page -> process -> BUILD tab ]
     PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE', 
     
-    // ???
+    // Allow to switch state "attended" to "not attended" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_ATTENDED_EDIT = 'PROCESS_IS_ATTENDED_EDIT',
 
-    // ====== NEVER USED ======
+    // Show "Is process attended" switcher [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_ATTENDED_READ = 'PROCESS_IS_ATTENDED_READ',
     
-    // ???
+    // Allow to execute triggerable proces by url /scheduler/trigger/:processInfo [ ? Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EXECUTE = 'PROCESS_IS_TRIGGERABLE_EXECUTE',
-
-    // ====== NEVER USED ======
+    
+    // Show "Is process triggerable" switcher [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_READ = 'PROCESS_IS_TRIGGERABLE_READ',
-
-    // ???
+    
+    // Allow to switch state "triggerable" to "not triggerable" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EDIT = 'PROCESS_IS_TRIGGERABLE_EDIT',
 
-    // Bot collection select disable // ???
+    // Allow to select particular bot collection [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_BOT_COLLECTION_EDIT = 'PROCESS_BOT_COLLECTION_EDIT',
 
-    // Bot collection select ukryj // ???
+    // Bot collection select ukryj // ?
     PROCESS_BOT_COLLECTION_READ = 'PROCESS_BOT_COLLECTION_READ',
 
-    // Bot collection select  disable // ???
+    // Bot collection select  disable // ?
     PROCESS_BOT_SYSTEM_EDIT = 'PROCESS_BOT_SYSTEM_EDIT',
 
-    // Bot collection select ukryj // ???
+    // Bot collection select ukryj // ?
     PROCESS_BOT_SYSTEM_READ = 'PROCESS_BOT_SYSTEM_READ',
 
     // Allow to GET all process instances & GET single process instance by id (displayed e.g. in: "History" table, "Run Info" sidebar) [ Processes page -> process -> RUN tab ]

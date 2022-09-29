@@ -8,6 +8,7 @@ import useTranslations from 'src/hooks/useTranslations';
 import { StyledContent } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
 import { DATE_FORMAT } from '..';
+import If from 'src/components/utils/If';
 
 const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) => {
     const { translate } = useTranslations();
@@ -42,11 +43,9 @@ const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) =>
                 <Typography color="textSecondary" variant="body2">
                     {translate('Component.Tile.Process.Content.Scheduled')}
                 </Typography>
-                {process.schedules && process.schedules.length > 0 ? (
+                <If condition={process.schedules && process.schedules.length > 0} else={<RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />}>
                     <CheckCircleOutlineOutlinedIcon color="success" />
-                ) : (
-                    <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
-                )}
+                </If>
             </Box>
         </StyledContent>
     );

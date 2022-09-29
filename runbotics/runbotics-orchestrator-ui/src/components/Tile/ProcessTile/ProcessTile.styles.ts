@@ -33,26 +33,22 @@ export const IconsWrapper = styled.div`
     align-items: center;
 `;
 
-export const DescriptionWrapper = styled.div`
-    width: 90%;
-    margin-top: auto;
-    margin-right: auto;
-    margin-bottom: 1.125rem;
-    margin-left: auto;
-`
-
 export const StyledCardActionArea = styled(CardActionArea)`
     && {
-        height: 100%;
         display: flex;
-        align-items: flex-start;
         flex-direction: column;
         justify-content: space-between;
+        align-items: flex-start;
+        height: 100%;
     }
 `
 
 export const Description = styled(Typography)`
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    && {
+        width: 90%;
+        margin: auto auto 1.5rem auto;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 `

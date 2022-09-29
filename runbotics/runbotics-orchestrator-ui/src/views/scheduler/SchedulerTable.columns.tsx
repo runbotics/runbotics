@@ -4,14 +4,13 @@ import { CircularProgress, IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import useTranslations from 'src/hooks/useTranslations';
 import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
-import { Column } from 'react-table';
 import { IProcessInstance } from 'runbotics-common';
-import { RowCustomExpandedSpan } from 'src/components/Table';
+import { ProcessInstanceColumn, RowCustomExpandedSpan } from 'src/components/Table';
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';
 
-export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
+export const useActiveProcessColumns = (): ProcessInstanceColumn<IProcessInstance>[] => {
     const { translate } = useTranslations();
 
     return [
@@ -58,7 +57,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
     ];
 };
 
-export const useWaitingProcessColumns = (): Column<SchedulerJob>[] => {
+export const useWaitingProcessColumns = (): ProcessInstanceColumn<SchedulerJob>[] => {
     const { translate } = useTranslations();
 
     return [
@@ -100,7 +99,7 @@ export const useWaitingProcessColumns = (): Column<SchedulerJob>[] => {
     ];
 };
 
-export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
+export const useScheduledProcessColumns = (): ProcessInstanceColumn<ScheduledJob>[] => {
     const { translate } = useTranslations();
 
     return [

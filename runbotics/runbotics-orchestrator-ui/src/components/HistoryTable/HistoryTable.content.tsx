@@ -55,11 +55,6 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
-    const { user } = useAuth()
-
-    const accessedColumns = processInstanceColumns.filter((column) =>
-        column.featureKeys ? hasAccessByFeatureKey(user, column.featureKeys) : true,
-    );
 
     useEffect(() => {
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
@@ -121,7 +116,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
             <Box sx={{ display: 'flex', gap: '0.75rem' }}>
                 <Box ref={tableRef} sx={{ ...sx, width: '100%' }}>
                     <Table
-                        columns={accessedColumns}
+                        columns={processInstanceColumns}
                         data={processInstancePage?.content ?? []}
                         totalPages={processInstancePage?.totalPages ?? 1}
                         onRowClick={hasProcessInstanceEventReadAccess ? handleOnClick : undefined}
