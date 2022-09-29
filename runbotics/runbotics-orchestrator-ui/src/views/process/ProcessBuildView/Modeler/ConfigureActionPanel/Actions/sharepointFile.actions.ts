@@ -1,11 +1,11 @@
 import { translate } from 'src/hooks/useTranslations';
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, CloudPath } from './types';
 
 const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
-    'sharepointFile.downloadFile': {
-        id: 'sharepointFile.downloadFile',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.Download.Label'),
-        script: 'sharepointFile.downloadFile',
+    'sharepointFile.downloadFileFromRoot': {
+        id: 'sharepointFile.downloadFileFromRoot',
+        label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label'),
+        script: 'sharepointFile.downloadFileFromRoot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: false,
@@ -18,58 +18,19 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.Input'),
-                        type: 'object',
-                        properties: {
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.FileName'),
-                                type: 'string',
-                            },
-                            path: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download.SaveTo'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['fileName', 'path'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {
-                input: {
-                    fileName: '',
-                    path: '',
-                },
-            },
-        },
-    },
-    'sharepointFile.downloadFile2': {
-        id: 'sharepointFile.downloadFile2',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.Download2.Label'),
-        script: 'sharepointFile.downloadFile2',
-        runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: false,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.Download2.Input'),
+                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download2.FilePath'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.FilePath',
+                                ),
                                 type: 'string',
                             },
                             localPath: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Download2.SaveTo'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.SaveTo',
+                                ),
                                 type: 'string',
                             },
                         },
@@ -82,8 +43,8 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    fileName: '',
-                    path: '',
+                    filePath: '',
+                    localPath: '',
                 },
             },
         },
@@ -107,9 +68,9 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Input'),
                         type: 'object',
                         properties: {
-                            sitePath: {
+                            siteName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SitePath',
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SiteName',
                                 ),
                                 type: 'string',
                             },
@@ -138,7 +99,7 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['sitePath', 'listName', 'fileName', 'localPath'],
+                        required: ['siteName', 'listName', 'fileName', 'localPath'],
                     },
                 },
             },
@@ -147,7 +108,7 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    sitePath: '',
+                    siteName: '',
                     listName: '',
                     folderPath: '',
                     fileName: '',
@@ -262,8 +223,8 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.ListName'),
                                 type: 'string',
                             },
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.FileName'),
+                            filePath: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.FilePath'),
                                 type: 'string',
                             },
                             localPath: {
@@ -273,25 +234,25 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
                             cloudPath: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.CloudPath'),
                                 type: 'string',
-                                enum: ['root', 'site'],
-                                default: 'get',
+                                enum: [CloudPath.ROOT, CloudPath.SITE],
+                                default: CloudPath.SITE,
                             },
                         },
-                        required: ['fileName', 'localPath'],
+                        required: ['filePath', 'localPath'],
                         dependencies: {
                             cloudPath: {
                                 oneOf: [
                                     {
                                         properties: {
                                             cloudPath: {
-                                                enum: ['root'],
+                                                enum: [CloudPath.ROOT],
                                             },
                                         },
                                     },
                                     {
                                         properties: {
                                             cloudPath: {
-                                                enum: ['site'],
+                                                enum: [CloudPath.SITE],
                                             },
                                         },
                                     },
@@ -306,11 +267,95 @@ const getSharepointFileActions:() => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    siteName: undefined,
-                    listName: undefined,
-                    fileName: undefined,
-                    localPath: undefined,
-                    cloudPath: 'site',
+                    siteName: '',
+                    listName: '',
+                    filePath: '',
+                    localPath: '',
+                    cloudPath: CloudPath.SITE,
+                },
+            },
+        },
+    },
+    'sharepointFile.createFolder': {
+        id: 'sharepointFile.createFolder',
+        label: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Label'),
+        script: 'sharepointFile.createFolder',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Input'),
+                        type: 'object',
+                        properties: {
+                            siteName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.SiteName',
+                                ),
+                                type: 'string',
+                            },
+                            listName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ListName',
+                                ),
+                                type: 'string',
+                            },
+                            folderName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.FolderName',
+                                ),
+                                type: 'string',
+                            },
+                            parentFolder: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ParentFolder',
+                                ),
+                                type: 'string',
+                            },
+                            cloudPath: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.CloudPath',
+                                ),
+                                type: 'string',
+                                enum: [CloudPath.ROOT, CloudPath.SITE],
+                                default: CloudPath.SITE,
+                            },
+                        },
+                        required: ['folderName'],
+                        dependencies: {
+                            cloudPath: {
+                                oneOf: [
+                                    {
+                                        properties: {
+                                            cloudPath: {
+                                                enum: [CloudPath.ROOT],
+                                            },
+                                        },
+                                    },
+                                    {
+                                        properties: {
+                                            cloudPath: {
+                                                enum: [CloudPath.SITE],
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    siteName: '',
+                    listName: '',
+                    folderName: '',
+                    parentFolder: '',
+                    cloudPath: CloudPath.SITE,
                 },
             },
         },
