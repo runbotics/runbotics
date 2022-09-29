@@ -37,14 +37,24 @@
     </changeSet>
     <changeSet author="jarockis"  id="20220929114820-3">
         <preConditions onFail="MARK_RAN">
+            <tableExists tableName="jhi_authority"/>
+        </preConditions>
+        <sql>
+            INSERT INTO jhi_authority(name) VALUES
+            ('ROLE_EXTERNAL_USER')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <changeSet author="jarockis"  id="20220929114820-4">
+        <preConditions onFail="MARK_RAN">
             <tableExists tableName="authority_feature_key"/>
         </preConditions>
         <sql>
             INSERT INTO authority_feature_key(authority, feature_key) VALUES
-            ('ROLE_ADMIN','PROCESS_READ'),
-            ('ROLE_ADMIN','PROCESS_LIST_READ'),
-            ('ROLE_ADMIN','PROCESS_INSTANCE_HISTORY_READ'),
-            ('ROLE_ADMIN','PROCESS_START')
+            ('ROLE_EXTERNAL_USER','PROCESS_READ'),
+            ('ROLE_EXTERNAL_USER','PROCESS_LIST_READ'),
+            ('ROLE_EXTERNAL_USER','PROCESS_INSTANCE_HISTORY_READ'),
+            ('ROLE_EXTERNAL_USER','PROCESS_START')
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>
