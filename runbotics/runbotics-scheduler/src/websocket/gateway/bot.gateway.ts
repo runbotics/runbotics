@@ -13,12 +13,15 @@ import { Logger } from 'src/utils/logger';
 import { AuthService } from 'src/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
-import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
 import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
 import { UiGateway } from './ui.gateway';
 import { BotService } from 'src/database/bot/bot.service';
+import { ServerConfigService } from 'src/config/serverConfig.service';
+import { FileUploadService } from 'src/scheduler/upload/file-upload.service';
+import { MicrosoftSessionService } from 'src/auth/microsoft.session';
 
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
@@ -33,6 +36,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botProcessEventService: BotProcessEventService,
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
+        private readonly serverConfigSercvice: ServerConfigService,
+        private readonly fileUploadService: FileUploadService,
+        private readonly microsoftSessionService: MicrosoftSessionService,
     ) { }
 
     async handleConnection(client: Socket) {
@@ -69,6 +75,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
+        if (processInstance.status === ProcessInstanceStatus.COMPLETED && this.serverConfigSercvice.sharepointPassword) {
+            this.logger.log('Clearing sharepoint temporary files');
+            const { token } = await this.microsoftSessionService.getToken();
+            await this.fileUploadService.deleteTempFolder(token, processInstance.orchestratorProcessInstanceId)
+                .catch(() => this.logger.log("Temp folder not found"));
+        }
     }
 
     @UseGuards(WsBotJwtGuard)

@@ -79,25 +79,25 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         setLoading(true);
         setSubmitting(true);
-        closeModal();
 
         dispatch(
             processActions.startProcess({
                 processId: process.id,
-                executionInfo: process.executionInfo ? executionInfo : {},
+                executionInfo: isProcessAttended ? executionInfo : {},
             }),
         )
             .then(unwrapResult)
             .then(async (response: StartProcessResponse) => {
-                onRunClick?.();
                 await dispatch(
                     processInstanceActions.updateOrchestratorProcessInstanceId(response.orchestratorProcessInstanceId),
                 );
+                onRunClick?.();
                 setStarted(true);
+                closeModal();
             })
-            .catch(() => {
+            .catch((error) => {
                 setStarted(false);
-                enqueueSnackbar(translate('Component.BotProcessRunner.Error'), { variant: 'error' });
+                enqueueSnackbar(error?.message ?? translate('Component.BotProcessRunner.Error'), { variant: 'error' });
             })
             .finally(() => {
                 setSubmitting(false);
@@ -115,9 +115,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const runButton = (
         <>
-            <If condition={modalOpen}>
-                <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
-            </If>
             <If condition={hasRunProcessAccess}>
                 <Tooltip
                     title={
@@ -150,11 +147,16 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     );
 
     return (
-        <If condition={isRunButtonDisabled} else={runButton}>
-            <Tooltip title={tooltipTitle} placement="top">
-                <span>{runButton}</span>
-            </Tooltip>
-        </If>
+        <>
+            <If condition={isRunButtonDisabled} else={runButton}>
+                <Tooltip title={tooltipTitle} placement="top">
+                    <span>{runButton}</span>
+                </Tooltip>
+            </If>
+            <If condition={modalOpen}>
+                <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
+            </If>
+        </>
     );
 };
 

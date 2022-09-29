@@ -8,6 +8,7 @@ import { BotWebSocketGateway } from './gateway/bot.gateway';
 import { Module } from '@nestjs/common';
 import { WebsocketService } from './websocket.service';
 import { UiGateway } from './gateway/ui.gateway';
+import { FileUploadService } from 'src/scheduler/upload/file-upload.service';
 
 @Module({
     imports: [
@@ -16,10 +17,10 @@ import { UiGateway } from './gateway/ui.gateway';
         ConfigModule
     ],
     providers: [
-        BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService,
+        BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService, FileUploadService
     ],
     exports: [
         BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService,
     ]
 })
-export class WebsocketModule {}
+export class WebsocketModule { }

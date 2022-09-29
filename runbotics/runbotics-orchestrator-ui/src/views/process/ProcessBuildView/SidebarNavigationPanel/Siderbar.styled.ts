@@ -10,7 +10,7 @@ export const SidebarNavigationWrapper = styled('div')({
     justifyContent: 'center',
 });
 
-export const SidebarNavigationButton = styled('button')<{ selected: boolean }>(({ theme, selected }) => ({
+export const SidebarNavigationButton = styled('div')<{ selected: boolean }>(({ theme, selected }) => ({
     border: `${theme.typography.pxToRem(1)} solid ${theme.palette.grey[300]}`,
     borderRadius: `${theme.typography.pxToRem(15)} 0 0 ${theme.typography.pxToRem(15)}`,
     borderRight: `none`,
