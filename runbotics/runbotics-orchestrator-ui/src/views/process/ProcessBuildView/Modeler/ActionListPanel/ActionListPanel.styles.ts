@@ -22,7 +22,8 @@ export const classes = {
     hidden: `${PREFIX}-hidden`,
     list: `${PREFIX}-list`,
     highlight: `${PREFIX}-highlight`,
-    filterModalAnchor: `${PREFIX}-filterModalAnchor`
+    filterModalAnchor: `${PREFIX}-filterModalAnchor`,
+    filterButton: `${PREFIX}-filterButton`,
 };
 
 export const drawerWidth = 240;
@@ -143,7 +144,13 @@ export const Root = styled.div(({ theme }) => ({
         color: theme.palette.primary.main,
     },
     [`& .${classes.filterModalAnchor}`]: {
-        paddingTop: theme.spacing(1),
+        display: 'flex',
+        alignItems: 'center',
+        padding: `${theme.spacing(1)} ${theme.spacing(1)} 0`,
+    },
+    [`& .${classes.filterButton}`]: {
+        width: 'fit-content',
+        height: 'fit-content',
     },
 }));
 

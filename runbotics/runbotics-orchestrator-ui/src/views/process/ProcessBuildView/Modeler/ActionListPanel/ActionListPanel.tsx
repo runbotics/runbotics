@@ -27,7 +27,7 @@ import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
 import i18n from 'src/translations/i18n';
 import ActionSearch from './ActionSearch';
-import { ListItem, ListItemText, Typography } from '@mui/material';
+import { Badge, ListItem, ListItemText, Typography } from '@mui/material';
 import If from 'src/components/utils/If';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 
@@ -204,14 +204,16 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                             value={ListPanelTab.TEMPLATES}
                         />
                     </Tabs>
-                    <Box display="flex" ref={filterModalAnchorRef} className={classes.filterModalAnchor}>
+                    <Box ref={filterModalAnchorRef} className={classes.filterModalAnchor}>
                         <ActionSearch
                             onSearchPhraseChange={handleSearchPhrasechange}
                             label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
                         />
-                        <IconButton onClick={openFilterModal}>
-                            <FilterAltOutlinedIcon />
-                        </IconButton>
+                        <Badge badgeContent={filterModal.groupNames.length} color="primary" overlap="circular" variant="dot">
+                            <IconButton onClick={openFilterModal} className={classes.filterButton}>
+                                <FilterAltOutlinedIcon />
+                            </IconButton>
+                        </Badge>
                     </Box>
                     <FilterModal
                         filterModalState={filterModal}
