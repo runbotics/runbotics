@@ -317,6 +317,7 @@ importers:
       react-beautiful-dnd: ^13.0.0
       react-dom: ^17.0.2
       react-draft-wysiwyg: ^1.14.5
+      react-dropzone: ~14.2.2
       react-feather: ^2.0.8
       react-helmet: ^5.2.1
       react-hook-form: ^6.3.1
@@ -424,6 +425,7 @@ importers:
       react-beautiful-dnd: 13.1.0_react-dom@17.0.2+react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-draft-wysiwyg: 1.14.7_553badb77490d85fd515af1484b57b70
+      react-dropzone: 14.2.2_react@17.0.2
       react-feather: 2.0.9_react@17.0.2
       react-helmet: 5.2.1_react@17.0.2
       react-hook-form: 6.15.8_react@17.0.2
@@ -541,6 +543,7 @@ importers:
       '@types/supertest': ^2.0.11
       '@typescript-eslint/eslint-plugin': ^5.10.1
       '@typescript-eslint/parser': ^5.10.1
+      axios: ^0.21.1
       bull: ^4.2.1
       cross-env: ^7.0.3
       dayjs: ^1.11.0
@@ -549,6 +552,7 @@ importers:
       jest: ^27.2.5
       jsonwebtoken: ^8.5.1
       lodash: ^4.17.19
+      mime-types: ~2.1.35
       morgan: ^1.10.0
       passport: ^0.5.2
       passport-jwt: ^4.0.0
@@ -584,11 +588,13 @@ importers:
       '@nestjs/testing': 8.4.2_5c8ddff4a9023a553477f347a9afeb95
       '@nestjs/typeorm': 8.0.3_c3b8e069144beb027ec7310a59704eb3
       '@nestjs/websockets': 8.4.0_08c279d2acde1f4c03bf0647192f852e
+      axios: 0.21.1
       bull: 4.6.2
       dayjs: 1.11.0
       ioredis: 4.28.5
       jsonwebtoken: 8.5.1
       lodash: 4.17.21
+      mime-types: 2.1.35
       morgan: 1.10.0
       passport: 0.5.2
       passport-jwt: 4.0.0
@@ -8093,6 +8099,11 @@ packages:
     hasBin: true
     dev: true
 
+  /attr-accept/2.2.2:
+    resolution: {integrity: sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==}
+    engines: {node: '>=4'}
+    dev: false
+
   /autoprefixer/10.4.7_postcss@8.4.14:
     resolution: {integrity: sha512-ypHju4Y2Oav95SipEcCcI5J7CGPuvz8oat7sUtYj3ClK44bldfvtvcxK6IEK++7rqB7YchDGzweZIBG+SD0ZAA==}
     engines: {node: ^10 || ^12 || >=14}
@@ -8153,7 +8164,7 @@ packages:
   /axios/0.21.1:
     resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
     dependencies:
-      follow-redirects: 1.14.1
+      follow-redirects: 1.14.9
     transitivePeerDependencies:
       - debug
     dev: false
@@ -11974,6 +11985,13 @@ packages:
     resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
     dev: false
 
+  /file-selector/0.6.0:
+    resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}
+    engines: {node: '>= 12'}
+    dependencies:
+      tslib: 2.4.0
+    dev: false
+
   /file-stream-rotator/0.6.1:
     resolution: {integrity: sha512-u+dBid4PvZw17PmDeRcNOtCP9CCK/9lRN2w+r1xIS7yOL9JFrIBKTvrYsxT4P0pGtThYTn++QS5ChHaUov3+zQ==}
     dependencies:
@@ -12131,16 +12149,6 @@ packages:
 
   /fn.name/1.1.0:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
-    dev: false
-
-  /follow-redirects/1.14.1:
-    resolution: {integrity: sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
     dev: false
 
   /follow-redirects/1.14.9:
@@ -12693,7 +12701,7 @@ packages:
       extend: 3.0.2
       gaxios: 4.3.0
       google-auth-library: 7.3.0
-      qs: 6.10.3
+      qs: 6.11.0
       url-template: 2.0.8
       uuid: 8.3.2
     transitivePeerDependencies:
@@ -18573,6 +18581,13 @@ packages:
     engines: {node: '>=0.6'}
     dependencies:
       side-channel: 1.0.4
+    dev: true
+
+  /qs/6.11.0:
+    resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
+    engines: {node: '>=0.6'}
+    dependencies:
+      side-channel: 1.0.4
 
   /qs/6.5.2:
     resolution: {integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==}
@@ -18803,6 +18818,18 @@ packages:
     dependencies:
       classnames: 2.3.1
       prop-types: 15.7.2
+    dev: false
+
+  /react-dropzone/14.2.2_react@17.0.2:
+    resolution: {integrity: sha512-5oyGN/B5rNhop2ggUnxztXBQ6q6zii+OMEftPzsxAR2hhpVWz0nAV+3Ktxo2h5bZzdcCKrpd8bfWAVsveIBM+w==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+    dependencies:
+      attr-accept: 2.2.2
+      file-selector: 0.6.0
+      prop-types: 15.8.1
+      react: 17.0.2
     dev: false
 
   /react-error-overlay/6.0.11:
@@ -21054,7 +21081,7 @@ packages:
       formidable: 1.2.2
       methods: 1.1.2
       mime: 2.5.2
-      qs: 6.10.3
+      qs: 6.11.0
       readable-stream: 3.6.0
       semver: 7.3.7
     transitivePeerDependencies:
@@ -21795,6 +21822,10 @@ packages:
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
+
+  /tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: false
 
   /tsutils/3.21.0_typescript@4.5.5:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}

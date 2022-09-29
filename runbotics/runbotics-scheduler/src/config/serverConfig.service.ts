@@ -52,8 +52,23 @@ export class ServerConfigService {
     get botLogsDirectoryPath(): string {
         return this.configService.get('BOT_LOGS_DIRECTORY');
     }
-
     get requiredBotVersion(): string {
         return this.configService.get('MIN_BOT_VERSION');
+    }
+
+    get sharepointTenantId(): string {
+        return this.configService.get('SHAREPOINT_TENANT_ID');
+    }
+
+    get sharepointClientId(): string {
+        return this.configService.get('SHAREPOINT_CLIENT_ID');
+    }
+
+    get sharepointUsername(): string {
+        return this.configService.get('SHAREPOINT_USERNAME');
+    }
+
+    get sharepointPassword(): string {
+        return this.configService.get('SHAREPOINT_PASSWORD');
     }
 }

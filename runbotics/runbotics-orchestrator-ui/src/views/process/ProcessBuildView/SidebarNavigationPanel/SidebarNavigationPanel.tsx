@@ -26,7 +26,11 @@ const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, se
     return (
         <SidebarNavigationWrapper>
             {sidebarTabs.map(({ label, value }) => (
-                <SidebarNavigationButton type="button" key={value} onClick={() => onTabChange(value)} selected={value === selectedTab}>
+                <SidebarNavigationButton
+                    key={value}
+                    onClick={() => onTabChange(value)}
+                    selected={value === selectedTab}
+                >
                     {label}
                 </SidebarNavigationButton>
             ))}

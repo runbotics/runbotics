@@ -23,6 +23,7 @@ import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
 import getVariablesFromSchema from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
+import _ from "lodash";
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
   "waiting",
@@ -40,7 +41,8 @@ export class SchedulerService implements OnApplicationBootstrap {
     private readonly processService: ProcessService,
     private readonly scheduleProcessService: ScheduleProcessService,
     private readonly botSchedulerService: BotSchedulerService,
-    private readonly uiGateway: UiGateway
+    private readonly uiGateway: UiGateway,
+
   ) { }
 
   async onApplicationBootstrap() {
@@ -77,6 +79,8 @@ export class SchedulerService implements OnApplicationBootstrap {
         .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
   }
 
+
+
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
       if (!input.variables) {
@@ -96,16 +100,19 @@ export class SchedulerService implements OnApplicationBootstrap {
   }
 
 
-  async addNewInstantJob({ process, ...rest }: StartProcessRequest) {
+  async addNewInstantJob({ process, input, user }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
-
-    this.handleAttededProcess(process, rest.input);
+    await this.handleAttededProcess(process, input)
+      .catch(err => {
+        this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
+        throw new BadRequestException(err);
+      });
 
     const instantProcess: InstantProcess = {
       process,
-      ...rest,
+      user,
+      input
     };
-
     const job = await this.processQueue
       .add(instantProcess, {
         jobId: `${process.name}:${process.id}:${uuidv4()}`,
@@ -225,8 +232,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   async updateProcessForScheduledJob(jobs: Job[]) {
     return Promise.all(jobs.map(async (job) => {
       const process = await this.processService.findById(Number(job.data.process.id));
-        job.data.process = { ...process };
-        return job;
+      job.data.process = { ...process };
+      return job;
     }));
   }
 
@@ -282,7 +289,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     if (!hasAccess && !isPublic) {
       this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
       throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-}
+    }
 
     if (triggered && !isTriggerable) {
       this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);

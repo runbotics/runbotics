@@ -527,6 +527,8 @@
 
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Usuń pozycję",
 
+    "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik (maksimum 4mb)",
+
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Wyłączone",
     "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Uruchom z tej pozycji",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Nazwa akcji",

@@ -23,7 +23,7 @@ export const defaultForm = `{
         ]
     },
     "formData": {
-        "input": "",
-        "output": ""
+        "input": null,
+        "output": null
     }
 }`
