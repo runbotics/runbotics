@@ -14,7 +14,7 @@ const customWidgets = {
     EditorWidget,
     DraftJSEditor,
     GlobalVariableSelectWidget,
-    FileDropzone: FileDropzoneWidget,
+    FileDropzoneWidget,
 };
 
 export default customWidgets;
