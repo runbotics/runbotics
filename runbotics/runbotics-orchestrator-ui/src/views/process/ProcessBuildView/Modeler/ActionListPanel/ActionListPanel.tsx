@@ -65,7 +65,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
             return actionsGroupsList;
         }
         return templatesGroupsList;
-    }, [currentTab]);
+    }, [currentTab, templatesGroupsList, actionsGroupsList]);
 
     const handleAction = (event, action: IBpmnAction) => {
         const actionToBPMNElement = ActionToBPMNElement.from(props.modeler);
