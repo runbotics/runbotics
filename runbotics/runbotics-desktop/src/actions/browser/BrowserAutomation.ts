@@ -5,12 +5,11 @@ import { DesktopRunResponse } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
-import * as chrome from 'selenium-webdriver/chrome';
+import * as firefox from 'selenium-webdriver/firefox';
 import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
-
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -93,23 +92,31 @@ class BrowserAutomation extends StatefulActionHandler {
                 this.session = null;
             }
         }
+        const driversPath = process.cwd();
+        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
+        const isWin = process.platform === 'win32';
+        this.logger.log('geckoDriver', geckoDriver);
+        this.logger.log('isWin', isWin);
 
-        let optionsChrome = new chrome.Options()
-            .setChromeBinaryPath(process.env['CFG_CHROME_BIN'])
-            .excludeSwitches("enable-logging");
+        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
+        this.logger.log('Path', process.env['PATH']);
+        let optionsFF = new firefox.Options()
+            .setPreference('xpinstall.signatures.required', false)
+            .setPreference('devtools.console.stdout.content', true)
+            .setBinary(process.env['CFG_FIREFOX_BIN']);
 
         if (input.headless) {
-            optionsChrome = optionsChrome.headless();
+            optionsFF = optionsFF.headless();
         }
 
-        const service = new chrome
-            .ServiceBuilder(process.env["CFG_CHROME_DRIVER"])
-            .setStdio('inherit');
-
         this.session = await new Builder()
-            .forBrowser('chrome')
-            .setChromeService(service)
-            .setChromeOptions(optionsChrome)
+            .forBrowser('firefox')
+            .setFirefoxOptions(optionsFF)
+            .setFirefoxService(
+                new firefox.ServiceBuilder()
+                    //.enableVerboseLogging()
+                    .setStdio('inherit'),
+            )
             .build();
     }
 
@@ -119,6 +126,9 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     async openSite(input: BrowserOpenActionInput): Promise<BrowserOpenActionOutput> {
+        // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
+        //
+        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
