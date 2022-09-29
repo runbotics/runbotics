@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import _ from 'lodash';
-import Highlighter from 'react-highlight-words';
 import { useSelector } from 'src/store';
 import useTranslations from 'src/hooks/useTranslations';
 import { classes, Root, drawerWidth, ActionPanelToggler } from './ActionListPanel.styles';
@@ -30,6 +29,7 @@ import ActionSearch from './ActionSearch';
 import { Badge, ListItem, ListItemText, Typography } from '@mui/material';
 import If from 'src/components/utils/If';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
+import HighlightText from 'src/components/HighlightText';
 
 const filterModalInitialState: FilterModalState = {
     anchorElement: null,
@@ -209,7 +209,12 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                             onSearchPhraseChange={handleSearchPhrasechange}
                             label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
                         />
-                        <Badge badgeContent={filterModal.groupNames.length} color="primary" overlap="circular" variant="dot">
+                        <Badge
+                            badgeContent={filterModal.groupNames.length}
+                            color="primary"
+                            overlap="circular"
+                            variant="dot"
+                        >
                             <IconButton onClick={openFilterModal} className={classes.filterButton}>
                                 <FilterAltOutlinedIcon />
                             </IconButton>
@@ -255,14 +260,14 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                                                                 : item.label
                                                         }
                                                     >
-                                                        <Highlighter
-                                                            searchWords={filterModal.actionName?.split(' ')}
-                                                            textToHighlight={
+                                                        <HighlightText
+                                                            text={
                                                                 currentTab === ListPanelTab.TEMPLATES
                                                                     ? item.name
                                                                     : item.label
                                                             }
-                                                            highlightClassName={classes.highlight}
+                                                            matchingText={filterModal.actionName}
+                                                            matchClassName={classes.highlight}
                                                         />
                                                     </If>
                                                 </ListItemText>
