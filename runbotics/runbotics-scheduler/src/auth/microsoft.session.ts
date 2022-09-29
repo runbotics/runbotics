@@ -46,16 +46,16 @@ export class MicrosoftSessionService {
     }
 
     public static async authorize(url: string, params: { [key: string]: string }) {
-        const CancelToken = Axios.CancelToken.source();
-        const tokens = Axios
+        const cancelToken = Axios.CancelToken.source();
+        const token = Axios
             .post<APIToken>(url, this.encodeParams(params), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                cancelToken: CancelToken.token,
+                cancelToken: cancelToken.token,
             })
             .then(({ data }) => this.deserializeToken(data));
-        return tokens;
+        return token;
     }
 
     private static encodeParams(params: { [key: string]: string }) {

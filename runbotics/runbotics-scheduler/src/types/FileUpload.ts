@@ -1,7 +1,7 @@
 export interface AuthData {
-    token: string;
-    refreshToken: string;
-    expires: number;
+    token?: string;
+    refreshToken?: string;
+    expires?: number;
 }
 
 export interface APIToken {
