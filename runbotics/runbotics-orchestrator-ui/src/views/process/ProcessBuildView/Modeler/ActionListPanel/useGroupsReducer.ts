@@ -12,25 +12,20 @@ export const groupActions = {
     updateGroup: (label: string, open: boolean) => ({ type: 'updateGroup', label, open } as GroupAction),
 };
 
+const mapAll = (state: GroupState, value: boolean): GroupState => {
+    return Object.fromEntries(Object.keys(state).map((key) => [key, value]));
+};
+
 const groupReducer: React.Reducer<GroupState, GroupAction> = (state, action) => {
     switch (action.type) {
         case 'openAll':
-            for (const label of Object.keys(state)) {
-                state[label] = true;
-            }
-            break;
+            return mapAll(state, true);
         case 'closeAll':
-            for (const label of Object.keys(state)) {
-                state[label] = false;
-            }
-            break;
+            return mapAll(state, false);
         case 'updateGroup':
             state[action.label] = action.open;
-            break;
+            return { ...state, [action.label]: action.open };
     }
-    console.log('update');
-
-    return state;
 };
 
 const useGroupReducer = (initialState: GroupState) => {

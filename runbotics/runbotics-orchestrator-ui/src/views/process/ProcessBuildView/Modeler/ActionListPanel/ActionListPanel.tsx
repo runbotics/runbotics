@@ -159,11 +159,6 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         Object.fromEntries(filteredGroups.map(([_, { label }]) => [label, false])),
     );
 
-    useEffect(() => {
-        console.log(groupsOpenState);
-    }, [groupsOpenState]);
-    console.log(groupsOpenState);
-
     return (
         <Root>
             <ActionPanelToggler onClick={handleDrawerAction} open={open} drawerWidth={drawerWidth}>

@@ -37,8 +37,6 @@ const ListGroup: FC<ListGroupProps> = ({ label, open, onToggle, children }) => {
     const handleClick = () => {
         onToggle(!open);
     };
-    console.log(123);
-        
 
     return (
         <Root>
