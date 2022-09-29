@@ -27,7 +27,7 @@ import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import FilterModal from './FilterModal';
 import i18n from 'src/translations/i18n';
 import ActionSearch from './ActionSearch';
-import { ListItem, ListItemText } from '@mui/material';
+import { ListItem, ListItemText, Typography } from '@mui/material';
 import If from 'src/components/utils/If';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 
@@ -204,7 +204,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                             value={ListPanelTab.TEMPLATES}
                         />
                     </Tabs>
-                    <Box display="flex" ref={filterModalAnchorRef}>
+                    <Box display="flex" ref={filterModalAnchorRef} className={classes.filterModalAnchor}>
                         <ActionSearch
                             onSearchPhraseChange={handleSearchPhrasechange}
                             label={translate('Process.Details.Modeler.ActionListPanel.Search.Label')}
@@ -219,46 +219,57 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                         filterOptions={groupsToFilter}
                     />
                     <List className={clsx(classes.list)}>
-                        {filteredGroups.map(([key, { label, items }]) => (
-                            <ListGroup
-                                key={key}
-                                label={label}
-                                open={groupsOpenState[label]}
-                                onToggle={(open) => {
-                                    dispatchGroupsOpenState(groupActions.updateGroup(label, open));
-                                }}
-                            >
-                                <List component="div" disablePadding>
-                                    {items.map((item: Item) => (
-                                        <ListItem
-                                            key={item.id}
-                                            button
-                                            className={classes.nested}
-                                            onClick={(event) => handleItemClick(event, item)}
-                                        >
-                                            <ListItemText>
-                                                <If
-                                                    condition={Boolean(filterModal.actionName)}
-                                                    else={
-                                                        currentTab === ListPanelTab.TEMPLATES ? item.name : item.label
-                                                    }
-                                                >
-                                                    <Highlighter
-                                                        searchWords={filterModal.actionName?.split(' ')}
-                                                        textToHighlight={
+                        <If
+                            condition={Boolean(filteredGroups.length)}
+                            else={
+                                <Typography color="gray" align="center" sx={{ pt: 1 }}>
+                                    {translate('Process.Details.Modeler.ActionListPanel.NoResults')}
+                                </Typography>
+                            }
+                        >
+                            {filteredGroups.map(([key, { label, items }]) => (
+                                <ListGroup
+                                    key={key}
+                                    label={label}
+                                    open={groupsOpenState[label]}
+                                    onToggle={(open) => {
+                                        dispatchGroupsOpenState(groupActions.updateGroup(label, open));
+                                    }}
+                                >
+                                    <List component="div" disablePadding>
+                                        {items.map((item: Item) => (
+                                            <ListItem
+                                                key={item.id}
+                                                button
+                                                className={classes.nested}
+                                                onClick={(event) => handleItemClick(event, item)}
+                                            >
+                                                <ListItemText>
+                                                    <If
+                                                        condition={Boolean(filterModal.actionName)}
+                                                        else={
                                                             currentTab === ListPanelTab.TEMPLATES
                                                                 ? item.name
                                                                 : item.label
                                                         }
-                                                        highlightClassName={classes.highlight}
-                                                    />
-                                                </If>
-                                            </ListItemText>
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            </ListGroup>
-                        ))}
+                                                    >
+                                                        <Highlighter
+                                                            searchWords={filterModal.actionName?.split(' ')}
+                                                            textToHighlight={
+                                                                currentTab === ListPanelTab.TEMPLATES
+                                                                    ? item.name
+                                                                    : item.label
+                                                            }
+                                                            highlightClassName={classes.highlight}
+                                                        />
+                                                    </If>
+                                                </ListItemText>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </ListGroup>
+                            ))}
+                        </If>
                     </List>
                 </Box>
             </Drawer>

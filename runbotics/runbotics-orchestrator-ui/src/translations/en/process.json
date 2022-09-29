@@ -73,6 +73,7 @@
     "Process.Details.Options.ByValue.Desktop": "Desktop",
     "Process.Details.Options.ByValue.BackgroundPage": "Background Page",
     "Process.Details.Options.ByValue.HiddenContentScript": "Hidden Content Script",
+    "Process.Details.Modeler.ActionListPanel.NoResults": "No results found",
     "Process.Details.Modeler.ActionListPanel.Error": "Action cannot be handled",
     "Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label": "Actions",
     "Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label": "Templates",

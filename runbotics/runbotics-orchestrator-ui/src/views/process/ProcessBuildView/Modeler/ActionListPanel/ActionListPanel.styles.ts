@@ -21,7 +21,8 @@ export const classes = {
     nested: `${PREFIX}-nested`,
     hidden: `${PREFIX}-hidden`,
     list: `${PREFIX}-list`,
-    highlight: `${PREFIX}-highlight`
+    highlight: `${PREFIX}-highlight`,
+    filterModalAnchor: `${PREFIX}-filterModalAnchor`
 };
 
 export const drawerWidth = 240;
@@ -139,8 +140,11 @@ export const Root = styled.div(({ theme }) => ({
     },
     [`& .${classes.highlight}`]: {
         background: 'none',
-        color: theme.palette.primary.main
-    }
+        color: theme.palette.primary.main,
+    },
+    [`& .${classes.filterModalAnchor}`]: {
+        paddingTop: theme.spacing(1),
+    },
 }));
 
 export const ActionPanelToggler = styled('div')<{ drawerWidth: number, open: boolean }>(({

@@ -74,6 +74,7 @@
     "Process.Details.Options.ByValue.ContentScript": "Skrypt treści",
     "Process.Details.Options.ByValue.Desktop": "Pulpit",
     "Process.Details.Options.ByValue.BackgroundPage": "Strona w tle",
+    "Process.Details.Modeler.ActionListPanel.NoResults": "Nie znaleziono wyników",
     "Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label": "Akcje",
     "Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label": "Szablony",
     "Process.Details.Modeler.ActionListPanel.Search.Label": "Szukaj",
