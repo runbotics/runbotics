@@ -21,7 +21,7 @@ import {
 import { ScheduleProcessService } from "src/database/schedule-process/schedule-process.service";
 import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
-import getVariablesFromSchema from 'src/utils/variablesFromSchema';
+import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import _ from "lodash";
 
@@ -79,8 +79,6 @@ export class SchedulerService implements OnApplicationBootstrap {
         .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
   }
 
-
-
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
       if (!input.variables) {
@@ -88,11 +86,25 @@ export class SchedulerService implements OnApplicationBootstrap {
         this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
         throw new BadRequestException(err);
       }
-      const passedVariables = JSON.stringify(input.variables);
-      const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, false);
-      const missingVariables = difference(requiredVariables, Object.keys(JSON.parse(passedVariables)));
+
+      const passedVariables = input.variables;
+      const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, true);
+      const missingVariables = difference(requiredVariables, Object.keys(passedVariables));
       if (missingVariables.length > 0) {
         const err = { message: `You haven't provided variables for attended process: ${missingVariables.join(', ')}`, statusCode: 400 };
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        throw new BadRequestException(err);
+      }
+
+      const emptyVariables = requiredVariables.map((variable) => {
+        if (isObject(passedVariables[variable]) || passedVariables[variable] !== '') {
+          return null;
+        }
+        return variable;
+      }).filter((variable) => variable !== null);
+
+      if (emptyVariables.length > 0) {
+        const err = { message: `You haven't provided variables for attended process: ${emptyVariables.join(', ')}`, statusCode: 400 };
         this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
         throw new BadRequestException(err);
       }
