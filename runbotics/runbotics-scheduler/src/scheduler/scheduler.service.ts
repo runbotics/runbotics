@@ -82,8 +82,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
       if (!input.variables) {
-        const err = { message: 'You haven\'t provided variables for attended process', statusCode: 400 };
-        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        const err = 'You haven\'t provided variables for attended process';
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
         throw new BadRequestException(err);
       }
 
@@ -91,8 +91,8 @@ export class SchedulerService implements OnApplicationBootstrap {
       const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, true);
       const missingVariables = difference(requiredVariables, Object.keys(passedVariables));
       if (missingVariables.length > 0) {
-        const err = { message: `You haven't provided variables for attended process: ${missingVariables.join(', ')}`, statusCode: 400 };
-        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        const err = `You haven't provided variables for attended process: ${missingVariables.join(', ')}`;
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
         throw new BadRequestException(err);
       }
 
@@ -104,8 +104,8 @@ export class SchedulerService implements OnApplicationBootstrap {
       }).filter((variable) => variable !== null);
 
       if (emptyVariables.length > 0) {
-        const err = { message: `You haven't provided variables for attended process: ${emptyVariables.join(', ')}`, statusCode: 400 };
-        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        const err = `You haven't provided variables for attended process: ${emptyVariables.join(', ')}`;
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
         throw new BadRequestException(err);
       }
     };
