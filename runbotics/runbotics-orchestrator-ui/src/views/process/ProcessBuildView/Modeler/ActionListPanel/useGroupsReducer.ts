@@ -9,7 +9,7 @@ export type GroupAction =
 export const groupActions = {
     closeAll: () => ({ type: 'closeAll' } as GroupAction),
     openAll: () => ({ type: 'openAll' } as GroupAction),
-    updateGroup: (label: string, open: boolean) => ({ type: 'updateGroup', label, open } as GroupAction),
+    updateGroup: (key: string, open: boolean) => ({ type: 'updateGroup', label: key, open } as GroupAction),
 };
 
 const mapAll = (state: GroupState, value: boolean): GroupState => {

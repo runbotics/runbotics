@@ -1,13 +1,12 @@
-import ListItem from '@mui/material/ListItem';
+import React, { FC } from 'react';
 import styled from 'styled-components';
+import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import ListSubheader from '@mui/material/ListSubheader';
-import List from '@mui/material/List';
-import React, { FC, useEffect, useState } from 'react';
 
 const PREFIX = 'ListGroup';
 

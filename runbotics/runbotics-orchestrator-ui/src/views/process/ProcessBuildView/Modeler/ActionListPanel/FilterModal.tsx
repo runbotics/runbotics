@@ -7,17 +7,19 @@ import {
     FormLabel,
     Popover,
     Typography,
+    Box,
 } from '@mui/material';
-import Box from '@mui/material/Box';
-import React, { FC, useMemo } from 'react';
-import { translate } from 'src/hooks/useTranslations';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import { FilterModalState, GroupProperties } from './ActionListPanel.types';
+import { translate } from 'src/hooks/useTranslations';
+import { Filters, GroupProperties } from './ActionListPanel.types';
 
 interface FilterModalProps {
-    filterModalState: FilterModalState;
-    setFilterModalState: (value: React.SetStateAction<FilterModalState>) => void;
+    anchorElement: Element | null;
+    activeFilters: Filters;
     filterOptions: GroupProperties[];
+    setFilters: (value: React.SetStateAction<Filters>) => void;
+    onClose: () => void;
 }
 
 const StyledContainer = styled(Box)`
@@ -26,45 +28,40 @@ const StyledContainer = styled(Box)`
     padding: 15px;
 `;
 
-const FilterModal: FC<FilterModalProps> = ({ filterModalState, setFilterModalState, filterOptions }) => {
-    const isModalOpen = useMemo(() => Boolean(filterModalState.anchorElement), [filterModalState.anchorElement]);
-    const handleClose = () => {
-        setFilterModalState((prevState: FilterModalState) => {
-            return { ...prevState, anchorElement: null };
-        });
-    };
+const FilterModal: FC<FilterModalProps> = ({ anchorElement, activeFilters, filterOptions, setFilters, onClose }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = event.target;
         if (checked) {
-            setFilterModalState((prevState: FilterModalState) => {
+            setFilters((prevState: Filters) => {
                 return { ...prevState, groupNames: [...prevState.groupNames, name] };
             });
         } else {
-            setFilterModalState((prevState: FilterModalState) => {
+            setFilters((prevState: Filters) => {
                 return { ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) };
             });
         }
     };
 
     const clearFilters = () => {
-        setFilterModalState((prevState: FilterModalState) => {
+        setFilters((prevState: Filters) => {
             return { ...prevState, groupNames: [] };
         });
     };
 
     return (
         <Popover
-            open={isModalOpen}
-            anchorEl={filterModalState.anchorElement}
-            onClose={handleClose}
+            open={Boolean(anchorElement)}
+            onClose={onClose}
+            anchorEl={anchorElement}
             anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'center',
             }}
             transformOrigin={{
                 vertical: 'top',
-                horizontal: 'center',
+                horizontal: 'right',
             }}
+            sx={{ mt: 1 }}
         >
             <StyledContainer>
                 <FormControl component="fieldset" variant="standard">
@@ -72,14 +69,14 @@ const FilterModal: FC<FilterModalProps> = ({ filterModalState, setFilterModalSta
                         {translate('Process.Details.Modeler.ActionListPanel.Filter.Label')}
                     </FormLabel>
                     <FormGroup>
-                        {filterOptions.map(([key, { label }]) => (
+                        {filterOptions.map(({ key, label }) => (
                             <FormControlLabel
                                 sx={{ marginY: '2px', width: '100%' }}
                                 key={key}
                                 control={
                                     <Checkbox
                                         name={label}
-                                        checked={Boolean(filterModalState.groupNames.includes(label))}
+                                        checked={Boolean(activeFilters.groupNames.includes(label))}
                                         onChange={handleChange}
                                     />
                                 }
