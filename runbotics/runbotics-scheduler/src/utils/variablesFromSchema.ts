@@ -11,5 +11,8 @@ function getVariablesFromSchema(schema: JSONSchema7, requiredOnly: boolean = fal
         return variables;
     }
 }
+export function isObject(obj: unknown) {
+    return !!obj && typeof obj === "object" && !Array.isArray(obj);
+}
 
 export default getVariablesFromSchema;
