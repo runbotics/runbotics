@@ -1,19 +1,21 @@
 import React from 'react';
-import { Column } from 'react-table';
-import { IProcessInstance } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { RowCustomExpandedSpan } from '../Table';
+import { Column, RowCustomExpandedSpan } from '../Table';
 import Label from '../Label';
 import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
 import { convertToPascalCase } from 'src/utils/text';
 import useTranslations from 'src/hooks/useTranslations';
+import useAuth from 'src/hooks/useAuth';
+import { hasAccessByFeatureKey } from '../utils/Secured';
 
-const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
+const useProcessInstanceColumns = () : Column[]=> {
     const { translate } = useTranslations();
+    const { user } = useAuth();
 
-    return [
+    const columns = [
         {
             Header: ' ',
             id: 'expander',
@@ -58,6 +60,7 @@ const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Component.HistoryTable.Header.Bot'),
             accessor: ({ bot }) => bot?.installationId,
+            featureKeys: [FeatureKey.PROCESS_INSTANCE_HISTORY_DETAIL_VIEW],
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
@@ -65,6 +68,10 @@ const useProcessInstanceColumns = (): Column<IProcessInstance>[] => {
                 scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login,
         },
     ];
+
+    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasAccessByFeatureKey(user, column.featureKeys) : true));
+
+    return accessedColumns
 };
 
 export default useProcessInstanceColumns;

@@ -2,6 +2,9 @@ package com.runbotics.security;
 
 public final class FeatureKeyConstants {
 
+    public static final String PROCESS_LIST_READ = "PROCESS_LIST_READ";
+    public static final String PROCESS_LIST_TABLE_VIEW = "PROCESS_LIST_TABLE_VIEW";
+    public static final String PROCESS_LIST_DETAIL_VIEW = "PROCESS_LIST_DETAIL_VIEW";
     public static final String PROCESS_READ = "PROCESS_READ";
     public static final String PROCESS_ADD = "PROCESS_ADD";
     public static final String PROCESS_EDIT_INFO = "PROCESS_EDIT_INFO";
@@ -19,10 +22,14 @@ public final class FeatureKeyConstants {
     public static final String PROCESS_IS_TRIGGERABLE_EDIT = "PROCESS_IS_TRIGGERABLE_EDIT";
     public static final String PROCESS_IS_TRIGGERABLE_READ = "PROCESS_IS_TRIGGERABLE_READ";
     public static final String PROCESS_INSTANCE_READ = "PROCESS_INSTANCE_READ";
+    public static final String PROCESS_INSTANCE_HISTORY_DETAIL_VIEW = "PROCESS_INSTANCE_HISTORY_DETAIL_VIEW";
     public static final String PROCESS_INSTANCE_TERMINATE = "PROCESS_INSTANCE_TERMINATE";
     public static final String PROCESS_INSTANCE_HISTORY_READ = "PROCESS_INSTANCE_HISTORY_READ";
 
     public static final String PROCESS_INSTANCE_EVENT_READ = "PROCESS_INSTANCE_EVENT_READ";
+
+    public static final String PROCESS_CONFIGURE_VIEW = "PROCESS_CONFIGURE_VIEW";
+    public static final String PROCESS_BUILD_VIEW = "PROCESS_BUILD_VIEW";
 
     public static final String SCHEDULE_READ = "SCHEDULE_READ";
     public static final String SCHEDULE_ADD = "SCHEDULE_ADD";

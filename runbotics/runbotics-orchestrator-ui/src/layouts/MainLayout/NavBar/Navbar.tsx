@@ -7,45 +7,27 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
 import If from 'src/components/utils/If';
 import NavbarList from './NavbarList';
 import {
     getDrawerStyles, Wrapper, StyledIcon, StyledText,
 } from './Navbar.styles';
-import { Section } from './Navbar.types';
-import i18n from 'i18next';
-import { usePublicSections } from './usePublicSections';
+import { Section } from './Navbar.types'
 
 interface NavbarProps {
-    showMenu: boolean;
+    isShrinked: boolean;
     mobile: boolean;
     onMenuShowToggleChange: () => void;
+    accessedSections: Section[];
 }
 
-const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) => {
+const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, accessedSections }) => {
     const location = useLocation();
-    const { user } = useAuth();
     const { translate } = useTranslations();
-    const publicSections= usePublicSections();
-
-    const sections= useMemo(() => {
-        for (const accessToSection of publicSections) {
-            accessToSection.items = accessToSection.items.filter((item) => {
-                if (item.featureKeys) {
-                    return hasAccessByFeatureKey(user, item.featureKeys);
-                }
-                return true;
-            });
-        }
-
-        return publicSections;
-    }, [user, i18n.language]);
 
     return (
-        <Drawer sx={getDrawerStyles(mobile, showMenu)} anchor="left" open variant="persistent">
+        <Drawer sx={getDrawerStyles(mobile, isShrinked)} anchor="left" open variant="persistent">
             <Box
                 height="100%"
                 display="flex"
@@ -53,7 +35,7 @@ const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) =
                 sx={{ backgroundColor: (theme) => theme.palette.grey[100] }}
             >
                 <Box paddingTop="1.25rem">
-                    {sections.map((section) => (
+                    {accessedSections.map((section) => (
                         <List
                             disablePadding
                             key={section.id}
@@ -71,7 +53,7 @@ const NavBar: FC<NavbarProps> = ({ showMenu, mobile, onMenuShowToggleChange }) =
                     <Wrapper>
                         <IconButton color="inherit" onClick={onMenuShowToggleChange}>
                             <StyledIcon>
-                                <If condition={showMenu} else={<ArrowForwardIcon />}>
+                                <If condition={isShrinked} else={<ArrowForwardIcon />}>
                                     <ArrowBackIcon />
                                 </If>
                             </StyledIcon>

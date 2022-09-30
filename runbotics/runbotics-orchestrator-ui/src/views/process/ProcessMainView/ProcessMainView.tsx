@@ -1,7 +1,7 @@
 import {
     Divider, Grid, Tab, Tabs,
 } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'src/store';
 import useTranslations from 'src/hooks/useTranslations';
@@ -9,18 +9,45 @@ import { ProcessTab } from 'src/utils/process-tab';
 import { ProcessParams } from '../../../utils/types/ProcessParams';
 import ProcessMainViewManager from './ProcessMainView.manager';
 import { ProcessTitle, ProcessInternalPage } from './ProcessMainView.styled';
+import { FeatureKey } from 'runbotics-common';
+import useAuth from 'src/hooks/useAuth';
+import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import i18n from 'i18next';
 
 const ProcessMainView: FC = () => {
     const history = useHistory();
     const { process } = useSelector((state) => state.process.draft);
     const { id, tab } = useParams<ProcessParams>();
     const { translate } = useTranslations();
+    const { user } = useAuth()
 
     const processTabs = [
-        { value: ProcessTab.BUILD, label: translate('Process.MainView.Tabs.Build.Title') },
-        { value: ProcessTab.RUN, label: translate('Process.MainView.Tabs.Run.Title') },
-        { value: ProcessTab.CONFIGURE, label: translate('Process.MainView.Tabs.Configure.Title') },
+        {
+            value: ProcessTab.BUILD,
+            label: translate('Process.MainView.Tabs.Build.Title'),
+            featureKeys: [FeatureKey.PROCESS_BUILD_VIEW],
+        },
+        {
+            value: ProcessTab.RUN,
+            label: translate('Process.MainView.Tabs.Run.Title'),
+            featureKeys: [FeatureKey.PROCESS_START],
+        },
+        {
+            value: ProcessTab.CONFIGURE,
+            label: translate('Process.MainView.Tabs.Configure.Title'),
+            featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
+        },
     ];
+    
+    const accessedTabs = useMemo(() => {
+        return processTabs.filter((tab) => {
+            if (tab.featureKeys) {
+                return hasAccessByFeatureKey(user, tab.featureKeys);
+            }
+
+            return true;
+        });
+    }, [user, i18n.language]);
 
     const handleMainTabsChange = (processTab: ProcessTab) => {
         history.push(`/app/processes/${id}/${processTab}`);
@@ -37,7 +64,7 @@ const ProcessMainView: FC = () => {
                         value={tab}
                         variant="scrollable"
                     >
-                        {processTabs.map((processTab) => (
+                        {accessedTabs.length > 1 && accessedTabs.map((processTab) => (
                             <Tab key={processTab.value} label={processTab.label} value={processTab.value} />
                         ))}
                     </Tabs>

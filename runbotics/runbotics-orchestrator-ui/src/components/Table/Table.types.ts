@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { Column, Row } from 'react-table';
+import { Column as ReactTableColumn, Row } from 'react-table';
 import { SxProps, Theme } from '@mui/system';
+import { FeatureKey } from 'runbotics-common';
 
 export interface DataTableFooterProps {
     pageCount: number;
@@ -26,3 +27,7 @@ export interface DataTableProps<T extends object> {
     singleSelect?: boolean;
     autoHeight?: boolean;
 }
+
+export type Column<D extends object = {}> = ReactTableColumn<D> & {
+    featureKeys?: FeatureKey[];
+};
