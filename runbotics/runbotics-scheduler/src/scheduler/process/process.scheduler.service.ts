@@ -21,7 +21,7 @@ export class ProcessSchedulerService {
         const uiSchema = JSON.parse(process.executionInfo).uiSchema;
         const fileKeys = this.fileUploadService.getFileKeysFromSchema(uiSchema);
 
-        if (fileKeys.length < 0) return;
+        if (fileKeys.length <= 0) return;
 
         const token = await this.microsoftSessionService.getToken()
             .catch(err => {
