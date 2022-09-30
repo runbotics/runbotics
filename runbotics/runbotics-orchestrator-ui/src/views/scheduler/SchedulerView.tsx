@@ -15,8 +15,6 @@ import { IProcessInstance } from 'runbotics-common';
 import Header from './Header';
 import SchedulerTableContainer from './SchedulerTable.container';
 import { useActiveProcessColumns, useScheduledProcessColumns, useWaitingProcessColumns } from './SchedulerTable.columns';
-import { Column } from 'react-table';
-import moment from 'moment'
 import i18n from 'i18next';
 
 const SchedulerView = () => {

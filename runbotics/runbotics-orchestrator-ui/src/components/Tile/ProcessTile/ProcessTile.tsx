@@ -1,33 +1,58 @@
 import React from 'react';
 import type { VFC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CardActionArea, Divider } from '@mui/material';
+import { Divider, Tooltip, Typography } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import {
-    ProcessTileContent, ProcessTileFooter, ProcessTileProps,
+    Description,
+    ProcessTileContent,
+    ProcessTileFooter,
+    ProcessTileProps,
+    StyledCardActionArea,
 } from '.';
 import Tile, { TileAvatar } from '..';
 import { buildProcessUrl } from './ProcessTile.utils';
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import { FeatureKey } from 'runbotics-common';
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const history = useHistory();
+    const displayDetails = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
 
     const handleRedirect = () => {
         history.push(buildProcessUrl(process));
     };
 
+    const fullDescription = (
+        <Typography color="white" variant="body2">
+            {process.description}
+        </Typography>
+    );
+
     return (
         <Tile>
-            <CardActionArea onClick={handleRedirect}>
+            <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader
                     avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
                     title={process.name}
                     titleTypographyProps={{ variant: 'h5' }}
                 />
-                <ProcessTileContent process={process} />
-            </CardActionArea>
-            <Divider />
-            <ProcessTileFooter process={process} />
+                <If condition={displayDetails}>
+                    <ProcessTileContent process={process} />
+                </If>
+                <If condition={!displayDetails && Boolean(process.description)}>
+                    <Tooltip title={fullDescription}>
+                        <Description color="textSecondary" variant="body2">
+                            {process.description}
+                        </Description>
+                    </Tooltip>
+                </If>
+            </StyledCardActionArea>
+            <If condition={displayDetails}>
+                <Divider />
+                <ProcessTileFooter process={process} />
+            </If>
         </Tile>
     );
 };
