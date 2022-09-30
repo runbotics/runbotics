@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Column, Row } from 'react-table';
+import { Column as ReactTableColumn, Row } from 'react-table';
 import { SxProps, Theme } from '@mui/system';
 import { FeatureKey } from 'runbotics-common';
 
@@ -28,6 +28,6 @@ export interface DataTableProps<T extends object> {
     autoHeight?: boolean;
 }
 
-export type ProcessInstanceColumn<D extends object = {}> = Column<D> & {
+export type Column<D extends object = {}> = ReactTableColumn<D> & {
     featureKeys?: FeatureKey[];
 };

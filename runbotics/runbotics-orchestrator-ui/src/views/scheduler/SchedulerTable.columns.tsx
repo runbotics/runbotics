@@ -5,12 +5,12 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import useTranslations from 'src/hooks/useTranslations';
 import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
 import { IProcessInstance } from 'runbotics-common';
-import { ProcessInstanceColumn, RowCustomExpandedSpan } from 'src/components/Table';
+import { Column, RowCustomExpandedSpan } from 'src/components/Table';
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';
 
-export const useActiveProcessColumns = (): ProcessInstanceColumn<IProcessInstance>[] => {
+export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
     const { translate } = useTranslations();
 
     return [
@@ -57,7 +57,7 @@ export const useActiveProcessColumns = (): ProcessInstanceColumn<IProcessInstanc
     ];
 };
 
-export const useWaitingProcessColumns = (): ProcessInstanceColumn<SchedulerJob>[] => {
+export const useWaitingProcessColumns = (): Column<SchedulerJob>[] => {
     const { translate } = useTranslations();
 
     return [
@@ -99,7 +99,7 @@ export const useWaitingProcessColumns = (): ProcessInstanceColumn<SchedulerJob>[
     ];
 };
 
-export const useScheduledProcessColumns = (): ProcessInstanceColumn<ScheduledJob>[] => {
+export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
     const { translate } = useTranslations();
 
     return [

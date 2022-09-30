@@ -3,7 +3,7 @@ import { FeatureKey } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { ProcessInstanceColumn, RowCustomExpandedSpan } from '../Table';
+import { Column, RowCustomExpandedSpan } from '../Table';
 import Label from '../Label';
 import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
 import { convertToPascalCase } from 'src/utils/text';
@@ -11,7 +11,7 @@ import useTranslations from 'src/hooks/useTranslations';
 import useAuth from 'src/hooks/useAuth';
 import { hasAccessByFeatureKey } from '../utils/Secured';
 
-const useProcessInstanceColumns = () : ProcessInstanceColumn[]=> {
+const useProcessInstanceColumns = () : Column[]=> {
     const { translate } = useTranslations();
     const { user } = useAuth();
 
