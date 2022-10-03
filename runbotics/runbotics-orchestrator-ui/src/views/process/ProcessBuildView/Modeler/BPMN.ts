@@ -71,6 +71,7 @@ export type BusinessObject = {
     disabled: boolean;
     runFromHere: boolean;
     label: string;
+    customLabel?: string;
     extensionElements?: ExtensionElements;
 };
 

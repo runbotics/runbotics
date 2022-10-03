@@ -15,13 +15,19 @@ import { buildProcessUrl } from './ProcessTile.utils';
 import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
+import { ProcessTab } from 'src/utils/process-tab';
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const history = useHistory();
     const displayDetails = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
+    const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW])
 
     const handleRedirect = () => {
-        history.push(buildProcessUrl(process));
+        if (hasBuildTabAccess) {
+            history.push(buildProcessUrl(process, ProcessTab.BUILD));
+        } else {
+            history.push(buildProcessUrl(process, ProcessTab.RUN));
+        }
     };
 
     const fullDescription = (

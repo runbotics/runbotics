@@ -1,6 +1,7 @@
 import { IProcess } from 'runbotics-common';
-import { ProcessTab } from '../../../utils/process-tab';
+import { ProcessTab } from 'src/utils/process-tab';
 
-export const buildProcessUrl = (process: IProcess) => {
-    return `/app/processes/${process.id}/${ProcessTab.RUN}`;
+export const buildProcessUrl = (process: IProcess, tabName = ProcessTab.RUN) => {
+
+    return `/app/processes/${process.id}/${tabName}`;
 }
