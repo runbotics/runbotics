@@ -33,6 +33,12 @@ export const RunboticModdleDescriptor = {
                     type: "Boolean",
                     default: false,
                 },
+                {
+                    name: "customLabel",
+                    isAttr: true,
+                    type: "String",
+                    default: "text",
+                }
             ],
         },
         {
