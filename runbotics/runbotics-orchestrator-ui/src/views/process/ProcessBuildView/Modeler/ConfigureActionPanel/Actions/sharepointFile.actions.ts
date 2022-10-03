@@ -135,7 +135,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 },
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input', 'output'],
             },
             formData: {
                 input: {
