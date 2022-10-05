@@ -12,17 +12,13 @@ const classes = {
     cardsWrapper: `${PREFIX}-cardsWrapper`,
 };
 
-const Root = styled.div(() => ({
-    [`& .${classes.root}`]: {},
-
-    [`& .${classes.cardsWrapper}`]: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-        gridAutoRows: '1fr',
-        minHeight: '23rem',
-        gap: '1rem',
-    },
-}));
+const TilesWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-auto-rows: 1fr;
+    min-height: 23rem;
+    gap: 1rem;
+`;
 
 const GridView: VFC = () => {
     const processesPage = useSelector((state) => state.process.all.page);
@@ -33,16 +29,16 @@ const GridView: VFC = () => {
     } = useContext(ProcessPageContext);
 
     return (
-        <Root>
-            <Box className={classes.cardsWrapper}>
+        <>
+            <TilesWrapper className={classes.cardsWrapper}>
                 {(processesPage?.content ?? []).map((process) => (
                     <ProcessTile key={process.id} process={process} />
                 ))}
-            </Box>
+            </TilesWrapper>
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination count={processesPage?.totalPages ?? 1} onChange={handleGridPageChange} page={page + 1} />
             </Box>
-        </Root>
+        </>
     );
 };
 
