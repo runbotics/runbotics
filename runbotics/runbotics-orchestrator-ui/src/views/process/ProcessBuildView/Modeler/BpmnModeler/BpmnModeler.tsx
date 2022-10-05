@@ -156,11 +156,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             });
 
             eventBus.on('connection.removed', (event: any) => {
-                setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
+                setCurrentTab(null);
             });
 
             eventBus.on('shape.removed', (event: any) => {
-                setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
+                setCurrentTab(null);
                 dispatch(processActions.removeAppliedAction(event.element.id));
             });
 
@@ -302,7 +302,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         </ModelerArea>
                         <ResizableDrawer open={currentTab !== null}>
                             <If condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}>
-                                <BpmnFormProvider element={selectedElement} modeler={modeler} process={process}>
+                                <BpmnFormProvider
+                                    element={selectedElement}
+                                    modeler={modeler}
+                                    process={process}
+                                    commandStack={commandStack}
+                                >
                                     <ConfigureActionPanel />
                                 </BpmnFormProvider>
                             </If>
