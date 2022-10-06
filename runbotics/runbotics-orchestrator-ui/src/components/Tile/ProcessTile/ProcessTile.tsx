@@ -1,7 +1,9 @@
 import React from 'react';
 import type { VFC } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Divider, Tooltip, Typography } from '@mui/material';
+import {
+    Box, Divider, Tooltip, Typography,
+} from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
@@ -19,7 +21,7 @@ import {
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const history = useHistory();
-    const displayDetails = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
+    const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
 
     const handleRedirect = () => {
@@ -30,12 +32,6 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
         }
     };
 
-    const fullDescription = (
-        <Typography color="white" variant="body2">
-            {process.description}
-        </Typography>
-    );
-
     return (
         <Tile>
             <StyledCardActionArea onClick={handleRedirect}>
@@ -45,18 +41,25 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
                     titleTypographyProps={{ variant: 'h5' }}
                     sx={{ width: '100%' }}
                 />
-                <If condition={displayDetails}>
+                <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent process={process} />
                 </If>
-                <If condition={!displayDetails && Boolean(process.description)}>
-                    <Tooltip title={fullDescription}>
+                <If condition={!hasProcessDetailsAccess && Boolean(process.description)}>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        width="100%"
+                        height="100%"
+                        paddingBottom="1rem"
+                    >
                         <Description color="textSecondary" variant="body2">
                             {process.description}
                         </Description>
-                    </Tooltip>
+                    </Box>
                 </If>
             </StyledCardActionArea>
-            <If condition={displayDetails}>
+            <If condition={hasProcessDetailsAccess}>
                 <Divider />
                 <ProcessTileFooter process={process} />
             </If>

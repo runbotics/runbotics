@@ -50,10 +50,11 @@ export const StyledCardActionArea = styled(CardActionArea)`
 
 export const Description = styled(Typography)`
     && {
-        width: 90%;
-        margin: auto auto 1.5rem auto;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        display: -webkit-box;
+        max-width: 90%;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
         overflow: hidden;
+        word-break: break-word;
     }
 `;

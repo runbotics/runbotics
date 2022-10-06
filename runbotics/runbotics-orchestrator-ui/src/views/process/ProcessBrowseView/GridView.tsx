@@ -12,11 +12,11 @@ const classes = {
     cardsWrapper: `${PREFIX}-cardsWrapper`,
 };
 
-const TilesWrapper = styled.div`
+const TileGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     grid-auto-rows: 1fr;
-    min-height: 23rem;
+    min-height: 16.25rem;
     gap: 1rem;
 `;
 
@@ -30,11 +30,11 @@ const GridView: VFC = () => {
 
     return (
         <>
-            <TilesWrapper className={classes.cardsWrapper}>
+            <TileGrid className={classes.cardsWrapper}>
                 {(processesPage?.content ?? []).map((process) => (
                     <ProcessTile key={process.id} process={process} />
                 ))}
-            </TilesWrapper>
+            </TileGrid>
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination count={processesPage?.totalPages ?? 1} onChange={handleGridPageChange} page={page + 1} />
             </Box>
