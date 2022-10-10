@@ -29,6 +29,7 @@ export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
 
 export type BrowserLaunchActionInput = {
     headless: boolean;
+    target?: string;
 };
 
 export type BrowserOpenActionInput = {
@@ -118,6 +119,11 @@ class BrowserAutomation extends StatefulActionHandler {
                     .setStdio('inherit'),
             )
             .build();
+            if(input.target) {
+                this.openSite({
+                    target: input.target
+                });
+            }
     }
 
     async closeBrowser(request: BrowserActionRequest<any>): Promise<any> {
