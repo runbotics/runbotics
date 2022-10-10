@@ -167,7 +167,7 @@
     "Process.Details.Modeler.Actions.Browser.Launch.Label": "Launch browser",
     "Process.Details.Modeler.Actions.Browser.Launch.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Launch.Headless": "Headless",
-    "Process.Details.Modeler.Actions.Browser.Open.Site.Input": "Open site",
+    "Process.Details.Modeler.Actions.Browser.Launch.Target": "Open site",
     "Process.Details.Modeler.Actions.Browser.Close.Label": "Close browser",
     "Process.Details.Modeler.Actions.Browser.Close.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Click.Label": "Click",

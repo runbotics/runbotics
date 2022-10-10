@@ -122,7 +122,7 @@ class BrowserAutomation extends StatefulActionHandler {
             if(input.target) {
                 this.openSite({
                     target: input.target
-                })
+                });
             }
     }
 

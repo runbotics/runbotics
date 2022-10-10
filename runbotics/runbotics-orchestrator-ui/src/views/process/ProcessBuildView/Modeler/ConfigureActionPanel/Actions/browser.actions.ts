@@ -73,7 +73,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'boolean',
                             },
                             target: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Open.Site.Input'),
+                                title: translate('Process.Details.Modeler.Actions.Browser.Launch.Target'),
                                 type: 'string'
                             }
                         },
