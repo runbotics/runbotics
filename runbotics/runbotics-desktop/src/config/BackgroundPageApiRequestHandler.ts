@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import fs from 'fs';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
 import mimeTypes from 'mime-types';
 import { ApiResource } from './ApiResource';
 import { orchestratorAxios } from './axios-configuration';
@@ -56,13 +56,22 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
             }
         }
         let response;
-        const method = input.method ? input.method : 'get';
+        const method = input.method ? input.method : 'GET';
         try {
             switch (method) {
-                case 'get':
+                case 'GET':
                     response = await Axios.get(compiled, { headers: input.headers });
                     break;
-                case 'post':
+                case 'DELETE':
+                    response = await Axios.delete(compiled, JSON.parse(input.body));
+                    break;
+                case 'PATCH':
+                    response = await Axios.patch(compiled, JSON.parse(input.body), { headers: input.headers });
+                    break;
+                case 'PUT':
+                    response = await Axios.put(compiled, JSON.parse(input.body), { headers: input.headers });
+                    break;
+                case 'POST':
                     response = await Axios.post(compiled, JSON.parse(input.body), { headers: input.headers });
                     break;
                 default:
@@ -70,7 +79,11 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
                     break;
             }
         } catch (e) {
-            throw e;
+            this.logger.log(e); 
+            response = e.response;
+            if(!response) {
+                throw new InternalServerErrorException(e);
+            }
         }
         return {
             data: response.data,
@@ -121,7 +134,7 @@ export type ApiRequestInput = ApiResource & {
 };
 
 export type ApiRequestOutput<T> = {
-    data: T;
+    data?: T;
     status: number;
     statusText: string;
 };
