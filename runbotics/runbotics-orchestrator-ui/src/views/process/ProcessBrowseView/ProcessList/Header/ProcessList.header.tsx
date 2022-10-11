@@ -8,6 +8,8 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import If from 'src/components/utils/If';
 import { ProcessListDisplayMode } from '../ProcessList.utils';
 import useTranslations from 'src/hooks/useTranslations';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import { FeatureKey } from 'runbotics-common';
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',
@@ -34,6 +36,7 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
     displayMode, onDisplayModeChange, processesLength, search, onSearchChange,
 }) => {
     const { translate } = useTranslations();
+    const displayTableListView = useFeatureKey([FeatureKey.PROCESS_LIST_TABLE_VIEW])
     
     return (
     <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -51,19 +54,21 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
                     sx={{ width: '30%' }}
                 />
             </If>
-            <ToggleButtonGroup
-                exclusive
-                onChange={(_, mode) => onDisplayModeChange(mode)}
-                size="small"
-                value={displayMode}
-            >
-                <ToggleButton value={ProcessListDisplayMode.GRID}>
-                    <ViewModuleIcon />
-                </ToggleButton>
-                <ToggleButton value={ProcessListDisplayMode.LIST}>
-                    <Toc />
-                </ToggleButton>
-            </ToggleButtonGroup>
+            <If condition={displayTableListView}>
+                <ToggleButtonGroup
+                    exclusive
+                    onChange={(_, mode) => onDisplayModeChange(mode)}
+                    size="small"
+                    value={displayMode}
+                >
+                    <ToggleButton value={ProcessListDisplayMode.GRID}>
+                        <ViewModuleIcon />
+                    </ToggleButton>
+                    <ToggleButton value={ProcessListDisplayMode.LIST}>
+                        <Toc />
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </If>
         </Box>
     </Box>
 )}

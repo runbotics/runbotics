@@ -1,6 +1,6 @@
 export enum ProcessBuildTab {
     RUN_INFO,
-    PROPERTIES,
+    CONFIGURE_ACTION,
 }
 
 export interface SidebarProps {

@@ -1,6 +1,4 @@
-import React, {
-    useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState,
-} from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
@@ -31,7 +29,6 @@ import {
     ModelerProps,
     paste,
     Wrapper,
-    InfoDrawer,
     ModelerArea,
     centerCanvas,
 } from '.';
@@ -42,28 +39,29 @@ import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import LeavePromt from './LeavePromt';
+import ResizableDrawer from 'src/components/ResizableDrawer';
+import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import modelerPalette from '../modeler-palette';
+import If from 'src/components/utils/If';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
     commandStackIdx: -1,
     commandStackSize: 0,
 };
+
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
-    (
-        {
-            readOnly, definition, currentTab, onTabChange, offsetTop, onSave, onImport, onExport, onRunClick, process,
-        },
-        ref,
-    ) => {
+    ({ readOnly, definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const [selectedElement, setSelectedElement] = useState<BPMNElement>(null);
         const [commandStack, setCommandStack] = useState<CommandStackInfo>(initialCommandStackInfo);
         const [imported, setImported] = useState(false);
+        const [currentTab, setCurrentTab] = useState<ProcessBuildTab | null>(null);
         const modelerRef = useRef<BpmnIoModeler>(modeler);
         const externalBpmnActions = useSelector((state) => state.action.bpmnActions.byId);
         const appliedActivities = useSelector((state) => state.process.modeler.appliedActivities);
+
         useEffect(() => {
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
@@ -152,17 +150,17 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 if (ELEMENTS_PROPERTIES_WHITELIST.includes(event.element.type)) {
                     setSelectedElement(event.element);
                 } else {
-                    onTabChange(ProcessBuildTab.PROPERTIES);
+                    setCurrentTab(null);
                     setSelectedElement(null);
                 }
             });
 
             eventBus.on('connection.removed', (event: any) => {
-                onTabChange(ProcessBuildTab.PROPERTIES);
+                setCurrentTab(null);
             });
 
             eventBus.on('shape.removed', (event: any) => {
-                onTabChange(ProcessBuildTab.PROPERTIES);
+                setCurrentTab(null);
                 dispatch(processActions.removeAppliedAction(event.element.id));
             });
 
@@ -220,14 +218,14 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         };
 
         useUpdateEffect(() => {
-            if (currentTab === ProcessBuildTab.RUN_INFO) {
+            if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) {
                 setSelectedElement(null);
             }
         }, [currentTab]);
 
         useUpdateEffect(() => {
             if (selectedElement) {
-                onTabChange(ProcessBuildTab.PROPERTIES);
+                setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
             }
         }, [selectedElement]);
 
@@ -278,7 +276,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                     onSave();
                                     setCommandStack(initialCommandStackInfo);
                                 }}
-                                onRunClick={onRunClick}
+                                onRunClick={() => setCurrentTab(ProcessBuildTab.RUN_INFO)}
                             />
                             <ImportExportPanel
                                 onExport={onExport}
@@ -297,17 +295,27 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canRedo={canRedo}
                             />
                             <LeavePromt />
+                            <SidebarNavigationPanel
+                                selectedTab={currentTab}
+                                onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}
+                            />
                         </ModelerArea>
-                        <BpmnFormProvider element={selectedElement} modeler={modeler} process={process}>
-                            <ConfigureActionPanel />
-                        </BpmnFormProvider>
-                        <InfoDrawer
-                            variant="permanent"
-                            anchor="right"
-                            open={currentTab === ProcessBuildTab.RUN_INFO && !selectedElement}
-                        >
-                            <InfoPanel />
-                        </InfoDrawer>
+                        <ResizableDrawer open={currentTab !== null}>
+                            <If condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}>
+                                <BpmnFormProvider
+                                    element={selectedElement}
+                                    modeler={modeler}
+                                    process={process}
+                                    commandStack={commandStack}
+                                >
+                                    <ConfigureActionPanel />
+                                </BpmnFormProvider>
+                            </If>
+
+                            <If condition={currentTab === ProcessBuildTab.RUN_INFO}>
+                                <InfoPanel />
+                            </If>
+                        </ResizableDrawer>
                     </Wrapper>
                 </Hotkeys>
             </Hotkeys>

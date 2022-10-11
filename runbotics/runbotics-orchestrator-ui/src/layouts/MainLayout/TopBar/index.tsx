@@ -9,6 +9,8 @@ import {
 import Logo from 'src/components/utils/Logo/Logo';
 import useAuth from 'src/hooks/useAuth';
 import { HEADER_HEIGHT } from 'src/utils/constants';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import { FeatureKey } from 'runbotics-common';
 import Account from './Account';
 import HowToRun from './HowToRun';
 import LangSwitcher from './LangSwitcher';
@@ -48,6 +50,7 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const { isAuthenticated } = useAuth();
+    const hasBotInstallAccess = useFeatureKey([FeatureKey.BOT_READ]);
 
     return (
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
@@ -59,7 +62,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                 </Hidden>
                 <Box ml={2} flexGrow={1} />
                 <LangSwitcher />
-                {isAuthenticated && <HowToRun />}
+                {isAuthenticated && hasBotInstallAccess && <HowToRun />}
                 <Box ml={2}>
                     <Account />
                 </Box>

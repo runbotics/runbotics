@@ -21,8 +21,9 @@ import {
 import { ScheduleProcessService } from "src/database/schedule-process/schedule-process.service";
 import { IProcess, IScheduleProcess, WsMessage } from "runbotics-common";
 import { UiGateway } from "../websocket/gateway/ui.gateway";
-import getVariablesFromSchema from 'src/utils/variablesFromSchema';
+import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
+import _ from "lodash";
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
   "waiting",
@@ -40,7 +41,8 @@ export class SchedulerService implements OnApplicationBootstrap {
     private readonly processService: ProcessService,
     private readonly scheduleProcessService: ScheduleProcessService,
     private readonly botSchedulerService: BotSchedulerService,
-    private readonly uiGateway: UiGateway
+    private readonly uiGateway: UiGateway,
+
   ) { }
 
   async onApplicationBootstrap() {
@@ -80,32 +82,49 @@ export class SchedulerService implements OnApplicationBootstrap {
   private async handleAttededProcess(process: IProcess, input: ProcessInput) {
     if (process.isAttended) {
       if (!input.variables) {
-        const err = { message: 'You haven\'t provided variables for attended process', statusCode: 400 };
-        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        const err = 'You haven\'t provided variables for attended process';
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
         throw new BadRequestException(err);
       }
-      const passedVariables = JSON.stringify(input.variables);
-      const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, false);
-      const missingVariables = difference(requiredVariables, Object.keys(JSON.parse(passedVariables)));
+
+      const passedVariables = input.variables;
+      const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, true);
+      const missingVariables = difference(requiredVariables, Object.keys(passedVariables));
       if (missingVariables.length > 0) {
-        const err = { message: `You haven't provided variables for attended process: ${missingVariables.join(', ')}`, statusCode: 400 };
-        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err.message}`);
+        const err = `You haven't provided variables for attended process: ${missingVariables.join(', ')}`;
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
+        throw new BadRequestException(err);
+      }
+
+      const emptyVariables = requiredVariables.map((variable) => {
+        if (isObject(passedVariables[variable]) || passedVariables[variable] !== '') {
+          return null;
+        }
+        return variable;
+      }).filter((variable) => variable !== null);
+
+      if (emptyVariables.length > 0) {
+        const err = `You haven't provided variables for attended process: ${emptyVariables.join(', ')}`;
+        this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
         throw new BadRequestException(err);
       }
     };
   }
 
 
-  async addNewInstantJob({ process, ...rest }: StartProcessRequest) {
+  async addNewInstantJob({ process, input, user }: StartProcessRequest) {
     this.logger.log(`Adding new instant job for process: ${process.name}`);
-
-    this.handleAttededProcess(process, rest.input);
+    await this.handleAttededProcess(process, input)
+      .catch(err => {
+        this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
+        throw new BadRequestException(err);
+      });
 
     const instantProcess: InstantProcess = {
       process,
-      ...rest,
+      user,
+      input
     };
-
     const job = await this.processQueue
       .add(instantProcess, {
         jobId: `${process.name}:${process.id}:${uuidv4()}`,
@@ -225,8 +244,8 @@ export class SchedulerService implements OnApplicationBootstrap {
   async updateProcessForScheduledJob(jobs: Job[]) {
     return Promise.all(jobs.map(async (job) => {
       const process = await this.processService.findById(Number(job.data.process.id));
-        job.data.process = { ...process };
-        return job;
+      job.data.process = { ...process };
+      return job;
     }));
   }
 
@@ -282,7 +301,7 @@ export class SchedulerService implements OnApplicationBootstrap {
     if (!hasAccess && !isPublic) {
       this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
       throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-}
+    }
 
     if (triggered && !isTriggerable) {
       this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);

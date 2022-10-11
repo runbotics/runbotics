@@ -16,7 +16,7 @@ import { applyModelerElement } from '../utils';
 import i18n from 'i18next';
 
 const ActionFormRenderer: FC = () => {
-    const { element, modeler, action } = useBpmnFormContext();
+    const { element, modeler, action, commandStack } = useBpmnFormContext();
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
@@ -76,7 +76,7 @@ const ActionFormRenderer: FC = () => {
         defaultParameters.runFromHere = element.businessObject.runFromHere;
 
         return defaultParameters;
-    }, [action, element]);
+    }, [action, element, commandStack.commandStackIdx]);
 
     const handleSubmit = (event: IFormData) => {
         dispatch(processActions.addAppliedAction(element.id));
@@ -89,6 +89,7 @@ const ActionFormRenderer: FC = () => {
                 output: event.formData.output,
                 disabled: event.formData.disabled,
                 runFromHere: event.formData.runFromHere,
+                customLabel: 'customLabel',
             },
         });
     };

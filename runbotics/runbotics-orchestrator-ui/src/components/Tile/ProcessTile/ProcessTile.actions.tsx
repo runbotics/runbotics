@@ -51,17 +51,19 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
 
     return (
         <>
-            <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick}>
-                <MoreVertIcon />
-            </IconButton>
-            <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
-                <If condition={hasEditProcessAccess}>
-                    <MenuItem onClick={() => setShowDialog(true)}>{translate('Common.Edit')}</MenuItem>
-                </If>
-                <If condition={hasDeleteProcessAccess}>
-                    <DeleteProcess process={process} />
-                </If>
-            </Menu>
+            <If condition={hasEditProcessAccess || hasDeleteProcessAccess}>
+                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick}>
+                    <MoreVertIcon />
+                </IconButton>
+                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
+                    <If condition={hasEditProcessAccess}>
+                        <MenuItem onClick={() => setShowDialog(true)}>{translate('Common.Edit')}</MenuItem>
+                    </If>
+                    <If condition={hasDeleteProcessAccess}>
+                        <DeleteProcess process={process} />
+                    </If>
+                </Menu>
+            </If>
             <If condition={hasEditProcessAccess}>
                 <EditProcessDialog
                     open={showDialog}

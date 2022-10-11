@@ -26,7 +26,8 @@
         ],
         "types": [
             "node"
-        ]
+        ],
+        "downlevelIteration": true
     },
     "include": [
         "src"

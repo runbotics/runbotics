@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
-import { Column, Row } from 'react-table';
+import { Row } from 'react-table';
+import { Column } from '../../components/Table';
 import Table from '../../components/Table';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
