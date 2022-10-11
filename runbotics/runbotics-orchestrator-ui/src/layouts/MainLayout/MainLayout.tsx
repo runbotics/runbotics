@@ -3,14 +3,14 @@ import type { FC } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import useAsyncEffect from 'src/hooks/useAsyncEffect';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
-import NavBar from './NavBar';
-import TopBar from './TopBar';
-import { Main, ContentContainer, Content } from './MainLayout.styles';
 import If from 'src/components/utils/If';
-import { usePublicSections } from './NavBar/usePublicSections';
 import useAuth from 'src/hooks/useAuth';
 import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
 import i18n from 'i18next';
+import NavBar from './NavBar';
+import TopBar from './TopBar';
+import { Main, ContentContainer, Content } from './MainLayout.styles';
+import { usePublicSections } from './NavBar/usePublicSections';
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
@@ -18,7 +18,7 @@ const MainLayout: FC = ({ children }) => {
     const theme = useTheme();
     const mobile = useMediaQuery(theme.breakpoints.down('md'));
     const publicSections = usePublicSections();
-    const { user } = useAuth()
+    const { user } = useAuth();
 
     const accessedSections = useMemo(() => {
         for (const accessToSection of publicSections) {
@@ -32,7 +32,7 @@ const MainLayout: FC = ({ children }) => {
 
         return publicSections;
     }, [user, i18n.language]);
-    
+
     const isNavBarVisible = accessedSections[0].items.length !== 1;
 
     useAsyncEffect(() => {
