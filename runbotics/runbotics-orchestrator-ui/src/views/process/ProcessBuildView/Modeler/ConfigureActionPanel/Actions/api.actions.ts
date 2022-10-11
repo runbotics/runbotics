@@ -35,8 +35,8 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                             method: {
                                 title: translate('Process.Details.Modeler.Actions.Api.Method'),
                                 type: 'string',
-                                enum: ['get', 'post'],
-                                default: 'get',
+                                enum: ['GET', 'POST', 'DELETE', 'PATCH', 'PUT'],
+                                default: 'GET',
                             },
                         },
                         required: ['url'],
@@ -46,14 +46,14 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                                     {
                                         properties: {
                                             method: {
-                                                enum: ['get'],
+                                                enum: ['GET', 'DELETE'],
                                             },
                                         },
                                     },
                                     {
                                         properties: {
                                             method: {
-                                                enum: ['post'],
+                                                enum: ['POST', 'PUT', 'PATCH'],
                                             },
                                             body: {
                                                 type: 'string',
@@ -92,7 +92,7 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     url: undefined,
-                    method: 'get',
+                    method: 'GET',
                     headers: {
                         Authorization: '',
                     },
