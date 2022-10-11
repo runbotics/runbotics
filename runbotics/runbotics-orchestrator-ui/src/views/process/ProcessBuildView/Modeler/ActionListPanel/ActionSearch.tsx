@@ -25,7 +25,6 @@ const ActionSearch: VFC<SearchBarProps> = ({ onSearchPhraseChange, ...other }) =
             value={value}
             onChange={handleChange}
             size="small"
-            sx={{ m: 1 }}
             InputProps={{
                 endAdornment: (
                     <IconButton sx={{ visibility: value ? 'visible' : 'hidden' }} onClick={clear}>

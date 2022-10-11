@@ -138,6 +138,7 @@ export const Root = styled.div(({ theme }) => ({
 
     [`& .${classes.list}`]: {
         overflowY: 'scroll',
+        paddingTop: 0,
     },
     [`& .${classes.highlight}`]: {
         background: 'none',
@@ -146,7 +147,8 @@ export const Root = styled.div(({ theme }) => ({
     [`& .${classes.filterModalAnchor}`]: {
         display: 'flex',
         alignItems: 'center',
-        padding: `${theme.spacing(1)} ${theme.spacing(1)} 0`,
+        padding: theme.spacing(1),
+        gap: theme.spacing(1),
     },
     [`& .${classes.filterButton}`]: {
         width: 'fit-content',
