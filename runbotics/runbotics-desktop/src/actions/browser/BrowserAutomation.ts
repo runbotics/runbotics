@@ -10,6 +10,7 @@ import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
+import path from 'path';
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
@@ -286,10 +287,11 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     private async takeScreenshot(): Promise<BrowserTakeScreenshotActionOutput> {
-        const fileName = `${process.cwd()}\\temp\\${uuidv4()}.png`.replace(/\\\\/g, '\\');;
+        const fileName = path.join(process.cwd(), 'temp', uuidv4());
+
         try {
             const image = await this.session.takeScreenshot();
-            writeFileSync(`${fileName}`, image, { encoding: 'base64' });
+            writeFileSync(`${fileName}.png`, image, { encoding: 'base64' });
             return fileName
         } catch (e) {
             this.logger.log('Error occured while taking screenshot', e);
@@ -298,14 +300,21 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     private async printToPdf(input: BrowserPrintToPdfActionInput): Promise<BrowserPrintToPdfActionOutput> {
-        const fileName = `${process.cwd()}\\temp\\${uuidv4()}`.replace(/\\\\/g, '\\');
+        // Prince requires absolute path
+        const fileName = path.join(process.cwd(), 'temp', uuidv4())
+
         if (input.target === 'Session') {
             const source: string = await this.session?.executeScript('return document.body.outerHTML');
             writeFileSync(`${fileName}.html`, source, { encoding: 'utf8' });
-            await Prince()
-                .inputs(`${fileName}.html`)
-                .output(`${fileName}.pdf`)
-                .execute();
+            try {
+                await Prince()
+                    .inputs(`${fileName}.html`)
+                    .output(`${fileName}.pdf`)
+                    .execute();
+            } catch (error) {
+                this.logger.error('Error occured while printing to pdf', error);
+            }
+
             return `${fileName}.pdf`;
         }
         if (input.target === 'Url' && input.url) {
