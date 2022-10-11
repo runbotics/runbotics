@@ -102,9 +102,9 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
             const mimeType = mimeTypes.extension(response.headers['content-type']);
             fileName = `${process.cwd()}\\temp\\${uuid()}.${mimeType}`.replace(/\\\\/g, '\\');
             await new Promise((resolve, reject) =>
-                response.data
-                    .pipe(fs.createWriteStream(fileName).on('finish', () => resolve(true)))
-                    .on('error', (e) => reject(e)),
+                response.data.pipe(fs.createWriteStream(fileName)
+                    .on('finish', () => resolve(true)))
+                    .on('error', (e) => reject(e))
             );
         } catch (e) {
             throw e;
