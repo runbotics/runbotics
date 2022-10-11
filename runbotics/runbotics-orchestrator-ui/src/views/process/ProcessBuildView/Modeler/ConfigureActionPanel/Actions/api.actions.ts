@@ -46,7 +46,7 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                                     {
                                         properties: {
                                             method: {
-                                                enum: ['GET'],
+                                                enum: ['GET', 'DELETE'],
                                             },
                                         },
                                     },

@@ -63,7 +63,7 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
                     response = await Axios.get(compiled, { headers: input.headers });
                     break;
                 case 'DELETE':
-                    response = await Axios.delete(compiled, JSON.parse(input.body));
+                    response = await Axios.delete(compiled, { headers: input.headers });
                     break;
                 case 'PATCH':
                     response = await Axios.patch(compiled, JSON.parse(input.body), { headers: input.headers });
@@ -81,7 +81,7 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
         } catch (e) {
             this.logger.log(e); 
             response = e.response;
-            if(!response) {
+            if(!response || response.status > 400){
                 throw new InternalServerErrorException(e);
             }
         }
@@ -134,7 +134,7 @@ export type ApiRequestInput = ApiResource & {
 };
 
 export type ApiRequestOutput<T> = {
-    data?: T;
+    data: T;
     status: number;
     statusText: string;
 };
