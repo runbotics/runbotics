@@ -72,6 +72,10 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Browser.Launch.Headless'),
                                 type: 'boolean',
                             },
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Launch.Target'),
+                                type: 'string'
+                            }
                         },
                         required: ['headless'],
                     },

@@ -169,6 +169,7 @@
     "Process.Details.Modeler.Actions.Browser.Launch.Label": "Uruchom przeglądarkę",
     "Process.Details.Modeler.Actions.Browser.Launch.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Launch.Headless": "Bez nagłówka",
+    "Process.Details.Modeler.Actions.Browser.Launch.Target": "Otwórz stronę",
     "Process.Details.Modeler.Actions.Browser.Close.Label": "Zamknij przeglądarkę",
     "Process.Details.Modeler.Actions.Browser.Close.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Click.Label": "Klik",
