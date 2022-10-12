@@ -1,9 +1,5 @@
-import React, {
-    Suspense, Fragment, lazy, FC, VFC,
-} from 'react';
-import {
-    Switch, Redirect, Route, RouteComponentProps,
-} from 'react-router-dom';
+import React, { Suspense, Fragment, lazy, FC, VFC } from 'react';
+import { Switch, Redirect, Route, RouteComponentProps, BrowserRouter } from 'react-router-dom';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
 import GuestGuard from 'src/components/guards/GuestGuard';
@@ -21,7 +17,7 @@ type Routes = {
 }[];
 
 export const renderRoutes = (routes: Routes = []): JSX.Element => (
-    <Suspense fallback={<LoadingScreen />}>
+    <BrowserRouter>
         <Switch>
             {routes.map((route, index) => {
                 const Guard = route.guard || Fragment;
@@ -43,7 +39,7 @@ export const renderRoutes = (routes: Routes = []): JSX.Element => (
                 );
             })}
         </Switch>
-    </Suspense>
+    </BrowserRouter>
 );
 
 const routes: Routes = [
@@ -67,7 +63,7 @@ const routes: Routes = [
         exact: true,
         guard: GuestGuard,
         path: '/login',
-        component: lazy(() => import('src/pages/LoginPage')),
+        component: lazy(() => import('src/routing/LoginPage')),
     },
     {
         exact: true,

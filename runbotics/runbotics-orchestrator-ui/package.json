@@ -9,7 +9,7 @@
     "private": true,
     "sideEffects": false,
     "scripts": {
-        "start": "webpack serve --config webpack/webpack.config.js --env env=dev",
+        "start": "next dev",
         "build": "webpack --config webpack/webpack.config.js --env env=prod",
         "lint": "eslint --ext .ts,.tsx ./src",
         "lint:fix": "yarn lint --fix"
@@ -125,7 +125,9 @@
         "use-debounce": "7.0.0",
         "styled-components": "^5.3.3",
         "cronstrue": "^1.123.0",
-        "react-dropzone": "~14.2.2"
+        "react-dropzone": "~14.2.2",
+        "next": "~12.3.1",
+        "sass": "~1.55.0"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",

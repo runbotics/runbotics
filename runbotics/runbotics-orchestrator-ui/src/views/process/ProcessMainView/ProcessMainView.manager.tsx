@@ -1,6 +1,4 @@
-import React, {
-    VFC, lazy, Suspense, useEffect,
-} from 'react';
+import React, { VFC, lazy, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import If from 'src/components/utils/If';
 import { useDispatch } from 'src/store';
@@ -24,7 +22,7 @@ const ProcessMainViewManager: VFC = () => {
     }, [processId]);
 
     return (
-        <Suspense fallback={false}>
+        <>
             <If condition={tab === ProcessTab.BUILD}>
                 <ProcessBuildView />
             </If>
@@ -34,7 +32,7 @@ const ProcessMainViewManager: VFC = () => {
             <If condition={tab === ProcessTab.CONFIGURE}>
                 <ProcessConfigureView />
             </If>
-        </Suspense>
+        </>
     );
 };
 

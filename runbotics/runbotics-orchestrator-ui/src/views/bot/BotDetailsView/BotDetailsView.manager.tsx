@@ -12,7 +12,7 @@ const BotDetailsViewManager: VFC = () => {
     const { tab } = useParams<BotParams>();
 
     return (
-        <Suspense fallback={false}>
+        <>
             <If condition={tab === BotTab.LOGS}>
                 <BotLog />
             </If>
@@ -22,7 +22,7 @@ const BotDetailsViewManager: VFC = () => {
             <If condition={tab === BotTab.MANAGEMENT}>
                 <BotManagement />
             </If>
-        </Suspense>
+        </>
     );
 };
 

@@ -1,6 +1,4 @@
-import React, {
-    useState, useCallback, useEffect, useRef, useMemo,
-} from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@mui/material';
 import { CronProps, PeriodType } from './types';
 import Period from './fields/Period';
@@ -13,7 +11,7 @@ import { classNames, setError, usePrevious } from './utils';
 import DEFAULT_LOCALE_EN from './locale';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 
-import './styles.css';
+import './styles.module.css';
 
 export default function Cron(props: CronProps) {
     const {
@@ -102,9 +100,9 @@ export default function Cron(props: CronProps) {
             // Only change the value if a user touched a field
             // and if the user didn't use the clear button
             if (
-                (period || minutes || months || monthDays || weekDays || hours || minutes)
-                && !valueCleared
-                && !previousValueCleared
+                (period || minutes || months || monthDays || weekDays || hours || minutes) &&
+                !valueCleared &&
+                !previousValueCleared
             ) {
                 const cron = getCronStringFromValues(
                     period || defaultPeriodRef.current,
@@ -171,26 +169,28 @@ export default function Cron(props: CronProps) {
     );
 
     const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron': true,
-            'react-js-cron-error': error && displayError,
-            'react-js-cron-disabled': disabled,
-            'react-js-cron-read-only': readOnly,
-            [`${className}`]: !!className,
-            [`${className}-error`]: error && displayError && !!className,
-            [`${className}-disabled`]: disabled && !!className,
-            [`${className}-read-only`]: readOnly && !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron': true,
+                'react-js-cron-error': error && displayError,
+                'react-js-cron-disabled': disabled,
+                'react-js-cron-read-only': readOnly,
+                [`${className}`]: !!className,
+                [`${className}-error`]: error && displayError && !!className,
+                [`${className}-disabled`]: disabled && !!className,
+                [`${className}-read-only`]: readOnly && !!className,
+            }),
         [className, error, displayError, disabled, readOnly],
     );
 
     const { className: clearButtonClassNameProp, ...otherClearButtonProps } = clearButtonProps;
     const clearButtonClassName = useMemo(
-        () => classNames({
-            'react-js-cron-clear-button': true,
-            [`${className}-clear-button`]: !!className,
-            [`${clearButtonClassNameProp}`]: !!clearButtonClassNameProp,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-clear-button': true,
+                [`${className}-clear-button`]: !!className,
+                [`${clearButtonClassNameProp}`]: !!clearButtonClassNameProp,
+            }),
         [className, clearButtonClassNameProp],
     );
 

@@ -7,14 +7,14 @@ import ProcessNameSuggestionWidget from './SuggestProcessesNameWidget';
 import FileDropzoneWidget from './FileDropzone';
 
 const customWidgets = {
-    ElementAwareAutocomplete: ElementAwareAutocompleteWidget,
-    TextWidget: ElementAwareAutocompleteWidget,
-    ProcessNameSuggestionWidget,
-    JsonViewWidget,
-    EditorWidget,
-    DraftJSEditor,
-    GlobalVariableSelectWidget,
-    FileDropzoneWidget,
+    // ElementAwareAutocomplete: ElementAwareAutocompleteWidget,
+    // TextWidget: ElementAwareAutocompleteWidget,
+    // ProcessNameSuggestionWidget,
+    // JsonViewWidget,
+    // EditorWidget,
+    // // DraftJSEditor,
+    // GlobalVariableSelectWidget,
+    // FileDropzoneWidget,
 };
 
 export default customWidgets;

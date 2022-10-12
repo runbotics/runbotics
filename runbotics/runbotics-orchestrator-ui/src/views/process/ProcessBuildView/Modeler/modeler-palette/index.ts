@@ -1,5 +1,5 @@
 import ModelerPalette from './ModelerPalette';
-import './modeler-palette.scss';
+import './modeler-palette.module.scss';
 
 export * from './ModelerPalette.types.d';
 
