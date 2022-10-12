@@ -1,8 +1,9 @@
 {
     "name": "runbotics",
-    "version": "2.2.1",
+    "version": "2.3.0-SNAPSHOT.2",
     "private": true,
-    "license": "MIT",
+    "description": "Description for runbotics",
+    "license": "UNLICENSED",
     "scripts": {
         "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss,java}\"",
         "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss,java}\"",
