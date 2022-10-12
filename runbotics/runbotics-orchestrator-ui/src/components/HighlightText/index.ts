@@ -1,2 +1,3 @@
-import HighlightText from "./HighlightText";
+import HighlightText from './HighlightText';
+
 export default HighlightText;
