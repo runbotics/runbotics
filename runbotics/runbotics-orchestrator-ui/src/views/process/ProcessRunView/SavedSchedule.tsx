@@ -75,15 +75,10 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
         await dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 
-    const humanReadableCron = (cronExpression: string) => (
-            translate(
-        'Process.Schedule.Cron.HumanReadable',
-        {
-            cron: cronstrue
-                .toString(cronExpression, {locale: i18n.language}).toLowerCase()
-        },
-    ))
-
+    const humanReadableCron = (cronExpression: string) => translate('Process.Schedule.Cron.HumanReadable', {
+        cron: cronstrue
+            .toString(cronExpression, { locale: i18n.language }).toLowerCase(),
+    });
 
     return (
         <StyledContainer maxWidth={false} sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -116,7 +111,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
                                 </If>
                             </CardContent>
                         </Card>
-                    ))}
+                ))}
             </Box>
         </StyledContainer>
     );

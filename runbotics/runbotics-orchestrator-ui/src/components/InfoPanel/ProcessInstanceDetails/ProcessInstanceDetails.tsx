@@ -45,7 +45,9 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
     }, []);
 
     const loading = processInstanceState.all.loading || (
-        processInstanceState.active.orchestratorProcessInstanceId && !processInstanceState.active.processInstance
+        processInstanceState.active.orchestratorProcessInstanceId
+        && !processInstanceState.active.processInstance
+        && !processInstanceId
     );
 
     if (loading) {

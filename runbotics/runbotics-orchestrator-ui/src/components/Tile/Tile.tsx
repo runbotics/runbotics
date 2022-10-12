@@ -9,6 +9,7 @@ const Wrapper = styled(Card)<TileProps>`
     justify-content: space-between;
     box-sizing: border-box;
     height: 100%;
+    min-height: 13.125rem;
 
     && {
         box-shadow: 0 .25rem .5rem 0 ${alpha('#8d8c8c', 0.4)};

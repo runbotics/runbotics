@@ -2,7 +2,7 @@ import React from 'react';
 import type { VFC } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-    Box, Divider, Tooltip, Typography,
+    Box, Divider,
 } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import If from 'src/components/utils/If';

@@ -23,32 +23,32 @@ export const DataTableWrapper = styled.div(({ theme }) => `
     box-shadow: ${theme.shadows[2]};
 `);
 
-const subRowStyles = css<{ isRowSelected?: boolean }>`
+const subRowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
     background-color: ${(p) => (p.isRowSelected ? p.theme.palette.action.selected : p.theme.palette.grey[100])};
 
     &:hover {
-        cursor: pointer;
+        cursor: ${(p) => (p.isClickable ? 'pointer' : 'normal')};
         background-color: ${(p) => p.theme.palette.action.hover};
     }
 `;
 
-const rowStyles = css<{ isRowSelected?: boolean }>`
+const rowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
     ${(p) => p.isRowSelected && `background-color: ${p.theme.palette.action.selected}`};
 
     &:hover {
-        cursor: pointer;
+        cursor: ${(p) => (p.isClickable ? 'pointer' : 'normal')};
         background-color: ${(p) => p.theme.palette.action.hover};
     }
 `;
 
 export const DataTableRow = styled(TableRow) <{
-    isRowSelected?: boolean, isSubRoww: boolean
+    isRowSelected?: boolean, isSubRoww: boolean, isClickable?: boolean,
 }>`
     && {
         min-height: ${TABLE_ROW_HEIGHT}px;
     }
 
-    ${({ isSubRoww }) => (isSubRoww ? subRowStyles : rowStyles)};
+    ${(p) => (p.isSubRoww ? subRowStyles : rowStyles)};
 
     & > :first-child {
         cursor: default;

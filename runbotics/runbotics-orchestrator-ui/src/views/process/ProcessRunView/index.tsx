@@ -1,4 +1,6 @@
-import { Card, Grid, Box, Typography } from '@mui/material';
+import {
+    Card, Grid, Box, Typography,
+} from '@mui/material';
 import React, { FC, useEffect, useRef } from 'react';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'src/store';
@@ -44,10 +46,9 @@ const ProcessRunView: FC = () => {
     const { translate } = useTranslations();
 
     useEffect(() => {
-        dispatch(botActions.getAll());
-        dispatch(botCollectionActions.getAll());
-        dispatch(botSystemsActions.getAll());
-        dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        if (hasReadSchedulesAccess) {
+            dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        }
     }, [processId]);
 
     const handleProcessSchedule = async (data: Record<string, string>) => {
@@ -67,7 +68,7 @@ const ProcessRunView: FC = () => {
     }
 
     return (
-        <Grid sx={{ padding: '24px 24px 0 24px' }}>
+        <Grid sx={{ padding: '24px' }}>
             <Card>
                 <Grid container>
                     <Grid item width="100%">
@@ -106,11 +107,11 @@ const ProcessRunView: FC = () => {
                         <HistoryTable
                             ref={historyRef}
                             processId={processId}
-                            title={
+                            title={(
                                 <Typography variant="h4" gutterBottom>
                                     {translate('Process.Run.History.Title')}
                                 </Typography>
-                            }
+                            )}
                         />
                     </Grid>
                 </Card>

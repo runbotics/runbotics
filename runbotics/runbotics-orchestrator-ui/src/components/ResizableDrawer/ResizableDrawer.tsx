@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Drawer } from '@mui/material';
 import { DrawerProps } from '@mui/material/Drawer/Drawer';
 import useWrappedState from 'src/hooks/useWrappedState';
-import { Dragger, EventCatcher } from './ResizableDrawer.styled';
 import { createPortal } from 'react-dom';
+import { Dragger, EventCatcher } from './ResizableDrawer.styled';
+import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 
-const INITIAL_WIDTH = 300;
-const MIN_WIDTH = 250;
-const MAX_WIDTH = 600;
-
-const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
-    const [width, setWidth] = useWrappedState(INITIAL_WIDTH, { min: MIN_WIDTH, max: MAX_WIDTH });
+const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
+    const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });
     const [dragmode, setDragmode] = useState(false);
 
     const handleDragStart = () => {
@@ -18,7 +15,9 @@ const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
     };
 
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        setWidth(window.innerWidth - event.clientX);
+        setTimeout(() => {
+            setWidth(window.innerWidth - event.clientX);
+        }, 100);
     };
 
     const handleDragEnd = () => {
@@ -40,8 +39,7 @@ const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
             sx={[
                 {
                     width,
-                    transition: ({ transitions: { easing, duration } }) =>
-                        `margin ${duration.enteringScreen}ms ${easing.easeOut} 0ms`,
+                    transition: ({ transitions: { easing, duration } }) => `margin ${duration.enteringScreen}ms ${easing.easeOut} 0ms`,
                     overflowX: 'hidden',
                 },
                 !open && {
@@ -51,10 +49,13 @@ const ResizableDrawer = ({ children, open, ...other }: DrawerProps) => {
         >
             <Dragger active={dragmode} onMouseDown={handleDragStart} />
             {createPortal(
-                <EventCatcher active={dragmode} onMouseMove={handleMouseMove} onMouseUp={handleDragEnd} />,
+                <EventCatcher
+                    active={dragmode}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleDragEnd}
+                />,
                 document.body,
             )}
-
             {children}
         </Drawer>
     );

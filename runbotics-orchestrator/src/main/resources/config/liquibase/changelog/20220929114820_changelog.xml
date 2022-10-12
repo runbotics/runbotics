@@ -58,4 +58,14 @@
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>
+    <changeSet author="szymczakm"  id="20220929114820-5">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_EXTERNAL_USER','PROCESS_INSTANCE_READ')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

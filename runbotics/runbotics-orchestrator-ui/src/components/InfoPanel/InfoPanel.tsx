@@ -1,11 +1,11 @@
-import React from 'react';
-import { Box, IconButton, SxProps, Theme } from '@mui/material';
+import React, { VFC } from 'react';
+import {
+    Box, IconButton, SxProps, Theme,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
 import If from '../utils/If';
-
-export const drawerWidth = 450;
 
 interface InfoPanelProps {
     processInstanceId?: string;
@@ -14,8 +14,11 @@ interface InfoPanelProps {
     sx?: SxProps<Theme>;
 }
 
-const InfoPanel = ({ processInstanceId, onClose, showCloseButton = false }: InfoPanelProps) => (
-    <>
+const InfoPanel: VFC<InfoPanelProps> = ({ processInstanceId, onClose, showCloseButton = false }) => (
+    <Box
+        display="flex"
+        flexDirection="column"
+    >
         <If condition={showCloseButton}>
             <Box display="flex" justifyContent="flex-end" paddingRight="0.625rem">
                 <IconButton aria-label="close" size="small" onClick={onClose}>
@@ -25,8 +28,8 @@ const InfoPanel = ({ processInstanceId, onClose, showCloseButton = false }: Info
         </If>
         <Box
             sx={{
-                ml: '3px',
                 height: '100%',
+                width: '100%',
                 overflowY: 'auto',
                 overflowX: 'hidden',
             }}
@@ -34,7 +37,7 @@ const InfoPanel = ({ processInstanceId, onClose, showCloseButton = false }: Info
             <ProcessInstanceDetails processInstanceId={processInstanceId} />
             <ProcessInstanceEventsDetails processInstanceId={processInstanceId} />
         </Box>
-    </>
+    </Box>
 );
 
 export default InfoPanel;

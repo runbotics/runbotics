@@ -13,7 +13,7 @@ import {
     Grid,
     Box,
 } from '@mui/material';
-import useTranslations, { translate } from 'src/hooks/useTranslations';
+import useTranslations from 'src/hooks/useTranslations';
 import { DataTableProps } from './Table.types';
 import { DataTableRow, DataTableWrapper } from './Table.styles';
 import DataTableFooter from './Table.footer';
@@ -89,17 +89,17 @@ const Table = <T extends object>({
     };
 
     const renderCells = (row: Row<T>) => row.cells.map((cell) => (
-            <TableCell
-                {...cell.getCellProps()}
-                onClick={
-                    cell.column.id !== 'expander' && cell.column.id !== 'button'
-                        ? () => handleRowClick(row)
-                        : undefined
-                }
-                sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
-            >
-                <>{cell.render('Cell')}</>
-            </TableCell>
+        <TableCell
+            {...cell.getCellProps()}
+            onClick={
+                cell.column.id !== 'expander' && cell.column.id !== 'button'
+                    ? () => handleRowClick(row)
+                    : undefined
+            }
+            sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
+        >
+            <>{cell.render('Cell')}</>
+        </TableCell>
     ));
 
     const countExpandedRows = () => {
@@ -118,7 +118,7 @@ const Table = <T extends object>({
             const rowKey = row.getRowProps().key;
             return (
                 <React.Fragment key={rowKey}>
-                    <DataTableRow isRowSelected={row.isSelected} isSubRoww={row.depth > 0}>
+                    <DataTableRow isClickable={!!onRowClick} isRowSelected={row.isSelected} isSubRoww={row.depth > 0}>
                         {renderCells(row)}
                     </DataTableRow>
                     {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
