@@ -18,6 +18,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({ processInstanceId, onClose, showCloseB
     <Box
         display="flex"
         flexDirection="column"
+        height="100%"
     >
         <If condition={showCloseButton}>
             <Box display="flex" justifyContent="flex-end" paddingRight="0.625rem">

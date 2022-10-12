@@ -15,9 +15,7 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     };
 
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        setTimeout(() => {
-            setWidth(window.innerWidth - event.clientX);
-        }, 100);
+        setWidth(window.innerWidth - event.clientX);
     };
 
     const handleDragEnd = () => {

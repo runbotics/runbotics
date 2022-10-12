@@ -118,7 +118,11 @@ const Table = <T extends object>({
             const rowKey = row.getRowProps().key;
             return (
                 <React.Fragment key={rowKey}>
-                    <DataTableRow isClickable={!!onRowClick} isRowSelected={row.isSelected} isSubRoww={row.depth > 0}>
+                    <DataTableRow
+                        isClickable={Boolean(onRowClick)}
+                        isRowSelected={row.isSelected}
+                        isSubRoww={row.depth > 0}
+                    >
                         {renderCells(row)}
                     </DataTableRow>
                     {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}

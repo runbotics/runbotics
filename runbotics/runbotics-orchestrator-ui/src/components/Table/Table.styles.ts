@@ -24,20 +24,22 @@ export const DataTableWrapper = styled.div(({ theme }) => `
 `);
 
 const subRowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
-    background-color: ${(p) => (p.isRowSelected ? p.theme.palette.action.selected : p.theme.palette.grey[100])};
+    background-color: ${({ isRowSelected, theme }) => (isRowSelected
+        ? theme.palette.action.selected
+        : theme.palette.grey[100])};
 
     &:hover {
-        cursor: ${(p) => (p.isClickable ? 'pointer' : 'normal')};
-        background-color: ${(p) => p.theme.palette.action.hover};
+        cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'normal')};
+        background-color: ${({ theme }) => theme.palette.action.hover};
     }
 `;
 
 const rowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
-    ${(p) => p.isRowSelected && `background-color: ${p.theme.palette.action.selected}`};
+    ${({ isRowSelected, theme }) => isRowSelected && `background-color: ${theme.palette.action.selected}`};
 
     &:hover {
-        cursor: ${(p) => (p.isClickable ? 'pointer' : 'normal')};
-        background-color: ${(p) => p.theme.palette.action.hover};
+        cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'normal')};
+        background-color: ${({ theme }) => theme.palette.action.hover};
     }
 `;
 
@@ -48,7 +50,7 @@ export const DataTableRow = styled(TableRow) <{
         min-height: ${TABLE_ROW_HEIGHT}px;
     }
 
-    ${(p) => (p.isSubRoww ? subRowStyles : rowStyles)};
+    ${({ isSubRoww }) => (isSubRoww ? subRowStyles : rowStyles)};
 
     & > :first-child {
         cursor: default;
