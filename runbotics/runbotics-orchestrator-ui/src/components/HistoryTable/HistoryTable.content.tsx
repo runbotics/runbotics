@@ -1,5 +1,5 @@
 import React, {
-    forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState
+    forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState,
 } from 'react';
 import {
     Box, SxProps,
@@ -12,6 +12,8 @@ import InfoPanel from 'src/components/InfoPanel';
 import { useHistory } from 'react-router-dom';
 import useQuery from 'src/hooks/useQuery';
 import { getSearchParams } from 'src/utils/SearchParamsUtils';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useAuth from 'src/hooks/useAuth';
 import { useDispatch, useSelector } from '../../store';
 import {
     processInstanceActions,
@@ -23,9 +25,8 @@ import Table from '../Table';
 import If from '../utils/If';
 import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
-import useFeatureKey from 'src/hooks/useFeatureKey';
 import { hasAccessByFeatureKey } from '../utils/Secured';
-import useAuth from 'src/hooks/useAuth';
+import ResizableDrawer from '../ResizableDrawer';
 
 interface PanelInfoState {
     show: boolean;
@@ -126,16 +127,18 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
                         setPageSize={setPageSize}
                         loading={loadingPage}
                         subRowProperty="subProcesses"
-                        singleSelect
+                        singleSelect={hasProcessInstanceEventReadAccess}
                     />
                 </Box>
                 <If condition={panelInfoState.show && hasProcessInstanceEventReadAccess}>
-                    <InfoPanel
-                        processInstanceId={panelInfoState.processInstanceId}
-                        onClose={handleCloseButton}
-                        showCloseButton
-                        sx={{ maxHeight: `${tableRef.current?.clientHeight ?? 0}px` }}
-                    />
+                    <ResizableDrawer open>
+                        <InfoPanel
+                            processInstanceId={panelInfoState.processInstanceId}
+                            onClose={handleCloseButton}
+                            showCloseButton
+                            sx={{ maxHeight: `${tableRef.current?.clientHeight ?? 0}px` }}
+                        />
+                    </ResizableDrawer>
                 </If>
             </Box>
         </Wrapper>

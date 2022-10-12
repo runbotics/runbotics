@@ -1,13 +1,12 @@
-// https://stackoverflow.com/a/73416240/13234727
-import React from 'react';
+import React, { VFC } from 'react';
 
-export type HighlightTextProps = {
+export interface HighlightTextProps {
     text: string;
     matchingText: string;
     matchClassName?: string;
-};
+}
 
-const HighlightText = ({ text, matchingText, matchClassName }: HighlightTextProps) => {
+const HighlightText: VFC<HighlightTextProps> = ({ text, matchingText, matchClassName }) => {
     const matchRegex = RegExp(matchingText, 'ig');
     const matches = React.useMemo(() => [...text.matchAll(matchRegex)], [text, matchRegex]);
 

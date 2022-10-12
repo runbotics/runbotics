@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { VFC, useState } from 'react';
 import useTranslations from 'src/hooks/useTranslations';
 import { ManageAttendedProcessModal } from 'src/components/AttendedProcessModal';
 import If from 'src/components/utils/If';
@@ -7,9 +7,7 @@ import { processActions } from 'src/store/slices/Process';
 import { useSnackbar } from 'notistack';
 import Button from '@mui/material/Button';
 
-interface AddProcessFormProps {}
-
-const ManageProcessForm: FC<AddProcessFormProps> = ({}) => {
+const ManageProcessForm: VFC = () => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();

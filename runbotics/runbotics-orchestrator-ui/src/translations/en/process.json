@@ -12,55 +12,46 @@
     "Process.PIView.Table.Events.Header.Id": "Id",
     "Process.PIView.Table.Events.Header.Created": "Created",
     "Process.PIView.Table.Events.Header.Log": "Log",
-
     "Process.ProcessInstanceView.Meta.Title": "Bot",
     "Process.ProcessInstanceView.Header.Title": "Process instance: {{ id }} for process {{ name }}",
     "Process.ProcessInstanceView.Dialog.Title": "Process instance",
     "Process.ProcessInstanceView.Tabs.Details.Title": "Details",
     "Process.ProcessInstanceView.Tabs.Events.Title": "Events",
-
     "Process.Edit.Title": "Edit process",
     "Process.Edit.Form.Fields.Name.Label": "Name",
     "Process.Edit.Form.Fields.Description.Label": "Description",
     "Process.Edit.Form.Fields.Public.Label": "Public:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Is process attended",
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Is process triggerable",
-
     "Process.Delete.ActionName": "Delete",
     "Process.Delete.Title": "Delete process {{ name }}",
     "Process.Delete.SuccessMessage": "Process {{ name }} deleted successfully",
     "Process.Delete.ConfirmationQuestion": "Are you sure you want to delete process: {{ name }}",
-
     "Process.Add.ActionName": "Add new process",
     "Process.Add.Title": "Add new process",
     "Process.Add.Form.Fields.Name": "Name",
     "Process.Add.Form.Error.General": "An error occured while creating new process",
     "Process.Add.Form.Error.NameNotAvailable": "This name is already taken",
     "Process.Add.Form.Error.Required": "Process name is required",
-
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Cron.HumanReadable": "Run: {{cron}}",
     "Process.Schedule.Cron.At": "at",
     "Process.Schedule.Title": "Schedules",
-
     "Process.Run.NoSchedules.Message": "No schedules found",
     "Process.Run.History.Title": "History",
     "Process.Run.BotSystem": "Bot system",
     "Process.Run.BotCollection": "Bot collection",
     "Process.Run.ManageProcessForm": "ATTENDANCE FORM",
-
     "Process.MainView.Tabs.Build.Title": "Build",
     "Process.MainView.Tabs.Run.Title": "Run",
     "Process.MainView.Tabs.Configure.Title": "Configure",
     "Process.MainView.Meta.Title": "Process Details",
     "Process.MainView.Sidebar.RunInfo": "Run info",
-
     "Process.MainView.Toast.Save.Success": "Process saved successfully",
     "Process.MainView.Toast.Save.Failed": "Process save failed",
     "Process.MainView.Tooltip.Save.Enabled": "Save process to database",
     "Process.MainView.Tooltip.Save.Disabled": "No changes found to save or changes are still applying",
     "Process.MainView.Tooltip.Run.Enabled": "Run this process",
-    "Process.MainView.Tooltip.Run.Disabled": "Cannot run process now",
     "Process.MainView.Tooltip.Import": "Import process from xml file",
     "Process.MainView.Tooltip.Export": "Download this process as xml file",
     "Process.MainView.Tooltip.Undo": "Undo last change",
@@ -68,7 +59,6 @@
     "Process.MainView.Tooltip.Center": "Center modeler view",
     "Process.MainView.Tooltip.ZoomIn": "Zoom in modeler view",
     "Process.MainView.Tooltip.ZoomOut": "Zoom out modeler view",
-
     "Process.Details.Options.ByValue.ContentScript": "Content Script",
     "Process.Details.Options.ByValue.Desktop": "Desktop",
     "Process.Details.Options.ByValue.BackgroundPage": "Background Page",
@@ -80,7 +70,6 @@
     "Process.Details.Modeler.ActionListPanel.Search.Label": "Search",
     "Process.Details.Modeler.ActionListPanel.Filter.Label": "Filter by groups",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Clear filters",
-
     "Process.Details.Modeler.Actions.Api.Label": "API Request",
     "Process.Details.Modeler.Actions.Api.Input": "Input",
     "Process.Details.Modeler.Actions.Api.Url": "URL",
@@ -95,20 +84,16 @@
     "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Output",
     "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Assign file path to variable",
-
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Application: Launch",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Input",
     "Process.Details.Modeler.Actions.Application.Launch.Location": "Location (e.g. C:\\Program Files (x86)\\calculator.exe)",
-
     "Process.Details.Modeler.Actions.Application.Close.Label": "Application: Close",
     "Process.Details.Modeler.Actions.Application.Close.Input": "Input",
-
     "Process.Details.Modeler.Actions.Asana.Label": "Asana - Get All",
     "Process.Details.Modeler.Actions.Asana.Input": "Input",
     "Process.Details.Modeler.Actions.Asana.Output": "Output",
     "Process.Details.Modeler.Actions.Asana.Output.VariableName": "Variable name",
     "Process.Details.Modeler.Actions.Asana.Output.VariableMessage": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.BeeOffice.Create.Label": "BeeOffice: Create new timetable activity",
     "Process.Details.Modeler.Actions.BeeOffice.Create.Input": "Input",
     "Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Employee": "Variable [Employee]",
@@ -161,7 +146,6 @@
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Output": "Output",
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Variable": "Variable name",
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.Browser.Open.Label": "Open site",
     "Process.Details.Modeler.Actions.Browser.Open.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Open.Site": "Site",
@@ -222,7 +206,6 @@
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Url": "Url to print",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Variable": "Variable Name",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.VariableText": "Assign PDF path to variable",
-
     "Process.Details.Modeler.Actions.CSV.Import.Label": "CSV: Import",
     "Process.Details.Modeler.Actions.CSV.Import.Input": "Input",
     "Process.Details.Modeler.Actions.CSV.Import.SingleFile": "Single file",
@@ -252,7 +235,6 @@
     "Process.Details.Modeler.Actions.CSV.WriteFile.Output": "Output",
     "Process.Details.Modeler.Actions.CSV.WriteFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.CSV.WriteFile.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Desktop PowerPoint: Open Application",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input": "Input",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath": "Specific file path",
@@ -266,7 +248,6 @@
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Output": "Output",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label": "Desktop PowerPoint: Close Application",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Input": "Input",
-
     "Process.Details.Modeler.Actions.File.AppendFile.Label": "File: Add content to file",
     "Process.Details.Modeler.Actions.File.AppendFile.Input": "Input",
     "Process.Details.Modeler.Actions.File.AppendFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
@@ -300,7 +281,6 @@
     "Process.Details.Modeler.Actions.File.WriteFile.Output": "Output",
     "Process.Details.Modeler.Actions.File.WriteFile.Variable": "Variable name",
     "Process.Details.Modeler.Actions.File.WriteFile.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.General.ConsoleLog.Label": "Console Log",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Input": "Input",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Variables",
@@ -315,11 +295,9 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Ouput": "Output",
     "Process.Details.Modeler.Actions.General.StartProcess.Variable": "Variable name",
     "Process.Details.Modeler.Actions.General.StartProcess.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Label": "Google Sheets Write",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Input": "Input",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Values",
-
     "Process.Details.Modeler.Actions.Loop.Loop1.Label": "Loop",
     "Process.Details.Modeler.Actions.Loop.Loop1.Input": "Input",
     "Process.Details.Modeler.Actions.Loop.Loop1.Manual": "Manual",
@@ -333,7 +311,6 @@
     "Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable": "Item name (under environment.variables.content.[item name])",
     "Process.Details.Modeler.Actions.Loop.Loop2.Repeat": "Repeat",
     "Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations": "Number of iterations",
-
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Label": "Run TypeScript",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Input": "Input",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Code": "Code",
@@ -349,7 +326,6 @@
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.Output": "Output",
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.Variable": "Variable name",
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Label": "JIRA: Get logged work",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Input": "Input",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.UseAll41Jira": "Use All41 JIRA",
@@ -358,7 +334,6 @@
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Output": "Output",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Variable": "Variable name",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.Mail.Send.Label": "Send mail",
     "Process.Details.Modeler.Actions.Mail.Send.Input": "Input",
     "Process.Details.Modeler.Actions.Mail.Send.To": "To",
@@ -366,7 +341,6 @@
     "Process.Details.Modeler.Actions.Mail.Send.Subject": "Subject",
     "Process.Details.Modeler.Actions.Mail.Send.Attachment": "Attachment (full local path)",
     "Process.Details.Modeler.Actions.Mail.Send.Content": "Content",
-
     "Process.Details.Modeler.Actions.Variable.Assign.Label": "Assign value to variable",
     "Process.Details.Modeler.Actions.Variable.Assign.Input": "Input",
     "Process.Details.Modeler.Actions.Variable.Assign.Variable": "Variable",
@@ -379,7 +353,6 @@
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Label": "Assign global variable",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Input": "Input",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable": "Global variable",
-
     "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Connect",
     "Process.Details.Modeler.Actions.SAP.Connect.Input": "Input",
     "Process.Details.Modeler.Actions.SAP.Connect.ConnectionName": "Connection name",
@@ -422,7 +395,6 @@
     "Process.Details.Modeler.Actions.SAP.Select.Label": "SAP: Select",
     "Process.Details.Modeler.Actions.SAP.Select.Input": "Input",
     "Process.Details.Modeler.Actions.SAP.Select.Target": "Target",
-
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label": "Sharepoint Excel: Get content from cell",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Input": "Input",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell": "Specific cell",
@@ -471,7 +443,6 @@
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Output": "Output",
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Variable": "Variable name",
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.VariableText": "Assign the output to variable",
-
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label": "SharePoint: Download file from root",
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Input": "Input",
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.FilePath": "Full path to file (root)",
@@ -513,27 +484,20 @@
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.FolderName": "Folder name",
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ParentFolder": "Parent path?",
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.CloudPath": "Cloud path",
-
     "Process.Details.Modeler.Templates.Api.Name": "Test Api Template",
     "Process.Details.Modeler.Templates.Login.Name": "Login Template",
-
     "Process.Details.Modeler.Widgets.JsonView.Errors.UnableToParse": "Unable to parse JSON value",
     "Process.Details.Modeler.Widgets.JsonView.Tabs.View.Title": "View",
     "Process.Details.Modeler.Widgets.JsonView.Tabs.Editor.Title": "Editor",
-
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local": "Local Variables",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs": "Outputs [for current scope]",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables": "Variables",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services": "Services",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils": "Utils",
-
     "Process.Details.Modeler.Widgets.Editor.AutoSave.Label": "Auto save",
     "Process.Details.Modeler.Widgets.Editor.AutoSave.NotImplemented": "Auto save action not yet implemented",
-
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Remove item",
-
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Drop file here or click to select file (max 4mb)",
-
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Disabled",
     "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Run from here",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Action name",
@@ -569,7 +533,6 @@
     "Process.Details.Modeler.ActionPanel.ActionsGroup.External": "External",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.Login": "Login",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.API": "API",
-
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Label": "Selenium",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Script": "script",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Command": "command",
@@ -577,7 +540,6 @@
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Value": "value",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Import": "Import selenium",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Import.Error": "Not correct data in clipboard",
-
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.InitLoop": "Init loop",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.TakeItem": "Take item",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.Increment": "Increment",
@@ -620,8 +582,6 @@
     "Process.List.Table.Header.Updated": "Updated",
     "Process.List.Table.Header.Scheduled": "Scheduled",
     "Process.List.Table.Header.Actions": "Actions",
-
     "Process.List.Table.Step.StartEvent": "Start event",
-
     "Process.Modeler.LeavePrompt": "You haven't saved changes, are you sure u want to leave? All unsaved changes will be lost."
 }

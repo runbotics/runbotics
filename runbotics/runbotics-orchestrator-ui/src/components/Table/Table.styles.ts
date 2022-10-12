@@ -23,26 +23,28 @@ export const DataTableWrapper = styled.div(({ theme }) => `
     box-shadow: ${theme.shadows[2]};
 `);
 
-const subRowStyles = css<{ isRowSelected?: boolean }>`
-    background-color: ${(p) => (p.isRowSelected ? p.theme.palette.action.selected : p.theme.palette.grey[100])};
+const subRowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
+    background-color: ${({ isRowSelected, theme }) => (isRowSelected
+        ? theme.palette.action.selected
+        : theme.palette.grey[100])};
 
     &:hover {
-        cursor: pointer;
-        background-color: ${(p) => p.theme.palette.action.hover};
+        cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'normal')};
+        background-color: ${({ theme }) => theme.palette.action.hover};
     }
 `;
 
-const rowStyles = css<{ isRowSelected?: boolean }>`
-    ${(p) => p.isRowSelected && `background-color: ${p.theme.palette.action.selected}`};
+const rowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
+    ${({ isRowSelected, theme }) => isRowSelected && `background-color: ${theme.palette.action.selected}`};
 
     &:hover {
-        cursor: pointer;
-        background-color: ${(p) => p.theme.palette.action.hover};
+        cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'normal')};
+        background-color: ${({ theme }) => theme.palette.action.hover};
     }
 `;
 
 export const DataTableRow = styled(TableRow) <{
-    isRowSelected?: boolean, isSubRoww: boolean
+    isRowSelected?: boolean, isSubRoww: boolean, isClickable?: boolean,
 }>`
     && {
         min-height: ${TABLE_ROW_HEIGHT}px;
