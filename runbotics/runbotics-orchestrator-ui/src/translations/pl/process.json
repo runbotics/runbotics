@@ -12,37 +12,31 @@
     "Process.PIView.Table.Events.Header.Id": "Id",
     "Process.PIView.Table.Events.Header.Created": "Utworzono",
     "Process.PIView.Table.Events.Header.Log": "Log",
-
     "Process.ProcessInstanceView.Meta.Title": "Bot",
     "Process.ProcessInstanceView.Header.Title": "Instancja procesu: {{ id }} dla procesu {{ name }}",
     "Process.ProcessInstanceView.Dialog.Title": "Instancja procesu",
     "Process.ProcessInstanceView.Tabs.Details.Title": "Szczegóły",
     "Process.ProcessInstanceView.Tabs.Events.Title": "Wydarzenia",
-
     "Process.Edit.Title": "Edytuj proces",
     "Process.Edit.Form.Fields.Name.Label": "Nazwa",
     "Process.Edit.Form.Fields.Description.Label": "Opis",
     "Process.Edit.Form.Fields.Public.Label": "Publiczny:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Czy proces jest zajęty",
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Czy proces można uruchomić",
-
     "Process.Delete.ActionName": "Usuń",
     "Process.Delete.Title": "Usuń proces {{ name }}",
     "Process.Delete.SuccessMessage": "Proces {{ name }} został pomyślnie usunięty",
     "Process.Delete.ConfirmationQuestion": "Czy na pewno chcesz usunąć proces {{ name }}",
-
     "Process.Add.ActionName": "Dodaj nowy proces",
     "Process.Add.Title": "Dodaj nowy proces",
     "Process.Add.Form.Fields.Name": "Nazwa",
     "Process.Add.Form.Error.General": "Podczas tworzenia procesu wystąpił błąd",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
-
     "Process.Schedule.Tooltip.PickBotAndCollection": "Wybierz system botów i kolekcję",
     "Process.Schedule.Cron.HumanReadable": "Uruchom: {{cron}}",
     "Process.Schedule.Cron.At": "o",
     "Process.Schedule.Title": "Harmonogramy",
-
     "Process.Run.ChooseBotCollection.Title": "Wybierz kolekcję botów",
     "Process.Run.ChooseBotSystem.Title": "Wybierz system botów",
     "Process.Run.NoSchedules.Message": "Nie znaleziono harmonogramów",
@@ -50,19 +44,16 @@
     "Process.Run.BotSystem": "System bota:",
     "Process.Run.BotCollection": "Zbiory bota",
     "Process.Run.ManageProcessForm": "FORMULARZ STARTOWY",
-
     "Process.MainView.Tabs.Build.Title": "Buduj",
     "Process.MainView.Tabs.Run.Title": "Uruchom",
     "Process.MainView.Tabs.Configure.Title": "Konfiguruj",
     "Process.MainView.Meta.Title": "Szczegóły procesu",
-
     "Process.MainView.Sidebar.RunInfo": "Informacje",
     "Process.MainView.Toast.Save.Success": "Pomyślnie zapisano proces",
     "Process.MainView.Toast.Save.Failed": "Nie udało się zapisać procesu",
     "Process.MainView.Tooltip.Save.Enabled": "Zapisz aktualny stan procesu",
     "Process.MainView.Tooltip.Save.Disabled": "Nie wykryto żadnych zmian lub trwa zastosowywanie wprowadzonych zmian",
     "Process.MainView.Tooltip.Run.Enabled": "Uruchom ten proces",
-    "Process.MainView.Tooltip.Run.Disabled": "Nie można teraz uruchomić procesu",
     "Process.MainView.Tooltip.Import": "Zaimportuj proces z pliku xml",
     "Process.MainView.Tooltip.Export": "Pobierz ten proces w formacie xml",
     "Process.MainView.Tooltip.Undo": "Cofnij ostatnią zmianę",
@@ -70,7 +61,6 @@
     "Process.MainView.Tooltip.Center": "Wycentruj widok na model",
     "Process.MainView.Tooltip.ZoomIn": "Przybliż widok modelu",
     "Process.MainView.Tooltip.ZoomOut": "Oddal widok modelu",
-
     "Process.Details.Options.ByValue.ContentScript": "Skrypt treści",
     "Process.Details.Options.ByValue.Desktop": "Pulpit",
     "Process.Details.Options.ByValue.BackgroundPage": "Strona w tle",
@@ -82,7 +72,6 @@
     "Process.Details.Modeler.ActionListPanel.Error": "Nie można obsłużyć akcji",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Wyczyść filtry",
     "Process.Details.Modeler.ActionListPanel.Filter.Label": "Filtruj według grup",
-
     "Process.Details.Modeler.Actions.Api.Label": "Prośba API",
     "Process.Details.Modeler.Actions.Api.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Api.Output.VariableName": "Nazwa zmiennej",
@@ -91,7 +80,6 @@
     "Process.Details.Modeler.Actions.Api.Headers": "Nagłówki",
     "Process.Details.Modeler.Actions.Api.Method": "Metody",
     "Process.Details.Modeler.Actions.Api.Output": "Dane wyjściowe",
-
     "Process.Details.Modeler.Actions.Application.Launch.Label": "Aplikacja: Uruchom",
     "Process.Details.Modeler.Actions.Application.Launch.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Application.Launch.Location": "Lokalizacja (np. C:\\Program Files (x86)\\calculator.exe)",
@@ -101,16 +89,13 @@
     "Process.Details.Modeler.Actions.Api.DownloadFile.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.Api.DownloadFile.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Api.DownloadFile.VariableText": "Przypisz ścieżkę zapisanego pliku do zmiennej",
-
     "Process.Details.Modeler.Actions.Application.Close.Label": "Aplikacja: Zamknij",
     "Process.Details.Modeler.Actions.Application.Close.Input": "Dane wejściowe",
-
     "Process.Details.Modeler.Actions.Asana.Label": "Asana - Pobierz wszystko",
     "Process.Details.Modeler.Actions.Asana.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Asana.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.Asana.Output.VariableName": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Asana.Output.VariableMessage": "Przypisz daną wejściową do zmiennej",
-
     "Process.Details.Modeler.Actions.BeeOffice.Create.Label": "BeeOffice: Tworzenie nowego harmonogramu aktywności",
     "Process.Details.Modeler.Actions.BeeOffice.Create.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Employee": "Zmienna [Pracownik]",
@@ -127,7 +112,7 @@
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Email": "Email",
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Variable": "Nazwa zmiennej",
-    "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.VariableText":"Przypisz daną wyjściową do zmiennej",
+    "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.VariableText": "Przypisz daną wyjściową do zmiennej",
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Label": "BeeOffice: Wybierz pracownika przez ID",
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Input": "Dana wejściowa",
     "Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Id": "ID",
@@ -163,7 +148,6 @@
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.Browser.Open.Label": "Otwórz stronę",
     "Process.Details.Modeler.Actions.Browser.Open.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Open.Site": "Miejsce",
@@ -224,7 +208,6 @@
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Url": "Adres Url do drukowania",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.VariableText": "Przypisz ścieżkę zrzutu ekranu do zmiennej",
-
     "Process.Details.Modeler.Actions.CSV.Import.Label": "CSV: Importuj",
     "Process.Details.Modeler.Actions.CSV.Import.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.CSV.Import.SingleFile": "Pojedynczy plik",
@@ -254,7 +237,6 @@
     "Process.Details.Modeler.Actions.CSV.WriteFile.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.CSV.WriteFile.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.CSV.WriteFile.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label": "Lokalny PowerPoint: Otwórz aplikację",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath": "Określona ścieżka pliku",
@@ -268,7 +250,6 @@
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label": "PowerPoint: Zamknij aplikację",
     "Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Input": "Dane wejściowe",
-
     "Process.Details.Modeler.Actions.File.AppendFile.Label": "Plik: Dodaj zawartość do pliku",
     "Process.Details.Modeler.Actions.File.AppendFile.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.File.AppendFile.FilePath": "Ścieżka pliku (np. C://RunBotics/example.txt)",
@@ -302,7 +283,6 @@
     "Process.Details.Modeler.Actions.File.WriteFile.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.File.WriteFile.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.File.WriteFile.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.General.ConsoleLog.Label": "Log do konsoli",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Zmienne",
@@ -317,11 +297,9 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Ouput": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.General.StartProcess.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.General.StartProcess.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Label": "Zapis w arkuszach Google",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Wartości",
-
     "Process.Details.Modeler.Actions.Loop.Loop1.Label": "Pętla",
     "Process.Details.Modeler.Actions.Loop.Loop1.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Loop.Loop1.Manual": "Ręczny",
@@ -335,7 +313,6 @@
     "Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable": "Nazwa przedmiotu (under environment.variables.content.[item name])",
     "Process.Details.Modeler.Actions.Loop.Loop2.Repeat": "Powtórzyć",
     "Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations": "Liczba iteracji",
-
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Label": "Uruchom TypeScript",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Code": "Kod",
@@ -351,7 +328,6 @@
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Javascript.RunJavascript.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Label": "JIRA: Zaloguj pracę",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.UseAll41Jira": "Użyj All41 JIRA",
@@ -360,7 +336,6 @@
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Jira.GetLoggedWork.VariableText": "Przypisz daną wyjściową do zmiennej",
-
     "Process.Details.Modeler.Actions.Mail.Send.Label": "Wyślij emaila",
     "Process.Details.Modeler.Actions.Mail.Send.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Mail.Send.To": "Do",
@@ -368,7 +343,6 @@
     "Process.Details.Modeler.Actions.Mail.Send.Subject": "Temat",
     "Process.Details.Modeler.Actions.Mail.Send.Attachment": "Załącznik (Pełna ścieżka lokalna)",
     "Process.Details.Modeler.Actions.Mail.Send.Content": "Zawartość",
-
     "Process.Details.Modeler.Actions.Variable.Assign.Label": "Przypisz wartość do zmiennej",
     "Process.Details.Modeler.Actions.Variable.Assign.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Variable.Assign.Variable": "Zmienna",
@@ -381,7 +355,6 @@
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Label": "Przypisz zmienną globalną",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable": "Zmienna globalna",
-
     "Process.Details.Modeler.Actions.SAP.Connect.Label": "SAP: Łączenie",
     "Process.Details.Modeler.Actions.SAP.Connect.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SAP.Connect.ConnectionName": "Nazwa połączenia",
@@ -425,7 +398,6 @@
     "Process.Details.Modeler.Actions.SAP.Select.Label": "SAP: Wybór",
     "Process.Details.Modeler.Actions.SAP.Select.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SAP.Select.Target": "Cel",
-
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label": "Sharepoint Excel: Pobierz zawartość z komórki",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell": "Adres komórki",
@@ -474,7 +446,6 @@
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Output": "Dane wyjściowe",
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.SharePointExcel.CloseSession.VariableText": "Przypisz dane wyjściowe do zmiennej",
-
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label": "SharePoint: Pobierz plik z głównego katalogu",
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.FilePath": "Pełna ścieżka do pliku",
@@ -516,27 +487,20 @@
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.FolderName": "Nazwa nowego folderu",
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.ParentFolder": "Ścieżka nadrzędna?",
     "Process.Details.Modeler.Actions.SharePointFile.CreateFolder.CloudPath": "Ścieżka danych w chmurze",
-
     "Process.Details.Modeler.Templates.Api.Name": "Szablon testowania API",
     "Process.Details.Modeler.Templates.Login.Name": "Szablon logowania",
-
     "Process.Details.Modeler.Widgets.JsonView.Errors.UnableToParse": "Nie można przeanalizować wartości JSON",
     "Process.Details.Modeler.Widgets.JsonView.Tabs.View.Title": "Widok",
     "Process.Details.Modeler.Widgets.JsonView.Tabs.Editor.Title": "Edytor",
-
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local": "Zmienne lokalne",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs": "Dane wyjściowe [Dla obecnego zakresu]",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables": "Zmienne",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services": "Usługi",
     "Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils": "Akcesoria",
-
     "Process.Details.Modeler.Widgets.Editor.AutoSave.Label": "Autozapis",
     "Process.Details.Modeler.Widgets.Editor.AutoSave.NotImplemented": "Akcja automatycznego zapisywania nie została jeszcze zaimplementowana",
-
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Usuń pozycję",
-
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik (maksimum 4mb)",
-
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Wyłączone",
     "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Uruchom z tej pozycji",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Nazwa akcji",
@@ -572,7 +536,6 @@
     "Process.Details.Modeler.ActionPanel.ActionsGroup.External": "Zewnętrzny",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.Login": "Logowanie",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.API": "API",
-
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Label": "Selenium",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Script": "Skrypt",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Command": "Komenda",
@@ -580,7 +543,6 @@
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Value": "Wartość",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Import": "Importuj selenium",
     "Process.Details.Modeler.Extensions.Tasks.Selenium.Import.Error": "Nieprawidłowe dane w schowku",
-
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.InitLoop": "Pętla początkowa",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.TakeItem": "Pobierz element",
     "Process.Details.Modeler.Extensions.Tasks.CustomPallete.Increment": "Przyrost",
@@ -623,8 +585,6 @@
     "Process.List.Table.Header.Updated": "Aktualizowano",
     "Process.List.Table.Header.Scheduled": "Zaplanowanego",
     "Process.List.Table.Header.Actions": "Akcje",
-
     "Process.List.Table.Step.StartEvent": "Zdarzenie początkowe",
-
     "Process.Modeler.LeavePrompt": "Czy na pewno chcesz wyjść? Niezapisane zmiany zostaną utracone."
 }

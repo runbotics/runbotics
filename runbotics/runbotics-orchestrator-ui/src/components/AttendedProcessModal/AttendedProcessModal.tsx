@@ -33,9 +33,8 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
     const processForm = useMemo(() => {
         if (isJsonValid(process?.executionInfo)) {
             return JSON.parse(process.executionInfo);
-        } else {
-            return null;
         }
+        return null;
     }, [process.id]);
 
     const handleSubmit = (e: ISubmitEvent<any>) => {

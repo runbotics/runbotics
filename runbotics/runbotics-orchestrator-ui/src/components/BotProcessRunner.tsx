@@ -17,14 +17,12 @@ import { AttendedProcessModal } from './AttendedProcessModal';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
-const StyledRunButton = styled(LoadingButton)(
-    ({ theme }) => `
+const StyledRunButton = styled(LoadingButton)(({ theme }) => `
     margin-top: ${theme.spacing(1)};
     & + & {
         margin-left: ${theme.spacing(1)};
     }
-    `,
-);
+`);
 
 interface BotProcessRunnerProps {
     className?: string;
@@ -52,12 +50,13 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const processInstances = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
+    const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
+    const isProcessAttended = process?.isAttended && process?.executionInfo;
 
     useEffect(() => {
-        const isProcessInstanceFinished =
-            processInstance?.status === ProcessInstanceStatus.COMPLETED ||
-            processInstance?.status === ProcessInstanceStatus.ERRORED ||
-            processInstance?.status === ProcessInstanceStatus.TERMINATED;
+        const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
+            || processInstance?.status === ProcessInstanceStatus.ERRORED
+            || processInstance?.status === ProcessInstanceStatus.TERMINATED;
 
         if (isProcessInstanceFinished) {
             setStarted(false);
@@ -88,16 +87,19 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         )
             .then(unwrapResult)
             .then(async (response: StartProcessResponse) => {
-                await dispatch(
-                    processInstanceActions.updateOrchestratorProcessInstanceId(response.orchestratorProcessInstanceId),
-                );
+                await dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
+                    response.orchestratorProcessInstanceId,
+                ));
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
             })
             .catch((error) => {
                 setStarted(false);
-                enqueueSnackbar(error?.message ?? translate('Component.BotProcessRunner.Error'), { variant: 'error' });
+                enqueueSnackbar(
+                    error?.message as string ?? translate('Component.BotProcessRunner.Error'),
+                    { variant: 'error' },
+                );
             })
             .finally(() => {
                 setSubmitting(false);
@@ -106,57 +108,47 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             });
     };
 
-    const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
-    const isProcessAttended = process?.isAttended && process?.executionInfo;
-    const tooltipTitle =
-        processInstance?.status === ProcessInstanceStatus.IN_PROGRESS
+    const getTooltipTitle = () => {
+        if (!isRunButtonDisabled) return translate('Process.MainView.Tooltip.Run.Enabled');
+
+        return processInstance?.status === ProcessInstanceStatus.IN_PROGRESS
             ? translate('Component.BotProcessRunner.Tooltip.Title.ProcessRunning')
             : translate('Component.BotProcessRunner.Tooltip.Title.LookingForBot');
+    };
 
     const runButton = (
-        <>
-            <If condition={hasRunProcessAccess}>
-                <Tooltip
-                    title={
-                        isRunButtonDisabled
-                            ? translate('Process.MainView.Tooltip.Run.Disabled')
-                            : translate('Process.MainView.Tooltip.Run.Enabled')
-                    }
+        <Tooltip title={getTooltipTitle()} placement="top">
+            <span>
+                <StyledRunButton
+                    className={className}
+                    disabled={isRunButtonDisabled}
+                    onClick={isProcessAttended ? openModal : handleRun}
+                    color={color}
+                    loading={loading}
+                    loadingPosition="start"
+                    startIcon={(
+                        <SvgIcon fontSize="small">
+                            <PlayIcon />
+                        </SvgIcon>
+                    )}
+                    variant={variant}
                 >
-                    <span>
-                        <StyledRunButton
-                            className={className}
-                            disabled={isRunButtonDisabled}
-                            onClick={isProcessAttended ? openModal : handleRun}
-                            color={color}
-                            loading={loading}
-                            loadingPosition="start"
-                            startIcon={
-                                <SvgIcon fontSize="small">
-                                    <PlayIcon />
-                                </SvgIcon>
-                            }
-                            variant={variant}
-                        >
-                            {translate('Component.BotProcessRunner.Run')}
-                        </StyledRunButton>
-                    </span>
-                </Tooltip>
-            </If>
-        </>
+                    {translate('Component.BotProcessRunner.Run')}
+                </StyledRunButton>
+            </span>
+        </Tooltip>
     );
 
     return (
-        <>
-            <If condition={isRunButtonDisabled} else={runButton}>
-                <Tooltip title={tooltipTitle} placement="top">
-                    <span>{runButton}</span>
-                </Tooltip>
-            </If>
-            <If condition={modalOpen}>
-                <AttendedProcessModal setOpen={setModalOpen} open={modalOpen} process={process} onSubmit={handleRun} />
-            </If>
-        </>
+        <If condition={hasRunProcessAccess}>
+            {runButton}
+            <AttendedProcessModal
+                open={modalOpen}
+                process={process}
+                setOpen={setModalOpen}
+                onSubmit={handleRun}
+            />
+        </If>
     );
 };
 
