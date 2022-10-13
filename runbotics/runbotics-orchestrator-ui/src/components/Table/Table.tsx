@@ -13,7 +13,7 @@ import {
     Grid,
     Box,
 } from '@mui/material';
-import useTranslations, { translate } from 'src/hooks/useTranslations';
+import useTranslations from 'src/hooks/useTranslations';
 import { DataTableProps } from './Table.types';
 import { DataTableRow, DataTableWrapper } from './Table.styles';
 import DataTableFooter from './Table.footer';
@@ -88,20 +88,19 @@ const Table = <T extends object>({
         }
     };
 
-    const renderCells = (row: Row<T>) =>
-        row.cells.map((cell) => (
-            <TableCell
-                {...cell.getCellProps()}
-                onClick={
-                    cell.column.id !== 'expander' && cell.column.id !== 'button'
-                        ? () => handleRowClick(row)
-                        : undefined
-                }
-                sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
-            >
-                <>{cell.render('Cell')}</>
-            </TableCell>
-        ));
+    const renderCells = (row: Row<T>) => row.cells.map((cell) => (
+        <TableCell
+            {...cell.getCellProps()}
+            onClick={
+                cell.column.id !== 'expander' && cell.column.id !== 'button'
+                    ? () => handleRowClick(row)
+                    : undefined
+            }
+            sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
+        >
+            <>{cell.render('Cell')}</>
+        </TableCell>
+    ));
 
     const countExpandedRows = () => {
         let iterator = propPageSize;
@@ -119,7 +118,11 @@ const Table = <T extends object>({
             const rowKey = row.getRowProps().key;
             return (
                 <React.Fragment key={rowKey}>
-                    <DataTableRow isRowSelected={row.isSelected} isSubRoww={row.depth > 0}>
+                    <DataTableRow
+                        isClickable={Boolean(onRowClick)}
+                        isRowSelected={row.isSelected}
+                        isSubRoww={row.depth > 0}
+                    >
                         {renderCells(row)}
                     </DataTableRow>
                     {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
@@ -146,7 +149,7 @@ const Table = <T extends object>({
 
     const emptyDataElement = (
         <TableRow>
-            <TableCell colSpan={6} align="center">
+            <TableCell colSpan={columns.length ?? 7} align="center">
                 <Grid item xs={12}>
                     {translate('Component.Table.NoDataFound')}
                 </Grid>
@@ -156,7 +159,7 @@ const Table = <T extends object>({
 
     const loader = (
         <TableRow>
-            <TableCell colSpan={6} sx={{ verticalAlign: 'middle' }}>
+            <TableCell colSpan={columns.length ?? 7} sx={{ verticalAlign: 'middle' }}>
                 <Box width="100%" display="flex" justifyContent="center">
                     <CircularProgress color="secondary" />
                 </Box>
@@ -192,10 +195,9 @@ const Table = <T extends object>({
                     {!!totalPages && !!pageSize && (
                         <DataTableFooter
                             sx={{
-                                borderTop: (theme) =>
-                                    TABLE_PAGE_SIZES[0] > rows.length
-                                        ? `1px solid ${theme.palette.grey[300]}`
-                                        : undefined,
+                                borderTop: (theme) => (TABLE_PAGE_SIZES[0] > rows.length
+                                    ? `1px solid ${theme.palette.grey[300]}`
+                                    : undefined),
                             }}
                             pageCount={totalPages}
                             pageSize={propPageSize}

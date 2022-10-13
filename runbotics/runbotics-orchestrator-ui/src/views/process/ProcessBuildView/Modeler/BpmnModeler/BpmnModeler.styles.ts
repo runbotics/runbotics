@@ -1,5 +1,5 @@
 import { Drawer, Theme } from '@mui/material';
-import { drawerWidth } from 'src/components/InfoPanel/InfoPanel';
+import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH, DRAWER_WIDTH } from 'src/components/InfoPanel';
 import styled from 'styled-components';
 
 const prepareLeavingTransition = (theme: Theme) => theme.transitions.create(
@@ -40,8 +40,10 @@ export const InfoDrawer = styled(Drawer)`
     & > [class*="MuiPaper"] {
         position: relative;
         transition: ${({ theme }) => prepareEnteringTransition(theme)};
-        width: ${drawerWidth}px;
-        overflowX: hidden;
+        width: ${DRAWER_WIDTH}px;
+        min-width: ${MIN_DRAWER_WIDTH}px;
+        max-width: ${MAX_DRAWER_WIDTH}px;
+        overflow-x: hidden;
 
         ${({ open, theme }) => !open && `
             width: 0;

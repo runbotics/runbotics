@@ -20,8 +20,10 @@ export const classes = {
     contentShift: `${PREFIX}-contentShift`,
     nested: `${PREFIX}-nested`,
     hidden: `${PREFIX}-hidden`,
-    autocomplete: `${PREFIX}-autocomplete`,
     list: `${PREFIX}-list`,
+    highlight: `${PREFIX}-highlight`,
+    filterModalAnchor: `${PREFIX}-filterModalAnchor`,
+    filterButton: `${PREFIX}-filterButton`,
 };
 
 export const drawerWidth = 240;
@@ -134,11 +136,23 @@ export const Root = styled.div(({ theme }) => ({
         display: 'none',
     },
 
-    [`& .${classes.autocomplete}`]: {
-        margin: theme.spacing(1),
-    },
     [`& .${classes.list}`]: {
         overflowY: 'scroll',
+        paddingTop: 0,
+    },
+    [`& .${classes.highlight}`]: {
+        background: 'none',
+        color: theme.palette.primary.main,
+    },
+    [`& .${classes.filterModalAnchor}`]: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(1),
+        gap: theme.spacing(1),
+    },
+    [`& .${classes.filterButton}`]: {
+        width: 'fit-content',
+        height: 'fit-content',
     },
 }));
 

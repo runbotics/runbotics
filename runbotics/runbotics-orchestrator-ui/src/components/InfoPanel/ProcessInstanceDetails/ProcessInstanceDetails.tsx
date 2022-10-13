@@ -35,13 +35,17 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
         }
     }, [processInstanceId]);
 
-    useEffect(
-        () => () => {
-            if (isProcessFinished) {
-                dispatch(processInstanceActions.resetActive());
-            }
-        },
-        [],
+
+    useEffect(() => () => {
+        if (isProcessFinished) {
+            dispatch(processInstanceActions.resetActive());
+        }
+    }, []);
+
+    const loading = processInstanceState.all.loading || (
+        processInstanceState.active.orchestratorProcessInstanceId
+        && !processInstanceState.active.processInstance
+        && !processInstanceId
     );
 
     const loading =
