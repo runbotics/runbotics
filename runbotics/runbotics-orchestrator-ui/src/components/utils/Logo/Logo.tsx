@@ -1,29 +1,30 @@
-import React from 'react';
 import type { FC } from 'react';
-import LogoBlackSimp from './logo-black-simp.svg';
-import LogoRectangleWhite from './logo-rectangle-white.svg';
-import LogoWhiteSimp from './logo-white-simp.svg';
+import Image from 'next/image';
+import logoBlackSimp from './logo-black-simp.svg';
+import logoRectangleWhite from './logo-rectangle-white.svg';
+import logoWhiteSimp from './logo-white-simp.svg';
 
 interface LogoProps {
     white?: boolean;
     simple?: boolean;
     className?: string;
 }
-
+const LOGO_WIDTH = 177;
+const LOGO_HEIGHT = 48;
 const Logo: FC<LogoProps> = (props) => (
     <>
         {!props.simple && (
             <>
                 {!props.white ? (
-                    <LogoWhiteSimp className={props.className} />
+                    <Image src={logoWhiteSimp} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} />
                 ) : (
-                    <LogoBlackSimp className={props.className} />
+                    <Image src={logoBlackSimp} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} />
                 )}
             </>
         )}
         {props.simple && (
             <>
-                <LogoRectangleWhite className={props.className} />
+                <Image src={logoRectangleWhite} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} />
             </>
         )}
     </>

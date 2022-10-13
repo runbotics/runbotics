@@ -1,4 +1,5 @@
-import React, { VFC, lazy, Suspense, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import React, { VFC, Suspense, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import If from 'src/components/utils/If';
 import { useDispatch } from 'src/store';
@@ -7,8 +8,8 @@ import { ProcessTab } from 'src/utils/process-tab';
 import { ProcessParams } from 'src/utils/types/ProcessParams';
 import ProcessConfigureView from '../ProcessConfigureView';
 
-const ProcessBuildView = lazy(() => import('../ProcessBuildView'));
-const ProcessRunView = lazy(() => import('../ProcessRunView'));
+const ProcessBuildView = dynamic(() => import('../ProcessBuildView'), { ssr: false });
+const ProcessRunView = dynamic(() => import('../ProcessRunView'));
 
 const ProcessMainViewManager: VFC = () => {
     const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import React, { Suspense, Fragment, lazy, FC, VFC } from 'react';
+import React, { Suspense, Fragment, FC, VFC } from 'react';
 import { Switch, Redirect, Route, RouteComponentProps, BrowserRouter } from 'react-router-dom';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import AuthGuard from 'src/components/guards/AuthGuard';
@@ -6,13 +6,13 @@ import GuestGuard from 'src/components/guards/GuestGuard';
 import { FeatureKey, Role } from 'runbotics-common';
 import Secured from '../components/utils/Secured';
 import MainLayout from '../layouts/MainLayout/MainLayout';
-
+import dynamic from 'next/dynamic';
 type Routes = {
     exact?: boolean;
     path?: string | string[];
     guard?: FC;
     layout?: VFC;
-    component?: FC<RouteComponentProps>;
+    component?: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
     routes?: Routes;
 }[];
 
@@ -46,35 +46,35 @@ const routes: Routes = [
     {
         exact: true,
         path: '/404',
-        component: lazy(() => import('src/views/errors/NotFoundView')),
+        component: dynamic(() => import('src/views/errors/NotFoundView')),
     },
     {
         exact: true,
         path: '/empty',
-        component: lazy(() => import('src/views/empty/EmptyView')),
+        component: dynamic(() => import('src/views/empty/EmptyView')),
     },
     // {
     //     exact: true,
     //     guard: GuestGuard,
     //     path: '/',
-    //     component: lazy(() => import('src/views/auth/LoginView'))
+    //     component: dynamic(() => import('src/views/auth/LoginView'))
     // },
     {
         exact: true,
         guard: GuestGuard,
         path: '/login',
-        component: lazy(() => import('src/routing/LoginPage')),
+        component: dynamic(() => import('src/routing/LoginPage')),
     },
     {
         exact: true,
         guard: GuestGuard,
         path: '/register',
-        component: lazy(() => import('src/views/auth/RegisterView')),
+        component: dynamic(() => import('src/views/auth/RegisterView')),
     },
     {
         exact: true,
         path: '/register-unprotected',
-        component: lazy(() => import('src/views/auth/RegisterView')),
+        component: dynamic(() => import('src/views/auth/RegisterView')),
     },
     {
         path: '/app',
@@ -84,61 +84,61 @@ const routes: Routes = [
             {
                 exact: true,
                 path: '/app/processes',
-                component: lazy(() => import('src/views/process/ProcessBrowseView/ProcessBrowseView')),
+                component: dynamic(() => import('src/views/process/ProcessBrowseView/ProcessBrowseView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/processes/:id/:tab',
-                component: lazy(() => import('src/views/process/ProcessMainView/ProcessMainView')),
+                component: dynamic(() => import('src/views/process/ProcessMainView/ProcessMainView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/bots/:id/details/:tab',
-                component: lazy(() => import('src/views/bot/BotDetailsView')),
+                component: dynamic(() => import('src/views/bot/BotDetailsView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/bots',
-                component: lazy(() => import('src/views/bot/BotBrowseView')),
+                component: dynamic(() => import('src/views/bot/BotBrowseView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/bots/:tab',
-                component: lazy(() => import('src/views/bot/BotBrowseView')),
+                component: dynamic(() => import('src/views/bot/BotBrowseView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/bots/:id/process-instance/:processInstance/:tab',
-                component: lazy(() => import('src/views/bot/ProcessInstanceView')),
+                component: dynamic(() => import('src/views/bot/ProcessInstanceView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/actions',
-                component: lazy(() => import('src/views/action/ActionListView')),
+                component: dynamic(() => import('src/views/action/ActionListView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.EXTERNAL_ACTION_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/variables',
-                component: lazy(() => import('src/views/variable/VariableListView')),
+                component: dynamic(() => import('src/views/variable/VariableListView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.GLOBAL_VARIABLE_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/scheduler',
-                component: lazy(() => import('src/views/scheduler/SchedulerView')),
+                component: dynamic(() => import('src/views/scheduler/SchedulerView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.SCHEDULER_PAGE_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/history',
-                component: lazy(() => import('src/views/history/HistoryListView')),
+                component: dynamic(() => import('src/views/history/HistoryListView')),
                 guard: ({ children }) => <Secured featureKeys={[FeatureKey.HISTORY_READ]}>{children}</Secured>,
             },
             {
@@ -154,7 +154,7 @@ const routes: Routes = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to="/app/processes" />,
+        component: () => <Redirect to="/app/history" />,
     },
 ];
 

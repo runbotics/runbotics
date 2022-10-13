@@ -26,11 +26,14 @@ const BotConsole: FC = () => {
                 const logObjs = botLogs.reduce<Message[]>((acc, log, index) => {
                     const splittedLog = log.split(/: \[Nest\] \d+ {3}- /);
                     if (!methods.includes(splittedLog[0])) return acc;
-                    return [{
-                        id: index.toString(),
-                        method: splittedLog[0] as Methods,
-                        data: [splittedLog[1]],
-                    }, ...acc];
+                    return [
+                        {
+                            id: index.toString(),
+                            method: splittedLog[0] as Methods,
+                            data: [splittedLog[1]],
+                        },
+                        ...acc,
+                    ];
                 }, []);
                 setLogs(logObjs);
             })
@@ -45,11 +48,7 @@ const BotConsole: FC = () => {
             });
     }, [id, location.search]);
 
-    return (
-        <div style={{ backgroundColor: '#242424' }}>
-            <Console logs={logs} variant="dark" />
-        </div>
-    );
+    return <div style={{ backgroundColor: '#242424' }}>{/* <Console logs={logs} variant="dark" /> */}</div>;
 };
 
 export default BotConsole;

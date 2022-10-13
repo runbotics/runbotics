@@ -12,7 +12,8 @@ import {
     Typography,
 } from '@mui/material';
 import { IProcessInstanceEvent } from 'runbotics-common';
-import ReactJson from 'react-json-view';
+import dynamic from 'next/dynamic';
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatDate } from 'src/utils/utils';
 import useTranslations from 'src/hooks/useTranslations';
@@ -52,9 +53,7 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({ processInstanceEvent })
             </Table>
             <Accordion disableGutters disabled={!processInstanceEvent.input} sx={{ '&&': { borderRadius: 0 } }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                        {translate('Component.InfoPanel.EventsDetails.Input')}
-                    </Typography>
+                    <Typography variant="h6">{translate('Component.InfoPanel.EventsDetails.Input')}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <TableContainer>
@@ -64,9 +63,7 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({ processInstanceEvent })
             </Accordion>
             <Accordion disableGutters disabled={!processInstanceEvent.output}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                        {translate('Component.InfoPanel.EventsDetails.Output')}
-                    </Typography>
+                    <Typography variant="h6">{translate('Component.InfoPanel.EventsDetails.Output')}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <TableContainer>
@@ -77,9 +74,7 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({ processInstanceEvent })
             {processInstanceEvent.error && (
                 <Accordion disableGutters>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography variant="h6">
-                            {translate('Component.InfoPanel.EventsDetails.Error')}
-                        </Typography>
+                        <Typography variant="h6">{translate('Component.InfoPanel.EventsDetails.Error')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <TableContainer>

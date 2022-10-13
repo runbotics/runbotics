@@ -11,7 +11,8 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import ReactJson from 'react-json-view';
+import dynamic from 'next/dynamic';
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 import { IProcessInstance } from 'runbotics-common';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatDate } from 'src/utils/utils';
@@ -34,9 +35,7 @@ const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
                                 {translate('Component.InfoPanel.Details.Table.Header.Started')}
                             </Typography>
                         </TableCell>
-                        <TableCell>
-                            {processInstance.created ? formatDate(processInstance.created) : ''}
-                        </TableCell>
+                        <TableCell>{processInstance.created ? formatDate(processInstance.created) : ''}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell component="th" scope="row">
@@ -44,9 +43,7 @@ const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
                                 {translate('Component.InfoPanel.Details.Table.Header.Finished')}
                             </Typography>
                         </TableCell>
-                        <TableCell>
-                            {processInstance.updated ? formatDate(processInstance.updated) : ''}
-                        </TableCell>
+                        <TableCell>{processInstance.updated ? formatDate(processInstance.updated) : ''}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
@@ -61,9 +58,7 @@ const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
                 }}
             >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                        {translate('Component.InfoPanel.Details.Input')}
-                    </Typography>
+                    <Typography variant="h6">{translate('Component.InfoPanel.Details.Input')}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <TableContainer>
@@ -85,9 +80,7 @@ const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
                 }}
             >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="h6">
-                        {translate('Component.InfoPanel.Details.Output')}
-                    </Typography>
+                    <Typography variant="h6">{translate('Component.InfoPanel.Details.Output')}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <TableContainer>
@@ -98,9 +91,7 @@ const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
             {processInstance.error && (
                 <Accordion disableGutters>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography variant="h6">
-                            {translate('Component.InfoPanel.Details.Error')}
-                        </Typography>
+                        <Typography variant="h6">{translate('Component.InfoPanel.Details.Error')}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <TableContainer>

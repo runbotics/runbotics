@@ -5,23 +5,24 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import _ from 'lodash';
 import Cron from 'src/components/cron';
-import {
-    Box, Button, DialogActions, Paper, Tooltip,
-} from '@mui/material';
+import { Box, Button, DialogActions, Paper, Tooltip } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
-import {useCurrentLocale} from '../../../components/cron/useCurrentLocale'
+import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
 
-const SubmitButton = styled(Button)(({ theme }) => `
+const SubmitButton = styled(Button)(
+    ({ theme }) => `
     && {
         padding-left: ${theme.spacing(8)};
         padding-right: ${theme.spacing(8)};
         color: ${theme.palette.common.white};
     }
-`);
+`,
+);
 
-const StyledBox = styled(Box)(({ theme }) => `
+const StyledBox = styled(Box)(
+    ({ theme }) => `
     & > div {
         display: flex;
         align-items: center;
@@ -30,7 +31,8 @@ const StyledBox = styled(Box)(({ theme }) => `
     && .react-js-cron-field {
         margin-bottom: ${theme.spacing(0)};
     }
-`);
+`,
+);
 
 const scheduleProcessSchema = yup.object().shape({
     cron: yup.string().required(),
@@ -58,7 +60,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         const splitted = _.split(props.value, ' ');
         const cron5Digit = _.join(splitted.slice(1), ' ');
 
-        const currentLocale = useCurrentLocale()
+        const currentLocale = useCurrentLocale();
 
         return (
             <Cron
@@ -77,12 +79,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     const { process, loading } = useSelector((state) => state.process.draft);
     const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
     const submitButton = (
-        <SubmitButton
-            disabled={isSubmitButtonDisabled}
-            type="submit"
-            variant="contained"
-            color="primary"
-        >
+        <SubmitButton disabled={isSubmitButtonDisabled} type="submit" variant="contained" color="primary">
             {translate('Common.Schedule')}
         </SubmitButton>
     );
@@ -93,19 +90,13 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 <form onSubmit={handleSubmit(onProcessScheduler)}>
                     <DialogActions>
                         <StyledBox display="flex" gap="0.5rem" alignContent="center">
-                            <Controller
-                                name="cron"
-                                control={control}
-                                render={renderCronComponent}
-                            />
+                            <Controller name="cron" control={control} render={renderCronComponent} />
                             <If condition={isSubmitButtonDisabled} else={submitButton}>
                                 <Tooltip
                                     title={translate('Process.Schedule.Tooltip.PickBotAndCollection')}
                                     placement="top"
                                 >
-                                    <span>
-                                        {submitButton}
-                                    </span>
+                                    <span>{submitButton}</span>
                                 </Tooltip>
                             </If>
                         </StyledBox>

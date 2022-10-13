@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
-import ReactJson from 'react-json-view';
+import dynamic from 'next/dynamic';
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -51,9 +52,7 @@ const Index: FC<IndexProps> = ({ processInstance }) => {
                                 <TableRow>
                                     <TableCell component="th" scope="row">
                                         <Typography variant="h6">
-                                            {translate(
-                                                'Process.PIView.Table.Details.Header.OrchestratorProcessID',
-                                            )}
+                                            {translate('Process.PIView.Table.Details.Header.OrchestratorProcessID')}
                                         </Typography>
                                     </TableCell>
                                     <TableCell>{processInstance.orchestratorProcessInstanceId}</TableCell>
@@ -86,8 +85,9 @@ const Index: FC<IndexProps> = ({ processInstance }) => {
                                     </TableCell>
                                     <TableCell>
                                         {processInstance.input && <ReactJson src={JSON.parse(processInstance.input)} />}
-                                        {!processInstance.input
-                                            && <>{translate('Process.PIView.Table.Details.Data.NoInput')}</>}
+                                        {!processInstance.input && (
+                                            <>{translate('Process.PIView.Table.Details.Data.NoInput')}</>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
@@ -100,8 +100,9 @@ const Index: FC<IndexProps> = ({ processInstance }) => {
                                         {processInstance.output && (
                                             <ReactJson src={JSON.parse(processInstance.output)} />
                                         )}
-                                        {!processInstance.output
-                                            && <>{translate('Process.PIView.Table.Details.Data.NoOutput')}</>}
+                                        {!processInstance.output && (
+                                            <>{translate('Process.PIView.Table.Details.Data.NoOutput')}</>
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
