@@ -29,8 +29,8 @@
     "Bot.Console.ErrorMessage": "!!!!!Błąd podczas ładowania logów!!!!!",
 
     "Bot.Details.Meta.Title": "Bot",
+    "Bot.Details.Tabs.History.TabName": "Historia",
     "Bot.Details.Tabs.Logs.TabName": "Logi",
-    "Bot.Details.Tabs.Console.TabName": "Konsola",
     "Bot.Details.Tabs.Management.TabName": "Zarządzanie",
 
     "Bot.ListView.Table.Header.Name": "Nazwa",

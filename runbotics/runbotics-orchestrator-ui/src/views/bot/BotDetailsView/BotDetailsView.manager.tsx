@@ -6,7 +6,6 @@ import { BotParams } from 'src/utils/types/BotParams';
 
 const BotLog = lazy(() => import('./BotLog'));
 const BotConsole = lazy(() => import('./BotConsole'));
-const BotManagement = lazy(() => import('./BotManagement'));
 
 const BotDetailsViewManager: VFC = () => {
     const { tab } = useParams<BotParams>();
@@ -18,9 +17,6 @@ const BotDetailsViewManager: VFC = () => {
             </If>
             <If condition={tab === BotTab.CONSOLE}>
                 <BotConsole />
-            </If>
-            <If condition={tab === BotTab.MANAGEMENT}>
-                <BotManagement />
             </If>
         </Suspense>
     );
