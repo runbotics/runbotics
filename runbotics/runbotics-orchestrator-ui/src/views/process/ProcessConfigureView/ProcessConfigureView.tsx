@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'src/store';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
 import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { processActions } from 'src/store/slices/Process';
+import { fetchProcessById, saveProcess, updateTriggerable } from 'src/store/slices/Process/Process.thunks';
 import { ProcessParams } from 'src/utils/types/ProcessParams';
 import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
@@ -58,11 +59,13 @@ const ProcessConfigureView: VFC = () => {
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(processActions.updateAttendedance({ ...process, isAttended }));
         setAttended(isAttended);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(processActions.updateTriggerable({ ...process, isTriggerable }));
         setTriggerable(isTriggerable);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     return (
