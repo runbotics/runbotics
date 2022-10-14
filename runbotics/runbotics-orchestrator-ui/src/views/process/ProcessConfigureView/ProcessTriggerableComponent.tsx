@@ -1,4 +1,6 @@
-import React, { VFC, ChangeEvent, useState, useEffect } from 'react';
+import React, {
+    VFC, ChangeEvent, useState, useEffect,
+} from 'react';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { FormControlLabel, Switch } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
@@ -13,8 +15,8 @@ interface ProcessTriggerableProps {
 }
 
 const ProcessTriggerableComponent: VFC<ProcessTriggerableProps> = ({ isProcessTriggerable, onTriggerableChange }) => {
-    const hasReadIsProcessTriggerable = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_READ]);
-    const hasEditIsProcessTriggerable = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_EDIT]);
+    const hasReadProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_READ]);
+    const hasEditProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_EDIT]);
     const { translate } = useTranslations();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,11 +24,15 @@ const ProcessTriggerableComponent: VFC<ProcessTriggerableProps> = ({ isProcessTr
     };
 
     const attendedSwitch = (
-        <Switch onChange={handleChange} checked={isProcessTriggerable} disabled={!hasEditIsProcessTriggerable} />
+        <Switch
+            onChange={handleChange}
+            checked={isProcessTriggerable}
+            disabled={!hasEditProcessTriggerAccess}
+        />
     );
 
     return (
-        <If condition={hasReadIsProcessTriggerable}>
+        <If condition={hasReadProcessTriggerAccess}>
             <Wrapper>
                 <PersonOutlinedIcon />
                 <FormControlLabel
