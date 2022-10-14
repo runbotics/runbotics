@@ -16,6 +16,10 @@ export class ServerConfigService {
         return this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
     }
 
+    get entrypointSchedulerUrl(): string {
+        return this.configService.get('RUNBOTICS_SCHEDULER_ENTRYPOINT_URL');
+    }
+
     get installationId(): string {
         return this.configService.get('RUNBOTICS_INSTALLATION_ID');
     }

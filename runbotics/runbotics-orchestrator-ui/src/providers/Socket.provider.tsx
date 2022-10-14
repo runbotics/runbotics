@@ -2,10 +2,7 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { io, Socket } from 'socket.io-client';
 import useAuth from 'src/hooks/useAuth';
 
-// const uri = process.env.NODE_ENV === 'production'
-//     ? `${window.location.origin}`
-//     : 'http://localhost:4000';
-
+const uri = process.env.NEXT_PUBLIC_RUNBOTICS_ENTRYPOINT_URL;
 export const SocketContext = React.createContext<Socket | null>(null);
 
 const SocketProvider: FC = ({ children }) => {
@@ -16,7 +13,7 @@ const SocketProvider: FC = ({ children }) => {
         }
         const accessToken = window.localStorage.getItem('access_token');
 
-        return io('http://localhost:4000', {
+        return io(uri, {
             reconnection: true,
             reconnectionDelay: 1000,
             auth: {

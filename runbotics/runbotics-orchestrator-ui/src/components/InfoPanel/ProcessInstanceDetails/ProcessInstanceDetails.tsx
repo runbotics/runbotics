@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'src/store';
 import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
 import { Box, CircularProgress } from '@mui/material';
 import { ProcessInstanceStatus } from 'runbotics-common';
-import { ProcessInstanceDetailsHeader, ProcessInstanceDetailsTable } from '.';
+import ProcessInstanceDetailsTable from './ProcessInstanceDetailsTable';
+import ProcessInstanceDetailsHeader from './ProcessInstanceDetailsHeader';
 
 interface ProcessInstanceDetailsProps {
     processInstanceId: string;
@@ -35,22 +36,20 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
         }
     }, [processInstanceId]);
 
-
-    useEffect(() => () => {
-        if (isProcessFinished) {
-            dispatch(processInstanceActions.resetActive());
-        }
-    }, []);
-
-    const loading = processInstanceState.all.loading || (
-        processInstanceState.active.orchestratorProcessInstanceId
-        && !processInstanceState.active.processInstance
-        && !processInstanceId
+    useEffect(
+        () => () => {
+            if (isProcessFinished) {
+                dispatch(processInstanceActions.resetActive());
+            }
+        },
+        [],
     );
 
     const loading =
         processInstanceState.all.loading ||
-        (processInstanceState.active.orchestratorProcessInstanceId && !processInstanceState.active.processInstance);
+        (processInstanceState.active.orchestratorProcessInstanceId &&
+            !processInstanceState.active.processInstance &&
+            !processInstanceId);
 
     if (loading) {
         return (
@@ -66,8 +65,8 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
 
     return (
         <Box ref={containerRef} display="flex" flexDirection="column" padding="0.625rem" gap="1rem">
-            {/* <ProcessInstanceDetailsHeader processInstance={processInstance} />
-            <ProcessInstanceDetailsTable processInstance={processInstance} /> */}
+            <ProcessInstanceDetailsHeader processInstance={processInstance} />
+            <ProcessInstanceDetailsTable processInstance={processInstance} />
         </Box>
     );
 };

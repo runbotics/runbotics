@@ -79,6 +79,7 @@ const routes: Routes = [
     {
         path: '/app',
         guard: AuthGuard,
+
         layout: MainLayout,
         routes: [
             {
@@ -154,7 +155,7 @@ const routes: Routes = [
     {
         exact: true,
         path: '/',
-        component: () => <Redirect to="/app/history" />,
+        component: () => <Redirect to="/app/processes" />,
     },
 ];
 
