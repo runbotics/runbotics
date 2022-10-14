@@ -73,6 +73,7 @@ export type BusinessObject = {
     label: string;
     customLabel?: string;
     extensionElements?: ExtensionElements;
+    runbotics?: string;
 };
 
 export type BPMNElement = {

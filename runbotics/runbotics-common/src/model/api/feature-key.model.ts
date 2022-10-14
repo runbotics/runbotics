@@ -1,4 +1,5 @@
 export enum FeatureKey {
+<<<<<<< Updated upstream
     // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
     PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW', 
 
@@ -27,6 +28,17 @@ export enum FeatureKey {
     PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE', 
     
     // Allow to switch state "attended" to "not attended" [ Processes page -> process -> CONFIGURE tab ]
+=======
+    PROCESS_LIST_READ = 'PROCESS_LIST_READ', // display all processes
+    PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW', // add option "display as a list" to view of all processes
+    PROCESS_LIST_DETAIL_VIEW = 'PROCESS_LIST_DETAIL_VIEW', // show details of each process
+    PROCESS_READ = 'PROCESS_READ', // lista procesow = /app/processes + konkretny proces
+    PROCESS_ADD = 'PROCESS_ADD', // przycisk dodawania
+    PROCESS_EDIT_INFO = 'PROCESS_EDIT_INFO', // akcja edit na kafelku
+    PROCESS_DELETE = 'PROCESS_DELETE', // akcja delete na kafelku
+    PROCESS_START = 'PROCESS_START', // ukryj przycisku RUN na procesie
+    PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE', //  tylko read to wyswietl viewer zamiast modelera, nie mozna wyswieltac panulu info actions
+>>>>>>> Stashed changes
     PROCESS_IS_ATTENDED_EDIT = 'PROCESS_IS_ATTENDED_EDIT',
 
     // Show "Is process attended" switcher [ Processes page -> process -> CONFIGURE tab ]
@@ -41,14 +53,29 @@ export enum FeatureKey {
     // Allow to switch state "triggerable" to "not triggerable" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EDIT = 'PROCESS_IS_TRIGGERABLE_EDIT',
 
+<<<<<<< Updated upstream
     // Allow to select particular bot collection [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_BOT_COLLECTION_EDIT = 'PROCESS_BOT_COLLECTION_EDIT',
+=======
+    PROCESS_INSTANCE_READ = 'PROCESS_INSTANCE_READ', // panel z run info
+    PROCESS_INSTANCE_TERMINATE = 'PROCESS_INSTANCE_TERMINATE', // active processes guzik terminate
+    PROCESS_INSTANCE_HISTORY_READ = 'PROCESS_INSTANCE_HISTORY_READ', // na run tez jest
+    PROCESS_INSTANCE_HISTORY_DETAIL_VIEW = 'PROCESS_INSTANCE_HISTORY_DETAIL_VIEW', // show additional columns in history table (in RUN tab)
+>>>>>>> Stashed changes
 
     // Bot collection select ukryj // ?
     PROCESS_BOT_COLLECTION_READ = 'PROCESS_BOT_COLLECTION_READ',
 
+<<<<<<< Updated upstream
     // Bot collection select  disable // ?
     PROCESS_BOT_SYSTEM_EDIT = 'PROCESS_BOT_SYSTEM_EDIT',
+=======
+    PROCESS_CONFIGURE_VIEW = 'PROCESS_CONFIGURE_VIEW', // add tab "configure" (next to RUN tab)
+
+    SCHEDULE_READ = 'SCHEDULE_READ', // RUN process / wyswietlanie schedules
+    SCHEDULE_ADD = 'SCHEDULE_ADD', // cron u gory
+    SCHEDULE_DELETE = 'SCHEDULE_DELETE', // usuwanie dodanego cron'a na run process
+>>>>>>> Stashed changes
 
     // Bot collection select ukryj // ?
     PROCESS_BOT_SYSTEM_READ = 'PROCESS_BOT_SYSTEM_READ',

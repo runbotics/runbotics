@@ -20,7 +20,7 @@ export const usePublicSections = (): Section[] => {
                     title: translate('Nav.Items.Processes'),
                     icon: CallSplitIcon,
                     href: '/app/processes',
-                    featureKeys: [FeatureKey.PROCESS_READ],
+                    featureKeys: [FeatureKey.PROCESS_LIST_READ],
                 },
                 {
                     title: translate('Nav.Items.Bots'),

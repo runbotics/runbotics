@@ -89,7 +89,6 @@ const ActionFormRenderer: FC = () => {
                 output: event.formData.output,
                 disabled: event.formData.disabled,
                 runFromHere: event.formData.runFromHere,
-                customLabel: 'customLabel',
             },
         });
     };

@@ -18,6 +18,8 @@ import { truncate } from 'lodash';
 import { CustomActionDescription } from 'src/utils/action';
 import store from '../../../../../../store';
 import internalBpmnActions from '../../ConfigureActionPanel/Actions';
+import { translate } from 'src/hooks/useTranslations';
+import i18n from 'i18next';
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
@@ -62,8 +64,9 @@ export default class CustomRenderer extends BaseRenderer {
         });
 
         // svgClasses(text).add('djs-label');
+        const translatedLabel = translate(label.translateKey)
 
-        svgAppend(text, document.createTextNode(label));
+        svgAppend(text, document.createTextNode(label.title ? label.title : translatedLabel));
 
         svgAppend(parentNode, text);
     }
@@ -83,11 +86,11 @@ export default class CustomRenderer extends BaseRenderer {
             svgRemove(shape);
         }
 
-        if (label && label.title) {
+        if (label && (label.title || label.translateKey)) {
             if (is(element, 'bpmn:SubProcess')) {
-                this.drawTextNode(label.title, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
+                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
             } else {
-                this.drawTextNode(label.title, parentNode, disabled ? '#b3b3b3' : '#000', 0, 90);
+                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, 90);
                 if (label.description && label.description != '') {
                     this.drawTextNode(label.description, parentNode, disabled ? '#b3b3b3' : '#8d8d8d', 0, 105);
                 }
@@ -251,6 +254,8 @@ export default class CustomRenderer extends BaseRenderer {
 
     getLabel(element) {
         const businessObject = getBusinessObject(element);
+        // 'runbotics' xml field is a temporary solution for storing translate keys.
+        const translateKey = businessObject.runbotics;
         let title;
         let description = undefined;
         //
@@ -295,6 +300,7 @@ export default class CustomRenderer extends BaseRenderer {
             }
             return {
                 title: businessObject.label,
+                translateKey: translateKey,
                 description: description,
             };
         } else {
@@ -304,6 +310,7 @@ export default class CustomRenderer extends BaseRenderer {
         }
         return {
             title: title,
+            translateKey: translateKey,
             description: description,
         };
     }

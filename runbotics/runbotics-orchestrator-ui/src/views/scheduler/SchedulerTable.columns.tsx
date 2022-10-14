@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { CircularProgress, IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -31,7 +31,8 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Step'),
-            accessor: ({ step }) => (step ? `${step}` : ''),
+            // @ts-ignore
+            accessor: ({ step }) => (step ? translate(step) : '')
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.StartTime'),

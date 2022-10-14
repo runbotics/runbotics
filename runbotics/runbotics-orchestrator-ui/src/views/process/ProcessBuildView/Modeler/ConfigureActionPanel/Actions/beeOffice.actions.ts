@@ -5,6 +5,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: 'beeOffice.createNewTimetableActivity',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.Create.Label',
         script: 'beeOffice.createNewTimetableActivity',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -82,6 +83,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getEmployee': {
         id: 'beeOffice.getEmployee',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Label',
         script: 'beeOffice.getEmployee',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -139,6 +141,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getEmployeeById': {
         id: 'beeOffice.getEmployeeById',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Label',
         script: 'beeOffice.getEmployeeById',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -194,6 +197,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getActivity': {
         id: 'beeOffice.getActivity',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivity.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetActivity.Label',
         script: 'beeOffice.getActivity',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -256,6 +260,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getSchedule': {
         id: 'beeOffice.getSchedule',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Label',
         script: 'beeOffice.getSchedule',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -320,6 +325,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.deleteTimeTableActivity': {
         id: 'beeOffice.deleteTimeTableActivity',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTable.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTable.Label',
         script: 'beeOffice.deleteTimeTableActivity',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -354,6 +360,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getActivityGroups': {
         id: 'beeOffice.getActivityGroups',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Label',
         script: 'beeOffice.getActivityGroups',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -411,6 +418,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.getActivitiesByURLParameters': {
         id: 'beeOffice.getActivitiesByURLParameters',
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Label',
         script: 'beeOffice.getActivitiesByURLParameters',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

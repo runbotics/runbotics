@@ -585,5 +585,6 @@
     "Process.List.Table.Header.Scheduled": "Scheduled",
     "Process.List.Table.Header.Actions": "Actions",
     "Process.List.Table.Step.StartEvent": "Start event",
+    "Process.List.Table.Step.EndEvent": "End event",
     "Process.Modeler.LeavePrompt": "You haven't saved changes, are you sure u want to leave? All unsaved changes will be lost."
 }
