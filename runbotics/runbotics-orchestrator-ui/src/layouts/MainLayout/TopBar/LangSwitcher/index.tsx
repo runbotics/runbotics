@@ -1,3 +1,4 @@
+import useTranslations from 'src/hooks/useTranslations';
 import React, { ChangeEvent, useState } from 'react';
 import {
     Select, SvgIcon, InputLabel,
@@ -6,39 +7,51 @@ import {
     languages, TranslationsDescriptors, DEFAULT_LANG, Language,
 } from 'src/translations/translations';
 import LanguageIcon from '@mui/icons-material/Language';
-import useTranslations from 'src/hooks/useTranslations';
 import { LangFormControl, StyledMenuItem } from './LangSwitcher.styled';
+import { useSelector } from 'src/store';
+import LanguageChangeDialog from './LanguageChangeDialog';
 
 const LangSwitcher = () => {
     const [selectedLang, setSelectedLang] = useState<Language>(DEFAULT_LANG);
     const { translate, switchLanguage } = useTranslations();
+    const { isSaveDisabled } = useSelector((state) => state.process.modeler);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [currentLanguage, setCurrentLanguage] = useState<Language>(DEFAULT_LANG);
 
     const onSwitchLang = (e: ChangeEvent<HTMLInputElement>) => {
-        const lang = e.target.value as Language;
-        setSelectedLang(lang);
-        switchLanguage(lang);
+        setCurrentLanguage(e.target.value as Language);
+        
+        if (!isSaveDisabled) {
+            setOpenDialog(true);
+        } else {
+            setSelectedLang(currentLanguage);
+            switchLanguage(currentLanguage);
+        }
+    };
+    
+    const handleDialogLoseChanges = () => {
+        setOpenDialog(false);
+        setSelectedLang(currentLanguage);
+        switchLanguage(currentLanguage);
+    };
+
+    const handleDialogCancel = () => {
+        setOpenDialog(false);
     };
 
     return (
         <LangFormControl size="small" variant="standard">
+            <LanguageChangeDialog handleDialogLoseChanges={handleDialogLoseChanges} handleDialogCancel={handleDialogCancel} openDialog={openDialog} />
             <InputLabel>
                 <SvgIcon>
                     <LanguageIcon />
                 </SvgIcon>
-                <Select
-                    value={selectedLang}
-                    onChange={onSwitchLang}
-                >
-                    {
-                        languages.map((lang) => (
-                            <StyledMenuItem
-                                value={lang}
-                                key={lang}
-                            >
-                                {translate(`Common.Languages.${lang}` as keyof TranslationsDescriptors)}
-                            </StyledMenuItem>
-                        ))
-                    }
+                <Select value={selectedLang} onChange={onSwitchLang}>
+                    {languages.map((lang) => (
+                        <StyledMenuItem value={lang} key={lang}>
+                            {translate(`Common.Languages.${lang}` as keyof TranslationsDescriptors)}
+                        </StyledMenuItem>
+                    ))}
                 </Select>
             </InputLabel>
         </LangFormControl>

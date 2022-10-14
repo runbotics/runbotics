@@ -140,10 +140,10 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                     const { label, items, isTemplate } = group;
                     const { groupNames, actionName } = filters;
 
-                    console.log(
-                        actionName,
-                        items.map((item) => item.name),
-                    );
+                    // console.log(
+                    //     actionName,
+                    //     items.map((item) => item.name),
+                    // );
 
                     // filter group by name
                     if (groupNames.length && !groupNames.includes(label)) return;
