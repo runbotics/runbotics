@@ -31,7 +31,6 @@
     "Bot.Details.Meta.Title": "Bot",
     "Bot.Details.Tabs.History.TabName": "Historia",
     "Bot.Details.Tabs.Logs.TabName": "Logi",
-    "Bot.Details.Tabs.Management.TabName": "Zarządzanie",
 
     "Bot.ListView.Table.Header.Name": "Nazwa",
     "Bot.ListView.Table.Header.Creator": "Twórca",
