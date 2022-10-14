@@ -1,6 +1,5 @@
 import { writeFileSync } from 'fs';
-import { Injectable, Logger } from '@nestjs/common';
-import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
+import { Injectable } from '@nestjs/common';
 import { DesktopRunResponse } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
@@ -11,67 +10,7 @@ import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import Prince from "prince";
 import Puppeteer from 'puppeteer';
 import path from 'path';
-
-export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
-    script:
-    | 'browser.selenium.select'
-    | 'browser.selenium.open'
-    | 'browser.selenium.type'
-    | 'browser.selenium.click'
-    | 'browser.selenium.wait'
-    | 'browser.launch'
-    | 'browser.index'
-    | 'browser.selenium.printToPdf'
-    | 'browser.selenium.takeScreenshot'
-    | 'browser.selenium.elements.count'
-    | 'browser.selenium.element.attribute.change'
-    | 'browser.close';
-};
-
-export type BrowserLaunchActionInput = {
-    headless: boolean;
-    target?: string;
-};
-
-export type BrowserOpenActionInput = {
-    target: string;
-};
-export type BrowserOpenActionOutput = any;
-
-export type BrowserActionInput = {
-    target: string;
-    value: any;
-};
-export type BrowserClickActionOutput = any;
-
-export type BrowserIndexActionInput = {
-    jsonConfiguration: string;
-    headless: boolean;
-};
-export type BrowserIndexActionOutput = any[];
-
-
-export type BrowserCountElementsInput = {
-    target: string;
-};
-export type BrowserCountElementsOutput = {
-    elementsCount: number;
-};
-
-export type BrowserElementAttributeChangeInput = {
-    target: string;
-    attribute: string;
-    newValue: string;
-};
-
-export type BrowserPrintToPdfActionInput = {
-    target: "Url" | "Session";
-    url?: string;
-};
-
-export type BrowserPrintToPdfActionOutput = string;
-
-export type BrowserTakeScreenshotActionOutput = string;
+import * as BrowserTypes from './BrowserAutomation.types';
 
 @Injectable()
 class BrowserAutomation extends StatefulActionHandler {
@@ -83,7 +22,7 @@ class BrowserAutomation extends StatefulActionHandler {
         super();
     }
 
-    async launchBrowser(input: BrowserLaunchActionInput): Promise<any> {
+    async launchBrowser(input: BrowserTypes.BrowserLaunchActionInput): Promise<any> {
         const current = await this.session?.getSession();
         if (this.session || current) {
             try {
@@ -127,12 +66,12 @@ class BrowserAutomation extends StatefulActionHandler {
             }
     }
 
-    async closeBrowser(request: BrowserActionRequest<any>): Promise<any> {
+    async closeBrowser(request: BrowserTypes.BrowserActionRequest<any>): Promise<any> {
         await this.session?.quit();
         this.session = null;
     }
 
-    async openSite(input: BrowserOpenActionInput): Promise<BrowserOpenActionOutput> {
+    async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
         // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
         //
         // let driver = await new Builder().forBrowser('chrome').build();
@@ -141,7 +80,7 @@ class BrowserAutomation extends StatefulActionHandler {
         return {};
     }
 
-    async run(request: BrowserActionRequest<any>): Promise<DesktopRunResponse<any>> {
+    async run(request: BrowserTypes.BrowserActionRequest<any>): Promise<DesktopRunResponse<any>> {
         let output = {};
         try {
             switch (request.script) {
@@ -193,7 +132,7 @@ class BrowserAutomation extends StatefulActionHandler {
         };
     }
 
-    private async elementAttributeChange(input: BrowserElementAttributeChangeInput): Promise<BrowserClickActionOutput> {
+    private async elementAttributeChange(input: BrowserTypes.BrowserElementAttributeChangeInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
         this.session.executeScript(
             'arguments[0].setAttribute(arguments[1], arguments[2])',
@@ -205,7 +144,7 @@ class BrowserAutomation extends StatefulActionHandler {
         return {};
     }
 
-    private async countElements(input: BrowserCountElementsInput): Promise<BrowserCountElementsOutput> {
+    private async countElements(input: BrowserTypes.BrowserCountElementsInput): Promise<BrowserTypes.BrowserCountElementsOutput> {
         const locator: any = {};
         const [key, ...rest] = input.target.split('=');
         locator[key] = rest.join('=');
@@ -216,19 +155,19 @@ class BrowserAutomation extends StatefulActionHandler {
             .catch(() => ({ elementsCount: 0 }));
     }
 
-    private async doClick(input: BrowserActionInput): Promise<BrowserClickActionOutput> {
+    private async doClick(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
         await element.click();
         return {};
     }
 
-    private async doWait(input: BrowserActionInput): Promise<BrowserClickActionOutput> {
+    private async doWait(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
         this.logger.log('doWait', element);
         return {};
     }
 
-    private async doType(input: BrowserActionInput): Promise<BrowserClickActionOutput> {
+    private async doType(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
         await element.sendKeys(input.value);
 
@@ -245,7 +184,7 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
 
-    private async doSelect(input: BrowserActionInput): Promise<BrowserClickActionOutput> {
+    private async doSelect(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         // const element = this.session.findElement(locator);
         const element = await this.findElement(input.target);
         const qualifiedName = input.value.split('=')[0];
@@ -276,7 +215,7 @@ class BrowserAutomation extends StatefulActionHandler {
         return {};
     }
 
-    private async doIndex(input: BrowserIndexActionInput): Promise<BrowserIndexActionOutput> {
+    private async doIndex(input: BrowserTypes.BrowserIndexActionInput): Promise<BrowserTypes.BrowserIndexActionOutput> {
         try {
             const result = await RunIndex(this.session, input.jsonConfiguration);
             return result;
@@ -286,7 +225,7 @@ class BrowserAutomation extends StatefulActionHandler {
         }
     }
 
-    private async takeScreenshot(): Promise<BrowserTakeScreenshotActionOutput> {
+    private async takeScreenshot(): Promise<BrowserTypes.BrowserTakeScreenshotActionOutput> {
         const fileName = path.join(process.cwd(), 'temp', uuidv4());
 
         try {
@@ -299,7 +238,7 @@ class BrowserAutomation extends StatefulActionHandler {
         }
     }
 
-    private async printToPdf(input: BrowserPrintToPdfActionInput): Promise<BrowserPrintToPdfActionOutput> {
+    private async printToPdf(input: BrowserTypes.BrowserPrintToPdfActionInput): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
         // Prince requires absolute path
         const fileName = path.join(process.cwd(), 'temp', uuidv4())
 
