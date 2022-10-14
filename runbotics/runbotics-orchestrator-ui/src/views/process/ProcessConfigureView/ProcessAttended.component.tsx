@@ -15,8 +15,8 @@ interface ProcessAttendedProps {
 }
 
 const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended, onAttendedChange }) => {
-    const hasReadProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_READ]);
-    const hasEditProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
+    const hasReadProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_READ]);
+    const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
     const { translate } = useTranslations();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,12 +27,12 @@ const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended
         <Switch
             onChange={handleChange}
             checked={isProcessAttended}
-            disabled={!hasEditProcessTriggerAccess}
+            disabled={!hasEditProcessAttendAccess}
         />
     );
 
     return (
-        <If condition={hasReadProcessTriggerAccess}>
+        <If condition={hasReadProcessAttendAccess}>
             <Wrapper>
                 <PersonOutlinedIcon />
                 <FormControlLabel
