@@ -4,12 +4,17 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import useTranslations from 'src/hooks/useTranslations';
 
-const LanguageChangeDialog = ({handleDialogLoseChanges, handleDialogCancel, openDialog}) => {
+interface DialogProps {
+    handleDialogLoseChanges: () => void;
+    handleDialogCancel: () => void;
+    openDialog: boolean;
+}
+
+const LanguageChangeDialog = ({handleDialogLoseChanges, handleDialogCancel, openDialog} : DialogProps) => {
     const { translate } = useTranslations();
-    
+
     return (
         <Dialog
             open={openDialog}

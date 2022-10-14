@@ -15,17 +15,18 @@ const LangSwitcher = () => {
     const [selectedLang, setSelectedLang] = useState<Language>(DEFAULT_LANG);
     const { translate, switchLanguage } = useTranslations();
     const { isSaveDisabled } = useSelector((state) => state.process.modeler);
-    const [openDialog, setOpenDialog] = React.useState(false);
+    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
     const [currentLanguage, setCurrentLanguage] = useState<Language>(DEFAULT_LANG);
 
     const onSwitchLang = (e: ChangeEvent<HTMLInputElement>) => {
-        setCurrentLanguage(e.target.value as Language);
+        const lang = e.target.value as Language;
         
         if (!isSaveDisabled) {
             setOpenDialog(true);
+            setCurrentLanguage(lang);
         } else {
-            setSelectedLang(currentLanguage);
-            switchLanguage(currentLanguage);
+            setSelectedLang(lang);
+            switchLanguage(lang);
         }
     };
     
