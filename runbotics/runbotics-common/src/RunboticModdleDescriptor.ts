@@ -22,11 +22,6 @@ export const RunboticModdleDescriptor = {
                     type: "String",
                 },
                 {
-                    name: "customLabel",
-                    isAttr: true,
-                    type: "String",
-                },
-                {
                     name: "disabled",
                     isAttr: true,
                     type: "Boolean",

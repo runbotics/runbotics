@@ -589,5 +589,10 @@
     "Process.List.Table.Header.Actions": "Akcje",
     "Process.List.Table.Step.StartEvent": "Zdarzenie początkowe",
     "Process.List.Table.Step.EndEvent": "Zdarzenie końcowe",
+    "Process.Modeler.LeavePromptTitle": "Czy na pewno chcesz wyjść?",
+    "Process.Modeler.LeavePromptContent": "Niezapisane zmiany zostaną utracone.",
+    "Process.Modeler.ChangeLanguageTitle": "Czy na pewno chcesz zmienić język?",
+    "Process.Modeler.ChangeLanguageContent": "Wszystkie niezapisane zmiany kreatora procesu zostaną utracone.",
+    "Process.Modeler.DialogCancel": "Anuluj",
     "Process.Modeler.LeavePrompt": "Czy na pewno chcesz wyjść? Niezapisane zmiany zostaną utracone."
 }

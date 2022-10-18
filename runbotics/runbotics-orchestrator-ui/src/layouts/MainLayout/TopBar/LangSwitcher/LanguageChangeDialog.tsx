@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import useTranslations from 'src/hooks/useTranslations';
+import { StyledTitle } from './LangSwitcher.styled';
 
 interface DialogProps {
     handleDialogLoseChanges: () => void;
@@ -20,14 +21,17 @@ const LanguageChangeDialog = ({handleDialogLoseChanges, handleDialogCancel, open
             open={openDialog}
         >
             <DialogContent>
+                <StyledTitle>
+                    {translate('Process.Modeler.ChangeLanguageTitle')}
+                </StyledTitle>
                 <DialogContentText>
-                    {translate('Process.Modeler.LeavePrompt')}
+                    {translate('Process.Modeler.ChangeLanguageContent')}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleDialogLoseChanges}>Ok</Button>
                 <Button onClick={handleDialogCancel} autoFocus>
-                    Cancel
+                    {translate('Process.Modeler.DialogCancel')}
                 </Button>
             </DialogActions>
         </Dialog>
