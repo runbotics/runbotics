@@ -23,6 +23,20 @@ export const hasAuthorities = (user: User, authorities: any[]) => {
     return true;
 };
 
+export const hasAdminAuthority = (user: User, roles: Role) => {
+    if (!user || !user.roles) {
+        return false;
+    }
+
+    for (const role of roles) {
+        if (!user.roles.includes(role)) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 export const hasAccessByFeatureKey = (user: User, featureKeys: FeatureKey[]) => {
     if (!user || !user.featureKeys || !user.roles) {
         return false;
