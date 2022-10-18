@@ -9,9 +9,9 @@ import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceSta
 import { convertToPascalCase } from 'src/utils/text';
 import useTranslations from 'src/hooks/useTranslations';
 import useAuth from 'src/hooks/useAuth';
-import { hasAccessByFeatureKey } from '../utils/Secured';
+import { hasFeatureKeyAccess } from '../utils/Secured';
 
-const useProcessInstanceColumns = () : Column[]=> {
+const useProcessInstanceColumns = (): Column[] => {
     const { translate } = useTranslations();
     const { user } = useAuth();
 
@@ -69,7 +69,7 @@ const useProcessInstanceColumns = () : Column[]=> {
         },
     ];
 
-    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasAccessByFeatureKey(user, column.featureKeys) : true));
+    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasFeatureKeyAccess(user, column.featureKeys) : true));
 
     return accessedColumns
 };

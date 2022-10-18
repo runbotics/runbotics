@@ -1,11 +1,11 @@
-import { FeatureKey, Role } from 'runbotics-common';
-import { hasAdminAuthority } from 'src/components/utils/Secured';
+import { Role } from 'runbotics-common';
+import { hasRoleAccess } from 'src/components/utils/Secured';
 import useAuth from './useAuth';
 
-const useRole = (key: Role) => {
+const useRole = (keys: Role[]) => {
     const { user } = useAuth();
 
-    return hasAdminAuthority(user, key);
+    return hasRoleAccess(user, keys);
 };
 
 export default useRole;

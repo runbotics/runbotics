@@ -23,7 +23,7 @@ export const hasAuthorities = (user: User, authorities: any[]) => {
     return true;
 };
 
-export const hasAdminAuthority = (user: User, roles: Role) => {
+export const hasRoleAccess = (user: User, roles: Role[]) => {
     if (!user || !user.roles) {
         return false;
     }
@@ -37,7 +37,7 @@ export const hasAdminAuthority = (user: User, roles: Role) => {
     return true;
 };
 
-export const hasAccessByFeatureKey = (user: User, featureKeys: FeatureKey[]) => {
+export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[]) => {
     if (!user || !user.featureKeys || !user.roles) {
         return false;
     }
@@ -56,7 +56,7 @@ const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
 
     if (isAuthenticated) {
         if (featureKeys) {
-            if (hasAccessByFeatureKey(user, featureKeys)) {
+            if (hasFeatureKeyAccess(user, featureKeys)) {
                 return <>{children}</>;
             }
             return <Redirect to="/404" />;

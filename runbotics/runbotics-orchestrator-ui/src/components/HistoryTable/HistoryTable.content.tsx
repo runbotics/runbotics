@@ -25,7 +25,7 @@ import Table from '../Table';
 import If from '../utils/If';
 import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
-import { hasAccessByFeatureKey } from '../utils/Secured';
+import { hasFeatureKeyAccess } from '../utils/Secured';
 import ResizableDrawer from '../ResizableDrawer';
 
 interface PanelInfoState {

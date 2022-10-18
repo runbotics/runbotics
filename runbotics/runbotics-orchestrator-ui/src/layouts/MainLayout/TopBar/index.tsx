@@ -54,7 +54,7 @@ interface TopBarProps {
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const { isAuthenticated } = useAuth();
     const hasBotInstallAccess = useFeatureKey([FeatureKey.BOT_READ]);
-    const hadAdminAcces = useRole(Role.ROLE_ADMIN);
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
 
     return (
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
@@ -64,7 +64,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                         <Logo className={classes.logo} white />
                     </RouterLink>
                 </Hidden>
-                <If condition={!hadAdminAcces}>
+                <If condition={hasAdminAccess}>
                     <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
                         {environment.version}
                     </Typography>
