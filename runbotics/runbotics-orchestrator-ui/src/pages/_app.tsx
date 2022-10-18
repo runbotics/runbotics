@@ -13,7 +13,9 @@ import { DEFAULT_LANG } from '../translations/translations';
 import i18n from '../translations/i18n';
 import store from 'src/store';
 import { SettingsProvider } from 'src/contexts/SettingsContext';
+import Head from 'next/Head';
 
+import 'src/theme/cronStyles.css';
 // without this line it didn't work
 moment.locale(DEFAULT_LANG);
 enableES5();
@@ -24,23 +26,28 @@ const MyApp = (props) => {
     const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
 
     return (
-        <CacheProvider value={emotionCache}>
-            <Provider store={store}>
-                <SettingsProvider>
-                    <I18nextProvider i18n={i18n}>
-                        <StylesProvider>
-                            <SnackbarProvider>
-                                <InitializeAuth>
-                                    <SocketProvider>
-                                        <Component {...pageProps} />
-                                    </SocketProvider>
-                                </InitializeAuth>
-                            </SnackbarProvider>
-                        </StylesProvider>
-                    </I18nextProvider>
-                </SettingsProvider>
-            </Provider>
-        </CacheProvider>
+        <>
+            <Head>
+                <title>Runbotics</title>
+            </Head>
+            <CacheProvider value={emotionCache}>
+                <Provider store={store}>
+                    <SettingsProvider>
+                        <I18nextProvider i18n={i18n}>
+                            <StylesProvider>
+                                <SnackbarProvider>
+                                    <InitializeAuth>
+                                        <SocketProvider>
+                                            <Component {...pageProps} />
+                                        </SocketProvider>
+                                    </InitializeAuth>
+                                </SnackbarProvider>
+                            </StylesProvider>
+                        </I18nextProvider>
+                    </SettingsProvider>
+                </Provider>
+            </CacheProvider>
+        </>
     );
 };
 export default MyApp;

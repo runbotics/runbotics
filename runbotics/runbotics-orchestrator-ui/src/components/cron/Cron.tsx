@@ -11,8 +11,6 @@ import { classNames, setError, usePrevious } from './utils';
 import DEFAULT_LOCALE_EN from './locale';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 
-import './styles.module.css';
-
 export default function Cron(props: CronProps) {
     const {
         clearButton = true,

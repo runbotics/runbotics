@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as yup from 'yup';
 import _ from 'lodash';
 import Cron from 'src/components/cron';
@@ -10,6 +10,7 @@ import useTranslations from 'src/hooks/useTranslations';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
+import './styles.module.css';
 
 const SubmitButton = styled(Button)(
     ({ theme }) => `

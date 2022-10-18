@@ -213,7 +213,7 @@ importers:
       '@fullcalendar/react': ^4.4.2
       '@fullcalendar/timegrid': ^4.4.2
       '@fullcalendar/timeline': ^4.4.2
-      '@hookform/resolvers': ^2.0.0
+      '@hookform/resolvers': ^1.3.5
       '@monaco-editor/react': ^4.1.3
       '@mui/icons-material': ^5.10.6
       '@mui/lab': ^5.0.0-alpha.68
@@ -284,14 +284,12 @@ importers:
       eslint-plugin-react: ^7.26.0
       eslint-plugin-react-hooks: ^4.2.0
       eslint-webpack-plugin: ^3.1.1
-      express: ~4.18.2
       file-saver: ^2.0.5
       fontsource-roboto: 4.0.0
       fork-ts-checker-webpack-plugin: ^7.2.11
       formik: ^2.1.5
       history: ^4.10.1
       html-webpack-plugin: ^5.5.0
-      http-proxy-middleware: ^1.0.6
       i18next: ^21.8.14
       ids: ^1.0.0
       immer: ^6.0.9
@@ -311,7 +309,6 @@ importers:
       min-dom: ^3.1.3
       moment: ^2.27.0
       next: ~12.3.1
-      next-http-proxy-middleware: ~1.2.4
       node-sass: ^4.14.1
       notistack: ^2.0.3
       numeral: ^2.0.6
@@ -325,7 +322,7 @@ importers:
       react-dropzone: ~14.2.2
       react-feather: ^2.0.8
       react-helmet: ^5.2.1
-      react-hook-form: ^7.37.0
+      react-hook-form: ^6.3.1
       react-hot-keys: ^2.6.0
       react-i18next: ^11.18.1
       react-json-tree: ^0.15.0
@@ -375,7 +372,7 @@ importers:
       '@fullcalendar/react': 4.4.2_react-dom@17.0.2+react@17.0.2
       '@fullcalendar/timegrid': 4.4.2_@fullcalendar+core@4.4.2
       '@fullcalendar/timeline': 4.4.3_@fullcalendar+core@4.4.2
-      '@hookform/resolvers': 2.9.8_react-hook-form@7.37.0
+      '@hookform/resolvers': 1.3.8_react-hook-form@6.15.8
       '@monaco-editor/react': 4.1.3_react-dom@17.0.2+react@17.0.2
       '@mui/icons-material': 5.10.6_527f378d5852b58af37346a06289b128
       '@mui/lab': 5.0.0-alpha.68_2cb7012b58d280fe8787cbf04abee612
@@ -403,12 +400,10 @@ importers:
       dompurify: 2.3.9
       draft-js: 0.11.7_react-dom@17.0.2+react@17.0.2
       draft-js-export-html: 1.4.1_727ce7c70ce1652dd4fa25a8415ba8b1
-      express: 4.18.2
       file-saver: 2.0.5
       fontsource-roboto: 4.0.0
       formik: 2.2.9_react@17.0.2
       history: 4.10.1
-      http-proxy-middleware: 1.3.1
       i18next: 21.8.14
       ids: 1.0.0
       immer: 6.0.9
@@ -427,7 +422,6 @@ importers:
       min-dom: 3.1.3
       moment: 2.29.1
       next: 12.3.1_f00468fe5720037061f9433cea27dc2b
-      next-http-proxy-middleware: 1.2.4
       node-sass: 4.14.1
       notistack: 2.0.3_827018a13d94f02ad252a2e8ea84d515
       prop-types: 15.7.2
@@ -439,7 +433,7 @@ importers:
       react-dropzone: 14.2.2_react@17.0.2
       react-feather: 2.0.9_react@17.0.2
       react-helmet: 5.2.1_react@17.0.2
-      react-hook-form: 7.37.0_react@17.0.2
+      react-hook-form: 6.15.8_react@17.0.2
       react-hot-keys: 2.6.2_fa2e0119cfae2e7f1f4dff632578cec0
       react-i18next: 11.18.1_34f8be224c7532c786ad97566d363105
       react-json-tree: 0.15.0_@types+react@17.0.0+react@17.0.2
@@ -4533,12 +4527,12 @@ packages:
       '@fullcalendar/core': 4.4.2
     dev: false
 
-  /@hookform/resolvers/2.9.8_react-hook-form@7.37.0:
-    resolution: {integrity: sha512-iVVjH0USq+1TqDdGkWe2M1x7Wn5OFPgVRo7CbWFsXTqqXqCaZtZcnzJu+UhljCWbthFWxWGXKLGYUDPZ04oVvQ==}
+  /@hookform/resolvers/1.3.8_react-hook-form@6.15.8:
+    resolution: {integrity: sha512-mEUqsqbx5S78+uN1tVS1vrgaFEeh4cbFzBs0tuzvWmJFGSSDaqf0Z9SoKvrDFXl8eBIQvADA6H4vsbUYnlXuxw==}
     peerDependencies:
-      react-hook-form: ^7.0.0
+      react-hook-form: '>=6.6.0'
     dependencies:
-      react-hook-form: 7.37.0_react@17.0.2
+      react-hook-form: 6.15.8_react@17.0.2
     dev: false
 
   /@humanwhocodes/config-array/0.9.5:
@@ -6915,18 +6909,6 @@ packages:
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
     dev: true
 
-  /@types/http-proxy/1.17.3:
-    resolution: {integrity: sha512-wIPqXANye5BbORbuh74exbwNzj+UWCwWyeEFJzUQ7Fq3W2NSAy+7x7nX1fgbEypr2/TdKqpeuxLnXWgzN533/Q==}
-    dependencies:
-      '@types/node': 17.0.36
-    dev: false
-
-  /@types/http-proxy/1.17.7:
-    resolution: {integrity: sha512-9hdj6iXH64tHSLTY+Vt2eYOGzSogC+JQ2H7bdPWkuh7KXP5qLllWx++t+K9Wk556c3dkDdPws/SpMRi0sdCT1w==}
-    dependencies:
-      '@types/node': 17.0.36
-    dev: false
-
   /@types/http-proxy/1.17.9:
     resolution: {integrity: sha512-QsbSjA/fSk7xB+UXlCT3wHBy5ai9wOcNDWwZAtud+jXhwOM3l+EYZh8Lng4+/6n8uar0J7xILzqftJdJ/Wdfkw==}
     dependencies:
@@ -8861,24 +8843,6 @@ packages:
       raw-body: 2.5.1
       type-is: 1.6.18
       unpipe: 1.0.0
-
-  /body-parser/1.20.1:
-    resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
-    engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
-    dependencies:
-      bytes: 3.1.2
-      content-type: 1.0.4
-      debug: 2.6.9
-      depd: 2.0.0
-      destroy: 1.2.0
-      http-errors: 2.0.0
-      iconv-lite: 0.4.24
-      on-finished: 2.4.1
-      qs: 6.11.0
-      raw-body: 2.5.1
-      type-is: 1.6.18
-      unpipe: 1.0.0
-    dev: false
 
   /bonjour-service/1.0.12:
     resolution: {integrity: sha512-pMmguXYCu63Ug37DluMKEHdxc+aaIf/ay4YbF8Gxtba+9d3u+rmEWy61VK3Z3hp8Rskok3BunHYnG0dUHAsblw==}
@@ -11848,6 +11812,7 @@ packages:
 
   /eventemitter3/4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+    dev: true
 
   /events/3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -11968,43 +11933,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-
-  /express/4.18.2:
-    resolution: {integrity: sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==}
-    engines: {node: '>= 0.10.0'}
-    dependencies:
-      accepts: 1.3.8
-      array-flatten: 1.1.1
-      body-parser: 1.20.1
-      content-disposition: 0.5.4
-      content-type: 1.0.4
-      cookie: 0.5.0
-      cookie-signature: 1.0.6
-      debug: 2.6.9
-      depd: 2.0.0
-      encodeurl: 1.0.2
-      escape-html: 1.0.3
-      etag: 1.8.1
-      finalhandler: 1.2.0
-      fresh: 0.5.2
-      http-errors: 2.0.0
-      merge-descriptors: 1.0.1
-      methods: 1.1.2
-      on-finished: 2.4.1
-      parseurl: 1.3.3
-      path-to-regexp: 0.1.7
-      proxy-addr: 2.0.7
-      qs: 6.11.0
-      range-parser: 1.2.1
-      safe-buffer: 5.2.1
-      send: 0.18.0
-      serve-static: 1.15.0
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      type-is: 1.6.18
-      utils-merge: 1.0.1
-      vary: 1.1.2
-    dev: false
 
   /extend-shallow/2.0.1:
     resolution: {integrity: sha1-Ua99YUrZqfYQ6huvu5idaxxWiQ8=}
@@ -13419,19 +13347,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /http-proxy-middleware/1.3.1:
-    resolution: {integrity: sha512-13eVVDYS4z79w7f1+NPllJtOQFx/FdUW4btIvVRMaRlUY9VGstAbo5MOhLEuUgZFRHn3x50ufn25zkj/boZnEg==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      '@types/http-proxy': 1.17.7
-      http-proxy: 1.18.1
-      is-glob: 4.0.1
-      is-plain-obj: 3.0.0
-      micromatch: 4.0.4
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /http-proxy-middleware/2.0.6_@types+express@4.17.13:
     resolution: {integrity: sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==}
     engines: {node: '>=12.0.0'}
@@ -13460,6 +13375,7 @@ packages:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
+    dev: true
 
   /http-signature/1.2.0:
     resolution: {integrity: sha512-CAbnr6Rz4CYQkLYUtSNXxQPUH2gK8f3iWexVlsnMeD+GjlsQ0Xsy1cOX+mN3dtxYomRy21CiOzU8Uhw6OwncEQ==}
@@ -13996,13 +13912,6 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /is-glob/4.0.1:
-    resolution: {integrity: sha512-5G0tKtBTFImOqDnLB2hG6Bp2qcKEFduo4tZu9MT/H6NQv/ghhy30o55ufafxJ/LdH79LLs2Kfrn85TLKyA7BUg==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      is-extglob: 2.1.1
-    dev: false
-
   /is-glob/4.0.3:
     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
     engines: {node: '>=0.10.0'}
@@ -14108,6 +14017,7 @@ packages:
   /is-plain-obj/3.0.0:
     resolution: {integrity: sha512-gwsOE28k+23GP1B6vFl1oVh/WOzmawBrKwo5Ev6wMKzPkaXaCDIQKzLnvsA42DRlbVTWorkgTKIviAKCWkfUwA==}
     engines: {node: '>=10'}
+    dev: true
 
   /is-plain-object/2.0.4:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
@@ -16093,6 +16003,7 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.3.0
+    dev: true
 
   /mime-db/1.52.0:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
@@ -16370,16 +16281,6 @@ packages:
   /netmask/2.0.2:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
     engines: {node: '>= 0.4.0'}
-    dev: false
-
-  /next-http-proxy-middleware/1.2.4:
-    resolution: {integrity: sha512-4ScStkj08nFL2IX0doJq8Hwrk1zOdKaOkxFGxRmV+lN4Oh/d6qDSqUKxfSew676qA07bhncj6vbKBVVpLKfZBA==}
-    engines: {node: '>=10.0.0'}
-    dependencies:
-      '@types/http-proxy': 1.17.3
-      http-proxy: 1.18.1
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /next/12.3.1_f00468fe5720037061f9433cea27dc2b:
@@ -19172,16 +19073,6 @@ packages:
       react: ^16.8.0 || ^17
     dependencies:
       react: 17.0.2
-    dev: true
-
-  /react-hook-form/7.37.0_react@17.0.2:
-    resolution: {integrity: sha512-6NFTxsnw+EXSpNNvLr5nFMjPdYKRryQcelTHg7zwBB6vAzfPIcZq4AExP4heVlwdzntepQgwiOQW4z7Mr99Lsg==}
-    engines: {node: '>=12.22.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      react: 17.0.2
-    dev: false
 
   /react-hot-keys/2.6.2_fa2e0119cfae2e7f1f4dff632578cec0:
     resolution: {integrity: sha512-BMyIrQqQg5H7VWPW0OlJe+MTVZ68t37kkGF2ELvQqgCBPEMbvi6jhb7V4gKYkUV/BetqNnLTrUC4LUMW6myr1Q==}
@@ -19957,6 +19848,7 @@ packages:
 
   /requires-port/1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
+    dev: true
 
   /reselect/4.0.0:
     resolution: {integrity: sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==}

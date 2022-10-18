@@ -32,7 +32,17 @@ class MyDocument extends Document {
             <Html lang="en" dir="ltr">
                 <Head>
                     <meta charSet="utf-8" />
+                    <meta name="theme-color" content="#000000" />
+                    <link rel="manifest" href="/manifest.json" />
+                    <link
+                        href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto+Slab|Roboto:300,400,500,700"
+                        rel="stylesheet"
+                    />
+                    <meta name="description" content="RunBotics" />
+                    <meta name="keywords" content="RunBotics" />
+                    <meta name="author" content="RunBotics" />
                 </Head>
+
                 <body>
                     <Main />
                     <NextScript />
