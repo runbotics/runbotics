@@ -1,7 +1,7 @@
-import { ProcessInstanceEntity } from '../../database/process_instance/process_instance.entity';
+import { ProcessInstanceEntity } from '../../database/process-instance/process-instance.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from '../../utils/logger';
-import { ProcessInstanceService } from '../../database/process_instance/process_instance.service';
+import { ProcessInstanceService } from '../../database/process-instance/process-instance.service';
 import { BotService } from '../../database/bot/bot.service';
 import { ProcessService } from '../../database/process/process.service';
 import { BotStatus, IBot, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
