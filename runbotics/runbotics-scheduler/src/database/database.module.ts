@@ -5,14 +5,14 @@ import { ConfigModule } from '../config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
-import { GlobalVariableModule } from './global_variable/global_variable.module';
+import { GlobalVariableModule } from './global-variable/global-variable.module';
 import { ProcessModule } from './process/process.module';
-import { ProcessInstanceModule } from './process_instance/process_instance.module';
-import { ProcessInstanceEventModule } from './process_instance_event/process_instance_event.module';
+import { ProcessInstanceModule } from './process-instance/process-instance.module';
+import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
-import { BotCollectionModule } from './bot_collection/bot_collection.module';
-import { BotSystemModule } from './bot_system/bot_system.module';
-import { FeatureKeyModule } from './feature_key/featureKey.module';
+import { BotCollectionModule } from './bot-collection/bot-collection.module';
+import { BotSystemModule } from './bot-system/bot-system.module';
+import { FeatureKeyModule } from './feature-key/feature-key.module';
 
 @Module({
     imports: [

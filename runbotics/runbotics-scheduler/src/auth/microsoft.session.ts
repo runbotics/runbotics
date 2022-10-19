@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Logger } from '../utils/logger';
 import Axios from 'axios';
 import { ServerConfigService } from 'src/config/serverConfig.service';
@@ -37,10 +37,10 @@ export class MicrosoftSessionService {
 
     public async getToken() {
         if (this.session.token) {
-            this.logger.log(`Using existing token...`);
+            this.logger.log('Using existing token...');
             return this.session;
         } else {
-            this.logger.log(`Getting new token...`);
+            this.logger.log('Getting new token...');
             return MicrosoftSessionService.authorize(this.TOKEN_URL, this.params);
         }
     }

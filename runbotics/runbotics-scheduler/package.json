@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "runbotics-scheduler",
     "author": {
         "name": "runbotics",
@@ -17,7 +17,7 @@
         "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
         "start:prod": "cross-env NODE_ENV=development node dist/main",
         "lint": "eslint \"{src,test}/**/*.ts\"",
-        "lint:fix": "rushx lint --fix ",
+        "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",

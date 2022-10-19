@@ -4,7 +4,7 @@ import { ConfigModule } from './config/config.module';
 import { StorageService } from './utils/storage.service';
 import { Logger } from './utils/logger';
 import { DatabaseModule } from './database/database.module';
-import { SchedulerModule } from './scheduler/scheduler.module';
+import { QueueModule } from './queue/queue.module';
 
 @Global()
 @Module({
@@ -12,7 +12,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
         AuthModule,
         ConfigModule,
         DatabaseModule,
-        SchedulerModule,
+        QueueModule,
     ],
     providers: [
         StorageService, Logger

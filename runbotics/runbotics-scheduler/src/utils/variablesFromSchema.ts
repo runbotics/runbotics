@@ -1,6 +1,6 @@
-import { JSONSchema7 } from "json-schema";
+import { JSONSchema7 } from 'json-schema';
 
-function getVariablesFromSchema(schema: JSONSchema7, requiredOnly: boolean = false): string[] {
+function getVariablesFromSchema(schema: JSONSchema7, requiredOnly = false): string[] {
     if (requiredOnly) {
         return schema?.required ?? [];
     } else {
@@ -12,7 +12,7 @@ function getVariablesFromSchema(schema: JSONSchema7, requiredOnly: boolean = fal
     }
 }
 export function isObject(obj: unknown) {
-    return !!obj && typeof obj === "object" && !Array.isArray(obj);
+    return !!obj && typeof obj === 'object' && !Array.isArray(obj);
 }
 
 export default getVariablesFromSchema;

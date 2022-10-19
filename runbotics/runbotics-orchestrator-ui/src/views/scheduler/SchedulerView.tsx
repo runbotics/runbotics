@@ -12,10 +12,10 @@ import InternalPage from 'src/components/pages/InternalPage';
 import { DataTableRow } from 'src/components/Table';
 import useTranslations from 'src/hooks/useTranslations';
 import { IProcessInstance } from 'runbotics-common';
+import i18n from 'i18next';
 import Header from './Header';
 import SchedulerTableContainer from './SchedulerTable.container';
 import { useActiveProcessColumns, useScheduledProcessColumns, useWaitingProcessColumns } from './SchedulerTable.columns';
-import i18n from 'i18next';
 
 const SchedulerView = () => {
     const dispatch = useDispatch();
@@ -51,11 +51,12 @@ const SchedulerView = () => {
     };
 
     const renderScheduledJobSubRow = (row: Row<ScheduledJob>) => {
-        const humanReadableCron = (cronExpression: string) =>
-            translate('Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
+        const humanReadableCron = (cronExpression: string) => translate(
+            'Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
                 cron: cronstrue
-                .toString(cronExpression, {locale: i18n.language}).toLowerCase()
-            });
+                    .toString(cronExpression, { locale: i18n.language }).toLowerCase(),
+            },
+        );
 
         return (
             <DataTableRow isSubRoww>
