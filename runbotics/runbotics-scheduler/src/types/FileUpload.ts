@@ -10,6 +10,7 @@ export interface APIToken {
     expires_on: number;
 }
 export interface APICell {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value?: any;
     values: string[][];
 }

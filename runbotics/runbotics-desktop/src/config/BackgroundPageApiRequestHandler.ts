@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import fs from 'fs';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
 import mimeTypes from 'mime-types';
 import { ApiResource } from './ApiResource';
 import { orchestratorAxios } from './axios-configuration';
@@ -50,19 +50,28 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
         let compiled = input.url;
-        for (let prop in input.templateData) {
+        for (const prop in input.templateData) {
             if (input.templateData.hasOwnProperty(prop)) {
                 compiled = compiled.replace(new RegExp('\\${' + prop + '}', 'g'), input.templateData[prop]);
             }
         }
         let response;
-        const method = input.method ? input.method : 'get';
+        const method = input.method ? input.method : 'GET';
         try {
             switch (method) {
-                case 'get':
+                case 'GET':
                     response = await Axios.get(compiled, { headers: input.headers });
                     break;
-                case 'post':
+                case 'DELETE':
+                    response = await Axios.delete(compiled, { headers: input.headers });
+                    break;
+                case 'PATCH':
+                    response = await Axios.patch(compiled, JSON.parse(input.body), { headers: input.headers });
+                    break;
+                case 'PUT':
+                    response = await Axios.put(compiled, JSON.parse(input.body), { headers: input.headers });
+                    break;
+                case 'POST':
                     response = await Axios.post(compiled, JSON.parse(input.body), { headers: input.headers });
                     break;
                 default:
@@ -70,7 +79,11 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
                     break;
             }
         } catch (e) {
-            throw e;
+            this.logger.log(e);
+            response = e.response;
+            if (!response || response.status > 400) {
+                throw new InternalServerErrorException(e);
+            }
         }
         return {
             data: response.data,
@@ -84,21 +97,21 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
         let fileName: string;
         try {
             const response = await Axios.get(url, {
-                responseType: 'stream'
+                responseType: 'stream',
             });
             const mimeType = mimeTypes.extension(response.headers['content-type']);
             fileName = `${process.cwd()}\\temp\\${uuid()}.${mimeType}`.replace(/\\\\/g, '\\');
             await new Promise((resolve, reject) =>
-                response.data.pipe(fs.createWriteStream(fileName)
-                    .on('finish', () => resolve(true)))
-                    .on('error', (e) => reject(e))
+                response.data
+                    .pipe(fs.createWriteStream(fileName).on('finish', () => resolve(true)))
+                    .on('error', (e) => reject(e)),
             );
         } catch (e) {
             throw e;
         }
 
         return fileName;
-    }
+    };
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
         let output = {};
         switch (request.script) {
@@ -130,4 +143,4 @@ export type ApiDownloadFileOutput = string;
 
 export type ApiDownloadFileInput = {
     url: string;
-}
+};
