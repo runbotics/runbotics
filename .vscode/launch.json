@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "name": "scheduler debug",
+            "request": "launch",
+            "command": "rushx start:debug",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-scheduler"
+        },
+        {
+            "type": "node-terminal",
+            "name": "bot debug",
+            "request": "launch",
+            "command": "rushx start:debug",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
+        }
+    ]
+}

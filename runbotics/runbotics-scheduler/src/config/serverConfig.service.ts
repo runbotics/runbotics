@@ -71,4 +71,8 @@ export class ServerConfigService {
     get sharepointPassword(): string {
         return this.configService.get('SHAREPOINT_PASSWORD');
     }
+
+    get timezone(): string {
+        return 'Europe/Warsaw';
+    }
 }
