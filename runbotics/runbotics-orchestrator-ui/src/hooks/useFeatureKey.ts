@@ -1,11 +1,11 @@
 import { FeatureKey } from 'runbotics-common';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
 import useAuth from './useAuth';
 
 const useFeatureKey = (key: FeatureKey[]) => {
     const { user } = useAuth();
 
-    return hasAccessByFeatureKey(user, key);
+    return hasFeatureKeyAccess(user, key);
 };
 
 export default useFeatureKey;
