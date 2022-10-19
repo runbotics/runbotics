@@ -4,7 +4,7 @@ import { IProcess, IScheduleProcess } from 'runbotics-common';
 import { Repository } from 'typeorm';
 import { ScheduleProcessEntity } from './schedule-process.entity';
 
-const relations = ['process', 'user'];
+const relations = ['process', 'user', 'process.system', 'process.botCollection'];
 
 @Injectable()
 export class ScheduleProcessService {

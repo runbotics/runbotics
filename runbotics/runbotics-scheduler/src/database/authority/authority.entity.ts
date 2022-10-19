@@ -1,7 +1,7 @@
 import { Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
 import { Role, IAuthority } from 'runbotics-common';
 import { IFeatureKey } from 'runbotics-common';
-import { FeatureKeyEntity } from '../feature_key/featureKey.entity';
+import { FeatureKeyEntity } from '../feature-key/feature-key.entity';
 
 @Entity({ name: 'jhi_authority' })
 export class AuthorityEntity implements IAuthority {

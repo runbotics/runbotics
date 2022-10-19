@@ -17,3 +17,8 @@ export const dateTransformer: TypedTransformer<Date | string, string> = {
     },
     to: (value: string) => value ?? null,
 } as const;
+
+export const numberTransformer: TypedTransformer<string | number, number> = {
+    to: (data: number): number => data,
+    from: (data: string): number => Number(data),
+} as const;
