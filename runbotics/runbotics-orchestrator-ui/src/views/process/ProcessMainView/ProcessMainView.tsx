@@ -11,7 +11,7 @@ import ProcessMainViewManager from './ProcessMainView.manager';
 import { ProcessTitle, ProcessInternalPage } from './ProcessMainView.styled';
 import { FeatureKey } from 'runbotics-common';
 import useAuth from 'src/hooks/useAuth';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
 import i18n from 'i18next';
 
 const ProcessMainView: FC = () => {
@@ -38,11 +38,11 @@ const ProcessMainView: FC = () => {
             featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
         },
     ];
-    
+
     const accessedTabs = useMemo(() => {
         return processTabs.filter((tab) => {
             if (tab.featureKeys) {
-                return hasAccessByFeatureKey(user, tab.featureKeys);
+                return hasFeatureKeyAccess(user, tab.featureKeys);
             }
 
             return true;
