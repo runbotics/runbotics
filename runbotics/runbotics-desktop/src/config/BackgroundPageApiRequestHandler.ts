@@ -50,7 +50,7 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
         let compiled = input.url;
-        for (let prop in input.templateData) {
+        for (const prop in input.templateData) {
             if (input.templateData.hasOwnProperty(prop)) {
                 compiled = compiled.replace(new RegExp('\\${' + prop + '}', 'g'), input.templateData[prop]);
             }
@@ -79,9 +79,9 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
                     break;
             }
         } catch (e) {
-            this.logger.log(e); 
+            this.logger.log(e);
             response = e.response;
-            if(!response || response.status > 400){
+            if (!response || response.status > 400) {
                 throw new InternalServerErrorException(e);
             }
         }
@@ -97,21 +97,21 @@ export class BackgroundPageApiRequestHandler extends StatelessActionHandler impl
         let fileName: string;
         try {
             const response = await Axios.get(url, {
-                responseType: 'stream'
+                responseType: 'stream',
             });
             const mimeType = mimeTypes.extension(response.headers['content-type']);
             fileName = `${process.cwd()}\\temp\\${uuid()}.${mimeType}`.replace(/\\\\/g, '\\');
             await new Promise((resolve, reject) =>
-                response.data.pipe(fs.createWriteStream(fileName)
-                    .on('finish', () => resolve(true)))
-                    .on('error', (e) => reject(e))
+                response.data
+                    .pipe(fs.createWriteStream(fileName).on('finish', () => resolve(true)))
+                    .on('error', (e) => reject(e)),
             );
         } catch (e) {
             throw e;
         }
 
         return fileName;
-    }
+    };
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
         let output = {};
         switch (request.script) {
@@ -143,4 +143,4 @@ export type ApiDownloadFileOutput = string;
 
 export type ApiDownloadFileInput = {
     url: string;
-}
+};

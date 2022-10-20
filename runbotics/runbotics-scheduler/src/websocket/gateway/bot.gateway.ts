@@ -20,7 +20,7 @@ import { WsBotJwtGuard } from 'src/auth/guards';
 import { UiGateway } from './ui.gateway';
 import { BotService } from 'src/database/bot/bot.service';
 import { ServerConfigService } from 'src/config/serverConfig.service';
-import { FileUploadService } from 'src/scheduler/upload/file-upload.service';
+import { FileUploadService } from 'src/queue/upload/file-upload.service';
 import { MicrosoftSessionService } from 'src/auth/microsoft.session';
 
 
@@ -79,7 +79,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             this.logger.log('Clearing sharepoint temporary files');
             const { token } = await this.microsoftSessionService.getToken();
             await this.fileUploadService.deleteTempFolder(token, processInstance.orchestratorProcessInstanceId)
-                .catch(() => this.logger.log("Temp folder not found"));
+                .catch(() => this.logger.log('Temp folder not found'));
         }
     }
 

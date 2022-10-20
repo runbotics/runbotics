@@ -1,11 +1,13 @@
-import React, { VFC, ChangeEvent, useState, useEffect } from 'react';
+import React, {
+    VFC, ChangeEvent, useState, useEffect,
+} from 'react';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { FormControlLabel, Switch } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
-import { Wrapper } from './BotComponent.styles';
 import If from 'src/components/utils/If';
 import { FeatureKey } from 'runbotics-common';
 import useFeatureKey from 'src/hooks/useFeatureKey';
+import { Wrapper } from './BotComponent.styles';
 
 interface ProcessTriggerableProps {
     isProcessTriggerable: boolean;
@@ -13,19 +15,28 @@ interface ProcessTriggerableProps {
 }
 
 const ProcessTriggerableComponent: VFC<ProcessTriggerableProps> = ({ isProcessTriggerable, onTriggerableChange }) => {
-    const hasReadIsProcessTriggerable = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_READ]);
+    const hasReadProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_READ]);
+    const hasEditProcessTriggerAccess = useFeatureKey([FeatureKey.PROCESS_IS_TRIGGERABLE_EDIT]);
     const { translate } = useTranslations();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onTriggerableChange(e.target.checked);
     };
 
+    const attendedSwitch = (
+        <Switch
+            onChange={handleChange}
+            checked={isProcessTriggerable}
+            disabled={!hasEditProcessTriggerAccess}
+        />
+    );
+
     return (
-        <If condition={hasReadIsProcessTriggerable}>
+        <If condition={hasReadProcessTriggerAccess}>
             <Wrapper>
                 <PersonOutlinedIcon />
                 <FormControlLabel
-                    control={<Switch onChange={handleChange} checked={isProcessTriggerable} />}
+                    control={attendedSwitch}
                     label={translate('Process.Edit.Form.Fields.IsTriggerable.Label')}
                     labelPlacement="start"
                     sx={{ height: '1.75rem' }}

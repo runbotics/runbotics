@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '../../utils/logger';
-import { ProcessInstanceEventService } from '../../database/process_instance_event/process_instance_event.service';
+import { ProcessInstanceEventService } from '../../database/process-instance-event/process-instance-event.service';
 import {
     IBot,
     IProcessInstance,
@@ -11,8 +11,8 @@ import {
 } from 'runbotics-common';
 import { Connection, QueryRunner } from 'typeorm';
 import { UiGateway } from '../gateway/ui.gateway';
-import { ProcessInstanceEventEntity } from 'src/database/process_instance_event/process_instance_event.entity';
-import { ProcessInstanceEntity } from 'src/database/process_instance/process_instance.entity';
+import { ProcessInstanceEventEntity } from 'src/database/process-instance-event/process-instance-event.entity';
+import { ProcessInstanceEntity } from 'src/database/process-instance/process-instance.entity';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',

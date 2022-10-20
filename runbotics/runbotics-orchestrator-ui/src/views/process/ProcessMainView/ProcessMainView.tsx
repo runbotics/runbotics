@@ -6,7 +6,7 @@ import { ProcessTab } from 'src/utils/process-tab';
 import { FeatureKey } from 'runbotics-common';
 import { useRouter } from 'next/router';
 import useAuth from 'src/hooks/useAuth';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
 import i18n from 'i18next';
 import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
 import ProcessMainViewManager from './ProcessMainView.manager';
@@ -39,7 +39,7 @@ const ProcessMainView: FC = () => {
     const accessedTabs = useMemo(() => {
         return processTabs.filter((tab) => {
             if (tab.featureKeys) {
-                return hasAccessByFeatureKey(user, tab.featureKeys);
+                return hasFeatureKeyAccess(user, tab.featureKeys);
             }
 
             return true;

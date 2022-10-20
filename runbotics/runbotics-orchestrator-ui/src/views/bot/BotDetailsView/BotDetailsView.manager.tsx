@@ -7,7 +7,6 @@ import { BotParams } from 'src/utils/types/BotParams';
 
 const BotLog = dynamic(() => import('./BotLog'));
 const BotConsole = dynamic(() => import('./BotConsole'));
-const BotManagement = dynamic(() => import('./BotManagement'));
 
 const BotDetailsViewManager: VFC = () => {
     const router = useRouter();

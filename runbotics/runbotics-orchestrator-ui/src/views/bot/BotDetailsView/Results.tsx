@@ -19,20 +19,17 @@ const Results: FC = () => {
         if (hasLogsTabAccess) {
             return tab || BotTab.LOGS;
         }
-
-        return tab || BotTab.MANAGEMENT;
-    }, [hasLogsTabAccess]);
+        return tab;
+    }, [hasLogsTabAccess, tab, id]);
 
     const tabs = useMemo(() => {
         const tabsToReturn = [];
         if (hasLogsTabAccess) {
-            tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.Logs.TabName') });
+            tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') });
         }
         if (hasConsoleTabAccess) {
-            tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Console.TabName') });
+            tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') });
         }
-        tabsToReturn.push({ value: BotTab.MANAGEMENT, label: translate('Bot.Details.Tabs.Management.TabName') });
-
         return tabsToReturn;
     }, [hasConsoleTabAccess, hasLogsTabAccess]);
 

@@ -3,12 +3,17 @@ import styled from 'styled-components';
 import type { FC } from 'react';
 import RouterLink from 'next/link';
 import clsx from 'clsx';
-import { AppBar, Box, Hidden, Toolbar } from '@mui/material';
+import {
+    AppBar, Box, Hidden, Toolbar, Typography,
+} from '@mui/material';
 import Logo from 'src/components/utils/Logo/Logo';
 import useAuth from 'src/hooks/useAuth';
 import { HEADER_HEIGHT } from 'src/utils/constants';
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
+import environment from 'src/utils/environment';
+import If from 'src/components/utils/If';
+import useRole from 'src/hooks/useRole';
 import Account from './Account';
 import HowToRun from './HowToRun';
 import LangSwitcher from './LangSwitcher';
@@ -49,6 +54,7 @@ interface TopBarProps {
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const { isAuthenticated } = useAuth();
     const hasBotInstallAccess = useFeatureKey([FeatureKey.BOT_READ]);
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
 
     return (
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
@@ -60,6 +66,11 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                         </a>
                     </RouterLink>
                 </Hidden>
+                <If condition={hasAdminAccess}>
+                    <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
+                        {environment.version}
+                    </Typography>
+                </If>
                 <Box ml={2} flexGrow={1} />
                 <LangSwitcher />
                 {isAuthenticated && hasBotInstallAccess && <HowToRun />}

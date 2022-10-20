@@ -9,8 +9,8 @@ import { UserService } from '../database/user/user.service';
 import { JWTPayload } from '../types';
 import { Logger } from '../utils/logger';
 import { BotStatus, IBot } from 'runbotics-common';
-import { BotSystemService } from '../database/bot_system/bot_system.service';
-import { BotCollectionService } from '../database/bot_collection/bot_collection.service';
+import { BotSystemService } from '../database/bot-system/bot-system.service';
+import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
 
@@ -75,7 +75,7 @@ export class AuthService {
                 reject('Provided version is not a valid semantic version');
             }
 
-            resolve([major, minor, patch])
+            resolve([major, minor, patch]);
         });
     }
 
@@ -106,7 +106,7 @@ export class AuthService {
                 || (areMajorVersionsEqual && isMinimumMinorVersionFulfilled)
                 || (areMajorVersionsEqual && areMinorVersionsEqual && isMinimumPatchVersionFulfilled)
                 || (areMajorVersionsEqual && areMinorVersionsEqual && arePatchVersionsEqual)
-            )
+            );
         } catch (err) {
             this.logger.error('bot version error', err);
             throw new WsException(err);
@@ -140,7 +140,7 @@ export class AuthService {
                 const isVersionFullfiled = await this.isBotMinimumVersionFulfilled(version);
                 if (!isVersionFullfiled) {
                     this.logger.warn(`Bot cannot be registered. Provided version ${version} does not fulfill minimum ${this.serverConfigService.requiredBotVersion}`);
-                    throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`)
+                    throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`);
                 }
 
                 return bot;
