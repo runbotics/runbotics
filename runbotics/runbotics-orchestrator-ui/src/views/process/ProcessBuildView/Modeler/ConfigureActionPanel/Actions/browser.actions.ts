@@ -423,6 +423,63 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'browser.read.attribute': {
+        id: 'browser.read.attribute',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
+        script: 'browser.read.attribute',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: 'Target',
+                                type: 'string',
+                            },
+                            attribute: {
+                                title: 'Attribute',
+                                type: 'string',
+                            },
+                        },
+                        required: ['target', 'attribute'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
+                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    target: '',
+                    attribute: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
     'browser.index': {
         id: 'browser.index',
         label: translate('Process.Details.Modeler.Actions.Browser.Index.Label'),

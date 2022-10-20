@@ -13,7 +13,8 @@ export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     | 'browser.selenium.takeScreenshot'
     | 'browser.selenium.elements.count'
     | 'browser.selenium.element.attribute.change'
-    | 'browser.close';
+    | 'browser.close'
+    | 'browser.read.attribute';
 };
 
 export type BrowserLaunchActionInput = {
@@ -50,6 +51,11 @@ export type BrowserElementAttributeChangeInput = {
     target: string;
     attribute: string;
     newValue: string;
+};
+
+export type BrowserReadElementAttribute = {
+    target: string;
+    attribute: string;
 };
 
 export type BrowserPrintToPdfActionInput = {

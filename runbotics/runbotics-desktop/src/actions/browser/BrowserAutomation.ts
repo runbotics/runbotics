@@ -120,6 +120,9 @@ class BrowserAutomation extends StatefulActionHandler {
                 case 'browser.selenium.element.attribute.change':
                     output = await this.elementAttributeChange(request.input);
                     break;
+                case 'browser.read.attribute':
+                    output = await this.readElementAttribute(request.input);
+                    break;
                 default:
             }
         } catch (e) {
@@ -139,6 +142,17 @@ class BrowserAutomation extends StatefulActionHandler {
             element,
             input.attribute,
             input.newValue,
+        );
+
+        return {};
+    }
+
+    private async readElementAttribute(input: BrowserTypes.BrowserReadElementAttribute): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        this.session.executeScript(
+            'arguments[0].getAttribute(arguments[1])',
+            element,
+            input.attribute,
         );
 
         return {};
