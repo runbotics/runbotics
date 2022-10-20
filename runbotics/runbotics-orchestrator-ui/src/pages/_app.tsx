@@ -5,7 +5,6 @@ import 'moment/locale/pl';
 import moment from 'moment';
 import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
-import { enableES5 } from 'immer';
 import SnackbarProvider from '../providers/Snackbar.provider';
 import StylesProvider from '../providers/Styles.provider';
 import SocketProvider from '../providers/Socket.provider';
@@ -14,12 +13,11 @@ import { DEFAULT_LANG } from '../translations/translations';
 import i18n from '../translations/i18n';
 import store from 'src/store';
 import { SettingsProvider } from 'src/contexts/SettingsContext';
-import Head from 'next/Head';
+import Head from 'next/head';
 import MainLayout from 'src/layouts/MainLayout';
 import 'src/theme/cronStyles.css';
 // without this line it didn't work
 moment.locale(DEFAULT_LANG);
-enableES5();
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 

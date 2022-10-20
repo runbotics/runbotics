@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import type { HTMLProps, ReactNode } from 'react';
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
@@ -9,9 +9,9 @@ interface PageProps extends HTMLProps<HTMLDivElement> {
 
 const Page = forwardRef<HTMLDivElement, PageProps>(({ children, title = '', ...rest }, ref) => (
     <div ref={ref as any} {...rest}>
-        <Helmet>
+        <Head>
             <title>{title}</title>
-        </Helmet>
+        </Head>
         {children}
     </div>
 ));
