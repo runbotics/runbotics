@@ -186,7 +186,7 @@
     "Process.Details.Modeler.Actions.Browser.WaitForElement.Label": "Wait for element",
     "Process.Details.Modeler.Actions.Browser.WaitForElement.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.WaitForElement.Target": "Target",
-    "Process.Details.Modeler.Actions.Browser.Read.Label": "Read element",
+    "Process.Details.Modeler.Actions.Browser.Read.Attribute.Label": "Read attribute",
     "Process.Details.Modeler.Actions.Browser.Read.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Read.Target": "Target",
     "Process.Details.Modeler.Actions.Browser.Read.Output": "Output",
