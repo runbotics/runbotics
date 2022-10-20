@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { Row } from 'react-table';
 import cronstrue from 'cronstrue/i18n';
 import { Stack, TableCell } from '@mui/material';
 import { useSelector, useDispatch } from 'src/store';
-import {
-    schedulerActions, schedulerSelector, ScheduledJob, SchedulerJob,
-} from 'src/store/slices/Scheduler';
+import { schedulerActions, schedulerSelector, ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler';
 import useScheduledStatusSocket from 'src/hooks/useScheduledStatusSocket';
 import InternalPage from 'src/components/pages/InternalPage';
 import { DataTableRow } from 'src/components/Table';
@@ -15,11 +12,16 @@ import { IProcessInstance } from 'runbotics-common';
 import i18n from 'i18next';
 import Header from './Header';
 import SchedulerTableContainer from './SchedulerTable.container';
-import { useActiveProcessColumns, useScheduledProcessColumns, useWaitingProcessColumns } from './SchedulerTable.columns';
+import {
+    useActiveProcessColumns,
+    useScheduledProcessColumns,
+    useWaitingProcessColumns,
+} from './SchedulerTable.columns';
+import { useRouter } from 'next/router';
 
 const SchedulerView = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const router = useRouter();
     const { translate } = useTranslations();
     const { scheduledJobs, activeJobs, waitingJobs } = useSelector(schedulerSelector);
     useScheduledStatusSocket();
@@ -36,27 +38,25 @@ const SchedulerView = () => {
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
         if (rowData.process) {
-            history.push(`/app/processes/${rowData.process.id}/build`);
+            router.push(`/app/processes/${rowData.process.id}/build`);
         }
     };
 
     const handleSchedulerJobRedirect = (rowData: SchedulerJob) => {
         if (rowData.data.process) {
-            history.push(`/app/processes/${rowData.data.process.id}/build`);
+            router.push(`/app/processes/${rowData.data.process.id}/build`);
         }
     };
 
     const handleScheduledJobRedirect = (rowData: ScheduledJob) => {
-        history.push(`/app/processes/${rowData.process.id}/build`);
+        router.push(`/app/processes/${rowData.process.id}/build`);
     };
 
     const renderScheduledJobSubRow = (row: Row<ScheduledJob>) => {
-        const humanReadableCron = (cronExpression: string) => translate(
-            'Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
-                cron: cronstrue
-                    .toString(cronExpression, { locale: i18n.language }).toLowerCase(),
-            },
-        );
+        const humanReadableCron = (cronExpression: string) =>
+            translate('Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
+                cron: cronstrue.toString(cronExpression, { locale: i18n.language }).toLowerCase(),
+            });
 
         return (
             <DataTableRow isSubRoww>

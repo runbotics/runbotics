@@ -1,19 +1,8 @@
-import React, {
-    ChangeEvent, MouseEvent, useState, VFC,
-} from 'react';
+import React, { ChangeEvent, MouseEvent, useState, VFC } from 'react';
 import { IBotCollection } from 'runbotics-common';
-import {
-    Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
-    TextField,
-} from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import moment from 'moment';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import { red } from '@mui/material/colors';
@@ -26,9 +15,14 @@ import { useSelector } from '../../../store';
 import { botCollectionSelector } from '../../../store/slices/BotCollections';
 
 const BotCollectionListView: VFC<BotCollectionViewProps> = ({
-    page, setPage, limit, setLimit, setSearch, setSearchField,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    setSearch,
+    setSearchField,
 }) => {
-    const history = useHistory();
+    const router = useRouter();
     const { byPage, loading } = useSelector(botCollectionSelector);
 
     const [searchName, setSearchName] = useState('');
@@ -46,7 +40,7 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
 
     const handleRedirect = (event, collectionId: string) => {
         if (event.target.nodeName === 'TD') {
-            history.push(`/app/bots?collection=${collectionId}`);
+            router.push(`/app/bots?collection=${collectionId}`);
         }
     };
 
@@ -65,9 +59,11 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
     };
 
     const mapCollectionToRow = (collection: IBotCollection) => {
-        const includedPublicBotMark = (collection.publicBotsIncluded
-            ? <CheckCircleOutlineOutlinedIcon color="success" />
-            : <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />);
+        const includedPublicBotMark = collection.publicBotsIncluded ? (
+            <CheckCircleOutlineOutlinedIcon color="success" />
+        ) : (
+            <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
+        );
         return (
             <TableRow hover key={collection.id} onClick={(ev) => handleRedirect(ev, collection.id)}>
                 <TableCell>{collection.name}</TableCell>
@@ -86,25 +82,20 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
         <Table>
             <TableHead>
                 <TableRow>
-                        <TableCell>
-                            <TextField
-                                id="name"
-                                onChange={handleSearchName}
-                                value={searchName}
-                                variant="standard"
-                            />
-                        </TableCell>
-                        <TableCell>
-                            <TextField
-                                id="createdByName"
-                                onChange={handleSearchCreator}
-                                value={searchCreator}
-                                variant="standard"
-                            />
-                        </TableCell>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
+                    <TableCell>
+                        <TextField id="name" onChange={handleSearchName} value={searchName} variant="standard" />
+                    </TableCell>
+                    <TableCell>
+                        <TextField
+                            id="createdByName"
+                            onChange={handleSearchCreator}
+                            value={searchCreator}
+                            variant="standard"
+                        />
+                    </TableCell>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
                 </TableRow>
                 <TableRow>
                     <TableCell>{translate('Bot.ListView.Table.Header.Name')}</TableCell>
@@ -115,17 +106,13 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
                     <TableCell align="right">{translate('Bot.ListView.Table.Header.Options')}</TableCell>
                 </TableRow>
             </TableHead>
-            <TableBody>
-                {byPage?.content.map((collection) => mapCollectionToRow(collection))}
-            </TableBody>
+            <TableBody>{byPage?.content.map((collection) => mapCollectionToRow(collection))}</TableBody>
         </Table>
     );
 
     return (
         <Box minWidth={1200}>
-            {loading
-                ? <LoadingScreen />
-                : getTableView()}
+            {loading ? <LoadingScreen /> : getTableView()}
             <TablePagination
                 component="div"
                 count={byPage?.totalElements ?? 0}

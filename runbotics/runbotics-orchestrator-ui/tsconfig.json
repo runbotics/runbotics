@@ -19,7 +19,7 @@
         "isolatedModules": true,
         "jsx": "preserve",
         "typeRoots": ["src/@types"],
-        "noFallthroughCasesInSwitch": true,
+        "downlevelIteration": true
     },
     "include": ["next-env.d.ts", "src"],
     "exclude": ["node_modules"]

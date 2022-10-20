@@ -1,6 +1,5 @@
 import React, { MouseEvent, useEffect, useState } from 'react';
 import type { FC, ChangeEvent } from 'react';
-import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import {
     Autocomplete,
@@ -23,11 +22,12 @@ import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useBotStatusSocket from 'src/hooks/useBotStatusSocket';
 import useTranslations from 'src/hooks/useTranslations';
 import useQuery from 'src/hooks/useQuery';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
 import { classes, StyledCard } from './Results.styles';
 import { botActions } from '../../../store/slices/Bot';
 import ActionBotButton from './ActionBotButton';
 import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
+import { useRouter } from 'next/router';
+import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
 
 interface ResultsProps {
     className?: string;
@@ -41,7 +41,7 @@ const getBotStatusColor = (status: BotStatus) => {
 };
 
 const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
-    const history = useHistory();
+    const router = useRouter();
     const dispatch = useDispatch();
     const query = useQuery();
 
@@ -61,9 +61,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
         const pageNotAvailable = page && currentPage >= page.totalPages;
         if (pageNotAvailable) {
             setCurrentPage(0);
-            history.replace(getSearchParams({
-                page: 0, pageSize: limit,
-            }));
+            ReplaceQueryParams({ page: 0, pageSize: limit }, router);
         }
     }, [page]);
 
@@ -71,35 +69,31 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
         const params = {
             page: currentPage,
             size: limit,
-            ...(collectionFilter
-                && collectionFilter.length && {
-                filter: {
-                    in: {
-                        collection: collectionFilter,
+            ...(collectionFilter &&
+                collectionFilter.length && {
+                    filter: {
+                        in: {
+                            collection: collectionFilter,
+                        },
                     },
-                },
-            }),
+                }),
         };
         dispatch(botActions.getPage(params));
     }, [currentPage, limit, collectionFilter]);
 
     const handlePageChange = (event: any, newPage: number): void => {
-        history.replace(getSearchParams({
-            page: newPage, pageSize: limit,
-        }));
+        ReplaceQueryParams({ page: newPage, pageSize: limit }, router);
         setCurrentPage(newPage);
     };
 
     const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setCurrentPage(0);
-        history.replace(getSearchParams({
-            page: 0, pageSize: parseInt(event.target.value, 10),
-        }));
+        ReplaceQueryParams({ page: 0, pageSize: parseInt(event.target.value, 10) }, router);
         setLimit(parseInt(event.target.value, 10));
     };
 
     const handleRedirect = (event: MouseEvent<HTMLTableCellElement>, botId: number) => {
-        history.push(`/app/bots/${botId}/details/logs`);
+        router.push(`/app/bots/${botId}/details/logs`);
     };
 
     const handleFilterCollection = (event, value) => {
@@ -117,9 +111,9 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                     options={botCollections.map((collection) => collection.name)}
                     getOptionLabel={(collectionNameLabel) => collectionNameLabel}
                     defaultValue={collectionFilter}
-                    renderInput={
-                        (params) => <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
-                    }
+                    renderInput={(params) => (
+                        <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
+                    )}
                     filterSelectedOptions
                     disableCloseOnSelect
                     multiple
@@ -157,7 +151,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             <Label color={getBotStatusColor(bot.status)}>
                                                 {/* @ts-ignore */}
-                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`,)}
+                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`)}
                                             </Label>
                                         </TableCell>
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>

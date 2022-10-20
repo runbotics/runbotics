@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import React, { VFC, Suspense } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import If from 'src/components/utils/If';
 import { BotTab } from 'src/utils/bot-tab';
 import { BotParams } from 'src/utils/types/BotParams';
@@ -10,7 +10,8 @@ const BotConsole = dynamic(() => import('./BotConsole'));
 const BotManagement = dynamic(() => import('./BotManagement'));
 
 const BotDetailsViewManager: VFC = () => {
-    const { tab } = useParams<BotParams>();
+    const router = useRouter();
+    const { tab } = router.query;
 
     return (
         <>
@@ -19,9 +20,6 @@ const BotDetailsViewManager: VFC = () => {
             </If>
             <If condition={tab === BotTab.CONSOLE}>
                 <BotConsole />
-            </If>
-            <If condition={tab === BotTab.MANAGEMENT}>
-                <BotManagement />
             </If>
         </>
     );

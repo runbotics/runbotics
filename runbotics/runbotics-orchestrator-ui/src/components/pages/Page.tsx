@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react';
 import type { HTMLProps, ReactNode } from 'react';
 import { Helmet } from 'react-helmet';
-import PropTypes from 'prop-types';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
@@ -16,10 +15,5 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({ children, title = '', ...r
         {children}
     </div>
 ));
-
-Page.propTypes = {
-    children: PropTypes.node.isRequired,
-    title: PropTypes.string,
-};
 
 export default Page;

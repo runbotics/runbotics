@@ -3,7 +3,7 @@ import { IBotCollection } from 'runbotics-common';
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'src/store';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { botCollectionSelector } from 'src/store/slices/BotCollections';
 import useBotCollectionColumns from './useBotCollectionColumns';
 
@@ -18,14 +18,18 @@ interface TableProps {
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 
 const BotCollectionTable: VFC<TableProps> = ({
-    page, pageSize, onPageSizeChange, onPageChange, onFilterModelChange,
+    page,
+    pageSize,
+    onPageSizeChange,
+    onPageChange,
+    onFilterModelChange,
 }) => {
     const botCollectionColumns = useBotCollectionColumns();
-    const history = useHistory();
+    const router = useRouter();
     const { byPage, loading } = useSelector(botCollectionSelector);
 
     const handleRedirect = (collectionId: string) => {
-        history.push(`/app/bots?collection=${collectionId}`);
+        router.push(`/app/bots?collection=${collectionId}`);
     };
 
     return (

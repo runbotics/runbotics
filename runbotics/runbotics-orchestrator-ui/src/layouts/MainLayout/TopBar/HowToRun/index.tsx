@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import GetAppIcon from '@mui/icons-material/GetApp';
-import { useLocation } from 'react-router-dom';
 import useLocalStorage from 'src/hooks/useLocalStorage';
 import useTranslations from 'src/hooks/useTranslations';
 import HowToRunDialog from './HowToRunDialog';
 
 const Index = () => {
-    const location = useLocation();
     const { translate } = useTranslations();
     const [isOpen, setOpen] = useLocalStorage('HowToRun', false);
     useEffect(() => {

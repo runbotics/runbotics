@@ -10,7 +10,6 @@ import useTranslations from 'src/hooks/useTranslations';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
-import './styles.module.css';
 
 const SubmitButton = styled(Button)(
     ({ theme }) => `

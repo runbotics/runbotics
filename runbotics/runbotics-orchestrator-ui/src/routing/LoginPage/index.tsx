@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import RouterLink from 'next/link';
 import {
     Box,
     Card,
@@ -20,8 +20,9 @@ import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import { useDispatch } from '../../store';
-import { login } from '../../store/slices/Auth/Auth.thunks';
+import { useDispatch } from 'src/store';
+import { login } from 'src/store/slices/Auth/Auth.thunks';
+import { useRouter } from 'next/router';
 
 const PREFIX = 'LoginPage';
 
@@ -59,12 +60,12 @@ const LoginPage: FC = () => {
     const auth = useAuth();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-
+    const router = useRouter();
     return (
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink to="/">
+                    <RouterLink href="/">
                         <Logo simple className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -159,9 +160,11 @@ const LoginPage: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
-                            {translate('Login.SwitchToRegisterMessage')}
-                        </Link>
+                        <RouterLink href="/register" passHref>
+                            <Link variant="body2" color="textSecondary">
+                                {translate('Login.SwitchToRegisterMessage')}
+                            </Link>
+                        </RouterLink>
                     </CardContent>
                 </Card>
             </Container>

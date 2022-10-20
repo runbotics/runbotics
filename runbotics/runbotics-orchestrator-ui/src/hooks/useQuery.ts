@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
-
+import { useRouter } from 'next/router';
 const useQuery = () => {
-    const { search } = useLocation();
+    const { query } = useRouter();
+    const search = useMemo(() => query.search, [query.search]);
 
-    return useMemo(() => new URLSearchParams(search), [search]);
+    return useMemo(() => new URLSearchParams(search as string), [search]);
 };
 
 export default useQuery;

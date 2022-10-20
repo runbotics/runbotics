@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
-import {
-    Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box,
-} from '@mui/material';
-import { useHistory } from 'react-router-dom';
+import { Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box } from '@mui/material';
+import { useRouter } from 'next/router';
 import { PlusCircle as PlusIcon } from 'react-feather';
 import { BotSystem, IProcess } from 'runbotics-common';
 import { ProcessTab } from 'src/utils/process-tab';
@@ -27,7 +25,7 @@ const defaultProcessInfo: IProcess = {
     name: '',
     description: '',
     definition: emptyBpmn,
-}
+};
 
 type AddProcessDialogProps = {
     open?: boolean;
@@ -53,7 +51,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
             setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
             return;
         }
-        
+
         setInputErrorType(null);
 
         try {
@@ -80,7 +78,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
                 <Box sx={{ pt: 1, pb: 3 }}>
                     <TextField
                         label={translate('Process.Add.Form.Fields.Name')}
-                        error={inputErrorType !== null} 
+                        error={inputErrorType !== null}
                         helperText={inputErrorMessages[inputErrorType]}
                         fullWidth
                         value={name}
@@ -90,10 +88,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button
-                    color="primary"
-                    onClick={onClose}
-                >
+                <Button color="primary" onClick={onClose}>
                     {translate('Common.Cancel')}
                 </Button>
                 <Button
@@ -113,11 +108,11 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
 
 const AddProcess = () => {
     const [showDialog, setShowDialog] = useState(false);
-    const history = useHistory();
+    const router = useRouter();
     const { translate } = useTranslations();
 
     const handleAdd = (process: IProcess) => {
-        history.push(`/app/processes/${process.id}/${ProcessTab.BUILD}`);
+        router.push(`/app/processes/${process.id}/${ProcessTab.BUILD}`);
     };
 
     return (

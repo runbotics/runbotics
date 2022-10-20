@@ -1,21 +1,13 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import type { FC } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
-import {
-    Avatar,
-    Box,
-    Button,
-    Hidden,
-    Menu,
-    MenuItem,
-    Typography,
-    Link,
-} from '@mui/material';
+import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import { useDispatch } from 'src/store';
 import { logout } from 'src/store/slices/Auth/Auth.thunks';
+import Router, { useRouter } from 'next/router';
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'Account';
@@ -47,7 +39,7 @@ const Root = styled.div(({ theme }) => ({
 }));
 
 const Account: FC = () => {
-    const history = useHistory();
+    const router = useRouter();
     const ref = useRef<HTMLDivElement>(null);
     const auth = useAuth();
     const { translate } = useTranslations();
@@ -66,7 +58,7 @@ const Account: FC = () => {
         try {
             handleClose();
             dispatch(logout());
-            history.push('/');
+            router.push('/login');
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
                 variant: 'error',
@@ -76,9 +68,11 @@ const Account: FC = () => {
 
     if (!auth.isAuthenticated) {
         return (
-            <Link className={classes.link} component={RouterLink} to="/login" underline="none" variant="body2">
-                {translate('Account.SignIn')}
-            </Link>
+            <RouterLink href="/login" passHref>
+                <Link className={classes.link} underline="none" variant="body2">
+                    {translate('Account.SignIn')}
+                </Link>
+            </RouterLink>
         );
     }
 

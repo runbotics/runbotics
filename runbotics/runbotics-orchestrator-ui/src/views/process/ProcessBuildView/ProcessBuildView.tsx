@@ -8,13 +8,13 @@ import { saveAs } from 'file-saver';
 import moment from 'moment';
 import { ProcessBuildTab } from 'src/types/sidebar';
 import { processActions } from 'src/store/slices/Process';
-import { useParams } from 'react-router-dom';
 import { ProcessParams } from 'src/utils/types/ProcessParams';
 import BpmnModeler, { ModelerImperativeHandle } from './Modeler/BpmnModeler';
 import { StyledCard } from './ProcessBuildView.styled';
 import _ from 'lodash';
 import { useSnackbar } from 'notistack';
 import useTranslations from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
 
 const BORDER_SIZE = 2;
 const SNACKBAR_DURATION = 1500;
@@ -23,7 +23,7 @@ const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
-    const { id } = useParams<ProcessParams>();
+    const { id } = useRouter().query;
     const BpmnModelerRef = useRef<ModelerImperativeHandle>(null);
     const [offSet, setOffSet] = useState<number>(null);
     const actionsLoading = useSelector((state) => state.action.actions.loading);

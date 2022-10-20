@@ -1,16 +1,16 @@
 import { GridFilterModel } from '@mui/x-data-grid';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
+import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
 import useDebounce from './useDebounce';
 import useQuery from './useQuery';
 
 const DEBOUNCE_TIME = 250;
 
 const useProcessSearch = (pageSize = 12, page = 0) => {
-    const history = useHistory();
+    const router = useRouter();
     const query = useQuery();
     const searchFromUrl = query.get('search');
     const searchFieldFromUrl = query.get('searchField');
@@ -21,9 +21,7 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
     useEffect(() => {
-        history.replace(getSearchParams({
-            page, pageSize, search, searchField,
-        }));
+        ReplaceQueryParams({ page, pageSize, search, searchField }, router);
         dispatch(processActions.getProcessesPage({
             page,
             size: pageSize,

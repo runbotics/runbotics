@@ -10,9 +10,7 @@ const LeavePromt = () => {
         <Prompt
             when={!isSaveDisabled}
             message={(location) =>
-                !location.pathname.includes('build')
-                    ? translate('Process.Modeler.LeavePrompt')
-                    : false
+                !location.pathname.includes('build') ? translate('Process.Modeler.LeavePrompt') : false
             }
         />
     );

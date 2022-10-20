@@ -1,8 +1,6 @@
-import {
-    Box, Tab, Tabs,
-} from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
+import { useRouter } from 'next/router';
 import React, { ChangeEvent, FC, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import { FeatureKey } from 'runbotics-common';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
@@ -11,8 +9,8 @@ import { BotParams } from 'src/utils/types/BotParams';
 import BotDetailsViewManager from './BotDetailsView.manager';
 
 const Results: FC = () => {
-    const { id, tab } = useParams<BotParams>();
-    const history = useHistory();
+    const router = useRouter();
+    const { id, tab } = router.query;
     const { translate } = useTranslations();
     const hasConsoleTabAccess = useFeatureKey([FeatureKey.BOT_LOG_READ]);
     const hasLogsTabAccess = useFeatureKey([FeatureKey.BOT_HISTORY_READ]);
@@ -39,7 +37,7 @@ const Results: FC = () => {
     }, [hasConsoleTabAccess, hasLogsTabAccess]);
 
     const handleTabsChange = (event: ChangeEvent<HTMLInputElement>, value: string): void => {
-        history.push(`/app/bots/${id}/details/${value}`);
+        router.push(`/app/bots/${id}/details/${value}`);
     };
 
     return (

@@ -1,11 +1,9 @@
-import React, {
-    FC, MouseEvent, createContext, Dispatch, SetStateAction,
-} from 'react';
+import React, { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
 import useUpdateEffect from 'src/hooks/useUpdateEffect';
-import { useHistory } from 'react-router-dom';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
+import { useRouter } from 'next/router';
+import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
 
 interface ProcessPageProps {
     search: string;
@@ -17,62 +15,65 @@ interface ProcessPageProps {
 }
 
 interface ProcessPageContextValues {
-    page: number,
-    search: string,
-    pageSize: number,
-    handleGridPageChange: (event: MouseEvent<HTMLElement>, currentPage: number) => void,
-    handleTablePageChange: (currentPage: number) => void,
-    handlePageSizeChange: (currentPageSize: number) => void,
+    page: number;
+    search: string;
+    pageSize: number;
+    handleGridPageChange: (event: MouseEvent<HTMLElement>, currentPage: number) => void;
+    handleTablePageChange: (currentPage: number) => void;
+    handlePageSizeChange: (currentPageSize: number) => void;
 }
 
 export const ProcessPageContext = createContext<ProcessPageContextValues>(null);
 
 const ProcessPageProvider: FC<ProcessPageProps> = ({
-    children, search, searchField, pageSize, setPageSize, page, setPage
+    children,
+    search,
+    searchField,
+    pageSize,
+    setPageSize,
+    page,
+    setPage,
 }) => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const router = useRouter();
 
     useUpdateEffect(() => {
-        dispatch(processActions.getProcessesPage({
-            page,
-            size: pageSize,
-            filter: {
-                contains: { ...(search.trim() && { name: search.trim() }) },
-            },
-        }));
+        dispatch(
+            processActions.getProcessesPage({
+                page,
+                size: pageSize,
+                filter: {
+                    contains: { ...(search.trim() && { name: search.trim() }) },
+                },
+            }),
+        );
     }, [page]);
 
     const handleGridPageChange = (event: MouseEvent<HTMLElement>, currentPage: number) => {
-        history.replace(getSearchParams({
-            page: currentPage - 1, pageSize, search, searchField,
-        }));
+        ReplaceQueryParams({ page: currentPage - 1, pageSize, search, searchField }, router);
         setPage(currentPage - 1);
     };
 
     const handleTablePageChange = (currentPage: number) => {
-        history.replace(getSearchParams({
-            page: currentPage, pageSize, search, searchField,
-        }));
+        ReplaceQueryParams({ page: currentPage, pageSize, search, searchField }, router);
         setPage(currentPage);
     };
 
     const handlePageSizeChange = (currentPageSize: number) => {
-        history.replace(getSearchParams({
-            page, pageSize: currentPageSize, search, searchField,
-        }));
+        ReplaceQueryParams({ page, pageSize: currentPageSize, search, searchField }, router);
         setPageSize(currentPageSize);
     };
 
     return (
-        <ProcessPageContext.Provider value={{
-            page,
-            pageSize,
-            handleGridPageChange,
-            handleTablePageChange,
-            handlePageSizeChange,
-            search,
-        }}
+        <ProcessPageContext.Provider
+            value={{
+                page,
+                pageSize,
+                handleGridPageChange,
+                handleTablePageChange,
+                handlePageSizeChange,
+                search,
+            }}
         >
             {children}
         </ProcessPageContext.Provider>

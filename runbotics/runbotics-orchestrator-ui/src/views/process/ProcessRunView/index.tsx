@@ -1,7 +1,6 @@
-import {
-    Card, Grid, Box, Typography,
-} from '@mui/material';
+import { Card, Grid, Box, Typography } from '@mui/material';
 import React, { FC, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
@@ -11,7 +10,6 @@ import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import LoadingType from 'src/types/loading';
-import { useParams } from 'react-router-dom';
 import { ProcessParams } from 'src/utils/types/ProcessParams';
 import { FeatureKey } from 'runbotics-common';
 import HistoryTable from 'src/components/HistoryTable';
@@ -35,7 +33,7 @@ const ValidationSchedule = styled('div')(
 const ProcessRunView: FC = () => {
     const historyRef = useRef(null);
     const dispatch = useDispatch();
-    const { id } = useParams<ProcessParams>();
+    const { id } = useRouter().query;
     const processId = Number(id);
     const { process, loading } = useSelector((state) => state.process.draft);
     const { schedules } = useSelector(scheduleProcessSelector);
@@ -107,11 +105,11 @@ const ProcessRunView: FC = () => {
                         <HistoryTable
                             ref={historyRef}
                             processId={processId}
-                            title={(
+                            title={
                                 <Typography variant="h4" gutterBottom>
                                     {translate('Process.Run.History.Title')}
                                 </Typography>
-                            )}
+                            }
                         />
                     </Grid>
                 </Card>

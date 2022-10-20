@@ -43,99 +43,99 @@ export const renderRoutes = (routes: Routes = []): JSX.Element => (
 );
 
 const routes: Routes = [
-    {
-        exact: true,
-        path: '/404',
-        component: dynamic(() => import('src/views/errors/NotFoundView')),
-    },
-    {
-        exact: true,
-        path: '/empty',
-        component: dynamic(() => import('src/views/empty/EmptyView')),
-    },
+    // {
+    //     exact: true,
+    //     path: '/404',
+    //     component: dynamic(() => import('src/views/errors/NotFoundView')),
+    // },
+    // {
+    //     exact: true,
+    //     path: '/empty',
+    //     component: dynamic(() => import('src/views/empty/EmptyView')),
+    // },
     // {
     //     exact: true,
     //     guard: GuestGuard,
     //     path: '/',
     //     component: dynamic(() => import('src/views/auth/LoginView'))
     // },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/login',
-        component: dynamic(() => import('src/routing/LoginPage')),
-    },
-    {
-        exact: true,
-        guard: GuestGuard,
-        path: '/register',
-        component: dynamic(() => import('src/views/auth/RegisterView')),
-    },
-    {
-        exact: true,
-        path: '/register-unprotected',
-        component: dynamic(() => import('src/views/auth/RegisterView')),
-    },
+    // {
+    //     exact: true,
+    //     guard: GuestGuard,
+    //     path: '/login',
+    //     component: dynamic(() => import('src/routing/LoginPage')),
+    // },
+    // {
+    //     exact: true,
+    //     guard: GuestGuard,
+    //     path: '/register',
+    //     component: dynamic(() => import('src/views/auth/RegisterView')),
+    // },
+    // {
+    //     exact: true,
+    //     path: '/register-unprotected',
+    //     component: dynamic(() => import('src/views/auth/RegisterView')),
+    // },
     {
         path: '/app',
         guard: AuthGuard,
 
         layout: MainLayout,
         routes: [
-            {
-                exact: true,
-                path: '/app/processes',
-                component: dynamic(() => import('src/views/process/ProcessBrowseView/ProcessBrowseView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/processes/:id/:tab',
-                component: dynamic(() => import('src/views/process/ProcessMainView/ProcessMainView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/bots/:id/details/:tab',
-                component: dynamic(() => import('src/views/bot/BotDetailsView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/bots',
-                component: dynamic(() => import('src/views/bot/BotBrowseView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/bots/:tab',
-                component: dynamic(() => import('src/views/bot/BotBrowseView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/bots/:id/process-instance/:processInstance/:tab',
-                component: dynamic(() => import('src/views/bot/ProcessInstanceView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/actions',
-                component: dynamic(() => import('src/views/action/ActionListView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.EXTERNAL_ACTION_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/variables',
-                component: dynamic(() => import('src/views/variable/VariableListView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.GLOBAL_VARIABLE_READ]}>{children}</Secured>,
-            },
-            {
-                exact: true,
-                path: '/app/scheduler',
-                component: dynamic(() => import('src/views/scheduler/SchedulerView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.SCHEDULER_PAGE_READ]}>{children}</Secured>,
-            },
+            // {
+            //     exact: true,
+            //     path: '/app/processes',
+            //     component: dynamic(() => import('src/views/process/ProcessBrowseView/ProcessBrowseView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/processes/:id/:tab',
+            //     component: dynamic(() => import('src/views/process/ProcessMainView/ProcessMainView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/bots/:id/details/:tab',
+            //     component: dynamic(() => import('src/views/bot/BotDetailsView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/bots',
+            //     component: dynamic(() => import('src/views/bot/BotBrowseView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/bots/:tab',
+            //     component: dynamic(() => import('src/views/bot/BotBrowseView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/bots/:id/process-instance/:processInstance/:tab',
+            //     component: dynamic(() => import('src/views/bot/ProcessInstanceView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.BOT_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/actions',
+            //     component: dynamic(() => import('src/views/action/ActionListView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.EXTERNAL_ACTION_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/variables',
+            //     component: dynamic(() => import('src/views/variable/VariableListView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.GLOBAL_VARIABLE_READ]}>{children}</Secured>,
+            // },
+            // {
+            //     exact: true,
+            //     path: '/app/scheduler',
+            //     component: dynamic(() => import('src/views/scheduler/SchedulerView')),
+            //     guard: ({ children }) => <Secured featureKeys={[FeatureKey.SCHEDULER_PAGE_READ]}>{children}</Secured>,
+            // },
             {
                 exact: true,
                 path: '/app/history',

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import type { FC } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import RouterLink from 'next/link';
 import {
     Box,
     Card,
@@ -56,7 +56,6 @@ const StyledPage = styled(Page)(({ theme }) => ({
 }));
 
 const RegisterView: FC = () => {
-    const history = useHistory();
     const { translate } = useTranslations();
     const registrationText = translate('Register.AccountCreated.ActivationNeededMessage');
     const dispatch = useDispatch();
@@ -67,7 +66,7 @@ const RegisterView: FC = () => {
         <StyledPage className={classes.root} title={translate('Register.Meta.Title')}>
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink to="/">
+                    <RouterLink href="/">
                         <Logo className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -98,24 +97,23 @@ const RegisterView: FC = () => {
                                         .min(7)
                                         .max(255)
                                         .required(translate('Register.Form.Validation.Password.Required')),
-                                    passwordConfirmation: Yup.string().oneOf(
-                                        [Yup.ref('password'), null],
-                                        translate('Register.Form.Validation.Password.Match'),
-                                    ).required(translate('Register.Form.Validation.PasswordConfirmation.Required')),
+                                    passwordConfirmation: Yup.string()
+                                        .oneOf(
+                                            [Yup.ref('password'), null],
+                                            translate('Register.Form.Validation.Password.Match'),
+                                        )
+                                        .required(translate('Register.Form.Validation.PasswordConfirmation.Required')),
                                 })}
                                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                                     try {
                                         await dispatch(register(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
-                                        history.push('/login');
-                                        enqueueSnackbar(
-                                            registrationText,
-                                            {
-                                                variant: 'success',
-                                                autoHideDuration: 5000,
-                                            },
-                                        );
+                                        // history.push('/login');
+                                        enqueueSnackbar(registrationText, {
+                                            variant: 'success',
+                                            autoHideDuration: 5000,
+                                        });
                                     } catch (err) {
                                         setStatus({ success: false });
                                         setErrors({ submit: err.message });
@@ -199,9 +197,11 @@ const RegisterView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/login" variant="body2" color="textSecondary">
-                            {translate('Register.SwitchToLoginMessage')}
-                        </Link>
+                        <RouterLink href="/login" passHref>
+                            <Link variant="body2" color="textSecondary">
+                                {translate('Register.SwitchToLoginMessage')}
+                            </Link>
+                        </RouterLink>
                     </CardContent>
                 </Card>
             </Container>

@@ -1,12 +1,11 @@
 import { Box } from '@mui/material';
+import { useRouter } from 'next/router';
 import React, { ChangeEvent, useEffect, useState, VFC } from 'react';
-import { useParams } from 'react-router-dom';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
 import { useDispatch, useSelector } from 'src/store';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
 import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { processActions } from 'src/store/slices/Process';
-import { ProcessParams } from 'src/utils/types/ProcessParams';
 import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
@@ -17,7 +16,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { process } = useSelector((state) => state.process.draft);
-    const { id } = useParams<ProcessParams>();
+    const { id } = useRouter().query;
     const processId = Number(id);
 
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(process?.system);

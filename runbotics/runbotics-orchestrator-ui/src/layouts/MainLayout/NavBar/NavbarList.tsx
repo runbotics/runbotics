@@ -1,8 +1,8 @@
 import React, { VFC } from 'react';
 import List from '@mui/material/List';
-import { matchPath } from 'react-router-dom';
 import NavbarItem from './NavbarItem';
 import { Item } from './Navbar.types';
+import { useRouter } from 'next/router';
 
 interface NavbarListProps {
     items: Item[];
@@ -11,17 +11,13 @@ interface NavbarListProps {
     mobile?: boolean;
 }
 
-const NavbarList: VFC<NavbarListProps> = ({
-    items, pathname, depth = 0, mobile,
-}) => (
+const NavbarList: VFC<NavbarListProps> = ({ items, pathname, depth = 0, mobile }) => (
     <List disablePadding>
         {items.reduce((acc, item) => {
             const key = `${item.title}${depth}`;
-
-            const open = matchPath(pathname, {
-                path: item.href,
-                exact: false,
-            });
+            const { pathname } = useRouter();
+            const page = pathname.split('/')[2];
+            const open = item.href.includes(page);
 
             if (item.items) {
                 acc.push(
@@ -34,12 +30,7 @@ const NavbarList: VFC<NavbarListProps> = ({
                         title={item.title}
                         mobile={mobile}
                     >
-                        <NavbarList
-                            depth={depth + 1}
-                            pathname={pathname}
-                            items={item.items}
-                            mobile={mobile}
-                        />
+                        <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
                     </NavbarItem>,
                 );
             } else {

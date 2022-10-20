@@ -1,10 +1,10 @@
 import React from 'react';
 
-const IndexPage = () => {
+const AppPage = () => {
     return <div>Redirect to app/processes</div>;
 };
 
-export default IndexPage;
+export default AppPage;
 
 export async function getServerSideProps(context) {
     return {

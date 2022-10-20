@@ -1,7 +1,6 @@
 import React from 'react';
 import type { FC, ReactNode } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import useAuth from '../../hooks/useAuth';
 
 interface AuthGuardProps {
@@ -18,10 +17,6 @@ const AuthGuard: FC<AuthGuardProps> = ({ children }) => {
     }
 
     return <>{children}</>;
-};
-
-AuthGuard.propTypes = {
-    children: PropTypes.node,
 };
 
 export default AuthGuard;

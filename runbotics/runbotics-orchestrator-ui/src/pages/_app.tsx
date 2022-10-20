@@ -1,3 +1,4 @@
+import React, { FC } from 'react';
 import { CacheProvider } from '@emotion/react';
 import createEmotionCache from 'src/utils/createEmotionCache';
 import 'moment/locale/pl';
@@ -14,7 +15,7 @@ import i18n from '../translations/i18n';
 import store from 'src/store';
 import { SettingsProvider } from 'src/contexts/SettingsContext';
 import Head from 'next/Head';
-
+import MainLayout from 'src/layouts/MainLayout';
 import 'src/theme/cronStyles.css';
 // without this line it didn't work
 moment.locale(DEFAULT_LANG);
@@ -23,7 +24,12 @@ enableES5();
 const clientSideEmotionCache = createEmotionCache();
 
 const MyApp = (props) => {
-    const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
+    const { Component, pageProps, emotionCache = clientSideEmotionCache, router } = props;
+    let Layout: FC = React.Fragment;
+
+    if (router.pathname.startsWith('/app/')) {
+        Layout = MainLayout;
+    }
 
     return (
         <>
@@ -38,7 +44,9 @@ const MyApp = (props) => {
                                 <SnackbarProvider>
                                     <InitializeAuth>
                                         <SocketProvider>
-                                            <Component {...pageProps} />
+                                            <Layout>
+                                                <Component {...pageProps} />
+                                            </Layout>
                                         </SocketProvider>
                                     </InitializeAuth>
                                 </SnackbarProvider>

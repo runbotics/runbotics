@@ -1,5 +1,5 @@
 import React, { useContext, VFC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { IProcess } from 'runbotics-common';
 import { Card, Grid } from '@mui/material';
 import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
@@ -16,17 +16,12 @@ interface ProcessTableProps {
 
 const ProcessTable: VFC<ProcessTableProps> = ({ onAdvancedSearchChange }) => {
     const columns = useProcessColumns();
-    const history = useHistory();
+    const router = useRouter();
     const { page: processesPage, loading } = useSelector((state) => state.process.all);
-    const {
-        page,
-        pageSize,
-        handleTablePageChange,
-        handlePageSizeChange,
-    } = useContext(ProcessPageContext);
-
+    const { page, pageSize, handleTablePageChange, handlePageSizeChange } = useContext(ProcessPageContext);
+    console.log(processesPage?.content ?? []);
     const handleRedirect = (process: IProcess) => {
-        history.push(buildProcessUrl(process));
+        router.push(buildProcessUrl(process));
     };
 
     return (

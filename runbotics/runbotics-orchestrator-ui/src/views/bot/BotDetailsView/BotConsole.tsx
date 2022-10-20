@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Console } from 'console-feed';
-import { useLocation, useParams } from 'react-router-dom';
 import { BotParams } from 'src/utils/types/BotParams';
 import { useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
@@ -9,16 +8,17 @@ import { Message } from 'console-feed/lib/definitions/Component';
 import { Methods } from 'console-feed/lib/definitions/Console';
 import methods from 'console-feed/lib/definitions/Methods';
 import useTranslations from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
 
 const BotConsole: FC = () => {
-    const { id } = useParams<BotParams>();
+    const router = useRouter();
+    const { id, search } = router.query;
     const dispatch = useDispatch();
     const [logs, setLogs] = useState<Message[]>([]);
-    const location = useLocation();
     const { translate } = useTranslations();
 
     useEffect(() => {
-        const params = new URLSearchParams(location.search);
+        const params = new URLSearchParams(search as string);
         const lines = Number(params.get('lines')) || 100;
         dispatch(botActions.getLogs({ id: Number(id), lines }))
             .then(unwrapResult)
@@ -46,7 +46,7 @@ const BotConsole: FC = () => {
                     },
                 ]);
             });
-    }, [id, location.search]);
+    }, [id, search]);
 
     return <div style={{ backgroundColor: '#242424' }}>{/* <Console logs={logs} variant="dark" /> */}</div>;
 };

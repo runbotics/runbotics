@@ -18,4 +18,12 @@ module.exports = {
         //temp solution, remove when project is linted finally
         ignoreDuringBuilds: true,
     },
+    future: {
+        webpack5: true,
+    },
+    webpack: (config) => {
+        config.resolve.fallback = { '@material-ui/core': false, '@material-ui/icons': false };
+
+        return config;
+    },
 };

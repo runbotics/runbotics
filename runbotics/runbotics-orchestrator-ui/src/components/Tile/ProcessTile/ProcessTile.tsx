@@ -1,9 +1,6 @@
 import React from 'react';
 import type { VFC } from 'react';
-import { useHistory } from 'react-router-dom';
-import {
-    Box, Divider,
-} from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
@@ -11,24 +8,19 @@ import { FeatureKey } from 'runbotics-common';
 import { ProcessTab } from 'src/utils/process-tab';
 import { buildProcessUrl } from './ProcessTile.utils';
 import Tile, { TileAvatar } from '..';
-import {
-    Description,
-    ProcessTileContent,
-    ProcessTileFooter,
-    ProcessTileProps,
-    StyledCardActionArea,
-} from '.';
+import { Description, ProcessTileContent, ProcessTileFooter, ProcessTileProps, StyledCardActionArea } from '.';
+import { useRouter } from 'next/router';
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
-    const history = useHistory();
+    const router = useRouter();
     const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
 
     const handleRedirect = () => {
         if (hasBuildTabAccess) {
-            history.push(buildProcessUrl(process, ProcessTab.BUILD));
+            router.push(buildProcessUrl(process, ProcessTab.BUILD));
         } else {
-            history.push(buildProcessUrl(process, ProcessTab.RUN));
+            router.push(buildProcessUrl(process, ProcessTab.RUN));
         }
     };
 

@@ -294,7 +294,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canUndo={canUndo}
                                 canRedo={canRedo}
                             />
-                            <LeavePromt />
+                            {/* <LeavePromt /> */}
                             <SidebarNavigationPanel
                                 selectedTab={currentTab}
                                 onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}
