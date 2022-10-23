@@ -480,6 +480,110 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'browser.read.text': {
+        id: 'browser.read.text',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Text.Label'),
+        script: 'browser.read.text',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: 'Target',
+                                type: 'string',
+                            },
+                        },
+                        required: ['target'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
+                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    target: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+    'browser.read.input': {
+        id: 'browser.read.input',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Input.Label'),
+        script: 'browser.read.input',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: 'Target',
+                                type: 'string',
+                            },
+                        },
+                        required: ['target'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
+                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    target: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
     'browser.index': {
         id: 'browser.index',
         label: translate('Process.Details.Modeler.Actions.Browser.Index.Label'),

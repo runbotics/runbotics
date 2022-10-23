@@ -189,6 +189,8 @@
     "Process.Details.Modeler.Actions.Browser.WaitForElement.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.WaitForElement.Target": "Cel",
     "Process.Details.Modeler.Actions.Browser.Read.Attribute.Label": "Czytaj atrybut",
+    "Process.Details.Modeler.Actions.Browser.Read.Text.Label": "Czytaj tekst",
+    "Process.Details.Modeler.Actions.Browser.Read.Input.Label": "Czytaj dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Read.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Read.Target": "Cel",
     "Process.Details.Modeler.Actions.Browser.Read.Output": "Dane wyjściowe",

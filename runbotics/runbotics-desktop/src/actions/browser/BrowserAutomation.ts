@@ -1,3 +1,5 @@
+import { FieldValues } from 'react-hook-form';
+import { TextField } from '@mui/material';
 import { writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { DesktopRunResponse } from 'runbotics-sdk';
@@ -123,6 +125,12 @@ class BrowserAutomation extends StatefulActionHandler {
                 case 'browser.read.attribute':
                     output = await this.readElementAttribute(request.input);
                     break;
+                case 'browser.read.text':
+                    output = await this.readElementText(request.input);
+                    break;
+                case 'browser.read.input':
+                    output = await this.readElementInput(request.input);
+                    break;
                 default:
             }
         } catch (e) {
@@ -153,6 +161,28 @@ class BrowserAutomation extends StatefulActionHandler {
             'arguments[0].getAttribute(arguments[1])',
             element,
             input.attribute,
+        );
+
+        return {};
+    }
+
+    private async readElementText(input: BrowserTypes.BrowserReadElementText): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        this.session.executeScript(
+            'arguments[0].getText(arguments[1])',
+            element,
+            input.TextField,
+        );
+
+        return {};
+    }
+
+    private async readElementInput(input: BrowserTypes.BrowserReadElementInput): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        this.session.executeScript(
+            'arguments[0].getValue(arguments[1])',
+            element,
+            input.value,
         );
 
         return {};

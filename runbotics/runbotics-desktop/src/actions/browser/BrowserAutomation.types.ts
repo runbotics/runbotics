@@ -14,7 +14,9 @@ export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     | 'browser.selenium.elements.count'
     | 'browser.selenium.element.attribute.change'
     | 'browser.close'
-    | 'browser.read.attribute';
+    | 'browser.read.attribute'
+    | 'browser.read.text'
+    | 'browser.read.input';
 };
 
 export type BrowserLaunchActionInput = {
@@ -56,6 +58,16 @@ export type BrowserElementAttributeChangeInput = {
 export type BrowserReadElementAttribute = {
     target: string;
     attribute: string;
+};
+
+export type BrowserReadElementText = {
+    target: string;
+    TextField: string;
+};
+
+export type BrowserReadElementInput = {
+    target: string;
+    value: string;
 };
 
 export type BrowserPrintToPdfActionInput = {
