@@ -62,12 +62,11 @@ export type BrowserReadElementAttribute = {
 
 export type BrowserReadElementText = {
     target: string;
-    TextField: string;
+    textField: string;
 };
 
 export type BrowserReadElementInput = {
     target: string;
-    value: string;
 };
 
 export type BrowserPrintToPdfActionInput = {

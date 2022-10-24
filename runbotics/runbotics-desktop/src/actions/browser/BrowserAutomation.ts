@@ -155,35 +155,20 @@ class BrowserAutomation extends StatefulActionHandler {
 
     private async readElementAttribute(input: BrowserTypes.BrowserReadElementAttribute): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        this.session.executeScript(
-            'arguments[0].getAttribute(arguments[1])',
-            element,
-            input.attribute,
-        );
-
-        return {};
+        const attributeValue = await element.getAttribute(input.attribute)
+        return attributeValue;
     }
 
     private async readElementText(input: BrowserTypes.BrowserReadElementText): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        this.session.executeScript(
-            'arguments[0].getText(arguments[1])',
-            element,
-            input.TextField,
-        );
-
-        return {};
+        const textValue = await element.getText()
+        return textValue;
     }
 
     private async readElementInput(input: BrowserTypes.BrowserReadElementInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        this.session.executeScript(
-            'arguments[0].getValue(arguments[1])',
-            element,
-            input.value,
-        );
-
-        return {};
+        const inputValue = await element.getAttribute('value');
+        return inputValue;
     }
 
     private async countElements(input: BrowserTypes.BrowserCountElementsInput): Promise<BrowserTypes.BrowserCountElementsOutput> {
