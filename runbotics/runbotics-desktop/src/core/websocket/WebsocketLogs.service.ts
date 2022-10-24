@@ -13,8 +13,8 @@ import { BotWsMessage } from 'runbotics-common';
 export class WebsoketLogs {
     constructor(
         @InjectIoClientProvider() private readonly io: IoClient,
-        private serverConfigService: ServerConfigService
-    ) { }
+        private serverConfigService: ServerConfigService,
+    ) {}
 
     private readonly logger = new RunboticsLogger(WebsoketLogs.name);
     readonly DATE_FORMAT = 'YYYY-MM-DD-HH';
@@ -90,11 +90,11 @@ export class WebsoketLogs {
         } as ISubscription;
     };
 
-    @Cron('*/5 * * * *')
+    // @Cron('*/5 * * * *')
     async sheduledSendingLogs() {
         if (!this.serverConfigService.logger || this.serverConfigService.logger !== 'winston') return;
 
-        const path = './logs'
+        const path = './logs';
         const file = `${path}/application-${dayjs().format(this.DATE_FORMAT)}.log`;
         if (!fs.existsSync(file)) {
             this.logger.error(`File ${file} does not exist. Can't update the logs`);
@@ -107,7 +107,7 @@ export class WebsoketLogs {
         const rl = readLine.createInterface({
             input: fileStream,
             output: process.stdout,
-            terminal: false
+            terminal: false,
         });
 
         rl.on('line', (logsText) => {

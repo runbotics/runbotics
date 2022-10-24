@@ -1,11 +1,11 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
 import { AuthorityEntity } from '../authority/authority.entity';
-import { dateTransformer } from '../database.utils';
+import { dateTransformer, numberTransformer } from '../database.utils';
 
 @Entity({ name: 'jhi_user' })
 export class UserEntity implements IUser {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
 
     @Column({ unique: true })
