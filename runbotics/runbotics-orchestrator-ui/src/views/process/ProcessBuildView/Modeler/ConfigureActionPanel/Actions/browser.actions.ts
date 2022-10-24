@@ -74,8 +74,8 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             target: {
                                 title: translate('Process.Details.Modeler.Actions.Browser.Launch.Target'),
-                                type: 'string'
-                            }
+                                type: 'string',
+                            },
                         },
                         required: ['headless'],
                     },
@@ -423,11 +423,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.read': {
-        id: 'browser.read',
-        label: translate('Process.Details.Modeler.Actions.Browser.Read.Label'),
-        script: 'browser.read',
-        runner: Runner.BROWSER_FRONTEND_SCRIPT,
+    'browser.read.attribute': {
+        id: 'browser.read.attribute',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
+        script: 'browser.read.attribute',
+        runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
             outputMethods: {
@@ -443,7 +443,116 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             target: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Target'),
+                                title: 'Target',
+                                type: 'string',
+                            },
+                            attribute: {
+                                title: 'Attribute',
+                                type: 'string',
+                            },
+                        },
+                        required: ['target', 'attribute'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
+                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    target: '',
+                    attribute: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+    'browser.read.text': {
+        id: 'browser.read.text',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Text.Label'),
+        script: 'browser.read.text',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: 'Target',
+                                type: 'string',
+                            },
+                        },
+                        required: ['target'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
+                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                input: {
+                    target: '',
+                },
+                output: {
+                    variableName: '',
+                },
+            },
+        },
+    },
+    'browser.read.input': {
+        id: 'browser.read.input',
+        label: translate('Process.Details.Modeler.Actions.Browser.Read.Input.Label'),
+        script: 'browser.read.input',
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: 'Target',
                                 type: 'string',
                             },
                         },
@@ -568,7 +677,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     variableName: '',
                 },
             },
-        }
+        },
     },
     'browser.selenium.printToPdf': {
         id: 'browser.selenium.printToPdf',
@@ -641,14 +750,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'Session',
-                    url: undefined
+                    url: undefined,
                 },
                 output: {
                     variableName: undefined,
                 },
             },
         },
-    }
-})
+    },
+});
 
 export default getBrowserActions;

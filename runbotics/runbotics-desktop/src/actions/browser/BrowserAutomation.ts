@@ -120,6 +120,15 @@ class BrowserAutomation extends StatefulActionHandler {
                 case 'browser.selenium.element.attribute.change':
                     output = await this.elementAttributeChange(request.input);
                     break;
+                case 'browser.read.attribute':
+                    output = await this.readElementAttribute(request.input);
+                    break;
+                case 'browser.read.text':
+                    output = await this.readElementText(request.input);
+                    break;
+                case 'browser.read.input':
+                    output = await this.readElementInput(request.input);
+                    break;
                 default:
             }
         } catch (e) {
@@ -142,6 +151,24 @@ class BrowserAutomation extends StatefulActionHandler {
         );
 
         return {};
+    }
+
+    private async readElementAttribute(input: BrowserTypes.BrowserReadElementAttribute): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const attributeValue = await element.getAttribute(input.attribute)
+        return attributeValue;
+    }
+
+    private async readElementText(input: BrowserTypes.BrowserReadElementText): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const textValue = await element.getText()
+        return textValue;
+    }
+
+    private async readElementInput(input: BrowserTypes.BrowserReadElementInput): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const inputValue = await element.getAttribute('value');
+        return inputValue;
     }
 
     private async countElements(input: BrowserTypes.BrowserCountElementsInput): Promise<BrowserTypes.BrowserCountElementsOutput> {
