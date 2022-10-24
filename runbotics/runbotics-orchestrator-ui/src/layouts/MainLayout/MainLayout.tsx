@@ -5,7 +5,7 @@ import useAsyncEffect from 'src/hooks/useAsyncEffect';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import If from 'src/components/utils/If';
 import useAuth from 'src/hooks/useAuth';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
 import i18n from 'i18next';
 import NavBar from './NavBar';
 import TopBar from './TopBar';
@@ -24,7 +24,7 @@ const MainLayout: FC = ({ children }) => {
         for (const accessToSection of publicSections) {
             accessToSection.items = accessToSection.items.filter((item) => {
                 if (item.featureKeys) {
-                    return hasAccessByFeatureKey(user, item.featureKeys);
+                    return hasFeatureKeyAccess(user, item.featureKeys);
                 }
                 return true;
             });

@@ -3,15 +3,15 @@ import { FeatureKey } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Column, RowCustomExpandedSpan } from '../Table';
-import Label from '../Label';
-import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
 import { convertToPascalCase } from 'src/utils/text';
 import useTranslations from 'src/hooks/useTranslations';
 import useAuth from 'src/hooks/useAuth';
-import { hasAccessByFeatureKey } from '../utils/Secured';
+import { hasFeatureKeyAccess } from '../utils/Secured';
+import { Column, RowCustomExpandedSpan } from '../Table';
+import Label from '../Label';
+import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
 
-const useProcessInstanceColumns = () : Column[]=> {
+const useProcessInstanceColumns = (): Column[] => {
     const { translate } = useTranslations();
     const { user } = useAuth();
 
@@ -19,29 +19,31 @@ const useProcessInstanceColumns = () : Column[]=> {
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) =>
-                row.original.subProcesses && row.original.subProcesses.length > 0 ? (
+            Cell: ({ row }) => (row.original.subProcesses && row.original.subProcesses.length > 0
+                ? (
                     <RowCustomExpandedSpan isExpanded={row.isExpanded}>
                         <IconButton {...row.getToggleRowExpandedProps()} size="small">
                             <ArrowForwardIosIcon fontSize="small" />
                         </IconButton>
                     </RowCustomExpandedSpan>
-                ) : null,
+                )
+                : null),
             width: '20px',
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
             accessor: ({ process }) => process?.name,
-            width: '20%',
+            width: '25%',
         },
         {
             Header: translate('Component.HistoryTable.Header.Status'),
             accessor: 'status',
+            width: '200px',
             Cell: ({ value }) => {
                 const formattedStatus = convertToPascalCase(value);
                 return (
                     <Label color={getProcessInstanceStatusColor(value)}>
-                        {/*@ts-ignore*/}
+                        {/* @ts-ignore */}
                         {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
                     </Label>
                 );
@@ -50,11 +52,13 @@ const useProcessInstanceColumns = () : Column[]=> {
         {
             Header: translate('Component.HistoryTable.Header.Started'),
             accessor: 'created',
+            width: '200px',
             Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
         },
         {
             Header: translate('Component.HistoryTable.Header.Finished'),
             accessor: 'updated',
+            width: '200px',
             Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
         },
         {
@@ -64,14 +68,13 @@ const useProcessInstanceColumns = () : Column[]=> {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, scheduled }) =>
-                scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login,
+            accessor: ({ user, scheduled }) => (scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login),
         },
     ];
 
-    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasAccessByFeatureKey(user, column.featureKeys) : true));
+    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasFeatureKeyAccess(user, column.featureKeys) : true));
 
-    return accessedColumns
+    return accessedColumns;
 };
 
 export default useProcessInstanceColumns;

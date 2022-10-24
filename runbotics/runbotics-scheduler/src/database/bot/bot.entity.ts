@@ -1,13 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Generated } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { BotStatus, IBot, IUser, IBotCollection, IBotSystem } from 'runbotics-common';
-import { BotCollectionEntity } from '../bot_collection/bot_collection.entity';
-import { BotSystemEntity } from '../bot_system/bot_system.entity';
-import { dateTransformer } from '../database.utils';
+import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
+import { BotSystemEntity } from '../bot-system/bot-system.entity';
+import { dateTransformer, numberTransformer } from '../database.utils';
 
 @Entity({ name: 'bot' })
 export class BotEntity implements IBot {
-    @PrimaryGeneratedColumn()
+    @Generated()
+    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
 
     @Column({ transformer: dateTransformer })

@@ -8,8 +8,8 @@ import { BotModule } from '../database/bot/bot.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from '../database/user/user.module';
-import { BotSystemModule } from '../database/bot_system/bot_system.module';
-import { BotCollectionModule } from '../database/bot_collection/bot_collection.module';
+import { BotSystemModule } from '../database/bot-system/bot-system.module';
+import { BotCollectionModule } from '../database/bot-collection/bot-collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';
 import { MicrosoftSessionService } from './microsoft.session';
@@ -22,7 +22,7 @@ const GlobalRoleGuard = {
 const GlobalFeatureKeyGuard = {
     provide: APP_GUARD,
     useClass: FeatureKeyGuard,
-}
+};
 
 @Module({
     imports: [

@@ -8,7 +8,7 @@ import { BotWebSocketGateway } from './gateway/bot.gateway';
 import { Module } from '@nestjs/common';
 import { WebsocketService } from './websocket.service';
 import { UiGateway } from './gateway/ui.gateway';
-import { FileUploadService } from 'src/scheduler/upload/file-upload.service';
+import { FileUploadService } from 'src/queue/upload/file-upload.service';
 
 @Module({
     imports: [
