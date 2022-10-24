@@ -132,6 +132,7 @@ export class SharepointFileActionHandler extends StatelessActionHandler {
             { key: '.pptx', value: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' },
             { key: '.xlsm', value: 'application/vnd.ms-excel.sheet.macroEnabled.12' },
             { key: '.pdf', value: 'application/pdf' },
+            { key: '.txt', value: 'text/plain' },
         ];
         const extension = path.extname(sharepointFilePath);
         if (!extension) {
