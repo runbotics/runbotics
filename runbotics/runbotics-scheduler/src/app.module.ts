@@ -5,6 +5,7 @@ import { StorageService } from './utils/storage.service';
 import { Logger } from './utils/logger';
 import { DatabaseModule } from './database/database.module';
 import { QueueModule } from './queue/queue.module';
+import { MailModule } from './mail/mail.module';
 
 @Global()
 @Module({
@@ -13,6 +14,7 @@ import { QueueModule } from './queue/queue.module';
         ConfigModule,
         DatabaseModule,
         QueueModule,
+        MailModule,
     ],
     providers: [
         StorageService, Logger
