@@ -2,7 +2,6 @@ import { Location } from 'history';
 import React, { useEffect, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { translate } from 'src/hooks/useTranslations';
-import { processActions } from 'src/store/slices/Process';
 import LeavePrompt from './LeavePrompt';
 
 interface Props {
@@ -40,7 +39,6 @@ const RouteLeavingGuard = ({
 
   useEffect(() => {
     if (confirmedNavigation && lastLocation) {
-      // Navigate to the previous blocked location with your navigate function
       navigate(lastLocation.pathname);
     }
   }, [confirmedNavigation, lastLocation]);
@@ -60,8 +58,5 @@ const RouteLeavingGuard = ({
     </>
   );
 };
-export default RouteLeavingGuard;
 
-function dispatch(arg0: { payload: boolean; type: string; }) {
-  throw new Error('Function not implemented.');
-}
+export default RouteLeavingGuard;

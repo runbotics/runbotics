@@ -16,7 +16,7 @@ import {
 import { Section } from './Navbar.types'
 import i18n from 'i18next';
 import { usePublicSections } from './usePublicSections';
-import { hasAccessByFeatureKey } from 'src/components/utils/Secured';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
 import useAuth from 'src/hooks/useAuth';
 
 interface NavbarProps {
@@ -36,7 +36,7 @@ const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, a
         for (const accessToSection of publicSections) {
             accessToSection.items = accessToSection.items.filter((item) => {
                 if (item.featureKeys) {
-                    return hasAccessByFeatureKey(user, item.featureKeys);
+                    return hasFeatureKeyAccess(user, item.featureKeys);
                 }
                 return true;
             });

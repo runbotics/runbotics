@@ -179,7 +179,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             return () => {
                 dispatch(processActions.setSaveDisabled(true));
             }
-
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
