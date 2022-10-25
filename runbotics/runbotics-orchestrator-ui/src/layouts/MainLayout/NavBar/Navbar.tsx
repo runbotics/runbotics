@@ -29,21 +29,6 @@ interface NavbarProps {
 const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, accessedSections }) => {
     const location = useLocation();
     const { translate } = useTranslations();
-    const publicSections = usePublicSections();
-    const { user } = useAuth();
-
-    const sections = useMemo(() => {
-        for (const accessToSection of publicSections) {
-            accessToSection.items = accessToSection.items.filter((item) => {
-                if (item.featureKeys) {
-                    return hasFeatureKeyAccess(user, item.featureKeys);
-                }
-                return true;
-            });
-        }
-
-        return publicSections;
-    }, [user, i18n.language]);
 
     return (
         <Drawer sx={getDrawerStyles(mobile, isShrinked)} anchor="left" open variant="persistent">

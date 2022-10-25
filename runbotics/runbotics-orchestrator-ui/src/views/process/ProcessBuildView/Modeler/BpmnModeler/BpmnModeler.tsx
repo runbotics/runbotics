@@ -311,7 +311,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             <RouteLeavingGuard
                                 when={!isSaveDisabled}
                                 navigate={path => history.push(path)}
-                                shouldBlockNavigation={location => true}
                             />
                             <SidebarNavigationPanel
                                 selectedTab={currentTab}

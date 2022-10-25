@@ -101,7 +101,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ 
                                 expanded={expanded === processInstanceEvent.id}
                                 onChange={handleChange(processInstanceEvent.id)}
                                 disableGutters
-                                >
+                            >
                                 <AccordionHeader expandIcon={<ExpandMoreIcon />}>
                                     <ProcessInstanceEventsDetailsHeader processInstanceEvent={processInstanceEvent} />
                                 </AccordionHeader>

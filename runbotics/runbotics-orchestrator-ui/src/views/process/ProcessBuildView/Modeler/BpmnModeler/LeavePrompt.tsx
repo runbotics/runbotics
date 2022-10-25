@@ -1,30 +1,46 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { VFC } from 'react';
+import styled from 'styled-components';
 
-const LeavePrompt = ({open, titleText, contentText, cancelButtonText, confirmButtonText, onCancel, onConfirm}) => {
+const StyledTitle = styled(DialogTitle)`
+    && {
+        padding-bottom: 2rem;
+        font-size: 1.25rem;
+    }
+`;
 
-    return (
-        <Dialog
-            open={open}
-            onClose={onCancel}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-          {titleText}
-        </DialogTitle>
+interface Props {
+    open: boolean;
+    titleText: string;
+    contentText: string;
+    cancelButtonText: string;
+    confirmButtonText: string;
+    onCancel: () => void;
+    onConfirm: () => void;
+}
+
+const LeavePrompt: VFC<Props> = ({
+    open,
+    titleText,
+    contentText,
+    cancelButtonText,
+    confirmButtonText,
+    onCancel,
+    onConfirm,
+}) => (
+    <Dialog
+        open={open}
+        onClose={onCancel}
+    >
+        <StyledTitle>{titleText}</StyledTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {contentText}
-          </DialogContentText>
+            <DialogContentText>{contentText}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onCancel}>{cancelButtonText}</Button>
-          <Button onClick={onConfirm} autoFocus>
-            {confirmButtonText}
-          </Button>
+            <Button onClick={onCancel}>{cancelButtonText}</Button>
+            <Button onClick={onConfirm}>{confirmButtonText}</Button>
         </DialogActions>
-        </Dialog>
-    )
-}
+    </Dialog>
+);
 
 export default LeavePrompt;

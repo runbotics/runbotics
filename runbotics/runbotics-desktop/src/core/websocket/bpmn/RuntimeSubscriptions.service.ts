@@ -47,7 +47,7 @@ export class RuntimeSubscriptionsService {
                                     // xml field 'runbotics' is a temporary solution.
                                     const translateKey = eventBehaviour?.runbotics;
                                     
-                                    if(eventBehaviour?.label) {
+                                    if (eventBehaviour?.label) {
                                         processInstanceEvent.step = label;
                                     } else if (translateKey) {
                                         processInstanceEvent.step = translateKey;

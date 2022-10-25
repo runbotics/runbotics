@@ -417,11 +417,6 @@
                     "type": "String"
                 },
                 {
-                    "name": "customLabel",
-                    "isAttr": true,
-                    "type": "String"
-                },
-                {
                     "name": "script",
                     "isAttr": true,
                     "type": "Script"

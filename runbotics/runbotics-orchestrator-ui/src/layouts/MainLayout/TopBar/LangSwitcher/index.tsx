@@ -15,14 +15,14 @@ const LangSwitcher = () => {
     const [selectedLang, setSelectedLang] = useState<Language>(DEFAULT_LANG);
     const { translate, switchLanguage } = useTranslations();
     const { isSaveDisabled } = useSelector((state) => state.process.modeler);
-    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+    const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
     const [currentLanguage, setCurrentLanguage] = useState<Language>(DEFAULT_LANG);
 
     const onSwitchLang = (e: ChangeEvent<HTMLInputElement>) => {
         const lang = e.target.value as Language;
         
         if (!isSaveDisabled) {
-            setOpenDialog(true);
+            setIsDialogOpen(true);
             setCurrentLanguage(lang);
         } else {
             setSelectedLang(lang);
@@ -30,19 +30,19 @@ const LangSwitcher = () => {
         }
     };
     
-    const handleDialogLoseChanges = () => {
-        setOpenDialog(false);
+    const onConfirm = () => {
+        setIsDialogOpen(false);
         setSelectedLang(currentLanguage);
         switchLanguage(currentLanguage);
     };
 
-    const handleDialogCancel = () => {
-        setOpenDialog(false);
+    const onCancel = () => {
+        setIsDialogOpen(false);
     };
 
     return (
         <LangFormControl size="small" variant="standard">
-            <LanguageChangeDialog handleDialogLoseChanges={handleDialogLoseChanges} handleDialogCancel={handleDialogCancel} openDialog={openDialog} />
+            <LanguageChangeDialog onConfirm={onConfirm} onCancel={onCancel} isDialogOpen={isDialogOpen} />
             <InputLabel>
                 <SvgIcon>
                     <LanguageIcon />

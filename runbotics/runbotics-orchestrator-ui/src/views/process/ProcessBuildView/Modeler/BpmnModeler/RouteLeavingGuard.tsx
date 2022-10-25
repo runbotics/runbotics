@@ -1,5 +1,5 @@
 import { Location } from 'history';
-import React, { useEffect, useState } from 'react';
+import React, {VFC, useEffect, useState } from 'react';
 import { Prompt } from 'react-router-dom';
 import { translate } from 'src/hooks/useTranslations';
 import LeavePrompt from './LeavePrompt';
@@ -7,24 +7,24 @@ import LeavePrompt from './LeavePrompt';
 interface Props {
   when?: boolean | undefined;
   navigate: (path: string) => void;
-  shouldBlockNavigation: (location: Location) => boolean;
+  shouldBlockNavigation?: (location: Location) => boolean;
 }
 
-const RouteLeavingGuard = ({
+const RouteLeavingGuard: VFC<Props> = ({
   when,
   navigate,
   shouldBlockNavigation,
-}: Props) => {
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [lastLocation, setLastLocation] = useState<Location | null>(null);
-  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+  const [isNavigationConfirmed, setIsNavigationConfirmed] = useState(false);
 
   const closeModal = () => {
     setModalVisible(false);
   };
 
   const handleBlockedNavigation = (nextLocation: Location): boolean => {
-    if (!confirmedNavigation && shouldBlockNavigation(nextLocation)) {
+    if (!isNavigationConfirmed && (!shouldBlockNavigation || shouldBlockNavigation(nextLocation))) {
       setModalVisible(true);
       setLastLocation(nextLocation);
       return false;
@@ -34,14 +34,14 @@ const RouteLeavingGuard = ({
 
   const handleConfirmNavigationClick = () => {
     setModalVisible(false);
-    setConfirmedNavigation(true);
+    setIsNavigationConfirmed(true);
   }; 
 
   useEffect(() => {
-    if (confirmedNavigation && lastLocation) {
+    if (isNavigationConfirmed && lastLocation) {
       navigate(lastLocation.pathname);
     }
-  }, [confirmedNavigation, lastLocation]);
+  }, [isNavigationConfirmed, lastLocation]);
 
   return (
     <>

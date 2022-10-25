@@ -9,9 +9,10 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
-import {translate} from '../../../hooks/useTranslations'
+import {checkIfKeyExists, translate} from '../../../hooks/useTranslations'
 import { convertToPascalCase } from 'src/utils/text';
 import i18n from 'i18next';
+import { TranslationsDescriptors } from 'src/translations/translations';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
@@ -22,8 +23,11 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const [step, setStep] = useState<string>(processInstanceEvent.step)
 
     useEffect(() => {
-        // @ts-ignore
-        setStep(translate(processInstanceEvent.step))
+        if (checkIfKeyExists(processInstanceEvent.step)) {
+            setStep(translate(processInstanceEvent.step));
+        } else {
+            setStep(processInstanceEvent.step);
+        }
     }, [i18n.language])
 
     return (

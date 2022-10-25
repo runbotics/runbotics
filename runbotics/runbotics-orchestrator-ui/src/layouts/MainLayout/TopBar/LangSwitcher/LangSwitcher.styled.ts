@@ -27,6 +27,6 @@ export const StyledTitle = styled(DialogTitle)`
         padding-left: 0;  
         padding-top: 0;  
         padding-bottom: 2rem;
-        font-size: 1.3rem;
+        font-size: 1.25rem;
     }
 `;
