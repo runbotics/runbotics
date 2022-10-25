@@ -262,7 +262,7 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     private async takeScreenshot(): Promise<BrowserTypes.BrowserTakeScreenshotActionOutput> {
-        const filePath = path.join(process.cwd(), 'temp', uuidv4(), '.png');
+        const filePath = path.join(process.cwd(), 'temp', `${uuidv4()}.png`);
 
         try {
             const image = await this.session.takeScreenshot();
