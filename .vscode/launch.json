@@ -3,10 +3,10 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "scheduler debug",
+            "name": "java debug",
             "request": "launch",
-            "command": "rushx start:debug",
-            "cwd": "${workspaceFolder}/runbotics/runbotics-scheduler"
+            "command": "./gradlew -x webapp",
+            "cwd": "${workspaceFolder}/runbotics-orchestrator"
         },
         {
             "type": "node-terminal",
