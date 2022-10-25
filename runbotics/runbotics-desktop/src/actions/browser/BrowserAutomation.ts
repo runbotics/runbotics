@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
 import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
-import Prince from "prince";
+import Prince from 'prince';
 import Puppeteer from 'puppeteer';
 import path from 'path';
 import * as BrowserTypes from './BrowserAutomation.types';
@@ -59,11 +59,11 @@ class BrowserAutomation extends StatefulActionHandler {
                     .setStdio('inherit'),
             )
             .build();
-            if(input.target) {
-                this.openSite({
-                    target: input.target
-                });
-            }
+        if (input.target) {
+            this.openSite({
+                target: input.target,
+            });
+        }
     }
 
     async closeBrowser(request: BrowserTypes.BrowserActionRequest<any>): Promise<any> {
@@ -120,6 +120,15 @@ class BrowserAutomation extends StatefulActionHandler {
                 case 'browser.selenium.element.attribute.change':
                     output = await this.elementAttributeChange(request.input);
                     break;
+                case 'browser.read.attribute':
+                    output = await this.readElementAttribute(request.input);
+                    break;
+                case 'browser.read.text':
+                    output = await this.readElementText(request.input);
+                    break;
+                case 'browser.read.input':
+                    output = await this.readElementInput(request.input);
+                    break;
                 default:
             }
         } catch (e) {
@@ -132,7 +141,9 @@ class BrowserAutomation extends StatefulActionHandler {
         };
     }
 
-    private async elementAttributeChange(input: BrowserTypes.BrowserElementAttributeChangeInput): Promise<BrowserTypes.BrowserClickActionOutput> {
+    private async elementAttributeChange(
+        input: BrowserTypes.BrowserElementAttributeChangeInput,
+    ): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
         this.session.executeScript(
             'arguments[0].setAttribute(arguments[1], arguments[2])',
@@ -144,7 +155,33 @@ class BrowserAutomation extends StatefulActionHandler {
         return {};
     }
 
-    private async countElements(input: BrowserTypes.BrowserCountElementsInput): Promise<BrowserTypes.BrowserCountElementsOutput> {
+    private async readElementAttribute(
+        input: BrowserTypes.BrowserReadElementAttribute,
+    ): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const attributeValue = await element.getAttribute(input.attribute);
+        return attributeValue;
+    }
+
+    private async readElementText(
+        input: BrowserTypes.BrowserReadElementText,
+    ): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const textValue = await element.getText();
+        return textValue;
+    }
+
+    private async readElementInput(
+        input: BrowserTypes.BrowserReadElementInput,
+    ): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const element = await this.findElement(input.target);
+        const inputValue = await element.getAttribute('value');
+        return inputValue;
+    }
+
+    private async countElements(
+        input: BrowserTypes.BrowserCountElementsInput,
+    ): Promise<BrowserTypes.BrowserCountElementsOutput> {
         const locator: any = {};
         const [key, ...rest] = input.target.split('=');
         locator[key] = rest.join('=');
@@ -179,10 +216,9 @@ class BrowserAutomation extends StatefulActionHandler {
         const [key, ...rest] = target.split('=');
 
         locator[key] = rest.join('=');
-        let element = await this.session.wait(until.elementLocated(locator), 10000);
+        const element = await this.session.wait(until.elementLocated(locator), 10000);
         return element;
     }
-
 
     private async doSelect(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         // const element = this.session.findElement(locator);
@@ -196,7 +232,7 @@ class BrowserAutomation extends StatefulActionHandler {
             }
         } else {
             const options = await element.findElements(By.css('option'));
-            for (let option of options) {
+            for (const option of options) {
                 const text = await option.getText();
                 if (text === optionValue) {
                     await option.click();
@@ -226,45 +262,42 @@ class BrowserAutomation extends StatefulActionHandler {
     }
 
     private async takeScreenshot(): Promise<BrowserTypes.BrowserTakeScreenshotActionOutput> {
-        const fileName = path.join(process.cwd(), 'temp', uuidv4());
+        const filePath = path.join(process.cwd(), 'temp', uuidv4(), '.png');
 
         try {
             const image = await this.session.takeScreenshot();
-            writeFileSync(`${fileName}.png`, image, { encoding: 'base64' });
-            return fileName
+            writeFileSync(filePath, image, { encoding: 'base64' });
+            return filePath;
         } catch (e) {
             this.logger.log('Error occured while taking screenshot', e);
             throw e;
         }
     }
 
-    private async printToPdf(input: BrowserTypes.BrowserPrintToPdfActionInput): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
+    private async printToPdf(
+        input: BrowserTypes.BrowserPrintToPdfActionInput,
+    ): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
         // Prince requires absolute path
-        const fileName = path.join(process.cwd(), 'temp', uuidv4())
+        const fileName = path.join(process.cwd(), 'temp', uuidv4());
 
         if (input.target === 'Session') {
             const source: string = await this.session?.executeScript('return document.body.outerHTML');
             writeFileSync(`${fileName}.html`, source, { encoding: 'utf8' });
             try {
-                await Prince()
-                    .inputs(`${fileName}.html`)
-                    .output(`${fileName}.pdf`)
-                    .execute();
+                await Prince().inputs(`${fileName}.html`).output(`${fileName}.pdf`).execute();
             } catch (error) {
                 this.logger.error('Error occured while printing to pdf', error);
             }
 
             return `${fileName}.pdf`;
         }
+
         if (input.target === 'Url' && input.url) {
             this.logger.log('Printing to pdf', input.url);
-            // assigning browser to variable to before try/catch block 
+            // assigning browser to variable to before try/catch block
             // because it is not available in try/catch block
             const browser = await Puppeteer.launch({
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                ]
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
             }).catch((e) => {
                 this.logger.error('error puppeteer', e);
                 throw e;
@@ -278,10 +311,10 @@ class BrowserAutomation extends StatefulActionHandler {
                 await page.pdf({
                     path: `${fileName}.pdf`,
                     format: 'A4',
-                })
+                });
             } catch (e) {
-                this.logger.error("error while generating pdf", e);
-                throw e
+                this.logger.error('error while generating pdf', e);
+                throw e;
             } finally {
                 await browser.close();
             }
