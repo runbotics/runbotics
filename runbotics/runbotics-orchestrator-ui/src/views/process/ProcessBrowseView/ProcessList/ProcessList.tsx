@@ -12,7 +12,7 @@ import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
 import If from 'src/components/utils/If';
 import useLoading from 'src/hooks/useLoading';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
@@ -26,12 +26,13 @@ const ProcessList: VFC = () => {
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.GRID);
     const { handleSearch, search, handleAdvancedSearch, searchField, clearSearch } = useProcessSearch(pageSize, page);
+    const replaceQueryParams = useReplaceQueryParams();
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            ReplaceQueryParams({ page: 0, pageSize, search, searchField }, router);
+            replaceQueryParams({ page: 0, pageSize, search, searchField });
         }
     }, [processesPage]);
 
@@ -47,7 +48,7 @@ const ProcessList: VFC = () => {
                         mode === ProcessListDisplayMode.GRID ? DefaultPageSize.GRID : DefaultPageSize.TABLE;
                     setPageSize(newPageSize);
                     if (mode) setDisplayMode(mode);
-                    ReplaceQueryParams({ page, pageSize: newPageSize, search, searchField }, router);
+                    replaceQueryParams({ page, pageSize: newPageSize, search, searchField });
                     clearSearch();
                 }}
             />

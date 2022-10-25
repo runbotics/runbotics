@@ -10,7 +10,7 @@ import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 import BotCollectionGridView from './BotCollectionGridView';
 import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
 import BotCollectionTable from './BotCollectionTable/BotCollectionTable';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 const BotCollectionView: VFC = () => {
     const dispatch = useDispatch();
@@ -28,12 +28,12 @@ const BotCollectionView: VFC = () => {
 
     const { search, searchField, debouncedSearch, handleSearchChange, handleAdvancedSearchChange } =
         useBotCollectionSearch();
-
+    const replaceQueryParams = useReplaceQueryParams();
     useEffect(() => {
         const pageNotAvailable = byPage && page >= byPage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            ReplaceQueryParams({ page: 0, pageSize: limit, search, searchField }, router);
+            replaceQueryParams({ page: 0, pageSize: limit, search, searchField });
         }
     }, [byPage]);
 

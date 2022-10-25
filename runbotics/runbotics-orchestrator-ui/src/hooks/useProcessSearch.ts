@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 import useDebounce from './useDebounce';
 import useQuery from './useQuery';
 
@@ -16,12 +16,13 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
     const searchFieldFromUrl = query.get('searchField');
     const [search, setSearch] = useState(searchFromUrl || '');
     const [searchField, setSearchField] = useState(searchFieldFromUrl || '');
+    const replaceQueryParams = useReplaceQueryParams();
 
     const dispatch = useDispatch();
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
     useEffect(() => {
-        ReplaceQueryParams({ page, pageSize, search, searchField }, router);
+        replaceQueryParams({ page, pageSize, search, searchField });
         dispatch(processActions.getProcessesPage({
             page,
             size: pageSize,

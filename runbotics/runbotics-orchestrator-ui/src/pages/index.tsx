@@ -1,7 +1,8 @@
 import React from 'react';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
 
 const IndexPage = () => {
-    return <div>Redirect to app/processes</div>;
+    return <LoadingScreen />;
 };
 
 export default IndexPage;

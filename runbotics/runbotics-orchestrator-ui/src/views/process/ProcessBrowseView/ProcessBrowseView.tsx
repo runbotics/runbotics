@@ -4,8 +4,8 @@ import { useDispatch } from 'src/store';
 import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
 import InternalPage from 'src/components/pages/InternalPage';
-import Header from 'src/views/process/ProcessBrowseView/Header';
-import ProcessList from 'src/views/process/ProcessBrowseView/ProcessList';
+import Header from './Header';
+import ProcessList from './ProcessList';
 
 const ProcessBrowseView: VFC = () => {
     const dispatch = useDispatch();

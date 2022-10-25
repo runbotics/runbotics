@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { CacheProvider } from '@emotion/react';
+import React, { FC, VFC } from 'react';
+import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from 'src/utils/createEmotionCache';
 import 'moment/locale/pl';
 import moment from 'moment';
@@ -16,13 +16,18 @@ import { SettingsProvider } from 'src/contexts/SettingsContext';
 import Head from 'next/head';
 import MainLayout from 'src/layouts/MainLayout';
 import 'src/theme/cronStyles.css';
+import { AppProps as PageProps } from 'next/app';
+
+interface AppProps extends PageProps {
+    emotionCache?: EmotionCache;
+}
 
 // without this line it didn't work
 moment.locale(DEFAULT_LANG);
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-const MyApp = (props) => {
+const App: VFC<AppProps> = (props) => {
     const { Component, pageProps, emotionCache = clientSideEmotionCache, router } = props;
     let Layout: FC = React.Fragment;
 
@@ -57,4 +62,4 @@ const MyApp = (props) => {
         </div>
     );
 };
-export default MyApp;
+export default App;

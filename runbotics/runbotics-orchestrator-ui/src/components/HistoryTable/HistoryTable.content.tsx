@@ -22,7 +22,7 @@ import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { hasFeatureKeyAccess } from '../utils/Secured';
 import ResizableDrawer from '../ResizableDrawer';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 interface PanelInfoState {
     show: boolean;
@@ -51,17 +51,17 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
-
+    const replaceQueryParams = useReplaceQueryParams();
     useEffect(() => {
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            ReplaceQueryParams({ page, pageSize, tab, id }, router);
+            replaceQueryParams({ page, pageSize, tab, id });
         }
     }, [processInstancePage]);
 
     useEffect(() => {
-        ReplaceQueryParams({ page, pageSize, tab, id }, router);
+        replaceQueryParams({ page, pageSize, tab, id });
         dispatch(
             processInstanceActions.getProcessInstancePage({
                 page,

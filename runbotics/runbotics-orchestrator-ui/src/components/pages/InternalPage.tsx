@@ -25,7 +25,7 @@ interface InternalPageProps extends Omit<HTMLProps<HTMLDivElement>, 'ref' | 'as'
 
 const InternalPage = forwardRef<HTMLDivElement, InternalPageProps>(({ children, sx, fullWidth, ...rest }, ref) => {
     const matches = useMediaQuery('(min-width: 1920px)');
-    console.log((ref as any)?.current.offSetTop);
+
     return (
         <StyledPage ref={ref} {...rest}>
             <Container maxWidth={false} sx={{ ...getContainerProps(matches, fullWidth), ...sx }}>

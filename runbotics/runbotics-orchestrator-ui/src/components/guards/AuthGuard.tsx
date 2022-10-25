@@ -15,9 +15,7 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[]) => (pro
     }
 
     if (isBrowser && isInitialised && isAuthenticated) {
-        if (!featureKeys) return <Component {...props} />;
-
-        if (hasFeatureKeyAccess(user, featureKeys)) {
+        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys)) {
             return <Component {...props} />;
         }
 

@@ -1,8 +1,7 @@
 import React from 'react';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
 
-const AppPage = () => {
-    return <div>Redirect to app/processes</div>;
-};
+const AppPage = () => <LoadingScreen />;
 
 export default AppPage;
 

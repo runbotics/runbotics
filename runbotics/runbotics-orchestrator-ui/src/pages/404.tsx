@@ -34,7 +34,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
-const NotFoundView: FC = () => {
+const NotFoundPage: FC = () => {
     const theme = useTheme();
     const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
     const { translate } = useTranslations();
@@ -64,4 +64,4 @@ const NotFoundView: FC = () => {
     );
 };
 
-export default NotFoundView;
+export default NotFoundPage;

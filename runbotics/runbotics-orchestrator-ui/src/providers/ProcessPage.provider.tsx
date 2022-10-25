@@ -3,7 +3,7 @@ import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
 import useUpdateEffect from 'src/hooks/useUpdateEffect';
 import { useRouter } from 'next/router';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 interface ProcessPageProps {
     search: string;
@@ -36,6 +36,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
 }) => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const replaceQueryParams = useReplaceQueryParams();
 
     useUpdateEffect(() => {
         dispatch(
@@ -50,17 +51,17 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     }, [page]);
 
     const handleGridPageChange = (event: MouseEvent<HTMLElement>, currentPage: number) => {
-        ReplaceQueryParams({ page: currentPage - 1, pageSize, search, searchField }, router);
+        replaceQueryParams({ page: currentPage - 1, pageSize, search, searchField });
         setPage(currentPage - 1);
     };
 
     const handleTablePageChange = (currentPage: number) => {
-        ReplaceQueryParams({ page: currentPage, pageSize, search, searchField }, router);
+        replaceQueryParams({ page: currentPage, pageSize, search, searchField });
         setPage(currentPage);
     };
 
     const handlePageSizeChange = (currentPageSize: number) => {
-        ReplaceQueryParams({ page, pageSize: currentPageSize, search, searchField }, router);
+        replaceQueryParams({ page, pageSize: currentPageSize, search, searchField });
         setPageSize(currentPageSize);
     };
 

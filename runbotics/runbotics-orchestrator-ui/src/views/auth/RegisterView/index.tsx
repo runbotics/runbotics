@@ -19,6 +19,7 @@ import Logo from 'src/components/utils/Logo/Logo';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 import { useDispatch } from 'src/store';
 import { register } from 'src/store/slices/Auth/Auth.thunks';
 import useTranslations from 'src/hooks/useTranslations';
@@ -58,6 +59,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
 const RegisterView: FC = () => {
     const { translate } = useTranslations();
     const registrationText = translate('Register.AccountCreated.ActivationNeededMessage');
+    const router = useRouter();
     const dispatch = useDispatch();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -109,7 +111,7 @@ const RegisterView: FC = () => {
                                         await dispatch(register(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
-                                        // history.push('/login');
+                                        router.push('/app/processes');
                                         enqueueSnackbar(registrationText, {
                                             variant: 'success',
                                             autoHideDuration: 5000,

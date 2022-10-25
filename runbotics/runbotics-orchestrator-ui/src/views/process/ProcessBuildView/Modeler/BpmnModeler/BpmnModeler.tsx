@@ -38,11 +38,13 @@ import { applyModelerElement } from '../utils';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
-import LeavePromt from './LeavePromt';
 import ResizableDrawer from 'src/components/ResizableDrawer';
 import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import modelerPalette from '../modeler-palette';
 import If from 'src/components/utils/If';
+import useNavigationLock from 'src/hooks/useNavigationLock';
+import { translate } from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -53,6 +55,7 @@ const initialCommandStackInfo: CommandStackInfo = {
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     ({ readOnly, definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
+        const router = useRouter();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const [selectedElement, setSelectedElement] = useState<BPMNElement>(null);
         const [commandStack, setCommandStack] = useState<CommandStackInfo>(initialCommandStackInfo);
@@ -61,6 +64,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const modelerRef = useRef<BpmnIoModeler>(modeler);
         const externalBpmnActions = useSelector((state) => state.action.bpmnActions.byId);
         const appliedActivities = useSelector((state) => state.process.modeler.appliedActivities);
+        const { isSaveDisabled } = useSelector((state) => state.process.modeler);
+
+        useNavigationLock(!isSaveDisabled, translate('Process.Modeler.LeavePrompt'));
 
         useEffect(() => {
             modelerRef.current = modeler;
@@ -294,7 +300,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canUndo={canUndo}
                                 canRedo={canRedo}
                             />
-                            {/* <LeavePromt /> */}
                             <SidebarNavigationPanel
                                 selectedTab={currentTab}
                                 onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}

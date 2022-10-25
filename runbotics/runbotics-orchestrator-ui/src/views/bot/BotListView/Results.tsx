@@ -27,7 +27,7 @@ import { botActions } from '../../../store/slices/Bot';
 import ActionBotButton from './ActionBotButton';
 import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 import { useRouter } from 'next/router';
-import { ReplaceQueryParams } from 'src/views/utils/routerUtils';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 interface ResultsProps {
     className?: string;
@@ -56,12 +56,13 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     const [collectionFilter, setCollectionFilter] = useState<string[]>(getDefaultCollectionFilter());
     useBotStatusSocket();
     const { translate } = useTranslations();
+    const replaceQueryParams = useReplaceQueryParams();
 
     useEffect(() => {
         const pageNotAvailable = page && currentPage >= page.totalPages;
         if (pageNotAvailable) {
             setCurrentPage(0);
-            ReplaceQueryParams({ page: 0, pageSize: limit }, router);
+            replaceQueryParams({ page: 0, pageSize: limit });
         }
     }, [page]);
 
@@ -82,13 +83,13 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     }, [currentPage, limit, collectionFilter]);
 
     const handlePageChange = (event: any, newPage: number): void => {
-        ReplaceQueryParams({ page: newPage, pageSize: limit }, router);
+        replaceQueryParams({ page: newPage, pageSize: limit });
         setCurrentPage(newPage);
     };
 
     const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setCurrentPage(0);
-        ReplaceQueryParams({ page: 0, pageSize: parseInt(event.target.value, 10) }, router);
+        replaceQueryParams({ page: 0, pageSize: parseInt(event.target.value, 10) });
         setLimit(parseInt(event.target.value, 10));
     };
 
