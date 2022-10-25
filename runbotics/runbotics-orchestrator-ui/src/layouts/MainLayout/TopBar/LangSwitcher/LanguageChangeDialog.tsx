@@ -25,11 +25,13 @@ const LanguageChangeDialog = ({handleDialogLoseChanges, handleDialogCancel, open
                     {translate('Process.Modeler.ChangeLanguageTitle')}
                 </StyledTitle>
                 <DialogContentText>
-                    {translate('Process.Modeler.ChangeLanguageContent')}
+                    {translate('Process.Modeler.LoseModelerChangesContent')}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDialogLoseChanges}>Ok</Button>
+                <Button onClick={handleDialogLoseChanges}>
+                    {translate('Process.Modeler.DialogConfirm')}
+                </Button>
                 <Button onClick={handleDialogCancel} autoFocus>
                     {translate('Process.Modeler.DialogCancel')}
                 </Button>

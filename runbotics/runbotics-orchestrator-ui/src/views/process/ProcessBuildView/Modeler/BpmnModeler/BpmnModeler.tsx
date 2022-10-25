@@ -38,12 +38,13 @@ import { applyModelerElement } from '../utils';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
-import LeavePromt from './LeavePromt';
 import ResizableDrawer from 'src/components/ResizableDrawer';
 import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import modelerPalette from '../modeler-palette';
 import If from 'src/components/utils/If';
 import i18n from 'i18next';
+import RouteLeavingGuard from './RouteLeavingGuard';
+import { useHistory } from 'react-router-dom';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -63,6 +64,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const externalBpmnActions = useSelector((state) => state.action.bpmnActions.byId);
         const appliedActivities = useSelector((state) => state.process.modeler.appliedActivities);
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
+        const { isSaveDisabled } = useSelector((state) => state.process.modeler);
+        const history = useHistory();
 
         useEffect(() => {
             modelerRef.current = modeler;
@@ -172,6 +175,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             });
 
             setModeler(bpmnModeler);
+            
+            return () => {
+                dispatch(processActions.setSaveDisabled(true));
+            }
+
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
@@ -301,7 +309,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canUndo={canUndo}
                                 canRedo={canRedo}
                             />
-                            <LeavePromt />
+                            <RouteLeavingGuard
+                                when={!isSaveDisabled}
+                                navigate={path => history.push(path)}
+                                shouldBlockNavigation={location => true}
+                            />
                             <SidebarNavigationPanel
                                 selectedTab={currentTab}
                                 onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}
