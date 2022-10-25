@@ -43,17 +43,26 @@ export class RuntimeSubscriptionsService {
                                     processInstanceEvent.step = `${eventBehaviour.label}: ${desktopTask.input?.processName}`;
                                     break;
                                 default:
-                                    processInstanceEvent.step = `${eventBehaviour ? eventBehaviour.label : desktopTask.input?.script
-                                        }`;
+                                    const label = eventBehaviour?.label;
+                                    // xml field 'runbotics' is a temporary solution.
+                                    const translateKey = eventBehaviour?.runbotics;
+                                    
+                                    if (eventBehaviour?.label) {
+                                        processInstanceEvent.step = label;
+                                    } else if (translateKey) {
+                                        processInstanceEvent.step = translateKey;
+                                    } else {
+                                        processInstanceEvent.step = desktopTask.input?.script
+                                    }
                             }
                             break;
                         case 'bpmn:EndEvent':
-                            processInstanceEvent.step = `EndEvent`;
+                            processInstanceEvent.step = `Process.List.Table.Step.EndEvent`;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
                         case 'bpmn:StartEvent':
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = `StartEvent`;
+                            processInstanceEvent.step = `Process.List.Table.Step.StartEvent`;
                             break;
                         case 'bpmn:ExclusiveGateway':
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;

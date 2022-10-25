@@ -14,6 +14,10 @@ import {
     getDrawerStyles, Wrapper, StyledIcon, StyledText,
 } from './Navbar.styles';
 import { Section } from './Navbar.types'
+import i18n from 'i18next';
+import { usePublicSections } from './usePublicSections';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+import useAuth from 'src/hooks/useAuth';
 
 interface NavbarProps {
     isShrinked: boolean;

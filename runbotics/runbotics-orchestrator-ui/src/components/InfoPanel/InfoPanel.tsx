@@ -36,7 +36,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({ processInstanceId, onClose, showCloseB
             }}
         >
             <ProcessInstanceDetails processInstanceId={processInstanceId} />
-            <ProcessInstanceEventsDetails processInstanceId={processInstanceId} />
+            <ProcessInstanceEventsDetails processInstanceId={processInstanceId} /> 
         </Box>
     </Box>
 );
