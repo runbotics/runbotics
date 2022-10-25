@@ -92,6 +92,7 @@ const LoginPage: FC = () => {
                                         await dispatch(login(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
+                                        router.push('/app/processes');
                                     } catch (err) {
                                         setStatus({ success: false });
                                         setErrors({ submit: err.message });

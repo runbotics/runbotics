@@ -11,6 +11,7 @@ import NavBar from './NavBar';
 import TopBar from './TopBar';
 import { Main, ContentContainer, Content } from './MainLayout.styles';
 import { usePublicSections } from './NavBar/usePublicSections';
+import { withAuthGuard } from 'src/components/guards/AuthGuard';
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
@@ -47,7 +48,12 @@ const MainLayout: FC = ({ children }) => {
         <>
             <TopBar />
             <If condition={isNavBarVisible}>
-                <NavBar isShrinked={isMenuShrinked} mobile={mobile} onMenuShowToggleChange={handleMenuShowToggle} accessedSections={accessedSections} />
+                <NavBar
+                    isShrinked={isMenuShrinked}
+                    mobile={mobile}
+                    onMenuShowToggleChange={handleMenuShowToggle}
+                    accessedSections={accessedSections}
+                />
             </If>
             <Main isNavbarVisible={isNavBarVisible} isShrinked={isMenuShrinked} mobile={mobile}>
                 <ContentContainer>
@@ -61,4 +67,4 @@ const MainLayout: FC = ({ children }) => {
     );
 };
 
-export default MainLayout;
+export default withAuthGuard(MainLayout);

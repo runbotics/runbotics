@@ -11,8 +11,15 @@ const GlobalStyles = createGlobalStyle(
     html {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        height: 100%;
         width: 100%;
+    }
+
+    html,
+    body,
+    body > div:first-child,
+    div#__next,
+    div#__next > div {
+        height: 100%;
     }
 
     body {

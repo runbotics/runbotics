@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react';
-import { Redirect } from 'react-router-dom';
 import { FeatureKey, Role } from 'runbotics-common';
 import useAuth from 'src/hooks/useAuth';
 import { User } from 'src/types/user';
@@ -59,12 +58,11 @@ const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
             if (hasFeatureKeyAccess(user, featureKeys)) {
                 return <>{children}</>;
             }
-            return <Redirect to="/404" />;
         }
 
         return <>{children}</>;
     }
-    return <Redirect to="/404" />;
+    return <></>;
 };
 
 export default Secured;

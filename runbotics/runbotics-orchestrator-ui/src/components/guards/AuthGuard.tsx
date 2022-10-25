@@ -1,22 +1,28 @@
-import React from 'react';
-import type { FC, ReactNode } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import type { FC } from 'react';
 import useAuth from '../../hooks/useAuth';
+import { useRouter } from 'next/router';
+import LoadingScreen from '../utils/LoadingScreen';
+import { FeatureKey } from 'runbotics-common';
+import { hasFeatureKeyAccess } from '../utils/Secured';
 
-interface AuthGuardProps {
-    children?: ReactNode;
-}
+export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[]) => (props: any) => {
+    const { isAuthenticated, isInitialised, user } = useAuth();
+    const router = useRouter();
+    const isBrowser = typeof window !== 'undefined';
 
-const AuthGuard: FC<AuthGuardProps> = ({ children }) => {
-    const { isAuthenticated } = useAuth();
-    const location = useLocation();
-
-    if (!isAuthenticated) {
-        localStorage.setItem('last_page', location.pathname);
-        return <Redirect to="/login" />;
+    if (isBrowser && isInitialised && !isAuthenticated) {
+        router.replace('/login');
     }
 
-    return <>{children}</>;
-};
+    if (isBrowser && isInitialised && isAuthenticated) {
+        if (!featureKeys) return <Component {...props} />;
 
-export default AuthGuard;
+        if (hasFeatureKeyAccess(user, featureKeys)) {
+            return <Component {...props} />;
+        }
+
+        router.replace('/404');
+    }
+
+    return <LoadingScreen />;
+};

@@ -16,6 +16,7 @@ import { SettingsProvider } from 'src/contexts/SettingsContext';
 import Head from 'next/head';
 import MainLayout from 'src/layouts/MainLayout';
 import 'src/theme/cronStyles.css';
+
 // without this line it didn't work
 moment.locale(DEFAULT_LANG);
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -30,7 +31,7 @@ const MyApp = (props) => {
     }
 
     return (
-        <>
+        <div style={{ height: '100%' }}>
             <Head>
                 <title>Runbotics</title>
             </Head>
@@ -53,7 +54,7 @@ const MyApp = (props) => {
                     </SettingsProvider>
                 </Provider>
             </CacheProvider>
-        </>
+        </div>
     );
 };
 export default MyApp;

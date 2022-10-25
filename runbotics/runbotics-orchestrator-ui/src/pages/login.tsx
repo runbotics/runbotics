@@ -1,2 +1,4 @@
+import { withGuestGuard } from 'src/components/guards/GuestGuard';
 import LoginPage from 'src/routing/LoginPage';
-export default LoginPage;
+
+export default withGuestGuard(LoginPage);
