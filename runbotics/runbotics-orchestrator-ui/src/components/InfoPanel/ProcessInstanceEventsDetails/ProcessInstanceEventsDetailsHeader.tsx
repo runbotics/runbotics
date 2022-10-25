@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React, { useEffect, useState, VFC } from 'react';
 import { Typography } from '@mui/material';
 import { IProcessInstanceEvent } from 'runbotics-common';
 import Label from 'src/components/Label';
@@ -9,8 +9,10 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
-import {translate} from '../../../hooks/useTranslations'
+import {checkIfKeyExists, translate} from '../../../hooks/useTranslations'
 import { convertToPascalCase } from 'src/utils/text';
+import i18n from 'i18next';
+import { TranslationsDescriptors } from 'src/translations/translations';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
@@ -18,11 +20,20 @@ interface Props {
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
     const formattedStatus = convertToPascalCase(processInstanceEvent.status);
+    const [step, setStep] = useState<string>(processInstanceEvent.step)
+
+    useEffect(() => {
+        if (checkIfKeyExists(processInstanceEvent.step)) {
+            setStep(translate(processInstanceEvent.step));
+        } else {
+            setStep(processInstanceEvent.step);
+        }
+    }, [i18n.language])
 
     return (
         <GridContainer>
             <GridItem width="100%">
-                <Typography variant="h5">{processInstanceEvent.step}</Typography>
+                <Typography variant="h5">{step}</Typography>
             </GridItem>
             <GridItem>
                 <Typography>

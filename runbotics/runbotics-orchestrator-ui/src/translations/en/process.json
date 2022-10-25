@@ -585,5 +585,10 @@
     "Process.List.Table.Header.Scheduled": "Scheduled",
     "Process.List.Table.Header.Actions": "Actions",
     "Process.List.Table.Step.StartEvent": "Start event",
-    "Process.Modeler.LeavePrompt": "You haven't saved changes, are you sure u want to leave? All unsaved changes will be lost."
+    "Process.List.Table.Step.EndEvent": "End event",
+    "Process.Modeler.LeaveModelerTitle": "Are you sure you want to leave?",
+    "Process.Modeler.ChangeLanguageTitle": "Are you sure you want to change the language?",
+    "Process.Modeler.LoseModelerChangesContent": "All unsaved changes process wizard changes will be lost.",
+    "Process.Modeler.DialogCancel": "Cancel",
+    "Process.Modeler.DialogConfirm": "Ok"
 }

@@ -5,6 +5,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromRoot': {
         id: 'sharepointFile.downloadFileFromRoot',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label',
         script: 'sharepointFile.downloadFileFromRoot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -69,6 +70,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromSite': {
         id: 'sharepointFile.downloadFileFromSite',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Label',
         script: 'sharepointFile.downloadFileFromSite',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -154,6 +156,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFiles': {
         id: 'sharepointFile.downloadFiles',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Label',
         script: 'sharepointFile.downloadFiles',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -239,6 +242,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.uploadFile': {
         id: 'sharepointFile.uploadFile',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.SharePointFile.Upload.Label',
         script: 'sharepointFile.uploadFile',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -313,6 +317,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.createFolder': {
         id: 'sharepointFile.createFolder',
         label: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Label',
         script: 'sharepointFile.createFolder',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

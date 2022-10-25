@@ -89,13 +89,13 @@ const routes: Routes = [
                 exact: true,
                 path: '/app/processes',
                 component: lazy(() => import('src/views/process/ProcessBrowseView/ProcessBrowseView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
+                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_LIST_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
                 path: '/app/processes/:id/:tab',
                 component: lazy(() => import('src/views/process/ProcessMainView/ProcessMainView')),
-                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_READ]}>{children}</Secured>,
+                guard: ({ children }) => <Secured featureKeys={[FeatureKey.PROCESS_LIST_READ]}>{children}</Secured>,
             },
             {
                 exact: true,
