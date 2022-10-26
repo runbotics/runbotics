@@ -1,4 +1,3 @@
-import { Location } from 'history';
 import React, { VFC, useEffect, useState } from 'react';
 import { translate } from 'src/hooks/useTranslations';
 import LeavePrompt from './LeavePrompt';
