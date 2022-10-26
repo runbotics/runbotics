@@ -5,7 +5,7 @@ import { Box, Button, Grid, Alert } from '@mui/material';
 import _ from 'lodash';
 import useDebounce from 'src/hooks/useDebounce';
 import { translate as t } from 'src/hooks/useTranslations';
-import { useDispatch, useSelector } from 'src/store';
+import { useDispatch } from 'src/store';
 import AutocompleteWidget from './widgets/AutocompleteWidget';
 import FieldTemplate from './widgets/FieldTemplate';
 import { processActions } from 'src/store/slices/Process';
@@ -45,9 +45,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const dispatch = useDispatch();
     const [isFormError, setIsFormError] = useState(false);
     const formRefCallback = (node) => {
-        if (node) {
-            setIsFormError(node.state.errors.length > 0);
-        }
+        if (node) setIsFormError(node.state.errors.length > 0);
     };
     const [editMode, setEditMode] = useState(false);
     const [appliedFormState, setAppliedFormState] = useState(props.formData);
@@ -62,6 +60,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     useEffect(() => {
         formValueRef.current = formState;
         isFormDirtyRef.current = isFormDirty;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [formState, appliedFormState]);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
@@ -73,9 +72,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
         setFormState({ ...formState, formData: e.formData });
-        if (!editMode) {
-            dispatch(processActions.removeAppliedAction(props.id));
-        }
+        if (!editMode) dispatch(processActions.removeAppliedAction(props.id));
     };
 
     useEffect(() => {
@@ -86,15 +83,17 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [props.formData, props.id]);
 
     useEffect(() => {
-        if (formState?.formData && isFormDirty && !isFormError) {
-            handleSubmit(formState);
-        }
+        if (formState?.formData && isFormDirty && !isFormError) handleSubmit(formState);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedForm]);
-    useEffect(() => {
-        return () => {
+    useEffect(
+        () => () => {
             if (isFormDirtyRef.current) handleSubmit(formValueRef.current);
-        };
-    }, []);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [],
+    );
     return (
         <Grid item xs={12}>
             <Box px={1}>

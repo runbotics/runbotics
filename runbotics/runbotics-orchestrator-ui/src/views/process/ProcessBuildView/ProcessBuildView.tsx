@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, DialogContent } from '@mui/material';
 import { useDispatch, useSelector } from 'src/store';
 import { getActions } from 'src/store/slices/Action/Action.thunks';
@@ -6,12 +6,9 @@ import { globalVariableActions } from 'src/store/slices/GlobalVariable';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
-import { ProcessBuildTab } from 'src/types/sidebar';
 import { processActions } from 'src/store/slices/Process';
-import { ProcessParams } from 'src/utils/types/ProcessParams';
 import BpmnModeler, { ModelerImperativeHandle } from './Modeler/BpmnModeler';
 import { StyledCard } from './ProcessBuildView.styled';
-import _ from 'lodash';
 import { useSnackbar } from 'notistack';
 import useTranslations from 'src/hooks/useTranslations';
 import { useRouter } from 'next/router';
@@ -32,12 +29,11 @@ const ProcessBuildView: FC = () => {
     useEffect(() => {
         dispatch(getActions());
         dispatch(globalVariableActions.getGlobalVariables());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
-        if (node) {
-            setOffSet(node.offsetTop + BORDER_SIZE);
-        }
+        if (node) setOffSet(node.offsetTop + BORDER_SIZE);
     }, []);
 
     const onSave = async () => {
@@ -84,9 +80,7 @@ const ProcessBuildView: FC = () => {
         saveAs(blob, `${process.name}_${moment().format('YYYY_MM_DD_HH_mm')}.bpmn`);
     };
 
-    if (!process || process.id?.toString() !== id || actionsLoading) {
-        return <LoadingScreen />;
-    }
+    if (!process || process.id?.toString() !== id || actionsLoading) return <LoadingScreen />;
 
     return (
         <StyledCard offsetTop={offSet}>

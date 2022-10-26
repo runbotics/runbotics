@@ -5,17 +5,17 @@ import { BPMNElementFactory } from '../../custom/BPMNElementFactory';
 // export const definition = [{'command': 'open', 'target': 'https://www.google.pl/', 'value': ''}, {'command': 'open', 'target': 'https://www.google.pl/', 'value': ''}, {'command': 'test', 'target': 'https://www.google.pl/', 'value': ''}];
 
 export default class SeleniumImporter {
-    constructor(private modeler: BpmnModeler) {}
+    constructor(private modeler: BpmnModeler) { }
 
     public async import(event) {
         const clipboard: string = await navigator.clipboard.readText();
         try {
             const definition = JSON.parse(clipboard);
-            if (!Array.isArray(definition)) {
+            if (!Array.isArray(definition))
                 return {
                     error: true,
                 };
-            }
+
             const bpmnElementFactory = new BPMNElementFactory(
                 this.modeler.get('bpmnFactory'),
                 this.modeler.get('elementFactory'),
@@ -23,7 +23,7 @@ export default class SeleniumImporter {
             );
             let tasks = [];
             let connections = [];
-            for (let i = 0; i < definition.length; i += 1) {
+            for (let i = 0; i < definition.length; i += 1)
                 if (i === 0) {
                     tasks.push(bpmnElementFactory.createSeleniumTask(definition[i], { x: i * 150, y: 0 }));
                 } else {
@@ -40,13 +40,14 @@ export default class SeleniumImporter {
                     tasks = [...tasks, target];
                     connections = [...connections, connection];
                 }
-            }
+
 
             this.modeler.get('create').start(event, [...tasks, ...connections]);
             return {
                 completed: true,
             };
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error('Error loading clip', e);
             return {
                 error: true,

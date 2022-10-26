@@ -78,10 +78,10 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
     const attendedProcessVariables =
         isAttended && executionInfo
             ? context?.passedInVariables.map((variable) => ({
-                  label: variable,
-                  value: variable,
-                  group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'),
-              }))
+                label: variable,
+                value: variable,
+                group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'),
+            }))
             : [];
 
     const options: Record<string, { label: string; value: any; group: any }> = React.useMemo(() => {
@@ -181,6 +181,7 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
             newPrev[currentValue.value] = currentValue;
             return newPrev;
         }, {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [context?.element]);
 
     const optionValues = React.useMemo(

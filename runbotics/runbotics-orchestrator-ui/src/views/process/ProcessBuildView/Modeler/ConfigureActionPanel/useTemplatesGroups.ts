@@ -13,5 +13,5 @@ export const useTemplatesGroups = () => {
             label: translate('Process.Details.Modeler.ActionPanel.TemplatesGroup.API'),
             items: [internalTemplates['api.test']],
         },
-    })
-}
+    });
+};

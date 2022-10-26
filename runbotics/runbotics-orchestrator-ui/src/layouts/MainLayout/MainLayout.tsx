@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from 'react';
-import type { FC } from 'react';
+import { useState, useMemo, FC } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import useAsyncEffect from 'src/hooks/useAsyncEffect';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
@@ -20,12 +19,19 @@ const MainLayout: FC = ({ children }) => {
     const mobile = useMediaQuery(theme.breakpoints.down('md'));
     const publicSections = usePublicSections();
     const { user } = useAuth();
-    
-    const accessedSections = useMemo(() => publicSections.map(accessToSection => {
-            const items = accessToSection.items.filter((item) => (item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true));
-            return { ...accessToSection, items };
-        }), [user, i18n.language]);
-    
+
+    const accessedSections = useMemo(
+        () =>
+            publicSections.map((accessToSection) => {
+                const items = accessToSection.items.filter((item) =>
+                    item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true,
+                );
+                return { ...accessToSection, items };
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [user, i18n.language],
+    );
+
     const isNavBarVisible = accessedSections[0].items.length !== 1;
 
     useAsyncEffect(() => {

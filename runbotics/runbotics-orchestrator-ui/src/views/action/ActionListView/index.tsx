@@ -1,4 +1,4 @@
-import React, { useEffect, VFC } from 'react';
+import { useEffect, VFC } from 'react';
 import { Box } from '@mui/material';
 import { getActions } from 'src/store/slices/Action/Action.thunks';
 import { useDispatch } from 'src/store';
@@ -12,7 +12,7 @@ const ActionListView: VFC = () => {
 
     useEffect(() => {
         dispatch(getActions());
-    }, []);
+    }, [dispatch]);
 
     return (
         <InternalPage title="Actions">

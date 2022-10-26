@@ -38,6 +38,6 @@ const LanguageChangeDialog: VFC<DialogProps> = ({onConfirm, onCancel, isDialogOp
             </DialogActions>
         </Dialog>
     );
-}
+};
 
 export default LanguageChangeDialog;

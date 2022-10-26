@@ -36,9 +36,9 @@ const WrapIfAdditional = ({
     const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
     const { translate } = useTranslations();
 
-    if (!additional) {
+    if (!additional) 
         return <>{children}</>;
-    }
+    
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
@@ -65,8 +65,8 @@ const WrapIfAdditional = ({
             <Grid item>
                 <Button color="secondary" disabled={disabled || readonly} onClick={onDropPropertyClick(label)}>
                     <Remove />
-                        {' '}
-                        {translate('Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem')}
+                    {' '}
+                    {translate('Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem')}
                 </Button>
             </Grid>
         </Grid>

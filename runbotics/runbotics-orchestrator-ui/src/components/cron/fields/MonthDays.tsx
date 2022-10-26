@@ -6,29 +6,27 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { classNames } from '../utils';
 import { UNITS } from '../constants';
 
+// eslint-disable-next-line complexity
 export default function MonthDays(props: MonthDaysProps) {
-    const {
-        value, setValue, locale, className, weekDays, disabled, readOnly, leadingZero, period,
-    } = props;
+    const { value, setValue, locale, className, weekDays, disabled, readOnly, leadingZero, period } = props;
     const noWeekDays = !weekDays || weekDays.length === 0;
 
     const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-month-days': true,
-            'react-js-cron-month-days-placeholder': !noWeekDays,
-            [`${className}-field`]: !!className,
-            [`${className}-month-days`]: !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-field': true,
+                'react-js-cron-month-days': true,
+                'react-js-cron-month-days-placeholder': !noWeekDays,
+                [`${className}-field`]: !!className,
+                [`${className}-month-days`]: !!className,
+            }),
         [className, noWeekDays],
     );
 
     const localeJSON = JSON.stringify(locale);
     const placeholder = useMemo(
         () => {
-            if (noWeekDays) {
-                return locale.emptyMonthDays || DEFAULT_LOCALE_EN.emptyMonthDays;
-            }
+            if (noWeekDays) return locale.emptyMonthDays || DEFAULT_LOCALE_EN.emptyMonthDays;
 
             return locale.emptyMonthDaysShort || DEFAULT_LOCALE_EN.emptyMonthDaysShort;
         },
@@ -36,9 +34,10 @@ export default function MonthDays(props: MonthDaysProps) {
         [noWeekDays, localeJSON],
     );
 
-    const displayMonthDays = !readOnly
-        || (value && value.length > 0)
-        || ((!value || value.length === 0) && (!weekDays || weekDays.length === 0));
+    const displayMonthDays =
+        !readOnly ||
+        (value && value.length > 0) ||
+        ((!value || value.length === 0) && (!weekDays || weekDays.length === 0));
 
     return displayMonthDays ? (
         <div className={internalClassName}>

@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, LinearProgress } from '@mui/material';
 import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import { JSONSchema7 } from 'json-schema';
 import { v4 as uuidv4 } from 'uuid';
 import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';

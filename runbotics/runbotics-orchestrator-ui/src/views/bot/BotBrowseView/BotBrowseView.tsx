@@ -9,7 +9,6 @@ import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 import { BotCollectionTab } from '../../../utils/bot-tab';
 import BotListView from '../BotListView';
 import BotCollectionView from '../BotCollectionView';
-import { DefaultPageSize } from './BotBrowseView.utils';
 import { useRouter } from 'next/router';
 
 const BotBrowseView: VFC = () => {
@@ -24,23 +23,19 @@ const BotBrowseView: VFC = () => {
     const botTabs = useMemo(() => {
         const tabs = [];
 
-        if (hasBotsTabAccess) {
+        if (hasBotsTabAccess)
             tabs.push({ value: BotCollectionTab.BOTS, label: translate('Bot.Browse.Tabs.Bots.Label') });
-        }
 
-        if (hasBotsCollectionTabAccess) {
+        if (hasBotsCollectionTabAccess)
             tabs.push({ value: BotCollectionTab.COLLECTIONS, label: translate('Bot.Browse.Tabs.Collections.Label') });
-        }
 
         return tabs;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasBotsTabAccess, hasBotsCollectionTabAccess]);
 
     const handleTabChange = (event: ChangeEvent<HTMLInputElement>, value: BotCollectionTab) => {
-        if (value === BotCollectionTab.COLLECTIONS) {
-            router.push(`/app/bots/collections`);
-        } else {
-            router.push('/app/bots');
-        }
+        if (value === BotCollectionTab.COLLECTIONS) router.push('/app/bots/collections');
+        else router.push('/app/bots');
     };
 
     const getTabValue = () =>

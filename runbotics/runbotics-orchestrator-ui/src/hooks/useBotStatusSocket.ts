@@ -21,7 +21,7 @@ export const useBotStatusSocket = () => {
             socket.off(WsMessage.BOT_STATUS);
             socket.off(WsMessage.BOT_DELETE);
         };
-    }, [socket]);
+    }, [dispatch, socket]);
 };
 
 export default useBotStatusSocket;

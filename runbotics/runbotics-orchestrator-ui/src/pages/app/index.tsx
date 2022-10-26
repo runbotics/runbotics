@@ -5,7 +5,7 @@ const AppPage = () => <LoadingScreen />;
 
 export default AppPage;
 
-export async function getServerSideProps(context) {
+export function getServerSideProps() {
     return {
         redirect: {
             destination: '/app/processes',

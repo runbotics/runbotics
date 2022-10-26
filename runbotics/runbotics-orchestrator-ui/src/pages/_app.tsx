@@ -31,9 +31,9 @@ const App: VFC<AppProps> = (props) => {
     const { Component, pageProps, emotionCache = clientSideEmotionCache, router } = props;
     let Layout: FC = React.Fragment;
 
-    if (router.pathname.startsWith('/app/')) {
+    if (router.pathname.startsWith('/app/')) 
         Layout = MainLayout;
-    }
+    
 
     return (
         <div style={{ height: '100%' }}>

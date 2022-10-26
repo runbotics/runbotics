@@ -12,12 +12,12 @@ interface LabelProps {
 const Label: FC<LabelProps> = ({
     color = 'secondary', children, ...rest
 }) => (
-        <Wrapper
-            color={color}
-            {...rest}
-        >
-            {children}
-        </Wrapper>
+    <Wrapper
+        color={color}
+        {...rest}
+    >
+        {children}
+    </Wrapper>
 );
 
 export default Label;

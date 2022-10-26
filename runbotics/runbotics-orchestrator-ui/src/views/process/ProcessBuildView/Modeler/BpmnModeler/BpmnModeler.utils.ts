@@ -55,9 +55,9 @@ export const createReviver = (moddle) => {
         if (typeof object === 'object' && typeof object.$type === 'string') {
             const objectId = object.id;
 
-            if (objectId && elCache[objectId]) {
+            if (objectId && elCache[objectId]) 
                 return elCache[objectId];
-            }
+            
 
             const type = object.$type;
             const attrs = { ...object };
@@ -66,9 +66,9 @@ export const createReviver = (moddle) => {
 
             const newEl = moddle.create(type, attrs);
 
-            if (objectId) {
+            if (objectId) 
                 elCache[objectId] = newEl;
-            }
+            
 
             return newEl;
         }

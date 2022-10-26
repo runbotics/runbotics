@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import type { FC } from 'react';
 import RouterLink from 'next/link';
@@ -16,7 +15,6 @@ import {
 } from '@mui/material';
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo/Logo';
-import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -57,7 +55,6 @@ const StyledPage = styled(Page)(({ theme }) => ({
 }));
 
 const LoginPage: FC = () => {
-    const auth = useAuth();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();

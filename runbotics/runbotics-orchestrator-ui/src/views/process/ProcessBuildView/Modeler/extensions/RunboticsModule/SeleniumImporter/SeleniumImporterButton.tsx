@@ -13,11 +13,11 @@ const SeleniumImporterButton = () => {
     const handleImportSelenium = async (event) => {
         const seleniumImporter = new SeleniumImporter(modeler);
         const result = await seleniumImporter.import(event);
-        if (result.error) {
+        if (result.error) 
             enqueueSnackbar(translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Import.Error'), {
                 variant: 'error',
             });
-        }
+        
     };
 
     return (

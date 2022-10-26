@@ -1,5 +1,5 @@
 import React, {
-    VFC, ChangeEvent, useState, useEffect,
+    VFC, ChangeEvent,
 } from 'react';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { FormControlLabel, Switch } from '@mui/material';

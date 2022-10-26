@@ -444,6 +444,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getSharepointExcelActions;

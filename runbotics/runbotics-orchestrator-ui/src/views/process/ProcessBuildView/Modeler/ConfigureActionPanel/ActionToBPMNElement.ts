@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7 } from 'json-schema';
 import _ from 'lodash';
@@ -49,93 +50,99 @@ export class ActionToBPMNElement {
         destination: ParameterDestination,
         data: Record<string, any>,
         schema?: JSONSchema7,
-    ): Parameter[] => Object.entries(data).map(([key, value]) => {
-        const parameter = {
-            name: key,
-            value,
-            type: null,
-        };
-        let field = _.get(schema, `properties.${destination.toLowerCase()}.properties.${key}`) as JSONSchema7;
-        if (!field) {
-            const oneOf = _.get(schema, `properties.${destination.toLowerCase()}.oneOf`) as JSONSchema7;
-            if (oneOf && Array.isArray(oneOf)) {
-                const array = oneOf as any[];
-                const selectedList = array.filter((element) => {
-                    const found = Object.keys(data).some((elementKey) => _.get(element, `properties.${elementKey}`));
-                    return found;
-                });
-                if (selectedList.length > 0) {
-                    const selected = selectedList[0];
-                    field = _.get(selected, `properties.${key}`) as JSONSchema7;
+    ): Parameter[] =>
+        Object.entries(data).map(([key, value]) => {
+            const parameter = {
+                name: key,
+                value,
+                type: null,
+            };
+            let field = _.get(schema, `properties.${destination.toLowerCase()}.properties.${key}`) as JSONSchema7;
+            if (!field) {
+                const oneOf = _.get(schema, `properties.${destination.toLowerCase()}.oneOf`) as JSONSchema7;
+                if (oneOf && Array.isArray(oneOf)) {
+                    const array = oneOf as any[];
+                    const selectedList = array.filter((element) => {
+                        const found = Object.keys(data).some((elementKey) =>
+                            _.get(element, `properties.${elementKey}`),
+                        );
+                        return found;
+                    });
+                    if (selectedList.length > 0) {
+                        const selected = selectedList[0];
+                        field = _.get(selected, `properties.${key}`) as JSONSchema7;
+                    }
                 }
             }
-        }
 
-        if (field && field.type) {
-            switch (field.type) {
-                case 'array':
-                    parameter.type = ParameterType.LIST;
-                    break;
-                case 'boolean':
-                    parameter.value = `\${${value}}`;
-                    parameter.type = ParameterType.Boolean;
-                    break;
-                case 'object':
-                    parameter.type = ParameterType.MAP;
-                    break;
-                case 'number':
-                    parameter.value = `\${${value}}`;
-                    parameter.type = ParameterType.Number;
-                    break;
-                default:
-                    parameter.type = ParameterType.TEXT;
-                    break;
-            }
-        } else {
-            parameter.type = ParameterType.TEXT;
-        }
+            if (field && field.type)
+                switch (field.type) {
+                    case 'array':
+                        parameter.type = ParameterType.LIST;
+                        break;
+                    case 'boolean':
+                        parameter.value = `\${${value}}`;
+                        parameter.type = ParameterType.Boolean;
+                        break;
+                    case 'object':
+                        parameter.type = ParameterType.MAP;
+                        break;
+                    case 'number':
+                        parameter.value = `\${${value}}`;
+                        parameter.type = ParameterType.Number;
+                        break;
+                    default:
+                        parameter.type = ParameterType.TEXT;
+                        break;
+                }
+            else parameter.type = ParameterType.TEXT;
 
-        return this.createParameter(destination, parameter);
-    });
+            return this.createParameter(destination, parameter);
+        });
 
     createParameter = (destination: ParameterDestination, parameter: Parameter) => {
-        if (parameter.type == null || parameter.type === ParameterType.TEXT) {
+        // eslint-disable-next-line eqeqeq
+        if (parameter.type == null || parameter.type === ParameterType.TEXT)
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                 name: parameter.name,
                 value: parameter.value,
             });
-        } if (parameter.type === ParameterType.Number) {
+        if (parameter.type === ParameterType.Number)
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                 name: parameter.name,
                 value: parameter.value,
                 type: ParameterType.Number,
             });
-        } if (parameter.type === ParameterType.Boolean) {
+        if (parameter.type === ParameterType.Boolean)
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                 name: parameter.name,
                 value: parameter.value,
                 type: ParameterType.Boolean,
             });
-        } if (parameter.type === ParameterType.MAP) {
+        if (parameter.type === ParameterType.MAP) {
             const parameterMap = parameter as ParameterMap;
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                 name: parameter.name,
                 definition: this.bpmnFactory.create('camunda:Map', {
-                    entries: Object.entries(parameterMap.value)
-                        .map(([key, value]) => this.bpmnFactory.create('camunda:Entry', {
+                    entries: Object.entries(parameterMap.value).map(([key, value]) =>
+                        this.bpmnFactory.create('camunda:Entry', {
                             key,
                             value,
-                        })),
+                        }),
+                    ),
                 }),
             });
-        } if (parameter.type === ParameterType.LIST) {
+        }
+        if (parameter.type === ParameterType.LIST) {
             const parameterList = parameter as ParameterList;
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                 name: parameter.name,
                 definition: this.bpmnFactory.create('camunda:List', {
-                    items: parameterList.value.map((value) => this.bpmnFactory.create('camunda:Value', {
-                        value,
-                    })),
+                    items: parameterList.value.map((value) =>
+                        this.bpmnFactory.create('camunda:Value', {
+                            value,
+                        }),
+                    ),
                 }),
             });
         }
@@ -192,6 +199,7 @@ export class ActionToBPMNElement {
         this.commandStack.execute('properties-panel.update-businessobject-list', request);
     };
 
+    // eslint-disable-next-line max-params
     createElement = (
         type: TaskType,
         action: IBpmnAction,
@@ -199,9 +207,9 @@ export class ActionToBPMNElement {
         shapeProperties?: Record<string, any>,
     ) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`, properties);
-        businessObject.label = action.translateKey ? "" : action.label;
+        businessObject.label = action.translateKey ? '' : action.label;
         businessObject.implementation = action.runner;
-        businessObject.runbotics = action.translateKey ? action.translateKey : "";
+        businessObject.runbotics = action.translateKey ? action.translateKey : '';
         businessObject.actionId = action.id;
 
         const shape = this.elementFactory.createShape({
@@ -233,9 +241,7 @@ export class ActionToBPMNElement {
         const inputFields = {
             ...action.form.formData.input,
         };
-        if (action.script) {
-            inputFields.script = action.script;
-        }
+        if (action.script) inputFields.script = action.script;
 
         this.commandStack.execute('properties-panel.update-businessobject-list', {
             element: shape,
@@ -254,7 +260,7 @@ export class ActionToBPMNElement {
             objectsToRemove: [],
         });
 
-        if (action.form.formData.output) {
+        if (action.form.formData.output)
             this.commandStack.execute('properties-panel.update-businessobject-list', {
                 element: shape,
                 currentObject: inputOutput,
@@ -271,7 +277,7 @@ export class ActionToBPMNElement {
                         if (action.form && action.form.schema) {
                             const { schema } = action.form;
                             const field = _.get(schema, `properties.output.properties.${key}`) as JSONSchema7;
-                            if (field && field.type) {
+                            if (field && field.type)
                                 switch (field.type) {
                                     case 'array':
                                         parameter.type = ParameterType.LIST;
@@ -280,14 +286,12 @@ export class ActionToBPMNElement {
                                         parameter.type = ParameterType.TEXT;
                                         break;
                                 }
-                            }
                         }
 
                         return this.createParameter(ParameterDestination.Output, parameter);
                     }),
                 objectsToRemove: [],
             });
-        }
 
         return shape;
     };

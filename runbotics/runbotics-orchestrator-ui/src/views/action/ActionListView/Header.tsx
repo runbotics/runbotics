@@ -1,13 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import clsx from 'clsx';
-import {
-    Button, Grid, SvgIcon, Typography,
-} from '@mui/material';
-import {
-    PlusCircle as PlusIcon,
-} from 'react-feather';
+import { Button, Grid, SvgIcon, Typography } from '@mui/material';
+import { PlusCircle as PlusIcon } from 'react-feather';
 import { setShowEditModal } from 'src/store/slices/Action/Action.thunks';
 import { defaultValue } from 'src/types/model/action.model';
 import { useDispatch } from 'src/store';
@@ -61,11 +56,11 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                     <Button
                         color="secondary"
                         variant="contained"
-                        startIcon={(
+                        startIcon={
                             <SvgIcon fontSize="small">
                                 <PlusIcon />
                             </SvgIcon>
-                        )}
+                        }
                         onClick={() => {
                             dispatch(setShowEditModal({ show: true, action: { ...defaultValue } }));
                         }}

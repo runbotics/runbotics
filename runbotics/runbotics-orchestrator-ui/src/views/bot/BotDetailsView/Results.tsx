@@ -1,11 +1,10 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, FC, useMemo } from 'react';
+import { ChangeEvent, FC, useMemo } from 'react';
 import { FeatureKey } from 'runbotics-common';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
 import { BotTab } from 'src/utils/bot-tab';
-import { BotParams } from 'src/utils/types/BotParams';
 import BotDetailsViewManager from './BotDetailsView.manager';
 
 const Results: FC = () => {
@@ -16,21 +15,22 @@ const Results: FC = () => {
     const hasLogsTabAccess = useFeatureKey([FeatureKey.BOT_HISTORY_READ]);
 
     const currentTab = useMemo(() => {
-        if (hasLogsTabAccess) {
-            return tab || BotTab.LOGS;
-        }
+        if (hasLogsTabAccess) return tab || BotTab.LOGS;
+
         return tab;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasLogsTabAccess, tab, id]);
 
     const tabs = useMemo(() => {
         const tabsToReturn = [];
-        if (hasLogsTabAccess) {
+        if (hasLogsTabAccess)
             tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') });
-        }
-        if (hasConsoleTabAccess) {
+
+        if (hasConsoleTabAccess)
             tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') });
-        }
+
         return tabsToReturn;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasConsoleTabAccess, hasLogsTabAccess]);
 
     const handleTabsChange = (event: ChangeEvent<HTMLInputElement>, value: string): void => {

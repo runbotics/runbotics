@@ -7,9 +7,9 @@ import DEFAULT_LOCALE_EN from './locale';
 export function range(start: number, end: number) {
     const array: number[] = [];
 
-    for (let i = start; i <= end; i += 1) {
+    for (let i = start; i <= end; i += 1) 
         array.push(i);
-    }
+    
 
     return array;
 }
@@ -30,9 +30,9 @@ export function dedup(array: number[]) {
     const result: number[] = [];
 
     array.forEach((i) => {
-        if (result.indexOf(i) < 0) {
+        if (result.indexOf(i) < 0) 
             result.push(i);
-        }
+        
     });
 
     return result;

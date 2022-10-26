@@ -1,13 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import { useDispatch } from 'src/store';
 import { logout } from 'src/store/slices/Auth/Auth.thunks';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'Account';
@@ -66,7 +65,7 @@ const Account: FC = () => {
         }
     };
 
-    if (!auth.isAuthenticated) {
+    if (!auth.isAuthenticated)
         return (
             <RouterLink href="/login" passHref>
                 <Link className={classes.link} underline="none" variant="body2">
@@ -74,7 +73,6 @@ const Account: FC = () => {
                 </Link>
             </RouterLink>
         );
-    }
 
     return (
         <Root>

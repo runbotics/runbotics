@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@mui/material';
 import { CronProps, PeriodType } from './types';
@@ -70,7 +71,7 @@ export default function Cron(props: CronProps) {
 
     useEffect(
         () => {
-            if (value !== internalValueRef.current) {
+            if (value !== internalValueRef.current)
                 setValuesFromCronString(
                     value,
                     setInternalError,
@@ -87,7 +88,6 @@ export default function Cron(props: CronProps) {
                     setWeekDays,
                     setPeriod,
                 );
-            }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [value, internalValueRef, localeJSON, allowEmpty, shortcuts],
@@ -138,9 +138,7 @@ export default function Cron(props: CronProps) {
 
             const newPeriod = period !== 'reboot' && period ? period : defaultPeriodRef.current;
 
-            if (newPeriod !== period) {
-                setPeriod(newPeriod);
-            }
+            if (newPeriod !== period) setPeriod(newPeriod);
 
             // When clearButtonAction is 'fill-with-every'
             if (clearButtonAction === 'fill-with-every') {
@@ -195,7 +193,7 @@ export default function Cron(props: CronProps) {
     const otherClearButtonPropsJSON = JSON.stringify(otherClearButtonProps);
     const clearButtonNode = useMemo(
         () => {
-            if (clearButton && !readOnly) {
+            if (clearButton && !readOnly)
                 return (
                     <Button
                         style={{ marginLeft: '10px' }}
@@ -208,7 +206,6 @@ export default function Cron(props: CronProps) {
                         {locale.clearButtonText || DEFAULT_LOCALE_EN.clearButtonText}
                     </Button>
                 );
-            }
 
             return null;
         },

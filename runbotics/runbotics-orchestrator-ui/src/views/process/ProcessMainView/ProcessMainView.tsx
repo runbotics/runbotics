@@ -36,15 +36,18 @@ const ProcessMainView: FC = () => {
         },
     ];
 
-    const accessedTabs = useMemo(() => {
-        return processTabs.filter((tab) => {
-            if (tab.featureKeys) {
-                return hasFeatureKeyAccess(user, tab.featureKeys);
-            }
+    const accessedTabs = useMemo(
+        () =>
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            processTabs.filter((tab) => {
+                if (tab.featureKeys) return hasFeatureKeyAccess(user, tab.featureKeys);
 
-            return true;
-        });
-    }, [user, i18n.language]);
+                return true;
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [user, i18n.language],
+    );
 
     const handleMainTabsChange = (processTab: ProcessTab) => {
         router.push({ pathname: `/app/processes/${id}/${processTab}` });

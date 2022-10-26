@@ -87,30 +87,30 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
             </Typography>
             <Box display="flex" flexDirection="column" gap="0.5rem">
                 {schedules.map((schedule) => (
-                        <Card key={schedule.id} className={classes.card}>
-                            <CardContent className={classes.cardContent}>
-                                <Box display="flex" alignItems="center">
-                                    <Avatar classes={{ root: clsx(classes.avatar) }}>
-                                        <SvgIcon fontSize="small">
-                                            <CalendarIcon />
-                                        </SvgIcon>
-                                    </Avatar>
-                                    <Typography
-                                        variant="body1"
-                                        className={classes.typography}
-                                    >
-                                        {humanReadableCron(schedule.cron)}
-                                    </Typography>
-                                </Box>
-                                <If condition={hasDeleteScheduleAccess}>
-                                    <IconButton className={classes.deleteButton} onClick={() => handleDelete(schedule.id)}>
-                                        <SvgIcon fontSize="small" color="secondary">
-                                            <TrashIcon />
-                                        </SvgIcon>
-                                    </IconButton>
-                                </If>
-                            </CardContent>
-                        </Card>
+                    <Card key={schedule.id} className={classes.card}>
+                        <CardContent className={classes.cardContent}>
+                            <Box display="flex" alignItems="center">
+                                <Avatar classes={{ root: clsx(classes.avatar) }}>
+                                    <SvgIcon fontSize="small">
+                                        <CalendarIcon />
+                                    </SvgIcon>
+                                </Avatar>
+                                <Typography
+                                    variant="body1"
+                                    className={classes.typography}
+                                >
+                                    {humanReadableCron(schedule.cron)}
+                                </Typography>
+                            </Box>
+                            <If condition={hasDeleteScheduleAccess}>
+                                <IconButton className={classes.deleteButton} onClick={() => handleDelete(schedule.id)}>
+                                    <SvgIcon fontSize="small" color="secondary">
+                                        <TrashIcon />
+                                    </SvgIcon>
+                                </IconButton>
+                            </If>
+                        </CardContent>
+                    </Card>
                 ))}
             </Box>
         </StyledContainer>

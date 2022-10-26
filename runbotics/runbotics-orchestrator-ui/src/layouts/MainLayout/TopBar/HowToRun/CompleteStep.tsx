@@ -1,9 +1,7 @@
-import React, { FC, FormEvent, useState } from 'react';
+import React, { FC, FormEvent } from 'react';
 import styled from 'styled-components';
 import clsx from 'clsx';
-import {
-    Box, Button, FormHelperText, Typography,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'CompleteStep';
@@ -26,11 +24,9 @@ interface CompleteStepProps {
     onBack?: () => void;
 }
 
-const CompleteStep: FC<CompleteStepProps> = ({
-    className, onBack, onComplete, ...rest
-}) => {
-    const [isSubmitting, setSubmitting] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+const CompleteStep: FC<CompleteStepProps> = ({ className, onComplete, ...rest }) => {
+    // const [isSubmitting, setSubmitting] = useState<boolean>(false);
+    // const [error, setError] = useState<string | null>(null);
     const { translate } = useTranslations();
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -48,15 +44,15 @@ const CompleteStep: FC<CompleteStepProps> = ({
                     {translate('Install.CompletedStep.Completed')}
                 </Typography>
             </Box>
-            {error && (
+            {/* {false && (
                 <Box mt={2}>
                     <FormHelperText error>{FormHelperText}</FormHelperText>
                 </Box>
-            )}
+            )} */}
             <Box mt="auto" display="flex">
                 <Box flexGrow={1} />
                 <Box>
-                    <Button color="secondary" disabled={isSubmitting} type="submit" variant="contained" size="large">
+                    <Button color="secondary" type="submit" variant="contained" size="large">
                         {translate('Common.Complete')}
                     </Button>
                 </Box>

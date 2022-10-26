@@ -1,6 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, FC, ChangeEvent } from 'react';
 import styled from 'styled-components';
-import type { FC, ChangeEvent } from 'react';
 import { Button, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -49,15 +48,10 @@ const MultiSelect: FC<MultiSelectProps> = ({ label, options, value, onChange }) 
     const handleOptionToggle = (event: ChangeEvent<HTMLInputElement>): void => {
         let newValue = [...value];
 
-        if (event.target.checked) {
-            newValue.push(event.target.value);
-        } else {
-            newValue = newValue.filter((item) => item !== event.target.value);
-        }
+        if (event.target.checked) newValue.push(event.target.value);
+        else newValue = newValue.filter((item) => item !== event.target.value);
 
-        if (onChange) {
-            onChange(newValue);
-        }
+        if (onChange) onChange(newValue);
     };
 
     return (

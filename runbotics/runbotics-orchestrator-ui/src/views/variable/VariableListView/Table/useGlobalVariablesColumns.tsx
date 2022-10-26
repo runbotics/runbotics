@@ -64,14 +64,10 @@ const useGlobalVariablesColumns = ({
             type: 'actions',
             getActions: (params: GridRowParams<IGlobalVariable>) => {
                 const handleEditClick = () => {
-                    if (onEdit) {
-                        onEdit(params.row);
-                    }
+                    if (onEdit) onEdit(params.row);
                 };
                 const handleDeleteClick = () => {
-                    if (onDelete) {
-                        onDelete(params.row);
-                    }
+                    if (onDelete) onDelete(params.row);
                 };
                 return [
                     <GridActionsCellItem
@@ -79,12 +75,14 @@ const useGlobalVariablesColumns = ({
                         label={translate('Variables.ListView.Table.Actions.Edit')}
                         onClick={handleEditClick}
                         showInMenu={hasEditVariableAccess}
+                        key="edit"
                     />,
                     <GridActionsCellItem
                         label={translate('Variables.ListView.Table.Actions.Delete')}
                         icon={<DeleteIcon />}
                         onClick={handleDeleteClick}
                         showInMenu={hasDeleteVariableAccess}
+                        key="delete"
                     />,
                 ];
             },

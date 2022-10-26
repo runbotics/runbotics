@@ -1,8 +1,7 @@
-import React, { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
+import { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
 import useUpdateEffect from 'src/hooks/useUpdateEffect';
-import { useRouter } from 'next/router';
 import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 interface ProcessPageProps {
@@ -35,7 +34,6 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     setPage,
 }) => {
     const dispatch = useDispatch();
-    const router = useRouter();
     const replaceQueryParams = useReplaceQueryParams();
 
     useUpdateEffect(() => {

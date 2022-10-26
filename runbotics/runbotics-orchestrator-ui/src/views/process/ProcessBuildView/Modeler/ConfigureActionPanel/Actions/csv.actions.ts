@@ -242,6 +242,6 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getCsvActions;

@@ -12,9 +12,7 @@ export const groupActions = {
     updateGroup: (key: string, open: boolean) => ({ type: 'updateGroup', label: key, open } as GroupAction),
 };
 
-const mapAll = (state: GroupState, value: boolean): GroupState => {
-    return Object.fromEntries(Object.keys(state).map((key) => [key, value]));
-};
+const mapAll = (state: GroupState, value: boolean): GroupState => Object.fromEntries(Object.keys(state).map((key) => [key, value]));
 
 const groupReducer: React.Reducer<GroupState, GroupAction> = (state, action) => {
     switch (action.type) {
@@ -25,11 +23,11 @@ const groupReducer: React.Reducer<GroupState, GroupAction> = (state, action) => 
         case 'updateGroup':
             state[action.label] = action.open;
             return { ...state, [action.label]: action.open };
+        default:
+            return state;
     }
 };
 
-const useGroupReducer = (initialState: GroupState) => {
-    return useReducer(groupReducer, initialState);
-};
+const useGroupReducer = (initialState: GroupState) => useReducer(groupReducer, initialState);
 
 export default useGroupReducer;

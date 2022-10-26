@@ -1,5 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
-import type { FC, ChangeEvent } from 'react';
+import React, { MouseEvent, useEffect, useState, FC, ChangeEvent } from 'react';
 import clsx from 'clsx';
 import {
     Autocomplete,
@@ -64,6 +63,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
             setCurrentPage(0);
             replaceQueryParams({ page: 0, pageSize: limit });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     useEffect(() => {
@@ -72,14 +72,15 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
             size: limit,
             ...(collectionFilter &&
                 collectionFilter.length && {
-                    filter: {
-                        in: {
-                            collection: collectionFilter,
-                        },
+                filter: {
+                    in: {
+                        collection: collectionFilter,
                     },
-                }),
+                },
+            }),
         };
         dispatch(botActions.getPage(params));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, limit, collectionFilter]);
 
     const handlePageChange = (event: any, newPage: number): void => {

@@ -10,9 +10,9 @@ const Index = () => {
     const [isOpen, setOpen] = useLocalStorage('HowToRun', false);
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
-        if (urlParams && urlParams.get('open') === 'howto') {
-            setOpen(true);
-        }
+        if (urlParams && urlParams.get('open') === 'howto') setOpen(true);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search, setOpen]);
     const handleOpen = (): void => {
         setOpen(true);

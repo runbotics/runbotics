@@ -1,8 +1,8 @@
+/* eslint-disable no-duplicate-imports */
 import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
-import type { TypedUseSelectorHook } from 'react-redux';
 import type { ThunkAction } from 'redux-thunk';
 import { configureStore } from '@reduxjs/toolkit';
-import type { Action } from '@reduxjs/toolkit';
+import type { Action, TypedUseSelectorHook } from '@reduxjs/toolkit';
 import { ENABLE_REDUX_DEV_TOOLS } from 'src/utils/constants';
 import rootReducer from './rootReducer';
 

@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import RouterLink from 'next/link';
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';

@@ -29,10 +29,10 @@ const themes = {
 const createTheme = (config: ThemeConfig, language: string): Theme => {
     const themeOptions = themes[config.theme];
 
-    if (!themeOptions) {
+    if (!themeOptions) 
         // eslint-disable-next-line no-console
         console.warn(new Error(`The theme ${config.theme} is not valid`));
-    }
+    
 
     let theme = createMuiTheme(
         _.merge({}, baseOptions, themeOptions),
@@ -40,9 +40,9 @@ const createTheme = (config: ThemeConfig, language: string): Theme => {
         language === 'pl' ? plPL : enUS,
     );
 
-    if (config.responsiveFontSizes) {
+    if (config.responsiveFontSizes) 
         theme = responsiveFontSizes(theme);
-    }
+    
 
     return theme;
 };

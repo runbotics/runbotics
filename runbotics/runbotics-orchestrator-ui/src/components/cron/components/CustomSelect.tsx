@@ -21,15 +21,15 @@ export default function CustomSelect(props: CustomSelectProps) {
     } = props;
 
     const stringValue = useMemo(() => {
-        if (value && Array.isArray(value)) {
+        if (value && Array.isArray(value)) 
             return value.map((item: number) => item.toString());
-        }
+        
         return [];
     }, [value]);
 
     const options = useMemo(
         () => {
-            if (optionsList) {
+            if (optionsList) 
                 return optionsList.map((option, index) => {
                     const number = unit.min === 0 ? index : index + 1;
                     return {
@@ -37,7 +37,7 @@ export default function CustomSelect(props: CustomSelectProps) {
                         label: option,
                     };
                 });
-            }
+            
             return [...Array(unit.total)].map((e, index) => {
                 const number = unit.min === 0 ? index : index + 1;
                 return {
@@ -52,9 +52,9 @@ export default function CustomSelect(props: CustomSelectProps) {
         (tagProps) => {
             const propsValue = tagProps;
 
-            if (!propsValue || Number.isNaN((propsValue[0]))) {
+            if (!propsValue || Number.isNaN((propsValue[0]))) 
                 return <></>;
-            }
+            
 
             const parsedArray = parsePartArray(propsValue, unit);
             const cronValue = partToString(parsedArray, unit, humanizeLabels, leadingZero, clockFormat);
@@ -75,16 +75,16 @@ export default function CustomSelect(props: CustomSelectProps) {
     const simpleClick = useCallback(
         (event) => {
             let newValueOption: number[] = event.target.value;
-            if (newValueOption.length === 0) {
+            if (newValueOption.length === 0) 
                 newValueOption.push(0);
-            }
+            
             newValueOption = Array.isArray(newValueOption) ? sort(newValueOption) : [newValueOption];
             const newValue: number[] = newValueOption;
-            if (newValue.length === unit.total) {
+            if (newValue.length === unit.total) 
                 setValue([]);
-            } else {
+            else 
                 setValue(newValue);
-            }
+            
         },
         [setValue, unit.total],
     );

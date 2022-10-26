@@ -61,6 +61,6 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getApplicationActions;

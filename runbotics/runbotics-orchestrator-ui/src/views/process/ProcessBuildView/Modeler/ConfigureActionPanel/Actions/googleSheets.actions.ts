@@ -35,6 +35,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-}) 
+}); 
 
 export default getGoogleSheetsActions;

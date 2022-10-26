@@ -115,24 +115,22 @@ export const getParameterValue = (parameter: CamundaParameter) => {
         return result;
     }
 
-    if (!parameter.definition) {
+    if (!parameter.definition) 
         return parameter.value;
-    }
+    
     switch (parameter.definition.$type) {
         case 'camunda:List':
             return parameter.definition.items.map((item) => item.value);
-            break;
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
-            if (!map.entries) {
+            if (!map.entries) 
                 return {};
-            }
+            
             return map.entries.reduce((previousValue, currentValue) => {
                 const newPrev = previousValue;
                 newPrev[currentValue.key] = currentValue.value;
                 return newPrev;
             }, {});
-            break;
         default:
             return null;
     }
@@ -140,9 +138,9 @@ export const getParameterValue = (parameter: CamundaParameter) => {
 
 export const getInputParameters = (element: BPMNElement): Record<string, any> => {
     const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement) {
+    if (!inputOutputElement) 
         return {};
-    }
+    
     return inputOutputElement.inputParameters.reduce((previousValue, currentValue) => {
         const newPrev = previousValue;
         newPrev[currentValue.name] = getParameterValue(currentValue);
@@ -152,9 +150,9 @@ export const getInputParameters = (element: BPMNElement): Record<string, any> =>
 
 export const getOutputParameters = (element: BPMNElement): Record<string, any> => {
     const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement || !inputOutputElement.outputParameters) {
+    if (!inputOutputElement || !inputOutputElement.outputParameters) 
         return {};
-    }
+    
     return inputOutputElement.outputParameters.reduce((previousValue, currentValue) => {
         const newPrev = previousValue;
         newPrev[currentValue.name] = getParameterValue(currentValue);

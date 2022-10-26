@@ -464,6 +464,6 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     //         }
     //     }
     // },
-})
+});
 
 export default getSharepointFileActions;

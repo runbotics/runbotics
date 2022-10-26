@@ -39,9 +39,9 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
     };
 
     const handleRedirect = (event, collectionId: string) => {
-        if (event.target.nodeName === 'TD') {
+        if (event.target.nodeName === 'TD') 
             router.push(`/app/bots?collection=${collectionId}`);
-        }
+        
     };
 
     const handleSearchName = (event) => {

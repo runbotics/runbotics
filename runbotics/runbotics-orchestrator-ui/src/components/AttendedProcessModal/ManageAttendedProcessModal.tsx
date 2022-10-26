@@ -17,7 +17,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { defaultForm } from './utils';
-import _ from 'lodash';
 import Dialog from '@mui/material/Dialog';
 import { translate } from 'src/hooks/useTranslations';
 import If from '../utils/If';
@@ -70,9 +69,9 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
     const isDeleteDisabled = !process?.executionInfo;
 
     useEffect(() => {
-        if (process) {
+        if (process) 
             setDraft({ form: process?.executionInfo ? process.executionInfo : defaultForm });
-        }
+        
     }, [process]);
 
     useEffect(() => {

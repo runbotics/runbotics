@@ -36,9 +36,9 @@ export const resetActive = (state: ProcessInstanceState) => {
 const updateProcessInstancePageList = (processInstanceList: IProcessInstance[], newProcessInst: IProcessInstance) => {
     const exist = processInstanceList.some((item) => item.id === newProcessInst.id);
 
-    if (!exist) {
+    if (!exist) 
         return { exist };
-    }
+    
 
     const newProcessInstancesList = processInstanceList.reduce<IProcessInstance[]>(
         (acc, processInstance) => (processInstance.id === newProcessInst.id
@@ -58,9 +58,9 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
         action.payload,
     );
 
-    if (exist) {
+    if (exist) 
         state.all.page.content = newProcessInstancesList;
-    } else {
+    else 
         state.all.page?.content.unshift(action.payload);
-    }
+    
 };

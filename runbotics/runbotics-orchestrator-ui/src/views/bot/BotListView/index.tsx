@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import type { FC } from 'react';
+import { useEffect, FC } from 'react';
 import { Box } from '@mui/material';
 import { botActions } from 'src/store/slices/Bot';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
@@ -17,6 +16,7 @@ const BotListView: FC<BotListViewProps> = ({ collectionId }) => {
     useEffect(() => {
         dispatch(botActions.getAll());
         dispatch(botCollectionActions.getAll());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

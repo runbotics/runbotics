@@ -49,6 +49,6 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getAsanaActions;

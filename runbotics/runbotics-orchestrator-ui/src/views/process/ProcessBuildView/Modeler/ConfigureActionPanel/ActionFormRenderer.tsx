@@ -22,9 +22,8 @@ const ActionFormRenderer: FC = () => {
 
     const defaultUISchema = React.useMemo<UiSchema>(() => {
         const cloned = { ...action.form.uiSchema };
-        if (cloned['ui:order']) {
-            cloned['ui:order'] = ['disabled', 'runFromHere', ...action.form.uiSchema['ui:order']];
-        }
+        if (cloned['ui:order']) cloned['ui:order'] = ['disabled', 'runFromHere', ...action.form.uiSchema['ui:order']];
+
         return cloned;
     }, [action.form.uiSchema]);
 
@@ -43,6 +42,7 @@ const ActionFormRenderer: FC = () => {
                 ...action.form.schema.properties,
             },
         }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [action.form.schema, i18n.language],
     );
     const defaultFormData = React.useMemo(() => {
@@ -54,7 +54,7 @@ const ActionFormRenderer: FC = () => {
 
         if (action.output && action.output.assignVariables) {
             const outputParameters = getOutputParameters(element);
-            if (Object.entries(outputParameters).length > 0) {
+            if (Object.entries(outputParameters).length > 0)
                 Object.entries(outputParameters).forEach(([key], index) => {
                     defaultParameters.output[
                         Object.keys(defaultParameters.output)[index]
@@ -62,20 +62,18 @@ const ActionFormRenderer: FC = () => {
                             : 'variableName'
                     ] = key;
                 });
-            }
         }
 
         const outputParameters = getOutputParameters(element);
         Object.entries(outputParameters).forEach(([key, value]) => {
-            if (defaultParameters.output) {
-                defaultParameters.output[key] = value;
-            }
+            if (defaultParameters.output) defaultParameters.output[key] = value;
         });
 
         defaultParameters.disabled = element.businessObject.disabled;
         defaultParameters.runFromHere = element.businessObject.runFromHere;
 
         return defaultParameters;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [action, element, commandStack.commandStackIdx]);
 
     const handleSubmit = (event: IFormData) => {

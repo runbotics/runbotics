@@ -1,11 +1,7 @@
-import React, {
-    FC, FormEvent, useEffect, useState,
-} from 'react';
+import { FC, FormEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import clsx from 'clsx';
-import {
-    Box, Button, FormHelperText, Typography,
-} from '@mui/material';
+import { Box, Button, FormHelperText, Typography } from '@mui/material';
 import { IProcess } from 'runbotics-common';
 import Axios from 'axios';
 import BotProcessRunner from 'src/components/BotProcessRunner';
@@ -31,10 +27,8 @@ interface RunStepProps {
     onBack?: () => void;
 }
 
-const RunStep: FC<RunStepProps> = ({
-    className, onBack, onComplete, ...rest
-}) => {
-    const [isSubmitting, setSubmitting] = useState<boolean>(false);
+const RunStep: FC<RunStepProps> = ({ className, onBack, ...rest }) => {
+    // eslint-disable-next-line unused-imports/no-unused-vars
     const [error, setError] = useState<string | null>(null);
     const [helloProcess, setHelloProcess] = useState<IProcess>();
     const { translate } = useTranslations();
@@ -49,12 +43,11 @@ const RunStep: FC<RunStepProps> = ({
                 setError(translate('Install.Errors.ProcessNotFound'));
             }
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setSubmitting(true);
-        setSubmitting(false);
     };
 
     return (
@@ -81,9 +74,7 @@ const RunStep: FC<RunStepProps> = ({
                 <Box flexGrow={1} />
 
                 <Box>
-                    {
-                        helloProcess && <BotProcessRunner process={helloProcess} /* onClose={() => onComplete()} */ />
-                    }
+                    {helloProcess && <BotProcessRunner process={helloProcess} /* onClose={() => onComplete()} */ />}
                 </Box>
             </Box>
         </Root>

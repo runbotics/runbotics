@@ -30,6 +30,7 @@ const SchedulerView = () => {
         dispatch(schedulerActions.getActiveJobs());
         dispatch(schedulerActions.getScheduledJobs());
         dispatch(schedulerActions.getWaitingJobs());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const activeProcessColumns = useActiveProcessColumns();
@@ -37,15 +38,11 @@ const SchedulerView = () => {
     const scheduledProcessColumns = useScheduledProcessColumns();
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
-        if (rowData.process) {
-            router.push(`/app/processes/${rowData.process.id}/build`);
-        }
+        if (rowData.process) router.push(`/app/processes/${rowData.process.id}/build`);
     };
 
     const handleSchedulerJobRedirect = (rowData: SchedulerJob) => {
-        if (rowData.data.process) {
-            router.push(`/app/processes/${rowData.data.process.id}/build`);
-        }
+        if (rowData.data.process) router.push(`/app/processes/${rowData.data.process.id}/build`);
     };
 
     const handleScheduledJobRedirect = (rowData: ScheduledJob) => {

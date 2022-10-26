@@ -6,30 +6,28 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { classNames } from '../utils';
 import { UNITS } from '../constants';
 
+// eslint-disable-next-line complexity
 export default function WeekDays(props: WeekDaysProps) {
-    const {
-        value, setValue, locale, className, humanizeLabels, monthDays, disabled, readOnly, period,
-    } = props;
+    const { value, setValue, locale, className, humanizeLabels, monthDays, disabled, readOnly, period } = props;
     const optionsList = locale.weekDays || DEFAULT_LOCALE_EN.weekDays;
     const noMonthDays = period === 'week' || !monthDays || monthDays.length === 0;
 
     const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-week-days': true,
-            'react-js-cron-week-days-placeholder': !noMonthDays,
-            [`${className}-field`]: !!className,
-            [`${className}-week-days`]: !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-field': true,
+                'react-js-cron-week-days': true,
+                'react-js-cron-week-days-placeholder': !noMonthDays,
+                [`${className}-field`]: !!className,
+                [`${className}-week-days`]: !!className,
+            }),
         [className, noMonthDays],
     );
 
     const localeJSON = JSON.stringify(locale);
     const placeholder = useMemo(
         () => {
-            if (noMonthDays) {
-                return locale.emptyWeekDays || DEFAULT_LOCALE_EN.emptyWeekDays;
-            }
+            if (noMonthDays) return locale.emptyWeekDays || DEFAULT_LOCALE_EN.emptyWeekDays;
 
             return locale.emptyWeekDaysShort || DEFAULT_LOCALE_EN.emptyWeekDaysShort;
         },
@@ -37,14 +35,16 @@ export default function WeekDays(props: WeekDaysProps) {
         [noMonthDays, localeJSON],
     );
 
-    const displayWeekDays = period === 'week'
-        || !readOnly
-        || (value && value.length > 0)
-        || ((!value || value.length === 0) && (!monthDays || monthDays.length === 0));
+    const displayWeekDays =
+        period === 'week' ||
+        !readOnly ||
+        (value && value.length > 0) ||
+        ((!value || value.length === 0) && (!monthDays || monthDays.length === 0));
 
-    const monthDaysIsDisplayed = !readOnly
-        || (monthDays && monthDays.length > 0)
-        || ((!monthDays || monthDays.length === 0) && (!value || value.length === 0));
+    const monthDaysIsDisplayed =
+        !readOnly ||
+        (monthDays && monthDays.length > 0) ||
+        ((!monthDays || monthDays.length === 0) && (!value || value.length === 0));
 
     return displayWeekDays ? (
         <div className={internalClassName}>
@@ -54,8 +54,8 @@ export default function WeekDays(props: WeekDaysProps) {
 
             {locale.prefixWeekDaysForMonthAndYearPeriod !== '' && period !== 'week' && monthDaysIsDisplayed && (
                 <span>
-                    {locale.prefixWeekDaysForMonthAndYearPeriod
-                        || DEFAULT_LOCALE_EN.prefixWeekDaysForMonthAndYearPeriod}
+                    {locale.prefixWeekDaysForMonthAndYearPeriod ||
+                        DEFAULT_LOCALE_EN.prefixWeekDaysForMonthAndYearPeriod}
                 </span>
             )}
 

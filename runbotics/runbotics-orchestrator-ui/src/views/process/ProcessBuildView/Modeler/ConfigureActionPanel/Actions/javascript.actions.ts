@@ -161,6 +161,6 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getJavascriptActions;

@@ -304,6 +304,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getFileActions;

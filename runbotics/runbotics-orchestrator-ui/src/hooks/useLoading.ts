@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LOADING_DEBOUNCE } from 'src/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 
 const useLoading = (isLoading: boolean, delay = LOADING_DEBOUNCE) => {
@@ -18,10 +18,12 @@ const useLoading = (isLoading: boolean, delay = LOADING_DEBOUNCE) => {
             setIsDelayPassed(true);
             clearTimeout(id);
         }, delay);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading, delay]);
 
     useEffect(() => {
         setShowLoading(isLoading);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDelayPassed]);
 
     return showLoading;

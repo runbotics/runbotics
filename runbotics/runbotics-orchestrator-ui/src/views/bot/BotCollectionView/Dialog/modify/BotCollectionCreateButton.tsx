@@ -26,10 +26,10 @@ const BotCollectionCreateButton: FC<BotCollectionModifyProps> = ({ botCollection
                 {translate('Bot.Collection.Dialog.Modify.CreateButton')}
             </Button>
             <BotCollectionModifyDialog
-                        open={show}
-                        onClose={() => setShow(false)}
-                        pageParams={params}
-                        collection={botCollection}
+                open={show}
+                onClose={() => setShow(false)}
+                pageParams={params}
+                collection={botCollection}
             />
         </>
     );

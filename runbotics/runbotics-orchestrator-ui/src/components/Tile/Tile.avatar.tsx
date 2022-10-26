@@ -22,13 +22,13 @@ const TileAvatar: VFC<TileAvatarProps> = ({ href, title }) => {
     const { translate } = useTranslations();
 
     const AvatarWrapper = ({ children }) => {
-        if (href) {
+        if (href) 
             return (
                 <RouterLink href={href} passHref>
                     <Link>{children}</Link>
                 </RouterLink>
             );
-        }
+        
 
         return children;
     };

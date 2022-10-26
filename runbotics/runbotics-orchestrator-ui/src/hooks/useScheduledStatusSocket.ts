@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import {
     IProcessInstance, IProcessInstanceEvent, ProcessInstanceStatus, WsMessage,
 } from 'runbotics-common';
@@ -28,11 +28,11 @@ export const useScheduledStatusSocket = () => {
                 return;
             }
 
-            if (isFinishedStatus(processInstance.status)) {
+            if (isFinishedStatus(processInstance.status))
                 dispatch(schedulerActions.removeActiveJob(processInstance));
-            }
 
-            if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
+
+            if (processInstance.status === ProcessInstanceStatus.TERMINATED)
                 enqueueSnackbar(
                     translate('Scheduler.ActiveProcess.Terminate.Success', {
                         processName: processInstance.process.name,
@@ -40,7 +40,7 @@ export const useScheduledStatusSocket = () => {
                         variant: 'success',
                     },
                 );
-            }
+
         });
 
         socket.on(WsMessage.REMOVE_WAITING_SCHEDULE, (job: SchedulerJob) => {
@@ -69,6 +69,7 @@ export const useScheduledStatusSocket = () => {
             socket.off(WsMessage.ADD_WAITING_SCHEDULE);
             socket.off(WsMessage.PROCESS);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 };
 

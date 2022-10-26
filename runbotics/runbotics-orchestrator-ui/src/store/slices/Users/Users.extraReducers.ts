@@ -14,7 +14,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAll.rejected, (state) => {
             state.loading = false;
-        })
+        });
 };
 
 export default buildUsersExtraReducers;

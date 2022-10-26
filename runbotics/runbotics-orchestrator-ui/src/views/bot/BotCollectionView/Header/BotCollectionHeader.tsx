@@ -22,11 +22,11 @@ const BotCollectionHeader: VFC<BotCollectionHeaderProps> = ({
     return (
         <Box display="flex" flexDirection="column" gap="1rem">
             <Box display="flex" justifyContent="flex-end">
-            <If condition={hasAddNewBotCollectionAccess}>
-                <BotCollectionCreateButton
-                    displayMode={displayMode}
-                />
-            </If>
+                <If condition={hasAddNewBotCollectionAccess}>
+                    <BotCollectionCreateButton
+                        displayMode={displayMode}
+                    />
+                </If>
             </Box>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Typography className={classes.title} variant="h5" color="textPrimary">

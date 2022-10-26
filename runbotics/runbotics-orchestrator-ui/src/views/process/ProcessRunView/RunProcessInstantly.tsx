@@ -1,4 +1,4 @@
-import React, { useState, VFC } from 'react';
+import React, { VFC } from 'react';
 import styled from 'styled-components';
 import { Box, Paper } from '@mui/material';
 import BotProcessRunner from 'src/components/BotProcessRunner';

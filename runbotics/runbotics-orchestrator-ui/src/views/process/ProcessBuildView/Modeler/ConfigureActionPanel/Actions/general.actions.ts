@@ -148,6 +148,6 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getGeneralActions;

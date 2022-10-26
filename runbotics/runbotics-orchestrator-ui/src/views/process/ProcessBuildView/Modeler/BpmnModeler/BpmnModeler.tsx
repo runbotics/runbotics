@@ -44,9 +44,7 @@ import modelerPalette from '../modeler-palette';
 import If from 'src/components/utils/If';
 import useNavigationLock from 'src/hooks/useNavigationLock';
 import { translate } from 'src/hooks/useTranslations';
-import { useRouter } from 'next/router';
 import i18n from 'i18next';
-import RouteLeavingGuard from './RouteLeavingGuard';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -76,9 +74,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [modeler, offsetTop]);
 
         useEffect(() => {
-            if (prevLanguage !== i18n.language && modeler) {
-                modeler._container.remove();
-            }
+            if (prevLanguage !== i18n.language && modeler) modeler._container.remove();
+
             setPrevLanguage(i18n.language);
 
             if (!offsetTop) return;
@@ -113,7 +110,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             const eventBus = bpmnModeler.get('eventBus');
 
-            eventBus.on('commandStack.changed', (e) => {
+            eventBus.on('commandStack.changed', () => {
                 const { _stackIdx, _stack } = bpmnModeler.get('commandStack');
                 const isLastIndex = parseInt(_stackIdx) >= 0;
 
@@ -122,18 +119,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     commandStackSize: _stack.length,
                 });
 
-                if (isLastIndex || imported) {
-                    dispatch(processActions.setSaveDisabled(false));
-                } else {
-                    dispatch(processActions.setSaveDisabled(true));
-                }
+                if (isLastIndex || imported) dispatch(processActions.setSaveDisabled(false));
+                else dispatch(processActions.setSaveDisabled(true));
             });
 
-            eventBus.on('commandStack.shape.delete.preExecute', (e) => {
+            eventBus.on('commandStack.shape.delete.preExecute', () => {
                 setSelectedElement(null);
             });
 
-            eventBus.on('commandStack.connection.delete.preExecute', (e) => {
+            eventBus.on('commandStack.connection.delete.preExecute', () => {
                 setSelectedElement(null);
             });
 
@@ -144,20 +138,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
                     const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
                     applyModelerElement({ modeler: bpmnModeler, element, action });
-                    if (element.id.includes('Activity')) {
-                        dispatch(processActions.addAppliedAction(element.id));
-                    }
+                    if (element.id.includes('Activity')) dispatch(processActions.addAppliedAction(element.id));
                 }
-                if (event.context.elements.length > 1) {
+                if (event.context.elements.length > 1)
                     event.context.elements.forEach((element) => {
                         const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
                         const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
                         applyModelerElement({ modeler: bpmnModeler, element, action });
-                        if (element.id.includes('Activity')) {
-                            dispatch(processActions.addAppliedAction(element.id));
-                        }
+                        if (element.id.includes('Activity')) dispatch(processActions.addAppliedAction(element.id));
                     });
-                }
             });
 
             eventBus.on('element.click', (event: any) => {
@@ -169,7 +158,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 }
             });
 
-            eventBus.on('connection.removed', (event: any) => {
+            eventBus.on('connection.removed', () => {
                 setCurrentTab(null);
             });
 
@@ -180,9 +169,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             setModeler(bpmnModeler);
 
-            return () => {
-                dispatch(processActions.setSaveDisabled(true));
-            };
+            // eslint-disable-next-line consistent-return
+            return () => dispatch(processActions.setSaveDisabled(true));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
@@ -192,11 +181,10 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
 
             const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
-            if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported) {
+            if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported)
                 dispatch(processActions.setSaveDisabled(false));
-            } else {
-                dispatch(processActions.setSaveDisabled(true));
-            }
+            else dispatch(processActions.setSaveDisabled(true));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [appliedActivities, modeler]);
 
         useImperativeHandle(
@@ -229,28 +217,21 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 const canvas = modeler.get('canvas');
                 canvas.zoom('fit-viewport', 'auto');
             } catch (error) {
-                if (error) {
-                    console.log('fail import xml');
-                }
+                // eslint-disable-next-line no-console
+                if (error) console.log('fail import xml');
             }
         };
 
         useUpdateEffect(() => {
-            if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) {
-                setSelectedElement(null);
-            }
+            if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) setSelectedElement(null);
         }, [currentTab]);
 
         useUpdateEffect(() => {
-            if (selectedElement) {
-                setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
-            }
+            if (selectedElement) setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
         }, [selectedElement]);
 
         useAsyncEffect(async () => {
-            if (modeler) {
-                await openBpmnDiagram(definition ?? emptyBpmn);
-            }
+            if (modeler) await openBpmnDiagram(definition ?? emptyBpmn);
         }, [modeler, definition]);
 
         const onCopy = () => {
@@ -282,8 +263,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         };
 
         return (
-            <Hotkeys keyName="command+c,ctrl+c" disabled={selectedElement == null} onKeyDown={onCopy}>
-                <Hotkeys keyName="command+b,ctrl+b" disabled={selectedElement == null} onKeyDown={onPaste}>
+            <Hotkeys keyName="command+c,ctrl+c" disabled={selectedElement === null} onKeyDown={onCopy}>
+                <Hotkeys keyName="command+b,ctrl+b" disabled={selectedElement === null} onKeyDown={onPaste}>
                     <Wrapper offsetTop={offsetTop}>
                         <ActionListPanel modeler={modeler} offsetTop={offsetTop} />
                         <ModelerArea>
@@ -340,5 +321,5 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         );
     },
 );
-
+BpmnModeler.displayName = 'BpmnModeler';
 export default BpmnModeler;

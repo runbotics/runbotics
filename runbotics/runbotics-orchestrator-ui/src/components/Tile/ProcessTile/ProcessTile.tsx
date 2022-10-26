@@ -1,4 +1,3 @@
-import React from 'react';
 import type { VFC } from 'react';
 import { Box, Divider } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
@@ -17,11 +16,8 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
 
     const handleRedirect = () => {
-        if (hasBuildTabAccess) {
-            router.push(buildProcessUrl(process, ProcessTab.BUILD));
-        } else {
-            router.push(buildProcessUrl(process, ProcessTab.RUN));
-        }
+        if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
+        else router.push(buildProcessUrl(process, ProcessTab.RUN));
     };
 
     return (

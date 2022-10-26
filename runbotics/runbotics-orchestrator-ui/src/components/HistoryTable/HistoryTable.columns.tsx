@@ -19,15 +19,14 @@ const useProcessInstanceColumns = (): Column[] => {
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) => (row.original.subProcesses && row.original.subProcesses.length > 0
-                ? (
+            Cell: ({ row }) =>
+                row.original.subProcesses && row.original.subProcesses.length > 0 ? (
                     <RowCustomExpandedSpan isExpanded={row.isExpanded}>
                         <IconButton {...row.getToggleRowExpandedProps()} size="small">
                             <ArrowForwardIosIcon fontSize="small" />
                         </IconButton>
                     </RowCustomExpandedSpan>
-                )
-                : null),
+                ) : null,
             width: '20px',
         },
         {
@@ -68,11 +67,15 @@ const useProcessInstanceColumns = (): Column[] => {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, scheduled }) => (scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login),
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            accessor: ({ user, scheduled }) =>
+                scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login,
         },
     ];
 
-    const accessedColumns = columns.filter((column) => (column.featureKeys ? hasFeatureKeyAccess(user, column.featureKeys) : true));
+    const accessedColumns = columns.filter((column) =>
+        column.featureKeys ? hasFeatureKeyAccess(user, column.featureKeys) : true,
+    );
 
     return accessedColumns;
 };

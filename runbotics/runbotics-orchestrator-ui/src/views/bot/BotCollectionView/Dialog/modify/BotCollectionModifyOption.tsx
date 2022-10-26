@@ -14,10 +14,10 @@ const BotCollectionModifyOption: FC<BotCollectionModifyProps> = ({ botCollection
         <>
             <MenuItem onClick={() => setShow(true)}>{translate('Bot.Collection.Actions.Modify')}</MenuItem>
             <BotCollectionModifyDialog
-                    open={show}
-                    onClose={() => setShow(false)}
-                    pageParams={params}
-                    collection={botCollection}
+                open={show}
+                onClose={() => setShow(false)}
+                pageParams={params}
+                collection={botCollection}
             />
         </>
     );

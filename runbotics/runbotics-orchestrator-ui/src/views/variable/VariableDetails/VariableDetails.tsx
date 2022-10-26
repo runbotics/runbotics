@@ -36,11 +36,11 @@ const VariableDetails: FunctionComponent<VariableDetailsProps> = ({ onClose, var
     };
 
     useEffect(() => {
-        if (variableDetailState.show) {
+        if (variableDetailState.show) 
             setVariable(mapVariableToInnerState(variableDetailState.variable));
-        } else {
+        else 
             setVariable(initialVariableState);
-        }
+        
     }, [variableDetailState.show, variableDetailState.variable]);
 
     const handleCreateGlobalVariable = (globalVariable: IGlobalVariable) => {

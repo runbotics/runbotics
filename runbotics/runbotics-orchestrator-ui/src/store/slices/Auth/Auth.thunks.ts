@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { User } from 'src/types/user';
-import objFromArray from 'src/utils/objFromArray';
 
 const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
@@ -20,9 +19,9 @@ export const login = createAsyncThunk('auth/login', async (payload: { email: str
         password: payload.password,
         rememberMe: true,
     });
-    const { id_token } = response.data;
+    const { id_token: idToken } = response.data;
 
-    setAccessToken(id_token);
+    setAccessToken(idToken);
     const responseUser = await Axios.get<User>('/api/account');
     const user = responseUser.data;
     return { ...user, authoritiesById: user?.roles };
@@ -33,9 +32,9 @@ export const logout = createAsyncThunk('auth/logout', () => {
 });
 
 const isValidToken = (accessToken: string): boolean => {
-    if (!accessToken) {
+    if (!accessToken)
         return false;
-    }
+
     const decoded: any = jwtDecode(accessToken);
     const currentTime = Date.now() / 1000;
     return decoded.exp > currentTime;
@@ -44,7 +43,7 @@ const isValidToken = (accessToken: string): boolean => {
 export const initialize = createAsyncThunk<{
     isAuthenticated: boolean;
     user: User | null;
-}>('auth/initialize', async (payload: void) => {
+}>('auth/initialize', async () => {
     try {
         const accessToken = window.localStorage.getItem('access_token');
 

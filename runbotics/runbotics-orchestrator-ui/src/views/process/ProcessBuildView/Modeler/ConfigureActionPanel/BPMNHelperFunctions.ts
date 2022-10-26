@@ -5,16 +5,16 @@ class BPMNHelperFunctions {
     static getScope(element) {
         const businessObject = getBusinessObject(element);
 
-        if (isAny(businessObject, ['bpmn:Process', 'bpmn:SubProcess'])) {
+        if (isAny(businessObject, ['bpmn:Process', 'bpmn:SubProcess']))
             return businessObject.id;
-        }
+
 
         // look for processes or sub process in parents
         let parent = businessObject;
 
-        while (parent.$parent && !isAny(parent, ['bpmn:Process', 'bpmn:SubProcess'])) {
+        while (parent.$parent && !isAny(parent, ['bpmn:Process', 'bpmn:SubProcess']))
             parent = parent.$parent;
-        }
+
 
         return parent.id;
     }
@@ -26,10 +26,11 @@ class BPMNHelperFunctions {
             const businessObject = getBusinessObject(element);
             parent = businessObject?.$parent;
 
-            while (parent && parent.$parent && !isAny(parent, ['bpmn:Process', 'bpmn:SubProcess'])) {
+            while (parent && parent.$parent && !isAny(parent, ['bpmn:Process', 'bpmn:SubProcess']))
                 parent = parent.$parent;
-            }
+
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error('Error getting parent', e, element);
         }
 
@@ -40,9 +41,9 @@ class BPMNHelperFunctions {
         const businessObject = getBusinessObject(element);
         let parent = businessObject;
 
-        while (parent.$parent && !is(parent, 'bpmn:Process')) {
+        while (parent.$parent && !is(parent, 'bpmn:Process'))
             parent = parent.$parent;
-        }
+
 
         return parent;
     }

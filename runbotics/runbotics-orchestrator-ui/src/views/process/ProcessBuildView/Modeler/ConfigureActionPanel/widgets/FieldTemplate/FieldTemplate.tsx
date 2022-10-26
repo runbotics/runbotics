@@ -32,16 +32,16 @@ const FieldTemplate = ({
     const [errors, setErrors] = useState(rawErrors);
 
     useEffect(() => {
-        if (typeof rawDescription !== 'undefined') {
+        if (typeof rawDescription !== 'undefined') 
             if (
                 checkIfKeyExists(
                     'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
                 )
             ) {
-                {/*@ts-ignore*/}
+                { /*@ts-ignore*/ }
                 setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
             }
-        }
+        
 
         if (rawErrors.length > 0) {
             const localRawErrors = [];
@@ -50,7 +50,7 @@ const FieldTemplate = ({
                 if (
                     checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawError))
                 ) {
-                    {/*@ts-ignore*/}
+                    { /*@ts-ignore*/ }
                     localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
                 } else {
                     localRawErrors.push(rawError);

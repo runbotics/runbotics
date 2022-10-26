@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import styled from 'styled-components';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
@@ -60,6 +60,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         const splitted = _.split(props.value, ' ');
         const cron5Digit = _.join(splitted.slice(1), ' ');
 
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const currentLocale = useCurrentLocale();
 
         return (
@@ -74,9 +75,10 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
 
     useEffect(() => {
         if (isSubmitSuccessful) reset();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSubmitSuccessful]);
 
-    const { process, loading } = useSelector((state) => state.process.draft);
+    const { process } = useSelector((state) => state.process.draft);
     const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
     const submitButton = (
         <SubmitButton disabled={isSubmitButtonDisabled} type="submit" variant="contained" color="primary">

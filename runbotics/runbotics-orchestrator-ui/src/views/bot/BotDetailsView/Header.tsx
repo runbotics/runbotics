@@ -1,8 +1,6 @@
 import type { FC } from 'react';
-import React from 'react';
 import styled from 'styled-components';
 import { Grid, Typography } from '@mui/material';
-import { BotParams } from 'src/utils/types/BotParams';
 import { useSelector } from 'src/store';
 import { useRouter } from 'next/router';
 

@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
-import type { FC, ChangeEvent, KeyboardEvent } from 'react';
 import clsx from 'clsx';
-import {
-    Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input,
-} from '@mui/material';
+import { Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import MultiSelect from './MultiSelect';
 
@@ -70,12 +67,11 @@ const Filter: FC<FilterProps> = ({ className, ...rest }) => {
     const handleInputKeyup = (event: KeyboardEvent<HTMLInputElement>): void => {
         event.persist();
 
-        if (event.keyCode === 13 && inputValue) {
+        if (event.keyCode === 13 && inputValue)
             if (!chips.includes(inputValue)) {
                 setChips((prevChips) => [...prevChips, inputValue]);
                 setInputValue('');
             }
-        }
     };
 
     const handleChipDelete = (chip: string): void => {

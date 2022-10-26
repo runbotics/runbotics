@@ -1,6 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Console } from 'console-feed';
-import { BotParams } from 'src/utils/types/BotParams';
 import { useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -9,6 +7,7 @@ import { Methods } from 'console-feed/lib/definitions/Console';
 import methods from 'console-feed/lib/definitions/Methods';
 import useTranslations from 'src/hooks/useTranslations';
 import { useRouter } from 'next/router';
+import { Console } from 'console-feed';
 
 const BotConsole: FC = () => {
     const router = useRouter();
@@ -16,6 +15,7 @@ const BotConsole: FC = () => {
     const dispatch = useDispatch();
     const [logs, setLogs] = useState<Message[]>([]);
     const { translate } = useTranslations();
+    const isBrowser = typeof window !== 'undefined';
 
     useEffect(() => {
         const params = new URLSearchParams(search as string);
@@ -46,9 +46,9 @@ const BotConsole: FC = () => {
                     },
                 ]);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, search]);
-
-    return <div style={{ backgroundColor: '#242424' }}>{/* <Console logs={logs} variant="dark" /> */}</div>;
+    return <div style={{ backgroundColor: '#242424' }}>{isBrowser && <Console logs={logs} variant="dark" />}</div>;
 };
 
 export default BotConsole;

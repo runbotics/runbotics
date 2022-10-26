@@ -13,8 +13,8 @@ export const SidebarNavigationWrapper = styled('div')({
 export const SidebarNavigationButton = styled('div')<{ selected: boolean }>(({ theme, selected }) => ({
     border: `${theme.typography.pxToRem(1)} solid ${theme.palette.grey[300]}`,
     borderRadius: `${theme.typography.pxToRem(15)} 0 0 ${theme.typography.pxToRem(15)}`,
-    borderRight: `none`,
-    width: `calc(1.5em)`,
+    borderRight: 'none',
+    width: 'calc(1.5em)',
     padding: `${theme.typography.pxToRem(26)} ${theme.typography.pxToRem(2)}`,
     background: selected ? theme.palette.primary.main : theme.palette.grey[100],
     color: selected ? theme.palette.common.white : theme.palette.primary.main,

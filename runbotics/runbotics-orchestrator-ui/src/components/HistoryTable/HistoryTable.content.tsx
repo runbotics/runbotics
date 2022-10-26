@@ -8,7 +8,6 @@ import InfoPanel from 'src/components/InfoPanel';
 import { useRouter } from 'next/router';
 import useQuery from 'src/hooks/useQuery';
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import useAuth from 'src/hooks/useAuth';
 import { useDispatch, useSelector } from '../../store';
 import {
     processInstanceActions,
@@ -20,7 +19,6 @@ import Table from '../Table';
 import If from '../utils/If';
 import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
-import { hasFeatureKeyAccess } from '../utils/Secured';
 import ResizableDrawer from '../ResizableDrawer';
 import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
@@ -58,6 +56,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             setPage(0);
             replaceQueryParams({ page, pageSize, tab, id });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstancePage]);
 
     useEffect(() => {
@@ -74,6 +73,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                 },
             }),
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, page]);
 
     useImperativeHandle(ref, () => ({
@@ -140,5 +140,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         </Wrapper>
     );
 });
+
+HistoryTable.displayName = 'HistoryTable';
 
 export default HistoryTable;

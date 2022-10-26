@@ -6,13 +6,10 @@ import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatu
 import { formatTimeDiff } from 'src/utils/utils';
 import If from 'src/components/utils/If';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import {
-    GridContainer, GridItem,
-} from './ProcessInstanceEventsDetails.styles';
-import {checkIfKeyExists, translate} from '../../../hooks/useTranslations'
+import { GridContainer, GridItem } from './ProcessInstanceEventsDetails.styles';
+import { checkIfKeyExists, translate } from '../../../hooks/useTranslations';
 import { convertToPascalCase } from 'src/utils/text';
 import i18n from 'i18next';
-import { TranslationsDescriptors } from 'src/translations/translations';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
@@ -20,15 +17,14 @@ interface Props {
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
     const formattedStatus = convertToPascalCase(processInstanceEvent.status);
-    const [step, setStep] = useState<string>(processInstanceEvent.step)
+    const [step, setStep] = useState<string>(processInstanceEvent.step);
 
     useEffect(() => {
-        if (checkIfKeyExists(processInstanceEvent.step)) {
-            setStep(translate(processInstanceEvent.step));
-        } else {
-            setStep(processInstanceEvent.step);
-        }
-    }, [i18n.language])
+        if (checkIfKeyExists(processInstanceEvent.step)) setStep(translate(processInstanceEvent.step));
+        else setStep(processInstanceEvent.step);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language]);
 
     return (
         <GridContainer>

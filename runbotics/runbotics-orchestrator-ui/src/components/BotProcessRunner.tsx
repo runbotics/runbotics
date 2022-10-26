@@ -58,9 +58,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             || processInstance?.status === ProcessInstanceStatus.ERRORED
             || processInstance?.status === ProcessInstanceStatus.TERMINATED;
 
-        if (isProcessInstanceFinished) {
+        if (isProcessInstanceFinished) 
             setStarted(false);
-        }
+        
     }, [processInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });

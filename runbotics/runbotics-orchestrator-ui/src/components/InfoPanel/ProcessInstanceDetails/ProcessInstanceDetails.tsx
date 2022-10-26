@@ -31,17 +31,16 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
         processInstance?.status === ProcessInstanceStatus.STOPPED;
 
     useEffect(() => {
-        if (processInstanceId) {
-            dispatch(processInstanceActions.getProcessInstance({ processInstanceId }));
-        }
+        if (processInstanceId) dispatch(processInstanceActions.getProcessInstance({ processInstanceId }));
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
 
     useEffect(
         () => () => {
-            if (isProcessFinished) {
-                dispatch(processInstanceActions.resetActive());
-            }
+            if (isProcessFinished) dispatch(processInstanceActions.resetActive());
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
@@ -51,17 +50,14 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
             !processInstanceState.active.processInstance &&
             !processInstanceId);
 
-    if (loading) {
+    if (loading)
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', margin: (theme) => theme.spacing(4) }}>
                 <CircularProgress color="secondary" />
             </Box>
         );
-    }
 
-    if (!processInstance) {
-        return null;
-    }
+    if (!processInstance) return null;
 
     return (
         <Box ref={containerRef} display="flex" flexDirection="column" padding="0.625rem" gap="1rem">

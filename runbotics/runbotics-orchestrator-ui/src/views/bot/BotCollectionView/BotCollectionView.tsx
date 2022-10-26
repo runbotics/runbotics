@@ -35,6 +35,7 @@ const BotCollectionView: VFC = () => {
             setPage(0);
             replaceQueryParams({ page: 0, pageSize: limit, search, searchField });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [byPage]);
 
     useEffect(() => {
@@ -42,6 +43,7 @@ const BotCollectionView: VFC = () => {
         router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit, search, searchField } });
 
         dispatch(botCollectionActions.getByPage(params));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, displayMode, debouncedSearch, searchField]);
 
     const handleDisplayModeChange = (event: MouseEvent<HTMLElement>, value: CollectionsDisplayMode) => {

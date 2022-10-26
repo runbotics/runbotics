@@ -1,5 +1,4 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
-import _ from 'lodash';
 import {
     ActionToBPMNElement,
 } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/ActionToBPMNElement';
@@ -84,6 +83,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                 return null;
         }
     };
+    // eslint-disable-next-line complexity
     const calculateOffset = ({
         element, direction, offsetValues, origin,
     }: CalculateOffsetProps) => {
@@ -97,7 +97,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             if (direction === Direction.LEFT || direction === Direction.TOP) offset += shape[directionOfSubtracking];
         } else if (
             direction === Direction.RIGHT || direction === Direction.BOTTOM
-        ) offset += shape[directionOfSubtracking];
+        ) { offset += shape[directionOfSubtracking]; }
 
         return offset;
     };
@@ -212,6 +212,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                 expression: val.expression ? val.expression : null,
                 defaultEdge: val.default ? val.default : false,
             };
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             const label = val.type === ElementType.MERGE ? val.mergeByLabel : val.label;
             return { label, direction: key, edgeProps };
         };
@@ -238,11 +239,11 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             target: targetElement.shape,
             waypoints: [adjustSourceEdge(sourceElement, direction), adjustTargetEdge(targetElement, direction)],
         });
-        if (expression) {
+        if (expression)
             connection.businessObject.conditionExpression = modeler.get('bpmnFactory').create('bpmn:FormalExpression', {
                 body: expression,
             });
-        }
+
         // we have to add refrence to the connection to the source shape
         if (defaultEdge) {
             const { shape } = sourceElement;

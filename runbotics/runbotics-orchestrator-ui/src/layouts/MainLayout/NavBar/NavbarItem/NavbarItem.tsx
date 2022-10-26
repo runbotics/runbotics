@@ -1,5 +1,4 @@
-import React from 'react';
-import type { FC } from 'react';
+import React, { FC } from 'react';
 import { Collapse, ListItemButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -15,13 +14,12 @@ const NavbarItem: FC<NavbarItemProps> = ({
     href,
     icon: Icon,
     info: Info,
-    open: openProp,
     title,
     mobile,
     open,
     ...rest
 }) => {
-    if (children) {
+    if (children)
         return (
             <StyledListItem className={className} key={title} disablePadding {...rest}>
                 <ListItemButton sx={getLinkButtonSx(depth, open)}>
@@ -36,7 +34,6 @@ const NavbarItem: FC<NavbarItemProps> = ({
                 <Collapse in={open}>{children}</Collapse>
             </StyledListItem>
         );
-    }
 
     return (
         <StyledListItem className={className} key={title} disablePadding {...rest}>

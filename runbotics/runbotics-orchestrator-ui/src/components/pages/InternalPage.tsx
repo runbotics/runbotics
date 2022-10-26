@@ -34,5 +34,6 @@ const InternalPage = forwardRef<HTMLDivElement, InternalPageProps>(({ children, 
         </StyledPage>
     );
 });
+InternalPage.displayName = 'InternalPage';
 
 export default InternalPage;

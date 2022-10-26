@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { IBpmnAction } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 import { BPMNElement } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
 import BpmnModelerType from 'bpmn-js/lib/Modeler';
@@ -34,9 +34,9 @@ const BpmnFormProvider: FC<BpmnFormProviderProps> = ({ modeler, element, childre
     const [action, setAction] = useState<IBpmnAction>(null);
     const [passedInVariables, setPassedInVariables] = useState<string[]>([]);
     useEffect(() => {
-        if (process && process.isAttended && process.executionInfo) {
+        if (process && process.isAttended && process.executionInfo) 
             setPassedInVariables(extractNestedSchemaKeys(JSON.parse(process.executionInfo).schema) ?? []);
-        }
+        
     }, [process]);
 
     return (

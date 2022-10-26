@@ -20,14 +20,14 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
                     runner: Runner.DESKTOP_SCRIPT,
                     form: JSON.parse(actionValue.form),
                 };
-                if (bpmnAction.form.formData.output) {
+                if (bpmnAction.form.formData.output) 
                     bpmnAction.output = {
                         assignVariables: true,
                         outputMethods: {
                             variableName: '${content.output[0]}',
                         },
                     };
-                }
+                
                 const prevValue = prev;
                 prevValue[key] = bpmnAction;
                 return prevValue;
@@ -61,11 +61,11 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
         })
         .addCase(saveAction.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
-            if (action.payload) {
+            if (action.payload) 
                 state.draft.error = action.payload;
-            } else {
+            else 
                 state.draft.error = action.error.message;
-            }
+            
         });
 };
 

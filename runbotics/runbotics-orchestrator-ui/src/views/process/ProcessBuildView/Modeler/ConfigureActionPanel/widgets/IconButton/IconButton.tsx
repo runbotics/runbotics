@@ -20,9 +20,7 @@ type IconButtonProps = ButtonProps & {
 };
 
 const IconButton = (props: IconButtonProps) => {
-    const {
-        icon, className, iconProps, ...otherProps
-    } = props;
+    const { icon, iconProps, ...otherProps } = props;
     const IconComp = mappings[icon];
     return (
         <Button {...otherProps} size="small">

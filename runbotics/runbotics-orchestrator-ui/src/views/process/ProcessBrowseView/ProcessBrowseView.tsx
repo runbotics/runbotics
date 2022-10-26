@@ -13,6 +13,7 @@ const ProcessBrowseView: VFC = () => {
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

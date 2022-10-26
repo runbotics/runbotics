@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { VFC, Suspense, useEffect } from 'react';
+import React, { VFC, useEffect } from 'react';
 import If from 'src/components/utils/If';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
@@ -14,13 +14,13 @@ const ProcessMainViewManager: VFC = () => {
     const dispatch = useDispatch();
     const Router = useRouter();
     const { tab, id } = Router.query;
-    console.log(Router.query);
     const processId = Number(id);
 
     useEffect(() => {
         if (Number.isNaN(processId)) return;
 
         dispatch(processActions.fetchProcessById(processId));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
     return (

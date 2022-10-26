@@ -3,6 +3,7 @@ import './modeler-palette.module.scss';
 
 export * from './ModelerPalette.types.d';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     __init__: ['customPaletteProvider'],
     customPaletteProvider: ['type', ModelerPalette],

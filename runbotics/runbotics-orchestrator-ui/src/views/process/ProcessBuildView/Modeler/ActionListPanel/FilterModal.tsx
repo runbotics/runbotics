@@ -31,21 +31,15 @@ const StyledContainer = styled(Box)`
 const FilterModal: FC<FilterModalProps> = ({ anchorElement, activeFilters, filterOptions, setFilters, onClose }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = event.target;
-        if (checked) {
-            setFilters((prevState: Filters) => {
-                return { ...prevState, groupNames: [...prevState.groupNames, name] };
-            });
-        } else {
-            setFilters((prevState: Filters) => {
-                return { ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) };
-            });
-        }
+        if (checked) 
+            setFilters((prevState: Filters) => ({ ...prevState, groupNames: [...prevState.groupNames, name] }));
+        else 
+            setFilters((prevState: Filters) => ({ ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) }));
+        
     };
 
     const clearFilters = () => {
-        setFilters((prevState: Filters) => {
-            return { ...prevState, groupNames: [] };
-        });
+        setFilters((prevState: Filters) => ({ ...prevState, groupNames: [] }));
     };
 
     return (

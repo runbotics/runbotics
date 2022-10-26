@@ -6,17 +6,17 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { classNames } from '../utils';
 import { UNITS } from '../constants';
 
+// eslint-disable-next-line complexity
 export default function Minutes(props: MinutesProps) {
-    const {
-        value, setValue, locale, className, disabled, readOnly, leadingZero, clockFormat, period,
-    } = props;
+    const { value, setValue, locale, className, disabled, readOnly, leadingZero, clockFormat, period } = props;
     const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-minutes': true,
-            [`${className}-field`]: !!className,
-            [`${className}-minutes`]: !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-field': true,
+                'react-js-cron-minutes': true,
+                [`${className}-field`]: !!className,
+                [`${className}-minutes`]: !!className,
+            }),
         [className],
     );
 
@@ -24,7 +24,7 @@ export default function Minutes(props: MinutesProps) {
         <div className={internalClassName}>
             {period === 'hour'
                 ? locale.prefixMinutesForHourPeriod !== '' && (
-                      <span>{locale.prefixMinutesForHourPeriod || DEFAULT_LOCALE_EN.prefixMinutesForHourPeriod}</span>
+                    <span>{locale.prefixMinutesForHourPeriod || DEFAULT_LOCALE_EN.prefixMinutesForHourPeriod}</span>
                 )
                 : locale.prefixMinutes !== '' && <span>{locale.prefixMinutes || DEFAULT_LOCALE_EN.prefixMinutes}</span>}
 

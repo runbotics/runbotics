@@ -1,5 +1,4 @@
 import React, { VFC } from 'react';
-import { IBotCollection } from 'runbotics-common';
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'src/store';

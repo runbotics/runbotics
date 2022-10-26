@@ -1,6 +1,5 @@
-import React from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import RouterLink from 'next/link';
 import {
     Box,

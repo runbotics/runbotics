@@ -8,11 +8,11 @@ export type RunboticsModuleRendererProps = {
     modeler: BpmnModeler;
 };
 const RunboticsModuleRenderer: FC<RunboticsModuleRendererProps> = ({ modeler }) => (
-        <>
-            <ModelerContext.Provider value={modeler}>
-                <SeleniumImporterButton />
-            </ModelerContext.Provider>
-        </>
+    <>
+        <ModelerContext.Provider value={modeler}>
+            <SeleniumImporterButton />
+        </ModelerContext.Provider>
+    </>
 );
 
 export default RunboticsModuleRenderer;

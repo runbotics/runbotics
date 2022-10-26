@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { IBotCollection } from 'runbotics-common';
-import React, { useState, VFC } from 'react';
-import {
-    Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography,
-} from '@mui/material';
+import { useState, VFC } from 'react';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography } from '@mui/material';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import useTranslations from 'src/hooks/useTranslations';
 
@@ -24,7 +22,7 @@ const BotCollectionIdentifierDialog: VFC<IdentifierBotCollectionDialogProps> = (
     const [copySuccess, setCopySuccess] = useState<boolean>(false);
     const { translate, translateHTML } = useTranslations();
 
-    const handleCopy = async (event) => {
+    const handleCopy = async () => {
         await navigator.clipboard.writeText(props.botCollection.id);
         setCopySuccess(true);
     };
@@ -36,34 +34,20 @@ const BotCollectionIdentifierDialog: VFC<IdentifierBotCollectionDialogProps> = (
 
     return (
         <Dialog open={props.open} onClose={props.onClose} fullWidth maxWidth="sm">
-            <DialogTitle>
-                {translate('Bot.Collection.Dialog.Identifier.Title')}
-            </DialogTitle>
+            <DialogTitle>{translate('Bot.Collection.Dialog.Identifier.Title')}</DialogTitle>
             <DialogContent>
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1">
                         {translateHTML('Bot.Collection.Dialog.Identifier.Message', { name: props.botCollection.name })}
                     </Typography>
                     <Box display="flex">
-                        <Input
-                            value={props.botCollection.id}
-                            readOnly
-                            fullWidth
-                            margin="dense"
-                        />
-                        <Button
-                            autoFocus
-                            variant="contained"
-                            color="primary"
-                            onClick={handleCopy}
-                        >
+                        <Input value={props.botCollection.id} readOnly fullWidth margin="dense" />
+                        <Button autoFocus variant="contained" color="primary" onClick={handleCopy}>
                             <FileCopyIcon />
                         </Button>
                     </Box>
                     <CopyMessage copySuccess={copySuccess}>
-                        <Typography variant="caption">
-                            {translate('Common.Copied')}
-                        </Typography>
+                        <Typography variant="caption">{translate('Common.Copied')}</Typography>
                     </CopyMessage>
                 </Box>
             </DialogContent>

@@ -36,41 +36,41 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
     displayMode, onDisplayModeChange, processesLength, search, onSearchChange,
 }) => {
     const { translate } = useTranslations();
-    const displayTableListView = useFeatureKey([FeatureKey.PROCESS_LIST_TABLE_VIEW])
+    const displayTableListView = useFeatureKey([FeatureKey.PROCESS_LIST_TABLE_VIEW]);
     
     return (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
-        <StyledTypography variant="h5" color="textPrimary">
-        {translate('Process.List.Header.Showing', { count: processesLength })}
-        </StyledTypography>
-        <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
-            <If condition={displayMode === ProcessListDisplayMode.GRID}>
-                <TextField
-                    id="outlined-search"
-                    label={translate('Bot.Collection.Header.Search.Label')}
-                    onChange={onSearchChange}
-                    value={search}
-                    size="small"
-                    sx={{ width: '30%' }}
-                />
-            </If>
-            <If condition={displayTableListView}>
-                <ToggleButtonGroup
-                    exclusive
-                    onChange={(_, mode) => onDisplayModeChange(mode)}
-                    size="small"
-                    value={displayMode}
-                >
-                    <ToggleButton value={ProcessListDisplayMode.GRID}>
-                        <ViewModuleIcon />
-                    </ToggleButton>
-                    <ToggleButton value={ProcessListDisplayMode.LIST}>
-                        <Toc />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-            </If>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+            <StyledTypography variant="h5" color="textPrimary">
+                {translate('Process.List.Header.Showing', { count: processesLength })}
+            </StyledTypography>
+            <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
+                <If condition={displayMode === ProcessListDisplayMode.GRID}>
+                    <TextField
+                        id="outlined-search"
+                        label={translate('Bot.Collection.Header.Search.Label')}
+                        onChange={onSearchChange}
+                        value={search}
+                        size="small"
+                        sx={{ width: '30%' }}
+                    />
+                </If>
+                <If condition={displayTableListView}>
+                    <ToggleButtonGroup
+                        exclusive
+                        onChange={(_, mode) => onDisplayModeChange(mode)}
+                        size="small"
+                        value={displayMode}
+                    >
+                        <ToggleButton value={ProcessListDisplayMode.GRID}>
+                            <ViewModuleIcon />
+                        </ToggleButton>
+                        <ToggleButton value={ProcessListDisplayMode.LIST}>
+                            <Toc />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </If>
+            </Box>
         </Box>
-    </Box>
-)}
+    ); };
 
 export default ProcessListHeader;

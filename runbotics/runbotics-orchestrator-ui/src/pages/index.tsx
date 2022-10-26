@@ -1,13 +1,11 @@
 import React from 'react';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 
-const IndexPage = () => {
-    return <LoadingScreen />;
-};
+const IndexPage = () => <LoadingScreen />;
 
 export default IndexPage;
 
-export async function getServerSideProps(context) {
+export function getServerSideProps() {
     return {
         redirect: {
             destination: '/app/processes',

@@ -13,14 +13,21 @@ interface GlobalVariableOption {
 const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     const { page: processesPage } = useSelector((state) => state.process.all);
     const { handleSearch, search } = useProcessSearch();
-    
+
     const {
         process: { name: processName },
     } = useSelector((state) => state.process.draft);
 
-    const options = useMemo(() => (processesPage?.content ? processesPage.content
-        .filter((process) => process.name !== processName)
-        .map<GlobalVariableOption>((process) => ({ id: process.id, name: process.name })) : []), [processesPage]);
+    const options = useMemo(
+        () =>
+            processesPage?.content
+                ? processesPage.content
+                    .filter((process) => process.name !== processName)
+                    .map<GlobalVariableOption>((process) => ({ id: process.id, name: process.name }))
+                : [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [processesPage],
+    );
 
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
 

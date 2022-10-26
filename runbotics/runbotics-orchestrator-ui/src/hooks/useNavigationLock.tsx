@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
+// eslint-disable-next-line default-param-last
 const useNavigationLock = (isEnabled = true, warningText: string) => {
     const router = useRouter();
 
@@ -8,6 +9,7 @@ const useNavigationLock = (isEnabled = true, warningText: string) => {
         const handleWindowClose = (e: BeforeUnloadEvent) => {
             if (!isEnabled) return;
             e.preventDefault();
+            // eslint-disable-next-line consistent-return
             return (e.returnValue = warningText);
         };
 
@@ -26,6 +28,7 @@ const useNavigationLock = (isEnabled = true, warningText: string) => {
             window.removeEventListener('beforeunload', handleWindowClose);
             router.events.off('routeChangeStart', handleBrowseAway);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEnabled]);
 };
 

@@ -8,11 +8,11 @@ export const deleteWaitingJob = (state: SchedulerState, action: PayloadAction<IS
 
 export const addWaitingJob = (state: SchedulerState, action: PayloadAction<SchedulerJob>) => {
     const isUpdate = state.waitingJobs.find(({ id }) => id === action.payload.id);
-    if (isUpdate) {
+    if (isUpdate) 
         state.waitingJobs = state.waitingJobs.map(
             (waitingJob) => (waitingJob.id === action.payload.id ? action.payload : waitingJob),
         );
-    } else state.waitingJobs = [...state.waitingJobs, action.payload];
+    else state.waitingJobs = [...state.waitingJobs, action.payload];
 };
 
 export const addActiveJob = (state: SchedulerState, action: PayloadAction<IProcessInstance>) => {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useRouter } from 'next/router';
 import { useSelector } from 'src/store';
 import ProcessPageProvider from 'src/providers/ProcessPage.provider';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
@@ -18,7 +17,6 @@ const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
     const [displayMode, setDisplayMode] = useState(ProcessListDisplayMode.GRID);
     const showLoading = useLoading(isStoreLoading, LOADING_DEBOUNCE);
-    const router = useRouter();
     const query = useQuery();
 
     const pageFromUrl = query.get('page');
@@ -34,6 +32,7 @@ const ProcessList: VFC = () => {
             setPage(0);
             replaceQueryParams({ page: 0, pageSize, search, searchField });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processesPage]);
 
     return (

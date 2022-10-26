@@ -60,6 +60,6 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getMailActions;

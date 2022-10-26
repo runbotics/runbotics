@@ -17,6 +17,7 @@ const ActionSearch: VFC<SearchBarProps> = ({ onSearchPhraseChange, ...other }) =
 
     useEffect(() => {
         onSearchPhraseChange(value);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     return (

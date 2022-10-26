@@ -81,7 +81,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                                     }}
                                     checked={formState.isPublic}
                                 />
-                              )}
+                            )}
                             label={translate('Process.Edit.Form.Fields.Public.Label')}
                             labelPlacement="start"
                             sx={{

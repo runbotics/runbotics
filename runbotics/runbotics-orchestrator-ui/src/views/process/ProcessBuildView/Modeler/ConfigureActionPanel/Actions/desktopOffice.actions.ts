@@ -163,6 +163,6 @@ const getDesktopOfficeActions:  () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getDesktopOfficeActions;

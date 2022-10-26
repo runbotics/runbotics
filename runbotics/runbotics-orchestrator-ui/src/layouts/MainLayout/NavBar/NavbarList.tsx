@@ -11,46 +11,47 @@ interface NavbarListProps {
     mobile?: boolean;
 }
 
-const NavbarList: VFC<NavbarListProps> = ({ items, pathname, depth = 0, mobile }) => (
-    <List disablePadding>
-        {items.reduce((acc, item) => {
-            const key = `${item.title}${depth}`;
-            const { pathname } = useRouter();
-            const page = pathname.split('/')[2];
-            const open = item.href.includes(page);
+const NavbarList: VFC<NavbarListProps> = ({ items, depth = 0, mobile }) => {
+    const { pathname } = useRouter();
+    return (
+        <List disablePadding>
+            {items.reduce((acc, item) => {
+                const key = `${item.title}${depth}`;
+                const page = pathname.split('/')[2];
+                const open = item.href.includes(page);
 
-            if (item.items) {
-                acc.push(
-                    <NavbarItem
-                        key={key}
-                        depth={depth}
-                        icon={item.icon}
-                        info={item.info}
-                        open={!!open}
-                        title={item.title}
-                        mobile={mobile}
-                    >
-                        <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
-                    </NavbarItem>,
-                );
-            } else {
-                acc.push(
-                    <NavbarItem
-                        key={key}
-                        depth={depth}
-                        href={item.href}
-                        icon={item.icon}
-                        info={item.info}
-                        title={item.title}
-                        mobile={mobile}
-                        open={!!open}
-                    />,
-                );
-            }
+                if (item.items)
+                    acc.push(
+                        <NavbarItem
+                            key={key}
+                            depth={depth}
+                            icon={item.icon}
+                            info={item.info}
+                            open={!!open}
+                            title={item.title}
+                            mobile={mobile}
+                        >
+                            <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
+                        </NavbarItem>,
+                    );
+                else
+                    acc.push(
+                        <NavbarItem
+                            key={key}
+                            depth={depth}
+                            href={item.href}
+                            icon={item.icon}
+                            info={item.info}
+                            title={item.title}
+                            mobile={mobile}
+                            open={!!open}
+                        />,
+                    );
 
-            return acc;
-        }, [])}
-    </List>
-);
+                return acc;
+            }, [])}
+        </List>
+    );
+};
 
 export default NavbarList;

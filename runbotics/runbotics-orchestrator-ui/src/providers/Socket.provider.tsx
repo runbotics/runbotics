@@ -8,9 +8,8 @@ export const SocketContext = React.createContext<Socket | null>(null);
 const SocketProvider: FC = ({ children }) => {
     const { isAuthenticated } = useAuth();
     const socket = useMemo(() => {
-        if (!isAuthenticated) {
-            return null;
-        }
+        if (!isAuthenticated) return null;
+
         const accessToken = window.localStorage.getItem('access_token');
 
         return io(uri, {
@@ -22,6 +21,7 @@ const SocketProvider: FC = ({ children }) => {
             path: '/ws-ui/',
         });
     }, [isAuthenticated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => () => socket?.disconnect(), [isAuthenticated]);
 
     return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;

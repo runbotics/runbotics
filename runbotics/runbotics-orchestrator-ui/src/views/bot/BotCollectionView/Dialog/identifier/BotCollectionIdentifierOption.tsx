@@ -16,9 +16,9 @@ const BotCollectionIdentifierOption = (props: IdentifierBotCollectionProps) => {
         <>
             <MenuItem onClick={() => setShow(true)}>{translate('Bot.Collection.Actions.Identifier')}</MenuItem>
             <BotCollectionIdentifierDialog
-                    botCollection={props.botCollection}
-                    open={show}
-                    onClose={() => setShow(false)}
+                botCollection={props.botCollection}
+                open={show}
+                onClose={() => setShow(false)}
             />
         </>
     );

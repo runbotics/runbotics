@@ -5,7 +5,7 @@ const exampleJsonConfiguration = {
     actionParams: {
         rows: {
             isArray: true,
-            xpath: "//table[../span[@aria-label='Report table']]//tr[position()>1]",
+            xpath: '//table[../span[@aria-label=\'Report table\']]//tr[position()>1]',
             actionParams: {
                 TaskGroup: {
                     xpath: '(./td)[1]',

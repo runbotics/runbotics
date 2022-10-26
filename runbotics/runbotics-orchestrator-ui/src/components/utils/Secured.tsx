@@ -10,42 +10,42 @@ export interface SecuredProps {
 }
 
 export const hasAuthorities = (user: User, authorities: any[]) => {
-    if (!user || !user.authoritiesById) {
+    if (!user || !user.authoritiesById) 
         return false;
-    }
-    for (const authority of authorities) {
-        if (!user.authoritiesById[authority]) {
+    
+    for (const authority of authorities) 
+        if (!user.authoritiesById[authority]) 
             return false;
-        }
-    }
+        
+    
 
     return true;
 };
 
 export const hasRoleAccess = (user: User, roles: Role[]) => {
-    if (!user || !user.roles) {
+    if (!user || !user.roles) 
         return false;
-    }
+    
 
-    for (const role of roles) {
-        if (!user.roles.includes(role)) {
+    for (const role of roles) 
+        if (!user.roles.includes(role)) 
             return false;
-        }
-    }
+        
+    
 
     return true;
 };
 
 export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[]) => {
-    if (!user || !user.featureKeys || !user.roles) {
+    if (!user || !user.featureKeys || !user.roles) 
         return false;
-    }
+    
 
-    for (const featureKey of featureKeys) {
-        if (!user.featureKeys.includes(featureKey)) {
+    for (const featureKey of featureKeys) 
+        if (!user.featureKeys.includes(featureKey)) 
             return false;
-        }
-    }
+        
+    
 
     return true;
 };
@@ -54,11 +54,11 @@ const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
     const { isAuthenticated, user } = useAuth();
 
     if (isAuthenticated) {
-        if (featureKeys) {
-            if (hasFeatureKeyAccess(user, featureKeys)) {
+        if (featureKeys) 
+            if (hasFeatureKeyAccess(user, featureKeys)) 
                 return <>{children}</>;
-            }
-        }
+            
+        
 
         return <>{children}</>;
     }

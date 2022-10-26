@@ -7,11 +7,11 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
     const [open, setOpen] = useState(false);
 
     const handleInputChange = (event: any, newInputValue: string) => {
-        if (event && newInputValue && (newInputValue.startsWith('$') || newInputValue.startsWith('#'))) {
+        if (event && newInputValue && (newInputValue.startsWith('$') || newInputValue.startsWith('#'))) 
             setOpen(true);
-        } else {
+        else 
             setOpen(false);
-        }
+        
     };
 
     const handleOnClose = () => {

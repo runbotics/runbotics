@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable unused-imports/no-unused-vars */
 import React, { VFC, useEffect, useState } from 'react';
 import { translate } from 'src/hooks/useTranslations';
 import LeavePrompt from './LeavePrompt';
@@ -8,7 +10,7 @@ interface Props {
     shouldBlockNavigation?: (location: Location) => boolean;
 }
 
-const RouteLeavingGuard: VFC<Props> = ({ when, navigate, shouldBlockNavigation }) => {
+const RouteLeavingGuard: VFC<Props> = ({ navigate, shouldBlockNavigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [lastLocation, setLastLocation] = useState<Location | null>(null);
     const [isNavigationConfirmed, setIsNavigationConfirmed] = useState(false);
@@ -32,9 +34,7 @@ const RouteLeavingGuard: VFC<Props> = ({ when, navigate, shouldBlockNavigation }
     };
 
     useEffect(() => {
-        if (isNavigationConfirmed && lastLocation) {
-            navigate(lastLocation.pathname);
-        }
+        if (isNavigationConfirmed && lastLocation) navigate(lastLocation.pathname);
     }, [isNavigationConfirmed, lastLocation]);
 
     return (

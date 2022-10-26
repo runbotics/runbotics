@@ -1,11 +1,7 @@
-import React, {
-    FC, useEffect, useState,
-} from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
 import clsx from 'clsx';
-import {
-    Box, FormHelperText, Typography,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'ConnectStep';
@@ -24,10 +20,8 @@ interface ConnectStepProps {
     onBack?: () => void;
 }
 
-const ConnectStep: FC<ConnectStepProps> = ({
-    className, onBack, onComplete, ...rest
-}) => {
-    const [error, setError] = useState<string | null>(null);
+const ConnectStep: FC<ConnectStepProps> = ({ className, onComplete, ...rest }) => {
+    // const [error, setError] = useState<string | null>(null);
     const { translate } = useTranslations();
 
     useEffect(() => {
@@ -45,11 +39,11 @@ const ConnectStep: FC<ConnectStepProps> = ({
                     {translate('Install.ConnectStep.ConnectingMessage')}
                 </Typography>
             </Box>
-            {error && (
+            {/* {error && (
                 <Box mt={2}>
                     <FormHelperText error>{error}</FormHelperText>
                 </Box>
-            )}
+            )} */}
         </Root>
     );
 };

@@ -19,7 +19,6 @@ const ProcessTable: VFC<ProcessTableProps> = ({ onAdvancedSearchChange }) => {
     const router = useRouter();
     const { page: processesPage, loading } = useSelector((state) => state.process.all);
     const { page, pageSize, handleTablePageChange, handlePageSizeChange } = useContext(ProcessPageContext);
-    console.log(processesPage?.content ?? []);
     const handleRedirect = (process: IProcess) => {
         router.push(buildProcessUrl(process));
     };
@@ -45,9 +44,7 @@ const ProcessTable: VFC<ProcessTableProps> = ({ onAdvancedSearchChange }) => {
                         filterMode="server"
                         onFilterModelChange={onAdvancedSearchChange}
                         onCellClick={(param) => {
-                            if (param.field !== 'actions') {
-                                handleRedirect(param.row);
-                            }
+                            if (param.field !== 'actions') handleRedirect(param.row);
                         }}
                     />
                 </Grid>

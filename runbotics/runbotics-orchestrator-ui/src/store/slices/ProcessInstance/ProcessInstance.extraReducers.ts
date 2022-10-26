@@ -70,11 +70,11 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.byId[action.payload.id] = action.payload;
             state.all.ids = union(state.all.ids, [String(action.payload.id)]);
             const pageContent = state.all.page?.content;
-            if (pageContent && pageContent.find((processInstance) => processInstance.id === action.payload.id)) {
+            if (pageContent && pageContent.find((processInstance) => processInstance.id === action.payload.id)) 
                 state.all.page.content = pageContent.map((processInstance) =>
                     processInstance.id === action.payload.id ? action.payload : processInstance,
                 );
-            }
+            
         })
 
         // GET PAGE

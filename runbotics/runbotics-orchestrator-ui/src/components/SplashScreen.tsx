@@ -1,6 +1,5 @@
-import React from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import { Box, LinearProgress } from '@mui/material';
 
 const PREFIX = 'SlashScreen';
@@ -26,12 +25,12 @@ const Root = styled.div(({ theme }) => ({
     },
 }));
 
-const SlashScreen: FC = () => (
-        <Root className={classes.root}>
-            <Box width={400}>
-                <LinearProgress />
-            </Box>
-        </Root>
+const SplashScreen: FC = () => (
+    <Root className={classes.root}>
+        <Box width={400}>
+            <LinearProgress />
+        </Box>
+    </Root>
 );
 
-export default SlashScreen;
+export default SplashScreen;

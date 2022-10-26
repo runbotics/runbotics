@@ -1,4 +1,4 @@
-import { IBotCollection } from "runbotics-common";
+import { IBotCollection } from 'runbotics-common';
 import { Page } from '../../../utils/types/page';
 
 export interface BotCollectionsState {

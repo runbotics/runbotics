@@ -12,18 +12,18 @@ export const formatTimeDiff = (fromDate: string | Date, toDate: string | Date) =
 
     let durationText = '';
 
-    if (hours) {
+    if (hours) 
         durationText = `${hours}${translate('Common.Time.Hours.Short')} `;
-    }
-    if (minutes) {
+    
+    if (minutes) 
         durationText = `${durationText} ${minutes}${translate('Common.Time.Minutes.Short')} `;
-    }
-    if (seconds) {
+    
+    if (seconds) 
         durationText = `${durationText} ${seconds}${translate('Common.Time.Seconds.Short')} `;
-    }
-    if (miliseconds) {
+    
+    if (miliseconds) 
         durationText = `${durationText} ${miliseconds}${translate('Common.Time.Miliseconds.Short')}`;
-    }
+    
 
     return durationText;
 };

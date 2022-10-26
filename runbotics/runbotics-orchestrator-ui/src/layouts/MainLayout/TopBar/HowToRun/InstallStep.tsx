@@ -57,9 +57,9 @@ const InstallStep: FC<InstallStepProps> = ({
     useEffect(() => {
         const installBot = async () => {
             const installed = await isInstalled();
-            if (installed) {
+            if (installed) 
                 onComplete();
-            }
+            
         };
         const interval = setInterval(() => {
             installBot();
@@ -74,11 +74,11 @@ const InstallStep: FC<InstallStepProps> = ({
         try {
             setSubmitting(true);
             const installed = await isInstalled();
-            if (installed) {
+            if (installed) 
                 onComplete();
-            } else {
+            else 
                 setError(translate('Install.Errors.NotInstalled'));
-            }
+            
         } catch (err) {
             setError(err.message);
         } finally {

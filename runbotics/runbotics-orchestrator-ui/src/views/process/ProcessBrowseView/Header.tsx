@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import clsx from 'clsx';
 import { Grid, Typography } from '@mui/material';
 import useFeatureKey from 'src/hooks/useFeatureKey';
@@ -38,7 +37,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
-                {translate('Process.List.Header.Solutions')}
+                    {translate('Process.List.Header.Solutions')}
                 </Typography>
             </Grid>
             <Grid item>

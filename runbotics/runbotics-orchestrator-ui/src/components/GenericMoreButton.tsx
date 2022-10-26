@@ -1,9 +1,6 @@
-import React, { useRef, useState, memo } from 'react';
+import React, { useRef, useState, memo, FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
-import {
-    ListItemIcon, ListItemText, Tooltip, IconButton, Menu, MenuItem,
-} from '@mui/material';
+import { ListItemIcon, ListItemText, Tooltip, IconButton, Menu, MenuItem } from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import FileCopyIcon from '@mui/icons-material/FileCopy';

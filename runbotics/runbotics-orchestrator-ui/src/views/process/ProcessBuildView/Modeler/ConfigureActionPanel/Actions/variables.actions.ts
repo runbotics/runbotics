@@ -121,6 +121,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getVariablesActions;

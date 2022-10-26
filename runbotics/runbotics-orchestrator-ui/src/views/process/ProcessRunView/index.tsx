@@ -1,16 +1,12 @@
 import { Card, Grid, Box, Typography } from '@mui/material';
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from 'src/store';
-import { botActions } from 'src/store/slices/Bot';
 import If from 'src/components/utils/If';
-import { botCollectionActions } from 'src/store/slices/BotCollections';
-import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import LoadingType from 'src/types/loading';
-import { ProcessParams } from 'src/utils/types/ProcessParams';
 import { FeatureKey } from 'runbotics-common';
 import HistoryTable from 'src/components/HistoryTable';
 import useTranslations from 'src/hooks/useTranslations';
@@ -44,9 +40,8 @@ const ProcessRunView: FC = () => {
     const { translate } = useTranslations();
 
     useEffect(() => {
-        if (hasReadSchedulesAccess) {
-            dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
-        }
+        if (hasReadSchedulesAccess) dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
     const handleProcessSchedule = async (data: Record<string, string>) => {
@@ -61,9 +56,7 @@ const ProcessRunView: FC = () => {
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 
-    if (!process || process.id?.toString() !== id || loading === LoadingType.PENDING) {
-        return <LoadingScreen />;
-    }
+    if (!process || process.id?.toString() !== id || loading === LoadingType.PENDING) return <LoadingScreen />;
 
     return (
         <Grid sx={{ padding: '24px' }}>

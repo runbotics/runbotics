@@ -5,7 +5,7 @@ import {
 
 type LinkButtonSxStylesCallback = (depth: number, open: boolean) => SxProps<Theme>;
 
-export const getLinkButtonSx: LinkButtonSxStylesCallback = (depth: number, open: boolean) => ({
+export const getLinkButtonSx: LinkButtonSxStylesCallback = (depth: number) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '17px',

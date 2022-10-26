@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-    Row, useExpanded, useRowSelect, useTable,
-} from 'react-table';
+import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 import {
     Table as MuiTable,
     CircularProgress,
@@ -44,10 +42,10 @@ const Table = <T extends object>({
     }, [loading]);
 
     const data = useMemo(() => {
-        if (subRowProperty) {
-            return propData.map((row) => ({ ...row, subRows: row[subRowProperty] }));
-        }
+        if (subRowProperty) return propData.map((row) => ({ ...row, subRows: row[subRowProperty] }));
+
         return propData;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [propData]);
 
     const {
@@ -75,9 +73,9 @@ const Table = <T extends object>({
     }, [propPageSize]);
 
     useEffect(() => {
-        if (rows.length !== pageSize) {
-            setPageSize(rows.length);
-        }
+        if (rows.length !== pageSize) setPageSize(rows.length);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rows.length]);
 
     const handleRowClick = (row: Row<T>) => {
@@ -88,19 +86,19 @@ const Table = <T extends object>({
         }
     };
 
-    const renderCells = (row: Row<T>) => row.cells.map((cell) => (
-        <TableCell
-            {...cell.getCellProps()}
-            onClick={
-                cell.column.id !== 'expander' && cell.column.id !== 'button'
-                    ? () => handleRowClick(row)
-                    : undefined
-            }
-            sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
-        >
-            <>{cell.render('Cell')}</>
-        </TableCell>
-    ));
+    const renderCells = (row: Row<T>) =>
+        row.cells.map((cell) => (
+            // eslint-disable-next-line react/jsx-key
+            <TableCell
+                {...cell.getCellProps()}
+                onClick={
+                    cell.column.id !== 'expander' && cell.column.id !== 'button' ? () => handleRowClick(row) : undefined
+                }
+                sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
+            >
+                <>{cell.render('Cell')}</>
+            </TableCell>
+        ));
 
     const countExpandedRows = () => {
         let iterator = propPageSize;
@@ -133,7 +131,7 @@ const Table = <T extends object>({
 
         const dummyRows: JSX.Element[] = [];
         const dummyRowsLength = TABLE_PAGE_SIZES[0] - dataRows.length;
-        for (let i = dummyRowsLength; i > 0; i--) {
+        for (let i = dummyRowsLength; i > 0; i--)
             dummyRows.push(
                 <TableRow
                     sx={{
@@ -142,7 +140,6 @@ const Table = <T extends object>({
                     }}
                 />,
             );
-        }
 
         return [...dataRows, ...dummyRows];
     };
@@ -173,9 +170,12 @@ const Table = <T extends object>({
                 <MuiTable {...getTableProps()} aria-label={translate('Component.Table.Table.AriaLabel')}>
                     <TableHead>
                         {headerGroups.map((headerGroup) => (
+                            // eslint-disable-next-line react/jsx-key
                             <TableRow {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
+                                {headerGroup.headers.map((column, index) => (
                                     <TableCell
+                                        // eslint-disable-next-line react/no-array-index-key
+                                        key={index}
                                         {...column.getHeaderProps()}
                                         style={{ width: `${column.width}` || 'auto' }}
                                     >
@@ -195,9 +195,10 @@ const Table = <T extends object>({
                     {!!totalPages && !!pageSize && (
                         <DataTableFooter
                             sx={{
-                                borderTop: (theme) => (TABLE_PAGE_SIZES[0] > rows.length
-                                    ? `1px solid ${theme.palette.grey[300]}`
-                                    : undefined),
+                                borderTop: (theme) =>
+                                    TABLE_PAGE_SIZES[0] > rows.length
+                                        ? `1px solid ${theme.palette.grey[300]}`
+                                        : undefined,
                             }}
                             pageCount={totalPages}
                             pageSize={propPageSize}

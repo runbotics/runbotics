@@ -29,9 +29,9 @@ const FormRenderer: FC<FormPropsExtended> = (props) => {
     });
 
     const formRefCallback = (node) => {
-        if (node) {
+        if (node) 
             setIsFormError(node.state.errors.length > 0);
-        }
+        
     };
 
     const isDirty = React.useMemo(
@@ -50,9 +50,7 @@ const FormRenderer: FC<FormPropsExtended> = (props) => {
         setFormState({ ...formState, formData: e.formData });
     };
 
-    const handleSubmit = (e: ISubmitEvent<any>, nativeEvent: FormEvent<HTMLFormElement>) => {
-        return props.onSubmit && !isFormError && isDirty ? props.onSubmit(e, nativeEvent) : null;
-    };
+    const handleSubmit = (e: ISubmitEvent<any>, nativeEvent: FormEvent<HTMLFormElement>) => props.onSubmit && !isFormError && isDirty ? props.onSubmit(e, nativeEvent) : null;
 
     return (
         <Grid item xs={12}>

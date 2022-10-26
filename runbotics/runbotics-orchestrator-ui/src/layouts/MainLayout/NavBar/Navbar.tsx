@@ -1,5 +1,4 @@
-import React, { useMemo } from 'react';
-import type { FC } from 'react';
+import React, { FC } from 'react';
 import { Box, Drawer, List, ListSubheader, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';

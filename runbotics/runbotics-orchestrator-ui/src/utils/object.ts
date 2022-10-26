@@ -29,9 +29,9 @@ function snakeToCamel(str: string) {
 }
 
 export function toSnakeCase(object: any, exceptions: string[] = []) {
-    if (typeof object !== 'object' || object === null) {
+    if (typeof object !== 'object' || object === null)
         return object;
-    }
+
 
     return Object.keys(object).reduce((p: { [key: string]: any }, key: string) => {
         const newKey = exceptions.indexOf(key) === -1 ? camelToSnake(key) : key;
@@ -42,9 +42,9 @@ export function toSnakeCase(object: any, exceptions: string[] = []) {
 }
 
 export function toCamelCase(object: any, exceptions: string[] = []) {
-    if (typeof object !== 'object' || object === null) {
+    if (typeof object !== 'object' || object === null)
         return object;
-    }
+
 
     return Object.keys(object).reduce((p: { [key: string]: any }, key: string) => {
         const newKey = exceptions.indexOf(key) === -1 ? snakeToCamel(key) : key;
@@ -54,6 +54,7 @@ export function toCamelCase(object: any, exceptions: string[] = []) {
     }, {});
 }
 
+// eslint-disable-next-line complexity
 export function camelToWords(str: string) {
     let newKey = '';
     let index = 0;

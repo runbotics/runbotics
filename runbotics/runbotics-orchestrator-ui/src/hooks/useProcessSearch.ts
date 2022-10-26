@@ -1,5 +1,4 @@
 import { GridFilterModel } from '@mui/x-data-grid';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
@@ -10,7 +9,6 @@ import useQuery from './useQuery';
 const DEBOUNCE_TIME = 250;
 
 const useProcessSearch = (pageSize = 12, page = 0) => {
-    const router = useRouter();
     const query = useQuery();
     const searchFromUrl = query.get('search');
     const searchFieldFromUrl = query.get('searchField');
@@ -34,6 +32,7 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
                 },
             },
         }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, searchField]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +48,7 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
     const clearSearch = () => {
         setSearchField('');
         setSearch('');
-    }
+    };
 
     return {
         handleSearch, search, handleAdvancedSearch, searchField, clearSearch

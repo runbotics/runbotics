@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -8,8 +8,6 @@ import Tooltip from '@mui/material/Tooltip';
 import { IconButton } from '@mui/material';
 import FloatingGroup from '../FloatingGroup';
 import { translate } from 'src/hooks/useTranslations';
-import { useSelector } from 'src/store';
-import { CommandStackInfo } from 'src/store/slices/Process';
 
 interface ModelerToolboxPanelProps {
     onCenter: () => void;
@@ -29,36 +27,34 @@ const ModelerToolboxPanel: FC<ModelerToolboxPanelProps> = ({
     onUndo,
     canRedo,
     canUndo,
-}) => {
-    return (
-        <FloatingGroup horizontalPosition="right" verticalPosition="bottom" withSeparator>
-            <Tooltip title={translate('Process.MainView.Tooltip.Undo')}>
-                <IconButton onClick={onUndo} disabled={canUndo}>
-                    <UndoIcon fontSize="small" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={translate('Process.MainView.Tooltip.Redo')}>
-                <IconButton onClick={onRedo} disabled={canRedo}>
-                    <RedoIcon fontSize="small" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={translate('Process.MainView.Tooltip.Center')}>
-                <IconButton onClick={onCenter}>
-                    <LocationSearchingIcon fontSize="small" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={translate('Process.MainView.Tooltip.ZoomIn')}>
-                <IconButton onClick={onZoomIn}>
-                    <AddIcon fontSize="small" />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title={translate('Process.MainView.Tooltip.ZoomOut')}>
-                <IconButton onClick={onZoomOut}>
-                    <RemoveIcon fontSize="small" />
-                </IconButton>
-            </Tooltip>
-        </FloatingGroup>
-    );
-};
+}) => (
+    <FloatingGroup horizontalPosition="right" verticalPosition="bottom" withSeparator>
+        <Tooltip title={translate('Process.MainView.Tooltip.Undo')}>
+            <IconButton onClick={onUndo} disabled={canUndo}>
+                <UndoIcon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+        <Tooltip title={translate('Process.MainView.Tooltip.Redo')}>
+            <IconButton onClick={onRedo} disabled={canRedo}>
+                <RedoIcon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+        <Tooltip title={translate('Process.MainView.Tooltip.Center')}>
+            <IconButton onClick={onCenter}>
+                <LocationSearchingIcon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+        <Tooltip title={translate('Process.MainView.Tooltip.ZoomIn')}>
+            <IconButton onClick={onZoomIn}>
+                <AddIcon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+        <Tooltip title={translate('Process.MainView.Tooltip.ZoomOut')}>
+            <IconButton onClick={onZoomOut}>
+                <RemoveIcon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+    </FloatingGroup>
+);
 
 export default ModelerToolboxPanel;

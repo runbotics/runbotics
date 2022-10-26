@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
@@ -12,14 +12,13 @@ const LoopActionRenderer: FC = () => {
     const dispatch = useDispatch();
     const { element, action, modeler } = useBpmnFormContext();
 
-    const isLoopElement = (element: unknown): element is BpmnSubProcess =>
-        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !== undefined;
+    const isLoopElement = (ele: unknown): ele is BpmnSubProcess =>
+        (ele as BpmnSubProcess)?.businessObject?.loopCharacteristics !== undefined;
+
     const CUSTOM_FORMATS = { variableName: /(^\$.+)|(^#.+)/ };
 
     const defaultFormData = React.useMemo(() => {
-        if (!isLoopElement(element)) {
-            return null;
-        }
+        if (!isLoopElement(element)) return null;
 
         const defaultParameters = {
             input: {
@@ -35,9 +34,9 @@ const LoopActionRenderer: FC = () => {
             defaultParameters.input.iterations = element.businessObject.loopCharacteristics.loopCardinality.body;
             defaultParameters.input.loopType = 'Repeat';
         } else {
-            for (const [key] of Object.entries(action.form.formData.input)) {
+            for (const [key] of Object.entries(action.form.formData.input))
                 defaultParameters.input[key] = element.businessObject.loopCharacteristics[key];
-            }
+
             defaultParameters.input.loopType = 'Collection';
         }
 
@@ -50,18 +49,14 @@ const LoopActionRenderer: FC = () => {
     };
 
     const handleSubmit = (formState: IFormData) => {
-        if (!isLoopElement(element)) {
-            return;
-        }
+        if (!isLoopElement(element)) return;
 
         const bpmnHelper = BPMNHelper.from(modeler);
         const { loopType } = formState.formData.input;
         const { loopCharacteristics } = element.businessObject;
         const { loopCardinality, collection } = loopCharacteristics;
 
-        for (const [key, value] of Object.entries(formState.formData.input)) {
-            loopCharacteristics[key] = value;
-        }
+        for (const [key, value] of Object.entries(formState.formData.input)) loopCharacteristics[key] = value;
 
         if (loopType === 'Repeat') loopCardinality.body = formState.formData.input.iterations;
 

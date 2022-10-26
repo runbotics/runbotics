@@ -1,8 +1,4 @@
-import clsx from 'clsx';
-import styled from 'styled-components';
-import React, {
-    Dispatch, FunctionComponent, SetStateAction, useEffect, useState,
-} from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -50,11 +46,15 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     };
 
     const globalVariablesColumns = useGlobalVariablesColumns({
-        onDelete, onEdit, hasDeleteVariableAccess, hasEditVariableAccess,
+        onDelete,
+        onEdit,
+        hasDeleteVariableAccess,
+        hasEditVariableAccess,
     });
 
     useEffect(() => {
         dispatch(globalVariableActions.getGlobalVariables());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -69,9 +69,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                             autoHeight
                             disableSelectionOnClick
                             onCellClick={(param) => {
-                                if (param.field !== 'actions') {
-                                    onReadOnlyView(param.row as IGlobalVariable);
-                                }
+                                if (param.field !== 'actions') onReadOnlyView(param.row as IGlobalVariable);
                             }}
                         />
                     </Grid>

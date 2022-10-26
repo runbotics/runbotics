@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect, FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import { Container } from '@mui/material';
 import useTranslations from 'src/hooks/useTranslations';
 import Page from 'src/components/pages/Page';
-import { BotParams } from 'src/utils/types/BotParams';
 import { useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
 import Header from './Header';
@@ -41,6 +39,7 @@ const BotListView: FC = () => {
         }
 
         dispatch(botActions.getById({ id: botId }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     return (

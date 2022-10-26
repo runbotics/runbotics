@@ -30,7 +30,7 @@ const buildBotCollectionExtraReducers = (builder: ActionReducerMapBuilder<BotCol
         .addCase(deleteOne.pending, (state) => {
             state.loading = true;
         })
-        .addCase(deleteOne.fulfilled, (state, action) => {
+        .addCase(deleteOne.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(deleteOne.rejected, (state) => {
@@ -40,7 +40,7 @@ const buildBotCollectionExtraReducers = (builder: ActionReducerMapBuilder<BotCol
         .addCase(updateOne.pending, (state) => {
             state.loading = true;
         })
-        .addCase(updateOne.fulfilled, (state, action) => {
+        .addCase(updateOne.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(updateOne.rejected, (state) => {
@@ -50,7 +50,7 @@ const buildBotCollectionExtraReducers = (builder: ActionReducerMapBuilder<BotCol
         .addCase(createOne.pending, (state) => {
             state.loading = true;
         })
-        .addCase(createOne.fulfilled, (state, action) => {
+        .addCase(createOne.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(createOne.rejected, (state) => {

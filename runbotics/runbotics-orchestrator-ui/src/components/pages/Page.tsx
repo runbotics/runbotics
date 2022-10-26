@@ -1,5 +1,4 @@
-import React, { forwardRef } from 'react';
-import type { HTMLProps, ReactNode } from 'react';
+import React, { forwardRef, HTMLProps, ReactNode } from 'react';
 import Head from 'next/head';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
@@ -15,5 +14,6 @@ const Page = forwardRef<HTMLDivElement, PageProps>(({ children, title = '', ...r
         {children}
     </div>
 ));
+Page.displayName = 'Page';
 
 export default Page;

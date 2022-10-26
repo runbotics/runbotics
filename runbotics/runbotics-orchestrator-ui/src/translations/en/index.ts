@@ -14,7 +14,7 @@ import navTranslations from './nav.json';
 import componentsTranslations from './components.json';
 import paletteTranslations from './palette.json';
 
-export default {
+const translationResources = {
     ...commonTranslations,
     ...navTranslations,
     ...registerTranslations,
@@ -31,3 +31,4 @@ export default {
     ...componentsTranslations,
     ...paletteTranslations,
 };
+export default translationResources;

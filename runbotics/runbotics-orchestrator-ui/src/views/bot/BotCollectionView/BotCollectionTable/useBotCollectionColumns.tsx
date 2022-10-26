@@ -47,11 +47,12 @@ const useBotCollectionColumns = (): GridColDef[] => {
             filterable: false,
             filterOperators,
             disableColumnMenu: false,
-            renderCell: (params: GridCellParams) => (
-                params.row.publicBotsIncluded
-                    ? <CheckCircleOutlineOutlinedIcon color="success" />
-                    : <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
-            ),
+            renderCell: (params: GridCellParams) =>
+                params.row.publicBotsIncluded ? (
+                    <CheckCircleOutlineOutlinedIcon color="success" />
+                ) : (
+                    <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
+                ),
         },
         {
             field: 'date',
@@ -65,6 +66,7 @@ const useBotCollectionColumns = (): GridColDef[] => {
                 </Typography>
             ),
             valueGetter: (params) => (params.row.created ? moment(params.row.created).format(DATE_FORMAT) : ''),
+            // eslint-disable-next-line max-params
             sortComparator: (v1, v2, cellParams1, cellParams2) => +cellParams1.value - +cellParams2.value,
         },
         {
@@ -79,6 +81,7 @@ const useBotCollectionColumns = (): GridColDef[] => {
                 </Typography>
             ),
             valueGetter: (params) => (params.row.updated ? moment(params.row.updated).format('YYYY-MM-DD HH:mm') : ''),
+            // eslint-disable-next-line max-params
             sortComparator: (v1, v2, cellParams1, cellParams2) => +cellParams1.value - +cellParams2.value,
         },
     ];

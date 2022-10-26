@@ -477,6 +477,6 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getBeeOfficeActions;

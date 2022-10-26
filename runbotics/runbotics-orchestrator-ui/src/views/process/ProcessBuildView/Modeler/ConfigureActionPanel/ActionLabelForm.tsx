@@ -64,7 +64,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionNameLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">{formState.label !== "" ? formState.label : translatedLabel}</Typography>
+            <Typography variant="h4">{formState.label !== '' ? formState.label : translatedLabel}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>

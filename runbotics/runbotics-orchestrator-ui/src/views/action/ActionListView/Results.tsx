@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import styled from 'styled-components';
-import type { FC } from 'react';
 import clsx from 'clsx';
-import {
-    Card, Grid, IconButton,
-} from '@mui/material';
-import {
-    DataGrid,
-    GridCellParams,
-    GridColDef,
-} from '@mui/x-data-grid';
+import { Card, Grid, IconButton } from '@mui/material';
+import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { FeatureKey } from 'runbotics-common';

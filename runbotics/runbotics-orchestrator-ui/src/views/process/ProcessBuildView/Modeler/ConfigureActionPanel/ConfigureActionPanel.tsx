@@ -24,7 +24,9 @@ const ConfigureActionPanel: FC = () => {
         } else {
             setAction(null);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [actionId, externalBpmnActions, element?.businessObject.actionId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const CustomRenderer = React.useMemo(() => CustomActionRenderer.get(action?.id), [action?.id]);
 
     return (

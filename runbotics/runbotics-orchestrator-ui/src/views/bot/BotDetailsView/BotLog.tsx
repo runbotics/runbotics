@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
-import { BotParams } from 'src/utils/types/BotParams';
 import HistoryTable from '../../../components/HistoryTable';
 
 const BotLog: FC = () => {
