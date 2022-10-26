@@ -45,6 +45,8 @@ import If from 'src/components/utils/If';
 import useNavigationLock from 'src/hooks/useNavigationLock';
 import { translate } from 'src/hooks/useTranslations';
 import { useRouter } from 'next/router';
+import i18n from 'i18next';
+import RouteLeavingGuard from './RouteLeavingGuard';
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
@@ -55,7 +57,6 @@ const initialCommandStackInfo: CommandStackInfo = {
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     ({ readOnly, definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
-        const router = useRouter();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const [selectedElement, setSelectedElement] = useState<BPMNElement>(null);
         const [commandStack, setCommandStack] = useState<CommandStackInfo>(initialCommandStackInfo);
@@ -66,13 +67,20 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const appliedActivities = useSelector((state) => state.process.modeler.appliedActivities);
         const { isSaveDisabled } = useSelector((state) => state.process.modeler);
 
-        useNavigationLock(!isSaveDisabled, translate('Process.Modeler.LeavePrompt'));
+        useNavigationLock(!isSaveDisabled, translate('Process.Modeler.LoseModelerChangesContent'));
+        //TODO - add a CUSTOM warning when the user tries to leave the page without saving
+        const [prevLanguage, setPrevLanguage] = useState<string>(null);
 
         useEffect(() => {
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
 
         useEffect(() => {
+            if (prevLanguage !== i18n.language && modeler) {
+                modeler._container.remove();
+            }
+            setPrevLanguage(i18n.language);
+
             if (!offsetTop) return;
             let bpmnModeler: BpmnViewer | BpmnIoModeler;
 
@@ -171,7 +179,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             });
 
             setModeler(bpmnModeler);
-        }, [readOnly, offsetTop]);
+
+            return () => {
+                dispatch(processActions.setSaveDisabled(true));
+            };
+        }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
             if (!modeler) return;
@@ -300,6 +312,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 canUndo={canUndo}
                                 canRedo={canRedo}
                             />
+                            {/* TODO <RouteLeavingGuard when={!isSaveDisabled} navigate={(path) => history.push(path)} /> */}
                             <SidebarNavigationPanel
                                 selectedTab={currentTab}
                                 onTabToggle={(tabIndex) => setCurrentTab(tabIndex)}

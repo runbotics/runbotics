@@ -5,6 +5,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
     'application.launch': {
         id: 'application.launch',
         label: translate('Process.Details.Modeler.Actions.Application.Launch.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.Application.Launch.Label',
         script: 'application.launch',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -37,6 +38,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
     'application.close': {
         id: 'application.close',
         label: translate('Process.Details.Modeler.Actions.Application.Close.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.Application.Close.Label',
         script: 'application.close',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

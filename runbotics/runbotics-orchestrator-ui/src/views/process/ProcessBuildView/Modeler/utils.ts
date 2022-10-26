@@ -38,7 +38,6 @@ interface ApplyModelerElementProps {
         output: { [key: string]: any };
         disabled?: boolean;
         runFromHere?: boolean;
-        customLabel?: string;
     };
 }
 

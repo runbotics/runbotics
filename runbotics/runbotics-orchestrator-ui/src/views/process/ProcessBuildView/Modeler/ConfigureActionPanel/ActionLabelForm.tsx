@@ -19,6 +19,10 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const { translate } = useTranslations();
+    // using 'runbotics' xml field is a temporary solution
+    const translateKey = element.businessObject?.runbotics;
+    // @ts-ignore
+    const translatedLabel = translate(translateKey);
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });
@@ -45,11 +49,10 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const EditButtons = () => {
         const isSameAsBefore = formState.label === element.businessObject.label;
-        const isNotEmpty = !formState.label;
 
         return (
             <>
-                <IconButton disabled={isNotEmpty || isSameAsBefore} type="submit">
+                <IconButton disabled={isSameAsBefore} type="submit">
                     <DoneIcon />
                 </IconButton>
                 <IconButton onClick={() => setFormState({ editing: false, label: element.businessObject.label })}>
@@ -61,7 +64,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionNameLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">{formState.label}</Typography>
+            <Typography variant="h4">{formState.label !== "" ? formState.label : translatedLabel}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>

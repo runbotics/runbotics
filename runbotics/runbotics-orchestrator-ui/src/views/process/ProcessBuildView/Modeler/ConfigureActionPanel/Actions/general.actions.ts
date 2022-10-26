@@ -5,6 +5,7 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
         id: 'general.console.log',
         label: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.General.ConsoleLog.Label',
         script: 'general.console.log',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -40,6 +41,7 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
     'general.delay': {
         id: 'general.delay',
         label: translate('Process.Details.Modeler.Actions.General.Delay.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.General.Delay.Label',
         script: 'general.delay',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -81,6 +83,7 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
     'general.startProcess': {
         id: 'general.startProcess',
         label: translate('Process.Details.Modeler.Actions.General.StartProcess.Label'),
+        translateKey: 'Process.Details.Modeler.Actions.General.StartProcess.Label',
         script: 'general.startProcess',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

@@ -20,20 +20,12 @@ const MainLayout: FC = ({ children }) => {
     const mobile = useMediaQuery(theme.breakpoints.down('md'));
     const publicSections = usePublicSections();
     const { user } = useAuth();
-
-    const accessedSections = useMemo(() => {
-        for (const accessToSection of publicSections) {
-            accessToSection.items = accessToSection.items.filter((item) => {
-                if (item.featureKeys) {
-                    return hasFeatureKeyAccess(user, item.featureKeys);
-                }
-                return true;
-            });
-        }
-
-        return publicSections;
-    }, [user, i18n.language]);
-
+    
+    const accessedSections = useMemo(() => publicSections.map(accessToSection => {
+            const items = accessToSection.items.filter((item) => (item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true));
+            return { ...accessToSection, items };
+        }), [user, i18n.language]);
+    
     const isNavBarVisible = accessedSections[0].items.length !== 1;
 
     useAsyncEffect(() => {

@@ -5,7 +5,7 @@ interface IBehaviour {
     id: string;
     actionId: string;
     label: string;
-    customLabel?: string;
+    runbotics?: string;
 }
 
 export interface IActivityOwner extends BpmnEngine {

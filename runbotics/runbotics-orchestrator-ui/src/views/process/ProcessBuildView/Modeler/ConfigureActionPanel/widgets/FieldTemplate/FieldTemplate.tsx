@@ -35,7 +35,7 @@ const FieldTemplate = ({
         if (typeof rawDescription !== 'undefined') {
             if (
                 checkIfKeyExists(
-                    'Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawDescription)
+                    'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
                 )
             ) {
                 {/*@ts-ignore*/}
@@ -48,7 +48,7 @@ const FieldTemplate = ({
 
             rawErrors.forEach((rawError) => {
                 if (
-                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawError))
+                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawError))
                 ) {
                     {/*@ts-ignore*/}
                     localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
