@@ -3,9 +3,7 @@ import styled from 'styled-components';
 import type { FC } from 'react';
 import RouterLink from 'next/link';
 import clsx from 'clsx';
-import {
-    AppBar, Box, Hidden, Toolbar, Typography,
-} from '@mui/material';
+import { AppBar, Box, Hidden, Toolbar, Typography } from '@mui/material';
 import Logo from 'src/components/utils/Logo/Logo';
 import useAuth from 'src/hooks/useAuth';
 import { HEADER_HEIGHT } from 'src/utils/constants';
@@ -60,7 +58,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
-                    <RouterLink href="/app">
+                    <RouterLink href="/app/processes">
                         <a>
                             <Logo className={classes.logo} white />
                         </a>
