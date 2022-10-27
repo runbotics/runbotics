@@ -15,7 +15,6 @@ import { RunboticModdleDescriptor } from 'runbotics-common';
 import InfoPanel from 'src/components/InfoPanel';
 import ResizableDrawer from 'src/components/ResizableDrawer';
 import If from 'src/components/utils/If';
-import useAsyncEffect from 'src/hooks/useAsyncEffect';
 import useNavigationLock from 'src/hooks/useNavigationLock';
 import { translate } from 'src/hooks/useTranslations';
 import useUpdateEffect from 'src/hooks/useUpdateEffect';
