@@ -171,7 +171,7 @@
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Target": "Cel",
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Attribute": "Atrybut",
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.NewValue": "Nowa wartość",
-    "Process.Details.Modeler.Actions.Browser.Type.Label": "Rodzaj",
+    "Process.Details.Modeler.Actions.Browser.Type.Label": "Wypełnij dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Type.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Type.Target": "Cel",
     "Process.Details.Modeler.Actions.Browser.Type.Value": "Wartość",
