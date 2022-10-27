@@ -143,8 +143,7 @@ public class ProcessQueryService extends QueryService<Process> {
     protected Specification<Process> createSpecification(ProcessCriteria criteria) {
         Specification<Process> specification = Specification.where(null);
         Specification<Process> userIdAndPublicSpec = Specification.where(null);
-        var isAdmin = userService.getUserWithAuthorities().get().getAuthorities().toString().contains("ROLE_ADMIN");
-        log.debug("isAdmin: {}", isAdmin);
+        boolean isAdmin = userService.getUserWithAuthorities().get().getAuthorities().toString().contains("ROLE_ADMIN");
 
         if (criteria != null) {
             if (criteria.getId() != null) {
@@ -171,17 +170,18 @@ public class ProcessQueryService extends QueryService<Process> {
                     specification.and(buildRangeSpecification(criteria.getFailureExecutionsCount(), Process_.failureExecutionsCount));
             }
             if (criteria.getIsPublic() != null) {
-                // userIdAndPublicSpec = userIdAndPublicSpec.or(buildSpecification(criteria.getIsPublic(), Process_.isPublic));
+                userIdAndPublicSpec = userIdAndPublicSpec.or(buildSpecification(criteria.getIsPublic(), Process_.isPublic));
             } else {
                 log.debug("public null");
-                // userIdAndPublicSpec = userIdAndPublicSpec.or(isPublic());
+                userIdAndPublicSpec = userIdAndPublicSpec.or(isPublic());
             }
         } else {
-            // userIdAndPublicSpec = userIdAndPublicSpec.or(isPublic());
+            userIdAndPublicSpec = userIdAndPublicSpec.or(isPublic());
         }
+
         userIdAndPublicSpec = userIdAndPublicSpec.or(isCreatedByUser());
-        specification = specification.and(userIdAndPublicSpec);
-        return specification;
+
+        return isAdmin ? specification : specification.and(userIdAndPublicSpec);
     }
 
     private Specification<Process> isCreatedByUser() {
