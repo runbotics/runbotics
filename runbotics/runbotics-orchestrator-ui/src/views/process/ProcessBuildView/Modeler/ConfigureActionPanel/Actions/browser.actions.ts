@@ -401,39 +401,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.waitForElement': {
-        id: 'browser.waitForElement',
-        label: translate('Process.Details.Modeler.Actions.Browser.WaitForElement.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.WaitForElement.Label',
-        script: 'browser.wait',
-        runner: Runner.BROWSER_FRONTEND_SCRIPT,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.WaitForElement.Input'),
-                        type: 'object',
-                        properties: {
-                            xpath: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.WaitForElement.Target'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['xpath'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {
-                input: {
-                    target: 'xpath',
-                },
-            },
-        },
-    },
     'browser.read.attribute': {
         id: 'browser.read.attribute',
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
