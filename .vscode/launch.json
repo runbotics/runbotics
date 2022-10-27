@@ -3,24 +3,17 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "java debug",
+            "name": "scheduler debug",
             "request": "launch",
-            "command": "./gradlew -x webapp",
-            "cwd": "${workspaceFolder}/runbotics-orchestrator"
+            "command": "rushx start:debug",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-scheduler"
         },
         {
             "type": "node-terminal",
             "name": "bot debug",
             "request": "launch",
-            "command": "rushx start:dev",
-            "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
-        },
-        {
-            "type": "node-terminal",
-            "name": "scheduler debug",
-            "request": "launch",
             "command": "rushx start:debug",
-            "cwd": "${workspaceFolder}/runbotics/runbotics-scheduler"
+            "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
         }
     ]
 }
