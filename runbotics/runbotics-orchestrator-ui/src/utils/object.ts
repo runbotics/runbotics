@@ -1,5 +1,6 @@
 // copied then trimmed from https://raw.githubusercontent.com/auth0/auth0.js/master/src/helper/object.js
 
+// eslint-disable-next-line complexity
 function camelToSnake(str: string) {
     let newKey = '';
     let index = 0;
@@ -29,8 +30,7 @@ function snakeToCamel(str: string) {
 }
 
 export function toSnakeCase(object: any, exceptions: string[] = []) {
-    if (typeof object !== 'object' || object === null)
-        return object;
+    if (typeof object !== 'object' || object === null) { return object; }
 
 
     return Object.keys(object).reduce((p: { [key: string]: any }, key: string) => {
@@ -42,8 +42,7 @@ export function toSnakeCase(object: any, exceptions: string[] = []) {
 }
 
 export function toCamelCase(object: any, exceptions: string[] = []) {
-    if (typeof object !== 'object' || object === null)
-        return object;
+    if (typeof object !== 'object' || object === null) { return object; }
 
 
     return Object.keys(object).reduce((p: { [key: string]: any }, key: string) => {

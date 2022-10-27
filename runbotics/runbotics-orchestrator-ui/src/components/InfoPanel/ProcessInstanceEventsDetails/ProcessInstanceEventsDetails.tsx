@@ -24,6 +24,7 @@ interface ProcessInstanceEventsDetailsProps {
 const sortByFinished = (aEvent: IProcessInstanceEvent, bEvent: IProcessInstanceEvent) =>
     new Date(aEvent.created).getTime() - new Date(bEvent.created).getTime();
 
+// eslint-disable-next-line complexity
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ processInstanceId }) => {
     const dispatch = useDispatch();
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -60,11 +61,11 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ 
     };
 
     if (!processInstanceId && !active.orchestratorProcessInstanceId)
-        return (
-            <Typography variant="body1" sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}>
-                {translate('Component.InfoPanel.EventsDetails.NoData')}
-            </Typography>
-        );
+    { return (
+        <Typography variant="body1" sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}>
+            {translate('Component.InfoPanel.EventsDetails.NoData')}
+        </Typography>
+    ); }
 
     if (processInstanceEvents.length === 0) return null;
 

@@ -30,25 +30,25 @@ class URLBuilder {
 
     private static appendBasicParams(params: PageRequestParams) {
         if (params !== undefined) 
-            Object.entries(params)
-                .filter(([name, value]) => name !== 'filter' && value !== undefined)
-                .forEach(([name, value]) => this.appendBasicParam(name, value));
+        { Object.entries(params)
+            .filter(([name, value]) => name !== 'filter' && value !== undefined)
+            .forEach(([name, value]) => this.appendBasicParam(name, value)); }
         
     }
 
     private static appendBasicParam(name: string, value) {
         if (name === 'sort') 
-            this.internalURL.searchParams.append(name, `${value.by},${value.order}`);
+        { this.internalURL.searchParams.append(name, `${value.by},${value.order}`); }
         else 
-            this.internalURL.searchParams.append(name, `${value}`);
+        { this.internalURL.searchParams.append(name, `${value}`); }
         
     }
 
     private static appendFilterParams(params, condition?: string) {
         if (params !== undefined) 
-            Object.entries(params)
-                .filter(([, value]) => value !== undefined && value !== '')
-                .forEach(([name, value]) => this.internalURL.searchParams.append(`${name}.${condition}`, `${value}`));
+        { Object.entries(params)
+            .filter(([, value]) => value !== undefined && value !== '')
+            .forEach(([name, value]) => this.internalURL.searchParams.append(`${name}.${condition}`, `${value}`)); }
         
     }
 }

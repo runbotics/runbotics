@@ -1,3 +1,5 @@
+/* eslint-disable max-lines-per-function */
+/* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import internalBpmnActions from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions';
@@ -240,10 +242,11 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             target: targetElement.shape,
             waypoints: [adjustSourceEdge(sourceElement, direction), adjustTargetEdge(targetElement, direction)],
         });
-        if (expression)
+        if (expression) {
             connection.businessObject.conditionExpression = modeler.get('bpmnFactory').create('bpmn:FormalExpression', {
                 body: expression,
             });
+        }
 
         // we have to add refrence to the connection to the source shape
         if (defaultEdge) {

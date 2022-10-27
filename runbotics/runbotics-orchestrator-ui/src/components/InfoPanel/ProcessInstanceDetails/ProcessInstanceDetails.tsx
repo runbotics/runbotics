@@ -14,6 +14,7 @@ interface ProcessInstanceDetailsProps {
     processInstanceId: string;
 }
 
+// eslint-disable-next-line complexity
 const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInstanceId }) => {
     const dispatch = useDispatch();
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -55,11 +56,11 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
             !processInstanceId);
 
     if (loading)
-        return (
-            <Box sx={{ display: 'flex', justifyContent: 'center', margin: (theme) => theme.spacing(4) }}>
-                <CircularProgress color="secondary" />
-            </Box>
-        );
+    { return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', margin: (theme) => theme.spacing(4) }}>
+            <CircularProgress color="secondary" />
+        </Box>
+    ); }
 
     if (!processInstance) return null;
 

@@ -55,6 +55,7 @@ const initialCommandStackInfo: CommandStackInfo = {
 };
 
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
+    // eslint-disable-next-line max-lines-per-function
     ({ readOnly, definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
@@ -143,12 +144,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     if (element.id.includes('Activity')) dispatch(processActions.addAppliedAction(element.id));
                 }
                 if (event.context.elements.length > 1)
-                    event.context.elements.forEach((element) => {
-                        const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
-                        const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
-                        applyModelerElement({ modeler: bpmnModeler, element, action });
-                        if (element.id.includes('Activity')) dispatch(processActions.addAppliedAction(element.id));
-                    });
+                { event.context.elements.forEach((element) => {
+                    const externalAction = _.cloneDeep(externalBpmnActions[element?.businessObject.actionId]);
+                    const action = externalAction ?? internalBpmnActions[element?.businessObject.actionId];
+                    applyModelerElement({ modeler: bpmnModeler, element, action });
+                    if (element.id.includes('Activity')) dispatch(processActions.addAppliedAction(element.id));
+                }); }
             });
 
             eventBus.on('element.click', (event: any) => {
@@ -184,8 +185,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
             if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported)
-                dispatch(processActions.setSaveDisabled(false));
-            else dispatch(processActions.setSaveDisabled(true));
+            { dispatch(processActions.setSaveDisabled(false)); }
+            else { dispatch(processActions.setSaveDisabled(true)); }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [appliedActivities, modeler]);
 

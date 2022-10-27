@@ -70,10 +70,10 @@ const Filter: FC<FilterProps> = ({ className, ...rest }) => {
         event.persist();
 
         if (event.keyCode === 13 && inputValue)
-            if (!chips.includes(inputValue)) {
-                setChips((prevChips) => [...prevChips, inputValue]);
-                setInputValue('');
-            }
+        { if (!chips.includes(inputValue)) {
+            setChips((prevChips) => [...prevChips, inputValue]);
+            setInputValue('');
+        } }
     };
 
     const handleChipDelete = (chip: string): void => {

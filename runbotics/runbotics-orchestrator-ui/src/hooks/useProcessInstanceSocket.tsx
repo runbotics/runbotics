@@ -26,12 +26,13 @@ const useProcessInstanceSocket = ({
     const processState = useSelector(processSelector);
 
     useEffect(() => {
+        // eslint-disable-next-line complexity
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
             if (
                 !!orchestratorProcessInstanceId &&
                 processInstance.orchestratorProcessInstanceId === orchestratorProcessInstanceId
             )
-                dispatch(processInstanceActions.updateProcessInstance(processInstance));
+            { dispatch(processInstanceActions.updateProcessInstance(processInstance)); }
 
             if (
                 !processInstance.rootProcessInstanceId &&
@@ -39,11 +40,11 @@ const useProcessInstanceSocket = ({
             ) {
                 dispatch(processInstanceActions.insert(processInstance));
                 if (isProcessInstanceFinished(processInstance))
-                    dispatch(
-                        processInstanceActions.getProcessInstanceAndUpdatePage({
-                            processInstanceId: processInstance.id,
-                        }),
-                    );
+                { dispatch(
+                    processInstanceActions.getProcessInstanceAndUpdatePage({
+                        processInstanceId: processInstance.id,
+                    }),
+                ); }
             }
         });
 
@@ -53,7 +54,7 @@ const useProcessInstanceSocket = ({
                 processInstanceEvent.processInstance.orchestratorProcessInstanceId ===
                 processInstanceState.active.orchestratorProcessInstanceId
             )
-                dispatch(processInstanceActions.updateSingleActiveEvent(processInstanceEvent));
+            { dispatch(processInstanceActions.updateSingleActiveEvent(processInstanceEvent)); }
         });
 
         return () => {

@@ -32,17 +32,17 @@ export const useScheduledStatusSocket = () => {
             }
 
             if (isFinishedStatus(processInstance.status))
-                dispatch(schedulerActions.removeActiveJob(processInstance));
+            { dispatch(schedulerActions.removeActiveJob(processInstance)); }
 
 
             if (processInstance.status === ProcessInstanceStatus.TERMINATED)
-                enqueueSnackbar(
-                    translate('Scheduler.ActiveProcess.Terminate.Success', {
-                        processName: processInstance.process.name,
-                    }), {
-                        variant: 'success',
-                    },
-                );
+            { enqueueSnackbar(
+                translate('Scheduler.ActiveProcess.Terminate.Success', {
+                    processName: processInstance.process.name,
+                }), {
+                    variant: 'success',
+                },
+            ); }
 
         });
 

@@ -9,7 +9,7 @@ export function range(start: number, end: number) {
     const array: number[] = [];
 
     for (let i = start; i <= end; i += 1) 
-        array.push(i);
+    { array.push(i); }
     
 
     return array;
@@ -32,7 +32,7 @@ export function dedup(array: number[]) {
 
     array.forEach((i) => {
         if (result.indexOf(i) < 0) 
-            result.push(i);
+        { result.push(i); }
         
     });
 

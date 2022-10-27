@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React, { useEffect, useMemo, useState } from 'react';
 
 import {
@@ -21,6 +22,7 @@ import { DataTableRow, DataTableWrapper } from './Table.styles';
 import { DataTableProps } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT } from './Table.utils';
 
+// eslint-disable-next-line complexity
 const Table = <T extends object>({
     columns,
     data: propData,
@@ -135,14 +137,14 @@ const Table = <T extends object>({
         const dummyRows: JSX.Element[] = [];
         const dummyRowsLength = TABLE_PAGE_SIZES[0] - dataRows.length;
         for (let i = dummyRowsLength; i > 0; i--)
-            dummyRows.push(
-                <TableRow
-                    sx={{
-                        minHeight: `${TABLE_ROW_HEIGHT}px`,
-                        height: `${TABLE_ROW_HEIGHT}px`,
-                    }}
-                />,
-            );
+        { dummyRows.push(
+            <TableRow
+                sx={{
+                    minHeight: `${TABLE_ROW_HEIGHT}px`,
+                    height: `${TABLE_ROW_HEIGHT}px`,
+                }}
+            />,
+        ); }
 
         return [...dataRows, ...dummyRows];
     };

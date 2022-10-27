@@ -24,7 +24,7 @@ export default function CustomSelect(props: CustomSelectProps) {
 
     const stringValue = useMemo(() => {
         if (value && Array.isArray(value)) 
-            return value.map((item: number) => item.toString());
+        { return value.map((item: number) => item.toString()); }
         
         return [];
     }, [value]);
@@ -32,13 +32,13 @@ export default function CustomSelect(props: CustomSelectProps) {
     const options = useMemo(
         () => {
             if (optionsList) 
-                return optionsList.map((option, index) => {
-                    const number = unit.min === 0 ? index : index + 1;
-                    return {
-                        value: number.toString(),
-                        label: option,
-                    };
-                });
+            { return optionsList.map((option, index) => {
+                const number = unit.min === 0 ? index : index + 1;
+                return {
+                    value: number.toString(),
+                    label: option,
+                };
+            }); }
             
             return [...Array(unit.total)].map((e, index) => {
                 const number = unit.min === 0 ? index : index + 1;
@@ -51,11 +51,12 @@ export default function CustomSelect(props: CustomSelectProps) {
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
     const renderTag = useCallback(
+        // eslint-disable-next-line complexity
         (tagProps) => {
             const propsValue = tagProps;
 
             if (!propsValue || Number.isNaN((propsValue[0]))) 
-                return <></>;
+            { return <></>; }
             
 
             const parsedArray = parsePartArray(propsValue, unit);
@@ -78,14 +79,14 @@ export default function CustomSelect(props: CustomSelectProps) {
         (event) => {
             let newValueOption: number[] = event.target.value;
             if (newValueOption.length === 0) 
-                newValueOption.push(0);
+            { newValueOption.push(0); }
             
             newValueOption = Array.isArray(newValueOption) ? sort(newValueOption) : [newValueOption];
             const newValue: number[] = newValueOption;
             if (newValue.length === unit.total) 
-                setValue([]);
+            { setValue([]); }
             else 
-                setValue(newValue);
+            { setValue(newValue); }
             
         },
         [setValue, unit.total],

@@ -2,6 +2,7 @@ import { translate } from 'src/hooks/useTranslations';
 
 import { IBpmnAction, Runner, CloudPath } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromRoot': {
         id: 'sharepointFile.downloadFileFromRoot',

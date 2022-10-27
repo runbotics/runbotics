@@ -36,6 +36,7 @@ const filterModalInitialState: GroupFilters = {
     currentTab: ListPanelTab.ACTIONS,
 };
 
+// eslint-disable-next-line max-lines-per-function
 const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     const [filters, setFilters] = useState<GroupFilters>(filterModalInitialState);
     const [openDrawer, setOpenDrawer] = useState(true);
@@ -96,17 +97,18 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         props.modeler.get('create').start(event, shape);
     };
 
+    // eslint-disable-next-line complexity
     const handleItemClick = (event, item: Item) => {
         if (!item) return;
         if (customLoopHandler[item.id])
-            // Handler for loops - temporary solution, should be refactored/moved to templateHandler
-            customLoopHandler[item.id](event, props);
-        else if (internalTemplates[item.id]) CustomTemplateHandler(event, props, internalTemplates[item.id]);
+        // Handler for loops - temporary solution, should be refactored/moved to templateHandler
+        { customLoopHandler[item.id](event, props); }
+        else if (internalTemplates[item.id]) { CustomTemplateHandler(event, props, internalTemplates[item.id]); }
         else if (byId[item.id])
-            // Handler for external actions
-            handleAction(event, byId[item.id]);
-        else if (internalBpmnActions[item.id]) handleAction(event, internalBpmnActions[item.id]);
-        else throw new Error(translate('Process.Details.Modeler.ActionListPanel.Error'));
+        // Handler for external actions
+        { handleAction(event, byId[item.id]); }
+        else if (internalBpmnActions[item.id]) { handleAction(event, internalBpmnActions[item.id]); }
+        else { throw new Error(translate('Process.Details.Modeler.ActionListPanel.Error')); }
     };
 
     const handleSearchPhrasechange = (value: string) => {

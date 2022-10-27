@@ -42,6 +42,7 @@ interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
     sx?: SxProps<Theme>;
 }
 
+// eslint-disable-next-line complexity
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title }, ref) => {
     const dispatch = useDispatch();
     const tableRef = useRef<HTMLDivElement>(null);

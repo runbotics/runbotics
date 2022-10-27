@@ -69,13 +69,13 @@ const Account: FC = () => {
     };
 
     if (!auth.isAuthenticated)
-        return (
-            <RouterLink href="/login" passHref legacyBehavior>
-                <Link className={classes.link} underline="none" variant="body2">
-                    {translate('Account.SignIn')}
-                </Link>
-            </RouterLink>
-        );
+    { return (
+        <RouterLink href="/login" passHref legacyBehavior>
+            <Link className={classes.link} underline="none" variant="body2">
+                {translate('Account.SignIn')}
+            </Link>
+        </RouterLink>
+    ); }
 
     return (
         <Root>

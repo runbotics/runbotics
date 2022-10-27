@@ -8,9 +8,9 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
 
     const handleInputChange = (event: any, newInputValue: string) => {
         if (event && newInputValue && (newInputValue.startsWith('$') || newInputValue.startsWith('#'))) 
-            setOpen(true);
+        { setOpen(true); }
         else 
-            setOpen(false);
+        { setOpen(false); }
         
     };
 

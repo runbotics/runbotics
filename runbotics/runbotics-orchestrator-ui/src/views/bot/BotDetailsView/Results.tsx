@@ -27,10 +27,10 @@ const Results: FC = () => {
     const tabs = useMemo(() => {
         const tabsToReturn = [];
         if (hasLogsTabAccess)
-            tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') });
+        { tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') }); }
 
         if (hasConsoleTabAccess)
-            tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') });
+        { tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') }); }
 
         return tabsToReturn;
         // eslint-disable-next-line react-hooks/exhaustive-deps

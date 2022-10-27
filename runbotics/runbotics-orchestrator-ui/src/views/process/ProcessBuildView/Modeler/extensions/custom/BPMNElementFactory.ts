@@ -50,9 +50,9 @@ export class BPMNElementFactory {
     createTaskType = (type: TaskType, configuration: TaskConfiguration, additionalShapeAttrs?: Record<string, any>) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`);
         if (configuration.businessObject)
-            Object.entries(configuration.businessObject).forEach(([key, value]) => {
-                businessObject[key] = value;
-            });
+        { Object.entries(configuration.businessObject).forEach(([key, value]) => {
+            businessObject[key] = value;
+        }); }
 
         businessObject.label = configuration.label;
         const shape = this.elementFactory.createShape({
@@ -83,10 +83,10 @@ export class BPMNElementFactory {
 
         const createParameter = (destination: ParameterDestination, parameter: Parameter) => {
             if (parameter.type == null || parameter.type === ParameterType.TEXT)
-                return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
-                    name: parameter.name,
-                    value: parameter.value,
-                });
+            { return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
+                name: parameter.name,
+                value: parameter.value,
+            }); }
             if (parameter.type === ParameterType.MAP) {
                 const parameterMap = parameter as ParameterMap;
                 return this.bpmnFactory.create(`camunda:${destination}Parameter`, {

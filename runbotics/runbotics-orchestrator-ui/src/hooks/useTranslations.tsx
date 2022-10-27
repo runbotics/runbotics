@@ -38,7 +38,7 @@ const useTranslations = () => {
 
 export const isNamespaceLoaded = () => new Promise((resolve) => {
     if (i18next.hasLoadedNamespace(i18next.language)) 
-        resolve(true);
+    { resolve(true); }
     
 });
 

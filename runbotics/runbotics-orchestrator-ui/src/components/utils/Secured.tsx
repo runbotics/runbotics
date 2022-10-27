@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { FC, ReactNode } from 'react';
 
 import { FeatureKey, Role } from 'runbotics-common';
@@ -13,11 +14,11 @@ export interface SecuredProps {
 
 export const hasAuthorities = (user: User, authorities: any[]) => {
     if (!user || !user.authoritiesById) 
-        return false;
+    { return false; }
     
     for (const authority of authorities) 
-        if (!user.authoritiesById[authority]) 
-            return false;
+    { if (!user.authoritiesById[authority]) 
+    { return false; } }
         
     
 
@@ -26,12 +27,12 @@ export const hasAuthorities = (user: User, authorities: any[]) => {
 
 export const hasRoleAccess = (user: User, roles: Role[]) => {
     if (!user || !user.roles) 
-        return false;
+    { return false; }
     
 
     for (const role of roles) 
-        if (!user.roles.includes(role)) 
-            return false;
+    { if (!user.roles.includes(role)) 
+    { return false; } }
         
     
 
@@ -40,12 +41,12 @@ export const hasRoleAccess = (user: User, roles: Role[]) => {
 
 export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[]) => {
     if (!user || !user.featureKeys || !user.roles) 
-        return false;
+    { return false; }
     
 
     for (const featureKey of featureKeys) 
-        if (!user.featureKeys.includes(featureKey)) 
-            return false;
+    { if (!user.featureKeys.includes(featureKey)) 
+    { return false; } }
         
     
 
@@ -57,8 +58,8 @@ const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
 
     if (isAuthenticated) {
         if (featureKeys) 
-            if (hasFeatureKeyAccess(user, featureKeys)) 
-                return <>{children}</>;
+        { if (hasFeatureKeyAccess(user, featureKeys)) 
+        { return <>{children}</>; } }
             
         
 

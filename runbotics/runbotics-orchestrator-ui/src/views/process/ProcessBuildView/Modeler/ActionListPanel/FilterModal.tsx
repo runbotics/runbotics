@@ -35,9 +35,9 @@ const FilterModal: FC<FilterModalProps> = ({ anchorElement, activeFilters, filte
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = event.target;
         if (checked) 
-            setFilters((prevState: Filters) => ({ ...prevState, groupNames: [...prevState.groupNames, name] }));
+        { setFilters((prevState: Filters) => ({ ...prevState, groupNames: [...prevState.groupNames, name] })); }
         else 
-            setFilters((prevState: Filters) => ({ ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) }));
+        { setFilters((prevState: Filters) => ({ ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) })); }
         
     };
 

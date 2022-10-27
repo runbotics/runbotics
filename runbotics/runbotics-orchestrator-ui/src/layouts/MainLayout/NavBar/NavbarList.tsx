@@ -24,32 +24,32 @@ const NavbarList: VFC<NavbarListProps> = ({ items, depth = 0, mobile }) => {
                 const open = item.href.includes(page);
 
                 if (item.items)
-                    acc.push(
-                        <NavbarItem
-                            key={key}
-                            depth={depth}
-                            icon={item.icon}
-                            info={item.info}
-                            open={!!open}
-                            title={item.title}
-                            mobile={mobile}
-                        >
-                            <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
-                        </NavbarItem>,
-                    );
+                { acc.push(
+                    <NavbarItem
+                        key={key}
+                        depth={depth}
+                        icon={item.icon}
+                        info={item.info}
+                        open={!!open}
+                        title={item.title}
+                        mobile={mobile}
+                    >
+                        <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
+                    </NavbarItem>,
+                ); }
                 else
-                    acc.push(
-                        <NavbarItem
-                            key={key}
-                            depth={depth}
-                            href={item.href}
-                            icon={item.icon}
-                            info={item.info}
-                            title={item.title}
-                            mobile={mobile}
-                            open={!!open}
-                        />,
-                    );
+                { acc.push(
+                    <NavbarItem
+                        key={key}
+                        depth={depth}
+                        href={item.href}
+                        icon={item.icon}
+                        info={item.info}
+                        title={item.title}
+                        mobile={mobile}
+                        open={!!open}
+                    />,
+                ); }
 
                 return acc;
             }, [])}

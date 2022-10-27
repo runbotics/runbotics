@@ -2,6 +2,7 @@ import { translate } from 'src/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     'import.csv': {
         id: 'import.csv',

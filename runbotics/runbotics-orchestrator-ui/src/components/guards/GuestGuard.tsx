@@ -6,7 +6,7 @@ import useAuth from 'src/hooks/useAuth';
 
 import LoadingScreen from '../utils/LoadingScreen';
 
-// eslint-disable-next-line react/display-name
+// eslint-disable-next-line react/display-name, complexity
 export const withGuestGuard = (Component: FC) => (props: any) => {
     const { isAuthenticated, isInitialised } = useAuth();
     const router = useRouter();

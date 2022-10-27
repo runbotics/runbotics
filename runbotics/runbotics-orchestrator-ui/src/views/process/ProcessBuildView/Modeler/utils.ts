@@ -72,7 +72,7 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
 
     element.businessObject.disabled = additionalParameters?.disabled;
     if (additionalParameters?.runFromHere !== element.businessObject?.runFromHere)
-        disablePreviousElements(modeler, element, additionalParameters?.runFromHere);
+    { disablePreviousElements(modeler, element, additionalParameters?.runFromHere); }
 
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
 
@@ -92,25 +92,25 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         action ? action.form.schema : null,
     );
     if (inputParams.length > 0)
-        actionToBPMNElement.setInputParameters(element, inputParams);
+    { actionToBPMNElement.setInputParameters(element, inputParams); }
 
 
     if (additionalParameters?.output && action.output && action.output.assignVariables)
-        Object.entries(action.output.outputMethods).forEach((currentValue) => {
-            const key = currentValue[0];
-            const value = currentValue[1];
-            const output = data.output[key];
-            if (output) {
-                Object.entries(data.output).forEach(([k, v]) => {
-                    if (value === v)
-                        delete data.output[k];
+    { Object.entries(action.output.outputMethods).forEach((currentValue) => {
+        const key = currentValue[0];
+        const value = currentValue[1];
+        const output = data.output[key];
+        if (output) {
+            Object.entries(data.output).forEach(([k, v]) => {
+                if (value === v)
+                { delete data.output[k]; }
 
-                });
+            });
 
-                data.output[output] = value;
-            }
+            data.output[output] = value;
+        }
 
-        });
+    }); }
 
 
     if (Object.keys(data.output).length > 0) {

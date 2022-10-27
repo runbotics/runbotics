@@ -34,7 +34,7 @@ export const logout = createAsyncThunk('auth/logout', () => {
 
 const isValidToken = (accessToken: string): boolean => {
     if (!accessToken)
-        return false;
+    { return false; }
 
     const decoded: any = jwtDecode(accessToken);
     const currentTime = Date.now() / 1000;

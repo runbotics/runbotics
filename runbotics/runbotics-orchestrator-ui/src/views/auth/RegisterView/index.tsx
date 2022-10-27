@@ -60,6 +60,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
+// eslint-disable-next-line max-lines-per-function
 const RegisterView: FC = () => {
     const { translate } = useTranslations();
     const registrationText = translate('Register.AccountCreated.ActivationNeededMessage');
@@ -130,74 +131,76 @@ const RegisterView: FC = () => {
                                     }
                                 }}
                             >
-                                {({
-                                    errors,
-                                    handleBlur,
-                                    handleChange,
-                                    handleSubmit,
-                                    isSubmitting,
-                                    touched,
-                                    values,
-                                }) => (
-                                    <form noValidate onSubmit={handleSubmit}>
-                                        <TextField
-                                            error={Boolean(touched.email && errors.email)}
-                                            fullWidth
-                                            helperText={touched.email && errors.email}
-                                            label={translate('Register.Form.Fields.Email.Label')}
-                                            margin="normal"
-                                            name="email"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="email"
-                                            value={values.email}
-                                            variant="outlined"
-                                        />
-                                        <TextField
-                                            error={Boolean(touched.password && errors.password)}
-                                            fullWidth
-                                            helperText={touched.password && errors.password}
-                                            label={translate('Register.Form.Fields.Password.Label')}
-                                            margin="normal"
-                                            name="password"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="password"
-                                            value={values.password}
-                                            variant="outlined"
-                                        />
-                                        <TextField
-                                            error={Boolean(touched.passwordConfirmation && errors.passwordConfirmation)}
-                                            fullWidth
-                                            helperText={touched.passwordConfirmation && errors.passwordConfirmation}
-                                            label={translate('Register.Form.Fields.PasswordConfirmation.Label')}
-                                            margin="normal"
-                                            name="passwordConfirmation"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="password"
-                                            value={values.passwordConfirmation}
-                                            variant="outlined"
-                                        />
-                                        {errors.submit && (
-                                            <Box mt={3}>
-                                                <FormHelperText error>{errors.submit}</FormHelperText>
-                                            </Box>
-                                        )}
-                                        <Box mt={2}>
-                                            <Button
-                                                color="secondary"
-                                                disabled={isSubmitting}
+                                {
+                                // eslint-disable-next-line complexity
+                                    ({
+                                        errors,
+                                        handleBlur,
+                                        handleChange,
+                                        handleSubmit,
+                                        isSubmitting,
+                                        touched,
+                                        values,
+                                    }) => (
+                                        <form noValidate onSubmit={handleSubmit}>
+                                            <TextField
+                                                error={Boolean(touched.email && errors.email)}
                                                 fullWidth
-                                                size="large"
-                                                type="submit"
-                                                variant="contained"
-                                            >
-                                                {translate('Register.Form.Actions.Register')}
-                                            </Button>
-                                        </Box>
-                                    </form>
-                                )}
+                                                helperText={touched.email && errors.email}
+                                                label={translate('Register.Form.Fields.Email.Label')}
+                                                margin="normal"
+                                                name="email"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="email"
+                                                value={values.email}
+                                                variant="outlined"
+                                            />
+                                            <TextField
+                                                error={Boolean(touched.password && errors.password)}
+                                                fullWidth
+                                                helperText={touched.password && errors.password}
+                                                label={translate('Register.Form.Fields.Password.Label')}
+                                                margin="normal"
+                                                name="password"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="password"
+                                                value={values.password}
+                                                variant="outlined"
+                                            />
+                                            <TextField
+                                                error={Boolean(touched.passwordConfirmation && errors.passwordConfirmation)}
+                                                fullWidth
+                                                helperText={touched.passwordConfirmation && errors.passwordConfirmation}
+                                                label={translate('Register.Form.Fields.PasswordConfirmation.Label')}
+                                                margin="normal"
+                                                name="passwordConfirmation"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="password"
+                                                value={values.passwordConfirmation}
+                                                variant="outlined"
+                                            />
+                                            {errors.submit && (
+                                                <Box mt={3}>
+                                                    <FormHelperText error>{errors.submit}</FormHelperText>
+                                                </Box>
+                                            )}
+                                            <Box mt={2}>
+                                                <Button
+                                                    color="secondary"
+                                                    disabled={isSubmitting}
+                                                    fullWidth
+                                                    size="large"
+                                                    type="submit"
+                                                    variant="contained"
+                                                >
+                                                    {translate('Register.Form.Actions.Register')}
+                                                </Button>
+                                            </Box>
+                                        </form>
+                                    )}
                             </Formik>
                         </Box>
                         <Box my={3}>

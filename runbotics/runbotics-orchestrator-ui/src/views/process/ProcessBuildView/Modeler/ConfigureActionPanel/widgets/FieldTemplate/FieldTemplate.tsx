@@ -31,14 +31,14 @@ const FieldTemplate = ({
 
     useEffect(() => {
         if (typeof rawDescription !== 'undefined') 
-            if (
-                checkIfKeyExists(
-                    'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
-                )
-            ) {
-                { /*@ts-ignore*/ }
-                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
-            }
+        { if (
+            checkIfKeyExists(
+                'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
+            )
+        ) {
+            { /*@ts-ignore*/ }
+            setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
+        } }
         
 
         if (rawErrors.length > 0) {

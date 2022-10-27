@@ -2,6 +2,7 @@ import { translate } from 'src/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: 'beeOffice.createNewTimetableActivity',

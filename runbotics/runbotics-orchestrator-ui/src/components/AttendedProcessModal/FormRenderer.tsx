@@ -31,7 +31,7 @@ const FormRenderer: FC<FormPropsExtended> = (props) => {
 
     const formRefCallback = (node) => {
         if (node) 
-            setIsFormError(node.state.errors.length > 0);
+        { setIsFormError(node.state.errors.length > 0); }
         
     };
 

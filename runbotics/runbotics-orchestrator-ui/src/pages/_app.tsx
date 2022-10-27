@@ -41,7 +41,7 @@ const App: VFC<AppProps> = (props) => {
     let Layout: FC = React.Fragment;
 
     if (router.pathname.startsWith('/app/')) 
-        Layout = MainLayout;
+    { Layout = MainLayout; }
     
 
     return (

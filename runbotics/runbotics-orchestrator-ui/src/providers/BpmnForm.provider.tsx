@@ -37,7 +37,7 @@ const BpmnFormProvider: FC<BpmnFormProviderProps> = ({ modeler, element, childre
     const [passedInVariables, setPassedInVariables] = useState<string[]>([]);
     useEffect(() => {
         if (process && process.isAttended && process.executionInfo) 
-            setPassedInVariables(extractNestedSchemaKeys(JSON.parse(process.executionInfo).schema) ?? []);
+        { setPassedInVariables(extractNestedSchemaKeys(JSON.parse(process.executionInfo).schema) ?? []); }
         
     }, [process]);
 

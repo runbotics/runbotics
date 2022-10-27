@@ -36,6 +36,7 @@ interface BotProcessRunnerProps {
     variant?: 'text' | 'outlined' | 'contained';
 }
 
+// eslint-disable-next-line complexity
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
     process,
@@ -63,7 +64,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             || processInstance?.status === ProcessInstanceStatus.TERMINATED;
 
         if (isProcessInstanceFinished) 
-            setStarted(false);
+        { setStarted(false); }
         
     }, [processInstance]);
 
@@ -90,9 +91,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             }),
         )
             .then(unwrapResult)
-            .then(async (response: StartProcessResponse) => {
-                await dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
-                    response.orchestratorProcessInstanceId,
+            .then( (response: StartProcessResponse) => {
+                dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
+                    response.orchestratorProcessInstanceId
                 ));
                 onRunClick?.();
                 setStarted(true);

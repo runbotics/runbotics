@@ -39,7 +39,7 @@ export const saveAction = createAsyncThunk<
     } catch (err) {
         const error: AxiosError<any> = err; // cast the error for access
         if (!error.response) 
-            throw err;
+        { throw err; }
         
         // We got validation errors, let's return those so we can reference in our component and set form errors
         return rejectWithValue(error.response.data);

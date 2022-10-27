@@ -38,7 +38,7 @@ const updateProcessInstancePageList = (processInstanceList: IProcessInstance[], 
     const exist = processInstanceList.some((item) => item.id === newProcessInst.id);
 
     if (!exist) 
-        return { exist };
+    { return { exist }; }
     
 
     const newProcessInstancesList = processInstanceList.reduce<IProcessInstance[]>(
@@ -60,8 +60,8 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
     );
 
     if (exist) 
-        state.all.page.content = newProcessInstancesList;
+    { state.all.page.content = newProcessInstancesList; }
     else 
-        state.all.page?.content.unshift(action.payload);
+    { state.all.page?.content.unshift(action.payload); }
     
 };

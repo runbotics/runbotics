@@ -14,6 +14,7 @@ import DEFAULT_LOCALE_EN from './locale';
 import { CronProps, PeriodType } from './types';
 import { classNames, setError, usePrevious } from './utils';
 
+// eslint-disable-next-line max-lines-per-function
 export default function Cron(props: CronProps) {
     const {
         clearButton = true,
@@ -74,22 +75,22 @@ export default function Cron(props: CronProps) {
     useEffect(
         () => {
             if (value !== internalValueRef.current)
-                setValuesFromCronString(
-                    value,
-                    setInternalError,
-                    onError,
-                    allowEmpty,
-                    internalValueRef,
-                    false,
-                    locale,
-                    shortcuts,
-                    setMinutes,
-                    setHours,
-                    setMonthDays,
-                    setMonths,
-                    setWeekDays,
-                    setPeriod,
-                );
+            { setValuesFromCronString(
+                value,
+                setInternalError,
+                onError,
+                allowEmpty,
+                internalValueRef,
+                false,
+                locale,
+                shortcuts,
+                setMinutes,
+                setHours,
+                setMonthDays,
+                setMonths,
+                setWeekDays,
+                setPeriod,
+            ); }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [value, internalValueRef, localeJSON, allowEmpty, shortcuts],
@@ -196,18 +197,18 @@ export default function Cron(props: CronProps) {
     const clearButtonNode = useMemo(
         () => {
             if (clearButton && !readOnly)
-                return (
-                    <Button
-                        style={{ marginLeft: '10px' }}
-                        className={clearButtonClassName}
-                        variant="contained"
-                        color="secondary"
-                        disabled={disabled}
-                        onClick={handleClear}
-                    >
-                        {locale.clearButtonText || DEFAULT_LOCALE_EN.clearButtonText}
-                    </Button>
-                );
+            { return (
+                <Button
+                    style={{ marginLeft: '10px' }}
+                    className={clearButtonClassName}
+                    variant="contained"
+                    color="secondary"
+                    disabled={disabled}
+                    onClick={handleClear}
+                >
+                    {locale.clearButtonText || DEFAULT_LOCALE_EN.clearButtonText}
+                </Button>
+            ); }
 
             return null;
         },

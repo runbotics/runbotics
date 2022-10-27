@@ -14,16 +14,16 @@ export const formatTimeDiff = (fromDate: string | Date, toDate: string | Date) =
     let durationText = '';
 
     if (hours) 
-        durationText = `${hours}${translate('Common.Time.Hours.Short')} `;
+    { durationText = `${hours}${translate('Common.Time.Hours.Short')} `; }
     
     if (minutes) 
-        durationText = `${durationText} ${minutes}${translate('Common.Time.Minutes.Short')} `;
+    { durationText = `${durationText} ${minutes}${translate('Common.Time.Minutes.Short')} `; }
     
     if (seconds) 
-        durationText = `${durationText} ${seconds}${translate('Common.Time.Seconds.Short')} `;
+    { durationText = `${durationText} ${seconds}${translate('Common.Time.Seconds.Short')} `; }
     
     if (miliseconds) 
-        durationText = `${durationText} ${miliseconds}${translate('Common.Time.Miliseconds.Short')}`;
+    { durationText = `${durationText} ${miliseconds}${translate('Common.Time.Miliseconds.Short')}`; }
     
 
     return durationText;

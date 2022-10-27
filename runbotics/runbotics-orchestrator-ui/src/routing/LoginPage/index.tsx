@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import type { FC } from 'react';
 
 import {

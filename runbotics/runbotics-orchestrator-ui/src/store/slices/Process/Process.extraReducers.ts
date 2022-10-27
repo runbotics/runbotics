@@ -53,9 +53,9 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(saveProcess.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
             if (action.payload) 
-                state.draft.error = action.payload;
+            { state.draft.error = action.payload; }
             else 
-                state.draft.error = action.error.message;
+            { state.draft.error = action.error.message; }
             
         })
 
@@ -76,9 +76,9 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(fetchProcessById.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
             if (action.payload) 
-                state.draft.error = action.payload;
+            { state.draft.error = action.payload; }
             else 
-                state.draft.error = action.error.message;
+            { state.draft.error = action.error.message; }
             
         })
 

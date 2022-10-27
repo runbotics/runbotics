@@ -13,9 +13,9 @@ export default class SeleniumImporter {
         try {
             const definition = JSON.parse(clipboard);
             if (!Array.isArray(definition))
-                return {
-                    error: true,
-                };
+            { return {
+                error: true,
+            }; }
 
             const bpmnElementFactory = new BPMNElementFactory(
                 this.modeler.get('bpmnFactory'),
@@ -25,22 +25,22 @@ export default class SeleniumImporter {
             let tasks = [];
             let connections = [];
             for (let i = 0; i < definition.length; i += 1)
-                if (i === 0) {
-                    tasks.push(bpmnElementFactory.createSeleniumTask(definition[i], { x: i * 150, y: 0 }));
-                } else {
-                    const source = tasks[tasks.length - 1];
-                    const target = bpmnElementFactory.createSeleniumTask(definition[i], { x: i * 150, y: 0 });
-                    const connection = bpmnElementFactory.createSequenceFlow({
-                        source,
-                        target,
-                        waypoints: [
-                            { x: i * 150 - 50, y: 40 },
-                            { x: i * 150, y: 40 },
-                        ],
-                    });
-                    tasks = [...tasks, target];
-                    connections = [...connections, connection];
-                }
+            { if (i === 0) {
+                tasks.push(bpmnElementFactory.createSeleniumTask(definition[i], { x: i * 150, y: 0 }));
+            } else {
+                const source = tasks[tasks.length - 1];
+                const target = bpmnElementFactory.createSeleniumTask(definition[i], { x: i * 150, y: 0 });
+                const connection = bpmnElementFactory.createSequenceFlow({
+                    source,
+                    target,
+                    waypoints: [
+                        { x: i * 150 - 50, y: 40 },
+                        { x: i * 150, y: 40 },
+                    ],
+                });
+                tasks = [...tasks, target];
+                connections = [...connections, connection];
+            } }
 
 
             this.modeler.get('create').start(event, [...tasks, ...connections]);

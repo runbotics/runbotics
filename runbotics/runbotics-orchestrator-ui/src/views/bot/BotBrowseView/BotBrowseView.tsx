@@ -27,10 +27,10 @@ const BotBrowseView: VFC = () => {
         const tabs = [];
 
         if (hasBotsTabAccess)
-            tabs.push({ value: BotCollectionTab.BOTS, label: translate('Bot.Browse.Tabs.Bots.Label') });
+        { tabs.push({ value: BotCollectionTab.BOTS, label: translate('Bot.Browse.Tabs.Bots.Label') }); }
 
         if (hasBotsCollectionTabAccess)
-            tabs.push({ value: BotCollectionTab.COLLECTIONS, label: translate('Bot.Browse.Tabs.Collections.Label') });
+        { tabs.push({ value: BotCollectionTab.COLLECTIONS, label: translate('Bot.Browse.Tabs.Collections.Label') }); }
 
         return tabs;
         // eslint-disable-next-line react-hooks/exhaustive-deps

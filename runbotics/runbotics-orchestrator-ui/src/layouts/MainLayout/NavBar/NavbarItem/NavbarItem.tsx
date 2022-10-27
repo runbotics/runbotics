@@ -23,20 +23,20 @@ const NavbarItem: FC<NavbarItemProps> = ({
     ...rest
 }) => {
     if (children)
-        return (
-            <StyledListItem className={className} key={title} disablePadding {...rest}>
-                <ListItemButton sx={getLinkButtonSx(depth, open)}>
-                    <If condition={Icon}>
-                        <StyledListItemIcon>
-                            <Icon size="20" />
-                        </StyledListItemIcon>
-                    </If>
-                    <StyledListItemText primary={title} />
-                    <StyledListItemIcon>{open ? <ExpandLessIcon /> : <ExpandMoreIcon />}</StyledListItemIcon>
-                </ListItemButton>
-                <Collapse in={open}>{children}</Collapse>
-            </StyledListItem>
-        );
+    { return (
+        <StyledListItem className={className} key={title} disablePadding {...rest}>
+            <ListItemButton sx={getLinkButtonSx(depth, open)}>
+                <If condition={Icon}>
+                    <StyledListItemIcon>
+                        <Icon size="20" />
+                    </StyledListItemIcon>
+                </If>
+                <StyledListItemText primary={title} />
+                <StyledListItemIcon>{open ? <ExpandLessIcon /> : <ExpandMoreIcon />}</StyledListItemIcon>
+            </ListItemButton>
+            <Collapse in={open}>{children}</Collapse>
+        </StyledListItem>
+    ); }
 
     return (
         <StyledListItem className={className} key={title} disablePadding {...rest}>

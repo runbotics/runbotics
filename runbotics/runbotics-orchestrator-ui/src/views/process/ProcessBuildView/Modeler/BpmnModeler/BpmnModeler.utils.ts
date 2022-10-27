@@ -52,13 +52,13 @@ export const createReviver = (moddle) => {
      *
      * @return {Object} actual element
      */
+    // eslint-disable-next-line complexity
     return (key, object) => {
         if (typeof object === 'object' && typeof object.$type === 'string') {
             const objectId = object.id;
 
-            if (objectId && elCache[objectId]) 
-                return elCache[objectId];
-            
+            if (objectId && elCache[objectId]) { return elCache[objectId]; }
+
 
             const type = object.$type;
             const attrs = { ...object };
@@ -67,9 +67,8 @@ export const createReviver = (moddle) => {
 
             const newEl = moddle.create(type, attrs);
 
-            if (objectId) 
-                elCache[objectId] = newEl;
-            
+            if (objectId) { elCache[objectId] = newEl; }
+
 
             return newEl;
         }

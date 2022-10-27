@@ -38,7 +38,7 @@ const WrapIfAdditional = ({
     const { translate } = useTranslations();
 
     if (!additional) 
-        return <>{children}</>;
+    { return <>{children}</>; }
     
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);

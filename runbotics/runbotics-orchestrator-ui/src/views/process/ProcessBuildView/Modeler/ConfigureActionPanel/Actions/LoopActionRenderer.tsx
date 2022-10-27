@@ -38,7 +38,7 @@ const LoopActionRenderer: FC = () => {
             defaultParameters.input.loopType = 'Repeat';
         } else {
             for (const [key] of Object.entries(action.form.formData.input))
-                defaultParameters.input[key] = element.businessObject.loopCharacteristics[key];
+            { defaultParameters.input[key] = element.businessObject.loopCharacteristics[key]; }
 
             defaultParameters.input.loopType = 'Collection';
         }
@@ -51,6 +51,7 @@ const LoopActionRenderer: FC = () => {
         return `${collectionName.slice(0, -1)}.length}`;
     };
 
+    // eslint-disable-next-line complexity
     const handleSubmit = (formState: IFormData) => {
         if (!isLoopElement(element)) return;
 

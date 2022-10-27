@@ -30,8 +30,8 @@ const createTheme = (config: ThemeConfig, language: string): Theme => {
     const themeOptions = themes[config.theme];
 
     if (!themeOptions)
-        // eslint-disable-next-line no-console
-        console.warn(new Error(`The theme ${config.theme} is not valid`));
+    // eslint-disable-next-line no-console
+    { console.warn(new Error(`The theme ${config.theme} is not valid`)); }
 
 
     let theme = createMuiTheme(
@@ -41,7 +41,7 @@ const createTheme = (config: ThemeConfig, language: string): Theme => {
     );
 
     if (config.responsiveFontSizes)
-        theme = responsiveFontSizes(theme);
+    { theme = responsiveFontSizes(theme); }
 
 
     return theme;

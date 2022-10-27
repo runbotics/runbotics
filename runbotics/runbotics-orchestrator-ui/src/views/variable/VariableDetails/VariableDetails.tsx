@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import {
@@ -40,9 +41,9 @@ const VariableDetails: FunctionComponent<VariableDetailsProps> = ({ onClose, var
 
     useEffect(() => {
         if (variableDetailState.show) 
-            setVariable(mapVariableToInnerState(variableDetailState.variable));
+        { setVariable(mapVariableToInnerState(variableDetailState.variable)); }
         else 
-            setVariable(initialVariableState);
+        { setVariable(initialVariableState); }
         
     }, [variableDetailState.show, variableDetailState.variable]);
 
@@ -104,6 +105,7 @@ const VariableDetails: FunctionComponent<VariableDetailsProps> = ({ onClose, var
             });
     };
 
+    // eslint-disable-next-line complexity
     const validateForm = (): boolean => {
         if (variable.name.trim() === '') {
             setValidation({ name: true });

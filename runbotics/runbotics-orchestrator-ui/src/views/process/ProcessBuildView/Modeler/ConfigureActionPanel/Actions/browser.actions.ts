@@ -18,6 +18,7 @@ const exampleJsonConfiguration = {
         },
     },
 };
+// eslint-disable-next-line max-lines-per-function
 const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.open': {
         id: 'browser.selenium.open',

@@ -23,12 +23,12 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
                     form: JSON.parse(actionValue.form),
                 };
                 if (bpmnAction.form.formData.output) 
-                    bpmnAction.output = {
-                        assignVariables: true,
-                        outputMethods: {
-                            variableName: '${content.output[0]}',
-                        },
-                    };
+                { bpmnAction.output = {
+                    assignVariables: true,
+                    outputMethods: {
+                        variableName: '${content.output[0]}',
+                    },
+                }; }
                 
                 const prevValue = prev;
                 prevValue[key] = bpmnAction;
@@ -64,9 +64,9 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
         .addCase(saveAction.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
             if (action.payload) 
-                state.draft.error = action.payload;
+            { state.draft.error = action.payload; }
             else 
-                state.draft.error = action.error.message;
+            { state.draft.error = action.error.message; }
             
         });
 };

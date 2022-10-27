@@ -26,14 +26,14 @@ export const fetchProcessById = createAsyncThunk<
 >('processes/fetchById', (processId, { getState, requestId, rejectWithValue }) => {
     const { currentRequestId, loading } = getState().process.draft;
     if (loading !== LoadingType.PENDING || requestId !== currentRequestId) 
-        return;
+    { return; }
     
     // eslint-disable-next-line consistent-return
     return Axios.get<IProcess>(`/api/processes/${processId}`)
         .then((response) => response.data)
         .catch((error) => {
             if (!error.response) 
-                throw error;
+            { throw error; }
             
             // We got validation errors, let's return those so we can reference in our component and set form errors
             return rejectWithValue(error.response.data);

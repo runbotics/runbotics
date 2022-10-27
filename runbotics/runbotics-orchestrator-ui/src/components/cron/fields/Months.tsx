@@ -6,6 +6,7 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { MonthsProps } from '../types';
 import { classNames } from '../utils';
 
+// eslint-disable-next-line complexity
 export default function Months(props: MonthsProps) {
     const {
         value, setValue, locale, className, humanizeLabels, disabled, readOnly, period,

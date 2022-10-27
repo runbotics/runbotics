@@ -30,9 +30,8 @@ const DataTableFooter: FC<DataTableFooterProps> = ({ pageCount, pageSize, setPag
     };
 
     const renderPageSizeMenuItems = () =>
-        TABLE_PAGE_SIZES.map((item, index) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <MenuItem value={item} key={index}>
+        TABLE_PAGE_SIZES.map((item) => (
+            <MenuItem value={item} key={item}>
                 {item}
             </MenuItem>
         ));

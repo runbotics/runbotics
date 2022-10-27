@@ -104,6 +104,7 @@ export type BpmnSubProcess = BPMNElement & {
     businessObject: IBpmnSubProcessBusinessObject;
 };
 
+// eslint-disable-next-line complexity
 export const getParameterValue = (parameter: CamundaParameter) => {
     if (parameter.$attrs && parameter.$attrs.type === 'Boolean') {
         const result = Expressions.resolveExpression(parameter.value, {}, {});
@@ -115,17 +116,15 @@ export const getParameterValue = (parameter: CamundaParameter) => {
         return result;
     }
 
-    if (!parameter.definition) 
-        return parameter.value;
-    
+    if (!parameter.definition) { return parameter.value; }
+
     switch (parameter.definition.$type) {
         case 'camunda:List':
             return parameter.definition.items.map((item) => item.value);
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
-            if (!map.entries) 
-                return {};
-            
+            if (!map.entries) { return {}; }
+
             return map.entries.reduce((previousValue, currentValue) => {
                 const newPrev = previousValue;
                 newPrev[currentValue.key] = currentValue.value;
@@ -138,9 +137,8 @@ export const getParameterValue = (parameter: CamundaParameter) => {
 
 export const getInputParameters = (element: BPMNElement): Record<string, any> => {
     const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement) 
-        return {};
-    
+    if (!inputOutputElement) { return {}; }
+
     return inputOutputElement.inputParameters.reduce((previousValue, currentValue) => {
         const newPrev = previousValue;
         newPrev[currentValue.name] = getParameterValue(currentValue);
@@ -150,9 +148,8 @@ export const getInputParameters = (element: BPMNElement): Record<string, any> =>
 
 export const getOutputParameters = (element: BPMNElement): Record<string, any> => {
     const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement || !inputOutputElement.outputParameters) 
-        return {};
-    
+    if (!inputOutputElement || !inputOutputElement.outputParameters) { return {}; }
+
     return inputOutputElement.outputParameters.reduce((previousValue, currentValue) => {
         const newPrev = previousValue;
         newPrev[currentValue.name] = getParameterValue(currentValue);

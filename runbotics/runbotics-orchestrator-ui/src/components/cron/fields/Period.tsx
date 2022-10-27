@@ -38,13 +38,13 @@ export default function Period(props: PeriodProps) {
     ];
 
     if (shortcuts && (shortcuts === true || shortcuts.includes('@reboot')))
-        options = [
-            ...options,
-            {
-                value: 'reboot',
-                label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
-            },
-        ];
+    { options = [
+        ...options,
+        {
+            value: 'reboot',
+            label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
+        },
+    ]; }
 
     const handleChange = useCallback(
         (event) => {

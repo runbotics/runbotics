@@ -60,7 +60,7 @@ const VariableDetailsForm: FunctionComponent<VariableDetailsFormProps> = ({
         const name = event.target.value;
         setVariable((prevState) => ({ ...prevState, name }));
         if (name.trim() !== '') 
-            setValidation((prevState) => ({ ...prevState, name: false }));
+        { setValidation((prevState) => ({ ...prevState, name: false })); }
         
     };
 
@@ -72,7 +72,7 @@ const VariableDetailsForm: FunctionComponent<VariableDetailsFormProps> = ({
         const { value } = event.target;
         setVariable((prevState) => ({ ...prevState, type: VariableType.STRING, value }));
         if (value.trim() !== '') 
-            setValidation((prevState) => ({ ...prevState, value: false }));
+        { setValidation((prevState) => ({ ...prevState, value: false })); }
         
     };
 

@@ -12,6 +12,7 @@ import internalBpmnActions from './Actions';
 import LoopActionRenderer from './Actions/LoopActionRenderer';
 import ConnectionFormRenderer from './ConnectionFormRenderer';
 
+// eslint-disable-next-line complexity
 const ConfigureActionPanel: FC = () => {
     const { element, setAction, action } = useBpmnFormContext();
 

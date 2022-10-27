@@ -72,6 +72,7 @@ function isJsonValid(str) {
     return true;
 }
 
+// eslint-disable-next-line complexity
 const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, process, onSubmit, onDelete }) => {
     const ref = React.useRef<any>();
     const submitFormRef = React.useRef<any>();
@@ -82,7 +83,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
 
     useEffect(() => {
         if (process) 
-            setDraft({ form: process?.executionInfo ? process.executionInfo : defaultForm });
+        { setDraft({ form: process?.executionInfo ? process.executionInfo : defaultForm }); }
         
     }, [process]);
 

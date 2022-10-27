@@ -58,13 +58,13 @@ const ActionFormRenderer: FC = () => {
         if (action.output && action.output.assignVariables) {
             const outputParameters = getOutputParameters(element);
             if (Object.entries(outputParameters).length > 0)
-                Object.entries(outputParameters).forEach(([key], index) => {
-                    defaultParameters.output[
-                        Object.keys(defaultParameters.output)[index]
-                            ? Object.keys(defaultParameters.output)[index]
-                            : 'variableName'
-                    ] = key;
-                });
+            { Object.entries(outputParameters).forEach(([key], index) => {
+                defaultParameters.output[
+                    Object.keys(defaultParameters.output)[index]
+                        ? Object.keys(defaultParameters.output)[index]
+                        : 'variableName'
+                ] = key;
+            }); }
         }
 
         const outputParameters = getOutputParameters(element);
