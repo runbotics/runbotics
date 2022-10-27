@@ -1,16 +1,20 @@
 import React, { MouseEvent, useEffect, useState, VFC } from 'react';
-import useBotCollectionSearch from 'src/hooks/useBotCollectionSearch';
+
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
+
+import useBotCollectionSearch from 'src/hooks/useBotCollectionSearch';
 import useQuery from 'src/hooks/useQuery';
-import BotCollectionHeader from './Header/BotCollectionHeader';
+
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+
 import { useDispatch, useSelector } from '../../../store';
 import { botCollectionActions, botCollectionSelector } from '../../../store/slices/BotCollections';
 import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 import BotCollectionGridView from './BotCollectionGridView';
-import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
 import BotCollectionTable from './BotCollectionTable/BotCollectionTable';
-import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
+import BotCollectionHeader from './Header/BotCollectionHeader';
 
 const BotCollectionView: VFC = () => {
     const dispatch = useDispatch();

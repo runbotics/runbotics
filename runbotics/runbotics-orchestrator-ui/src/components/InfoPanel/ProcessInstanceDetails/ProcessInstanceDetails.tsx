@@ -1,10 +1,14 @@
 import React, { useEffect, VFC } from 'react';
+
+import { Box, CircularProgress } from '@mui/material';
+
+import { ProcessInstanceStatus } from 'runbotics-common';
+
 import { useDispatch, useSelector } from 'src/store';
 import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
-import { Box, CircularProgress } from '@mui/material';
-import { ProcessInstanceStatus } from 'runbotics-common';
-import ProcessInstanceDetailsTable from './ProcessInstanceDetailsTable';
+
 import ProcessInstanceDetailsHeader from './ProcessInstanceDetailsHeader';
+import ProcessInstanceDetailsTable from './ProcessInstanceDetailsTable';
 
 interface ProcessInstanceDetailsProps {
     processInstanceId: string;

@@ -1,22 +1,31 @@
 import React, { FC, VFC } from 'react';
+
 import { CacheProvider, EmotionCache } from '@emotion/react';
-import createEmotionCache from 'src/utils/createEmotionCache';
-import 'moment/locale/pl';
+
 import moment from 'moment';
-import { Provider } from 'react-redux';
-import { I18nextProvider } from 'react-i18next';
-import SnackbarProvider from '../providers/Snackbar.provider';
-import StylesProvider from '../providers/Styles.provider';
-import SocketProvider from '../providers/Socket.provider';
-import InitializeAuth from '../views/auth/InitializeAuth';
-import { DEFAULT_LANG } from '../translations/translations';
-import i18n from '../translations/i18n';
-import store from 'src/store';
-import { SettingsProvider } from 'src/contexts/SettingsContext';
-import Head from 'next/head';
-import MainLayout from 'src/layouts/MainLayout';
-import 'src/theme/cronStyles.css';
 import { AppProps as PageProps } from 'next/app';
+import Head from 'next/head';
+
+import { I18nextProvider } from 'react-i18next';
+
+import { Provider } from 'react-redux';
+
+import { SettingsProvider } from 'src/contexts/SettingsContext';
+import MainLayout from 'src/layouts/MainLayout';
+import store from 'src/store';
+import createEmotionCache from 'src/utils/createEmotionCache';
+
+import 'moment/locale/pl';
+import SnackbarProvider from '../providers/Snackbar.provider';
+import SocketProvider from '../providers/Socket.provider';
+import StylesProvider from '../providers/Styles.provider';
+import i18n from '../translations/i18n';
+import { DEFAULT_LANG } from '../translations/translations';
+import InitializeAuth from '../views/auth/InitializeAuth';
+
+
+
+import 'src/theme/cronStyles.css';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;

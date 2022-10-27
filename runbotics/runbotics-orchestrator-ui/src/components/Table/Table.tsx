@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
+
 import {
     Table as MuiTable,
     CircularProgress,
@@ -11,11 +11,14 @@ import {
     Grid,
     Box,
 } from '@mui/material';
+import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
+
 import useTranslations from 'src/hooks/useTranslations';
-import { DataTableProps } from './Table.types';
-import { DataTableRow, DataTableWrapper } from './Table.styles';
-import DataTableFooter from './Table.footer';
+
 import If from '../utils/If';
+import DataTableFooter from './Table.footer';
+import { DataTableRow, DataTableWrapper } from './Table.styles';
+import { DataTableProps } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT } from './Table.utils';
 
 const Table = <T extends object>({

@@ -1,31 +1,34 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable consistent-return */
 import React, { FC, memo, useMemo, useState } from 'react';
-import clsx from 'clsx';
-import _ from 'lodash';
-import { Badge, ListItem, ListItemText, Typography, Tab, Tabs, IconButton, Box, Drawer, List } from '@mui/material';
+
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { useSelector } from 'src/store';
-import useTranslations from 'src/hooks/useTranslations';
-import i18n from 'src/translations/i18n';
-import If from 'src/components/utils/If';
+import { Badge, ListItem, ListItemText, Typography, Tab, Tabs, IconButton, Box, Drawer, List } from '@mui/material';
+import clsx from 'clsx';
+import _ from 'lodash';
+
 import HighlightText from 'src/components/HighlightText';
-import ListGroup, { Item } from '../ListGroup';
+import If from 'src/components/utils/If';
+import useTranslations from 'src/hooks/useTranslations';
+import { useSelector } from 'src/store';
+import i18n from 'src/translations/i18n';
+
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
-import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
-import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
-import { internalTemplates } from '../ConfigureActionPanel/Templates';
-import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
+import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
+import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
+import { internalTemplates } from '../ConfigureActionPanel/Templates';
+import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
+import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
+import ListGroup, { Item } from '../ListGroup';
 import { classes, Root, drawerWidth, ActionPanelToggler } from './ActionListPanel.styles';
 import { ActionListPanelProps, Filters as GroupFilters, GroupProperties, ListPanelTab } from './ActionListPanel.types';
 import ActionSearch from './ActionSearch';
-import useGroupReducer, { groupActions } from './useGroupsReducer';
 import FilterModal from './FilterModal';
+import useGroupReducer, { groupActions } from './useGroupsReducer';
 
 const filterModalInitialState: GroupFilters = {
     groupNames: [],

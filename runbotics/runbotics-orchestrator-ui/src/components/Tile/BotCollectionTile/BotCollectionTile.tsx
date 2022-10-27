@@ -1,11 +1,12 @@
-import CardHeader from '@mui/material/CardHeader';
 import React, { VFC } from 'react';
-import { CardActionArea, Divider } from '@mui/material';
+
+import { CardActionArea, Divider, CardHeader } from '@mui/material';
 import { useRouter } from 'next/router';
+
 import Tile, { TileAvatar } from '..';
-import { BotCollectionTileProps } from './BotCollectionTile.types';
 import BotCollectionTileContent from './BotCollectionTile.content';
 import BotCollectionTileFooter from './BotCollectionTile.footer';
+import { BotCollectionTileProps } from './BotCollectionTile.types';
 
 const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, displayMode }) => {
     const router = useRouter();

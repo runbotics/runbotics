@@ -1,12 +1,16 @@
 import React, { VFC, ChangeEvent } from 'react';
+
 import DevicesIcon from '@mui/icons-material/Devices';
 import { MenuItem, Select } from '@mui/material';
+
+import { FeatureKey, IBotSystem } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
 import { useSelector } from 'src/store';
 import { capitalizeFirstLetter } from 'src/utils/text';
-import { FeatureKey, IBotSystem } from 'runbotics-common';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import If from 'src/components/utils/If';
+
 import { botSystemsSelector } from '../../../store/slices/BotSystem';
 import { Wrapper } from './BotComponent.styles';
 

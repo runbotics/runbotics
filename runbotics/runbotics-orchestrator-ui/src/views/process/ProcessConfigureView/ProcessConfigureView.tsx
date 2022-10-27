@@ -1,11 +1,14 @@
+import React, { useEffect, useState, VFC } from 'react';
+
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, VFC } from 'react';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
+
 import { useDispatch, useSelector } from 'src/store';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
 import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { processActions } from 'src/store/slices/Process';
+
 import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';

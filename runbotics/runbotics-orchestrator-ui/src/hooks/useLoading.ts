@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import { LOADING_DEBOUNCE } from 'src/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 
 const useLoading = (isLoading: boolean, delay = LOADING_DEBOUNCE) => {

@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
+
+import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/material';
 import { FieldTemplateProps } from '@rjsf/core';
 
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
 import { convertToPascalCase } from 'src/utils/text';
 
 import WrapIfAdditional from './WrapIfAdditional';
+
 
 const FieldTemplate = ({
     id,

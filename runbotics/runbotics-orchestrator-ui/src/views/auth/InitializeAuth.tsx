@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import SplashScreen from 'src/components/SplashScreen';
 import useAuth from 'src/hooks/useAuth';
 import { useDispatch } from 'src/store';

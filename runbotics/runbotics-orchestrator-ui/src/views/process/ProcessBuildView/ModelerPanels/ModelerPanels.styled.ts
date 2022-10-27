@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Button } from '@mui/material';
+import styled from 'styled-components';
+
 import BotProcessRunner from 'src/components/BotProcessRunner';
 
 export const FirstActionButton = styled(Button)(({ theme }) => `

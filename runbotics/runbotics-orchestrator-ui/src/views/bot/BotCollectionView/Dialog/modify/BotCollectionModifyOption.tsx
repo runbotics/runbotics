@@ -1,9 +1,12 @@
 import React, { FC, useState } from 'react';
+
 import { MenuItem } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
-import BotCollectionModifyDialog from './BotCollectionModifyDialog';
-import { BotCollectionModifyProps } from './BotCollectionModify.types';
+
 import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
+import { BotCollectionModifyProps } from './BotCollectionModify.types';
+import BotCollectionModifyDialog from './BotCollectionModifyDialog';
 
 const BotCollectionModifyOption: FC<BotCollectionModifyProps> = ({ botCollection, displayMode }) => {
     const [show, setShow] = useState(false);

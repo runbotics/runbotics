@@ -1,10 +1,9 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
+import internalBpmnActions from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions';
 import {
     ActionToBPMNElement,
 } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/ActionToBPMNElement';
-import { TaskType } from 'src/views/process/ProcessBuildView/Modeler/extensions/custom/BPMNElementFactory';
-import internalBpmnActions from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions';
-import { ParameterDestination } from 'src/views/process/ProcessBuildView/Modeler/extensions/custom/CustomPalette';
 import {
     Direction,
     ElementType,
@@ -15,6 +14,8 @@ import {
     CreateConnectionProps,
     CalculateOffsetProps,
 } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
+import { TaskType } from 'src/views/process/ProcessBuildView/Modeler/extensions/custom/BPMNElementFactory';
+import { ParameterDestination } from 'src/views/process/ProcessBuildView/Modeler/extensions/custom/CustomPalette';
 
 function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
     // mapOfRelations holds necessary information to create connections between elements (shapes)

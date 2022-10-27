@@ -1,12 +1,14 @@
 import React, { FC, useEffect, useState } from 'react';
-import { IBpmnAction } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
-import { BPMNElement } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
+
+import { Box, Typography } from '@mui/material';
 import BpmnModelerType from 'bpmn-js/lib/Modeler';
 import { IProcess } from 'runbotics-common';
+
 import extractNestedSchemaKeys from 'src/components/utils/extractNestedSchemaKeys';
 import If from 'src/components/utils/If';
-import { Box, Typography } from '@mui/material';
 import { CommandStackInfo } from 'src/store/slices/Process';
+import { BPMNElement } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
+import { IBpmnAction } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 
 export interface BpmnFormContext {
     element?: BPMNElement;

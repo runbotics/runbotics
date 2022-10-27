@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import LoadingType from 'src/types/loading';
 import { defaultValue } from 'src/types/model/action.model';
-import * as actionThunks from './Action.thunks';
-import { ActionState } from './Action.state';
+
 import buildActionExtraReducers from './Action.extraReducers';
+import { ActionState } from './Action.state';
+import * as actionThunks from './Action.thunks';
 
 const initialState: ActionState = {
     draft: {

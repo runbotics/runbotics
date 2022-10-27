@@ -1,8 +1,11 @@
 import React, { useMemo, FC } from 'react';
-import { ProcessBuildTab, SidebarProps } from 'src/types/sidebar';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+
 import { FeatureKey } from 'runbotics-common';
+
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
+import { ProcessBuildTab, SidebarProps } from 'src/types/sidebar';
+
 import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
 
 interface TabInfo {

@@ -1,9 +1,11 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import objFromArray from 'src/utils/objFromArray';
+
+import { ScheduleProcessState } from './ScheduleProcess.state';
 import {
     getScheduledProcesses, getSchedulesByProcess, scheduleProcess,
 } from './ScheduleProcess.thunks';
-import { ScheduleProcessState } from './ScheduleProcess.state';
 
 const buildScheduleProcessExtraReducers = (builder: ActionReducerMapBuilder<ScheduleProcessState>) => {
     builder

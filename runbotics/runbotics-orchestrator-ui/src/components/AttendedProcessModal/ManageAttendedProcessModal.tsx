@@ -1,25 +1,37 @@
 import React, { FC, useEffect, useState } from 'react';
+
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    LinearProgress,
+    Tooltip,
+    Typography,
+} from '@mui/material';
+import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
+import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
 import { IProcess } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
-import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import Tooltip from '@mui/material/Tooltip';
-import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
-import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
-import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
-import ErrorBoundary from '../utils/ErrorBoundary';
-import JSONSchemaFormRenderer from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
-import LinearProgress from '@mui/material/LinearProgress';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { defaultForm } from './utils';
-import Dialog from '@mui/material/Dialog';
+
 import { translate } from 'src/hooks/useTranslations';
+import JSONSchemaFormRenderer from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
+import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+
+import ErrorBoundary from '../utils/ErrorBoundary';
+
+
 import If from '../utils/If';
+import { defaultForm } from './utils';
+
+
+
+
+
 
 interface AdminModalProps {
     process: IProcess;

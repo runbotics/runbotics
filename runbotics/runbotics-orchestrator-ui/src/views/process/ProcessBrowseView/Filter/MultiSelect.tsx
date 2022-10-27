@@ -1,7 +1,8 @@
 import React, { useState, useRef, FC, ChangeEvent } from 'react';
-import styled from 'styled-components';
-import { Button, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Button, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material';
+import styled from 'styled-components';
 
 const PREFIX = 'MultiSelect';
 

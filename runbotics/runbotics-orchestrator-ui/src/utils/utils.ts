@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 import { translate } from 'src/hooks/useTranslations';
 
 export const formatDate = (date: string | Date) => moment(date).format('YYYY-MM-DD HH:mm:ss.SS');

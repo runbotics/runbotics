@@ -1,14 +1,18 @@
 import React, { FC } from 'react';
-import { WidgetProps } from '@rjsf/core';
+
 import { getVariablesForScope } from '@bpmn-io/extract-process-variables';
+import { WidgetProps } from '@rjsf/core';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+
 import useTranslations, { translate as t } from 'src/hooks/useTranslations';
-import BPMNHelperFunctions from '../BPMNHelperFunctions';
-import AutocompleteWidget from './AutocompleteWidget';
-import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
+
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { useSelector } from 'src/store';
 import { currentProcessSelector } from 'src/store/slices/Process';
+
+import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
+import BPMNHelperFunctions from '../BPMNHelperFunctions';
+import AutocompleteWidget from './AutocompleteWidget';
 
 const services = [
     'environment.services.idt',

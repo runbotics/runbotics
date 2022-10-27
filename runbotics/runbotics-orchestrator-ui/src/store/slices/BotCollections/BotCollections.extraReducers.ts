@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { getAll, deleteOne, getByPage, updateOne, createOne } from './BotCollections.thunks';
+
 import { BotCollectionsState } from './BotCollections.state';
+import { getAll, deleteOne, getByPage, updateOne, createOne } from './BotCollections.thunks';
 
 const buildBotCollectionExtraReducers = (builder: ActionReducerMapBuilder<BotCollectionsState>) => {
     builder

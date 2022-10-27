@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
+
 import { Select, MenuItem, SvgIcon } from '@mui/material';
 import { Calendar as CalendarIcon } from 'react-feather';
 
-import { PeriodProps } from '../types';
 import DEFAULT_LOCALE_EN from '../locale';
+import { PeriodProps } from '../types';
 import { classNames } from '../utils';
 
 // eslint-disable-next-line complexity

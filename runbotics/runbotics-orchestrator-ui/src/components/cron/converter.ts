@@ -1,10 +1,8 @@
 /* eslint-disable complexity */
 /* eslint-disable max-params */
 import { MutableRefObject } from 'react';
+
 import { UNITS, SUPPORTED_SHORTCUTS } from './constants';
-import {
-    range, sort, dedup, setError,
-} from './utils';
 import {
     Unit,
     PeriodType,
@@ -18,6 +16,9 @@ import {
     SetValueNumbersOrUndefined,
     SetValuePeriod,
 } from './types';
+import {
+    range, sort, dedup, setError,
+} from './utils';
 
 /**
  * Set values from cron string

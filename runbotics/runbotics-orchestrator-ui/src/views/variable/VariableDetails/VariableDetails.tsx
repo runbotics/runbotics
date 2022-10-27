@@ -1,25 +1,28 @@
+import React, { FunctionComponent, useEffect, useState } from 'react';
+
 import {
     Button,
     Dialog,
     DialogActions,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useDispatch } from 'src/store';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+
 import If from 'src/components/utils/If';
-import { globalVariableActions } from 'src/store/slices/GlobalVariable';
 import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch } from 'src/store';
+import { globalVariableActions } from 'src/store/slices/GlobalVariable';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
-import { VariableType } from '../Variable.types';
+
 import { Form, Title, Content } from '../../utils/FormDialog.styles';
+import { VariableType } from '../Variable.types';
 import {
     VariableDetailsProps,
     VariableState,
     VariableValidation,
     VariableValue,
 } from './VariableDetails.types';
-import VariableDetailsForm from './VariableDetailsForm';
 import { initialVariableState, mapVariableToInnerState } from './VariableDetails.utils';
+import VariableDetailsForm from './VariableDetailsForm';
 
 const VariableDetails: FunctionComponent<VariableDetailsProps> = ({ onClose, variableDetailState }) => {
     const [variable, setVariable] = useState<VariableState>(mapVariableToInnerState(variableDetailState.variable));

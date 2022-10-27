@@ -1,5 +1,6 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { VFC } from 'react';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import styled from 'styled-components';
 
 const StyledTitle = styled(DialogTitle)`

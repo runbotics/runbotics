@@ -1,13 +1,16 @@
 import React, { useRef, useState, FC } from 'react';
-import styled from 'styled-components';
-import RouterLink from 'next/link';
-import { useSnackbar } from 'notistack';
+
 import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import styled from 'styled-components';
+
 import useAuth from 'src/hooks/useAuth';
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch } from 'src/store';
 import { logout } from 'src/store/slices/Auth/Auth.thunks';
-import { useRouter } from 'next/router';
-import useTranslations from 'src/hooks/useTranslations';
+
 
 const PREFIX = 'Account';
 

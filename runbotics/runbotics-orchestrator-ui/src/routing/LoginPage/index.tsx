@@ -1,6 +1,5 @@
-import styled from 'styled-components';
 import type { FC } from 'react';
-import RouterLink from 'next/link';
+
 import {
     Box,
     Card,
@@ -13,14 +12,21 @@ import {
     FormHelperText,
     Button,
 } from '@mui/material';
+import { Formik } from 'formik';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
+
+import * as Yup from 'yup';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo/Logo';
 import useTranslations from 'src/hooks/useTranslations';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+
+
 import { useDispatch } from 'src/store';
 import { login } from 'src/store/slices/Auth/Auth.thunks';
-import { useRouter } from 'next/router';
+
 
 const PREFIX = 'LoginPage';
 

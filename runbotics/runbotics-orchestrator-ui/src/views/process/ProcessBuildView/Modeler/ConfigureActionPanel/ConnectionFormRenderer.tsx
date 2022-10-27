@@ -1,13 +1,18 @@
 import React from 'react';
+
+import { Box, Grid, Typography } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
-import { Box, Grid, Typography } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
+
+import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+
+import { BpmnConnectionFactory, IBpmnConnection } from '../BPMN';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { BpmnConnectionFactory, IBpmnConnection } from '../BPMN';
 import customWidgets from './widgets';
-import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+
 
 const ConnectionFormRenderer = () => {
     const { element, modeler } = useBpmnFormContext();

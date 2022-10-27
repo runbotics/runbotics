@@ -1,13 +1,16 @@
 import React, { FC, FunctionComponent, useEffect } from 'react';
+
 import { Grid } from '@mui/material';
-import _ from 'lodash';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
-import { useSelector } from 'src/store';
+import _ from 'lodash';
+
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+import { useSelector } from 'src/store';
+
 import ActionFormRenderer from './ActionFormRenderer';
-import ConnectionFormRenderer from './ConnectionFormRenderer';
 import internalBpmnActions from './Actions';
 import LoopActionRenderer from './Actions/LoopActionRenderer';
+import ConnectionFormRenderer from './ConnectionFormRenderer';
 
 const ConfigureActionPanel: FC = () => {
     const { element, setAction, action } = useBpmnFormContext();

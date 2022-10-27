@@ -1,27 +1,29 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+import propertiesPanelModule from 'bpmn-js-properties-panel';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import BpmnViewer from 'bpmn-js/lib/Viewer';
-import propertiesPanelModule from 'bpmn-js-properties-panel';
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
+import i18n from 'i18next';
+import _ from 'lodash';
 import Hotkeys from 'react-hot-keys';
 import 'react-resizable/css/styles.css';
 import { RunboticModdleDescriptor } from 'runbotics-common';
+
+import InfoPanel from 'src/components/InfoPanel';
+import ResizableDrawer from 'src/components/ResizableDrawer';
+import If from 'src/components/utils/If';
 import useAsyncEffect from 'src/hooks/useAsyncEffect';
+import useNavigationLock from 'src/hooks/useNavigationLock';
+import { translate } from 'src/hooks/useTranslations';
+import useUpdateEffect from 'src/hooks/useUpdateEffect';
+import BpmnFormProvider from 'src/providers/BpmnForm.provider';
 import { useDispatch, useSelector } from 'src/store';
 import { CommandStackInfo, processActions } from 'src/store/slices/Process';
 import { ProcessBuildTab } from 'src/types/sidebar';
-import InfoPanel from 'src/components/InfoPanel';
-import useUpdateEffect from 'src/hooks/useUpdateEffect';
-import BpmnFormProvider from 'src/providers/BpmnForm.provider';
-import _ from 'lodash';
-import emptyBpmn from '../empty.bpmn';
-import BasicModelerModule from '../Modeler.module';
-import ActionListPanel from '../ActionListPanel';
-import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
-import Clipboard from '../extensions/Clipboard';
-import ZoomScrollModule from '../extensions/zoomscroll';
+
 import {
     copy,
     ModelerContainer,
@@ -32,19 +34,24 @@ import {
     ModelerArea,
     centerCanvas,
 } from '.';
+import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
+import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
+import RunSavePanel from '../../ModelerPanels/RunSavePanel';
+import SidebarNavigationPanel from '../../SidebarNavigationPanel';
+import ActionListPanel from '../ActionListPanel';
 import { BPMNElement } from '../BPMN';
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import { applyModelerElement } from '../utils';
-import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
-import RunSavePanel from '../../ModelerPanels/RunSavePanel';
-import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
-import ResizableDrawer from 'src/components/ResizableDrawer';
-import SidebarNavigationPanel from '../../SidebarNavigationPanel';
+import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
+import emptyBpmn from '../empty.bpmn';
+import Clipboard from '../extensions/Clipboard';
+import ZoomScrollModule from '../extensions/zoomscroll';
 import modelerPalette from '../modeler-palette';
-import If from 'src/components/utils/If';
-import useNavigationLock from 'src/hooks/useNavigationLock';
-import { translate } from 'src/hooks/useTranslations';
-import i18n from 'i18next';
+import BasicModelerModule from '../Modeler.module';
+import { applyModelerElement } from '../utils';
+
+
+
+
 
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {

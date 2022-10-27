@@ -1,9 +1,10 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { IBot } from 'runbotics-common';
+
+import { BotState } from './Bot.state';
 import {
     deleteById, getAll, getPage, getById,
 } from './Bot.thunks';
-import { BotState } from './Bot.state';
 
 const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
     builder

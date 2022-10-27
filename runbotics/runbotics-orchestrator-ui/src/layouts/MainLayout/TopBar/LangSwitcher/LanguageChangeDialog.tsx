@@ -1,11 +1,11 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import useTranslations from 'src/hooks/useTranslations';
-import { StyledTitle } from './LangSwitcher.styled';
 import { VFC } from 'react';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
+
+import useTranslations from 'src/hooks/useTranslations';
+
+import { StyledTitle } from './LangSwitcher.styled';
+
 
 interface DialogProps {
     onConfirm: () => void;

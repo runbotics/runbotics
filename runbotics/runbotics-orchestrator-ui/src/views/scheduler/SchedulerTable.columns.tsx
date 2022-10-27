@@ -1,10 +1,13 @@
-import moment from 'moment';
-import { CircularProgress, IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { CircularProgress, IconButton } from '@mui/material';
+import moment from 'moment';
+
+import { IProcessInstance } from 'runbotics-common';
+
+import { Column, RowCustomExpandedSpan } from 'src/components/Table';
 import useTranslations from 'src/hooks/useTranslations';
 import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
-import { IProcessInstance } from 'runbotics-common';
-import { Column, RowCustomExpandedSpan } from 'src/components/Table';
+
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';

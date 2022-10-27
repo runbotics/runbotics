@@ -1,4 +1,5 @@
 import React, { ChangeEvent, FC } from 'react';
+
 import {
     Box,
     FormControl,
@@ -10,7 +11,9 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import { RowsSelectWrapper } from './Table.styles';
 import { DataTableFooterProps } from './Table.types';
 import { TABLE_PAGE_SIZES } from './Table.utils';

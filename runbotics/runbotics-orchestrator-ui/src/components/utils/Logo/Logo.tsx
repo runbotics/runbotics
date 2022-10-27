@@ -1,5 +1,7 @@
 import type { FC } from 'react';
+
 import Image from 'next/image';
+
 import logoBlackSimp from './logo-black-simp.svg';
 import logoRectangleWhite from './logo-rectangle-white.svg';
 import logoWhiteSimp from './logo-white-simp.svg';

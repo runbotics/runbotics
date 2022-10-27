@@ -1,8 +1,10 @@
 import { useEffect, FC } from 'react';
+
 import { Box } from '@mui/material';
+
+import { useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
-import { useDispatch } from 'src/store';
 
 import Results from './Results';
 

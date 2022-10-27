@@ -1,10 +1,13 @@
 import React, { useState, VFC } from 'react';
+
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Typography,
 } from '@mui/material';
-import { IBot } from 'runbotics-common';
 import { useSnackbar } from 'notistack';
+import { IBot } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import { useDispatch } from '../../../store';
 import { botActions } from '../../../store/slices/Bot';
 

@@ -1,7 +1,9 @@
 import { FC, useEffect } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
+
 import { Box, Typography } from '@mui/material';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'ConnectStep';

@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+
 import {
     Dialog,
     DialogActions,
@@ -12,10 +13,12 @@ import {
     Box,
 } from '@mui/material';
 import { IProcess } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+
+import { Form } from '../utils/FormDialog.styles';
 import BotCollectionComponent from './ProcessConfigureView/BotCollection.component';
 import BotSystemComponent from './ProcessConfigureView/BotSystem.component';
-import { Form } from '../utils/FormDialog.styles';
 
 type EditProcessDialogProps = {
     open?: boolean;

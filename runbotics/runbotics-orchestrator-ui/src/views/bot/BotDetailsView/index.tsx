@@ -1,13 +1,16 @@
 import { useEffect, FC } from 'react';
-import styled from 'styled-components';
+
 import { Container } from '@mui/material';
-import useTranslations from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
+
 import Page from 'src/components/pages/Page';
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch } from 'src/store';
 import { botActions } from 'src/store/slices/Bot';
+
 import Header from './Header';
 import Results from './Results';
-import { useRouter } from 'next/router';
 
 const PREFIX = 'BotListView';
 

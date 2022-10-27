@@ -1,10 +1,12 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import objFromArray from 'src/utils/objFromArray';
+
 import LoadingType from 'src/types/loading';
-import { IBpmnAction, Runner } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 import { defaultValue } from 'src/types/model/action.model';
-import { getActions, saveAction, setShowEditModal } from './Action.thunks';
+import objFromArray from 'src/utils/objFromArray';
+import { IBpmnAction, Runner } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
+
 import { ActionState } from './Action.state';
+import { getActions, saveAction, setShowEditModal } from './Action.thunks';
 
 const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>) => {
     builder.addCase(getActions.fulfilled, (state, action) => {

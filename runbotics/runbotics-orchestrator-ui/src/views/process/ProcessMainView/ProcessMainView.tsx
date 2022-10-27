@@ -1,15 +1,22 @@
-import { Divider, Grid, Tab, Tabs } from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { useSelector } from 'src/store';
-import useTranslations from 'src/hooks/useTranslations';
-import { ProcessTab } from 'src/utils/process-tab';
-import { FeatureKey } from 'runbotics-common';
-import { useRouter } from 'next/router';
-import useAuth from 'src/hooks/useAuth';
-import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+
+import { Divider, Grid, Tab, Tabs } from '@mui/material';
+
 import i18n from 'i18next';
-import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
+import { useRouter } from 'next/router';
+import { FeatureKey } from 'runbotics-common';
+
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+import useAuth from 'src/hooks/useAuth';
+import useTranslations from 'src/hooks/useTranslations';
+import { useSelector } from 'src/store';
+import { ProcessTab } from 'src/utils/process-tab';
+
+
+
+
 import ProcessMainViewManager from './ProcessMainView.manager';
+import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
     const router = useRouter();

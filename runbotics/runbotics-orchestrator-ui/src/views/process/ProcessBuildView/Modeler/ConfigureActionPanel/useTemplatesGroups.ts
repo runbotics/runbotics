@@ -1,4 +1,5 @@
 import useTranslate from 'src/hooks/useTranslations';
+
 import { internalTemplates } from './Templates';
 
 export const useTemplatesGroups = () => {

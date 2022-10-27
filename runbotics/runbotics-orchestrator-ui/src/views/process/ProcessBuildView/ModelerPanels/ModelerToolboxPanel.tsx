@@ -1,13 +1,16 @@
 import React, { FC } from 'react';
-import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-import UndoIcon from '@mui/icons-material/Undo';
-import RedoIcon from '@mui/icons-material/Redo';
+
 import AddIcon from '@mui/icons-material/Add';
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import RedoIcon from '@mui/icons-material/Redo';
 import RemoveIcon from '@mui/icons-material/Remove';
-import Tooltip from '@mui/material/Tooltip';
-import { IconButton } from '@mui/material';
-import FloatingGroup from '../FloatingGroup';
+import UndoIcon from '@mui/icons-material/Undo';
+import { IconButton, Tooltip } from '@mui/material';
+
+
 import { translate } from 'src/hooks/useTranslations';
+
+import FloatingGroup from '../FloatingGroup';
 
 interface ModelerToolboxPanelProps {
     onCenter: () => void;

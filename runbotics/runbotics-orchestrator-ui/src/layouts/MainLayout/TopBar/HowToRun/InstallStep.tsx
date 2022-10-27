@@ -1,13 +1,15 @@
 import React, {
     FC, FormEvent, useEffect, useState,
 } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
+
+import GetAppIcon from '@mui/icons-material/GetApp';
 import {
     Box, Button, FormHelperText, Typography,
 } from '@mui/material';
 import Axios from 'axios';
-import GetAppIcon from '@mui/icons-material/GetApp';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'InstallStep';

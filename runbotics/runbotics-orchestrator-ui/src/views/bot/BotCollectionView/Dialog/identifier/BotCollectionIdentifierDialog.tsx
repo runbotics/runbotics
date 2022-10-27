@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import { IBotCollection } from 'runbotics-common';
 import { useState, VFC } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography } from '@mui/material';
+
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography } from '@mui/material';
+import { IBotCollection } from 'runbotics-common';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const CopyMessage = styled.div<{ copySuccess: boolean }>`

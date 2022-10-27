@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { FC, useEffect, useState } from 'react';
+
 import { Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
 import { IProcess } from 'runbotics-common';
-import { ProcessTab } from 'src/utils/process-tab';
+
 import useTranslations, { translate } from 'src/hooks/useTranslations';
-import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
+
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { useSnackbar } from 'notistack';
+import { ProcessTab } from 'src/utils/process-tab';
+
+import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
 
 enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',

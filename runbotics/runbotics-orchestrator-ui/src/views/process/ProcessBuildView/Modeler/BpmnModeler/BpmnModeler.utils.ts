@@ -1,4 +1,5 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
+
 import { ModelerHTMLCanvasElement, ModelerRegistryElement } from './BpmnModeler.types';
 
 /**

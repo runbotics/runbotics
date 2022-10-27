@@ -1,10 +1,13 @@
 import React, { VFC } from 'react';
+
 import { Box } from '@mui/material';
+
+import InternalPage from 'src/components/pages/InternalPage';
 import useProcessInstanceSocket from 'src/hooks/useProcessInstanceSocket';
 import useTranslations from 'src/hooks/useTranslations';
-import InternalPage from 'src/components/pages/InternalPage';
-import Header from './Header';
+
 import HistoryTable from '../../../components/HistoryTable';
+import Header from './Header';
 
 const HistoryListView: VFC = () => {
     useProcessInstanceSocket({ fullHistoryUpdate: true });

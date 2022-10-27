@@ -1,16 +1,20 @@
 import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
+import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import { useDispatch, useSelector } from 'src/store';
 import { globalVariableActions, globalVariableSelector } from 'src/store/slices/GlobalVariable';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { VariableDetailState } from '../../Variable.types';
-import useGlobalVariablesColumns from './useGlobalVariablesColumns';
 import DeleteGlobalVariableDialog from './DeleteGlobalVariableDialog';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
-import If from 'src/components/utils/If';
+import useGlobalVariablesColumns from './useGlobalVariablesColumns';
+
 
 interface TableProps {
     className?: string;

@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+
 import GetAppIcon from '@mui/icons-material/GetApp';
+import { IconButton, Tooltip } from '@mui/material';
+
 import useLocalStorage from 'src/hooks/useLocalStorage';
 import useTranslations from 'src/hooks/useTranslations';
+
 import HowToRunDialog from './HowToRunDialog';
 
 const Index = () => {

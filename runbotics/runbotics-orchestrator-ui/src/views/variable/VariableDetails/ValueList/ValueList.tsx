@@ -1,11 +1,14 @@
+import { ChangeEvent, Dispatch, FunctionComponent, SetStateAction, useMemo, useRef, useState } from 'react';
+
+import AddIcon from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { ChangeEvent, Dispatch, FunctionComponent, SetStateAction, useMemo, useRef, useState } from 'react';
 import { IconButton, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
+
 import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
+
 import { VariableType } from '../../Variable.types';
 import { ListVariableState, VariableState, VariableValue } from '../VariableDetails.types';
 import { AddButton, AddListItem, SearchListItem, SearchInput, SearchWrapper, StyledList } from './ValueList.styles';

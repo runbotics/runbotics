@@ -1,19 +1,22 @@
 import React, { FC } from 'react';
+
+import { Box, Grid } from '@mui/material';
 import { UiSchema } from '@rjsf/core';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import i18n from 'i18next';
 import { JSONSchema7 } from 'json-schema';
-import { useDispatch } from 'src/store';
+
 import useTranslations from 'src/hooks/useTranslations';
-import { processActions } from 'src/store/slices/Process';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+import { useDispatch } from 'src/store';
+import { processActions } from 'src/store/slices/Process';
+
+import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
+import { applyModelerElement } from '../utils';
+import ActionLabelForm from './ActionLabelForm';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
 import customWidgets from './widgets';
-import ActionLabelForm from './ActionLabelForm';
-import { applyModelerElement } from '../utils';
-import i18n from 'i18next';
+
 
 const ActionFormRenderer: FC = () => {
     const { element, modeler, action, commandStack } = useBpmnFormContext();

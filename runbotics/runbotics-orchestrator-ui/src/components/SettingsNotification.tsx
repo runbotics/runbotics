@@ -1,11 +1,13 @@
 import React, { useState, useEffect, FC } from 'react';
-import styled from 'styled-components';
-import Cookies from 'js-cookie';
+
 import { Box, Button, Paper, Typography } from '@mui/material';
 import Portal from '@mui/material/Portal';
+import Cookies from 'js-cookie';
+import styled from 'styled-components';
+
 import useSettings from 'src/hooks/useSettings';
-import { ThemeType } from 'src/utils/constants';
 import useTranslations from 'src/hooks/useTranslations';
+import { ThemeType } from 'src/utils/constants';
 
 const PREFIX = 'SettingsNotification';
 

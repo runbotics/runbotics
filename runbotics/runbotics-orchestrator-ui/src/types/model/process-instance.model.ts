@@ -1,4 +1,5 @@
 import { IProcess } from 'runbotics-common';
+
 import { IBot } from './bot.model';
 import ProcessInstanceStatus from './enumerations/process-instance-status.model';
 

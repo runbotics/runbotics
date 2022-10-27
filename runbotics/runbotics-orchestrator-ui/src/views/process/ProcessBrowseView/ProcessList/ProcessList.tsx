@@ -1,17 +1,23 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { useSelector } from 'src/store';
-import ProcessPageProvider from 'src/providers/ProcessPage.provider';
-import LoadingScreen from 'src/components/utils/LoadingScreen';
-import useProcessSearch from 'src/hooks/useProcessSearch';
+
 import { Box } from '@mui/material';
+
+import If from 'src/components/utils/If';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
+import useLoading from 'src/hooks/useLoading';
+import useProcessSearch from 'src/hooks/useProcessSearch';
 import useQuery from 'src/hooks/useQuery';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+import ProcessPageProvider from 'src/providers/ProcessPage.provider';
+import { useSelector } from 'src/store';
+
+
+
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
 import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
-import If from 'src/components/utils/If';
-import useLoading from 'src/hooks/useLoading';
-import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+
 
 const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);

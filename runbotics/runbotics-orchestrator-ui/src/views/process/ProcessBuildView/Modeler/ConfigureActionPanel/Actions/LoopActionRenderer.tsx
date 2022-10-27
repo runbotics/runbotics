@@ -1,11 +1,14 @@
-import { Box, Grid, Typography } from '@mui/material';
 import React, { FC } from 'react';
+
+import { Box, Grid, Typography } from '@mui/material';
+
+import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+
+import { BPMNHelper, BpmnSubProcess } from '../../BPMN';
 import JSONSchemaFormRenderer from '../JSONSchemaFormRenderer';
 import customWidgets from '../widgets';
-import { BPMNHelper, BpmnSubProcess } from '../../BPMN';
 import { IFormData } from './types';
 
 const LoopActionRenderer: FC = () => {

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { Column as ReactTableColumn, Row } from 'react-table';
+
 import { SxProps, Theme } from '@mui/system';
+import { Column as ReactTableColumn, Row } from 'react-table';
 import { FeatureKey } from 'runbotics-common';
 
 export interface DataTableFooterProps {

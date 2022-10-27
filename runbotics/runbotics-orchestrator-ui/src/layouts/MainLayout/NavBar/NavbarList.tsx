@@ -1,8 +1,11 @@
 import React, { VFC } from 'react';
-import List from '@mui/material/List';
-import NavbarItem from './NavbarItem';
-import { Item } from './Navbar.types';
+
+import { List } from '@mui/material';
 import { useRouter } from 'next/router';
+
+import { Item } from './Navbar.types';
+
+import NavbarItem from './NavbarItem';
 
 interface NavbarListProps {
     items: Item[];

@@ -1,9 +1,13 @@
 import React, { VFC } from 'react';
+
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useSelector } from 'src/store';
+
 import { useRouter } from 'next/router';
+
+import { useSelector } from 'src/store';
 import { botCollectionSelector } from 'src/store/slices/BotCollections';
+
 import useBotCollectionColumns from './useBotCollectionColumns';
 
 interface TableProps {

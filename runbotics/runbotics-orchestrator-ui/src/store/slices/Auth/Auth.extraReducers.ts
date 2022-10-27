@@ -1,4 +1,5 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import type { AuthState } from './Auth.state';
 import { initialize, login, logout } from './Auth.thunks';
 

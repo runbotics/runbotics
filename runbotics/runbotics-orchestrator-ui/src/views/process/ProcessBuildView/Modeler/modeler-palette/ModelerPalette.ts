@@ -1,5 +1,7 @@
 import _ from 'lodash';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { BpmnEntries, Entries, InheritedEntries } from './ModelerPalette.types';
 
 export default class ModelerPalette {

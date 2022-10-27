@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { translate } from 'src/hooks/useTranslations';
+import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { VariableType } from '../Variable.types';
 import { Validator, VariableState, VariableValue } from './VariableDetails.types';
 

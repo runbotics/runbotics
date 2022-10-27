@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import jwtDecode from 'jwt-decode';
+
 import { User } from 'src/types/user';
 
 const setAccessToken = (accessToken: string | null): void => {

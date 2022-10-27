@@ -1,7 +1,9 @@
 import React, { FC, FormEvent } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
+
 import { Box, Button, Typography } from '@mui/material';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'CompleteStep';

@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
-import RouterLink from 'next/link';
+
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import RouterLink from 'next/link';
+import styled from 'styled-components';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo';
 import useTranslations from 'src/hooks/useTranslations';

@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
+
+import { Popper, PopperProps, TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { Popper, PopperProps, TextField } from '@mui/material';
 
 const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }> = (props) => {
     const [open, setOpen] = useState(false);

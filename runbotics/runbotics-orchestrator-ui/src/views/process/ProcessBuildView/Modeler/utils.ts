@@ -1,11 +1,15 @@
 /* eslint-disable complexity */
-import { is } from 'bpmn-js/lib/util/ModelUtil';
 import BpmnModeler from 'bpmn-js/lib/Modeler';
-import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
+import { is } from 'bpmn-js/lib/util/ModelUtil';
+
+import { translate } from 'src/hooks/useTranslations';
+
 import {
     BPMNElement, BPMNHelper, findPreviousElements, getInputParameters, getOutputParameters,
 } from './BPMN';
-import { translate } from 'src/hooks/useTranslations';
+import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
+
+
 import { ActionToBPMNElement } from './ConfigureActionPanel/ActionToBPMNElement';
 import { ParameterDestination } from './extensions/custom/CustomPalette';
 

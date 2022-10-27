@@ -1,8 +1,11 @@
+import { FC, useCallback } from 'react';
+
 import { Typography } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import { FC, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { calculateSize, StyledLabel, StyledPaper } from '.';
 
 const FileDropzoneWidget: FC<WidgetProps> = (props) => {

@@ -1,6 +1,8 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import LoadingType from 'src/types/loading';
 import objFromArray from 'src/utils/objFromArray';
+
 import { ProcessState } from './Process.state';
 import {
     fetchProcessById,

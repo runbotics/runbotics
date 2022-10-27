@@ -1,4 +1,5 @@
 import React, { VFC, useState, useContext } from 'react';
+
 import {
     Button,
     Dialog,
@@ -8,12 +9,13 @@ import {
     Typography,
     MenuItem,
 } from '@mui/material';
-import { IProcess } from 'runbotics-common';
-import { processActions } from 'src/store/slices/Process';
-import { useDispatch } from 'src/store';
 import { useSnackbar } from 'notistack';
-import { ProcessPageContext } from 'src/providers/ProcessPage.provider';
+import { IProcess } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { ProcessPageContext } from 'src/providers/ProcessPage.provider';
+import { useDispatch } from 'src/store';
+import { processActions } from 'src/store/slices/Process';
 
 type DeleteProcessDialogProps = {
     open?: boolean;

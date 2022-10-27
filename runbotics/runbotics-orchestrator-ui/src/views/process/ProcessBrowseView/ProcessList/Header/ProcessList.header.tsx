@@ -1,15 +1,20 @@
 import React, { ChangeEvent, VFC } from 'react';
+
+import Toc from '@mui/icons-material/Toc';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import {
     Box, Typography, ToggleButton, ToggleButtonGroup, TextField,
 } from '@mui/material';
-import styled from 'styled-components';
-import Toc from '@mui/icons-material/Toc';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import If from 'src/components/utils/If';
-import { ProcessListDisplayMode } from '../ProcessList.utils';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
 import { FeatureKey } from 'runbotics-common';
+import styled from 'styled-components';
+
+import If from 'src/components/utils/If';
+
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+
+import { ProcessListDisplayMode } from '../ProcessList.utils';
+
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',

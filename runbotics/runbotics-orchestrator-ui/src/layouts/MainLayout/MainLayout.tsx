@@ -1,16 +1,22 @@
 import { useState, useMemo, FC } from 'react';
+
 import { useMediaQuery, useTheme } from '@mui/material';
-import useAsyncEffect from 'src/hooks/useAsyncEffect';
-import LoadingScreen from 'src/components/utils/LoadingScreen';
-import If from 'src/components/utils/If';
-import useAuth from 'src/hooks/useAuth';
-import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+
 import i18n from 'i18next';
-import NavBar from './NavBar';
-import TopBar from './TopBar';
-import { Main, ContentContainer, Content } from './MainLayout.styles';
-import { usePublicSections } from './NavBar/usePublicSections';
+
 import { withAuthGuard } from 'src/components/guards/AuthGuard';
+import If from 'src/components/utils/If';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+import useAsyncEffect from 'src/hooks/useAsyncEffect';
+import useAuth from 'src/hooks/useAuth';
+
+
+import { Main, ContentContainer, Content } from './MainLayout.styles';
+import NavBar from './NavBar';
+import { usePublicSections } from './NavBar/usePublicSections';
+import TopBar from './TopBar';
+
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);

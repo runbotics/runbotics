@@ -1,3 +1,5 @@
+import React, { FC } from 'react';
+
 import {
     Button,
     Checkbox,
@@ -9,9 +11,10 @@ import {
     Typography,
     Box,
 } from '@mui/material';
-import React, { FC } from 'react';
 import styled from 'styled-components';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { Filters, GroupProperties } from './ActionListPanel.types';
 
 interface FilterModalProps {

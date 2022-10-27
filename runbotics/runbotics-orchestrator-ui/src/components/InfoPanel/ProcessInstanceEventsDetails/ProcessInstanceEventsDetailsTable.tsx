@@ -1,4 +1,6 @@
 import React, { VFC } from 'react';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
     AccordionDetails,
@@ -11,12 +13,12 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import { IProcessInstanceEvent } from 'runbotics-common';
 import dynamic from 'next/dynamic';
+import { IProcessInstanceEvent } from 'runbotics-common';
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { formatDate } from 'src/utils/utils';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { formatDate } from 'src/utils/utils';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;

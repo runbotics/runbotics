@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable unused-imports/no-unused-vars */
 import React, { VFC, useEffect, useState } from 'react';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import LeavePrompt from './LeavePrompt';
 
 interface Props {

@@ -1,11 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
+
+import { IProcess } from 'runbotics-common';
+
+import { RootState } from 'src/store';
 import LoadingType from 'src/types/loading';
 import { Page, PageRequestParams } from 'src/utils/types/page';
 import URLBuilder from 'src/utils/URLBuilder';
-import { RootState } from 'src/store';
-import { IProcess } from 'runbotics-common';
+
 import IProcessWithFilters from 'src/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
+
 import { StartProcessResponse } from './Process.state';
 
 const processPageURL = (params: PageRequestParams<IProcess>) => URLBuilder

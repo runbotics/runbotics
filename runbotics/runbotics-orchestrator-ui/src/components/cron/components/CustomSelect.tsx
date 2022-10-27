@@ -1,9 +1,11 @@
 import React, { useMemo, useCallback } from 'react';
+
 import { Select, MenuItem } from '@mui/material';
-import { CustomSelectProps } from '../types';
-import DEFAULT_LOCALE_EN from '../locale';
-import { classNames, sort } from '../utils';
+
 import { parsePartArray, partToString, formatValue } from '../converter';
+import DEFAULT_LOCALE_EN from '../locale';
+import { CustomSelectProps } from '../types';
+import { classNames, sort } from '../utils';
 
 export default function CustomSelect(props: CustomSelectProps) {
     const {

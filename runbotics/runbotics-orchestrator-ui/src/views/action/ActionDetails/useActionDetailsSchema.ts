@@ -1,5 +1,6 @@
-import useTranslations from 'src/hooks/useTranslations';
 import { JSONSchema7 } from 'json-schema';
+
+import useTranslations from 'src/hooks/useTranslations';
 
 const useSchema = (): JSONSchema7 => {
     const { translate } = useTranslations();

@@ -1,10 +1,13 @@
+import { ChangeEvent, FC, useMemo } from 'react';
+
 import { Box, Tab, Tabs } from '@mui/material';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FC, useMemo } from 'react';
 import { FeatureKey } from 'runbotics-common';
+
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
 import { BotTab } from 'src/utils/bot-tab';
+
 import BotDetailsViewManager from './BotDetailsView.manager';
 
 const Results: FC = () => {

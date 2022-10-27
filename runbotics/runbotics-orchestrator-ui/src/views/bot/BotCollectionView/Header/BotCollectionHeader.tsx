@@ -1,16 +1,20 @@
 import React, { VFC } from 'react';
+
+import Toc from '@mui/icons-material/Toc';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import {
     Box, TextField, ToggleButton, ToggleButtonGroup, Typography,
 } from '@mui/material';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import Toc from '@mui/icons-material/Toc';
-import If from 'src/components/utils/If';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+
 import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+
 import { CollectionsDisplayMode } from '../../BotBrowseView/BotBrowseView.utils';
-import { BotCollectionHeaderProps } from '../BotCollectionView.types';
 import { classes } from '../BotCollectionView.styles';
+import { BotCollectionHeaderProps } from '../BotCollectionView.types';
 import BotCollectionCreateButton from '../Dialog/modify/BotCollectionCreateButton';
 
 const BotCollectionHeader: VFC<BotCollectionHeaderProps> = ({

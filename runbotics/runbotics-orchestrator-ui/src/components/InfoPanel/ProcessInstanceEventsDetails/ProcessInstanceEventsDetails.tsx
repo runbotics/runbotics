@@ -1,11 +1,15 @@
 import React, { useCallback, useEffect, VFC } from 'react';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, AccordionDetails, Slide, Typography, Divider } from '@mui/material';
-import { useDispatch, useSelector } from 'src/store';
-import { processInstanceEventActions, processInstanceEventSelector } from 'src/store/slices/ProcessInstanceEvent';
-import { processInstanceSelector } from 'src/store/slices/ProcessInstance';
+
 import { IProcessInstanceEvent } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+import { processInstanceSelector } from 'src/store/slices/ProcessInstance';
+import { processInstanceEventActions, processInstanceEventSelector } from 'src/store/slices/ProcessInstanceEvent';
+
 import {
     ProcessInstanceEventsDetailsHeader,
     ProcessInstanceEventsDetailsTable,

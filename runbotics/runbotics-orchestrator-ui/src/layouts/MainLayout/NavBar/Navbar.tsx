@@ -1,14 +1,18 @@
 import React, { FC } from 'react';
-import { Box, Drawer, List, ListSubheader, IconButton } from '@mui/material';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Drawer, List, ListSubheader, IconButton } from '@mui/material';
 
-import useTranslations from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
+
 import If from 'src/components/utils/If';
-import NavbarList from './NavbarList';
+import useTranslations from 'src/hooks/useTranslations';
+
 import { getDrawerStyles, Wrapper, StyledIcon, StyledText } from './Navbar.styles';
 import { Section } from './Navbar.types';
-import { useRouter } from 'next/router';
+import NavbarList from './NavbarList';
+
 
 interface NavbarProps {
     isShrinked: boolean;

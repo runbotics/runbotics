@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcessInstance, IProcessInstanceEvent, IScheduleProcess } from 'runbotics-common';
+
 import { SchedulerJob, SchedulerState, ScheduledJob } from './Scheduler.state';
 
 export const deleteWaitingJob = (state: SchedulerState, action: PayloadAction<IScheduleProcess>) => {

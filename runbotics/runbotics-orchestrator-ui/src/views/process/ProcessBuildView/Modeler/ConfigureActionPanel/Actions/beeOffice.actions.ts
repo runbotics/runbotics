@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({

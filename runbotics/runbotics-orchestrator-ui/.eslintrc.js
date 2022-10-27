@@ -1,6 +1,6 @@
 module.exports = {
     extends: 'next/core-web-vitals',
-    plugins: ['unused-imports', '@typescript-eslint'],
+    plugins: ['unused-imports', '@typescript-eslint', 'simple-import-sort'],
     ignorePatterns: ['**/*.js'],
     rules: {
         indent: ['error', 4, { SwitchCase: 1 }],
@@ -70,5 +70,25 @@ module.exports = {
         'eol-last': 'error',
         'linebreak-style': 'error',
         quotes: ['error', 'single'],
+        'import/order': [
+            'error',
+            {
+                'newlines-between': 'always-and-inside-groups',
+                alphabetize: { order: 'asc', caseInsensitive: true },
+                pathGroups: [
+                    { pattern: 'react', group: 'external', position: 'before' },
+                    { pattern: '@mui/**', group: 'external' },
+                    { pattern: '@components/**', group: 'internal' },
+                    { pattern: '@config/**', group: 'internal' },
+                    { pattern: '@hooks/**', group: 'internal' },
+                    { pattern: '@providers/**', group: 'internal' },
+                    { pattern: '@redux/**', group: 'internal' },
+                    { pattern: '@styles/**', group: 'internal' },
+                    { pattern: '@utils/**', group: 'internal' },
+                ],
+                pathGroupsExcludedImportTypes: [],
+                groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
+            },
+        ],
     },
 };

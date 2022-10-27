@@ -1,8 +1,12 @@
-import { Avatar, Link } from '@mui/material';
-import styled from 'styled-components';
 import { VFC } from 'react';
-import useTranslations from 'src/hooks/useTranslations';
+
+import { Avatar, Link } from '@mui/material';
 import RouterLink from 'next/link';
+import styled from 'styled-components';
+
+import useTranslations from 'src/hooks/useTranslations';
+
+
 import { getAvatarText } from './Tile.utils';
 
 const StyledAvatar = styled(Avatar)(

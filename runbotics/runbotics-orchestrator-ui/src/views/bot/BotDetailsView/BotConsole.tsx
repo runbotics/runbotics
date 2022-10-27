@@ -1,13 +1,19 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'src/store';
-import { botActions } from 'src/store/slices/Bot';
+
 import { unwrapResult } from '@reduxjs/toolkit';
+
+import { Console } from 'console-feed';
 import { Message } from 'console-feed/lib/definitions/Component';
+
 import { Methods } from 'console-feed/lib/definitions/Console';
 import methods from 'console-feed/lib/definitions/Methods';
-import useTranslations from 'src/hooks/useTranslations';
+
 import { useRouter } from 'next/router';
-import { Console } from 'console-feed';
+
+import useTranslations from 'src/hooks/useTranslations';
+
+import { useDispatch } from 'src/store';
+import { botActions } from 'src/store/slices/Bot';
 
 const BotConsole: FC = () => {
     const router = useRouter();

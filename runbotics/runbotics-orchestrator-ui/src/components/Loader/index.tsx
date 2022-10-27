@@ -1,7 +1,8 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import styled from 'styled-components';
-import { Button } from '@mui/material';
 import React from 'react';
+
+import { Button, CircularProgress } from '@mui/material';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'Loader';

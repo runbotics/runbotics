@@ -1,6 +1,7 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { TextField, TextFieldProps, IconButton } from '@mui/material';
+
 import ClearIcon from '@mui/icons-material/Clear';
+import { TextField, TextFieldProps, IconButton } from '@mui/material';
 
 export type SearchBarProps = TextFieldProps & {
     onSearchPhraseChange: (value: string) => void;

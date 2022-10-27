@@ -1,12 +1,16 @@
 import React, { MouseEvent, useEffect, useState, VFC } from 'react';
+
 import { Box, Pagination } from '@mui/material';
+
+import { useRouter } from 'next/router';
+
 import BotCollectionTile from 'src/components/Tile/BotCollectionTile';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
-import { useRouter } from 'next/router';
-import { BotCollectionViewProps } from './BotCollectionView.types';
-import { CollectionsRoot, classes } from './BotCollectionView.styles';
+
 import { useSelector } from '../../../store';
 import { botCollectionSelector } from '../../../store/slices/BotCollections';
+import { CollectionsRoot, classes } from './BotCollectionView.styles';
+import { BotCollectionViewProps } from './BotCollectionView.types';
 
 const BotCollectionGridView: VFC<BotCollectionViewProps> = ({ page, setPage, displayMode }) => {
     const { byPage, loading } = useSelector(botCollectionSelector);

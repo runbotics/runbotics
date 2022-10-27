@@ -1,9 +1,12 @@
 import React, { VFC } from 'react';
-import { IBotCollection } from 'runbotics-common';
-import useTranslations from 'src/hooks/useTranslations';
+
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
+import { IBotCollection } from 'runbotics-common';
+
+import useTranslations from 'src/hooks/useTranslations';
+
 import { useDispatch } from '../../../../../store';
 import { botCollectionActions } from '../../../../../store/slices/BotCollections';
 import { PageRequestParams } from '../../../../../utils/types/page';

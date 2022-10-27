@@ -1,8 +1,11 @@
-import { GridFilterModel } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
+
+import { GridFilterModel } from '@mui/x-data-grid';
+
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+
 import useDebounce from './useDebounce';
 import useQuery from './useQuery';
 

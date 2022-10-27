@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
+
 import { Box, LinearProgress } from '@mui/material';
+import styled from 'styled-components';
 
 const Root = styled.div({
     display: 'flex',

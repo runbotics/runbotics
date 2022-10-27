@@ -1,15 +1,15 @@
 import React, { useEffect, useState, VFC } from 'react';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import DoneIcon from '@mui/icons-material/Done';
+
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
+
+import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
+
 import If from 'src/components/utils/If';
-import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import useTranslations from 'src/hooks/useTranslations';
+import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+
 
 type Props = {
     onSubmit: (label: string) => void;

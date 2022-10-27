@@ -1,6 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import union from 'lodash/union';
 import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
+
 import { initialState } from './ProcessInstance.slice';
 import { ProcessInstanceState } from './ProcessInstance.state';
 

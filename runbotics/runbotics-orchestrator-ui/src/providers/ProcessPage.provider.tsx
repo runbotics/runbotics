@@ -1,8 +1,9 @@
 import { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
+
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+import useUpdateEffect from 'src/hooks/useUpdateEffect';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import useUpdateEffect from 'src/hooks/useUpdateEffect';
-import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 
 interface ProcessPageProps {
     search: string;

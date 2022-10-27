@@ -1,4 +1,5 @@
 import React, { FC, ReactNode } from 'react';
+
 import { Wrapper } from './Label.styles';
 
 export type Color = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success';

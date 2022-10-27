@@ -1,6 +1,8 @@
 import React, { forwardRef, HTMLProps } from 'react';
+
 import { Container, SxProps, Theme, useMediaQuery } from '@mui/material';
 import styled from 'styled-components';
+
 import Page from './Page';
 
 const StyledPage = styled(Page)(

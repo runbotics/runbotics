@@ -1,11 +1,14 @@
 import React, { FC } from 'react';
-import { Collapse, ListItemButton } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Collapse, ListItemButton } from '@mui/material';
 import RouterLink from 'next/link';
+
 import If from 'src/components/utils/If';
-import { NavbarItemProps } from './NavbarItem.types';
+
 import { StyledListItem, StyledListItemText, StyledListItemIcon, getLinkButtonSx } from './NavbarItem.styles';
+import { NavbarItemProps } from './NavbarItem.types';
 
 const NavbarItem: FC<NavbarItemProps> = ({
     children,

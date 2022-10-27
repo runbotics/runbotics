@@ -219,12 +219,10 @@ module.exports.triggerClickEvent = triggerClickEvent;
 function escapeHTML(str) {
     str = '' + str;
 
-    return (
-        str &&
-        str.replace(/[&<>"']/g, function (match) {
-            return HTML_ESCAPE_MAP[match];
-        })
-    );
+    return str &&
+    str.replace(/[&<>"']/g, function (match) {
+        return HTML_ESCAPE_MAP[match];
+    });
 }
 
 module.exports.escapeHTML = escapeHTML;

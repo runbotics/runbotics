@@ -1,3 +1,5 @@
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import {
     GridActionsCellItem,
     GridCellParams,
@@ -5,12 +7,11 @@ import {
     GridEnrichedColDef,
     GridRowParams,
 } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import moment from 'moment';
+
+import useTranslations from 'src/hooks/useTranslations';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
 import { IUser } from 'src/types/model/user.model';
-import useTranslations from 'src/hooks/useTranslations';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;

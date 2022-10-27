@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
+
 import { initialModelerState } from './Process.slice';
 import { ProcessState } from './Process.state';
 

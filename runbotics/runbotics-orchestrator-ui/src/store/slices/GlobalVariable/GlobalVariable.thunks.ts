@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
+
 import { RootState } from 'src/store';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
 

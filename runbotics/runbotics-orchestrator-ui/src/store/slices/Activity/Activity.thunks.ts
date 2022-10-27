@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
+
 import { IActivity } from 'src/types/model/activity.model';
 
 export const getActivities = createAsyncThunk<IActivity[]>(

@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
 const getDesktopOfficeActions:  () => Record<string, IBpmnAction> = () => ({

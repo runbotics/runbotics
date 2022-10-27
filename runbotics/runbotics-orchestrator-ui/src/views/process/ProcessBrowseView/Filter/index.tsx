@@ -1,8 +1,10 @@
 import React, { useState, FC, ChangeEvent, KeyboardEvent } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
-import { Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input } from '@mui/material';
+
 import SearchIcon from '@mui/icons-material/Search';
+import { Box, Card, Checkbox, Chip, Divider, FormControlLabel, Input } from '@mui/material';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import MultiSelect from './MultiSelect';
 
 const PREFIX = 'Filter';

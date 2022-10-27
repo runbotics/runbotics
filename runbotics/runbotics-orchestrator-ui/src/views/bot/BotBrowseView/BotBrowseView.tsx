@@ -1,15 +1,18 @@
 import React, { ChangeEvent, useMemo, VFC } from 'react';
+
 import { Box, Tab, Tabs } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import useQuery from 'src/hooks/useQuery';
 import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import If from 'src/components/utils/If';
-import { StyledContainer, StyledPage } from './BotBrowseView.styles';
+
 import { BotCollectionTab } from '../../../utils/bot-tab';
-import BotListView from '../BotListView';
 import BotCollectionView from '../BotCollectionView';
-import { useRouter } from 'next/router';
+import BotListView from '../BotListView';
+import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 
 const BotBrowseView: VFC = () => {
     const router = useRouter();

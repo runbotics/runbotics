@@ -1,18 +1,21 @@
-import React, { ChangeEvent, MouseEvent, useState, VFC } from 'react';
-import { IBotCollection } from 'runbotics-common';
-import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
-import moment from 'moment';
-import { useRouter } from 'next/router';
+import { ChangeEvent, MouseEvent, useState, VFC } from 'react';
+
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 import { red } from '@mui/material/colors';
-import useTranslations from 'src/hooks/useTranslations';
+import moment from 'moment';
+import { useRouter } from 'next/router';
+import { IBotCollection } from 'runbotics-common';
+
 import LoadingScreen from 'src/components/utils/LoadingScreen';
+import useTranslations from 'src/hooks/useTranslations';
+
 import BotCollectionTileAction from '../../../components/Tile/BotCollectionTile/BotCollectionTile.actions';
-import { BotCollectionViewProps } from './BotCollectionView.types';
-import { ROWS_PER_PAGE_LIST_VIEW } from './BotCollectionView.utils';
 import { useSelector } from '../../../store';
 import { botCollectionSelector } from '../../../store/slices/BotCollections';
+import { BotCollectionViewProps } from './BotCollectionView.types';
+import { ROWS_PER_PAGE_LIST_VIEW } from './BotCollectionView.utils';
 
 const BotCollectionListView: VFC<BotCollectionViewProps> = ({
     page,
@@ -39,9 +42,7 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
     };
 
     const handleRedirect = (event, collectionId: string) => {
-        if (event.target.nodeName === 'TD') 
-            router.push(`/app/bots?collection=${collectionId}`);
-        
+        if (event.target.nodeName === 'TD') router.push(`/app/bots?collection=${collectionId}`);
     };
 
     const handleSearchName = (event) => {

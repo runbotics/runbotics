@@ -1,5 +1,5 @@
-import { BPMNElement, getInputParameters } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
+import { BPMNElement, getInputParameters } from 'src/views/process/ProcessBuildView/Modeler/BPMN';
 
 export const CustomActionDescription: Record<string, (element: BPMNElement, supplementarySource?: any[]) => string> = {
     'general.startProcess': (element) => {

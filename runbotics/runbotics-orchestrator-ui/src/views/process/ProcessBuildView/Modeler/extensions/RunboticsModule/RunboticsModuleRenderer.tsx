@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
+
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
 import SeleniumImporterButton from './SeleniumImporter/SeleniumImporterButton';
 
 const ModelerContext = React.createContext(null);

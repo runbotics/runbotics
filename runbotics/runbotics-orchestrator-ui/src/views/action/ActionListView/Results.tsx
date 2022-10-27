@@ -1,17 +1,20 @@
 import { useState, FC } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
-import { Card, Grid, IconButton } from '@mui/material';
-import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Card, Grid, IconButton } from '@mui/material';
+import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
+import clsx from 'clsx';
 import { FeatureKey } from 'runbotics-common';
-import { useDispatch, useSelector } from 'src/store';
-import { IAction } from 'src/types/model/action.model';
-import { setShowEditModal } from 'src/store/slices/Action/Action.thunks';
-import useTranslations from 'src/hooks/useTranslations';
+import styled from 'styled-components';
+
 import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+import { setShowEditModal } from 'src/store/slices/Action/Action.thunks';
+import { IAction } from 'src/types/model/action.model';
+
 import DeleteActionDialog from '../DeleteActionDialog';
 
 const PREFIX = 'Results';

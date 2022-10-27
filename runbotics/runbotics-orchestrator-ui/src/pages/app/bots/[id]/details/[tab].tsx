@@ -1,4 +1,5 @@
 import { FeatureKey } from 'runbotics-common';
+
 import { withAuthGuard } from 'src/components/guards/AuthGuard';
 import BotDetailsView from 'src/views/bot/BotDetailsView';
 

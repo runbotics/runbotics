@@ -1,6 +1,9 @@
 import type { FC } from 'react';
-import useAuth from 'src/hooks/useAuth';
+
 import { useRouter } from 'next/router';
+
+import useAuth from 'src/hooks/useAuth';
+
 import LoadingScreen from '../utils/LoadingScreen';
 
 // eslint-disable-next-line react/display-name

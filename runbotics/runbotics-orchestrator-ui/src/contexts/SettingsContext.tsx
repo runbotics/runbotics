@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState, FC, ReactNode } from 'react';
+
 import _ from 'lodash';
+
 import { ThemeType } from 'src/utils/constants';
 
 interface Settings {

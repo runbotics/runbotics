@@ -1,6 +1,6 @@
-import { IUser } from 'runbotics-common';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { IUser } from 'runbotics-common';
 
 export const getAll = createAsyncThunk<IUser[], void>(
     'users/getAll',

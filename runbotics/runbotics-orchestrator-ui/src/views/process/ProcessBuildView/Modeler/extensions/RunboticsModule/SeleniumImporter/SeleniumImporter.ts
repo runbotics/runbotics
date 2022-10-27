@@ -1,4 +1,5 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
 import { BPMNElementFactory } from '../../custom/BPMNElementFactory';
 
 // export const definition = [{'command': 'open', 'target': 'https://www.google.pl/', 'value': ''}, {'command': 'click', 'target': 'name=q', 'value': ''}, {'command': 'type', 'target': 'name=q', 'value': 'test'}, {'command': 'sendKeys', 'target': 'name=q', 'value': '${KEY_ENTER}'}];

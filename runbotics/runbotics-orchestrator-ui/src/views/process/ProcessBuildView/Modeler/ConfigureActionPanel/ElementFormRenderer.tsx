@@ -1,12 +1,17 @@
 import React, { FC, useState } from 'react';
+
 import { JSONSchema7 } from 'json-schema';
+
 import useTranslations from 'src/hooks/useTranslations';
-import { IFormData } from './Actions/types';
-import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { CamundaInputOutputElement, getInputParameters, getOutputParameters } from '../BPMN';
-import { ActionToBPMNElement } from './ActionToBPMNElement';
-import { ParameterDestination } from '../extensions/custom/CustomPalette';
+
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
+
+import { CamundaInputOutputElement, getInputParameters, getOutputParameters } from '../BPMN';
+import { ParameterDestination } from '../extensions/custom/CustomPalette';
+import { IFormData } from './Actions/types';
+import { ActionToBPMNElement } from './ActionToBPMNElement';
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
+
 
 const ElementFormRenderer: FC = () => {
     const { element, modeler } = useBpmnFormContext();

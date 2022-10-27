@@ -1,9 +1,12 @@
 import React from 'react';
+
 import { Button } from '@mui/material';
 import { useSnackbar } from 'notistack';
+
 import useTranslations from 'src/hooks/useTranslations';
-import SeleniumImporter from './SeleniumImporter';
+
 import { useModeler } from '../RunboticsModuleRenderer';
+import SeleniumImporter from './SeleniumImporter';
 
 const SeleniumImporterButton = () => {
     const modeler = useModeler();

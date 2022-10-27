@@ -1,7 +1,9 @@
 /* eslint-disable eqeqeq */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
 import { translate } from 'src/hooks/useTranslations';
 import { Position } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
+
 import {
     Parameter,
     ParameterDestination,

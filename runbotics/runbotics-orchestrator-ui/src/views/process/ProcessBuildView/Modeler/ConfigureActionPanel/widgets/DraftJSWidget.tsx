@@ -1,11 +1,10 @@
 import React, { FC, useState } from 'react';
+
 import { WidgetProps } from '@rjsf/core';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {
-    EditorState, ContentState, convertFromHTML,
-} from 'draft-js';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
+import { Editor } from 'react-draft-wysiwyg';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {

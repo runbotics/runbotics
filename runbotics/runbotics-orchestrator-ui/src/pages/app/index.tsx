@@ -1,4 +1,5 @@
 import React from 'react';
+
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 
 const AppPage = () => <LoadingScreen />;

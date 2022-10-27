@@ -1,17 +1,29 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, LinearProgress } from '@mui/material';
+
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    LinearProgress,
+    Typography,
+} from '@mui/material';
 import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import { v4 as uuidv4 } from 'uuid';
-import Typography from '@mui/material/Typography';
 import { useSnackbar } from 'notistack';
-import { IAction } from 'src/types/model/action.model';
-import { saveAction, setShowEditModal } from 'src/store/slices/Action/Action.thunks';
-import { useDispatch, useSelector } from 'src/store';
-import JSONSchemaFormRenderer from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
-import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+import { v4 as uuidv4 } from 'uuid';
+
 import ErrorBoundary from 'src/components/utils/ErrorBoundary';
 import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+import { saveAction, setShowEditModal } from 'src/store/slices/Action/Action.thunks';
+import { IAction } from 'src/types/model/action.model';
+import JSONSchemaFormRenderer from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
+import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+
 import useActionDetailsSchema from './useActionDetailsSchema';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;

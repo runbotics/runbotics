@@ -1,7 +1,9 @@
-import { Divider, MenuItem, TextField } from '@mui/material';
 import React, {
     ChangeEvent, Dispatch, FunctionComponent, SetStateAction,
 } from 'react';
+
+import { Divider, MenuItem, TextField } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 import { VariableDetailState, VariableType } from '../Variable.types';

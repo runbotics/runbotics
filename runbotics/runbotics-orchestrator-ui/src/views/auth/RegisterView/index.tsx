@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import styled from 'styled-components';
-import RouterLink from 'next/link';
+
 import {
     Box,
     Card,
@@ -13,15 +12,21 @@ import {
     FormHelperText,
     Button,
 } from '@mui/material';
+import { Formik } from 'formik';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import styled from 'styled-components';
+
+import * as Yup from 'yup';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo/Logo';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
+
+
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch } from 'src/store';
 import { register } from 'src/store/slices/Auth/Auth.thunks';
-import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'RegisterView';
 

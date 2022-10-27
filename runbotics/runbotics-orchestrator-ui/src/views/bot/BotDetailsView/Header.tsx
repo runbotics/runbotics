@@ -1,8 +1,11 @@
 import type { FC } from 'react';
-import styled from 'styled-components';
+
 import { Grid, Typography } from '@mui/material';
-import { useSelector } from 'src/store';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
+
+import { useSelector } from 'src/store';
+
 
 const PREFIX = 'Header';
 

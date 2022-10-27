@@ -1,6 +1,9 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import union from 'lodash/union';
+
 import objFromArray from 'src/utils/objFromArray';
+
+import { ProcessInstanceState } from './ProcessInstance.state';
 import {
     getAll,
     getAllByProcessId,
@@ -9,7 +12,6 @@ import {
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
-import { ProcessInstanceState } from './ProcessInstance.state';
 
 const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceState>) => {
     builder

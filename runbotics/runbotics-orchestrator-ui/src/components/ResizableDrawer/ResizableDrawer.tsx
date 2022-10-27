@@ -1,10 +1,13 @@
 import React, { FC, useState } from 'react';
-import { Drawer } from '@mui/material';
-import { DrawerProps } from '@mui/material/Drawer/Drawer';
-import useWrappedState from 'src/hooks/useWrappedState';
+
+import { Drawer, DrawerProps } from '@mui/material';
+
 import { createPortal } from 'react-dom';
-import { Dragger, EventCatcher } from './ResizableDrawer.styled';
+
+import useWrappedState from 'src/hooks/useWrappedState';
+
 import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
+import { Dragger, EventCatcher } from './ResizableDrawer.styled';
 
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });

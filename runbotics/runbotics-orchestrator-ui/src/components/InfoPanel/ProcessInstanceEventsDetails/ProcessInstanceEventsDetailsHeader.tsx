@@ -1,15 +1,20 @@
 import React, { useEffect, useState, VFC } from 'react';
-import { Typography } from '@mui/material';
-import { IProcessInstanceEvent } from 'runbotics-common';
-import Label from 'src/components/Label';
-import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
-import { formatTimeDiff } from 'src/utils/utils';
-import If from 'src/components/utils/If';
+
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { GridContainer, GridItem } from './ProcessInstanceEventsDetails.styles';
-import { checkIfKeyExists, translate } from '../../../hooks/useTranslations';
-import { convertToPascalCase } from 'src/utils/text';
+import { Typography } from '@mui/material';
 import i18n from 'i18next';
+import { IProcessInstanceEvent } from 'runbotics-common';
+
+import Label from 'src/components/Label';
+import If from 'src/components/utils/If';
+import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
+import { convertToPascalCase } from 'src/utils/text';
+import { formatTimeDiff } from 'src/utils/utils';
+
+import { checkIfKeyExists, translate } from '../../../hooks/useTranslations';
+import { GridContainer, GridItem } from './ProcessInstanceEventsDetails.styles';
+
+
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;

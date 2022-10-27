@@ -1,10 +1,13 @@
+import React, { VFC, useEffect } from 'react';
+
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import React, { VFC, useEffect } from 'react';
+
 import If from 'src/components/utils/If';
 import { useDispatch } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
 import { ProcessTab } from 'src/utils/process-tab';
+
 import ProcessConfigureView from '../ProcessConfigureView';
 
 const ProcessBuildView = dynamic(() => import('../ProcessBuildView'), { ssr: false });

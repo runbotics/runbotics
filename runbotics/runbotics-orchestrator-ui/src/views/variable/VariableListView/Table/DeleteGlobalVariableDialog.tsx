@@ -1,13 +1,15 @@
-import styled from 'styled-components';
 import React, { FC } from 'react';
+
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import styled from 'styled-components';
 
-import { globalVariableActions } from 'src/store/slices/GlobalVariable';
-import { useDispatch } from 'src/store';
 import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch } from 'src/store';
+import { globalVariableActions } from 'src/store/slices/GlobalVariable';
+
 import { DeleteDialogState } from './Table';
 
 const PREFIX = 'DeleteGlobalVariableDialog';

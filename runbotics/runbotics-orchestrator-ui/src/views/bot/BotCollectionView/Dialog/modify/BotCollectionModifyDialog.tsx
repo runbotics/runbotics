@@ -1,9 +1,12 @@
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+
 import { Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
-import { IBotCollection, IUser } from 'runbotics-common';
 import moment from 'moment';
-import { usersActions } from 'src/store/slices/Users';
+import { IBotCollection, IUser } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { usersActions } from 'src/store/slices/Users';
+
 import { useDispatch, useSelector } from '../../../../../store';
 import { botCollectionActions } from '../../../../../store/slices/BotCollections';
 import { PageRequestParams } from '../../../../../utils/types/page';

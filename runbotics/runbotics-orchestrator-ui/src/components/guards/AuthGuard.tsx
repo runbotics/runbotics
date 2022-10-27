@@ -1,8 +1,13 @@
 import type { FC } from 'react';
-import useAuth from '../../hooks/useAuth';
+
 import { useRouter } from 'next/router';
-import LoadingScreen from '../utils/LoadingScreen';
+
 import { FeatureKey } from 'runbotics-common';
+
+import useAuth from '../../hooks/useAuth';
+import LoadingScreen from '../utils/LoadingScreen';
+
+
 import { hasFeatureKeyAccess } from '../utils/Secured';
 
 // eslint-disable-next-line react/display-name

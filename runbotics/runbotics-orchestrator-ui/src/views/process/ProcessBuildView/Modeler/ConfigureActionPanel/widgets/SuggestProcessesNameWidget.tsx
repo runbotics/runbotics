@@ -1,7 +1,8 @@
 import React, { FC, useMemo } from 'react';
+
+import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { TextField } from '@mui/material';
+
 import useProcessSearch from 'src/hooks/useProcessSearch';
 import { useSelector } from 'src/store';
 
