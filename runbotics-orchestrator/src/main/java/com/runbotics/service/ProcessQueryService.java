@@ -143,6 +143,8 @@ public class ProcessQueryService extends QueryService<Process> {
     protected Specification<Process> createSpecification(ProcessCriteria criteria) {
         Specification<Process> specification = Specification.where(null);
         Specification<Process> userIdAndPublicSpec = Specification.where(null);
+        boolean isAdmin = userService.getUserWithAuthorities().get().getAuthorities().toString().contains("ROLE_ADMIN");
+
         if (criteria != null) {
             if (criteria.getId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Process_.id));
@@ -176,9 +178,10 @@ public class ProcessQueryService extends QueryService<Process> {
         } else {
             userIdAndPublicSpec = userIdAndPublicSpec.or(isPublic());
         }
+
         userIdAndPublicSpec = userIdAndPublicSpec.or(isCreatedByUser());
-        specification = specification.and(userIdAndPublicSpec);
-        return specification;
+
+        return isAdmin ? specification : specification.and(userIdAndPublicSpec);
     }
 
     private Specification<Process> isCreatedByUser() {
