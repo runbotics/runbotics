@@ -54,7 +54,7 @@ const NotFoundPage: FC = () => {
                 </Typography>
 
                 <Box mt={6} display="flex" justifyContent="center">
-                    <RouterLink href="/" passHref>
+                    <RouterLink href="/" passHref legacyBehavior>
                         <Button color="secondary" variant="outlined">
                             {translate('Error404.View.BackToHome')}
                         </Button>

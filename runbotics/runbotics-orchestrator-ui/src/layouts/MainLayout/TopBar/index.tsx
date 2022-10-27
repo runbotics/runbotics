@@ -63,9 +63,9 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
                     <RouterLink href="/app/processes">
-                        <a>
-                            <Logo className={classes.logo} white />
-                        </a>
+
+                        <Logo className={classes.logo} white />
+
                     </RouterLink>
                 </Hidden>
                 <If condition={hasAdminAccess}>

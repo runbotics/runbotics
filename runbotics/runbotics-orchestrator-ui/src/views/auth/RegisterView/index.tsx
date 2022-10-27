@@ -72,7 +72,7 @@ const RegisterView: FC = () => {
         <StyledPage className={classes.root} title={translate('Register.Meta.Title')}>
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink href="/">
+                    <RouterLink href="/" legacyBehavior>
                         <Logo className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -203,7 +203,7 @@ const RegisterView: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <RouterLink href="/login" passHref>
+                        <RouterLink href="/login" passHref legacyBehavior>
                             <Link variant="body2" color="textSecondary">
                                 {translate('Register.SwitchToLoginMessage')}
                             </Link>

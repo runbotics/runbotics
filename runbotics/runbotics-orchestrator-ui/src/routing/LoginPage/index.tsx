@@ -68,7 +68,7 @@ const LoginPage: FC = () => {
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink href="/">
+                    <RouterLink href="/" legacyBehavior>
                         <Logo simple className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -164,7 +164,7 @@ const LoginPage: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <RouterLink href="/register" passHref>
+                        <RouterLink href="/register" passHref legacyBehavior>
                             <Link variant="body2" color="textSecondary">
                                 {translate('Login.SwitchToRegisterMessage')}
                             </Link>

@@ -49,10 +49,6 @@ import modelerPalette from '../modeler-palette';
 import BasicModelerModule from '../Modeler.module';
 import { applyModelerElement } from '../utils';
 
-
-
-
-
 const ELEMENTS_PROPERTIES_WHITELIST = ['bpmn:ServiceTask', 'bpmn:SequenceFlow', 'bpmn:SubProcess'];
 const initialCommandStackInfo: CommandStackInfo = {
     commandStackIdx: -1,
@@ -237,8 +233,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             if (selectedElement) setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
         }, [selectedElement]);
 
-        useAsyncEffect(async () => {
-            if (modeler) await openBpmnDiagram(definition ?? emptyBpmn);
+        useEffect(() => {
+            if (modeler) openBpmnDiagram(definition ?? emptyBpmn);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [modeler, definition]);
 
         const onCopy = () => {

@@ -28,7 +28,7 @@ const TileAvatar: VFC<TileAvatarProps> = ({ href, title }) => {
     const AvatarWrapper = ({ children }) => {
         if (href) 
             return (
-                <RouterLink href={href} passHref>
+                <RouterLink href={href} passHref legacyBehavior>
                     <Link>{children}</Link>
                 </RouterLink>
             );

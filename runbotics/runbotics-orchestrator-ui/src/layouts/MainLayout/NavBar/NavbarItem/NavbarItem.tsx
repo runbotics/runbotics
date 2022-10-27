@@ -40,7 +40,7 @@ const NavbarItem: FC<NavbarItemProps> = ({
 
     return (
         <StyledListItem className={className} key={title} disablePadding {...rest}>
-            <RouterLink href={href} passHref is="span">
+            <RouterLink href={href} passHref is="span" legacyBehavior>
                 <ListItemButton className={`depth-${depth}`} sx={getLinkButtonSx(depth, open)} selected={open}>
                     <StyledListItemIcon>
                         <Icon size="20" />

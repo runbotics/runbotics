@@ -19,15 +19,15 @@ const Logo: FC<LogoProps> = (props) => (
         {!props.simple && (
             <>
                 {!props.white ? (
-                    <Image src={logoWhiteSimp} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image src={logoWhiteSimp} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
                 ) : (
-                    <Image src={logoBlackSimp} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image src={logoBlackSimp} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
                 )}
             </>
         )}
         {props.simple && (
             <>
-                <Image src={logoRectangleWhite} layout="fixed" height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                <Image src={logoRectangleWhite} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
             </>
         )}
     </>
