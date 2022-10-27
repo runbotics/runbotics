@@ -169,7 +169,7 @@
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Target": "Target",
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Attribute": "Attribute",
     "Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.NewValue": "New value",
-    "Process.Details.Modeler.Actions.Browser.Type.Label": "Fill input",
+    "Process.Details.Modeler.Actions.Browser.Type.Label": "Fill input field",
     "Process.Details.Modeler.Actions.Browser.Type.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Type.Target": "Target",
     "Process.Details.Modeler.Actions.Browser.Type.Value": "Value",
