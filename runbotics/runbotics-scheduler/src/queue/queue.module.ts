@@ -55,6 +55,7 @@ import { QueueService } from './queue.service';
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
         ProcessInstanceSchedulerService, BotSchedulerService, FileUploadService, QueueService,
-    ]
+    ],
+    exports: [QueueService]
 })
 export class QueueModule { }

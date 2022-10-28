@@ -119,9 +119,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async getProcessByInfo(processInfo: string | number) {
-        const process = isNaN(Number(processInfo))
-            ? await this.processService.findByName(processInfo as string)
-            : await this.processService.findById(Number(processInfo));
+        const process = this.processService.findByInfo(processInfo);
 
         if (!process) {
             this.logger.error(`Process ${processInfo} does not exist`);
@@ -138,13 +136,13 @@ export class QueueService implements OnModuleInit {
         const isAdmin = user.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;
 
         if (!hasAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-            throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
+            this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to process "${process?.name}" (${process?.id})`);
+            throw new ForbiddenException(`You do not have access to process "${process?.name}" (${process?.id})`);
         }
 
         if (triggered && !isTriggerable) {
-            this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);
-            throw new ForbiddenException(`Process ${process?.name} (${process?.id}) is not triggerable`);
+            this.logger.error(`Process "${process?.name}" (${process?.id}) is not triggerable`);
+            throw new ForbiddenException(`Process "${process?.name}" (${process?.id}) is not triggerable`);
         }
     }
 

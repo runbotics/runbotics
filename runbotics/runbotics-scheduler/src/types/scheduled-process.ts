@@ -6,4 +6,8 @@ export interface ScheduledProcess extends InstantProcess {
     cron: string;
 }
 
-export interface ValidateProcessAccessProps { process: IProcess, user: IUser, triggered?: boolean }
+export interface ValidateProcessAccessProps {
+    process: IProcess,
+    user?: IUser,
+    triggered?: boolean
+}

@@ -61,7 +61,7 @@ export class ProcessSchedulerService {
             orchestratorProcessInstanceId,
             processId: instantProcess.process.id,
             input: instantProcess.input,
-            userId: instantProcess.user.id,
+            ...(instantProcess.user && { userId: instantProcess.user.id }),
             scheduled,
         };
     }
