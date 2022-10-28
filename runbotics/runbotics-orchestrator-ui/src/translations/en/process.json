@@ -198,6 +198,7 @@
     "Process.Details.Modeler.Actions.Browser.Index.Variable": "Variable name",
     "Process.Details.Modeler.Actions.Browser.Index.VariableText": "Assign the output to variable",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Label": "Take screenshot",
+    "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Input.Label": "Element to capture",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Variable": "Variable Name",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.VariableText": "Assign screenshot path to variable",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Label": "Print to PDF",
