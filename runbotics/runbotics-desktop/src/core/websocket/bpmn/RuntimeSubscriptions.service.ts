@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '../../bpm/Runtime';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
 import {
-    BotWsMessage, IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus, ProcessInstanceStatus,
+    BotWsMessage,
+    IProcessInstance,
+    IProcessInstanceEvent,
+    ProcessInstanceEventStatus,
+    ProcessInstanceStatus,
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from 'src/core/bpm/bpmn.types';
@@ -46,13 +50,12 @@ export class RuntimeSubscriptionsService {
                                     const label = eventBehaviour?.label;
                                     // xml field 'runbotics' is a temporary solution.
                                     const translateKey = eventBehaviour?.runbotics;
-                                    
                                     if (eventBehaviour?.label) {
                                         processInstanceEvent.step = label;
                                     } else if (translateKey) {
                                         processInstanceEvent.step = translateKey;
                                     } else {
-                                        processInstanceEvent.step = desktopTask.input?.script
+                                        processInstanceEvent.step = desktopTask.input?.script;
                                     }
                             }
                             break;
