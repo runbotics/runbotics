@@ -4,6 +4,7 @@ import { FeatureKey, IProcess, ProcessInstanceStatus } from 'runbotics-common';
 import { SvgIcon, Tooltip } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { Play as PlayIcon } from 'react-feather';
+import { X as XIcon } from 'react-feather';
 import { processActions, StartProcessResponse } from 'src/store/slices/Process';
 import { useDispatch, useSelector } from 'src/store';
 import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
@@ -14,6 +15,8 @@ import useTranslations from 'src/hooks/useTranslations';
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import If from './utils/If';
 import { AttendedProcessModal } from './AttendedProcessModal';
+import { schedulerActions, schedulerSelector } from 'src/store/slices/Scheduler';
+import { getActiveJobs, getWaitingJobs} from 'src/store/slices/Scheduler/Scheduler.thunks';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
@@ -45,30 +48,101 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const [isSubmitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [currentProcessInstanceId, setCurrentProcessInstanceId] = useState<string | null>(null);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
-
+    
     const processInstances = useSelector(processInstanceSelector);
+    const { activeJobs } = useSelector(schedulerSelector);
+    // console.log('REAL active jobs: ', useSelector(schedulerSelector));
     const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
     const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
-
+    const processName = process?.name;
+    const [isProcessInstanceQueued, setIsProcessInstanceQueued] = useState(activeJobs.some(job => job.id === currentProcessInstanceId));
+    
     useEffect(() => {
         const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
             || processInstance?.status === ProcessInstanceStatus.ERRORED
             || processInstance?.status === ProcessInstanceStatus.TERMINATED;
+            
+        setIsProcessInstanceQueued(activeJobs.some(job => job.id === currentProcessInstanceId));
+
+        if (isProcessInstanceQueued) {
+            setStarted(true);
+        }
 
         if (isProcessInstanceFinished) {
             setStarted(false);
         }
+
+        dispatch(getActiveJobs());
+        dispatch(getWaitingJobs());
+
+        console.log('activeJobsUSEEFFECT: ', activeJobs);
+        
+        // console.log('processInstance?.id: ', processInstance?.id);
+        // console.log('processInstances.active.processInstance.id: ', processInstances.active.processInstance?.id);
+        
+        if(typeof processInstance?.id !== undefined) {
+            setCurrentProcessInstanceId(processInstance?.id);
+        }
+        
+        // console.log('activeJobs.some(job => job.id === currentProcessInstanceId): ', activeJobs.some(job => job.id === currentProcessInstanceId));
+        
+
+        // console.log('isProcessInstanceQueuedUSEEFFECT: ', isProcessInstanceQueued);
     }, [processInstance]);
 
-    useProcessInstanceSocket({ orchestratorProcessInstanceId });
+    // useEffect(() => {
+        // console.log('activeJobs: ', activeJobs);
+        // const isProcessInstanceQueued = activeJobs.some(job => {
+        //     // console.log('job.id: ', job.id);
+        //     // console.log('processInstance?.id: ', processInstance?.id);
+        //     return job.id === currentProcessInstanceId;
+        // });
+        // console.log('isProcessInstanceQueued: ', isProcessInstanceQueued);
+        
 
+    // }, [activeJobs]);
+    
+    useProcessInstanceSocket({ orchestratorProcessInstanceId });
+    
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
+    
+    const handleTerminate = async () => {
+        await dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
+        .then(() => {
+            console.log('activeJobsTERMINATE: ', activeJobs);
+            // const isProcessInstanceQueued = activeJobs.some(job => {
+                // console.log('job.id: ', job.id);
+                // console.log('processInstance?.id: ', processInstance?.id);
+                // return job.id === currentProcessInstanceId;
+            // });
+            setIsProcessInstanceQueued(activeJobs.some(job => job.id === currentProcessInstanceId));
+            console.log('isProcessInstanceQueuedTERMINATE: ', isProcessInstanceQueued);
+            if (!isProcessInstanceQueued) {
+                console.log('Weszło!')
+                setStarted(false);
+                setLoading(false);
+                setSubmitting(false);
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
+                    variant: 'success',
+                })
+            } else {
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                    variant: 'error',
+                })
+            }
+        })
+        .catch(() => {
+            console.log('ERROR');
+        });
+    }
 
     const handleRun = (executionInfo?: Record<string, any>) => {
+        if (started) return;
         dispatch(processInstanceActions.resetActiveProcessInstaceAndEvents());
 
         enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
@@ -79,17 +153,18 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
+        
         dispatch(
             processActions.startProcess({
                 processId: process.id,
                 executionInfo: isProcessAttended ? executionInfo : {},
             }),
-        )
+            )
             .then(unwrapResult)
             .then(async (response: StartProcessResponse) => {
                 await dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
                     response.orchestratorProcessInstanceId,
-                ));
+                    ));
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
@@ -99,14 +174,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 enqueueSnackbar(
                     error?.message as string ?? translate('Component.BotProcessRunner.Error'),
                     { variant: 'error' },
-                );
-            })
-            .finally(() => {
-                setSubmitting(false);
-                setLoading(false);
-                closeSnackbar(BOT_SEARCH_TOAST_KEY);
-            });
-    };
+                    );
+                })
+                .finally(() => {
+                    setSubmitting(false);
+                    setLoading(false);
+                    closeSnackbar(BOT_SEARCH_TOAST_KEY);
+                });
+            };
 
     const getTooltipTitle = () => {
         if (!isRunButtonDisabled) return translate('Process.MainView.Tooltip.Run.Enabled');
@@ -139,15 +214,33 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </Tooltip>
     );
 
+    const terminateButton = (
+        <StyledRunButton
+            className={className}
+            onClick={handleTerminate}
+            color={color}
+            loading={loading}
+            loadingPosition="start"
+            startIcon={(
+                <SvgIcon fontSize="small">
+                    <XIcon />
+                </SvgIcon>
+            )}
+            variant={variant}
+        >
+            {translate('Component.BotProcessRunner.Terminate')}
+        </StyledRunButton>
+    );
+
     return (
-        <If condition={hasRunProcessAccess}>
-            {runButton}
-            <AttendedProcessModal
-                open={modalOpen}
-                process={process}
-                setOpen={setModalOpen}
-                onSubmit={handleRun}
-            />
+        <If condition={hasRunProcessAccess && !started} else={terminateButton}>
+        {runButton}
+        <AttendedProcessModal
+            open={modalOpen}
+            process={process}
+            setOpen={setModalOpen}
+            onSubmit={handleRun}
+        />
         </If>
     );
 };
