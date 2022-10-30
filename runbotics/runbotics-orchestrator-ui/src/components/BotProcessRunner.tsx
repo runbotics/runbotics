@@ -54,7 +54,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     
     const processInstances = useSelector(processInstanceSelector);
     const { activeJobs } = useSelector(schedulerSelector);
-    // console.log('REAL active jobs: ', useSelector(schedulerSelector));
     const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
     const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
@@ -78,33 +77,11 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         dispatch(getActiveJobs());
         dispatch(getWaitingJobs());
-
-        console.log('activeJobsUSEEFFECT: ', activeJobs);
-        
-        // console.log('processInstance?.id: ', processInstance?.id);
-        // console.log('processInstances.active.processInstance.id: ', processInstances.active.processInstance?.id);
         
         if(typeof processInstance?.id !== undefined) {
             setCurrentProcessInstanceId(processInstance?.id);
         }
-        
-        // console.log('activeJobs.some(job => job.id === currentProcessInstanceId): ', activeJobs.some(job => job.id === currentProcessInstanceId));
-        
-
-        // console.log('isProcessInstanceQueuedUSEEFFECT: ', isProcessInstanceQueued);
-    }, [processInstance]);
-
-    // useEffect(() => {
-        // console.log('activeJobs: ', activeJobs);
-        // const isProcessInstanceQueued = activeJobs.some(job => {
-        //     // console.log('job.id: ', job.id);
-        //     // console.log('processInstance?.id: ', processInstance?.id);
-        //     return job.id === currentProcessInstanceId;
-        // });
-        // console.log('isProcessInstanceQueued: ', isProcessInstanceQueued);
-        
-
-    // }, [activeJobs]);
+    }, [processInstance, currentProcessInstanceId, isProcessInstanceQueued]);
     
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
     
@@ -112,18 +89,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const closeModal = () => setModalOpen(false);
     
     const handleTerminate = async () => {
-        await dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
+        await dispatch(schedulerActions.terminateActiveJob({ jobId: currentProcessInstanceId }))
         .then(() => {
-            console.log('activeJobsTERMINATE: ', activeJobs);
-            // const isProcessInstanceQueued = activeJobs.some(job => {
-                // console.log('job.id: ', job.id);
-                // console.log('processInstance?.id: ', processInstance?.id);
-                // return job.id === currentProcessInstanceId;
-            // });
             setIsProcessInstanceQueued(activeJobs.some(job => job.id === currentProcessInstanceId));
-            console.log('isProcessInstanceQueuedTERMINATE: ', isProcessInstanceQueued);
             if (!isProcessInstanceQueued) {
-                console.log('Weszło!')
                 setStarted(false);
                 setLoading(false);
                 setSubmitting(false);
@@ -136,9 +105,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 })
             }
         })
-        .catch(() => {
-            console.log('ERROR');
-        });
     }
 
     const handleRun = (executionInfo?: Record<string, any>) => {
