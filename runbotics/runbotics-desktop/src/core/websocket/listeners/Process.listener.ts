@@ -78,7 +78,7 @@ export class ProcessListener {
     @EventListener(BotWsMessage.TERMINATE)
     async terminateProcessInstance(processInstanceId: string) {
         this.logger.log(`=> Incoming message to terminate process instance (id: ${processInstanceId})`);
-        await this.runtimeService.terminateProcessInstance(processInstanceId)
+        await this.runtimeService.terminateProcessInstance(processInstanceId);
         this.logger.log(`<= Process instance successfully terminated (id: ${processInstanceId})`);
     }
 }

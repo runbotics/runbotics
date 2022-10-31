@@ -56,22 +56,25 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
     const processName = process?.name;
+    const processId = process?.id;
+    
+    useEffect(() => {
+        dispatch(schedulerActions.getActiveJobs())
+        
+        if (processId === activeJobs[0]?.process.id) {
+            setStarted(true);
+        }
+    }, [processInstance, processId]);
     
     useEffect(() => {
         const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
-        || processInstance?.status === ProcessInstanceStatus.ERRORED
-        || processInstance?.status === ProcessInstanceStatus.TERMINATED;
-        
-        dispatch(schedulerActions.getActiveJobs())
-        if (processName === activeJobs[0]?.process.name) {
-            setStarted(true);
-        }
+            || processInstance?.status === ProcessInstanceStatus.ERRORED
+            || processInstance?.status === ProcessInstanceStatus.TERMINATED;
 
         if (isProcessInstanceFinished) {
             setStarted(false);
         }
-
-    }, [processInstance, processName]);
+    }, [processInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
     
@@ -80,19 +83,19 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     
     const handleTerminate = async () => {
         await dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
-        .then(async () => {
-            setStarted(false);
-            setLoading(false);
-            setSubmitting(false);
-            enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
-                variant: 'success',
+            .then(() => {
+                setStarted(false);
+                setLoading(false);
+                setSubmitting(false);
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
+                    variant: 'success',
+                })
             })
-        })
-        .catch(()=>{
-            enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
-                variant: 'error',
-            })
-        });
+            .catch(()=>{
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                    variant: 'error',
+                })
+            });
     }
 
     const handleRun = (executionInfo?: Record<string, any>) => {
@@ -113,12 +116,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 processId: process.id,
                 executionInfo: isProcessAttended ? executionInfo : {},
             }),
-            )
+        )
             .then(unwrapResult)
             .then(async (response: StartProcessResponse) => {
                 await dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
                     response.orchestratorProcessInstanceId,
-                    ));
+                ));
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
@@ -128,13 +131,13 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 enqueueSnackbar(
                     error?.message as string ?? translate('Component.BotProcessRunner.Error'),
                     { variant: 'error' },
-                    );
-                })
-                .finally(() => {
-                    setSubmitting(false);
-                    setLoading(false);
-                    closeSnackbar(BOT_SEARCH_TOAST_KEY);
-                });
+                );
+            })
+            .finally(() => {
+                setSubmitting(false);
+                setLoading(false);
+                closeSnackbar(BOT_SEARCH_TOAST_KEY);
+            });
             };
 
     const getTooltipTitle = () => {
@@ -188,13 +191,13 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     return (
         <If condition={hasRunProcessAccess && !started} else={terminateButton}>
-        {runButton}
-        <AttendedProcessModal
-            open={modalOpen}
-            process={process}
-            setOpen={setModalOpen}
-            onSubmit={handleRun}
-        />
+            {runButton}
+            <AttendedProcessModal
+                open={modalOpen}
+                process={process}
+                setOpen={setModalOpen}
+                onSubmit={handleRun}
+            />
         </If>
     );
 };
