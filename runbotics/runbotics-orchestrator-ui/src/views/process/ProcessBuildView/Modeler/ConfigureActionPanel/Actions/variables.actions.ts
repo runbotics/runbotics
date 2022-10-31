@@ -5,7 +5,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assign': {
         id: 'variables.assign',
         label: translate('Process.Details.Modeler.Actions.Variable.Assign.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Variable.Assign.Label',
         script: 'variables.assign',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -44,7 +43,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assignList': {
         id: 'variables.assignList',
         label: translate('Process.Details.Modeler.Actions.Variable.AssignList.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Variable.AssignList.Label',
         script: 'variables.assignList',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -85,7 +83,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assignGlobalVariable': {
         id: 'variables.assignGlobalVariable',
         label: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Variable.AssignGlobal.Label',
         script: 'variables.assignGlobalVariable',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

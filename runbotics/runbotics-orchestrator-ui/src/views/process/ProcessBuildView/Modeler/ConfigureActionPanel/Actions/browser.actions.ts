@@ -21,7 +21,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.open': {
         id: 'browser.selenium.open',
         label: translate('Process.Details.Modeler.Actions.Browser.Open.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Open.Label',
         script: 'browser.selenium.open',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -59,7 +58,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.launch': {
         id: 'browser.launch',
         label: translate('Process.Details.Modeler.Actions.Browser.Launch.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Launch.Label',
         script: 'browser.launch',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -96,7 +94,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.close': {
         id: 'browser.close',
         label: translate('Process.Details.Modeler.Actions.Browser.Close.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Close.Label',
         script: 'browser.close',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -123,7 +120,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.click': {
         id: 'browser.selenium.click',
         label: translate('Process.Details.Modeler.Actions.Browser.Click.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Click.Label',
         script: 'browser.selenium.click',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -156,7 +152,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.elements.count': {
         id: 'browser.selenium.elements.count',
         label: translate('Process.Details.Modeler.Actions.Browser.CountElements.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.CountElements.Label',
         script: 'browser.selenium.elements.count',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -212,7 +207,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.element.attribute.change': {
         id: 'browser.selenium.element.attribute.change',
         label: translate('Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Label',
         script: 'browser.selenium.element.attribute.change',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -261,7 +255,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.type': {
         id: 'browser.selenium.type',
         label: translate('Process.Details.Modeler.Actions.Browser.Type.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Type.Label',
         script: 'browser.selenium.type',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -299,7 +292,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.wait': {
         id: 'browser.selenium.wait',
         label: translate('Process.Details.Modeler.Actions.Browser.Wait.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Wait.Label',
         script: 'browser.selenium.wait',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -333,7 +325,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.editContent': {
         id: 'browser.selenium.editContent',
         label: translate('Process.Details.Modeler.Actions.Browser.EditContent.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.EditContent.Label',
         script: 'browser.selenium.editContent',
         runner: Runner.BROWSER_FRONTEND_SCRIPT,
         form: {
@@ -366,7 +357,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.select': {
         id: 'browser.selenium.select',
         label: translate('Process.Details.Modeler.Actions.Browser.Select.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Select.Label',
         script: 'browser.selenium.select',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -404,7 +394,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.read.attribute': {
         id: 'browser.read.attribute',
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Read.Label',
         script: 'browser.read.attribute',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -566,7 +555,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.index': {
         id: 'browser.index',
         label: translate('Process.Details.Modeler.Actions.Browser.Index.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.Index.Label',
         script: 'browser.index',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -624,7 +612,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.takeScreenshot': {
         id: 'browser.selenium.takeScreenshot',
         label: translate('Process.Details.Modeler.Actions.Browser.TakeScreenshot.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.TakeScreenshot.Label',
         script: 'browser.selenium.takeScreenshot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -678,7 +665,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.printToPdf': {
         id: 'browser.selenium.printToPdf',
         label: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Browser.PrintToPdf.Label',
         script: 'browser.selenium.printToPdf',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

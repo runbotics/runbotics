@@ -5,7 +5,6 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
         id: 'typescript.run',
         label: translate('Process.Details.Modeler.Actions.Javascript.RunTypescript.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Javascript.RunTypescript.Label',
         script: 'typescript.run',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -81,7 +80,6 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'javascript.run': {
         id: 'javascript.run',
         label: translate('Process.Details.Modeler.Actions.Javascript.RunJavascript.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Javascript.RunJavascript.Label',
         script: 'javascript.run',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

@@ -5,7 +5,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
         id: 'sap.connect',
         label: translate('Process.Details.Modeler.Actions.SAP.Connect.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Connect.Label',
         script: 'sap.connect',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -48,7 +47,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.disconnect': {
         id: 'sap.disconnect',
         label: translate('Process.Details.Modeler.Actions.SAP.Disconnect.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Disconnect.Label',
         script: 'sap.disconnect',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -75,7 +73,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.startTransaction': {
         id: 'sap.startTransaction',
         label: translate('Process.Details.Modeler.Actions.SAP.StartTransaction.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.StartTransaction.Label',
         script: 'sap.startTransaction',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -108,7 +105,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.endTransaction': {
         id: 'sap.endTransaction',
         label: translate('Process.Details.Modeler.Actions.SAP.EndTransaction.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.EndTransaction.Label',
         script: 'sap.endTransaction',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -128,7 +124,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.type': {
         id: 'sap.type',
         label: translate('Process.Details.Modeler.Actions.SAP.Type.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Type.Label',
         script: 'sap.type',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -166,7 +161,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.sendVKey': {
         id: 'sap.sendVKey',
         label: translate('Process.Details.Modeler.Actions.SAP.SendVKey.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.SendVKey.Label',
         script: 'sap.sendVKey',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -267,7 +261,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.index': {
         id: 'sap.index',
         label: translate('Process.Details.Modeler.Actions.SAP.Index.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Index.Label',
         script: 'sap.index',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -321,7 +314,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.readText': {
         id: 'sap.readText',
         label: translate('Process.Details.Modeler.Actions.SAP.ReadText.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.ReadText.Label',
         script: 'sap.readText',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -375,7 +367,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.click': {
         id: 'sap.click',
         label: translate('Process.Details.Modeler.Actions.SAP.Click.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Click.Label',
         script: 'sap.click',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -408,7 +399,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.focus': {
         id: 'sap.focus',
         label: translate('Process.Details.Modeler.Actions.SAP.Focus.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Focus.Label',
         script: 'sap.focus',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -441,7 +431,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.doubleClick': {
         id: 'sap.doubleClick',
         label: translate('Process.Details.Modeler.Actions.SAP.DoubleClick.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.DoubleClick.Label',
         script: 'sap.doubleClick',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -474,7 +463,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.select': {
         id: 'sap.select',
         label: translate('Process.Details.Modeler.Actions.SAP.Select.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.SAP.Select.Label',
         script: 'sap.select',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

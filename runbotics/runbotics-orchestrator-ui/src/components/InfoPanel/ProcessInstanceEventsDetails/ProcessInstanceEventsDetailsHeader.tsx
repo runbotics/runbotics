@@ -9,31 +9,31 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
-import {checkIfKeyExists, translate} from '../../../hooks/useTranslations'
+import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations'
 import { convertToPascalCase } from 'src/utils/text';
 import i18n from 'i18next';
-import { TranslationsDescriptors } from 'src/translations/translations';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
 }
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
+    const { translate } = useTranslations();
     const formattedStatus = convertToPascalCase(processInstanceEvent.status);
-    const [step, setStep] = useState<string>(processInstanceEvent.step)
-    
+    const [translatedLabel, setTranslatedLabel] = useState(processInstanceEvent.step);
+    const actionIdArr = processInstanceEvent.step.split('.').map((word) => word);
+    const translateKey = actionIdArr.reduce((prev, curr) => prev === actionIdArr[0] ? actionKeys[prev][curr] : prev[curr]);
+
     useEffect(() => {
-        if (checkIfKeyExists(processInstanceEvent.step)) {
-            setStep(translate(processInstanceEvent.step));
-        } else {
-            setStep(processInstanceEvent.step);
+        if (checkIfKeyExists(translateKey)) {
+            setTranslatedLabel(translate(translateKey));
         }
     }, [i18n.language])
 
     return (
         <GridContainer>
             <GridItem width="100%">
-                <Typography variant="h5">{step}</Typography>
+                <Typography variant="h5">{translatedLabel}</Typography>
             </GridItem>
             <GridItem>
                 <Typography>

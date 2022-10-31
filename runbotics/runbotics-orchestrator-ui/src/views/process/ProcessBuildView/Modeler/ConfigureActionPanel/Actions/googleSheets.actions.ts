@@ -5,7 +5,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     'google.sheets.write': {
         id: 'google.sheets.write',
         label: translate('Process.Details.Modeler.Actions.GoogleSheets.Write.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.GoogleSheets.Write.Label',
         script: 'google.sheets.write',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

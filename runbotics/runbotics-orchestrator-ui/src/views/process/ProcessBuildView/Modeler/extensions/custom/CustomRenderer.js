@@ -19,7 +19,7 @@ import { CustomActionDescription } from 'src/utils/action';
 import store from '../../../../../../store';
 import internalBpmnActions from '../../ConfigureActionPanel/Actions';
 import { translate } from 'src/hooks/useTranslations';
-import i18n from 'i18next';
+import actionKeys from 'src/translations/actionKeys';
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
@@ -64,11 +64,22 @@ export default class CustomRenderer extends BaseRenderer {
         });
 
         // svgClasses(text).add('djs-label');
-        const translatedLabel = translate(label.translateKey)
 
-        svgAppend(text, document.createTextNode(label.title ? label.title : translatedLabel));
+        const actionId = label.actionId;
 
-        svgAppend(parentNode, text);
+        if(actionId) {
+            const actionIdArr = actionId.split('.');
+            console.log('actionIdArr', actionIdArr);
+            const translateKey = actionIdArr.reduce((prev, curr) => prev === actionIdArr[0] ? actionKeys[prev][curr] : prev[curr]);
+            console.log('translateKey', translateKey);
+            const translatedLabel = translate(translateKey);
+            console.log('translatedLabel', translatedLabel);
+
+            svgAppend(text, document.createTextNode(label.title || translatedLabel || label.actionId));
+    
+            svgAppend(parentNode, text);
+        }
+
     }
 
     drawShape(parentNode, element) {
@@ -86,7 +97,7 @@ export default class CustomRenderer extends BaseRenderer {
             svgRemove(shape);
         }
 
-        if (label && (label.title || label.translateKey)) {
+        if (label && (label.title || label.actionId)) {
             if (is(element, 'bpmn:SubProcess')) {
                 this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
             } else {
@@ -254,8 +265,7 @@ export default class CustomRenderer extends BaseRenderer {
 
     getLabel(element) {
         const businessObject = getBusinessObject(element);
-        // 'runbotics' xml field is a temporary solution for storing translate keys.
-        const translateKey = businessObject.runbotics;
+        const actionId = businessObject?.actionId;
         let title;
         let description = undefined;
         //
@@ -300,7 +310,7 @@ export default class CustomRenderer extends BaseRenderer {
             }
             return {
                 title: businessObject.label,
-                translateKey: translateKey,
+                actionId: actionId,
                 description: description,
             };
         } else {
@@ -310,7 +320,7 @@ export default class CustomRenderer extends BaseRenderer {
         }
         return {
             title: title,
-            translateKey: translateKey,
+            actionId: actionId,
             description: description,
         };
     }

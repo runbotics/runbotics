@@ -5,7 +5,6 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
     'jira.getLoggedWorkForUser': {
         id: 'jira.getLoggedWorkForUser',
         label: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWork.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Jira.GetLoggedWork.Label',
         script: 'jira.getLoggedWorkForUser',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

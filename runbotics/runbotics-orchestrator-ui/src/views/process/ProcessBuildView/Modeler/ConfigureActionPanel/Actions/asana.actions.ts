@@ -5,7 +5,6 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: 'asana.test',
         label: translate('Process.Details.Modeler.Actions.Asana.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Asana.Label',
         script: 'asana.test',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

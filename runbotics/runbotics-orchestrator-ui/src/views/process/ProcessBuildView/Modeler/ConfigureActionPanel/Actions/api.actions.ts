@@ -5,7 +5,6 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
     'api.request': {
         id: 'api.request',
         label: translate('Process.Details.Modeler.Actions.Api.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Api.Label',
         script: 'api.request',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -107,7 +106,6 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
     'api.downloadFile': {
         id: 'api.downloadFile',
         label: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Api.DownloadFile.Label',
         script: 'api.downloadFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
