@@ -16,11 +16,10 @@ import useFeatureKey from 'src/hooks/useFeatureKey';
 import If from './utils/If';
 import { AttendedProcessModal } from './AttendedProcessModal';
 import { schedulerActions, schedulerSelector } from 'src/store/slices/Scheduler';
-import { getActiveJobs, getWaitingJobs} from 'src/store/slices/Scheduler/Scheduler.thunks';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
-const StyledRunButton = styled(LoadingButton)(({ theme }) => `
+const StyledActionButton = styled(LoadingButton)(({ theme }) => `
     margin-top: ${theme.spacing(1)};
     & + & {
         margin-left: ${theme.spacing(1)};
@@ -48,7 +47,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const [isSubmitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
-    const [currentProcessInstanceId, setCurrentProcessInstanceId] = useState<string | null>(null);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
     
@@ -58,16 +56,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
     const processName = process?.name;
-    const [isProcessInstanceQueued, setIsProcessInstanceQueued] = useState(activeJobs.some(job => job.id === currentProcessInstanceId));
     
     useEffect(() => {
         const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
-            || processInstance?.status === ProcessInstanceStatus.ERRORED
-            || processInstance?.status === ProcessInstanceStatus.TERMINATED;
-            
-        setIsProcessInstanceQueued(activeJobs.some(job => job.id === currentProcessInstanceId));
-
-        if (isProcessInstanceQueued) {
+        || processInstance?.status === ProcessInstanceStatus.ERRORED
+        || processInstance?.status === ProcessInstanceStatus.TERMINATED;
+        
+        dispatch(schedulerActions.getActiveJobs())
+        if (processName === activeJobs[0]?.process.name) {
             setStarted(true);
         }
 
@@ -75,36 +71,28 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             setStarted(false);
         }
 
-        dispatch(getActiveJobs());
-        dispatch(getWaitingJobs());
-        
-        if(typeof processInstance?.id !== undefined) {
-            setCurrentProcessInstanceId(processInstance?.id);
-        }
-    }, [processInstance, currentProcessInstanceId, isProcessInstanceQueued]);
-    
+    }, [processInstance, processName]);
+
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
     
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     
     const handleTerminate = async () => {
-        await dispatch(schedulerActions.terminateActiveJob({ jobId: currentProcessInstanceId }))
-        .then(() => {
-            setIsProcessInstanceQueued(activeJobs.some(job => job.id === currentProcessInstanceId));
-            if (!isProcessInstanceQueued) {
-                setStarted(false);
-                setLoading(false);
-                setSubmitting(false);
-                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
-                    variant: 'success',
-                })
-            } else {
-                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
-                    variant: 'error',
-                })
-            }
+        await dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
+        .then(async () => {
+            setStarted(false);
+            setLoading(false);
+            setSubmitting(false);
+            enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
+                variant: 'success',
+            })
         })
+        .catch(()=>{
+            enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                variant: 'error',
+            })
+        });
     }
 
     const handleRun = (executionInfo?: Record<string, any>) => {
@@ -160,7 +148,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const runButton = (
         <Tooltip title={getTooltipTitle()} placement="top">
             <span>
-                <StyledRunButton
+                <StyledActionButton
                     className={className}
                     disabled={isRunButtonDisabled}
                     onClick={isProcessAttended ? openModal : handleRun}
@@ -175,13 +163,13 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                     variant={variant}
                 >
                     {translate('Component.BotProcessRunner.Run')}
-                </StyledRunButton>
+                </StyledActionButton>
             </span>
         </Tooltip>
     );
 
     const terminateButton = (
-        <StyledRunButton
+        <StyledActionButton
             className={className}
             onClick={handleTerminate}
             color={color}
@@ -195,7 +183,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             variant={variant}
         >
             {translate('Component.BotProcessRunner.Terminate')}
-        </StyledRunButton>
+        </StyledActionButton>
     );
 
     return (
