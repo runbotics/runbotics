@@ -4,7 +4,7 @@ import { IBpmnAction, Runner } from './types';
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: 'beeOffice.createNewTimetableActivity',
-        label: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Label'),
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.CreateNewTimetableActivity.Label'),
         script: 'beeOffice.createNewTimetableActivity',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -81,7 +81,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'beeOffice.getEmployee': {
         id: 'beeOffice.getEmployee',
-        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Label'),
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployee.Label'),
         script: 'beeOffice.getEmployee',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -255,7 +255,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'beeOffice.getSchedule': {
         id: 'beeOffice.getSchedule',
-        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Label'),
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetSchedule.Label'),
         script: 'beeOffice.getSchedule',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -319,7 +319,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'beeOffice.deleteTimeTableActivity': {
         id: 'beeOffice.deleteTimeTableActivity',
-        label: translate('Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTable.Label'),
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTableActivity.Label'),
         script: 'beeOffice.deleteTimeTableActivity',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -410,7 +410,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'beeOffice.getActivitiesByURLParameters': {
         id: 'beeOffice.getActivitiesByURLParameters',
-        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Label'),
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByURLParameters.Label'),
         script: 'beeOffice.getActivitiesByURLParameters',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

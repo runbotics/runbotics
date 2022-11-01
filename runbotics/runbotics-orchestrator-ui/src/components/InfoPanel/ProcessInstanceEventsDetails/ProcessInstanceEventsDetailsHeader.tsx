@@ -10,8 +10,9 @@ import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
 import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations'
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter, convertToPascalCase } from 'src/utils/text';
 import i18n from 'i18next';
+import actionKeys from 'src/translations/actionKeys';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
@@ -21,8 +22,13 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const { translate } = useTranslations();
     const formattedStatus = convertToPascalCase(processInstanceEvent.status);
     const [translatedLabel, setTranslatedLabel] = useState(processInstanceEvent.step);
-    const actionIdArr = processInstanceEvent.step.split('.').map((word) => word);
-    const translateKey = actionIdArr.reduce((prev, curr) => prev === actionIdArr[0] ? actionKeys[prev][curr] : prev[curr]);
+    const translateKey = `Process.Details.Modeler.Actions.${((processInstanceEvent.step).split('.')).reduce((prev, curr) => {
+        if(curr){
+            return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
+        } else {
+            return prev.charAt(0).toUpperCase() + prev.slice(1);
+        }
+    })}.Label`;
 
     useEffect(() => {
         if (checkIfKeyExists(translateKey)) {

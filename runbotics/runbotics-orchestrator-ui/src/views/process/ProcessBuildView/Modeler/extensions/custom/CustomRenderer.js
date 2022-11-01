@@ -19,7 +19,6 @@ import { CustomActionDescription } from 'src/utils/action';
 import store from '../../../../../../store';
 import internalBpmnActions from '../../ConfigureActionPanel/Actions';
 import { translate } from 'src/hooks/useTranslations';
-import actionKeys from 'src/translations/actionKeys';
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
@@ -68,12 +67,15 @@ export default class CustomRenderer extends BaseRenderer {
         const actionId = label.actionId;
 
         if(actionId) {
-            const actionIdArr = actionId.split('.');
-            console.log('actionIdArr', actionIdArr);
-            const translateKey = actionIdArr.reduce((prev, curr) => prev === actionIdArr[0] ? actionKeys[prev][curr] : prev[curr]);
-            console.log('translateKey', translateKey);
+            const translateKey = `Process.Details.Modeler.Actions.${(actionId.split('.')).reduce((prev, curr) => {
+                if(curr){
+                    return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
+                } else {
+                    return '.' + prev.charAt(0).toUpperCase() + prev.slice(1);
+                }
+            })}.Label`;
+            
             const translatedLabel = translate(translateKey);
-            console.log('translatedLabel', translatedLabel);
 
             svgAppend(text, document.createTextNode(label.title || translatedLabel || label.actionId));
     

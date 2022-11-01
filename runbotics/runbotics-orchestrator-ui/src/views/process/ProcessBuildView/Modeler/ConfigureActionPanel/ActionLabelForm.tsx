@@ -11,7 +11,6 @@ import If from 'src/components/utils/If';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
 import i18n from 'i18next';
-import actionKeys from 'src/translations/actionKeys';
 
 type Props = {
     onSubmit: (label: string) => void;
@@ -22,9 +21,17 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const { translate } = useTranslations();
     const actionId = element.businessObject?.actionId;
-    const actionIdArr = actionId.split('.').map((word) => word);
-    const translateKey = actionIdArr.reduce((prev, curr) => prev === actionIdArr[0] ? actionKeys[prev][curr] : prev[curr]);
+    const translateKey = `Process.Details.Modeler.Actions.${(actionId.split('.')).reduce((prev, curr) => {
+        if(curr){
+            return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
+        } else {
+            return '.' + prev.charAt(0).toUpperCase() + prev.slice(1);
+        }
+    })}.Label`;
+    
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
+    console.log('translateKey: ', translateKey);
+
     
     useEffect(() => {
         if (checkIfKeyExists(translateKey)) {

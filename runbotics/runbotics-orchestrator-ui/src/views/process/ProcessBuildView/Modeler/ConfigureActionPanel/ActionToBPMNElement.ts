@@ -199,7 +199,7 @@ export class ActionToBPMNElement {
         shapeProperties?: Record<string, any>,
     ) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`, properties);
-        businessObject.label = action.id ? "" : action.label;
+        businessObject.label = action.id && (action.id.slice(0,8) !== 'external') ? "" : action.label;
         businessObject.implementation = action.runner;
         businessObject.actionId = action.id;
 

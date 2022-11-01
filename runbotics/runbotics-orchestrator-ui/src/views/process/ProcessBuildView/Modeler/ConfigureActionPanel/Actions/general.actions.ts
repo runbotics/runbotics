@@ -4,7 +4,7 @@ import { IBpmnAction, Runner } from './types';
 const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
         id: 'general.console.log',
-        label: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Label'),
+        label: translate('Process.Details.Modeler.Actions.General.Console.Log.Label'),
         script: 'general.console.log',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

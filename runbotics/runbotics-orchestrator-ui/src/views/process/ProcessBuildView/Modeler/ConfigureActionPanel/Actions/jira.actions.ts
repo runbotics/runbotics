@@ -4,7 +4,7 @@ import { IBpmnAction, Runner } from './types';
 const getJiraActions: () => Record<string, IBpmnAction> = () => ({
     'jira.getLoggedWorkForUser': {
         id: 'jira.getLoggedWorkForUser',
-        label: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWork.Label'),
+        label: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWorkForUser.Label'),
         script: 'jira.getLoggedWorkForUser',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
