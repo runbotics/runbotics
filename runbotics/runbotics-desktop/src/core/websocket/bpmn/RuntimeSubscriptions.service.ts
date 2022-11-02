@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '../../bpm/Runtime';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
 import {
-    BotWsMessage, IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus, ProcessInstanceStatus,
+    BotWsMessage,
+    IProcessInstance,
+    IProcessInstanceEvent,
+    ProcessInstanceEventStatus,
+    ProcessInstanceStatus,
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from 'src/core/bpm/bpmn.types';
@@ -44,25 +48,21 @@ export class RuntimeSubscriptionsService {
                                     break;
                                 default:
                                     const label = eventBehaviour?.label;
-                                    // xml field 'runbotics' is a temporary solution.
-                                    const translateKey = eventBehaviour?.runbotics;
-                                    
+                                    const script = desktopTask.input?.script;
                                     if (eventBehaviour?.label) {
                                         processInstanceEvent.step = label;
-                                    } else if (translateKey) {
-                                        processInstanceEvent.step = translateKey;
                                     } else {
-                                        processInstanceEvent.step = desktopTask.input?.script
-                                    }
+                                        processInstanceEvent.step = script;
+                                    } 
                             }
                             break;
                         case 'bpmn:EndEvent':
-                            processInstanceEvent.step = `Process.List.Table.Step.EndEvent`;
+                            processInstanceEvent.step = 'event.end';
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
                         case 'bpmn:StartEvent':
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = `Process.List.Table.Step.StartEvent`;
+                            processInstanceEvent.step = 'event.start';
                             break;
                         case 'bpmn:ExclusiveGateway':
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;

@@ -9,20 +9,27 @@ import IconButton from '@mui/material/IconButton';
 import Alert from '@mui/material/Alert';
 import If from 'src/components/utils/If';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
-import useTranslations from 'src/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
+import i18n from 'i18next';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 type Props = {
     onSubmit: (label: string) => void;
 };
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
+    const { translate } = useTranslations();
     const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
-    const { translate } = useTranslations();
-    // using 'runbotics' xml field is a temporary solution
-    const translateKey = element.businessObject?.runbotics;
-    // @ts-ignore
-    const translatedLabel = translate(translateKey);
+    const actionId = element.businessObject?.actionId;
+    const [translatedLabel, setTranslatedLabel] = useState(actionId);
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+    
+    useEffect(() => {
+        if (checkIfKeyExists(translateKey)) {
+            setTranslatedLabel(translate(translateKey));
+        }
+    }, [i18n.language])
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });
@@ -64,7 +71,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionNameLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">{formState.label !== "" ? formState.label : translatedLabel}</Typography>
+            <Typography variant="h4">{formState.label ? formState.label : translatedLabel}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>
