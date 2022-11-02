@@ -1,5 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
-import { IBpmnAction, Runner } from './types';
+import { ActionSystem, IBpmnAction, Runner } from './types';
 
 const exampleJsonConfiguration = {
     actionParams: {
@@ -666,6 +666,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         translateKey: 'Process.Details.Modeler.Actions.Browser.PrintToPdf.Label',
         script: 'browser.selenium.printToPdf',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         output: {
             assignVariables: true,
             outputMethods: {
