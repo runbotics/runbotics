@@ -19,6 +19,7 @@ import { CustomActionDescription } from 'src/utils/action';
 import store from '../../../../../../store';
 import internalBpmnActions from '../../ConfigureActionPanel/Actions';
 import { translate } from 'src/hooks/useTranslations';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
@@ -67,13 +68,7 @@ export default class CustomRenderer extends BaseRenderer {
         const actionId = label.actionId;
 
         if(actionId) {
-            const translateKey = `Process.Details.Modeler.Actions.${(actionId.split('.')).reduce((prev, curr) => {
-                if(curr){
-                    return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
-                } else {
-                    return '.' + prev.charAt(0).toUpperCase() + prev.slice(1);
-                }
-            })}.Label`;
+            const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
             
             const translatedLabel = translate(translateKey);
 

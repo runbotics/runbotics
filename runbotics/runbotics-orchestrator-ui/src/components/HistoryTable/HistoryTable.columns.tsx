@@ -3,7 +3,7 @@ import { FeatureKey } from 'runbotics-common';
 import moment from 'moment';
 import { IconButton } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 import useTranslations from 'src/hooks/useTranslations';
 import useAuth from 'src/hooks/useAuth';
 import { hasFeatureKeyAccess } from '../utils/Secured';
@@ -40,7 +40,7 @@ const useProcessInstanceColumns = (): Column[] => {
             accessor: 'status',
             width: '200px',
             Cell: ({ value }) => {
-                const formattedStatus = convertToPascalCase(value);
+                const formattedStatus = capitalizeFirstLetter({ text: value, lowerCaseRest: true, delimiter: /_| / });
                 return (
                     <Label color={getProcessInstanceStatusColor(value)}>
                         {/* @ts-ignore */}

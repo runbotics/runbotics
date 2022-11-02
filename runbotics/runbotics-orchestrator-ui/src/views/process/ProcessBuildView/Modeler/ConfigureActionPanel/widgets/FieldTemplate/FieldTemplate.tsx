@@ -8,7 +8,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 import WrapIfAdditional from './WrapIfAdditional';
 
@@ -35,11 +35,11 @@ const FieldTemplate = ({
         if (typeof rawDescription !== 'undefined') {
             if (
                 checkIfKeyExists(
-                    'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
+                    'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, lowerCaseRest: true })
                 )
             ) {
                 {/*@ts-ignore*/}
-                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
+                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawDescription, lowerCaseRest: true })}`));
             }
         }
 
@@ -48,10 +48,10 @@ const FieldTemplate = ({
 
             rawErrors.forEach((rawError) => {
                 if (
-                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawError))
+                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawError, lowerCaseRest: true }))
                 ) {
                     {/*@ts-ignore*/}
-                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
+                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, lowerCaseRest: true })}`));
                 } else {
                     localRawErrors.push(rawError);
                 }

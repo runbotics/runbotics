@@ -24,11 +24,13 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
     const hasEditBotSystemAccess = useFeatureKey([FeatureKey.PROCESS_BOT_SYSTEM_EDIT]);
 
     const getBotSystemOptions = () => Object.values(botSystems)
-        .map((system) => (
-            <MenuItem value={system.name} key={system.name}>
-                {capitalizeFirstLetter(system.name)}
-            </MenuItem>
-        ));
+        .map((system) => {
+            return (
+                <MenuItem value={system.name} key={system.name}>
+                    {capitalizeFirstLetter({ text: system.name, lowerCaseRest: true })};
+                </MenuItem>
+            );
+        });
 
     const handleBotSystemChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selected = botSystems.find((system) => event.target.value === system.name);

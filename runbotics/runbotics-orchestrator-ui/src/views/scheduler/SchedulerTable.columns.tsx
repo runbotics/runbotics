@@ -9,6 +9,7 @@ import { Column, RowCustomExpandedSpan } from 'src/components/Table';
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
     const { translate } = useTranslations();
@@ -32,7 +33,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Step'),
             // @ts-ignore
-            accessor: ({ step }) => (step ? translate(step) : '')
+            accessor: (({ step }) => step ? translate(`Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: step, delimiter: '.', join: '.' })}.Label`) : ""),
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.StartTime'),

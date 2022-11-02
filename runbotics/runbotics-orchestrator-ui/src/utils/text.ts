@@ -1,7 +1,12 @@
-export const capitalizeFirstLetter = (text: string) => text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+interface IText {
+    text: string, 
+    lowerCaseRest?: boolean, 
+    delimiter?: string | RegExp, 
+    join?: string
+}
 
-export const convertToPascalCase = (rawText: string) =>
-    rawText
-        .split(/_| /)
-        .map((word) => capitalizeFirstLetter(word))
-        .join('');
+export const capitalizeFirstLetter = ({ text, lowerCaseRest = false, delimiter = " ", join }: IText) =>
+    text
+        .split(delimiter)
+        .map((word) => word.charAt(0).toUpperCase() + (lowerCaseRest ? word.slice(1).toLowerCase() : word.slice(1)))
+        .join(join ?? '');

@@ -11,27 +11,19 @@ import If from 'src/components/utils/If';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
 import i18n from 'i18next';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 type Props = {
     onSubmit: (label: string) => void;
 };
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
+    const { translate } = useTranslations();
     const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
-    const { translate } = useTranslations();
     const actionId = element.businessObject?.actionId;
-    const translateKey = `Process.Details.Modeler.Actions.${(actionId.split('.')).reduce((prev, curr) => {
-        if(curr){
-            return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
-        } else {
-            return '.' + prev.charAt(0).toUpperCase() + prev.slice(1);
-        }
-    })}.Label`;
-    
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    console.log('translateKey: ', translateKey);
-
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
     
     useEffect(() => {
         if (checkIfKeyExists(translateKey)) {

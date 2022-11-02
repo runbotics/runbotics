@@ -10,7 +10,7 @@ import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
 import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations'
-import { capitalizeFirstLetter, convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter} from 'src/utils/text';
 import i18n from 'i18next';
 import actionKeys from 'src/translations/actionKeys';
 
@@ -20,26 +20,13 @@ interface Props {
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
     const { translate } = useTranslations();
-    const formattedStatus = convertToPascalCase(processInstanceEvent.status);
-    const [translatedLabel, setTranslatedLabel] = useState(processInstanceEvent.step);
-    const translateKey = `Process.Details.Modeler.Actions.${((processInstanceEvent.step).split('.')).reduce((prev, curr) => {
-        if(curr){
-            return prev.charAt(0).toUpperCase() + prev.slice(1) + '.' + curr.charAt(0).toUpperCase() + curr.slice(1);
-        } else {
-            return prev.charAt(0).toUpperCase() + prev.slice(1);
-        }
-    })}.Label`;
-
-    useEffect(() => {
-        if (checkIfKeyExists(translateKey)) {
-            setTranslatedLabel(translate(translateKey));
-        }
-    }, [i18n.language])
-
+    const formattedStatus = capitalizeFirstLetter({ text: processInstanceEvent.status, lowerCaseRest: true, delimiter: /_| / });
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, lowerCaseRest: false, delimiter: '.', join: '.'})}.Label`;
+    
     return (
         <GridContainer>
             <GridItem width="100%">
-                <Typography variant="h5">{translatedLabel}</Typography>
+                <Typography variant="h5">{checkIfKeyExists(translateKey) ? translate(translateKey) : processInstanceEvent.step}</Typography>
             </GridItem>
             <GridItem>
                 <Typography>
