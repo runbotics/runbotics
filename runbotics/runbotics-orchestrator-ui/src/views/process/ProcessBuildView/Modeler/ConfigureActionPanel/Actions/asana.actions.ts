@@ -4,8 +4,7 @@ import { IBpmnAction, Runner } from './types';
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: 'asana.test',
-        label: translate('Process.Details.Modeler.Actions.Asana.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Asana.Label',
+        label: translate('Process.Details.Modeler.Actions.Asana.Test.Label'),
         script: 'asana.test',
         runner: Runner.DESKTOP_SCRIPT,
         output: {

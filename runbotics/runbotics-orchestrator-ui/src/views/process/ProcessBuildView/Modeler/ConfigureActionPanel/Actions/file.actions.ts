@@ -5,7 +5,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.appendFile': {
         id: 'file.appendFile',
         label: translate('Process.Details.Modeler.Actions.File.AppendFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.File.AppendFile.Label',
         script: 'file.appendFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -76,7 +75,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.createFile': {
         id: 'file.createFile',
         label: translate('Process.Details.Modeler.Actions.File.CreateFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.File.CreateFile.Label',
         script: 'file.createFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -138,7 +136,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.removeFile': {
         id: 'file.removeFile',
         label: translate('Process.Details.Modeler.Actions.File.RemoveFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.File.RemoveFile.Label',
         script: 'file.removeFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -192,7 +189,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.readFile': {
         id: 'file.readFile',
         label: translate('Process.Details.Modeler.Actions.File.ReadFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.File.ReadFile.Label',
         script: 'file.readFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -246,7 +242,6 @@ const getFileActions: () => Record<string, IBpmnAction> = () => ({
     'file.writeFile': {
         id: 'file.writeFile',
         label: translate('Process.Details.Modeler.Actions.File.WriteFile.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.File.WriteFile.Label',
         script: 'file.writeFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
