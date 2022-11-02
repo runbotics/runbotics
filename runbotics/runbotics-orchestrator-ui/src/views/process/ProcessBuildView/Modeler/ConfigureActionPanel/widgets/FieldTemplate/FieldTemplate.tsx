@@ -33,25 +33,21 @@ const FieldTemplate = ({
 
     useEffect(() => {
         if (typeof rawDescription !== 'undefined') {
-            if (
-                checkIfKeyExists(
-                    'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, lowerCaseRest: true })
-                )
-            ) {
+            const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: " ", lowerCaseRest: true });
+            if (checkIfKeyExists(translateKey)) {
                 {/*@ts-ignore*/}
-                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawDescription, lowerCaseRest: true })}`));
+                setDescription(translate(translateKey));
             }
-        }
+        };
 
         if (rawErrors.length > 0) {
             const localRawErrors = [];
-
+            
             rawErrors.forEach((rawError) => {
-                if (
-                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawError, lowerCaseRest: true }))
-                ) {
+                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, delimiter: " ", lowerCaseRest: true })}`;
+                if (checkIfKeyExists(translateKey)) {
                     {/*@ts-ignore*/}
-                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, lowerCaseRest: true })}`));
+                    localRawErrors.push(translate(translateKey));
                 } else {
                     localRawErrors.push(rawError);
                 }
