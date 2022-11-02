@@ -9,31 +9,22 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
     GridContainer, GridItem,
 } from './ProcessInstanceEventsDetails.styles';
-import {checkIfKeyExists, translate} from '../../../hooks/useTranslations'
-import { convertToPascalCase } from 'src/utils/text';
-import i18n from 'i18next';
-import { TranslationsDescriptors } from 'src/translations/translations';
+import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations'
+import { capitalizeFirstLetter} from 'src/utils/text';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
 }
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
-    const formattedStatus = convertToPascalCase(processInstanceEvent.status);
-    const [step, setStep] = useState<string>(processInstanceEvent.step)
+    const { translate } = useTranslations();
+    const formattedStatus = capitalizeFirstLetter({ text: processInstanceEvent.status, lowerCaseRest: true, delimiter: /_| / });
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
     
-    useEffect(() => {
-        if (checkIfKeyExists(processInstanceEvent.step)) {
-            setStep(translate(processInstanceEvent.step));
-        } else {
-            setStep(processInstanceEvent.step);
-        }
-    }, [i18n.language])
-
     return (
         <GridContainer>
             <GridItem width="100%">
-                <Typography variant="h5">{step}</Typography>
+                <Typography variant="h5">{checkIfKeyExists(translateKey) ? translate(translateKey) : processInstanceEvent.step}</Typography>
             </GridItem>
             <GridItem>
                 <Typography>

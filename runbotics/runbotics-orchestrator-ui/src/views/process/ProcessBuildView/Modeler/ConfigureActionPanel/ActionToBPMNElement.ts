@@ -199,9 +199,8 @@ export class ActionToBPMNElement {
         shapeProperties?: Record<string, any>,
     ) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`, properties);
-        businessObject.label = action.translateKey ? "" : action.label;
+        businessObject.label = action.id && (action.id.slice(0,8) !== 'external') ? "" : action.label;
         businessObject.implementation = action.runner;
-        businessObject.runbotics = action.translateKey ? action.translateKey : "";
         businessObject.actionId = action.id;
 
         const shape = this.elementFactory.createShape({
