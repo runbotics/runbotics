@@ -37,9 +37,11 @@ const TerminateProcessButton: VFC<TerminateProcessButtonProps> = ({ id, processN
     const handleTerminate = async () => {
         setShow(false);
         await dispatch(schedulerActions.terminateActiveJob({ jobId: id }))
-            .catch(() => enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
-                variant: 'error',
-            }));
+            .catch(() => {
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                    variant: 'error',
+                });
+            });
     };
 
     return (
