@@ -11,8 +11,6 @@ import {
 } from './ProcessInstanceEventsDetails.styles';
 import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations'
 import { capitalizeFirstLetter} from 'src/utils/text';
-import i18n from 'i18next';
-import actionKeys from 'src/translations/actionKeys';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
@@ -21,7 +19,7 @@ interface Props {
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
     const { translate } = useTranslations();
     const formattedStatus = capitalizeFirstLetter({ text: processInstanceEvent.status, lowerCaseRest: true, delimiter: /_| / });
-    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, lowerCaseRest: false, delimiter: '.', join: '.'})}.Label`;
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
     
     return (
         <GridContainer>

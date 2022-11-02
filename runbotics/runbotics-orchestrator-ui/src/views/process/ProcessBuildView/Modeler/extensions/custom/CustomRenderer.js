@@ -307,7 +307,7 @@ export default class CustomRenderer extends BaseRenderer {
             }
             return {
                 title: businessObject.label,
-                actionId: actionId,
+                actionId,
                 description: description,
             };
         } else {
@@ -317,7 +317,7 @@ export default class CustomRenderer extends BaseRenderer {
         }
         return {
             title: title,
-            actionId: actionId,
+            actionId,
             description: description,
         };
     }
