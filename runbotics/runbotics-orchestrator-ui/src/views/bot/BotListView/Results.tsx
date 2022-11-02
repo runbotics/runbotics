@@ -18,7 +18,7 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'src/store';
 import { BotStatus } from 'runbotics-common';
 import If from 'src/components/utils/If';
-import { capitalizeFirstLetter, convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useBotStatusSocket from 'src/hooks/useBotStatusSocket';
 import useTranslations from 'src/hooks/useTranslations';
@@ -144,7 +144,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                         </TableHead>
                         <TableBody>
                             {getPageContent().map((bot) => {
-                                const formattedStatus = convertToPascalCase(bot.status);
+                                const formattedStatus = capitalizeFirstLetter({ text: bot.status, lowerCaseRest: true, delimiter: /_| / });
 
                                 return (
                                     <TableRow hover key={bot.installationId}>
@@ -163,7 +163,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             {bot.collection?.name}
                                         </TableCell>
-                                        <TableCell>{capitalizeFirstLetter(bot.system?.name ?? '')}</TableCell>
+                                        <TableCell>{bot.system?.name ? capitalizeFirstLetter({ text: bot.system?.name }) : ""}</TableCell>
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             {bot.version}
                                         </TableCell>

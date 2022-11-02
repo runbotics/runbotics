@@ -21,8 +21,7 @@ import getApiActions from './api.actions';
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     'loop.init': {
         id: 'loop.init',
-        label: translate('Process.Details.Modeler.Actions.Loop.Loop1.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Loop.Loop1.Label',
+        label: translate('Process.Details.Modeler.Actions.Loop.Loop.Label'),
         script: 'loop.init',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -90,7 +89,6 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     'loop.loop': {
         id: 'loop.loop',
         label: translate('Process.Details.Modeler.Actions.Loop.Loop2.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Loop.Loop2.Label',
         script: 'loop.loop',
         runner: Runner.BPMN,
         output: {
