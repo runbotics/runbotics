@@ -21,7 +21,7 @@ interface Props {
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
     const formattedStatus = convertToPascalCase(processInstanceEvent.status);
     const [step, setStep] = useState<string>(processInstanceEvent.step)
-
+    
     useEffect(() => {
         if (checkIfKeyExists(processInstanceEvent.step)) {
             setStep(translate(processInstanceEvent.step));

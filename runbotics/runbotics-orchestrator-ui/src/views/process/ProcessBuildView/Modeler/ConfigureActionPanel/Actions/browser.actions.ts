@@ -637,13 +637,25 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             schema: {
                 type: 'object',
                 properties: {
+                    input: {
+                        title: 'Input',
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.TakeScreenshot.Input.Label'),
+                                type: 'string',
+                            },
+                        },
+                    },
                     output: {
                         title: 'Output',
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Browser.TakeScreenshot.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.TakeScreenshot.VariableText'),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.Browser.TakeScreenshot.VariableText',
+                                ),
                                 type: 'string',
                             },
                         },
@@ -651,9 +663,12 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 },
             },
             uiSchema: {
-                'ui:order': ['output'],
+                'ui:order': ['input', 'output'],
             },
             formData: {
+                input: {
+                    target: '',
+                },
                 output: {
                     variableName: '',
                 },
@@ -706,7 +721,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             url: {
                                                 type: 'string',
-                                                title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Url'),
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.Browser.PrintToPdf.Url',
+                                                ),
                                             },
                                         },
                                     },
@@ -720,7 +737,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.VariableText'),
+                                description: translate(
+                                    'Process.Details.Modeler.Actions.Browser.PrintToPdf.VariableText',
+                                ),
                                 type: 'string',
                             },
                         },

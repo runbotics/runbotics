@@ -109,7 +109,7 @@ class BrowserAutomation extends StatefulActionHandler {
                     output = await this.printToPdf(request.input);
                     break;
                 case 'browser.selenium.takeScreenshot':
-                    output = await this.takeScreenshot();
+                    output = await this.takeScreenshot(request.input);
                     break;
                 case 'browser.index':
                     output = await this.doIndex(request.input);
@@ -261,11 +261,13 @@ class BrowserAutomation extends StatefulActionHandler {
         }
     }
 
-    private async takeScreenshot(): Promise<BrowserTypes.BrowserTakeScreenshotActionOutput> {
+    private async takeScreenshot(
+        input: BrowserTypes.BrowserScreenshotElementInput,
+    ): Promise<BrowserTypes.BrowserTakeScreenshotActionOutput> {
         const filePath = path.join(process.cwd(), 'temp', `${uuidv4()}.png`);
-
         try {
-            const image = await this.session.takeScreenshot();
+            const elementToScreenshot = input.target ? await this.findElement(input.target) : this.session;
+            const image = await elementToScreenshot.takeScreenshot();
             writeFileSync(filePath, image, { encoding: 'base64' });
             return filePath;
         } catch (e) {

@@ -200,6 +200,7 @@
     "Process.Details.Modeler.Actions.Browser.Index.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Browser.Index.VariableText": "Przypisz daną wyjściową do zmiennej",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Label": "Zrób zrzut ekranu",
+    "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Input.Label": "Element do przechwycenia",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.Variable": "Nazwa zmiennej",
     "Process.Details.Modeler.Actions.Browser.TakeScreenshot.VariableText": "Przypisz ścieżkę zrzutu ekranu do zmiennej",
     "Process.Details.Modeler.Actions.Browser.PrintToPdf.Label": "Drukuj do PDF",

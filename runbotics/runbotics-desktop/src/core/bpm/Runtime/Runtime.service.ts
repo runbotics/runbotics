@@ -351,7 +351,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         setTimeout(() => {
             this.logger.log(`[${processInstanceId}] Cleaning instance`);
             delete this.processInstances[processInstanceId];
-        }, 10000);
+        }, 0);
     };
 
     private createEngineExecutionServices = (processInstanceId: string): BpmnEngineExecuteOptions['services'] => ({
