@@ -60,13 +60,13 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     
     useEffect(() => {
         dispatch(schedulerActions.getActiveJobs())
-    }, [processInstance, processId]);
+    }, [processId]);
     
     useEffect(() => {
         if (processId === activeJobs[0]?.process.id) {
             setStarted(true);
         }
-    }, [activeJobs]);
+    }, [activeJobs, processId]);
     
     useEffect(() => {
         const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
