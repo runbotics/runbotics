@@ -9,6 +9,7 @@
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
     "Component.BotProcessRunner.Run": "RUN",
+    "Component.BotProcessRunner.Terminate": "ABORT",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",

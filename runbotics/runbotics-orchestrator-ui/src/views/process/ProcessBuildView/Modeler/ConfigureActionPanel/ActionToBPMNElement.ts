@@ -76,26 +76,27 @@ export class ActionToBPMNElement {
                 }
             }
 
-            if (field && field.type)
-            { switch (field.type) {
-                case 'array':
-                    parameter.type = ParameterType.LIST;
-                    break;
-                case 'boolean':
-                    parameter.value = `\${${value}}`;
-                    parameter.type = ParameterType.Boolean;
-                    break;
-                case 'object':
-                    parameter.type = ParameterType.MAP;
-                    break;
-                case 'number':
-                    parameter.value = `\${${value}}`;
-                    parameter.type = ParameterType.Number;
-                    break;
-                default:
-                    parameter.type = ParameterType.TEXT;
-                    break;
-            } }
+            if (field && field.type) {
+                switch (field.type) {
+                    case 'array':
+                        parameter.type = ParameterType.LIST;
+                        break;
+                    case 'boolean':
+                        parameter.value = `\${${value}}`;
+                        parameter.type = ParameterType.Boolean;
+                        break;
+                    case 'object':
+                        parameter.type = ParameterType.MAP;
+                        break;
+                    case 'number':
+                        parameter.value = `\${${value}}`;
+                        parameter.type = ParameterType.Number;
+                        break;
+                    default:
+                        parameter.type = ParameterType.TEXT;
+                        break;
+                }
+            }
             else { parameter.type = ParameterType.TEXT; }
 
             return this.createParameter(destination, parameter);
@@ -103,23 +104,26 @@ export class ActionToBPMNElement {
 
     createParameter = (destination: ParameterDestination, parameter: Parameter) => {
         // eslint-disable-next-line eqeqeq
-        if (parameter.type == null || parameter.type === ParameterType.TEXT)
-        { return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
-            name: parameter.name,
-            value: parameter.value,
-        }); }
-        if (parameter.type === ParameterType.Number)
-        { return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
-            name: parameter.name,
-            value: parameter.value,
-            type: ParameterType.Number,
-        }); }
-        if (parameter.type === ParameterType.Boolean)
-        { return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
-            name: parameter.name,
-            value: parameter.value,
-            type: ParameterType.Boolean,
-        }); }
+        if (parameter.type == null || parameter.type === ParameterType.TEXT) {
+            return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
+                name: parameter.name,
+                value: parameter.value,
+            });
+        }
+        if (parameter.type === ParameterType.Number) {
+            return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
+                name: parameter.name,
+                value: parameter.value,
+                type: ParameterType.Number,
+            });
+        }
+        if (parameter.type === ParameterType.Boolean) {
+            return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
+                name: parameter.name,
+                value: parameter.value,
+                type: ParameterType.Boolean,
+            });
+        }
         if (parameter.type === ParameterType.MAP) {
             const parameterMap = parameter as ParameterMap;
             return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
@@ -208,9 +212,8 @@ export class ActionToBPMNElement {
         shapeProperties?: Record<string, any>,
     ) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`, properties);
-        businessObject.label = action.translateKey ? '' : action.label;
+        businessObject.label = action.id && (action.id.slice(0, 8) !== 'external') ? '' : action.label;
         businessObject.implementation = action.runner;
-        businessObject.runbotics = action.translateKey ? action.translateKey : '';
         businessObject.actionId = action.id;
 
         const shape = this.elementFactory.createShape({
@@ -261,38 +264,40 @@ export class ActionToBPMNElement {
             objectsToRemove: [],
         });
 
-        if (action.form.formData.output)
-        { this.commandStack.execute('properties-panel.update-businessobject-list', {
-            element: shape,
-            currentObject: inputOutput,
-            propertyName: 'outputParameters',
-            referencePropertyName: null,
-            objectsToAdd: Object.entries(action.form.formData.output)
-                .filter(([key]) => !(action.output && action.output.outputMethods[key]))
-                .map(([key, value]) => {
-                    const parameter = {
-                        name: key,
-                        value,
-                        type: null,
-                    };
-                    if (action.form && action.form.schema) {
-                        const { schema } = action.form;
-                        const field = _.get(schema, `properties.output.properties.${key}`) as JSONSchema7;
-                        if (field && field.type)
-                        { switch (field.type) {
-                            case 'array':
-                                parameter.type = ParameterType.LIST;
-                                break;
-                            default:
-                                parameter.type = ParameterType.TEXT;
-                                break;
-                        } }
-                    }
+        if (action.form.formData.output) {
+            this.commandStack.execute('properties-panel.update-businessobject-list', {
+                element: shape,
+                currentObject: inputOutput,
+                propertyName: 'outputParameters',
+                referencePropertyName: null,
+                objectsToAdd: Object.entries(action.form.formData.output)
+                    .filter(([key]) => !(action.output && action.output.outputMethods[key]))
+                    .map(([key, value]) => {
+                        const parameter = {
+                            name: key,
+                            value,
+                            type: null,
+                        };
+                        if (action.form && action.form.schema) {
+                            const { schema } = action.form;
+                            const field = _.get(schema, `properties.output.properties.${key}`) as JSONSchema7;
+                            if (field && field.type) {
+                                switch (field.type) {
+                                    case 'array':
+                                        parameter.type = ParameterType.LIST;
+                                        break;
+                                    default:
+                                        parameter.type = ParameterType.TEXT;
+                                        break;
+                                }
+                            }
+                        }
 
-                    return this.createParameter(ParameterDestination.Output, parameter);
-                }),
-            objectsToRemove: [],
-        }); }
+                        return this.createParameter(ParameterDestination.Output, parameter);
+                    }),
+                objectsToRemove: [],
+            });
+        }
 
         return shape;
     };

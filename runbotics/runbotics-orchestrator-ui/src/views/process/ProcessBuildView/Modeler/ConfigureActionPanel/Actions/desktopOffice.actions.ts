@@ -6,8 +6,7 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'desktop.powerpoint.open': {
         id: 'desktop.powerpoint.open',
-        label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Label',
+        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Open.Label'),
         script: 'desktop.powerpoint.open',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -51,8 +50,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'desktop.powerpoint.insert': {
         id: 'desktop.powerpoint.insert',
-        label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Label',
+        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Insert.Label'),
         script: 'desktop.powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -98,8 +96,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'desktop.powerpoint.save': {
         id: 'desktop.powerpoint.save',
-        label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Label',
+        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Save.Label'),
         script: 'desktop.powerpoint.save',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -136,8 +133,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
     'desktop.powerpoint.close': {
         id: 'desktop.powerpoint.close',
-        label: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Label',
+        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Close.Label'),
         script: 'desktop.powerpoint.close',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,

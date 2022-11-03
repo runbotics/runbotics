@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { SvgIcon, Tooltip } from '@mui/material';
-
 import { unwrapResult } from '@reduxjs/toolkit';
+
 import { useSnackbar } from 'notistack';
-import { Play as PlayIcon } from 'react-feather';
+import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import { FeatureKey, IProcess, ProcessInstanceStatus } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -16,12 +16,14 @@ import { useDispatch, useSelector } from 'src/store';
 import { processActions, StartProcessResponse } from 'src/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
 
+import { schedulerActions, schedulerSelector } from 'src/store/slices/Scheduler';
+
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
-const StyledRunButton = styled(LoadingButton)(({ theme }) => `
+const StyledActionButton = styled(LoadingButton)(({ theme }) => `
     margin-top: ${theme.spacing(1)};
     & + & {
         margin-left: ${theme.spacing(1)};
@@ -36,7 +38,7 @@ interface BotProcessRunnerProps {
     variant?: 'text' | 'outlined' | 'contained';
 }
 
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-lines-per-function
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
     process,
@@ -52,12 +54,25 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const [modalOpen, setModalOpen] = useState(false);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
-
+    
     const processInstances = useSelector(processInstanceSelector);
+    const { activeJobs } = useSelector(schedulerSelector);
     const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
     const isRunButtonDisabled = started || isSubmitting || !process.system || !process.botCollection;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
-
+    const processName = process?.name;
+    const processId = process?.id;
+    
+    useEffect(() => {
+        dispatch(schedulerActions.getActiveJobs());
+    }, [dispatch, processId]);
+    
+    useEffect(() => {
+        if (processId === activeJobs[0]?.process.id) {
+            setStarted(true);
+        }
+    }, [activeJobs, processId]);
+    
     useEffect(() => {
         const isProcessInstanceFinished = processInstance?.status === ProcessInstanceStatus.COMPLETED
             || processInstance?.status === ProcessInstanceStatus.ERRORED
@@ -69,11 +84,29 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     }, [processInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
-
+    
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
+    
+    const handleTerminate = async () => {
+        await dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
+            .then(() => {
+                setStarted(false);
+                setLoading(false);
+                setSubmitting(false);
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                    variant: 'error',
+                });
+            });
+    };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
+        if (started) return;
         dispatch(processInstanceActions.resetActiveProcessInstaceAndEvents());
 
         enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
@@ -84,6 +117,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
+        
         dispatch(
             processActions.startProcess({
                 processId: process.id,
@@ -124,7 +158,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const runButton = (
         <Tooltip title={getTooltipTitle()} placement="top">
             <span>
-                <StyledRunButton
+                <StyledActionButton
                     className={className}
                     disabled={isRunButtonDisabled}
                     onClick={isProcessAttended ? openModal : handleRun}
@@ -139,13 +173,31 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                     variant={variant}
                 >
                     {translate('Component.BotProcessRunner.Run')}
-                </StyledRunButton>
+                </StyledActionButton>
             </span>
         </Tooltip>
     );
 
+    const terminateButton = (
+        <StyledActionButton
+            className={className}
+            onClick={handleTerminate}
+            color={color}
+            loading={loading}
+            loadingPosition="start"
+            startIcon={(
+                <SvgIcon fontSize="small">
+                    <XIcon />
+                </SvgIcon>
+            )}
+            variant={variant}
+        >
+            {translate('Component.BotProcessRunner.Terminate')}
+        </StyledActionButton>
+    );
+
     return (
-        <If condition={hasRunProcessAccess}>
+        <If condition={hasRunProcessAccess && !started} else={terminateButton}>
             {runButton}
             <AttendedProcessModal
                 open={modalOpen}

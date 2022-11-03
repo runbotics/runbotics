@@ -5,7 +5,7 @@ import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/ma
 import { FieldTemplateProps } from '@rjsf/core';
 
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 import WrapIfAdditional from './WrapIfAdditional';
 
@@ -30,26 +30,22 @@ const FieldTemplate = ({
     const [errors, setErrors] = useState(rawErrors);
 
     useEffect(() => {
-        if (typeof rawDescription !== 'undefined') 
-        { if (
-            checkIfKeyExists(
-                'Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawDescription)
-            )
-        ) {
-            { /*@ts-ignore*/ }
-            setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
-        } }
-        
+        if (typeof rawDescription !== 'undefined') {
+            const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: ' ', lowerCaseRest: true });
+            if (checkIfKeyExists(translateKey)) {
+                { /*@ts-ignore*/ }
+                setDescription(translate(translateKey));
+            }
+        };
 
         if (rawErrors.length > 0) {
             const localRawErrors = [];
-
+            
             rawErrors.forEach((rawError) => {
-                if (
-                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.' + convertToPascalCase(rawError))
-                ) {
+                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, delimiter: ' ', lowerCaseRest: true })}`;
+                if (checkIfKeyExists(translateKey)) {
                     { /*@ts-ignore*/ }
-                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
+                    localRawErrors.push(translate(translateKey));
                 } else {
                     localRawErrors.push(rawError);
                 }

@@ -6,7 +6,6 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
     'mail.send': {
         id: 'mail.send',
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),
-        translateKey: 'Process.Details.Modeler.Actions.Mail.Send.Label',
         script: 'mail.send',
         runner: Runner.DESKTOP_SCRIPT,
         form: {

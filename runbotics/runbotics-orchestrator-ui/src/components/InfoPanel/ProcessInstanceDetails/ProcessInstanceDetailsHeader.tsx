@@ -7,7 +7,7 @@ import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
 import Label from 'src/components/Label';
 import If from 'src/components/utils/If';
 import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 import { formatTimeDiff } from 'src/utils/utils';
 
 import { translate } from '../../../hooks/useTranslations';
@@ -23,7 +23,8 @@ const isProcessInstanceActive = (
     || status === ProcessInstanceStatus.IN_PROGRESS;
 
 const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
-    const formattedStatus = convertToPascalCase(processInstance.status);
+    
+    const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
 
     return (
         <Grid container spacing={2}>

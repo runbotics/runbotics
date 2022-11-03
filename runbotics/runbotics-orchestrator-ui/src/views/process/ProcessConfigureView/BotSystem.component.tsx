@@ -30,7 +30,7 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
     const getBotSystemOptions = () => Object.values(botSystems)
         .map((system) => (
             <MenuItem value={system.name} key={system.name}>
-                {capitalizeFirstLetter(system.name)}
+                {capitalizeFirstLetter({ text: system.name, lowerCaseRest: true })};
             </MenuItem>
         ));
 
