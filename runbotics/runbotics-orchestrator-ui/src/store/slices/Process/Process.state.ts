@@ -1,6 +1,7 @@
-import { Page } from 'src/utils/types/page';
-import LoadingType from 'src/types/loading';
 import { IProcess, IProcessInstance } from 'runbotics-common';
+
+import LoadingType from 'src/types/loading';
+import { Page } from 'src/utils/types/page';
 
 export interface CommandStackInfo {
     commandStackSize: number;

@@ -1,9 +1,10 @@
 import React from 'react';
+
+import Remove from '@mui/icons-material/Remove';
+import { Button, TextField, Grid } from '@mui/material';
 import { utils } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
-import Grid from '@mui/material/Grid';
-import { Button, TextField } from '@mui/material';
-import Remove from '@mui/icons-material/Remove';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
@@ -36,9 +37,9 @@ const WrapIfAdditional = ({
     const additional = schema.hasOwnProperty(ADDITIONAL_PROPERTY_FLAG);
     const { translate } = useTranslations();
 
-    if (!additional) {
-        return <>{children}</>;
-    }
+    if (!additional) 
+    { return <>{children}</>; }
+    
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
@@ -65,8 +66,8 @@ const WrapIfAdditional = ({
             <Grid item>
                 <Button color="secondary" disabled={disabled || readonly} onClick={onDropPropertyClick(label)}>
                     <Remove />
-                        {' '}
-                        {translate('Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem')}
+                    {' '}
+                    {translate('Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem')}
                 </Button>
             </Grid>
         </Grid>

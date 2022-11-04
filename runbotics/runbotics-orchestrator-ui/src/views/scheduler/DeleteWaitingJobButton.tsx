@@ -1,8 +1,11 @@
 import React, { VFC } from 'react';
-import { useSnackbar } from 'notistack';
+
 import { IconButton, SvgIcon } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { Trash as TrashIcon } from 'react-feather';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import { useDispatch } from '../../store';
 import { schedulerActions } from '../../store/slices/Scheduler';
 

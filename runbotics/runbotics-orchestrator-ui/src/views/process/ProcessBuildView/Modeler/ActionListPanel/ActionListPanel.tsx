@@ -1,29 +1,34 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable consistent-return */
 import React, { FC, memo, useMemo, useState } from 'react';
-import clsx from 'clsx';
-import _ from 'lodash';
-import { Badge, ListItem, ListItemText, Typography, Tab, Tabs, IconButton, Box, Drawer, List } from '@mui/material';
+
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { useSelector } from 'src/store';
-import useTranslations from 'src/hooks/useTranslations';
-import i18n from 'src/translations/i18n';
-import If from 'src/components/utils/If';
+import { Badge, ListItem, ListItemText, Typography, Tab, Tabs, IconButton, Box, Drawer, List } from '@mui/material';
+import clsx from 'clsx';
+import _ from 'lodash';
+
 import HighlightText from 'src/components/HighlightText';
-import ListGroup, { Item } from '../ListGroup';
+import If from 'src/components/utils/If';
+import useTranslations from 'src/hooks/useTranslations';
+import { useSelector } from 'src/store';
+import i18n from 'src/translations/i18n';
+
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
-import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
-import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
-import { internalTemplates } from '../ConfigureActionPanel/Templates';
-import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
+import { ActionToBPMNElement, TaskType } from '../ConfigureActionPanel/ActionToBPMNElement';
 import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
+import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
+import { internalTemplates } from '../ConfigureActionPanel/Templates';
+import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
+import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
+import ListGroup, { Item } from '../ListGroup';
 import { classes, Root, drawerWidth, ActionPanelToggler } from './ActionListPanel.styles';
 import { ActionListPanelProps, Filters as GroupFilters, GroupProperties, ListPanelTab } from './ActionListPanel.types';
 import ActionSearch from './ActionSearch';
-import useGroupReducer, { groupActions } from './useGroupsReducer';
 import FilterModal from './FilterModal';
+import useGroupReducer, { groupActions } from './useGroupsReducer';
 
 const filterModalInitialState: GroupFilters = {
     groupNames: [],
@@ -31,6 +36,7 @@ const filterModalInitialState: GroupFilters = {
     currentTab: ListPanelTab.ACTIONS,
 };
 
+// eslint-disable-next-line max-lines-per-function
 const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     const [filters, setFilters] = useState<GroupFilters>(filterModalInitialState);
     const [openDrawer, setOpenDrawer] = useState(true);
@@ -64,6 +70,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
             ...getGroupList(completeActionsGroups, false), 
             ...getGroupList(templatesGroups, true)
         ];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [external, i18n.language, templatesGroups]);
 
     const [groupsOpenState, dispatchGroups] = useGroupReducer(
@@ -90,21 +97,18 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
         props.modeler.get('create').start(event, shape);
     };
 
+    // eslint-disable-next-line complexity
     const handleItemClick = (event, item: Item) => {
         if (!item) return;
-        if (customLoopHandler[item.id]) {
-            // Handler for loops - temporary solution, should be refactored/moved to templateHandler
-            customLoopHandler[item.id](event, props);
-        } else if (internalTemplates[item.id]) {
-            CustomTemplateHandler(event, props, internalTemplates[item.id]);
-        } else if (byId[item.id]) {
-            // Handler for external actions
-            handleAction(event, byId[item.id]);
-        } else if (internalBpmnActions[item.id]) {
-            handleAction(event, internalBpmnActions[item.id]);
-        } else {
-            throw new Error(translate('Process.Details.Modeler.ActionListPanel.Error'));
-        }
+        if (customLoopHandler[item.id])
+        // Handler for loops - temporary solution, should be refactored/moved to templateHandler
+        { customLoopHandler[item.id](event, props); }
+        else if (internalTemplates[item.id]) { CustomTemplateHandler(event, props, internalTemplates[item.id]); }
+        else if (byId[item.id])
+        // Handler for external actions
+        { handleAction(event, byId[item.id]); }
+        else if (internalBpmnActions[item.id]) { handleAction(event, internalBpmnActions[item.id]); }
+        else { throw new Error(translate('Process.Details.Modeler.ActionListPanel.Error')); }
     };
 
     const handleSearchPhrasechange = (value: string) => {
@@ -141,22 +145,25 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                     const { groupNames, actionName } = filters;
 
                     // filter group by name
+                    // eslint-disable-next-line array-callback-return
                     if (groupNames.length && !groupNames.includes(label)) return;
 
                     // filter group's items
                     const filteredItems = actionName
                         ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                          (items as (IBpmnAction & TemplatesSchema)[]).filter(({ label, name }) =>
-                              (isTemplate ? name : label).toLowerCase().includes(actionName.toLowerCase()),
-                          )
+                        (items as (IBpmnAction & TemplatesSchema)[]).filter(({ label, name }) =>
+                            (isTemplate ? name : label).toLowerCase().includes(actionName.toLowerCase()),
+                        )
                         : (items as TemplatesSchema[]);
 
                     // remove group if empty
+                    // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;
 
                     return { ...group, items: filteredItems };
                 })
                 .filter((el) => el),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [actionGroups, filters],
     );
 
@@ -285,4 +292,5 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     );
 });
 
+ActionListPanel.displayName = 'ActionListPanel';
 export default ActionListPanel;

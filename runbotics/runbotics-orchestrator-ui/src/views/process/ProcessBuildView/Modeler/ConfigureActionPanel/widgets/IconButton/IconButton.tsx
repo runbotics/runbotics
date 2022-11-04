@@ -1,11 +1,10 @@
 import React from 'react';
 
-import Button from '@mui/material/Button';
 import Add from '@mui/icons-material/Add';
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Remove from '@mui/icons-material/Remove';
-import { ButtonProps } from '@mui/material';
+import { ButtonProps, Button } from '@mui/material';
 
 const mappings = {
     remove: Remove,
@@ -20,9 +19,7 @@ type IconButtonProps = ButtonProps & {
 };
 
 const IconButton = (props: IconButtonProps) => {
-    const {
-        icon, className, iconProps, ...otherProps
-    } = props;
+    const { icon, iconProps, ...otherProps } = props;
     const IconComp = mappings[icon];
     return (
         <Button {...otherProps} size="small">

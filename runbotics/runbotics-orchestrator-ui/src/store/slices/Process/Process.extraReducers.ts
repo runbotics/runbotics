@@ -1,6 +1,8 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import LoadingType from 'src/types/loading';
 import objFromArray from 'src/utils/objFromArray';
+
 import { ProcessState } from './Process.state';
 import {
     fetchProcessById,
@@ -50,11 +52,11 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(saveProcess.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
-            if (action.payload) {
-                state.draft.error = action.payload;
-            } else {
-                state.draft.error = action.error.message;
-            }
+            if (action.payload) 
+            { state.draft.error = action.payload; }
+            else 
+            { state.draft.error = action.error.message; }
+            
         })
 
         .addCase(setDraft.fulfilled, (state, { payload }) => {
@@ -73,11 +75,11 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(fetchProcessById.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
-            if (action.payload) {
-                state.draft.error = action.payload;
-            } else {
-                state.draft.error = action.error.message;
-            }
+            if (action.payload) 
+            { state.draft.error = action.payload; }
+            else 
+            { state.draft.error = action.error.message; }
+            
         })
 
         // DELETE

@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
@@ -145,6 +146,6 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getGeneralActions;

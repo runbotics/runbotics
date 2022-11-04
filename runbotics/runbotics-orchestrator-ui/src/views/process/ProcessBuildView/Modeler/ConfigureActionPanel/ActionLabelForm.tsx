@@ -1,16 +1,16 @@
 import React, { useEffect, useState, VFC } from 'react';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import DoneIcon from '@mui/icons-material/Done';
+
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
-import If from 'src/components/utils/If';
-import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
-import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
+
+import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
+
 import i18n from 'i18next';
+
+import If from 'src/components/utils/If';
+import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
+import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
 type Props = {
@@ -29,7 +29,8 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         if (checkIfKeyExists(translateKey)) {
             setTranslatedLabel(translate(translateKey));
         }
-    }, [i18n.language])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language]);
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });

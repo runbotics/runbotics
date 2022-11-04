@@ -25,7 +25,7 @@ export const LoginTemplate: TemplatesSchema = {
             bpmnAction: 'browser.selenium.type',
             label: 'typeEmail',
             input: {
-                target: "css=input[name='email'][type='email']",
+                target: 'css=input[name=\'email\'][type=\'email\']',
                 value: 'user@localhost',
             },
             right: {
@@ -33,7 +33,7 @@ export const LoginTemplate: TemplatesSchema = {
                 bpmnAction: 'browser.selenium.type',
                 label: 'typePassword',
                 input: {
-                    target: "css=input[name='password'][type='password']",
+                    target: 'css=input[name=\'password\'][type=\'password\']',
                     value: 'user',
                 },
                 right: {
@@ -41,7 +41,7 @@ export const LoginTemplate: TemplatesSchema = {
                     bpmnAction: 'browser.selenium.click',
                     label: 'submit',
                     input: {
-                        target: "css=button[type='submit']",
+                        target: 'css=button[type=\'submit\']',
                     },
                 },
             },

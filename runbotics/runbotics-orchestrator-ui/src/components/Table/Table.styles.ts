@@ -1,5 +1,6 @@
-import styled, { css } from 'styled-components';
 import { TableRow } from '@mui/material';
+import styled, { css } from 'styled-components';
+
 import { TABLE_ROW_HEIGHT } from './Table.utils';
 
 export const RowsSelectWrapper = styled.div`

@@ -1,12 +1,16 @@
 import React, {
-    VFC, ChangeEvent, useState, useEffect,
+    VFC, ChangeEvent,
 } from 'react';
+
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { FormControlLabel, Switch } from '@mui/material';
-import useTranslations from 'src/hooks/useTranslations';
-import If from 'src/components/utils/If';
+
 import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+
 import { Wrapper } from './BotComponent.styles';
 
 interface ProcessTriggerableProps {

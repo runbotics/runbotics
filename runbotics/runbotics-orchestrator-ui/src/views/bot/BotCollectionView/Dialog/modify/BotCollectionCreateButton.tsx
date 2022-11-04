@@ -1,10 +1,13 @@
 import React, { FC, useState } from 'react';
+
 import { Button, SvgIcon } from '@mui/material';
 import { PlusCircle as PlusIcon } from 'react-feather';
+
 import useTranslations from 'src/hooks/useTranslations';
-import BotCollectionModifyDialog from './BotCollectionModifyDialog';
-import { BotCollectionModifyProps } from './BotCollectionModify.types';
+
 import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
+import { BotCollectionModifyProps } from './BotCollectionModify.types';
+import BotCollectionModifyDialog from './BotCollectionModifyDialog';
 
 const BotCollectionCreateButton: FC<BotCollectionModifyProps> = ({ botCollection, displayMode }) => {
     const [show, setShow] = useState(false);
@@ -26,10 +29,10 @@ const BotCollectionCreateButton: FC<BotCollectionModifyProps> = ({ botCollection
                 {translate('Bot.Collection.Dialog.Modify.CreateButton')}
             </Button>
             <BotCollectionModifyDialog
-                        open={show}
-                        onClose={() => setShow(false)}
-                        pageParams={params}
-                        collection={botCollection}
+                open={show}
+                onClose={() => setShow(false)}
+                pageParams={params}
+                collection={botCollection}
             />
         </>
     );

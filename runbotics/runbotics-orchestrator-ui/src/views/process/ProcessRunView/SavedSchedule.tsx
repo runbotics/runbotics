@@ -1,18 +1,25 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
+
 import {
     Avatar, Card, CardContent, Container, IconButton, SvgIcon, Typography, Box,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'src/store';
-import { Trash as TrashIcon, Calendar as CalendarIcon } from 'react-feather';
-import cronstrue from 'cronstrue/i18n';
 import clsx from 'clsx';
-import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
-import If from 'src/components/utils/If';
+import cronstrue from 'cronstrue/i18n';
 import i18n from 'i18next';
+import { Trash as TrashIcon, Calendar as CalendarIcon } from 'react-feather';
+import { FeatureKey } from 'runbotics-common';
+import styled from 'styled-components';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+
+
+import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
+
+
+
 
 const PREFIX = 'SavedSchedule';
 
@@ -87,30 +94,30 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
             </Typography>
             <Box display="flex" flexDirection="column" gap="0.5rem">
                 {schedules.map((schedule) => (
-                        <Card key={schedule.id} className={classes.card}>
-                            <CardContent className={classes.cardContent}>
-                                <Box display="flex" alignItems="center">
-                                    <Avatar classes={{ root: clsx(classes.avatar) }}>
-                                        <SvgIcon fontSize="small">
-                                            <CalendarIcon />
-                                        </SvgIcon>
-                                    </Avatar>
-                                    <Typography
-                                        variant="body1"
-                                        className={classes.typography}
-                                    >
-                                        {humanReadableCron(schedule.cron)}
-                                    </Typography>
-                                </Box>
-                                <If condition={hasDeleteScheduleAccess}>
-                                    <IconButton className={classes.deleteButton} onClick={() => handleDelete(schedule.id)}>
-                                        <SvgIcon fontSize="small" color="secondary">
-                                            <TrashIcon />
-                                        </SvgIcon>
-                                    </IconButton>
-                                </If>
-                            </CardContent>
-                        </Card>
+                    <Card key={schedule.id} className={classes.card}>
+                        <CardContent className={classes.cardContent}>
+                            <Box display="flex" alignItems="center">
+                                <Avatar classes={{ root: clsx(classes.avatar) }}>
+                                    <SvgIcon fontSize="small">
+                                        <CalendarIcon />
+                                    </SvgIcon>
+                                </Avatar>
+                                <Typography
+                                    variant="body1"
+                                    className={classes.typography}
+                                >
+                                    {humanReadableCron(schedule.cron)}
+                                </Typography>
+                            </Box>
+                            <If condition={hasDeleteScheduleAccess}>
+                                <IconButton className={classes.deleteButton} onClick={() => handleDelete(schedule.id)}>
+                                    <SvgIcon fontSize="small" color="secondary">
+                                        <TrashIcon />
+                                    </SvgIcon>
+                                </IconButton>
+                            </If>
+                        </CardContent>
+                    </Card>
                 ))}
             </Box>
         </StyledContainer>

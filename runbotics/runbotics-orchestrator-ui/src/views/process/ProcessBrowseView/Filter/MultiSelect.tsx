@@ -1,11 +1,8 @@
-import React, { useState, useRef } from 'react';
-import styled from 'styled-components';
-import type { FC, ChangeEvent } from 'react';
-import PropTypes from 'prop-types';
-import {
-    Button, Checkbox, FormControlLabel, Menu, MenuItem,
-} from '@mui/material';
+import React, { useState, useRef, FC, ChangeEvent } from 'react';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Button, Checkbox, FormControlLabel, Menu, MenuItem } from '@mui/material';
+import styled from 'styled-components';
 
 const PREFIX = 'MultiSelect';
 
@@ -37,9 +34,7 @@ interface MultiSelectProps {
     value: string[];
 }
 
-const MultiSelect: FC<MultiSelectProps> = ({
-    label, options, value, onChange,
-}) => {
+const MultiSelect: FC<MultiSelectProps> = ({ label, options, value, onChange }) => {
     const anchorRef = useRef<any>(null);
     const [openMenu, setOpenMenu] = useState<boolean>(false);
 
@@ -54,20 +49,14 @@ const MultiSelect: FC<MultiSelectProps> = ({
     const handleOptionToggle = (event: ChangeEvent<HTMLInputElement>): void => {
         let newValue = [...value];
 
-        if (event.target.checked) {
-            newValue.push(event.target.value);
-        } else {
-            newValue = newValue.filter((item) => item !== event.target.value);
-        }
+        if (event.target.checked) newValue.push(event.target.value);
+        else newValue = newValue.filter((item) => item !== event.target.value);
 
-        if (onChange) {
-            onChange(newValue);
-        }
+        if (onChange) onChange(newValue);
     };
 
     return (
-        (
-<Root>
+        <Root>
             <Button onClick={handleMenuOpen} ref={anchorRef}>
                 {label}
                 <ArrowDropDownIcon />
@@ -83,28 +72,20 @@ const MultiSelect: FC<MultiSelectProps> = ({
                     <MenuItem className={classes.menuItem} key={option}>
                         <FormControlLabel
                             className={classes.formControlLabel}
-                            control={(
+                            control={
                                 <Checkbox
                                     checked={value.indexOf(option) > -1}
                                     onChange={handleOptionToggle}
                                     value={option}
                                 />
-                              )}
+                            }
                             label={option}
                         />
                     </MenuItem>
                 ))}
             </Menu>
-</Root>
-        )
+        </Root>
     );
-};
-
-MultiSelect.propTypes = {
-    label: PropTypes.string.isRequired,
-    onChange: PropTypes.func,
-    options: PropTypes.array.isRequired,
-    value: PropTypes.array.isRequired,
 };
 
 export default MultiSelect;

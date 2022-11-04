@@ -1,7 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { FC } from 'react';
+
 import {
     Box,
     Card,
@@ -14,14 +12,21 @@ import {
     FormHelperText,
     Button,
 } from '@mui/material';
+import { Formik } from 'formik';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import styled from 'styled-components';
+
+import * as Yup from 'yup';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo/Logo';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { useSnackbar } from 'notistack';
+
+
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch } from 'src/store';
 import { register } from 'src/store/slices/Auth/Auth.thunks';
-import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'RegisterView';
 
@@ -55,10 +60,11 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
+// eslint-disable-next-line max-lines-per-function
 const RegisterView: FC = () => {
-    const history = useHistory();
     const { translate } = useTranslations();
     const registrationText = translate('Register.AccountCreated.ActivationNeededMessage');
+    const router = useRouter();
     const dispatch = useDispatch();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -67,7 +73,7 @@ const RegisterView: FC = () => {
         <StyledPage className={classes.root} title={translate('Register.Meta.Title')}>
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink to="/">
+                    <RouterLink href="/" legacyBehavior>
                         <Logo className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -98,24 +104,23 @@ const RegisterView: FC = () => {
                                         .min(7)
                                         .max(255)
                                         .required(translate('Register.Form.Validation.Password.Required')),
-                                    passwordConfirmation: Yup.string().oneOf(
-                                        [Yup.ref('password'), null],
-                                        translate('Register.Form.Validation.Password.Match'),
-                                    ).required(translate('Register.Form.Validation.PasswordConfirmation.Required')),
+                                    passwordConfirmation: Yup.string()
+                                        .oneOf(
+                                            [Yup.ref('password'), null],
+                                            translate('Register.Form.Validation.Password.Match'),
+                                        )
+                                        .required(translate('Register.Form.Validation.PasswordConfirmation.Required')),
                                 })}
                                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                                     try {
                                         await dispatch(register(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
-                                        history.push('/login');
-                                        enqueueSnackbar(
-                                            registrationText,
-                                            {
-                                                variant: 'success',
-                                                autoHideDuration: 5000,
-                                            },
-                                        );
+                                        router.push('/app/processes');
+                                        enqueueSnackbar(registrationText, {
+                                            variant: 'success',
+                                            autoHideDuration: 5000,
+                                        });
                                     } catch (err) {
                                         setStatus({ success: false });
                                         setErrors({ submit: err.message });
@@ -126,82 +131,86 @@ const RegisterView: FC = () => {
                                     }
                                 }}
                             >
-                                {({
-                                    errors,
-                                    handleBlur,
-                                    handleChange,
-                                    handleSubmit,
-                                    isSubmitting,
-                                    touched,
-                                    values,
-                                }) => (
-                                    <form noValidate onSubmit={handleSubmit}>
-                                        <TextField
-                                            error={Boolean(touched.email && errors.email)}
-                                            fullWidth
-                                            helperText={touched.email && errors.email}
-                                            label={translate('Register.Form.Fields.Email.Label')}
-                                            margin="normal"
-                                            name="email"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="email"
-                                            value={values.email}
-                                            variant="outlined"
-                                        />
-                                        <TextField
-                                            error={Boolean(touched.password && errors.password)}
-                                            fullWidth
-                                            helperText={touched.password && errors.password}
-                                            label={translate('Register.Form.Fields.Password.Label')}
-                                            margin="normal"
-                                            name="password"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="password"
-                                            value={values.password}
-                                            variant="outlined"
-                                        />
-                                        <TextField
-                                            error={Boolean(touched.passwordConfirmation && errors.passwordConfirmation)}
-                                            fullWidth
-                                            helperText={touched.passwordConfirmation && errors.passwordConfirmation}
-                                            label={translate('Register.Form.Fields.PasswordConfirmation.Label')}
-                                            margin="normal"
-                                            name="passwordConfirmation"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            type="password"
-                                            value={values.passwordConfirmation}
-                                            variant="outlined"
-                                        />
-                                        {errors.submit && (
-                                            <Box mt={3}>
-                                                <FormHelperText error>{errors.submit}</FormHelperText>
-                                            </Box>
-                                        )}
-                                        <Box mt={2}>
-                                            <Button
-                                                color="secondary"
-                                                disabled={isSubmitting}
+                                {
+                                // eslint-disable-next-line complexity
+                                    ({
+                                        errors,
+                                        handleBlur,
+                                        handleChange,
+                                        handleSubmit,
+                                        isSubmitting,
+                                        touched,
+                                        values,
+                                    }) => (
+                                        <form noValidate onSubmit={handleSubmit}>
+                                            <TextField
+                                                error={Boolean(touched.email && errors.email)}
                                                 fullWidth
-                                                size="large"
-                                                type="submit"
-                                                variant="contained"
-                                            >
-                                                {translate('Register.Form.Actions.Register')}
-                                            </Button>
-                                        </Box>
-                                    </form>
-                                )}
+                                                helperText={touched.email && errors.email}
+                                                label={translate('Register.Form.Fields.Email.Label')}
+                                                margin="normal"
+                                                name="email"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="email"
+                                                value={values.email}
+                                                variant="outlined"
+                                            />
+                                            <TextField
+                                                error={Boolean(touched.password && errors.password)}
+                                                fullWidth
+                                                helperText={touched.password && errors.password}
+                                                label={translate('Register.Form.Fields.Password.Label')}
+                                                margin="normal"
+                                                name="password"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="password"
+                                                value={values.password}
+                                                variant="outlined"
+                                            />
+                                            <TextField
+                                                error={Boolean(touched.passwordConfirmation && errors.passwordConfirmation)}
+                                                fullWidth
+                                                helperText={touched.passwordConfirmation && errors.passwordConfirmation}
+                                                label={translate('Register.Form.Fields.PasswordConfirmation.Label')}
+                                                margin="normal"
+                                                name="passwordConfirmation"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                type="password"
+                                                value={values.passwordConfirmation}
+                                                variant="outlined"
+                                            />
+                                            {errors.submit && (
+                                                <Box mt={3}>
+                                                    <FormHelperText error>{errors.submit}</FormHelperText>
+                                                </Box>
+                                            )}
+                                            <Box mt={2}>
+                                                <Button
+                                                    color="secondary"
+                                                    disabled={isSubmitting}
+                                                    fullWidth
+                                                    size="large"
+                                                    type="submit"
+                                                    variant="contained"
+                                                >
+                                                    {translate('Register.Form.Actions.Register')}
+                                                </Button>
+                                            </Box>
+                                        </form>
+                                    )}
                             </Formik>
                         </Box>
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/login" variant="body2" color="textSecondary">
-                            {translate('Register.SwitchToLoginMessage')}
-                        </Link>
+                        <RouterLink href="/login" passHref legacyBehavior>
+                            <Link variant="body2" color="textSecondary">
+                                {translate('Register.SwitchToLoginMessage')}
+                            </Link>
+                        </RouterLink>
                     </CardContent>
                 </Card>
             </Container>

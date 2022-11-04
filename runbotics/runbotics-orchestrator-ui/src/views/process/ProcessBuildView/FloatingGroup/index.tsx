@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import { StyledFloatingGroup } from './FloatingGroup.styled';
 
 export interface FloatingGroupProps {

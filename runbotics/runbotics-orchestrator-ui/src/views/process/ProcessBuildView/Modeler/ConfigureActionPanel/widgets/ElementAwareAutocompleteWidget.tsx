@@ -1,14 +1,18 @@
 import React, { FC } from 'react';
-import { WidgetProps } from '@rjsf/core';
+
 import { getVariablesForScope } from '@bpmn-io/extract-process-variables';
+import { WidgetProps } from '@rjsf/core';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
+
 import useTranslations, { translate as t } from 'src/hooks/useTranslations';
-import BPMNHelperFunctions from '../BPMNHelperFunctions';
-import AutocompleteWidget from './AutocompleteWidget';
-import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
+
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { useSelector } from 'src/store';
 import { currentProcessSelector } from 'src/store/slices/Process';
+
+import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
+import BPMNHelperFunctions from '../BPMNHelperFunctions';
+import AutocompleteWidget from './AutocompleteWidget';
 
 const services = [
     'environment.services.idt',
@@ -78,10 +82,10 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
     const attendedProcessVariables =
         isAttended && executionInfo
             ? context?.passedInVariables.map((variable) => ({
-                  label: variable,
-                  value: variable,
-                  group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'),
-              }))
+                label: variable,
+                value: variable,
+                group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'),
+            }))
             : [];
 
     const options: Record<string, { label: string; value: any; group: any }> = React.useMemo(() => {
@@ -181,6 +185,7 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
             newPrev[currentValue.value] = currentValue;
             return newPrev;
         }, {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [context?.element]);
 
     const optionValues = React.useMemo(

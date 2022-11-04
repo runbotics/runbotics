@@ -64,6 +64,7 @@ services:
     image: runbotics/runbotics-desktop:latest
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:3000
+      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=admin
       - RUNBOTICS_PASSWORD=admin

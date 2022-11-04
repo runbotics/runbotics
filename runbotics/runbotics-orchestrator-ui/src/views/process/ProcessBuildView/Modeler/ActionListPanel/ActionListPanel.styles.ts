@@ -158,6 +158,7 @@ export const Root = styled.div(({ theme }) => ({
 
 export const ActionPanelToggler = styled('div')<{ drawerWidth: number, open: boolean }>(({
     theme,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     drawerWidth,
     open,
 }) => `

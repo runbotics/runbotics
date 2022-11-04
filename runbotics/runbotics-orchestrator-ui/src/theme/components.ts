@@ -1,4 +1,4 @@
-import { Components } from '@mui/material/styles/components';
+import { Components } from '@mui/material';
 
 export const components: Components = {
     MuiTextField: {

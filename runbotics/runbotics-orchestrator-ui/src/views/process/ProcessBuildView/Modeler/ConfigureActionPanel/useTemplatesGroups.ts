@@ -1,4 +1,5 @@
 import useTranslate from 'src/hooks/useTranslations';
+
 import { internalTemplates } from './Templates';
 
 export const useTemplatesGroups = () => {
@@ -13,5 +14,5 @@ export const useTemplatesGroups = () => {
             label: translate('Process.Details.Modeler.ActionPanel.TemplatesGroup.API'),
             items: [internalTemplates['api.test']],
         },
-    })
-}
+    });
+};

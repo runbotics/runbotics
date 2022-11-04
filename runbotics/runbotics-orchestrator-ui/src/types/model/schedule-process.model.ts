@@ -1,4 +1,5 @@
 import { IProcess } from 'runbotics-common';
+
 import { IUser } from './user.model';
 
 export interface IScheduleProcess {

@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '../../index';
 import buildProcessInstanceExtraReducers from './ProcessInstance.extraReducers';
+import * as reducers from './ProcessInstance.reducers';
 import { ProcessInstanceState } from './ProcessInstance.state';
 import * as processInstanceThunks from './ProcessInstance.thunks';
-import * as reducers from './ProcessInstance.reducers';
 
 export const initialState: ProcessInstanceState = {
     active: {

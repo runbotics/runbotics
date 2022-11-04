@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+
 import { SnackbarProvider as NotistackSnackbarProvider } from 'notistack';
 
 const SnackbarProvider: FC = ({ children }) => (

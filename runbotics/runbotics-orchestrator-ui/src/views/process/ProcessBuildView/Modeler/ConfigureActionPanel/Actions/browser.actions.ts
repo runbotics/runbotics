@@ -1,11 +1,12 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const exampleJsonConfiguration = {
     actionParams: {
         rows: {
             isArray: true,
-            xpath: "//table[../span[@aria-label='Report table']]//tr[position()>1]",
+            xpath: '//table[../span[@aria-label=\'Report table\']]//tr[position()>1]',
             actionParams: {
                 TaskGroup: {
                     xpath: '(./td)[1]',
@@ -17,6 +18,7 @@ const exampleJsonConfiguration = {
         },
     },
 };
+// eslint-disable-next-line max-lines-per-function
 const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.selenium.open': {
         id: 'browser.selenium.open',

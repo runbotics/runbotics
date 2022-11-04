@@ -1,7 +1,9 @@
-import { Divider, MenuItem, TextField } from '@mui/material';
 import React, {
     ChangeEvent, Dispatch, FunctionComponent, SetStateAction,
 } from 'react';
+
+import { Divider, MenuItem, TextField } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 import { VariableDetailState, VariableType } from '../Variable.types';
@@ -57,9 +59,9 @@ const VariableDetailsForm: FunctionComponent<VariableDetailsFormProps> = ({
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
         setVariable((prevState) => ({ ...prevState, name }));
-        if (name.trim() !== '') {
-            setValidation((prevState) => ({ ...prevState, name: false }));
-        }
+        if (name.trim() !== '') 
+        { setValidation((prevState) => ({ ...prevState, name: false })); }
+        
     };
 
     const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +71,9 @@ const VariableDetailsForm: FunctionComponent<VariableDetailsFormProps> = ({
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setVariable((prevState) => ({ ...prevState, type: VariableType.STRING, value }));
-        if (value.trim() !== '') {
-            setValidation((prevState) => ({ ...prevState, value: false }));
-        }
+        if (value.trim() !== '') 
+        { setValidation((prevState) => ({ ...prevState, value: false })); }
+        
     };
 
     const renderValueComponent = () => {

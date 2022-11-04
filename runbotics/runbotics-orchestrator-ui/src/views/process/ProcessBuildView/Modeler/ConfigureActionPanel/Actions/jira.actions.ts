@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getJiraActions: () => Record<string, IBpmnAction> = () => ({
@@ -65,6 +66,6 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getJiraActions;

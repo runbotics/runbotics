@@ -1,5 +1,5 @@
-import { colors } from '@mui/material';
-import { ThemeOptions } from '@mui/material/styles';
+import { colors, ThemeOptions } from '@mui/material';
+
 import { softShadows } from './shadows';
 
 export const lightTheme: ThemeOptions = {

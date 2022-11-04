@@ -1,4 +1,5 @@
 import React, { useState, VFC } from 'react';
+
 import {
     Button,
     Dialog,
@@ -9,11 +10,13 @@ import {
     SvgIcon,
     Typography,
 } from '@mui/material';
-import { Trash as TrashIcon } from 'react-feather';
 import { useSnackbar } from 'notistack';
+import { Trash as TrashIcon } from 'react-feather';
+
 import useTranslations from 'src/hooks/useTranslations';
-import { scheduleProcessActions } from '../../store/slices/ScheduleProcess';
+
 import { useDispatch } from '../../store';
+import { scheduleProcessActions } from '../../store/slices/ScheduleProcess';
 
 interface DeleteScheduleButtonProps {
     id: number;

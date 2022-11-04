@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
@@ -48,6 +49,6 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getAsanaActions;
