@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
-import Axios from 'axios';
+
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
-import { useDispatch } from 'src/store';
-import { IAction } from 'src/types/model/action.model';
-import { getActions } from 'src/store/slices/Action/Action.thunks';
+import Axios from 'axios';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch } from 'src/store';
+import { getActions } from 'src/store/slices/Action/Action.thunks';
+import { IAction } from 'src/types/model/action.model';
 
 type DeleteActionDialogProps = {
     open?: boolean;

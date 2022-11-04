@@ -1,29 +1,20 @@
-import React from 'react';
-import type { FC, ReactNode } from 'react';
-import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import type { FC } from 'react';
+
+import { useRouter } from 'next/router';
+
 import useAuth from 'src/hooks/useAuth';
 
-interface GuestGuardProps {
-    children?: ReactNode;
-}
+import LoadingScreen from '../utils/LoadingScreen';
 
-const GuestGuard: FC<GuestGuardProps> = ({ children }) => {
-    const { isAuthenticated } = useAuth();
+// eslint-disable-next-line react/display-name, complexity
+export const withGuestGuard = (Component: FC) => (props: any) => {
+    const { isAuthenticated, isInitialised } = useAuth();
+    const router = useRouter();
+    const isBrowser = typeof window !== 'undefined';
 
-    if (isAuthenticated) {
-        const lastPage = localStorage.getItem('last_page');
-        if (lastPage) {
-            return <Redirect to={lastPage} />;
-        }
-        return <Redirect to="/app/account" />;
-    }
+    if (isBrowser && isInitialised && isAuthenticated) router.replace('/app');
 
-    return <>{children}</>;
+    if (isBrowser && isInitialised && !isAuthenticated) return <Component {...props} />;
+
+    return <LoadingScreen />;
 };
-
-GuestGuard.propTypes = {
-    children: PropTypes.node,
-};
-
-export default GuestGuard;

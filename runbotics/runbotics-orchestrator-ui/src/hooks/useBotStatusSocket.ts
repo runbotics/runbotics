@@ -1,8 +1,11 @@
 import { useContext, useEffect } from 'react';
+
 import { IBot, WsMessage } from 'runbotics-common';
+
 import { SocketContext } from 'src/providers/Socket.provider';
-import { botActions } from '../store/slices/Bot';
+
 import { useDispatch } from '../store';
+import { botActions } from '../store/slices/Bot';
 
 export const useBotStatusSocket = () => {
     const socket = useContext(SocketContext);
@@ -21,7 +24,7 @@ export const useBotStatusSocket = () => {
             socket.off(WsMessage.BOT_STATUS);
             socket.off(WsMessage.BOT_DELETE);
         };
-    }, [socket]);
+    }, [dispatch, socket]);
 };
 
 export default useBotStatusSocket;

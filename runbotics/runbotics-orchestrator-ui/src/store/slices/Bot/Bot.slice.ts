@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from 'src/store';
+
 import buildBotExtraReducers from './Bot.extraReducers';
+import * as reducers from './Bot.reducers';
 import { BotState } from './Bot.state';
 import * as botThunks from './Bot.thunks';
-import * as reducers from './Bot.reducers';
 
 const initialState: BotState = {
     bots: {

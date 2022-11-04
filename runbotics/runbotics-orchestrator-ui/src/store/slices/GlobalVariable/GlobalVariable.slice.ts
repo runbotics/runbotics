@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from 'src/store';
 
+import buildGlobalVariablesExtraReducers from './GlobalVariable.extraReducers';
 import { GlobalVariableState } from './GlobalVariable.state';
 import * as globalVariableThunks from './GlobalVariable.thunks';
 
-import buildGlobalVariablesExtraReducers from './GlobalVariable.extraReducers';
 
 const initialState: GlobalVariableState = {
     globalVariables: [],

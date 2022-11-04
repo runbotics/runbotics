@@ -1,11 +1,15 @@
 import React, { VFC, useState } from 'react';
-import useTranslations from 'src/hooks/useTranslations';
+
+import { Button } from '@mui/material';
+import { useSnackbar } from 'notistack';
+
 import { ManageAttendedProcessModal } from 'src/components/AttendedProcessModal';
+
 import If from 'src/components/utils/If';
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch, useSelector } from 'src/store';
 import { processActions } from 'src/store/slices/Process';
-import { useSnackbar } from 'notistack';
-import Button from '@mui/material/Button';
+
 
 const ManageProcessForm: VFC = () => {
     const dispatch = useDispatch();

@@ -1,7 +1,9 @@
-import useTranslations from 'src/hooks/useTranslations';
-import ExtensionIcon from '@mui/icons-material/Extension';
 import ContactlessIcon from '@mui/icons-material/Contactless';
+import ExtensionIcon from '@mui/icons-material/Extension';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+
+import useTranslations from 'src/hooks/useTranslations';
+
 import { CustomStep } from './CustomSteps.types';
 
 const useInstallSteps = (): CustomStep[] => {

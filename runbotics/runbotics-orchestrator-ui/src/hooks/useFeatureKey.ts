@@ -1,5 +1,7 @@
 import { FeatureKey } from 'runbotics-common';
+
 import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+
 import useAuth from './useAuth';
 
 const useFeatureKey = (key: FeatureKey[]) => {

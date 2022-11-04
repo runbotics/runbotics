@@ -1,4 +1,5 @@
 import useTranslations from 'src/hooks/useTranslations';
+
 import { DefaultLocale } from './types';
 
 export const useCurrentLocale = (): DefaultLocale => {

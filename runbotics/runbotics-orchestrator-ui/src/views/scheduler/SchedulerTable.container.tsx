@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
+
 import { Grid, Paper, Typography } from '@mui/material';
 import { Row } from 'react-table';
-import { Column } from '../../components/Table';
-import Table from '../../components/Table';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+import Table, { Column } from '../../components/Table';
+
 interface SchedulerTableContainerProps<T extends object> {
     title: string;
     columns: Column<T>[];
@@ -13,7 +13,6 @@ interface SchedulerTableContainerProps<T extends object> {
     renderSubRow?: (row: Row<T>) => ReactNode;
 }
 
-// eslint-disable-next-line @typescript-eslint/comma-dangle, @typescript-eslint/ban-types
 const SchedulerTableContainer = <T extends object>({
     title,
     processes,
@@ -21,20 +20,14 @@ const SchedulerTableContainer = <T extends object>({
     onRedirect,
     renderSubRow,
 }: SchedulerTableContainerProps<T>) => (
-    <Paper sx={{ padding: '1rem' }}>
-        <Grid container sx={{ marginBottom: '1rem' }} justifyContent="space-between">
-            <Grid item>
-                <Typography variant="h4">{title}</Typography>
+        <Paper sx={{ padding: '1rem' }}>
+            <Grid container sx={{ marginBottom: '1rem' }} justifyContent="space-between">
+                <Grid item>
+                    <Typography variant="h4">{title}</Typography>
+                </Grid>
             </Grid>
-        </Grid>
-        <Table<T>
-            columns={columns}
-            data={processes}
-            onRowClick={onRedirect}
-            renderSubRow={renderSubRow}
-            autoHeight
-        />
-    </Paper>
+            <Table<T> columns={columns} data={processes} onRowClick={onRedirect} renderSubRow={renderSubRow} autoHeight />
+        </Paper>
     );
 
 export default SchedulerTableContainer;

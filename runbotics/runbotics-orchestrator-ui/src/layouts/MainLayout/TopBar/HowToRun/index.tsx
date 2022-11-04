@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+
 import GetAppIcon from '@mui/icons-material/GetApp';
-import { useLocation } from 'react-router-dom';
+import { IconButton, Tooltip } from '@mui/material';
+
 import useLocalStorage from 'src/hooks/useLocalStorage';
 import useTranslations from 'src/hooks/useTranslations';
+
 import HowToRunDialog from './HowToRunDialog';
 
 const Index = () => {
-    const location = useLocation();
     const { translate } = useTranslations();
     const [isOpen, setOpen] = useLocalStorage('HowToRun', false);
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
-        if (urlParams && urlParams.get('open') === 'howto') {
-            setOpen(true);
-        }
+        if (urlParams && urlParams.get('open') === 'howto') setOpen(true);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search, setOpen]);
     const handleOpen = (): void => {
         setOpen(true);

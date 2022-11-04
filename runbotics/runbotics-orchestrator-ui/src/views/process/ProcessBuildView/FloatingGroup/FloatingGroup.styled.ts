@@ -1,5 +1,7 @@
-import { zIndex } from 'src/theme/zIndex';
 import styled from 'styled-components';
+
+import { zIndex } from 'src/theme/zIndex';
+
 import { FloatingGroupProps } from '.';
 
 export const StyledFloatingGroup = styled('div')<FloatingGroupProps>(({

@@ -1,21 +1,22 @@
 import React, { ChangeEvent, useMemo, VFC } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+
 import { Box, Tab, Tabs } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
-import useQuery from 'src/hooks/useQuery';
-import { BotCollectionParams } from 'src/utils/types/BotParams';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+
 import If from 'src/components/utils/If';
-import { StyledContainer, StyledPage } from './BotBrowseView.styles';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useQuery from 'src/hooks/useQuery';
+import useTranslations from 'src/hooks/useTranslations';
+
 import { BotCollectionTab } from '../../../utils/bot-tab';
-import BotListView from '../BotListView';
 import BotCollectionView from '../BotCollectionView';
-import { DefaultPageSize } from './BotBrowseView.utils';
+import BotListView from '../BotListView';
+import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 
 const BotBrowseView: VFC = () => {
-    const history = useHistory();
-    const { tab } = useParams<BotCollectionParams>();
+    const router = useRouter();
+    const tab = router.asPath.split('/').slice(-1)[0].split('?')[0];
     const { translate } = useTranslations();
     const query = useQuery();
     const collectionId = query.get('collection');
@@ -25,33 +26,28 @@ const BotBrowseView: VFC = () => {
     const botTabs = useMemo(() => {
         const tabs = [];
 
-        if (hasBotsTabAccess) {
-            tabs.push({ value: BotCollectionTab.BOTS, label: translate('Bot.Browse.Tabs.Bots.Label') });
-        }
+        if (hasBotsTabAccess)
+        { tabs.push({ value: BotCollectionTab.BOTS, label: translate('Bot.Browse.Tabs.Bots.Label') }); }
 
-        if (hasBotsCollectionTabAccess) {
-            tabs.push({ value: BotCollectionTab.COLLECTIONS, label: translate('Bot.Browse.Tabs.Collections.Label') });
-        }
+        if (hasBotsCollectionTabAccess)
+        { tabs.push({ value: BotCollectionTab.COLLECTIONS, label: translate('Bot.Browse.Tabs.Collections.Label') }); }
 
         return tabs;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasBotsTabAccess, hasBotsCollectionTabAccess]);
 
     const handleTabChange = (event: ChangeEvent<HTMLInputElement>, value: BotCollectionTab) => {
-        if (value === BotCollectionTab.COLLECTIONS) {
-            history.push(`/app/bots/collections?page=0&pageSize=${DefaultPageSize.GRID}`);
-        } else {
-            history.push('/app/bots');
-        }
+        if (value === BotCollectionTab.COLLECTIONS) router.push('/app/bots/collections');
+        else router.push('/app/bots');
     };
 
-    const getTabValue = () => (tab === BotCollectionTab.COLLECTIONS
-        ? BotCollectionTab.COLLECTIONS
-        : BotCollectionTab.BOTS);
+    const getTabValue = () =>
+        tab === BotCollectionTab.COLLECTIONS ? BotCollectionTab.COLLECTIONS : BotCollectionTab.BOTS;
 
-    const getPageTitle = () => (getTabValue() === BotCollectionTab.COLLECTIONS
-        ? translate('Bot.Browse.Tabs.Collections.Meta.Title')
-        : translate('Bot.Browse.Tabs.Bots.Meta.Title')
-    );
+    const getPageTitle = () =>
+        getTabValue() === BotCollectionTab.COLLECTIONS
+            ? translate('Bot.Browse.Tabs.Collections.Meta.Title')
+            : translate('Bot.Browse.Tabs.Bots.Meta.Title');
 
     return (
         <StyledPage title={getPageTitle()}>
@@ -73,9 +69,7 @@ const BotBrowseView: VFC = () => {
                 </Box>
                 <If
                     condition={tab === BotCollectionTab.COLLECTIONS && hasBotsCollectionTabAccess}
-                    else={
-                        <BotListView collectionId={collectionId} />
-                    }
+                    else={<BotListView collectionId={collectionId} />}
                 >
                     <BotCollectionView />
                 </If>

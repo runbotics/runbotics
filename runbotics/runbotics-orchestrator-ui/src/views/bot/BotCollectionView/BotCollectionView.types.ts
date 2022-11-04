@@ -1,5 +1,7 @@
-import { IBotCollection } from 'runbotics-common';
 import { MouseEvent } from 'react';
+
+import { IBotCollection } from 'runbotics-common';
+
 import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 
 export interface BotCollectionViewProps {

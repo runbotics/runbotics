@@ -1,7 +1,6 @@
-import React, { forwardRef } from 'react';
-import type { HTMLProps, ReactNode } from 'react';
-import { Helmet } from 'react-helmet';
-import PropTypes from 'prop-types';
+import React, { forwardRef, HTMLProps, ReactNode } from 'react';
+
+import Head from 'next/head';
 
 interface PageProps extends HTMLProps<HTMLDivElement> {
     children?: ReactNode;
@@ -10,16 +9,12 @@ interface PageProps extends HTMLProps<HTMLDivElement> {
 
 const Page = forwardRef<HTMLDivElement, PageProps>(({ children, title = '', ...rest }, ref) => (
     <div ref={ref as any} {...rest}>
-        <Helmet>
+        <Head>
             <title>{title}</title>
-        </Helmet>
+        </Head>
         {children}
     </div>
 ));
-
-Page.propTypes = {
-    children: PropTypes.node.isRequired,
-    title: PropTypes.string,
-};
+Page.displayName = 'Page';
 
 export default Page;

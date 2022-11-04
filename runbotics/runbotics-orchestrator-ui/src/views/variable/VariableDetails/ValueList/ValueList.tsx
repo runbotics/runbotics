@@ -1,24 +1,17 @@
+import { ChangeEvent, Dispatch, FunctionComponent, SetStateAction, useMemo, useRef, useState } from 'react';
+
+import AddIcon from '@mui/icons-material/Add';
 import Clear from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import React, {
-    ChangeEvent,
-    Dispatch,
-    FunctionComponent,
-    SetStateAction,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
 import { IconButton, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
+
 import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
+
 import { VariableType } from '../../Variable.types';
 import { ListVariableState, VariableState, VariableValue } from '../VariableDetails.types';
-import {
-    AddButton, AddListItem, SearchListItem, SearchInput, SearchWrapper, StyledList,
-} from './ValueList.styles';
+import { AddButton, AddListItem, SearchListItem, SearchInput, SearchWrapper, StyledList } from './ValueList.styles';
 import ValueListItem from './ValueListItem';
 
 interface ValueListProps {
@@ -42,14 +35,12 @@ const ValueList: FunctionComponent<ValueListProps> = ({ variable, setVariable, r
     };
 
     const deleteListItem = (id: string) => {
-        const variableValue = variable.value
-            .filter((value) => value.id !== id);
+        const variableValue = variable.value.filter((value) => value.id !== id);
         setVariable((prevState) => ({ ...prevState, type: VariableType.LIST, value: variableValue }));
     };
 
     const changeListItem = (newValue: VariableValue) => {
-        const variableValue = variable.value
-            .map((value) => (value.id !== newValue.id ? value : newValue));
+        const variableValue = variable.value.map((value) => (value.id !== newValue.id ? value : newValue));
         setVariable((prevState) => ({ ...prevState, type: VariableType.LIST, value: variableValue }));
     };
 
@@ -61,27 +52,28 @@ const ValueList: FunctionComponent<ValueListProps> = ({ variable, setVariable, r
         setSearch('');
     };
 
-    const displayedRows = useMemo(() => variable.value
-        .filter((listItem) => listItem.value.includes(search)).length,
-    [search, variable.value]);
+    const displayedRows = useMemo(
+        () => variable.value.filter((listItem) => listItem.value.includes(search)).length,
+        [search, variable.value],
+    );
 
-    const renderList = () => variable.value
-        .filter((listItem) => listItem.value.includes(search))
-        .map((listItem) => (
-            <ValueListItem
-                listItem={listItem}
-                onDelete={deleteListItem}
-                onChange={changeListItem}
-                readOnly={readOnly}
-            />
-        ));
+    const renderList = () =>
+        variable.value
+            .filter((listItem) => listItem.value.includes(search))
+            .map((listItem) => (
+                <ValueListItem
+                    listItem={listItem}
+                    onDelete={deleteListItem}
+                    onChange={changeListItem}
+                    readOnly={readOnly}
+                    key={listItem.id}
+                />
+            ));
 
     return (
         <StyledList>
             <SearchListItem key="search-input">
-                <SearchWrapper
-                    as="div"
-                >
+                <SearchWrapper as="div">
                     <SearchIcon />
                     <SearchInput
                         placeholder={translate('Variables.Details.ValueList.Search')}

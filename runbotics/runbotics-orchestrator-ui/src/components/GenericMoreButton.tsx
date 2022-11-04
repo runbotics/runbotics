@@ -1,14 +1,13 @@
-import React, { useRef, useState, memo } from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
-import {
-    ListItemIcon, ListItemText, Tooltip, IconButton, Menu, MenuItem,
-} from '@mui/material';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import GetAppIcon from '@mui/icons-material/GetApp';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import React, { useRef, useState, memo, FC } from 'react';
+
 import ArchiveIcon from '@mui/icons-material/ArchiveOutlined';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { ListItemIcon, ListItemText, Tooltip, IconButton, Menu, MenuItem } from '@mui/material';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'GenericMoreButton';

@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { FC } from 'react';
+
+import { Box, Button, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import RouterLink from 'next/link';
 import styled from 'styled-components';
-import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-    Box, Button, Container, Typography, useMediaQuery,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo';
 import useTranslations from 'src/hooks/useTranslations';
@@ -55,9 +53,11 @@ const NotFoundView: FC = () => {
                 </Typography>
 
                 <Box mt={6} display="flex" justifyContent="center">
-                    <Button color="secondary" component={RouterLink} to="/" variant="outlined">
-                        {translate('Error404.View.BackToHome')}
-                    </Button>
+                    <RouterLink href="/" passHref legacyBehavior>
+                        <Button color="secondary" variant="outlined">
+                            {translate('Error404.View.BackToHome')}
+                        </Button>
+                    </RouterLink>
                 </Box>
             </Container>
         </StyledPage>

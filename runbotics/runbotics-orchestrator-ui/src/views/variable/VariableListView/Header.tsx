@@ -1,17 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
+import React, { FC } from 'react';
+
+import { Button, Grid, SvgIcon, Typography } from '@mui/material';
 import clsx from 'clsx';
-import {
-    Button, Grid, SvgIcon, Typography,
-} from '@mui/material';
-import {
-    PlusCircle as PlusIcon,
-} from 'react-feather';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+import { PlusCircle as PlusIcon } from 'react-feather';
+
 import { FeatureKey } from 'runbotics-common';
+import styled from 'styled-components';
+
 import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'Header';
 
@@ -58,11 +56,11 @@ const Header: FC<HeaderProps> = ({ className, onVariableCreate, ...rest }) => {
                     <Button
                         color="secondary"
                         variant="contained"
-                        startIcon={(
+                        startIcon={
                             <SvgIcon fontSize="small">
                                 <PlusIcon />
                             </SvgIcon>
-                        )}
+                        }
                         onClick={onVariableCreate}
                     >
                         {translate('Variables.Header.AddGlobalVariable')}

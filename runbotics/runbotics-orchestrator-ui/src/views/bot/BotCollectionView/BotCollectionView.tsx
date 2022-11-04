@@ -1,57 +1,53 @@
-import React, {
-    MouseEvent, useEffect, useState, VFC,
-} from 'react';
-import useBotCollectionSearch from 'src/hooks/useBotCollectionSearch';
+import React, { MouseEvent, useEffect, useState, VFC } from 'react';
+
 import { Box } from '@mui/material';
-import { useHistory } from 'react-router-dom';
+import { useRouter } from 'next/router';
+
+import useBotCollectionSearch from 'src/hooks/useBotCollectionSearch';
 import useQuery from 'src/hooks/useQuery';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
-import BotCollectionHeader from './Header/BotCollectionHeader';
+
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+
 import { useDispatch, useSelector } from '../../../store';
 import { botCollectionActions, botCollectionSelector } from '../../../store/slices/BotCollections';
 import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 import BotCollectionGridView from './BotCollectionGridView';
-import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
 import BotCollectionTable from './BotCollectionTable/BotCollectionTable';
+import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
+import BotCollectionHeader from './Header/BotCollectionHeader';
 
 const BotCollectionView: VFC = () => {
     const dispatch = useDispatch();
     const { byPage } = useSelector(botCollectionSelector);
     const [displayMode, setDisplayMode] = useState<CollectionsDisplayMode>(CollectionsDisplayMode.GRID);
 
-    const history = useHistory();
+    const router = useRouter();
     const query = useQuery();
     const currentPage = parseInt(query.get('page'), 10);
     const pageSizeFromUrl = query.get('pageSize');
     const [page, setPage] = useState(currentPage);
-    const [limit, setLimit] = useState(pageSizeFromUrl
-        ? parseInt(pageSizeFromUrl, 10)
-        : getLimitByDisplayMode(displayMode));
+    const [limit, setLimit] = useState(
+        pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : getLimitByDisplayMode(displayMode),
+    );
 
-    const {
-        search,
-        searchField,
-        debouncedSearch,
-        handleSearchChange,
-        handleAdvancedSearchChange,
-    } = useBotCollectionSearch();
-
+    const { search, searchField, debouncedSearch, handleSearchChange, handleAdvancedSearchChange } =
+        useBotCollectionSearch();
+    const replaceQueryParams = useReplaceQueryParams();
     useEffect(() => {
         const pageNotAvailable = byPage && page >= byPage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            history.replace(getSearchParams({
-                page: 0, pageSize: limit, search, searchField,
-            }));
+            replaceQueryParams({ page: 0, pageSize: limit, search, searchField });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [byPage]);
 
     useEffect(() => {
         const params = getBotCollectionPageParams(page, limit, debouncedSearch, searchField);
-        history.replace(getSearchParams({
-            page, pageSize: limit, search, searchField,
-        }));
+        router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit, search, searchField } });
+
         dispatch(botCollectionActions.getByPage(params));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, displayMode, debouncedSearch, searchField]);
 
     const handleDisplayModeChange = (event: MouseEvent<HTMLElement>, value: CollectionsDisplayMode) => {
@@ -80,7 +76,7 @@ const BotCollectionView: VFC = () => {
         />
     );
 
-    const collectionLength = (byPage ? byPage.totalElements : 0);
+    const collectionLength = byPage ? byPage.totalElements : 0;
 
     return (
         <Box display="flex" flexDirection="column" gap="1rem">
@@ -91,9 +87,7 @@ const BotCollectionView: VFC = () => {
                 search={search}
                 onSearchChange={handleSearchChange}
             />
-            {displayMode === CollectionsDisplayMode.LIST
-                ? renderList()
-                : renderGrid()}
+            {displayMode === CollectionsDisplayMode.LIST ? renderList() : renderGrid()}
         </Box>
     );
 };

@@ -1,11 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
+
+import { IProcess } from 'runbotics-common';
+
+import { RootState } from 'src/store';
 import LoadingType from 'src/types/loading';
 import { Page, PageRequestParams } from 'src/utils/types/page';
 import URLBuilder from 'src/utils/URLBuilder';
-import { RootState } from 'src/store';
-import { IProcess } from 'runbotics-common';
+
 import IProcessWithFilters from 'src/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
+
 import { StartProcessResponse } from './Process.state';
 
 const processPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
@@ -21,16 +25,16 @@ export const fetchProcessById = createAsyncThunk<
     }
 >('processes/fetchById', (processId, { getState, requestId, rejectWithValue }) => {
     const { currentRequestId, loading } = getState().process.draft;
-    if (loading !== LoadingType.PENDING || requestId !== currentRequestId) {
-        return;
-    }
+    if (loading !== LoadingType.PENDING || requestId !== currentRequestId) 
+    { return; }
+    
     // eslint-disable-next-line consistent-return
     return Axios.get<IProcess>(`/api/processes/${processId}`)
         .then((response) => response.data)
         .catch((error) => {
-            if (!error.response) {
-                throw error;
-            }
+            if (!error.response) 
+            { throw error; }
+            
             // We got validation errors, let's return those so we can reference in our component and set form errors
             return rejectWithValue(error.response.data);
         });

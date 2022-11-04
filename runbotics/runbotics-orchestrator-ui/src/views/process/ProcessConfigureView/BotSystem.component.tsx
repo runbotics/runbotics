@@ -1,12 +1,16 @@
 import React, { VFC, ChangeEvent } from 'react';
+
 import DevicesIcon from '@mui/icons-material/Devices';
 import { MenuItem, Select } from '@mui/material';
+
+import { FeatureKey, IBotSystem } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
 import { useSelector } from 'src/store';
 import { capitalizeFirstLetter } from 'src/utils/text';
-import { FeatureKey, IBotSystem } from 'runbotics-common';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import If from 'src/components/utils/If';
+
 import { botSystemsSelector } from '../../../store/slices/BotSystem';
 import { Wrapper } from './BotComponent.styles';
 
@@ -24,13 +28,11 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
     const hasEditBotSystemAccess = useFeatureKey([FeatureKey.PROCESS_BOT_SYSTEM_EDIT]);
 
     const getBotSystemOptions = () => Object.values(botSystems)
-        .map((system) => {
-            return (
-                <MenuItem value={system.name} key={system.name}>
-                    {capitalizeFirstLetter({ text: system.name, lowerCaseRest: true })};
-                </MenuItem>
-            );
-        });
+        .map((system) => (
+            <MenuItem value={system.name} key={system.name}>
+                {capitalizeFirstLetter({ text: system.name, lowerCaseRest: true })};
+            </MenuItem>
+        ));
 
     const handleBotSystemChange = (event: ChangeEvent<HTMLInputElement>) => {
         const selected = botSystems.find((system) => event.target.value === system.name);

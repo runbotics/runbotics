@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyles = createGlobalStyle(({ theme }) => `
+const GlobalStyles = createGlobalStyle(
+    ({ theme }) => `
     * {
         box-sizing: border-box;
         margin: 0;
@@ -10,14 +11,20 @@ const GlobalStyles = createGlobalStyle(({ theme }) => `
     html {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        height: 100%;
         width: 100%;
+    }
+
+    html,
+    body,
+    body > div:first-child,
+    div#__next,
+    div#__next > div {
+        height: 100%;
     }
 
     body {
         height: 100%;
         width: 100%;
-        overflow: hidden;
     }
     
     #root {
@@ -44,6 +51,7 @@ const GlobalStyles = createGlobalStyle(({ theme }) => `
             background-color: ${theme.palette.action.disabled};
         }
     },
-`);
+`,
+);
 
 export default GlobalStyles;

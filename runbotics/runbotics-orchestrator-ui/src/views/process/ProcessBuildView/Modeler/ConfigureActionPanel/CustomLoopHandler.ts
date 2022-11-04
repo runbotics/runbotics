@@ -1,4 +1,5 @@
 import _ from 'lodash';
+
 import { ActionListPanelProps } from '../ActionListPanel';
 import internalBpmnActions from './Actions';
 import { ActionToBPMNElement, TaskType } from './ActionToBPMNElement';

@@ -1,6 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import union from 'lodash/union';
 import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
+
 import { initialState } from './ProcessInstance.slice';
 import { ProcessInstanceState } from './ProcessInstance.state';
 
@@ -36,9 +37,9 @@ export const resetActive = (state: ProcessInstanceState) => {
 const updateProcessInstancePageList = (processInstanceList: IProcessInstance[], newProcessInst: IProcessInstance) => {
     const exist = processInstanceList.some((item) => item.id === newProcessInst.id);
 
-    if (!exist) {
-        return { exist };
-    }
+    if (!exist) 
+    { return { exist }; }
+    
 
     const newProcessInstancesList = processInstanceList.reduce<IProcessInstance[]>(
         (acc, processInstance) => (processInstance.id === newProcessInst.id
@@ -58,9 +59,9 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
         action.payload,
     );
 
-    if (exist) {
-        state.all.page.content = newProcessInstancesList;
-    } else {
-        state.all.page?.content.unshift(action.payload);
-    }
+    if (exist) 
+    { state.all.page.content = newProcessInstancesList; }
+    else 
+    { state.all.page?.content.unshift(action.payload); }
+    
 };

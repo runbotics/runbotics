@@ -1,4 +1,5 @@
 import React from 'react';
+
 import styled from 'styled-components';
 
 const PREFIX = 'DividerWithText';
@@ -32,10 +33,10 @@ const Root = styled.div(({ theme }) => ({
 }));
 
 const DividerWithText = ({ children }: any) => (
-        <Root className={classes.container}>
-            <div className={classes.border} />
-            <span className={classes.content}>{children}</span>
-            <div className={classes.border} />
-        </Root>
+    <Root className={classes.container}>
+        <div className={classes.border} />
+        <span className={classes.content}>{children}</span>
+        <div className={classes.border} />
+    </Root>
 );
 export default DividerWithText;

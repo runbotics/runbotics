@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { translate } from 'src/hooks/useTranslations';
 
 const axiosInstance = axios.create();

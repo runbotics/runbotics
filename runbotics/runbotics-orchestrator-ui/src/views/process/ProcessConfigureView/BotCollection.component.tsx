@@ -1,12 +1,17 @@
 import React, { VFC, ChangeEvent } from 'react';
+
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import { MenuItem, Select } from '@mui/material';
+
+import { FeatureKey, IBotCollection } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
 import { useSelector } from 'src/store';
 import { botCollectionSelector } from 'src/store/slices/BotCollections';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey, IBotCollection } from 'runbotics-common';
-import useTranslations from 'src/hooks/useTranslations';
-import If from 'src/components/utils/If';
+
+
 import { Wrapper } from './BotComponent.styles';
 
 interface BotCollectionProps {

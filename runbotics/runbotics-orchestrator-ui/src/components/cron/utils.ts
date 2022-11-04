@@ -1,15 +1,16 @@
 import { useRef, useEffect } from 'react';
-import { Classes, OnError, Locale } from './types';
+
 import DEFAULT_LOCALE_EN from './locale';
+import { Classes, OnError, Locale } from './types';
 /**
  * Creates an array of integers from start to end, inclusive
  */
 export function range(start: number, end: number) {
     const array: number[] = [];
 
-    for (let i = start; i <= end; i += 1) {
-        array.push(i);
-    }
+    for (let i = start; i <= end; i += 1) 
+    { array.push(i); }
+    
 
     return array;
 }
@@ -30,9 +31,9 @@ export function dedup(array: number[]) {
     const result: number[] = [];
 
     array.forEach((i) => {
-        if (result.indexOf(i) < 0) {
-            result.push(i);
-        }
+        if (result.indexOf(i) < 0) 
+        { result.push(i); }
+        
     });
 
     return result;

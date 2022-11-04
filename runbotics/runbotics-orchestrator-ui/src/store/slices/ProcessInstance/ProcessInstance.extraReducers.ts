@@ -1,6 +1,9 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import union from 'lodash/union';
+
 import objFromArray from 'src/utils/objFromArray';
+
+import { ProcessInstanceState } from './ProcessInstance.state';
 import {
     getAll,
     getAllByProcessId,
@@ -9,7 +12,6 @@ import {
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
-import { ProcessInstanceState } from './ProcessInstance.state';
 
 const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceState>) => {
     builder
@@ -70,11 +72,11 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.byId[action.payload.id] = action.payload;
             state.all.ids = union(state.all.ids, [String(action.payload.id)]);
             const pageContent = state.all.page?.content;
-            if (pageContent && pageContent.find((processInstance) => processInstance.id === action.payload.id)) {
-                state.all.page.content = pageContent.map((processInstance) =>
-                    processInstance.id === action.payload.id ? action.payload : processInstance,
-                );
-            }
+            if (pageContent && pageContent.find((processInstance) => processInstance.id === action.payload.id)) 
+            { state.all.page.content = pageContent.map((processInstance) =>
+                processInstance.id === action.payload.id ? action.payload : processInstance,
+            ); }
+            
         })
 
         // GET PAGE

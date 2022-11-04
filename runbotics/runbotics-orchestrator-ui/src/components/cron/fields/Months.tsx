@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
 
-import { MonthsProps } from '../types';
 import CustomSelect from '../components/CustomSelect';
-import DEFAULT_LOCALE_EN from '../locale';
-import { classNames } from '../utils';
 import { UNITS } from '../constants';
+import DEFAULT_LOCALE_EN from '../locale';
+import { MonthsProps } from '../types';
+import { classNames } from '../utils';
 
+// eslint-disable-next-line complexity
 export default function Months(props: MonthsProps) {
     const {
         value, setValue, locale, className, humanizeLabels, disabled, readOnly, period,

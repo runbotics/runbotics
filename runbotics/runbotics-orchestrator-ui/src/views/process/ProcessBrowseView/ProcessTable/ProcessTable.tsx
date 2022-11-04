@@ -1,11 +1,14 @@
 import React, { useContext, VFC } from 'react';
-import { useHistory } from 'react-router-dom';
-import { IProcess } from 'runbotics-common';
+
 import { Card, Grid } from '@mui/material';
 import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
-import { useSelector } from 'src/store';
+import { useRouter } from 'next/router';
+import { IProcess } from 'runbotics-common';
+
 import { buildProcessUrl } from 'src/components/Tile/ProcessTile';
 import { ProcessPageContext } from 'src/providers/ProcessPage.provider';
+import { useSelector } from 'src/store';
+
 import useProcessColumns from './useProcessColumns';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
@@ -16,17 +19,11 @@ interface ProcessTableProps {
 
 const ProcessTable: VFC<ProcessTableProps> = ({ onAdvancedSearchChange }) => {
     const columns = useProcessColumns();
-    const history = useHistory();
+    const router = useRouter();
     const { page: processesPage, loading } = useSelector((state) => state.process.all);
-    const {
-        page,
-        pageSize,
-        handleTablePageChange,
-        handlePageSizeChange,
-    } = useContext(ProcessPageContext);
-
+    const { page, pageSize, handleTablePageChange, handlePageSizeChange } = useContext(ProcessPageContext);
     const handleRedirect = (process: IProcess) => {
-        history.push(buildProcessUrl(process));
+        router.push(buildProcessUrl(process));
     };
 
     return (
@@ -50,9 +47,7 @@ const ProcessTable: VFC<ProcessTableProps> = ({ onAdvancedSearchChange }) => {
                         filterMode="server"
                         onFilterModelChange={onAdvancedSearchChange}
                         onCellClick={(param) => {
-                            if (param.field !== 'actions') {
-                                handleRedirect(param.row);
-                            }
+                            if (param.field !== 'actions') handleRedirect(param.row);
                         }}
                     />
                 </Grid>

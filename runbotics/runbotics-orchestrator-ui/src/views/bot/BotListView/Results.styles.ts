@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Card } from '@mui/material';
+import styled from 'styled-components';
 
 const PREFIX = 'Results';
 

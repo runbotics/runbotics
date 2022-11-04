@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
 import styled from 'styled-components';
+
 import Page from '../../../components/pages/Page';
 
 export const StyledPage = styled(Page)(({ theme }) => `
