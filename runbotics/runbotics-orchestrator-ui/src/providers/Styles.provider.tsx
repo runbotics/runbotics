@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 
-import { LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import '@mui/lab';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useTranslation } from 'react-i18next';
 import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
 
