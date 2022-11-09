@@ -23,14 +23,14 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const actionId = element.businessObject?.actionId;
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+    const translationKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
     
     useEffect(() => {
-        if (checkIfKeyExists(translateKey)) {
-            setTranslatedLabel(translate(translateKey));
+        if (checkIfKeyExists(translationKey)) {
+            setTranslatedLabel(translate(translationKey));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [i18n.language]);
+    }, [i18n.language, actionId]);
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });

@@ -48,6 +48,7 @@ const ActionFormRenderer: FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [action.form.schema, i18n.language],
     );
+
     const defaultFormData = React.useMemo(() => {
         const defaultParameters = {
             ...action.form.formData,
