@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: ["develop", "master"]
+    branches: ['develop', 'master']
   workflow_dispatch:
 
 jobs:
@@ -33,15 +33,13 @@ jobs:
             api:
               - 'runbotics-orchestrator/package.json'
 
-
-
   push-ui:
     needs: changes-detection
     if: |
       (github.ref == 'refs/heads/develop'
       || github.ref == 'refs/heads/master')
       && needs.changes-detection.outputs.ui == 'true'
-    
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -67,17 +65,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Install dependencies
-        run: node ../common/scripts/install-run-rush.js install -t .
-
-      - name: Build
-        run: node ../common/scripts/install-run-rush.js build -t .
-
-      - name: Rush deploy
-        run: |
-          mkdir -p ../common/deploy/runbotics-orchestrator-ui
-          node ../common/scripts/install-run-rush.js deploy --scenario runbotics-orchestrator-ui --overwrite  --target-folder ../common/deploy/runbotics-orchestrator-ui;
-
       - name: Assign package version
         uses: nyaa8/package-version@v1
         with:
@@ -86,14 +73,12 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
-          context: ./runbotics/common/deploy/runbotics-orchestrator-ui
-          file: ./runbotics/common/deploy/runbotics-orchestrator-ui/Dockerfile
+          context: ./runbotics
+          file: ./runbotics/Dockerfile
           push: true
           tags: |
             runbotics/runbotics-orchestrator-ui:latest
             runbotics/runbotics-orchestrator-ui:${{ env.PACKAGE_VERSION }}
-
-
 
   push-scheduler:
     needs: changes-detection
@@ -101,7 +86,7 @@ jobs:
       (github.ref == 'refs/heads/develop'
       || github.ref == 'refs/heads/master')
       && needs.changes-detection.outputs.scheduler == 'true'
-      
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -126,7 +111,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      
+
       - name: Install dependencies
         run: node ../common/scripts/install-run-rush.js install -t .
 
@@ -152,8 +137,6 @@ jobs:
           tags: |
             runbotics/runbotics-scheduler:latest
             runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
-
-
 
   # push-bot:
   #   needs: changes-detection
@@ -203,7 +186,7 @@ jobs:
   #       run: |
   #         mkdir -p ../common/deploy/runbotics-desktop
   #         node ../common/scripts/install-run-rush.js deploy --overwrite  --target-folder ../common/deploy/runbotics-desktop
-      
+
   #     - name: Assign package version
   #       uses: nyaa8/package-version@v1
   #       with:
@@ -212,7 +195,7 @@ jobs:
   #     - name: Build and push image
   #       run: |
   #         cd ../common/deploy/runbotics-desktop
-  #         docker build -t "runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}" -t runbotics/runbotics-desktop:latest .
+  #         docker build -t 'runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}' -t runbotics/runbotics-desktop:latest .
   #         docker push --all-tags runbotics/runbotics-desktop
 
   #     - uses: docker/build-push-action@v2
@@ -224,15 +207,13 @@ jobs:
   #           runbotics/runbotics-desktop:latest
   #           runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}
 
-
-
   push-api:
     needs: changes-detection
     if: |
       (github.ref == 'refs/heads/develop'
       || github.ref == 'refs/heads/master')
       && needs.changes-detection.outputs.api == 'true'
-      
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -276,5 +257,5 @@ jobs:
 
       - name: Push image
         run: |
-          docker tag runbotics/runbotics-orchestrator:latest "runbotics/runbotics-orchestrator:${{ env.PACKAGE_VERSION }}"
+          docker tag runbotics/runbotics-orchestrator:latest 'runbotics/runbotics-orchestrator:${{ env.PACKAGE_VERSION }}'
           docker push --all-tags runbotics/runbotics-orchestrator

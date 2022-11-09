@@ -45,7 +45,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
         <Autocomplete
             value={getValue()}
             options={options}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => (option as GlobalVariableOption).name}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField
