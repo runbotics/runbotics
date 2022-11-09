@@ -36,7 +36,7 @@ export class AuthService {
 
     validateToken(token: string) {
         const secret = this.serverConfigService.secret;
-        const jwtPayload = jwt.verify<JWTPayload>(token, secret);
+        const jwtPayload = jwt.verify(token, secret) as JWTPayload;
         return this.validatePayload(jwtPayload);
     }
 
@@ -90,17 +90,17 @@ export class AuthService {
                 requiredMinor,
                 requiredPatch
             ] = await this.extractSemanticVersion(this.serverConfigService.requiredBotVersion);
-    
-            const [ major, minor, patch ] = await this.extractSemanticVersion(botVersion);
-    
+
+            const [major, minor, patch] = await this.extractSemanticVersion(botVersion);
+
             const isMinimumMajorVersionFulfilled = requiredMajor < major;
             const isMinimumMinorVersionFulfilled = requiredMinor < minor;
             const isMinimumPatchVersionFulfilled = requiredPatch < patch;
-    
+
             const areMajorVersionsEqual = requiredMajor === major;
             const areMinorVersionsEqual = requiredMinor === minor;
             const arePatchVersionsEqual = requiredPatch === patch;
-    
+
             return (
                 isMinimumMajorVersionFulfilled
                 || (areMajorVersionsEqual && isMinimumMinorVersionFulfilled)
