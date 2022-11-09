@@ -5,7 +5,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.3.0-SNAPSHOT.18",
+    "version": "2.3.0-SNAPSHOT.19",
     "private": true,
     "sideEffects": false,
     "scripts": {
@@ -147,6 +147,6 @@
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
     },
     "files": [
-        "dist"
+        ".next"
     ]
 }

@@ -35,6 +35,18 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Category'),
                                 type: 'string',
                             },
+                            specialization: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Specialization'
+                                ),
+                                type: 'string',
+                            },
+                            localization: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Localization'
+                                ),
+                                type: 'string',
+                            },
                             date: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Date'),
                                 type: 'string',
@@ -71,6 +83,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     employee: '',
                     activity: '',
+                    category: '',
+                    specialization: '',
+                    localization: '',
                     date: '',
                     duration: '',
                     description: '',
