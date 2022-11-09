@@ -1,7 +1,6 @@
 import { StatefulActionHandler, StatelessActionHandler } from 'runbotics-sdk';
 import { DesktopRunRequest } from 'runbotics-sdk';
 import { DesktopRunResponse } from 'runbotics-sdk';
-import { HttpService, Logger } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import moment from 'moment';
 import { externalAxios } from '../../config/axios-configuration';
@@ -74,7 +73,7 @@ type JiraUser = {
 export class JIRAActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(JIRAActionHandler.name);
 
-    constructor(private httpService: HttpService) {
+    constructor() {
         super();
     }
 
@@ -86,9 +85,9 @@ export class JIRAActionHandler extends StatelessActionHandler {
         try {
             const basicAuth = input.isAll41JIRA
                 ? 'Basic ' +
-                  Buffer.from(process.env['JIRA_A41_USERNAME'] + ':' + process.env['JIRA_A41_TOKEN']).toString('base64')
+                Buffer.from(process.env['JIRA_A41_USERNAME'] + ':' + process.env['JIRA_A41_TOKEN']).toString('base64')
                 : 'Basic ' +
-                  Buffer.from(process.env['JIRA_USERNAME'] + ':' + process.env['JIRA_PASSWORD']).toString('base64');
+                Buffer.from(process.env['JIRA_USERNAME'] + ':' + process.env['JIRA_PASSWORD']).toString('base64');
 
             const responseUsers = await externalAxios.get<JiraUser[]>(
                 input.isAll41JIRA

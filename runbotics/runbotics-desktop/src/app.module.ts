@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { DesktopRunnerService } from './DesktopRunnerService';
 import { ImportActionHandler } from './actions/import/ImportActionHandler';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -6,7 +7,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { MailActionHandler } from './actions/mail/MailHandler';
 import { LoopActionHandler } from './actions/loop/LoopActionHandler';
 import { JIRAActionHandler } from './actions/jira/JIRAActionHandler';
-import { HttpModule } from '@nestjs/common';
 import { BeeOfficeActionHandler } from './actions/beeoffice/BeeOfficeActionHandler';
 import { FileActionHandler } from './actions/files/FileActionHandler';
 import { VariablesActionHandler } from './actions/variables/VariablesActionHandler';
