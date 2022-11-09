@@ -61,7 +61,6 @@
    * the deployment target folder (common/deploy). This can be used to provide additional configuration files
    * or scripts needed by the server when deploying. The path is resolved relative to the repository root.
    */
-  "folderToCopy": "runbotics-build-configuration/runbotics-orchestrator-ui",
 
   /**
    * Customize how Rush projects are processed during deployment.
