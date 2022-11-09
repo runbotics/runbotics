@@ -1,14 +1,17 @@
-import { Box, Typography } from '@mui/material';
-import moment from 'moment';
 import React, { FunctionComponent } from 'react';
+
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { Box, Typography } from '@mui/material';
 import { red } from '@mui/material/colors';
+import moment from 'moment';
+
+import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
+
+import { DATE_FORMAT } from '..';
 import { StyledContent } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
-import { DATE_FORMAT } from '..';
-import If from 'src/components/utils/If';
 
 const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) => {
     const { translate } = useTranslations();
@@ -43,7 +46,10 @@ const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) =>
                 <Typography color="textSecondary" variant="body2">
                     {translate('Component.Tile.Process.Content.Scheduled')}
                 </Typography>
-                <If condition={process.schedules && process.schedules.length > 0} else={<RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />}>
+                <If
+                    condition={process.schedules && process.schedules.length > 0}
+                    else={<RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />}
+                >
                     <CheckCircleOutlineOutlinedIcon color="success" />
                 </If>
             </Box>

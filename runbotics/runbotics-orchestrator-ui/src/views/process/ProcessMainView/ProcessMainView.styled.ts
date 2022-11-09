@@ -1,6 +1,8 @@
 import { Typography } from '@mui/material';
-import InternalPage from 'src/components/pages/InternalPage';
+
 import styled from 'styled-components';
+
+import InternalPage from 'src/components/pages/InternalPage';
 
 export const ProcessTitle = styled(Typography)`
     display: flex;

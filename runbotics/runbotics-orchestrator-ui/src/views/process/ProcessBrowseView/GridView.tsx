@@ -1,9 +1,11 @@
 import React, { VFC, useContext } from 'react';
+
 import { Box, Pagination } from '@mui/material';
 import styled from 'styled-components';
+
 import ProcessTile from 'src/components/Tile/ProcessTile';
-import { useSelector } from 'src/store';
 import { ProcessPageContext } from 'src/providers/ProcessPage.provider';
+import { useSelector } from 'src/store';
 
 const PREFIX = 'GridView';
 

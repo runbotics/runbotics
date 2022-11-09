@@ -1,12 +1,16 @@
-import React from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
-import clsx from 'clsx';
+import React, { FC } from 'react';
+
 import { Grid, Typography } from '@mui/material';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+import clsx from 'clsx';
+
+
 import { FeatureKey } from 'runbotics-common';
+import styled from 'styled-components';
+
 import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
+
 import AddProcess from '../AddProcess';
 
 const PREFIX = 'Header';
@@ -38,7 +42,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
-                {translate('Process.List.Header.Solutions')}
+                    {translate('Process.List.Header.Solutions')}
                 </Typography>
             </Grid>
             <Grid item>

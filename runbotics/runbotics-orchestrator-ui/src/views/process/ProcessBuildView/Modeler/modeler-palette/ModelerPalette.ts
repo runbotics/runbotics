@@ -1,5 +1,7 @@
 import _ from 'lodash';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { BpmnEntries, Entries, InheritedEntries } from './ModelerPalette.types';
 
 export default class ModelerPalette {
@@ -39,20 +41,20 @@ export default class ModelerPalette {
         };
     }
 
-    getPaletteEntries(element) {
+    getPaletteEntries() {
         return function (entries) {
             const customEntries = ModelerPalette.createCustomEntries(entries, {
                 // prettier-ignore
                 inheritedEntries: {
-                    'hand-tool':                { title: translate('Palette.HandTool') },
-                    'lasso-tool':               { title: translate('Palette.LassoTool') },
-                    'space-tool':               { title: translate('Palette.SpaceTool') },
-                    'global-connect-tool':      { title: translate('Palette.GlobalConnectTool') },
-                    'tool-separator':           {},
-                    'create.start-event':       { title: translate('Palette.Create.StartEvent') },
-                    'create.end-event':         { title: translate('Palette.Create.EndEvent') },
+                    'hand-tool': { title: translate('Palette.HandTool') },
+                    'lasso-tool': { title: translate('Palette.LassoTool') },
+                    'space-tool': { title: translate('Palette.SpaceTool') },
+                    'global-connect-tool': { title: translate('Palette.GlobalConnectTool') },
+                    'tool-separator': {},
+                    'create.start-event': { title: translate('Palette.Create.StartEvent') },
+                    'create.end-event': { title: translate('Palette.Create.EndEvent') },
                     'create.exclusive-gateway': { title: translate('Palette.Create.ExclusiveGateway') },
-                    'create.group':             { title: translate('Palette.Create.Group') },
+                    'create.group': { title: translate('Palette.Create.Group') },
                 },
             });
 

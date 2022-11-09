@@ -1,20 +1,20 @@
-import clsx from 'clsx';
-import styled from 'styled-components';
-import React, {
-    Dispatch, FunctionComponent, SetStateAction, useEffect, useState,
-} from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
+import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import { useDispatch, useSelector } from 'src/store';
 import { globalVariableActions, globalVariableSelector } from 'src/store/slices/GlobalVariable';
 import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { VariableDetailState } from '../../Variable.types';
-import useGlobalVariablesColumns from './useGlobalVariablesColumns';
 import DeleteGlobalVariableDialog from './DeleteGlobalVariableDialog';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
-import If from 'src/components/utils/If';
+import useGlobalVariablesColumns from './useGlobalVariablesColumns';
+
 
 interface TableProps {
     className?: string;
@@ -50,11 +50,15 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     };
 
     const globalVariablesColumns = useGlobalVariablesColumns({
-        onDelete, onEdit, hasDeleteVariableAccess, hasEditVariableAccess,
+        onDelete,
+        onEdit,
+        hasDeleteVariableAccess,
+        hasEditVariableAccess,
     });
 
     useEffect(() => {
         dispatch(globalVariableActions.getGlobalVariables());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -69,9 +73,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                             autoHeight
                             disableSelectionOnClick
                             onCellClick={(param) => {
-                                if (param.field !== 'actions') {
-                                    onReadOnlyView(param.row as IGlobalVariable);
-                                }
+                                if (param.field !== 'actions') onReadOnlyView(param.row as IGlobalVariable);
                             }}
                         />
                     </Grid>

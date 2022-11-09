@@ -1,4 +1,5 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
 import { IBpmnAction } from '../ConfigureActionPanel/Actions/types';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 

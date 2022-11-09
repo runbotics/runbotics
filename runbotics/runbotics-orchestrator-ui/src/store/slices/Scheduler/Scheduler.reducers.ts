@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcessInstance, IProcessInstanceEvent, IScheduleProcess } from 'runbotics-common';
+
 import { SchedulerJob, SchedulerState, ScheduledJob } from './Scheduler.state';
 
 export const deleteWaitingJob = (state: SchedulerState, action: PayloadAction<IScheduleProcess>) => {
@@ -8,11 +9,11 @@ export const deleteWaitingJob = (state: SchedulerState, action: PayloadAction<IS
 
 export const addWaitingJob = (state: SchedulerState, action: PayloadAction<SchedulerJob>) => {
     const isUpdate = state.waitingJobs.find(({ id }) => id === action.payload.id);
-    if (isUpdate) {
-        state.waitingJobs = state.waitingJobs.map(
-            (waitingJob) => (waitingJob.id === action.payload.id ? action.payload : waitingJob),
-        );
-    } else state.waitingJobs = [...state.waitingJobs, action.payload];
+    if (isUpdate) 
+    { state.waitingJobs = state.waitingJobs.map(
+        (waitingJob) => (waitingJob.id === action.payload.id ? action.payload : waitingJob),
+    ); }
+    else { state.waitingJobs = [...state.waitingJobs, action.payload]; }
 };
 
 export const addActiveJob = (state: SchedulerState, action: PayloadAction<IProcessInstance>) => {

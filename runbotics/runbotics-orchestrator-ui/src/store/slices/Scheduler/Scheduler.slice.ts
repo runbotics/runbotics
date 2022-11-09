@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '../../index';
 import buildScheduledJobsExtraReducers from './Scheduler.extraReducers';
-import * as scheduledJobsThunks from './Scheduler.thunks';
 import * as reducers from './Scheduler.reducers';
+import * as scheduledJobsThunks from './Scheduler.thunks';
 
 const initialState = {
     loading: false,

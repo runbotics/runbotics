@@ -1,6 +1,8 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
         id: 'sap.connect',

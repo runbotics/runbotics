@@ -1,8 +1,10 @@
+import React, { FunctionComponent } from 'react';
+
 import CheckIcon from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
 import QueueIcon from '@mui/icons-material/Queue';
 import { Typography } from '@mui/material';
-import React, { FunctionComponent } from 'react';
+
 import {
     ProcessTileActions, ProcessTileProps, Footer, IconsWrapper, StyledSvg,
 } from '.';

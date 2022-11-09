@@ -1,21 +1,25 @@
-import React, { FC, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FeatureKey, IProcess, ProcessInstanceStatus } from 'runbotics-common';
-import { SvgIcon, Tooltip } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+
 import { LoadingButton } from '@mui/lab';
-import { Play as PlayIcon } from 'react-feather';
-import { X as XIcon } from 'react-feather';
-import { processActions, StartProcessResponse } from 'src/store/slices/Process';
-import { useDispatch, useSelector } from 'src/store';
-import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
-import useProcessInstanceSocket from 'src/hooks/useProcessInstanceSocket';
+import { SvgIcon, Tooltip } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
+
 import { useSnackbar } from 'notistack';
-import useTranslations from 'src/hooks/useTranslations';
+import { Play as PlayIcon, X as XIcon } from 'react-feather';
+import { FeatureKey, IProcess, ProcessInstanceStatus } from 'runbotics-common';
+import styled from 'styled-components';
+
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import If from './utils/If';
-import { AttendedProcessModal } from './AttendedProcessModal';
+import useProcessInstanceSocket from 'src/hooks/useProcessInstanceSocket';
+import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+import { processActions, StartProcessResponse } from 'src/store/slices/Process';
+import { processInstanceActions, processInstanceSelector } from 'src/store/slices/ProcessInstance';
+
 import { schedulerActions, schedulerSelector } from 'src/store/slices/Scheduler';
+
+import { AttendedProcessModal } from './AttendedProcessModal';
+import If from './utils/If';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
@@ -34,6 +38,7 @@ interface BotProcessRunnerProps {
     variant?: 'text' | 'outlined' | 'contained';
 }
 
+// eslint-disable-next-line complexity, max-lines-per-function
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
     process,
@@ -59,8 +64,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const processId = process?.id;
     
     useEffect(() => {
-        dispatch(schedulerActions.getActiveJobs())
-    }, [processId]);
+        dispatch(schedulerActions.getActiveJobs());
+    }, [dispatch, processId]);
     
     useEffect(() => {
         if (processId === activeJobs[0]?.process.id) {
@@ -73,9 +78,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             || processInstance?.status === ProcessInstanceStatus.ERRORED
             || processInstance?.status === ProcessInstanceStatus.TERMINATED;
 
-        if (isProcessInstanceFinished) {
-            setStarted(false);
-        }
+        if (isProcessInstanceFinished) 
+        { setStarted(false); }
+        
     }, [processInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
@@ -91,14 +96,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 setSubmitting(false);
                 enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Success', { processName }), {
                     variant: 'success',
-                })
+                });
             })
-            .catch(()=>{
+            .catch(() => {
                 enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
                     variant: 'error',
-                })
+                });
             });
-    }
+    };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
         if (started) return;
@@ -120,9 +125,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             }),
         )
             .then(unwrapResult)
-            .then(async (response: StartProcessResponse) => {
-                await dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
-                    response.orchestratorProcessInstanceId,
+            .then( (response: StartProcessResponse) => {
+                dispatch(processInstanceActions.updateOrchestratorProcessInstanceId(
+                    response.orchestratorProcessInstanceId
                 ));
                 onRunClick?.();
                 setStarted(true);
@@ -140,7 +145,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 setLoading(false);
                 closeSnackbar(BOT_SEARCH_TOAST_KEY);
             });
-            };
+    };
 
     const getTooltipTitle = () => {
         if (!isRunButtonDisabled) return translate('Process.MainView.Tooltip.Run.Enabled');

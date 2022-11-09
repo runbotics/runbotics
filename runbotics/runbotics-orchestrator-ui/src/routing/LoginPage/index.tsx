@@ -1,7 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
+/* eslint-disable complexity */
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+
 import {
     Box,
     Card,
@@ -14,14 +13,21 @@ import {
     FormHelperText,
     Button,
 } from '@mui/material';
+import { Formik } from 'formik';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
+
+import * as Yup from 'yup';
+
 import Page from 'src/components/pages/Page';
 import Logo from 'src/components/utils/Logo/Logo';
-import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { useDispatch } from '../../store';
-import { login } from '../../store/slices/Auth/Auth.thunks';
+
+
+import { useDispatch } from 'src/store';
+import { login } from 'src/store/slices/Auth/Auth.thunks';
+
 
 const PREFIX = 'LoginPage';
 
@@ -56,15 +62,14 @@ const StyledPage = styled(Page)(({ theme }) => ({
 }));
 
 const LoginPage: FC = () => {
-    const auth = useAuth();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-
+    const router = useRouter();
     return (
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink to="/">
+                    <RouterLink href="/" legacyBehavior>
                         <Logo simple className={classes.logo} />
                     </RouterLink>
                 </Box>
@@ -91,6 +96,7 @@ const LoginPage: FC = () => {
                                         await dispatch(login(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
+                                        router.push('/app/processes');
                                     } catch (err) {
                                         setStatus({ success: false });
                                         setErrors({ submit: err.message });
@@ -159,9 +165,11 @@ const LoginPage: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <Link component={RouterLink} to="/register" variant="body2" color="textSecondary">
-                            {translate('Login.SwitchToRegisterMessage')}
-                        </Link>
+                        <RouterLink href="/register" passHref legacyBehavior>
+                            <Link variant="body2" color="textSecondary">
+                                {translate('Login.SwitchToRegisterMessage')}
+                            </Link>
+                        </RouterLink>
                     </CardContent>
                 </Card>
             </Container>

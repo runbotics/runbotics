@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { translate } from 'src/hooks/useTranslations';
 
 interface IErrorBoundaryProps {
@@ -27,11 +28,11 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, IErrorBoundaryS
         const { error, errorInfo } = this.state;
         if (errorInfo) {
             const errorDetails = process.env.NODE_ENV === 'development' ? (
-                    <details className="preserve-space">
-                        {error && error.toString()}
-                        <br />
-                        {errorInfo.componentStack}
-                    </details>
+                <details className="preserve-space">
+                    {error && error.toString()}
+                    <br />
+                    {errorInfo.componentStack}
+                </details>
             ) : undefined;
             return (
                 <div>

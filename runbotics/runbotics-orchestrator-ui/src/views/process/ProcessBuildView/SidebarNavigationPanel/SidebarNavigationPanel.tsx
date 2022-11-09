@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
-import type { FC } from 'react';
-import { ProcessBuildTab, SidebarProps } from 'src/types/sidebar';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+import React, { useMemo, FC } from 'react';
+
 import { FeatureKey } from 'runbotics-common';
+
+import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
+import { ProcessBuildTab, SidebarProps } from 'src/types/sidebar';
+
 import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
 
 interface TabInfo {
@@ -17,10 +19,11 @@ const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, se
 
     const sidebarTabs = useMemo(() => {
         const tabs: TabInfo[] = [];
-        if (hasReadProcessInfoAccess) {
-            tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') });
-        }
+        if (hasReadProcessInfoAccess)
+        { tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') }); }
+
         return tabs;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasReadProcessInfoAccess]);
 
     return (

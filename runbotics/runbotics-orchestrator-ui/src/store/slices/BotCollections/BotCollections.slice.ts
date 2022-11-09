@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '../../index';
-import * as botCollectionThunks from './BotCollections.thunks';
-import { BotCollectionsState } from './BotCollections.state';
 import buildBotCollectionExtraReducers from './BotCollections.extraReducers';
+import { BotCollectionsState } from './BotCollections.state';
+import * as botCollectionThunks from './BotCollections.thunks';
 
 const initialState: BotCollectionsState = {
     loading: false,

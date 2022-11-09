@@ -1,7 +1,9 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import objFromArray from 'src/utils/objFromArray';
-import { getActivities } from './Activity.thunks';
+
 import { ActivityState } from './Activity.state';
+import { getActivities } from './Activity.thunks';
 
 const buildActivityExtraReducers = (builder: ActionReducerMapBuilder<ActivityState>) => {
     builder

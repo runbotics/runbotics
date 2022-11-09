@@ -1,13 +1,17 @@
 import React, { VFC } from 'react';
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box, Grid, LinearProgress, Typography } from '@mui/material';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
 import Label from 'src/components/Label';
-import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
 import If from 'src/components/utils/If';
-import { formatTimeDiff } from 'src/utils/utils';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { translate } from '../../../hooks/useTranslations';
+import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
 import { capitalizeFirstLetter } from 'src/utils/text';
+import { formatTimeDiff } from 'src/utils/utils';
+
+import { translate } from '../../../hooks/useTranslations';
+
 
 interface Props {
     processInstance: IProcessInstance;

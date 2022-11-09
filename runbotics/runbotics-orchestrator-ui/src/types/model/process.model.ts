@@ -1,8 +1,5 @@
 import { IProcess as IProcezz } from 'runbotics-common';
 
-import { IBotType } from './bot-type';
-import { IScheduleProcess } from './schedule-process.model';
-import { IUser } from './user.model';
 
 export interface IProcess extends IProcezz {}
 

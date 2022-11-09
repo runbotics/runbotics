@@ -1,5 +1,5 @@
-import { JSONSchema7 } from 'json-schema';
 import { UiSchema } from '@rjsf/core';
+import { JSONSchema7 } from 'json-schema';
 
 export enum Runner {
     BROWSER_BACKGROUND_SCRIPT = '${environment.services.backgroundScript()}',

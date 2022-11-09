@@ -1,19 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+
+import { AppBar, Box, Hidden, Toolbar, Typography } from '@mui/material';
 import clsx from 'clsx';
-import {
-    AppBar, Box, Hidden, Toolbar, Typography,
-} from '@mui/material';
+import RouterLink from 'next/link';
+import { FeatureKey, Role } from 'runbotics-common';
+import styled from 'styled-components';
+
+import If from 'src/components/utils/If';
 import Logo from 'src/components/utils/Logo/Logo';
 import useAuth from 'src/hooks/useAuth';
-import { HEADER_HEIGHT } from 'src/utils/constants';
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey, Role } from 'runbotics-common';
-import environment from 'src/utils/environment';
-import If from 'src/components/utils/If';
 import useRole from 'src/hooks/useRole';
+import { HEADER_HEIGHT } from 'src/utils/constants';
+
+
+import environment from 'src/utils/environment';
+
 import Account from './Account';
 import HowToRun from './HowToRun';
 import LangSwitcher from './LangSwitcher';
@@ -60,8 +62,10 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
-                    <RouterLink to="/">
+                    <RouterLink href="/app/processes">
+
                         <Logo className={classes.logo} white />
+
                     </RouterLink>
                 </Hidden>
                 <If condition={hasAdminAccess}>

@@ -1,42 +1,43 @@
-import {
-    Box, Tab, Tabs,
-} from '@mui/material';
-import React, { ChangeEvent, FC, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { ChangeEvent, FC, useMemo } from 'react';
+
+import { Box, Tab, Tabs } from '@mui/material';
+import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
+
 import useFeatureKey from 'src/hooks/useFeatureKey';
 import useTranslations from 'src/hooks/useTranslations';
 import { BotTab } from 'src/utils/bot-tab';
-import { BotParams } from 'src/utils/types/BotParams';
+
 import BotDetailsViewManager from './BotDetailsView.manager';
 
 const Results: FC = () => {
-    const { id, tab } = useParams<BotParams>();
-    const history = useHistory();
+    const router = useRouter();
+    const { id, tab } = router.query;
     const { translate } = useTranslations();
     const hasConsoleTabAccess = useFeatureKey([FeatureKey.BOT_LOG_READ]);
     const hasLogsTabAccess = useFeatureKey([FeatureKey.BOT_HISTORY_READ]);
 
     const currentTab = useMemo(() => {
-        if (hasLogsTabAccess) {
-            return tab || BotTab.LOGS;
-        }
+        if (hasLogsTabAccess) return tab || BotTab.LOGS;
+
         return tab;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasLogsTabAccess, tab, id]);
 
     const tabs = useMemo(() => {
         const tabsToReturn = [];
-        if (hasLogsTabAccess) {
-            tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') });
-        }
-        if (hasConsoleTabAccess) {
-            tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') });
-        }
+        if (hasLogsTabAccess)
+        { tabsToReturn.push({ value: BotTab.LOGS, label: translate('Bot.Details.Tabs.History.TabName') }); }
+
+        if (hasConsoleTabAccess)
+        { tabsToReturn.push({ value: BotTab.CONSOLE, label: translate('Bot.Details.Tabs.Logs.TabName') }); }
+
         return tabsToReturn;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasConsoleTabAccess, hasLogsTabAccess]);
 
     const handleTabsChange = (event: ChangeEvent<HTMLInputElement>, value: string): void => {
-        history.push(`/app/bots/${id}/details/${value}`);
+        router.push(`/app/bots/${id}/details/${value}`);
     };
 
     return (

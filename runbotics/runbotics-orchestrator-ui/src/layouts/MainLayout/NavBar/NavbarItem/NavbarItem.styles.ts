@@ -1,11 +1,11 @@
-import styled from 'styled-components';
 import {
     ListItem, ListItemIcon, ListItemText, SxProps, Theme,
 } from '@mui/material';
+import styled from 'styled-components';
 
 type LinkButtonSxStylesCallback = (depth: number, open: boolean) => SxProps<Theme>;
 
-export const getLinkButtonSx: LinkButtonSxStylesCallback = (depth: number, open: boolean) => ({
+export const getLinkButtonSx: LinkButtonSxStylesCallback = (depth: number) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '17px',

@@ -1,11 +1,10 @@
 import 'styled-components';
-import {
-    Theme as MuiTheme, TypeBackground as MuiPaletteBackground, ZIndex as MuiZIndex,
-} from '@mui/material/styles';
-/* eslint-disable @typescript-eslint/no-empty-interface */
+import { Theme as MuiTheme, ZIndex as MuiZIndex } from '@mui/material';
+import { TypeBackground as MuiPaletteBackground } from '@mui/material/styles';
+
 
 declare module '@mui/system' {
-    interface DefaultTheme extends MuiTheme {}
+    interface DefaultTheme extends MuiTheme { }
 }
 
 declare module '@mui/material/styles/createPalette' {
@@ -22,5 +21,5 @@ declare module '@mui/material/styles/zIndex' {
 }
 
 declare module 'styled-components' {
-    export interface DefaultTheme extends MuiTheme {}
+    export interface DefaultTheme extends MuiTheme { }
 }

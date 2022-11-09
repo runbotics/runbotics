@@ -9,6 +9,7 @@ class RunboticsModule {
 
     private commandStack: any;
 
+    // eslint-disable-next-line max-params
     constructor(bpmnFactory: any, create: any, elementFactory: any, translate: any, commandStack: any) {
         this.bpmnFactory = bpmnFactory;
         this.create = create;
@@ -20,6 +21,7 @@ class RunboticsModule {
 // @ts-ignore
 RunboticsModule.$inject = ['bpmnFactory', 'create', 'elementFactory', 'translate', 'commandStack'];
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
     __init__: ['runboticsModule'],
     runboticsModule: ['type', RunboticsModule],

@@ -1,8 +1,9 @@
 import React, { FC, useState } from 'react';
+
+import { Tab, Tabs, TextField, Box } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 import ReactJson, { InteractionProps } from 'react-json-view';
-import { Tab, Tabs, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 interface TabPanelProps {

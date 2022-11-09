@@ -1,13 +1,16 @@
 import React, { FC } from 'react';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
+
 import { LocalizationProvider } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { ThemeProvider as StyledComponentsThemeProvider } from 'styled-components';
 
 import GlobalStyles from 'src/components/utils/GlobalStyles';
+
 import useSettings from 'src/hooks/useSettings';
 import createTheme from 'src/theme';
-import { useTranslation } from 'react-i18next';
+
 
 const StylesProvider: FC = ({ children }) => {
     const { settings } = useSettings();

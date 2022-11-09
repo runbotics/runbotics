@@ -1,6 +1,6 @@
-import { Card } from '@mui/material';
-import { alpha } from '@mui/material/styles';
 import React, { FunctionComponent } from 'react';
+
+import { Card, alpha } from '@mui/material';
 import styled from 'styled-components';
 
 const Wrapper = styled(Card)<TileProps>`

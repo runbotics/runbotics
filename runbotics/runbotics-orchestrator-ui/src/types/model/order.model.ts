@@ -1,5 +1,5 @@
-import { IOrderItem } from './order-item.model';
 import OrderStatus from './enumerations/order-status.model';
+import { IOrderItem } from './order-item.model';
 
 export interface IOrder {
     id?: number;

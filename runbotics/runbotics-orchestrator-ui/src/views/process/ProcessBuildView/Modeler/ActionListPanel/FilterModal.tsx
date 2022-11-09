@@ -1,3 +1,5 @@
+import React, { FC } from 'react';
+
 import {
     Button,
     Checkbox,
@@ -9,9 +11,10 @@ import {
     Typography,
     Box,
 } from '@mui/material';
-import React, { FC } from 'react';
 import styled from 'styled-components';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { Filters, GroupProperties } from './ActionListPanel.types';
 
 interface FilterModalProps {
@@ -31,21 +34,15 @@ const StyledContainer = styled(Box)`
 const FilterModal: FC<FilterModalProps> = ({ anchorElement, activeFilters, filterOptions, setFilters, onClose }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { checked, name } = event.target;
-        if (checked) {
-            setFilters((prevState: Filters) => {
-                return { ...prevState, groupNames: [...prevState.groupNames, name] };
-            });
-        } else {
-            setFilters((prevState: Filters) => {
-                return { ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) };
-            });
-        }
+        if (checked) 
+        { setFilters((prevState: Filters) => ({ ...prevState, groupNames: [...prevState.groupNames, name] })); }
+        else 
+        { setFilters((prevState: Filters) => ({ ...prevState, groupNames: prevState.groupNames.filter((filter) => filter !== name) })); }
+        
     };
 
     const clearFilters = () => {
-        setFilters((prevState: Filters) => {
-            return { ...prevState, groupNames: [] };
-        });
+        setFilters((prevState: Filters) => ({ ...prevState, groupNames: [] }));
     };
 
     return (

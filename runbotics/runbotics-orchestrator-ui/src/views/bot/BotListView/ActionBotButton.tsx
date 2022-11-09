@@ -1,9 +1,12 @@
-import { IconButton, Menu } from '@mui/material';
 import React, { VFC } from 'react';
+
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton, Menu } from '@mui/material';
 import { FeatureKey, IBot } from 'runbotics-common';
-import useFeatureKey from 'src/hooks/useFeatureKey';
+
 import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+
 import ActionBotButtonDelete from './ActionBotButton.delete';
 
 const ActionBotButton: VFC<{ bot: IBot }> = ({ bot }) => {

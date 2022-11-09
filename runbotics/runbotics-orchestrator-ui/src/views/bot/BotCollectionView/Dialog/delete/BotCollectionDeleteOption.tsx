@@ -1,10 +1,13 @@
 import React, { FC, useState } from 'react';
+
 import { MenuItem } from '@mui/material';
 import { IBotCollection } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
-import BotCollectionDeleteDialog from './BotCollectionDeleteDialog';
+
 import { CollectionsDisplayMode } from '../../../BotBrowseView/BotBrowseView.utils';
 import { getLimitByDisplayMode, getBotCollectionPageParams } from '../../BotCollectionView.utils';
+import BotCollectionDeleteDialog from './BotCollectionDeleteDialog';
 
 interface DeleteBotCollectionProps {
     botCollection: IBotCollection;
@@ -25,11 +28,11 @@ const BotCollectionDeleteOption: FC<DeleteBotCollectionProps> = ({ botCollection
         <>
             <MenuItem onClick={() => setShow(true)}>{translate('Bot.Collection.Actions.Delete')}</MenuItem>
             <BotCollectionDeleteDialog
-                    botCollection={botCollection}
-                    open={show}
-                    onClose={() => setShow(false)}
-                    onDelete={handleDelete}
-                    pageParams={params}
+                botCollection={botCollection}
+                open={show}
+                onClose={() => setShow(false)}
+                onDelete={handleDelete}
+                pageParams={params}
             />
         </>
     );

@@ -1,8 +1,11 @@
-import { TextField } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import React, { FunctionComponent } from 'react';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import { TextField } from '@mui/material';
+
 import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
+
 import { VariableValue } from '../VariableDetails.types';
 import { DeleteButton, StyledListItem } from './ValueList.styles';
 

@@ -1,4 +1,5 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+
 import { GlobalVariableState } from './GlobalVariable.state';
 import {
     createGlobalVariable,

@@ -14,7 +14,7 @@ import { RuntimeService } from '../bpm/Runtime';
             inject: [ServerConfigService, AuthService],
             useFactory: async (config: ServerConfigService, auth: AuthService) => {
                 const logger = new RunboticsLogger(WebsocketModule.name);
-                const schedulerServer = new URL(config.entrypointUrl);
+                const schedulerServer = new URL(config.entrypointSchedulerUrl);
                 const wsUrl = `${schedulerServer.protocol == 'https:' ? 'wss' : 'ws'}://${schedulerServer.host}`;
                 logger.log(`Connecting with Scheduler (url: ${wsUrl})`);
                 const credentials = await auth.getCredentials();

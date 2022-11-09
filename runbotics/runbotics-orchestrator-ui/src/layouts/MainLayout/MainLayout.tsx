@@ -1,16 +1,22 @@
-import React, { useState, useMemo } from 'react';
-import type { FC } from 'react';
+import { useState, useMemo, FC } from 'react';
+
 import { useMediaQuery, useTheme } from '@mui/material';
-import useAsyncEffect from 'src/hooks/useAsyncEffect';
-import LoadingScreen from 'src/components/utils/LoadingScreen';
-import If from 'src/components/utils/If';
-import useAuth from 'src/hooks/useAuth';
-import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+
 import i18n from 'i18next';
-import NavBar from './NavBar';
-import TopBar from './TopBar';
+
+import { withAuthGuard } from 'src/components/guards/AuthGuard';
+import If from 'src/components/utils/If';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+import useAsyncEffect from 'src/hooks/useAsyncEffect';
+import useAuth from 'src/hooks/useAuth';
+
+
 import { Main, ContentContainer, Content } from './MainLayout.styles';
+import NavBar from './NavBar';
 import { usePublicSections } from './NavBar/usePublicSections';
+import TopBar from './TopBar';
+
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
@@ -19,12 +25,19 @@ const MainLayout: FC = ({ children }) => {
     const mobile = useMediaQuery(theme.breakpoints.down('md'));
     const publicSections = usePublicSections();
     const { user } = useAuth();
-    
-    const accessedSections = useMemo(() => publicSections.map(accessToSection => {
-            const items = accessToSection.items.filter((item) => (item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true));
-            return { ...accessToSection, items };
-        }), [user, i18n.language]);
-    
+
+    const accessedSections = useMemo(
+        () =>
+            publicSections.map((accessToSection) => {
+                const items = accessToSection.items.filter((item) =>
+                    item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true,
+                );
+                return { ...accessToSection, items };
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [user, i18n.language],
+    );
+
     const isNavBarVisible = accessedSections[0].items.length !== 1;
 
     useAsyncEffect(() => {
@@ -39,7 +52,12 @@ const MainLayout: FC = ({ children }) => {
         <>
             <TopBar />
             <If condition={isNavBarVisible}>
-                <NavBar isShrinked={isMenuShrinked} mobile={mobile} onMenuShowToggleChange={handleMenuShowToggle} accessedSections={accessedSections} />
+                <NavBar
+                    isShrinked={isMenuShrinked}
+                    mobile={mobile}
+                    onMenuShowToggleChange={handleMenuShowToggle}
+                    accessedSections={accessedSections}
+                />
             </If>
             <Main isNavbarVisible={isNavBarVisible} isShrinked={isMenuShrinked} mobile={mobile}>
                 <ContentContainer>
@@ -53,4 +71,4 @@ const MainLayout: FC = ({ children }) => {
     );
 };
 
-export default MainLayout;
+export default withAuthGuard(MainLayout);

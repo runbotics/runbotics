@@ -1,25 +1,24 @@
-import {
-    Card, Grid, Box, Typography,
-} from '@mui/material';
-import React, { FC, useEffect, useRef } from 'react';
-import { styled } from '@mui/material/styles';
-import { useSelector, useDispatch } from 'src/store';
-import { botActions } from 'src/store/slices/Bot';
-import If from 'src/components/utils/If';
-import { botCollectionActions } from 'src/store/slices/BotCollections';
-import { botSystemsActions } from 'src/store/slices/BotSystem';
-import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
-import LoadingScreen from 'src/components/utils/LoadingScreen';
-import LoadingType from 'src/types/loading';
-import { useParams } from 'react-router-dom';
-import { ProcessParams } from 'src/utils/types/ProcessParams';
+import { FC, useEffect, useRef } from 'react';
+
+import { Card, Grid, Box, Typography, styled } from '@mui/material';
+import { useRouter } from 'next/router';
+
 import { FeatureKey } from 'runbotics-common';
+
 import HistoryTable from 'src/components/HistoryTable';
-import useTranslations from 'src/hooks/useTranslations';
+import If from 'src/components/utils/If';
+import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+import { useSelector, useDispatch } from 'src/store';
+import { scheduleProcessActions, scheduleProcessSelector } from 'src/store/slices/ScheduleProcess';
+import LoadingType from 'src/types/loading';
+
+
+
 import RunProcessInstantly from './RunProcessInstantly';
-import ScheduleProcess from './ScheduleProcess';
 import SavedSchedule from './SavedSchedule';
+import ScheduleProcess from './ScheduleProcess';
 
 const ValidationSchedule = styled('div')(
     ({ theme }) => `
@@ -35,7 +34,7 @@ const ValidationSchedule = styled('div')(
 const ProcessRunView: FC = () => {
     const historyRef = useRef(null);
     const dispatch = useDispatch();
-    const { id } = useParams<ProcessParams>();
+    const { id } = useRouter().query;
     const processId = Number(id);
     const { process, loading } = useSelector((state) => state.process.draft);
     const { schedules } = useSelector(scheduleProcessSelector);
@@ -46,9 +45,8 @@ const ProcessRunView: FC = () => {
     const { translate } = useTranslations();
 
     useEffect(() => {
-        if (hasReadSchedulesAccess) {
-            dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
-        }
+        if (hasReadSchedulesAccess) dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
     const handleProcessSchedule = async (data: Record<string, string>) => {
@@ -63,9 +61,7 @@ const ProcessRunView: FC = () => {
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 
-    if (!process || process.id?.toString() !== id || loading === LoadingType.PENDING) {
-        return <LoadingScreen />;
-    }
+    if (!process || process.id?.toString() !== id || loading === LoadingType.PENDING) return <LoadingScreen />;
 
     return (
         <Grid sx={{ padding: '24px' }}>
@@ -107,11 +103,11 @@ const ProcessRunView: FC = () => {
                         <HistoryTable
                             ref={historyRef}
                             processId={processId}
-                            title={(
+                            title={
                                 <Typography variant="h4" gutterBottom>
                                     {translate('Process.Run.History.Title')}
                                 </Typography>
-                            )}
+                            }
                         />
                     </Grid>
                 </Card>

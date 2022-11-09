@@ -1,23 +1,18 @@
-import React, { useMemo } from 'react';
-import type { FC } from 'react';
-import { useLocation } from 'react-router-dom';
-import {
-    Box, Drawer, List, ListSubheader, IconButton,
-} from '@mui/material';
+import React, { FC } from 'react';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Drawer, List, ListSubheader, IconButton } from '@mui/material';
 
-import useTranslations from 'src/hooks/useTranslations';
+import { useRouter } from 'next/router';
+
 import If from 'src/components/utils/If';
+import useTranslations from 'src/hooks/useTranslations';
+
+import { getDrawerStyles, Wrapper, StyledIcon, StyledText } from './Navbar.styles';
+import { Section } from './Navbar.types';
 import NavbarList from './NavbarList';
-import {
-    getDrawerStyles, Wrapper, StyledIcon, StyledText,
-} from './Navbar.styles';
-import { Section } from './Navbar.types'
-import i18n from 'i18next';
-import { usePublicSections } from './usePublicSections';
-import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
-import useAuth from 'src/hooks/useAuth';
+
 
 interface NavbarProps {
     isShrinked: boolean;
@@ -27,7 +22,7 @@ interface NavbarProps {
 }
 
 const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, accessedSections }) => {
-    const location = useLocation();
+    const router = useRouter();
     const { translate } = useTranslations();
 
     return (
@@ -49,7 +44,7 @@ const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, a
                                 </ListSubheader>
                             }
                         >
-                            <NavbarList items={section.items} pathname={location.pathname} mobile={mobile} />
+                            <NavbarList items={section.items} pathname={router.pathname} mobile={mobile} />
                         </List>
                     ))}
                 </Box>

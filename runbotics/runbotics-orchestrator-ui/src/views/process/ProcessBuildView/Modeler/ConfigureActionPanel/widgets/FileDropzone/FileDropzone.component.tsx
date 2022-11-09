@@ -1,24 +1,29 @@
+import { FC, useCallback } from 'react';
+
 import { Typography } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import React, { FC, useCallback, useEffect } from 'react';
-import { useDropzone, FileRejection, DropEvent } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
+
 import { translate } from 'src/hooks/useTranslations';
+
 import { calculateSize, StyledLabel, StyledPaper } from '.';
 
 const FileDropzoneWidget: FC<WidgetProps> = (props) => {
-    const handleDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => {
+    const handleDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length <= 0) return;
         const reader = new FileReader();
         reader.onload = () => {
             props.onChange(reader.result);
         };
         reader.readAsDataURL(acceptedFiles[0]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const { getInputProps, getRootProps, acceptedFiles } = useDropzone({ onDrop: handleDrop, maxFiles: 1 });
 
-    const files = acceptedFiles.map((file) => (
-        <Typography>
+    const files = acceptedFiles.map((file, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <Typography key={index}>
             {file.name} - {calculateSize(file.size)}
         </Typography>
     ));
