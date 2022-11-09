@@ -2,8 +2,11 @@
 import Axios, { Method, AxiosResponse } from 'axios';
 import mime from 'mime-types';
 import { APICell } from 'src/types/FileUpload';
+import { Logger } from 'src/utils/logger';
 
 export class FileUploadService {
+    private readonly logger = new Logger(FileUploadService.name);
+
     constructor() { }
 
     private token = '';
@@ -108,7 +111,7 @@ export class FileUploadService {
             data: this.bufferFromBase64(content),
         });
 
-        console.log('File uploaded successfully', data);
+        this.logger.log('File uploaded successfully', data);
         return spPath + '/' + data.name;
     }
 
@@ -124,6 +127,6 @@ export class FileUploadService {
             },
         });
 
-        console.log('Temp folder deleted successfully', data);
+        this.logger.log('Temp folder deleted successfully', data);
     }
 }
