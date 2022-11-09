@@ -1,10 +1,14 @@
 import React, { FC, useEffect, useMemo } from 'react';
 
+import getConfig from 'next/config';
 import { io, Socket } from 'socket.io-client';
 
 import useAuth from 'src/hooks/useAuth';
 
-const uri = process.env.NEXT_PUBLIC_RUNBOTICS_ENTRYPOINT_URL;
+const { publicRuntimeConfig } = getConfig();
+
+const uri = publicRuntimeConfig.runboticsEntrypointUrl;
+
 export const SocketContext = React.createContext<Socket | null>(null);
 
 const SocketProvider: FC = ({ children }) => {
