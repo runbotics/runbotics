@@ -53,9 +53,11 @@ export type BeeOfficeGetActivityActionOutput = IBeeOfficeActivity;
 
 // ----
 export type BeeOfficeCreateNewTimetableActivityActionInput = {
+    employee: IBeeOfficeEmployee;
     activity: IBeeOfficeActivity;
     category: string;
-    employee: IBeeOfficeEmployee;
+    specialization: string;
+    localization: string;
     date: string;
     duration: string;
     description: string;
@@ -177,13 +179,13 @@ export class BeeOfficeActionHandler extends StatelessActionHandler {
             attribute2: null,
             attribute3: null,
             attribute4: null,
-            cat1_dic: null,
+            cat1_dic: Number(input.specialization),
             cat1_dic_name: null,
             cat2_dic: Number(input.category),
             cat2_dic_name: '',
             cat3_dic: 1,
             cat3_dic_name: '',
-            cat4_dic: null,
+            cat4_dic: Number(input.localization),
             cat4_dic_name: null,
             description: input.description,
             duration: Number(input.duration),
