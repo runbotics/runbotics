@@ -54,7 +54,7 @@
    *   create the links described in the "deploy-metadata.json" output file.
    * - "none": Do nothing; some other tool may create the links later.
    */
-   "linkCreation": "default",
+   "linkCreation": "script",
 
   /**
    * If this path is specified, then after "rush deploy", recursively copy the files from this folder to
@@ -94,7 +94,7 @@
         */
        "additionalDependenciesToInclude": [
          // "@rushstack/node-core-library"
-       ],
+       ]
 
        /**
         * This setting prevents specific dependencies from being deployed.  It only filters dependencies that
@@ -106,9 +106,6 @@
         * bundles its own dependencies, specify "dependenciesToExclude": [ "*" ] to exclude all package.json
         * dependencies.
         */
-       "dependenciesToExclude": [
-          "*"
-       ]
      }
   ]
 }

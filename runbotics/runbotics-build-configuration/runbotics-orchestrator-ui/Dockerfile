@@ -1,15 +1,13 @@
-FROM nginx:alpine
+FROM node:14-alpine
 
-#!/bin/sh
+WORKDIR /usr/src/app
 
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --chown=node:node . .
 
-## Remove default nginx index page
-RUN rm -rf /usr/share/nginx/html/*
+USER node
 
-# Copy from the stahg 1
-COPY ./runbotics-orchestrator-ui/dist /usr/share/nginx/html
+WORKDIR /usr/src/app/runbotics-orchestrator-ui
 
-EXPOSE 3000 80
+EXPOSE 3000
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# CMD node ../create-links.js create && node dist/main

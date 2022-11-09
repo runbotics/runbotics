@@ -20,7 +20,10 @@ export class FileUploadService {
     }
 
     private bufferFromBase64(base64File: string) {
-        return Buffer.from(base64File.split(';base64,').pop(), 'base64');
+        if (base64File.includes('base64,')) {
+            return Buffer.from(base64File.split(';base64,').pop(), 'base64');
+        }
+        return Buffer.from(base64File, 'base64');
     }
 
     static isObject(obj: unknown) {
