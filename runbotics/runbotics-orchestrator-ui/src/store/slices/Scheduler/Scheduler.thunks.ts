@@ -31,6 +31,6 @@ export const removeWaitingJob = createAsyncThunk<void, { jobId: string }>(
 
 export const terminateActiveJob = createAsyncThunk<void, { jobId: string }>(
     'activeJobs/terminateActiveJob',
-    ({ jobId }) => axios.post(`scheduler/process-instances/${jobId}/terminate`)
+    ({ jobId }) => axios.post(`/scheduler/process-instances/${jobId}/terminate`)
         .then((response) => response.data),
 );
