@@ -19,6 +19,6 @@ module.exports = {
         return config;
     },
     publicRuntimeConfig: {
-        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL,
     },
 };
