@@ -2,10 +2,6 @@ import type { FC } from 'react';
 
 import Image from 'next/image';
 
-import logoBlackSimp from './logo-black-simp.svg';
-import logoRectangleWhite from './logo-rectangle-white.svg';
-import logoWhiteSimp from './logo-white-simp.svg';
-
 interface LogoProps {
     white?: boolean;
     simple?: boolean;
@@ -19,15 +15,16 @@ const Logo: FC<LogoProps> = (props) => (
         {!props.simple && (
             <>
                 {!props.white ? (
-                    <Image src={logoWhiteSimp} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image priority src='/images/logo-white-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+
                 ) : (
-                    <Image src={logoBlackSimp} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image priority src='/images/logo-black-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
                 )}
             </>
         )}
         {props.simple && (
             <>
-                <Image src={logoRectangleWhite} height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                <Image priority src='/images/logo-rectangle-white.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
             </>
         )}
     </>
