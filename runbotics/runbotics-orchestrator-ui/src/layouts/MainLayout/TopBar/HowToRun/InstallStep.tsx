@@ -1,13 +1,15 @@
 import React, {
     FC, FormEvent, useEffect, useState,
 } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
+
+import GetAppIcon from '@mui/icons-material/GetApp';
 import {
     Box, Button, FormHelperText, Typography,
 } from '@mui/material';
 import Axios from 'axios';
-import GetAppIcon from '@mui/icons-material/GetApp';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'InstallStep';
@@ -57,9 +59,9 @@ const InstallStep: FC<InstallStepProps> = ({
     useEffect(() => {
         const installBot = async () => {
             const installed = await isInstalled();
-            if (installed) {
-                onComplete();
-            }
+            if (installed) 
+            { onComplete(); }
+            
         };
         const interval = setInterval(() => {
             installBot();
@@ -74,11 +76,11 @@ const InstallStep: FC<InstallStepProps> = ({
         try {
             setSubmitting(true);
             const installed = await isInstalled();
-            if (installed) {
-                onComplete();
-            } else {
-                setError(translate('Install.Errors.NotInstalled'));
-            }
+            if (installed) 
+            { onComplete(); }
+            else 
+            { setError(translate('Install.Errors.NotInstalled')); }
+            
         } catch (err) {
             setError(err.message);
         } finally {

@@ -1,4 +1,5 @@
 import React, { useState, VFC } from 'react';
+
 import {
     Button,
     Dialog,
@@ -9,14 +10,18 @@ import {
     SvgIcon,
     Typography,
 } from '@mui/material';
-import { X as CancelIcon } from 'react-feather';
 import { useSnackbar } from 'notistack';
-import useTranslations from 'src/hooks/useTranslations';
+import { X as CancelIcon } from 'react-feather';
+
+import { FeatureKey } from 'runbotics-common';
+
 import If from 'src/components/utils/If';
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
-import { schedulerActions } from '../../store/slices/Scheduler';
+import useTranslations from 'src/hooks/useTranslations';
+
+
 import { useDispatch } from '../../store';
+import { schedulerActions } from '../../store/slices/Scheduler';
 
 interface TerminateProcessButtonProps {
     id: string;
@@ -37,9 +42,11 @@ const TerminateProcessButton: VFC<TerminateProcessButtonProps> = ({ id, processN
     const handleTerminate = async () => {
         setShow(false);
         await dispatch(schedulerActions.terminateActiveJob({ jobId: id }))
-            .catch(() => enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
-                variant: 'error',
-            }));
+            .catch(() => {
+                enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
+                    variant: 'error',
+                });
+            });
     };
 
     return (

@@ -1,28 +1,27 @@
-import React, { VFC, lazy, Suspense } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { VFC } from 'react';
+
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+
 import If from 'src/components/utils/If';
 import { BotTab } from 'src/utils/bot-tab';
-import { BotParams } from 'src/utils/types/BotParams';
 
-const BotLog = lazy(() => import('./BotLog'));
-const BotConsole = lazy(() => import('./BotConsole'));
-const BotManagement = lazy(() => import('./BotManagement'));
+const BotLog = dynamic(() => import('./BotLog'));
+const BotConsole = dynamic(() => import('./BotConsole'), { ssr: false });
 
 const BotDetailsViewManager: VFC = () => {
-    const { tab } = useParams<BotParams>();
+    const router = useRouter();
+    const { tab } = router.query;
 
     return (
-        <Suspense fallback={false}>
+        <>
             <If condition={tab === BotTab.LOGS}>
                 <BotLog />
             </If>
             <If condition={tab === BotTab.CONSOLE}>
                 <BotConsole />
             </If>
-            <If condition={tab === BotTab.MANAGEMENT}>
-                <BotManagement />
-            </If>
-        </Suspense>
+        </>
     );
 };
 

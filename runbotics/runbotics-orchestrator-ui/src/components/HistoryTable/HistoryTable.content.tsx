@@ -1,19 +1,21 @@
-import React, {
-    forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState,
-} from 'react';
-import {
-    Box, SxProps,
-} from '@mui/material';
-import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+import React, { forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState } from 'react';
+
+import { Box, SxProps } from '@mui/material';
 import { Theme } from '@mui/system';
-import { processInstanceEventActions } from 'src/store/slices/ProcessInstanceEvent';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useRouter } from 'next/router';
+import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
 import InfoPanel from 'src/components/InfoPanel';
-import { useHistory } from 'react-router-dom';
-import useQuery from 'src/hooks/useQuery';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
 import useFeatureKey from 'src/hooks/useFeatureKey';
-import useAuth from 'src/hooks/useAuth';
+import useQuery from 'src/hooks/useQuery';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+import { processInstanceEventActions } from 'src/store/slices/ProcessInstanceEvent';
+
+
+
+
+
 import { useDispatch, useSelector } from '../../store';
 import {
     processInstanceActions,
@@ -21,12 +23,12 @@ import {
     processInstanceSelector,
 } from '../../store/slices/ProcessInstance';
 import { DefaultPageSize } from '../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
+import ResizableDrawer from '../ResizableDrawer';
 import Table from '../Table';
 import If from '../utils/If';
-import { Wrapper } from './HistoryTable.styles';
 import useProcessInstanceColumns from './HistoryTable.columns';
-import { hasAccessByFeatureKey } from '../utils/Secured';
-import ResizableDrawer from '../ResizableDrawer';
+import { Wrapper } from './HistoryTable.styles';
+
 
 interface PanelInfoState {
     show: boolean;
@@ -40,37 +42,34 @@ interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
     sx?: SxProps<Theme>;
 }
 
-const HistoryTable = forwardRef<any, HistoryTableProps>(({
-    botId, processId, sx, title,
-}, ref) => {
+// eslint-disable-next-line complexity
+const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title }, ref) => {
     const dispatch = useDispatch();
     const tableRef = useRef<HTMLDivElement>(null);
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const processInstanceColumns = useProcessInstanceColumns();
-    const history = useHistory();
+    const router = useRouter();
+    const { tab, id } = router.query;
     const query = useQuery();
     const pageFromUrl = query.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = query.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
-
+    const replaceQueryParams = useReplaceQueryParams();
     useEffect(() => {
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            history.replace(getSearchParams({
-                page, pageSize,
-            }));
+            replaceQueryParams({ page, pageSize, tab, id });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstancePage]);
 
     useEffect(() => {
-        history.replace(getSearchParams({
-            page, pageSize,
-        }));
+        replaceQueryParams({ page, pageSize, tab, id });
         dispatch(
             processInstanceActions.getProcessInstancePage({
                 page,
@@ -83,6 +82,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
                 },
             }),
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, page]);
 
     useImperativeHandle(ref, () => ({
@@ -93,15 +93,20 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
 
     const handleOnClick = async (processInstance: IProcessInstance) => {
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
-        if (processInstance.status === ProcessInstanceStatus.INITIALIZING
-            || processInstance.status === ProcessInstanceStatus.IN_PROGRESS
+        if (
+            processInstance.status === ProcessInstanceStatus.INITIALIZING ||
+            processInstance.status === ProcessInstanceStatus.IN_PROGRESS
         ) {
-            await dispatch(processInstanceEventActions
-                .getProcessInstanceEvents({ processInstanceId: processInstance.id }))
+            await dispatch(
+                processInstanceEventActions.getProcessInstanceEvents({ processInstanceId: processInstance.id }),
+            )
                 .then(unwrapResult)
                 .then((events) => dispatch(processInstanceActions.updateActiveEvents(events)));
-            dispatch(processInstanceActions
-                .updateOrchestratorProcessInstanceId(processInstance.orchestratorProcessInstanceId));
+            dispatch(
+                processInstanceActions.updateOrchestratorProcessInstanceId(
+                    processInstance.orchestratorProcessInstanceId,
+                ),
+            );
         } else {
             dispatch(processInstanceActions.resetActive());
         }
@@ -144,5 +149,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({
         </Wrapper>
     );
 });
+
+HistoryTable.displayName = 'HistoryTable';
 
 export default HistoryTable;

@@ -1,7 +1,9 @@
 import React, { VoidFunctionComponent } from 'react';
+
+import { Typography, Grid } from '@mui/material';
 import clsx from 'clsx';
 import styled from 'styled-components';
-import { Typography, Grid } from '@mui/material';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const PREFIX = 'SchedulerHeader';

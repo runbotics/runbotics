@@ -16,4 +16,4 @@ export const AttendancePaper = styled(StyledPaper)`
     display: flex;
     flex-direction: column;
     padding-bottom: 5px;
-`
+`;

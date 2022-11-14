@@ -1,10 +1,12 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointExcel.getCell': {
         id: 'sharepointExcel.getCell',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCell.Label'),
         script: 'sharepointExcel.getCell',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -59,7 +61,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.getRange': {
         id: 'sharepointExcel.getRange',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetRange.Label'),
         script: 'sharepointExcel.getRange',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -114,7 +116,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.setCell': {
         id: 'sharepointExcel.setCell',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label'),
         script: 'sharepointExcel.setCell',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -174,7 +176,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.updateRange': {
         id: 'sharepointExcel.updateRange',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label'),
         script: 'sharepointExcel.updateRange',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -236,7 +238,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.openFileFromSite': {
         id: 'sharepointExcel.openFileFromSite',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label'),
         script: 'sharepointExcel.openFileFromSite',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -323,7 +325,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.openFileFromRoot': {
         id: 'sharepointExcel.openFileFromRoot',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromRoot.Label'),
         script: 'sharepointExcel.openFileFromRoot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -396,7 +398,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointExcel.closeSession': {
         id: 'sharepointExcel.closeSession',
-        label: translate('Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
         script: 'sharepointExcel.closeSession',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -437,6 +439,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getSharepointExcelActions;

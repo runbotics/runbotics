@@ -1,7 +1,5 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
-import type { FC, ChangeEvent } from 'react';
-import { useHistory } from 'react-router-dom';
-import clsx from 'clsx';
+import React, { MouseEvent, useEffect, useState, FC, ChangeEvent } from 'react';
+
 import {
     Autocomplete,
     Box,
@@ -13,21 +11,31 @@ import {
     TableRow,
     TextField,
 } from '@mui/material';
-import Label from 'src/components/Label';
+import clsx from 'clsx';
+
 import moment from 'moment';
-import { useDispatch, useSelector } from 'src/store';
+
+import { useRouter } from 'next/router';
 import { BotStatus } from 'runbotics-common';
+
+import Label from 'src/components/Label';
+
+
 import If from 'src/components/utils/If';
-import { capitalizeFirstLetter, convertToPascalCase } from 'src/utils/text';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useBotStatusSocket from 'src/hooks/useBotStatusSocket';
-import useTranslations from 'src/hooks/useTranslations';
 import useQuery from 'src/hooks/useQuery';
-import { getSearchParams } from 'src/utils/SearchParamsUtils';
-import { classes, StyledCard } from './Results.styles';
+import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
+import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch, useSelector } from 'src/store';
+import { capitalizeFirstLetter } from 'src/utils/text';
+
 import { botActions } from '../../../store/slices/Bot';
-import ActionBotButton from './ActionBotButton';
 import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
+import ActionBotButton from './ActionBotButton';
+import { classes, StyledCard } from './Results.styles';
+
+
 
 interface ResultsProps {
     className?: string;
@@ -41,7 +49,7 @@ const getBotStatusColor = (status: BotStatus) => {
 };
 
 const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
-    const history = useHistory();
+    const router = useRouter();
     const dispatch = useDispatch();
     const query = useQuery();
 
@@ -56,23 +64,23 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     const [collectionFilter, setCollectionFilter] = useState<string[]>(getDefaultCollectionFilter());
     useBotStatusSocket();
     const { translate } = useTranslations();
+    const replaceQueryParams = useReplaceQueryParams();
 
     useEffect(() => {
         const pageNotAvailable = page && currentPage >= page.totalPages;
         if (pageNotAvailable) {
             setCurrentPage(0);
-            history.replace(getSearchParams({
-                page: 0, pageSize: limit,
-            }));
+            replaceQueryParams({ page: 0, pageSize: limit });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     useEffect(() => {
         const params = {
             page: currentPage,
             size: limit,
-            ...(collectionFilter
-                && collectionFilter.length && {
+            ...(collectionFilter &&
+                collectionFilter.length && {
                 filter: {
                     in: {
                         collection: collectionFilter,
@@ -81,25 +89,22 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
             }),
         };
         dispatch(botActions.getPage(params));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, limit, collectionFilter]);
 
     const handlePageChange = (event: any, newPage: number): void => {
-        history.replace(getSearchParams({
-            page: newPage, pageSize: limit,
-        }));
+        replaceQueryParams({ page: newPage, pageSize: limit });
         setCurrentPage(newPage);
     };
 
     const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
         setCurrentPage(0);
-        history.replace(getSearchParams({
-            page: 0, pageSize: parseInt(event.target.value, 10),
-        }));
+        replaceQueryParams({ page: 0, pageSize: parseInt(event.target.value, 10) });
         setLimit(parseInt(event.target.value, 10));
     };
 
     const handleRedirect = (event: MouseEvent<HTMLTableCellElement>, botId: number) => {
-        history.push(`/app/bots/${botId}/details/logs`);
+        router.push(`/app/bots/${botId}/details/logs`);
     };
 
     const handleFilterCollection = (event, value) => {
@@ -117,9 +122,9 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                     options={botCollections.map((collection) => collection.name)}
                     getOptionLabel={(collectionNameLabel) => collectionNameLabel}
                     defaultValue={collectionFilter}
-                    renderInput={
-                        (params) => <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
-                    }
+                    renderInput={(params) => (
+                        <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
+                    )}
                     filterSelectedOptions
                     disableCloseOnSelect
                     multiple
@@ -144,7 +149,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                         </TableHead>
                         <TableBody>
                             {getPageContent().map((bot) => {
-                                const formattedStatus = convertToPascalCase(bot.status);
+                                const formattedStatus = capitalizeFirstLetter({ text: bot.status, lowerCaseRest: true, delimiter: /_| / });
 
                                 return (
                                     <TableRow hover key={bot.installationId}>
@@ -157,13 +162,13 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             <Label color={getBotStatusColor(bot.status)}>
                                                 {/* @ts-ignore */}
-                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`,)}
+                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`)}
                                             </Label>
                                         </TableCell>
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             {bot.collection?.name}
                                         </TableCell>
-                                        <TableCell>{capitalizeFirstLetter(bot.system?.name ?? '')}</TableCell>
+                                        <TableCell>{bot.system?.name ? capitalizeFirstLetter({ text: bot.system?.name }) : ''}</TableCell>
                                         <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
                                             {bot.version}
                                         </TableCell>

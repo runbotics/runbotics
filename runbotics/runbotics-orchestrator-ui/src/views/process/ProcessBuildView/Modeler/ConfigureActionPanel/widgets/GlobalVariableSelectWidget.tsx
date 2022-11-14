@@ -1,8 +1,9 @@
 import React, { FC, useMemo } from 'react';
+
+import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
+
 import { globalVariableSelector } from 'src/store/slices/GlobalVariable';
 
 interface GlobalVariableOption {
@@ -36,7 +37,7 @@ const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
             value={getValue()}
             disabled={props.disabled}
             options={options}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => (option as GlobalVariableOption).name}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField

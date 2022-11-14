@@ -1,7 +1,9 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "src/store";
-import { IAction } from "src/types/model/action.model";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import Axios, { AxiosError } from 'axios';
+
+import { AppDispatch, RootState } from 'src/store';
+import { IAction } from 'src/types/model/action.model';
 
 export const getActions = createAsyncThunk('actions/getActions', async () => {
     const response = await Axios.get<IAction[]>('/api/actions');
@@ -36,9 +38,9 @@ export const saveAction = createAsyncThunk<
         return response.data;
     } catch (err) {
         const error: AxiosError<any> = err; // cast the error for access
-        if (!error.response) {
-            throw err;
-        }
+        if (!error.response) 
+        { throw err; }
+        
         // We got validation errors, let's return those so we can reference in our component and set form errors
         return rejectWithValue(error.response.data);
     }

@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '../../index';
-import * as usersThunks from './Users.thunks';
-import { UsersState } from './Users.state';
 import buildUsersExtraReducers from './Users.extraReducers';
+import { UsersState } from './Users.state';
+import * as usersThunks from './Users.thunks';
 
 const initialState: UsersState = {
     loading: false,

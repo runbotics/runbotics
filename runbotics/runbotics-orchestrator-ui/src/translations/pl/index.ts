@@ -1,20 +1,20 @@
-import commonTranslations from './common.json';
-import registerTranslations from './register.json';
-import loginTranslations from './login.json';
 import accountTranslations from './account.json';
-import historyTranslations from './history.json';
-import botTranslations from './bot.json';
-import processTranslations from './process.json';
-import error404Translations from './error404.json';
 import actionTranslations from './action.json';
+import botTranslations from './bot.json';
+import commonTranslations from './common.json';
+import componentsTranslations from './components.json';
+import error404Translations from './error404.json';
+import historyTranslations from './history.json';
+import installTranslations from './install.json';
+import loginTranslations from './login.json';
+import navTranslations from './nav.json';
+import paletteTranslations from './palette.json';
+import processTranslations from './process.json';
+import registerTranslations from './register.json';
 import schedulerTranslations from './scheduler.json';
 import variablesTranslations from './variables.json';
-import installTranslations from './install.json';
-import navTranslations from './nav.json';
-import componentsTranslations from './components.json';
-import paletteTranslations from './palette.json';
 
-export default {
+const translationResources = {
     ...commonTranslations,
     ...navTranslations,
     ...registerTranslations,
@@ -31,3 +31,4 @@ export default {
     ...componentsTranslations,
     ...paletteTranslations,
 };
+export default translationResources;

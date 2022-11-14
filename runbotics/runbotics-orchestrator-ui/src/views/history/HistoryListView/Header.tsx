@@ -1,7 +1,9 @@
 import React, { VoidFunctionComponent } from 'react';
-import styled from 'styled-components';
-import clsx from 'clsx';
+
 import { Typography, Grid } from '@mui/material';
+import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useTranslations from '../../../hooks/useTranslations';
 
 const PREFIX = 'Header';

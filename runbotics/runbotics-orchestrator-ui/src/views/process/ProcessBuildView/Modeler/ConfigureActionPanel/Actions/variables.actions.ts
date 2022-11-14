@@ -1,10 +1,11 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assign': {
         id: 'variables.assign',
-        label: translate('Process.Details.Modeler.Actions.Variable.Assign.Label'),
+        label: translate('Process.Details.Modeler.Actions.Variables.Assign.Label'),
         script: 'variables.assign',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -42,7 +43,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     },
     'variables.assignList': {
         id: 'variables.assignList',
-        label: translate('Process.Details.Modeler.Actions.Variable.AssignList.Label'),
+        label: translate('Process.Details.Modeler.Actions.Variables.AssignList.Label'),
         script: 'variables.assignList',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -82,7 +83,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     },
     'variables.assignGlobalVariable': {
         id: 'variables.assignGlobalVariable',
-        label: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Label'),
+        label: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'),
         script: 'variables.assignGlobalVariable',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -118,6 +119,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getVariablesActions;

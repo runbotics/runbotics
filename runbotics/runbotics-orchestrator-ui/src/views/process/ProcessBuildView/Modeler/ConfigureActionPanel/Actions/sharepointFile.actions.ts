@@ -1,10 +1,12 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner, CloudPath } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromRoot': {
         id: 'sharepointFile.downloadFileFromRoot',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFileFromRoot.Label'),
         script: 'sharepointFile.downloadFileFromRoot',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -68,7 +70,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointFile.downloadFileFromSite': {
         id: 'sharepointFile.downloadFileFromSite',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFileFromSite.Label'),
         script: 'sharepointFile.downloadFileFromSite',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -153,7 +155,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointFile.downloadFiles': {
         id: 'sharepointFile.downloadFiles',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFiles.Label'),
         script: 'sharepointFile.downloadFiles',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -238,7 +240,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointFile.uploadFile': {
         id: 'sharepointFile.uploadFile',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointFile.UploadFile.Label'),
         script: 'sharepointFile.uploadFile',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -312,7 +314,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sharepointFile.createFolder': {
         id: 'sharepointFile.createFolder',
-        label: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Label'),
+        label: translate('Process.Details.Modeler.Actions.SharepointFile.CreateFolder.Label'),
         script: 'sharepointFile.createFolder',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -459,6 +461,6 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     //         }
     //     }
     // },
-})
+});
 
 export default getSharepointFileActions;

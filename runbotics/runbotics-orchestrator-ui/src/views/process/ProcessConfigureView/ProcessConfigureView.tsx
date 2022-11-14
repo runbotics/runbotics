@@ -1,12 +1,14 @@
+import React, { useEffect, useState, VFC } from 'react';
+
 import { Box } from '@mui/material';
-import React, { ChangeEvent, useEffect, useState, VFC } from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
+
 import { useDispatch, useSelector } from 'src/store';
 import { botCollectionActions } from 'src/store/slices/BotCollections';
 import { botSystemsActions } from 'src/store/slices/BotSystem';
 import { processActions } from 'src/store/slices/Process';
-import { ProcessParams } from 'src/utils/types/ProcessParams';
+
 import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
@@ -17,7 +19,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { process } = useSelector((state) => state.process.draft);
-    const { id } = useParams<ProcessParams>();
+    const { id } = useRouter().query;
     const processId = Number(id);
 
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(process?.system);
@@ -28,21 +30,17 @@ const ProcessConfigureView: VFC = () => {
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
     useEffect(() => {
-        if (process?.system) {
-            setSelectedBotSystem(process.system);
-        }
-        if (process?.botCollection) {
-            setSelectedBotCollection(process.botCollection);
-        }
-        if (process?.isAttended) {
-            setAttended(process.isAttended);
-        }
-        if (process?.isTriggerable) {
-            setTriggerable(process.isTriggerable);
-        }
+        if (process?.system) setSelectedBotSystem(process.system);
+
+        if (process?.botCollection) setSelectedBotCollection(process.botCollection);
+
+        if (process?.isAttended) setAttended(process.isAttended);
+
+        if (process?.isTriggerable) setTriggerable(process.isTriggerable);
     }, [process]);
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
@@ -58,11 +56,13 @@ const ProcessConfigureView: VFC = () => {
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(processActions.updateAttendedance({ ...process, isAttended }));
         setAttended(isAttended);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(processActions.updateTriggerable({ ...process, isTriggerable }));
         setTriggerable(isTriggerable);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     return (

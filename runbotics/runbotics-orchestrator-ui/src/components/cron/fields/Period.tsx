@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
+
 import { Select, MenuItem, SvgIcon } from '@mui/material';
 import { Calendar as CalendarIcon } from 'react-feather';
 
-import { PeriodProps } from '../types';
 import DEFAULT_LOCALE_EN from '../locale';
+import { PeriodProps } from '../types';
 import { classNames } from '../utils';
 
+// eslint-disable-next-line complexity
 export default function Period(props: PeriodProps) {
-    const {
-        value, setValue, locale, className, disabled, readOnly, shortcuts,
-    } = props;
+    const { value, setValue, locale, className, disabled, readOnly, shortcuts } = props;
     let options = [
         {
             value: 'year',
@@ -37,41 +37,40 @@ export default function Period(props: PeriodProps) {
         },
     ];
 
-    if (shortcuts && (shortcuts === true || shortcuts.includes('@reboot'))) {
-        options = [
-            ...options,
-            {
-                value: 'reboot',
-                label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
-            },
-        ];
-    }
+    if (shortcuts && (shortcuts === true || shortcuts.includes('@reboot')))
+    { options = [
+        ...options,
+        {
+            value: 'reboot',
+            label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
+        },
+    ]; }
 
     const handleChange = useCallback(
         (event) => {
-            if (!readOnly) {
-                setValue(event.target.value);
-            }
+            if (!readOnly) setValue(event.target.value);
         },
         [setValue, readOnly],
     );
 
     const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-period': true,
-            [`${className}-field`]: !!className,
-            [`${className}-period`]: !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-field': true,
+                'react-js-cron-period': true,
+                [`${className}-field`]: !!className,
+                [`${className}-period`]: !!className,
+            }),
         [className],
     );
 
     const selectClassName = useMemo(
-        () => classNames({
-            'react-js-cron-select': true,
-            'react-js-cron-select-no-prefix': locale.prefixPeriod === '',
-            [`${className}-select`]: !!className,
-        }),
+        () =>
+            classNames({
+                'react-js-cron-select': true,
+                'react-js-cron-select-no-prefix': locale.prefixPeriod === '',
+                [`${className}-select`]: !!className,
+            }),
         [className, locale.prefixPeriod],
     );
 

@@ -1,24 +1,36 @@
 import React, { useEffect, useState, VFC } from 'react';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import DoneIcon from '@mui/icons-material/Done';
+
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
+
+import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
+
+import i18n from 'i18next';
+
 import If from 'src/components/utils/If';
+import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
-import useTranslations from 'src/hooks/useTranslations';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 type Props = {
     onSubmit: (label: string) => void;
 };
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
+    const { translate } = useTranslations();
     const { element, action } = useBpmnFormContext();
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
-    const { translate } = useTranslations();
+    const actionId = element.businessObject?.actionId;
+    const [translatedLabel, setTranslatedLabel] = useState(actionId);
+    const translationKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+    
+    useEffect(() => {
+        if (checkIfKeyExists(translationKey)) {
+            setTranslatedLabel(translate(translationKey));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language, actionId]);
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });
@@ -45,11 +57,10 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const EditButtons = () => {
         const isSameAsBefore = formState.label === element.businessObject.label;
-        const isNotEmpty = !formState.label;
 
         return (
             <>
-                <IconButton disabled={isNotEmpty || isSameAsBefore} type="submit">
+                <IconButton disabled={isSameAsBefore} type="submit">
                     <DoneIcon />
                 </IconButton>
                 <IconButton onClick={() => setFormState({ editing: false, label: element.businessObject.label })}>
@@ -61,7 +72,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionNameLabel = () => (
         <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">{formState.label}</Typography>
+            <Typography variant="h4">{formState.label ? formState.label : translatedLabel}</Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>

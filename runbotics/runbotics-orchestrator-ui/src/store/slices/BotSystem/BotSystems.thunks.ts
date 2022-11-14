@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IBotSystem } from 'runbotics-common';
 import axios from 'axios';
+import { IBotSystem } from 'runbotics-common';
 
 export const getAll = createAsyncThunk<IBotSystem[], void>(
     'botSystems/getAll',

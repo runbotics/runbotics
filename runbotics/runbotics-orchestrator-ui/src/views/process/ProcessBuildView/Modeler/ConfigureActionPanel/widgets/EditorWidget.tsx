@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { WidgetProps } from '@rjsf/core';
+
 import Editor, { useMonaco } from '@monaco-editor/react';
+import { WidgetProps } from '@rjsf/core';
+
 import useTranslations from 'src/hooks/useTranslations';
 
 const EditorWidget: FC<WidgetProps> = (props) => {

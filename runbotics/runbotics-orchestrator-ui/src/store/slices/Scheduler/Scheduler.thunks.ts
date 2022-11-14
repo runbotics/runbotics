@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
 import { ScheduledJob, SchedulerJob } from './Scheduler.state';
 
 const processStatuses = [ProcessInstanceStatus.IN_PROGRESS, ProcessInstanceStatus.INITIALIZING];
@@ -30,5 +31,6 @@ export const removeWaitingJob = createAsyncThunk<void, { jobId: string }>(
 
 export const terminateActiveJob = createAsyncThunk<void, { jobId: string }>(
     'activeJobs/terminateActiveJob',
-    ({ jobId }) => axios.post(`scheduler/process-instances/${jobId}/terminate`),
+    ({ jobId }) => axios.post(`/scheduler/process-instances/${jobId}/terminate`)
+        .then((response) => response.data),
 );

@@ -1,10 +1,11 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: 'asana.test',
-        label: translate('Process.Details.Modeler.Actions.Asana.Label'),
+        label: translate('Process.Details.Modeler.Actions.Asana.Test.Label'),
         script: 'asana.test',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -48,6 +49,6 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getAsanaActions;

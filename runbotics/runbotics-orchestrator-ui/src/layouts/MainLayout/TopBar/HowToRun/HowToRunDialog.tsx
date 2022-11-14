@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
+
 import {
     Avatar,
     Box,
@@ -13,14 +13,17 @@ import {
     Dialog, DialogContent, DialogTitle, 
 } from '@mui/material';
 import clsx from 'clsx';
+import styled from 'styled-components';
+
 import useLocalStorage from 'src/hooks/useLocalStorage';
 import useTranslations from 'src/hooks/useTranslations';
-import InstallStep from './InstallStep';
-import RunStep from './RunStep';
+
 import CompleteStep from './CompleteStep';
 import ConnectStep from './ConnectStep';
-import useInstallSteps from './useInstallSteps';
 import { CustomStepIconProps } from './CustomSteps.types';
+import InstallStep from './InstallStep';
+import RunStep from './RunStep';
+import useInstallSteps from './useInstallSteps';
 
 const DIALOG_PREFIX = 'HowToRunDialog';
 const ICON_PREFIX = 'CustomStepIcon';

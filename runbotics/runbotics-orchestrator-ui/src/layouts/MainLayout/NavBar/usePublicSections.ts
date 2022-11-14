@@ -1,11 +1,13 @@
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import TuneIcon from '@mui/icons-material/Tune';
 import HistoryIcon from '@mui/icons-material/History';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { FeatureKey, Role } from 'runbotics-common';
+import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
+import { FeatureKey, Role } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import { Section } from './Navbar.types';
 
 export const usePublicSections = (): Section[] => {
@@ -20,7 +22,7 @@ export const usePublicSections = (): Section[] => {
                     title: translate('Nav.Items.Processes'),
                     icon: CallSplitIcon,
                     href: '/app/processes',
-                    featureKeys: [FeatureKey.PROCESS_READ],
+                    featureKeys: [FeatureKey.PROCESS_LIST_READ],
                 },
                 {
                     title: translate('Nav.Items.Bots'),

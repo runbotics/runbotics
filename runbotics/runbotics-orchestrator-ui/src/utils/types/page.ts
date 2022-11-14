@@ -13,7 +13,6 @@ export interface Page<T> {
     totalPages: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export interface PageRequestParams<T extends object = any> {
     page?: number;
     size?: number;

@@ -1,11 +1,13 @@
 import React, { VFC } from 'react';
+
+import CloseIcon from '@mui/icons-material/Close';
 import {
     Box, IconButton, SxProps, Theme,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+
+import If from '../utils/If';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
-import If from '../utils/If';
 
 interface InfoPanelProps {
     processInstanceId?: string;
@@ -36,7 +38,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({ processInstanceId, onClose, showCloseB
             }}
         >
             <ProcessInstanceDetails processInstanceId={processInstanceId} />
-            <ProcessInstanceEventsDetails processInstanceId={processInstanceId} />
+            <ProcessInstanceEventsDetails processInstanceId={processInstanceId} /> 
         </Box>
     </Box>
 );

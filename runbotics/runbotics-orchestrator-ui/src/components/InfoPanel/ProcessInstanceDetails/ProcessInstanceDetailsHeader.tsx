@@ -1,13 +1,17 @@
 import React, { VFC } from 'react';
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Box, Grid, LinearProgress, Typography } from '@mui/material';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
 import Label from 'src/components/Label';
-import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
 import If from 'src/components/utils/If';
+import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
+import { capitalizeFirstLetter } from 'src/utils/text';
 import { formatTimeDiff } from 'src/utils/utils';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 import { translate } from '../../../hooks/useTranslations';
-import { convertToPascalCase } from 'src/utils/text';
+
 
 interface Props {
     processInstance: IProcessInstance;
@@ -19,7 +23,8 @@ const isProcessInstanceActive = (
     || status === ProcessInstanceStatus.IN_PROGRESS;
 
 const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
-    const formattedStatus = convertToPascalCase(processInstance.status);
+    
+    const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
 
     return (
         <Grid container spacing={2}>

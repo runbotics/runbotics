@@ -1,5 +1,5 @@
-import { JSONSchema7 } from 'json-schema';
 import { UiSchema } from '@rjsf/core';
+import { JSONSchema7 } from 'json-schema';
 
 export enum Runner {
     BROWSER_BACKGROUND_SCRIPT = '${environment.services.backgroundScript()}',
@@ -48,6 +48,7 @@ export type IBpmnAction = {
     runner: Runner;
     script: string;
     label: string;
+    translateKey?: string;
     system?: ActionSystem;
     input?: IActionInput;
     output?: IActionOutput;

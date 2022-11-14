@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { IBot } from 'runbotics-common';
-import { Page, PageRequestParams } from 'src/utils/types/page';
+
 import { IProcess } from 'src/types/model/process.model';
+import { Page, PageRequestParams } from 'src/utils/types/page';
 import URLBuilder from 'src/utils/URLBuilder';
 
 const botPageURL = (params: PageRequestParams<IProcess>) => URLBuilder

@@ -1,13 +1,13 @@
-import React, {
-    ChangeEvent, FC, useEffect, useMemo, useState,
-} from 'react';
-import {
-    Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typography,
-} from '@mui/material';
-import { IBotCollection, IUser } from 'runbotics-common';
+/* eslint-disable complexity */
+import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+
+import { Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
 import moment from 'moment';
-import { usersActions } from 'src/store/slices/Users';
+import { IBotCollection, IUser } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+import { usersActions } from 'src/store/slices/Users';
+
 import { useDispatch, useSelector } from '../../../../../store';
 import { botCollectionActions } from '../../../../../store/slices/BotCollections';
 import { PageRequestParams } from '../../../../../utils/types/page';
@@ -22,14 +22,12 @@ interface ModifyBotCollectionDialogProps {
 
 const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
 
-const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({
-    collection, onClose, open, pageParams,
-}) => {
+const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collection, onClose, open, pageParams }) => {
     const dispatch = useDispatch();
     useEffect(() => {
-        if (open) {
-            dispatch(usersActions.getAllLimited());
-        }
+        if (open) dispatch(usersActions.getAllLimited());
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
     const { user: currentUser } = useSelector((state) => state.auth);
     const { all } = useSelector((state) => state.users);
@@ -42,9 +40,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({
 
     const { translate } = useTranslations();
 
-    const isOwner = !collection
-                    || currentUser.login === collection?.createdBy.login
-                    || currentUser.login === 'admin';
+    const isOwner = !collection || currentUser.login === collection?.createdBy.login || currentUser.login === 'admin';
 
     const filteredUsers = useMemo(() => all.filter((user) => user.login !== 'admin'), [all]);
 
@@ -67,10 +63,9 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({
         setError(false);
     };
 
-    const updateCollection = async (body) => {
-        if (collection) {
-            return dispatch(botCollectionActions.updateOne({ id: collection.id, body }));
-        }
+    const updateCollection = (body) => {
+        if (collection) return dispatch(botCollectionActions.updateOne({ id: collection.id, body }));
+
         return dispatch(botCollectionActions.createOne({ body }));
     };
 
@@ -152,10 +147,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({
                         disableCloseOnSelect
                         readOnly={!isOwner}
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={translate('Bot.Collection.Dialog.Modify.Form.Users.Label')}
-                            />
+                            <TextField {...params} label={translate('Bot.Collection.Dialog.Modify.Form.Users.Label')} />
                         )}
                     />
                     <Typography sx={{ visibility: `${error ? 'visibily' : 'hidden'}` }} color="red" variant="body2">
@@ -173,13 +165,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({
                 >
                     {translate('Common.Cancel')}
                 </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    autoFocus
-                    onClick={() => handleSubmit()}
-                >
+                <Button type="submit" variant="contained" color="primary" autoFocus onClick={() => handleSubmit()}>
                     {translate('Common.Save')}
                 </Button>
             </DialogActions>

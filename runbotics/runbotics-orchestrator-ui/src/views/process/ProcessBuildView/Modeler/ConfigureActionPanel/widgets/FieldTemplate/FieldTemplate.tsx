@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
+
+import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/material';
 import { FieldTemplateProps } from '@rjsf/core';
 
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
-import { convertToPascalCase } from 'src/utils/text';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 import WrapIfAdditional from './WrapIfAdditional';
+
 
 const FieldTemplate = ({
     id,
@@ -33,25 +31,21 @@ const FieldTemplate = ({
 
     useEffect(() => {
         if (typeof rawDescription !== 'undefined') {
-            if (
-                checkIfKeyExists(
-                    'Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawDescription)
-                )
-            ) {
-                {/*@ts-ignore*/}
-                setDescription(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawDescription)}`));
+            const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: ' ', lowerCaseRest: true });
+            if (checkIfKeyExists(translateKey)) {
+                { /*@ts-ignore*/ }
+                setDescription(translate(translateKey));
             }
-        }
+        };
 
         if (rawErrors.length > 0) {
             const localRawErrors = [];
-
+            
             rawErrors.forEach((rawError) => {
-                if (
-                    checkIfKeyExists('Process.BuildView.Modeler.Widgets.FieldTemplate.', convertToPascalCase(rawError))
-                ) {
-                    {/*@ts-ignore*/}
-                    localRawErrors.push(translate(`Process.BuildView.Modeler.Widgets.FieldTemplate.${convertToPascalCase(rawError)}`));
+                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, delimiter: ' ', lowerCaseRest: true })}`;
+                if (checkIfKeyExists(translateKey)) {
+                    { /*@ts-ignore*/ }
+                    localRawErrors.push(translate(translateKey));
                 } else {
                     localRawErrors.push(rawError);
                 }

@@ -1,10 +1,12 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     'import.csv': {
         id: 'import.csv',
-        label: translate('Process.Details.Modeler.Actions.CSV.Import.Label'),
+        label: translate('Process.Details.Modeler.Actions.Import.Csv.Label'),
         script: 'import.csv',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -56,7 +58,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     },
     'csv.appendFile': {
         id: 'csv.appendFile',
-        label: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Label'),
+        label: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Label'),
         script: 'csv.appendFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -119,7 +121,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     },
     'csv.readFile': {
         id: 'csv.readFile',
-        label: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Label'),
+        label: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Label'),
         script: 'csv.readFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -177,7 +179,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     },
     'csv.writeFile': {
         id: 'csv.writeFile',
-        label: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Label'),
+        label: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Label'),
         script: 'csv.writeFile',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -238,6 +240,6 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getCsvActions;

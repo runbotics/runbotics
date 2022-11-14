@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getMailActions: () => Record<string, IBpmnAction> = () => ({
@@ -59,6 +60,6 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getMailActions;

@@ -1,6 +1,9 @@
+/* eslint-disable eqeqeq */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+
 import { translate } from 'src/hooks/useTranslations';
 import { Position } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
+
 import {
     Parameter,
     ParameterDestination,
@@ -46,11 +49,11 @@ export class BPMNElementFactory {
 
     createTaskType = (type: TaskType, configuration: TaskConfiguration, additionalShapeAttrs?: Record<string, any>) => {
         const businessObject = this.bpmnFactory.create(`bpmn:${type}`);
-        if (configuration.businessObject) {
-            Object.entries(configuration.businessObject).forEach(([key, value]) => {
-                businessObject[key] = value;
-            });
-        }
+        if (configuration.businessObject)
+        { Object.entries(configuration.businessObject).forEach(([key, value]) => {
+            businessObject[key] = value;
+        }); }
+
         businessObject.label = configuration.label;
         const shape = this.elementFactory.createShape({
             type: `bpmn:${type}`,
@@ -79,12 +82,12 @@ export class BPMNElementFactory {
         });
 
         const createParameter = (destination: ParameterDestination, parameter: Parameter) => {
-            if (parameter.type == null || parameter.type === ParameterType.TEXT) {
-                return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
-                    name: parameter.name,
-                    value: parameter.value,
-                });
-            } if (parameter.type === ParameterType.MAP) {
+            if (parameter.type == null || parameter.type === ParameterType.TEXT)
+            { return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
+                name: parameter.name,
+                value: parameter.value,
+            }); }
+            if (parameter.type === ParameterType.MAP) {
                 const parameterMap = parameter as ParameterMap;
                 return this.bpmnFactory.create(`camunda:${destination}Parameter`, {
                     name: parameter.name,

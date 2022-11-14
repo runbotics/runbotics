@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { getProcessInstanceEvents } from './ProcessInstanceEvent.thunks';
+
 import { ProcessInstanceEventState } from './ProcessInstanceEvent.state';
+import { getProcessInstanceEvents } from './ProcessInstanceEvent.thunks';
 
 const buildProcessInstanceEventExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceEventState>) => {
     builder

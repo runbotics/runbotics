@@ -1,16 +1,15 @@
-import React, { useEffect, useMemo } from 'react';
-import { IProcess } from 'runbotics-common';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import React, { useMemo } from 'react';
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
-import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
-import ErrorBoundary from '../utils/ErrorBoundary';
-import _ from 'lodash';
-import FormRenderer from './FormRenderer';
+import { IProcess } from 'runbotics-common';
+
 import { translate } from 'src/hooks/useTranslations';
+import customWidgets from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+
+import ErrorBoundary from '../utils/ErrorBoundary';
+import FormRenderer from './FormRenderer';
+
 
 interface UserModalProps {
     open: boolean;
@@ -31,10 +30,10 @@ function isJsonValid(str) {
 const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit }) => {
     const submitFormRef = React.useRef<any>();
     const processForm = useMemo(() => {
-        if (isJsonValid(process?.executionInfo)) {
-            return JSON.parse(process.executionInfo);
-        }
+        if (isJsonValid(process?.executionInfo)) return JSON.parse(process.executionInfo);
+
         return null;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [process.id]);
 
     const handleSubmit = (e: ISubmitEvent<any>) => {

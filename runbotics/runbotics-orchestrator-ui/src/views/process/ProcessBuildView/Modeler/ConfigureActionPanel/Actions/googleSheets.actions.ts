@@ -1,10 +1,11 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     'google.sheets.write': {
         id: 'google.sheets.write',
-        label: translate('Process.Details.Modeler.Actions.GoogleSheets.Write.Label'),
+        label: translate('Process.Details.Modeler.Actions.Google.Sheets.Write.Label'),
         script: 'google.sheets.write',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -34,6 +35,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-}) 
+}); 
 
 export default getGoogleSheetsActions;

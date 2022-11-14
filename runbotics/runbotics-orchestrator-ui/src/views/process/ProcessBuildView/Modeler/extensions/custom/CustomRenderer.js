@@ -18,6 +18,8 @@ import { truncate } from 'lodash';
 import { CustomActionDescription } from 'src/utils/action';
 import store from '../../../../../../store';
 import internalBpmnActions from '../../ConfigureActionPanel/Actions';
+import { translate } from 'src/hooks/useTranslations';
+import { capitalizeFirstLetter } from 'src/utils/text';
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
@@ -63,9 +65,18 @@ export default class CustomRenderer extends BaseRenderer {
 
         // svgClasses(text).add('djs-label');
 
-        svgAppend(text, document.createTextNode(label));
+        const actionId = label.actionId;
 
-        svgAppend(parentNode, text);
+        if(actionId) {
+            const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+            
+            const translatedLabel = translate(translateKey);
+
+            svgAppend(text, document.createTextNode(label.title || translatedLabel || label.actionId));
+    
+            svgAppend(parentNode, text);
+        }
+
     }
 
     drawShape(parentNode, element) {
@@ -83,11 +94,11 @@ export default class CustomRenderer extends BaseRenderer {
             svgRemove(shape);
         }
 
-        if (label && label.title) {
+        if (label && (label.title || label.actionId)) {
             if (is(element, 'bpmn:SubProcess')) {
-                this.drawTextNode(label.title, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
+                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
             } else {
-                this.drawTextNode(label.title, parentNode, disabled ? '#b3b3b3' : '#000', 0, 90);
+                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, 90);
                 if (label.description && label.description != '') {
                     this.drawTextNode(label.description, parentNode, disabled ? '#b3b3b3' : '#8d8d8d', 0, 105);
                 }
@@ -251,6 +262,7 @@ export default class CustomRenderer extends BaseRenderer {
 
     getLabel(element) {
         const businessObject = getBusinessObject(element);
+        const actionId = businessObject?.actionId;
         let title;
         let description = undefined;
         //
@@ -295,6 +307,7 @@ export default class CustomRenderer extends BaseRenderer {
             }
             return {
                 title: businessObject.label,
+                actionId,
                 description: description,
             };
         } else {
@@ -304,6 +317,7 @@ export default class CustomRenderer extends BaseRenderer {
         }
         return {
             title: title,
+            actionId,
             description: description,
         };
     }

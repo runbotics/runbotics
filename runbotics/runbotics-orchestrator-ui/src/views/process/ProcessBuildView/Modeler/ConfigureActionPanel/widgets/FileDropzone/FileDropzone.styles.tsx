@@ -1,6 +1,6 @@
+import { Typography, Paper } from '@mui/material';
 import styled from 'styled-components';
-import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+
 import { DropzoneRootProps, getColor } from '.';
 
 export const StyledPaper = styled(Paper)`

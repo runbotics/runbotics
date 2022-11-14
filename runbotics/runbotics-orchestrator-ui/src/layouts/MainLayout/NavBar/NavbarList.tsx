@@ -1,8 +1,11 @@
 import React, { VFC } from 'react';
-import List from '@mui/material/List';
-import { matchPath } from 'react-router-dom';
-import NavbarItem from './NavbarItem';
+
+import { List } from '@mui/material';
+import { useRouter } from 'next/router';
+
 import { Item } from './Navbar.types';
+
+import NavbarItem from './NavbarItem';
 
 interface NavbarListProps {
     items: Item[];
@@ -11,20 +14,17 @@ interface NavbarListProps {
     mobile?: boolean;
 }
 
-const NavbarList: VFC<NavbarListProps> = ({
-    items, pathname, depth = 0, mobile,
-}) => (
-    <List disablePadding>
-        {items.reduce((acc, item) => {
-            const key = `${item.title}${depth}`;
+const NavbarList: VFC<NavbarListProps> = ({ items, depth = 0, mobile }) => {
+    const { pathname } = useRouter();
+    return (
+        <List disablePadding>
+            {items.reduce((acc, item) => {
+                const key = `${item.title}${depth}`;
+                const page = pathname.split('/')[2];
+                const open = item.href.includes(page);
 
-            const open = matchPath(pathname, {
-                path: item.href,
-                exact: false,
-            });
-
-            if (item.items) {
-                acc.push(
+                if (item.items)
+                { acc.push(
                     <NavbarItem
                         key={key}
                         depth={depth}
@@ -34,16 +34,11 @@ const NavbarList: VFC<NavbarListProps> = ({
                         title={item.title}
                         mobile={mobile}
                     >
-                        <NavbarList
-                            depth={depth + 1}
-                            pathname={pathname}
-                            items={item.items}
-                            mobile={mobile}
-                        />
+                        <NavbarList depth={depth + 1} pathname={pathname} items={item.items} mobile={mobile} />
                     </NavbarItem>,
-                );
-            } else {
-                acc.push(
+                ); }
+                else
+                { acc.push(
                     <NavbarItem
                         key={key}
                         depth={depth}
@@ -54,12 +49,12 @@ const NavbarList: VFC<NavbarListProps> = ({
                         mobile={mobile}
                         open={!!open}
                     />,
-                );
-            }
+                ); }
 
-            return acc;
-        }, [])}
-    </List>
-);
+                return acc;
+            }, [])}
+        </List>
+    );
+};
 
 export default NavbarList;

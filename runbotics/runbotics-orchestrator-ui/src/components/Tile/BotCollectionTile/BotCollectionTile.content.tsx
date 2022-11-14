@@ -1,13 +1,16 @@
-import { Box, Typography } from '@mui/material';
-import moment from 'moment';
 import React, { FunctionComponent } from 'react';
+
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import { Box, Typography } from '@mui/material';
 import { red } from '@mui/material/colors';
+import moment from 'moment';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import { DATE_FORMAT } from '..';
-import { BotCollectionTileProps } from './BotCollectionTile.types';
 import { StyledContent } from './BotCollectionTile.styles';
+import { BotCollectionTileProps } from './BotCollectionTile.types';
 
 const BotCollectionTileContent: FunctionComponent<BotCollectionTileProps> = ({ botCollection }) => {
     const { translate } = useTranslations();
@@ -43,11 +46,11 @@ const BotCollectionTileContent: FunctionComponent<BotCollectionTileProps> = ({ b
                     {translate('Component.Tile.BotCollection.Content.PublicIncluded')}
                 </Typography>
                 <Typography color="textPrimary" variant="h6">
-                    {
-                        botCollection.publicBotsIncluded
-                            ? <CheckCircleOutlineOutlinedIcon color="success" />
-                            : <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
-                    }
+                    {botCollection.publicBotsIncluded ? (
+                        <CheckCircleOutlineOutlinedIcon color="success" />
+                    ) : (
+                        <RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />
+                    )}
                 </Typography>
             </Box>
         </StyledContent>

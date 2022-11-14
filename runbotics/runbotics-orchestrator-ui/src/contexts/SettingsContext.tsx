@@ -1,6 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react';
-import type { FC, ReactNode } from 'react';
+import React, { createContext, useEffect, useState, FC, ReactNode } from 'react';
+
 import _ from 'lodash';
+
 import { ThemeType } from 'src/utils/constants';
 
 interface Settings {
@@ -31,10 +32,9 @@ export const restoreSettings = (): Settings | null => {
     try {
         const storedData: string | null = window.localStorage.getItem('settings');
 
-        if (storedData) {
-            settings = JSON.parse(storedData);
-        }
+        if (storedData) settings = JSON.parse(storedData);
     } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err);
         // If stored data is not a strigified JSON this will fail,
         // that's why we catch the error
@@ -65,9 +65,7 @@ export const SettingsProvider: FC<SettingsProviderProps> = ({ settings, children
     useEffect(() => {
         const restoredSettings = restoreSettings();
 
-        if (restoredSettings) {
-            setCurrentSettings(restoredSettings);
-        }
+        if (restoredSettings) setCurrentSettings(restoredSettings);
     }, []);
 
     useEffect(() => {

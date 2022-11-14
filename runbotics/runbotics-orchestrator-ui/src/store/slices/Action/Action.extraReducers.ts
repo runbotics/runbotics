@@ -1,10 +1,12 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import objFromArray from 'src/utils/objFromArray';
+
 import LoadingType from 'src/types/loading';
-import { IBpmnAction, Runner } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 import { defaultValue } from 'src/types/model/action.model';
-import { getActions, saveAction, setShowEditModal } from './Action.thunks';
+import objFromArray from 'src/utils/objFromArray';
+import { IBpmnAction, Runner } from 'src/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
+
 import { ActionState } from './Action.state';
+import { getActions, saveAction, setShowEditModal } from './Action.thunks';
 
 const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>) => {
     builder.addCase(getActions.fulfilled, (state, action) => {
@@ -20,14 +22,14 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
                     runner: Runner.DESKTOP_SCRIPT,
                     form: JSON.parse(actionValue.form),
                 };
-                if (bpmnAction.form.formData.output) {
-                    bpmnAction.output = {
-                        assignVariables: true,
-                        outputMethods: {
-                            variableName: '${content.output[0]}',
-                        },
-                    };
-                }
+                if (bpmnAction.form.formData.output) 
+                { bpmnAction.output = {
+                    assignVariables: true,
+                    outputMethods: {
+                        variableName: '${content.output[0]}',
+                    },
+                }; }
+                
                 const prevValue = prev;
                 prevValue[key] = bpmnAction;
                 return prevValue;
@@ -61,11 +63,11 @@ const buildActionExtraReducers = (builder: ActionReducerMapBuilder<ActionState>)
         })
         .addCase(saveAction.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
-            if (action.payload) {
-                state.draft.error = action.payload;
-            } else {
-                state.draft.error = action.error.message;
-            }
+            if (action.payload) 
+            { state.draft.error = action.payload; }
+            else 
+            { state.draft.error = action.error.message; }
+            
         });
 };
 

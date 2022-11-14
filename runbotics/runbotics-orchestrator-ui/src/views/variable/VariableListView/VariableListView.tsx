@@ -1,8 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
+
 import { Box } from '@mui/material';
 
 import InternalPage from 'src/components/pages/InternalPage';
 import useTranslations from 'src/hooks/useTranslations';
+
 import { VariableDetailState } from '../Variable.types';
 import VariableDetails from '../VariableDetails/VariableDetails';
 

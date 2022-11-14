@@ -1,28 +1,35 @@
 import React, { VFC } from 'react';
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 import { Typography } from '@mui/material';
 import { IProcessInstanceEvent } from 'runbotics-common';
+
 import Label from 'src/components/Label';
-import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
-import { formatTimeDiff } from 'src/utils/utils';
 import If from 'src/components/utils/If';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { getProcessInstanceStatusColor } from 'src/utils/getProcessInstanceStatusColor';
+import { capitalizeFirstLetter} from 'src/utils/text';
+
+import { formatTimeDiff } from 'src/utils/utils';
+
+import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations';
 import {
-    GridContainer, GridItem,
+    GridContainer, GridItem
 } from './ProcessInstanceEventsDetails.styles';
-import {translate} from '../../../hooks/useTranslations'
-import { convertToPascalCase } from 'src/utils/text';
 
 interface Props {
     processInstanceEvent: IProcessInstanceEvent;
 }
 
 const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }) => {
-    const formattedStatus = convertToPascalCase(processInstanceEvent.status);
-
+    const { translate } = useTranslations();
+    const formattedStatus = capitalizeFirstLetter({ text: processInstanceEvent.status, lowerCaseRest: true, delimiter: /_| / });
+    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
+    
     return (
         <GridContainer>
             <GridItem width="100%">
-                <Typography variant="h5">{processInstanceEvent.step}</Typography>
+                <Typography variant="h5">{checkIfKeyExists(translateKey) ? translate(translateKey) : processInstanceEvent.step}</Typography>
             </GridItem>
             <GridItem>
                 <Typography>
