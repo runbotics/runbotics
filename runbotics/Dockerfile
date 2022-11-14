@@ -17,8 +17,6 @@ RUN mkdir -p ../common/deploy/runbotics-orchestrator-ui;
 
 RUN node ../common/scripts/install-run-rush.js deploy --scenario runbotics-orchestrator-ui --overwrite --target-folder ../common/deploy/runbotics-orchestrator-ui;
 
-
-
 FROM node:14-alpine AS runner
 
 ENV NODE_ENV production
@@ -26,6 +24,7 @@ ENV NODE_ENV production
 WORKDIR /usr/src/app/runbotics-orchestrator-ui
 
 COPY --from=builder /usr/src/app/common/deploy/runbotics-orchestrator-ui .
+COPY --from=builder /usr/src/app/runbotics-orchestrator-ui/public ./runbotics-orchestrator-ui/public
 COPY --from=builder /usr/src/app/common/scripts .
 
 RUN node create-links.js create
