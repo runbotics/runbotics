@@ -15,8 +15,17 @@ export async function generatePdf(file: Target, options?: Record<string, any>) {
     const getChromiumPath = () => {
         const isProd = process.env.NODE_ENV === 'production';
         const isWin = process.platform === 'win32';
+        this.logger.log("env",
+            process.env.NODE_ENV,
+            isProd,
+            "isWin",
+            isWin,
+            process.platform,
+            'path',
+            Puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked'));
 
         if (isProd && isWin) {
+            this.logger.log("isProd && isWin");
             return Puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked');
         }
         return Puppeteer.executablePath();
