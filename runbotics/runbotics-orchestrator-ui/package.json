@@ -147,6 +147,8 @@
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
     },
     "files": [
-        ".next"
+        ".next",
+        "public",
+        "next.config.js"
     ]
 }
