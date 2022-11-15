@@ -1,18 +1,18 @@
 import React, { FC, useEffect, useMemo } from 'react';
 
-import getConfig from 'next/config';
 import { io, Socket } from 'socket.io-client';
 
 import useAuth from 'src/hooks/useAuth';
 
-const { publicRuntimeConfig } = getConfig();
-
-const uri = publicRuntimeConfig.runboticsEntrypointUrl;
-
 export const SocketContext = React.createContext<Socket | null>(null);
 
-const SocketProvider: FC = ({ children }) => {
+interface SocketProviderProps {
+    uri: string;
+}
+
+const SocketProvider: FC<SocketProviderProps> = ({ children, uri }) => {
     const { isAuthenticated } = useAuth();
+
     const socket = useMemo(() => {
         if (!isAuthenticated) return null;
 
@@ -26,7 +26,8 @@ const SocketProvider: FC = ({ children }) => {
             },
             path: '/ws-ui/',
         });
-    }, [isAuthenticated]);
+    }, [isAuthenticated, uri]);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => () => socket?.disconnect(), [isAuthenticated]);
 

@@ -24,7 +24,6 @@ ENV NODE_ENV production
 WORKDIR /usr/src/app/runbotics-orchestrator-ui
 
 COPY --from=builder /usr/src/app/common/deploy/runbotics-orchestrator-ui .
-COPY --from=builder /usr/src/app/runbotics-orchestrator-ui/public ./runbotics-orchestrator-ui/public
 COPY --from=builder /usr/src/app/common/scripts .
 
 RUN node create-links.js create
