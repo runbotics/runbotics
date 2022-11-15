@@ -13,13 +13,14 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Input'),
-                        type: 'object',
+                        title: '',
                         properties: {
                             variables: {
-                                title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Variables'),
+                                title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Input'),
                                 type: 'object',
                                 additionalProperties: {
+                                    mainTitle: 'Message',
+                                    subTitle: 'Variable',
                                     type: 'string',
                                 },
                             },
@@ -30,11 +31,10 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                variables: [],
             },
             formData: {
-                input: {
-                    variables: {},
-                },
+                input: {},
             },
         },
     },

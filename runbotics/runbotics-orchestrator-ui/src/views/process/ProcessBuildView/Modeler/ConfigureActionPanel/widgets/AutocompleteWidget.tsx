@@ -44,7 +44,6 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
                     variant="outlined"
                     label={label}
                     onChange={(event) => onChange(event, event.target.value)}
-                    InputLabelProps={{ shrink: true }}
                     error={!!props.rawErrors}
                 />
             )}

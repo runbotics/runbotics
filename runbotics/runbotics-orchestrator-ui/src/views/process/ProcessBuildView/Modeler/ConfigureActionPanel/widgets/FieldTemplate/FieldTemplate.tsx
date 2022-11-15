@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 
 import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/material';
 import { FieldTemplateProps } from '@rjsf/core';
+import i18n from 'i18next';
 
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
-import WrapIfAdditional from './WrapIfAdditional';
+import AdditionalPropertiesField from './AdditionalPropertiesField';
 
 
 const FieldTemplate = ({
@@ -42,7 +43,7 @@ const FieldTemplate = ({
             const localRawErrors = [];
             
             rawErrors.forEach((rawError) => {
-                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, delimiter: ' ', lowerCaseRest: true })}`;
+                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError.replace(/".*"/g, ''), delimiter: ' ', lowerCaseRest: true })}`;
                 if (checkIfKeyExists(translateKey)) {
                     { /*@ts-ignore*/ }
                     localRawErrors.push(translate(translateKey));
@@ -53,10 +54,10 @@ const FieldTemplate = ({
 
             setErrors(localRawErrors);
         }
-    }, [rawDescription, rawErrors]);
+    }, [rawDescription, rawErrors, i18n.language]);
 
     return (
-        <WrapIfAdditional
+        <AdditionalPropertiesField
             classNames={classNames}
             disabled={disabled}
             id={id}
@@ -85,7 +86,7 @@ const FieldTemplate = ({
                 )}
                 {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
             </FormControl>
-        </WrapIfAdditional>
+        </AdditionalPropertiesField>
     );
 };
 
