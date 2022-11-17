@@ -42,7 +42,7 @@ const ActionFormRenderer: FC = () => {
                     type: 'boolean',
                     title: translate('Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'),
                 },
-                ...action.form.schema.properties,
+                ...action.form.schema.properties,   
             },
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +77,7 @@ const ActionFormRenderer: FC = () => {
         defaultParameters.runFromHere = element.businessObject.runFromHere;
 
         return defaultParameters;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [action, element, commandStack.commandStackIdx]);
 
     const handleSubmit = (event: IFormData) => {
@@ -108,16 +108,18 @@ const ActionFormRenderer: FC = () => {
                     <ActionLabelForm onSubmit={updateLabel} />
                 </Box>
             </Grid>
-            {defaultFormData && action && (
+            {defaultFormData && action  ? (
                 <JSONSchemaFormRenderer
                     id={element.id}
+                    key={element.id}
                     schema={defaultSchema}
                     uiSchema={defaultUISchema}
                     formData={defaultFormData}
                     onSubmit={handleSubmit}
                     widgets={customWidgets}
                 />
-            )}
+            )
+                : null}
         </>
     );
 };
