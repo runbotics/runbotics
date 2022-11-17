@@ -5,7 +5,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.3.0-SNAPSHOT.22",
+    "version": "2.4.0-SNAPSHOT.0",
     "private": true,
     "sideEffects": false,
     "scripts": {
@@ -147,6 +147,8 @@
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
     },
     "files": [
-        ".next"
+        ".next",
+        "public",
+        "next.config.js"
     ]
 }

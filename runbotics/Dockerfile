@@ -17,8 +17,6 @@ RUN mkdir -p ../common/deploy/runbotics-orchestrator-ui;
 
 RUN node ../common/scripts/install-run-rush.js deploy --scenario runbotics-orchestrator-ui --overwrite --target-folder ../common/deploy/runbotics-orchestrator-ui;
 
-
-
 FROM node:14-alpine AS runner
 
 ENV NODE_ENV production
