@@ -25,10 +25,6 @@ export const removeAppliedAction = (state: ProcessState, action: PayloadAction<s
 
 };
 
-export const clearModelerState = (state: ProcessState) => {
-    state.modeler.isSaveDisabled = true;
-};
-
 export const setSaveDisabled = (state: ProcessState, action: PayloadAction<boolean>) => {
     state.modeler.isSaveDisabled = action.payload;
 };
