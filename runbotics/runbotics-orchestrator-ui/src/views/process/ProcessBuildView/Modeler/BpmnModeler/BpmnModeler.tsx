@@ -257,16 +257,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             modeler?.get('commandStack')?.redo();
         };
 
-    
-        // great debugging log for auto apply, uncomment if needed
-        // const getModelerActivities = () => {
-        //     if (!modeler) return [];
-        //     const { _elements } = modeler.get('elementRegistry');
-        //     const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
-        //     return modelerActivities;
-        // };
-        // console.table({isSaveDisabled, imported, commandStack, appliedActivities:_.sortBy( appliedActivities), modelerActivities: _.sortBy(getModelerActivities()) });
-
         return (
             <Hotkeys keyName="command+c,ctrl+c" disabled={selectedElement === null} onKeyDown={onCopy}>
                 <Hotkeys keyName="command+b,ctrl+b" disabled={selectedElement === null} onKeyDown={onPaste}>

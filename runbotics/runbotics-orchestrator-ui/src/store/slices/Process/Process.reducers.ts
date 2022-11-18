@@ -12,15 +12,16 @@ export const setAppliedActions = (state: ProcessState, action: PayloadAction<str
 };
 
 export const addAppliedAction = (state: ProcessState, action: PayloadAction<string>) => {
-    if (!state.modeler.appliedActivities.includes(action.payload)) { state.modeler.appliedActivities = [...state.modeler.appliedActivities, action.payload]; }
+    if (!state.modeler.appliedActivities.includes(action.payload)) {
+        state.modeler.appliedActivities = [...state.modeler.appliedActivities, action.payload];
+    }
 
 };
 
 export const removeAppliedAction = (state: ProcessState, action: PayloadAction<string>) => {
     if (state.modeler.appliedActivities.includes(action.payload)) {
-        state.modeler.appliedActivities = state.modeler.appliedActivities.filter(
-            (activity) => activity !== action.payload,
-        );
+        state.modeler.appliedActivities = state.modeler.appliedActivities
+            .filter((activity) => activity !== action.payload);
     }
 
 };
