@@ -57,6 +57,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const isFormDirty = !_.isEqual(formState.formData, props.formData);
     const formValueRef = useRef<FormState>(initialFormState);
     const isFormDirtyRef = useRef(isFormDirty);
+    const editModeRef = useRef(editMode);
     const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
@@ -75,8 +76,8 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     useEffect(() => {
         formValueRef.current = formState;
         isFormDirtyRef.current = isFormDirty;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formState]);
+        editModeRef.current = editMode;
+    }, [formState, editMode, isFormDirty]);
     
     useEffect(() => {
         setFormState({
@@ -94,7 +95,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [debouncedForm]);
     useEffect(
         () => () => {
-            if (isFormDirtyRef.current) {
+            if (isFormDirtyRef.current && editModeRef.current) {
                 handleSubmit(formValueRef.current);
             }
         },
