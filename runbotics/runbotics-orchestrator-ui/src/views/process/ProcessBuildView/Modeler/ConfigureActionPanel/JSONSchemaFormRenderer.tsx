@@ -53,8 +53,8 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const formRefCallback = (node) => {
         if (node) setIsFormError(node.state.errors.length > 0);
     };
-    // Reference to the form state used in component cleanup
     const isFormDirty = !_.isEqual(formState.formData, props.formData);
+    // Reference to the form state used in component cleanup
     const formValueRef = useRef<FormState>(initialFormState);
     const isFormDirtyRef = useRef(isFormDirty);
     const editModeRef = useRef(editMode);
