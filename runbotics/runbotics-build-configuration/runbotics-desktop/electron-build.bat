@@ -1,1 +1,0 @@
-cd runbotics-desktop && npm run dist & cd ..
