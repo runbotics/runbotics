@@ -7,6 +7,7 @@ const EditorWidget = dynamic(() => import('./EditorWidget'), { ssr: false });
 const DraftJSEditor = dynamic(() => import('./DraftJSWidget'), { ssr: false });
 const ProcessNameSuggestionWidget = dynamic(() => import('./SuggestProcessesNameWidget'), { ssr: false });
 const FileDropzoneWidget = dynamic(() => import('./FileDropzone'), { ssr: false });
+const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: false });
 
 const customWidgets = {
     ElementAwareAutocomplete: ElementAwareAutocompleteWidget,
@@ -17,6 +18,7 @@ const customWidgets = {
     DraftJSEditor,
     GlobalVariableSelectWidget,
     FileDropzoneWidget,
+    TypographyWidget,
 };
 
 export default customWidgets;
