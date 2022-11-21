@@ -67,12 +67,12 @@ const disablePreviousElements = (modeler: BpmnModeler, element: BPMNElement, run
 };
 
 export const applyModelerElement = ({ modeler, element, action, additionalParameters }: ApplyModelerElementProps) => {
-    const bpmnHelper = BPMNHelper.from(modeler);
     const actionToBPMNElement: ActionToBPMNElement = ActionToBPMNElement.from(modeler);
 
     element.businessObject.disabled = additionalParameters?.disabled;
-    if (additionalParameters?.runFromHere !== element.businessObject?.runFromHere)
-    { disablePreviousElements(modeler, element, additionalParameters?.runFromHere); }
+    if (additionalParameters?.runFromHere !== element.businessObject?.runFromHere) {
+        disablePreviousElements(modeler, element, additionalParameters?.runFromHere);
+    }
 
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
 
@@ -91,26 +91,24 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         data.input,
         action ? action.form.schema : null,
     );
-    if (inputParams.length > 0)
-    { actionToBPMNElement.setInputParameters(element, inputParams); }
+    if (inputParams.length > 0) { actionToBPMNElement.setInputParameters(element, inputParams); }
 
 
-    if (additionalParameters?.output && action.output && action.output.assignVariables)
-    { Object.entries(action.output.outputMethods).forEach((currentValue) => {
-        const key = currentValue[0];
-        const value = currentValue[1];
-        const output = data.output[key];
-        if (output) {
-            Object.entries(data.output).forEach(([k, v]) => {
-                if (value === v)
-                { delete data.output[k]; }
-
-            });
-
-            data.output[output] = value;
-        }
-
-    }); }
+    if (additionalParameters?.output && action.output && action.output.assignVariables) {
+        Object.entries(action.output.outputMethods).forEach((currentValue) => {
+            const key = currentValue[0];
+            const value = currentValue[1];
+            const output = data.output[key];
+            if (output) {
+                Object.entries(data.output).forEach(([k, v]) => {
+                    if (value === v || k !== 'variableName') {
+                        delete data.output[k];
+                    }
+                });
+                data.output[output] = value;
+            }
+        });
+    }
 
 
     if (Object.keys(data.output).length > 0) {
@@ -121,5 +119,4 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         );
         actionToBPMNElement.setOutputParameters(element, outputParams);
     }
-    bpmnHelper.updateBusinessObject(element);
 };
