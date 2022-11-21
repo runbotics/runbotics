@@ -683,34 +683,36 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         title: 'Input',
                         type: 'object',
                         properties: {
-                            target: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Target'),
+                            method: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Method'),
                                 type: 'string',
-                                enum: ['Session', 'Url'],
+                                enum: ['Session', 'URL'],
                                 default: 'Session',
                             },
                         },
-                        required: ['target'],
+                        required: ['method'],
                         dependencies: {
-                            target: {
+                            method: {
                                 oneOf: [
                                     {
                                         properties: {
-                                            target: {
+                                            method: {
                                                 enum: ['Session'],
+                                            },
+                                            sessionDescription: {
+                                                type: 'string',
+                                                title: 'Session description',
                                             },
                                         },
                                     },
                                     {
                                         properties: {
-                                            target: {
-                                                enum: ['Url'],
+                                            method: {
+                                                enum: ['URL'],
                                             },
                                             url: {
                                                 type: 'string',
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.Browser.PrintToPdf.Url',
-                                                ),
+                                                title: 'URL'
                                             },
                                         },
                                     },
@@ -735,11 +737,20 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    sessionDescription: {
+                        'ui:widget': 'TypographyWidget',
+                        'ui:options': {
+                            text: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Session.Description'),
+                            variant: 'h6',
+                            infoIcon: true,
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
-                    target: 'Session',
-                    url: undefined,
+                    url: 'https://',
                 },
                 output: {
                     variableName: undefined,
