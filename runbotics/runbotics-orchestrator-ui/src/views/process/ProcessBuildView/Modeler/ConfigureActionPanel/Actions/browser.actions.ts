@@ -750,11 +750,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    method: {
-                        url: {
-                            url: 'https://',
-                        },
-                    },
+                    url: 'https://',
                 },
                 output: {
                     variableName: undefined,
