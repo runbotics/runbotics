@@ -37,7 +37,7 @@ class MyDocument extends Document {
                     <meta name="theme-color" content="#000000" />
                     <link rel="icon" href="/images/favicon.ico" />
                     <link
-                        href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto+Slab|Roboto:300,400,500,700"
+                        href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto+Slab|Roboto:300,400,500,700,900"
                         rel="stylesheet"
                     />
                     <meta name="description" content="RunBotics" />

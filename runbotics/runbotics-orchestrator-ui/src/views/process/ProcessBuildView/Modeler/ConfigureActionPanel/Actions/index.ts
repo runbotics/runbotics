@@ -154,18 +154,17 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
                 input: {
                     collection: {
                         'ui:options': {
-                            hint: 'This variable must be an array of elements',
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info'),
                         }
                     },
                     elementVariable: {
                         'ui:options': {
-                            hint: `This is the name of the variable that will be used to access the current element in the collection. 
-                            Accesible under environment.variables.content.[item name]`,
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info'),
                         }
                     },
                     iterations: {
                         'ui:options': {
-                            hint: 'This be an integer or variable that resolves to an integer',
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
                         }
                     }
                 }

@@ -6,8 +6,10 @@ import { IconButton, Tooltip } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
+import { sanitize } from 'dompurify';
 import styled from 'styled-components';
 
+import If from 'src/components/utils/If';
 import useTranslations, { translate as t } from 'src/hooks/useTranslations';
 
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
@@ -80,7 +82,7 @@ const utils = ['false', 'true', 'content.output', 'environment', 'environment.ou
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
-        hint?: string;
+        info?: string;
     }
 }
 const AutocompleteWrapper = styled.div`
@@ -210,7 +212,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
     );
 
     const infoButton = (
-        <Tooltip title={props.options.hint}>   
+        <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(props.options.info) }}></span>}>   
             <span>
                 <IconButton>
                     <InfoOutlined/>
@@ -227,7 +229,9 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
                 groupBy={(option) => options[option].group}
                 options={optionValues}
             />
-            {props.options.hint ? infoButton : null}
+            <If condition={Boolean(props.options.info)}>
+                {infoButton}
+            </If>
         </AutocompleteWrapper>
     );
 };
