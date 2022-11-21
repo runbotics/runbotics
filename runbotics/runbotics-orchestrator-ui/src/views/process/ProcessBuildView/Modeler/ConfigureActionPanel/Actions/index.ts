@@ -151,6 +151,23 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    collection: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info'),
+                        }
+                    },
+                    elementVariable: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info'),
+                        }
+                    },
+                    iterations: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {

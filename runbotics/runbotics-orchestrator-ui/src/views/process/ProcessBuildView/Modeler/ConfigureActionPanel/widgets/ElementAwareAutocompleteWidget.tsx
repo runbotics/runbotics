@@ -1,9 +1,15 @@
 import React, { FC } from 'react';
 
 import { getVariablesForScope } from '@bpmn-io/extract-process-variables';
+import { InfoOutlined } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
+import { sanitize } from 'dompurify';
+import styled from 'styled-components';
+
+import If from 'src/components/utils/If';
 import useTranslations, { translate as t } from 'src/hooks/useTranslations';
 
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
@@ -74,11 +80,21 @@ const utils = ['false', 'true', 'content.output', 'environment', 'environment.ou
     group: t('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'),
 }));
 
-const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
+interface ElementAwareAutocompleteProps extends WidgetProps {
+    options: {
+        info?: string;
+    }
+}
+const AutocompleteWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+`;
+const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props) => {
     const context = useBpmnFormContext();
     const { translate } = useTranslations();
     const { executionInfo, isAttended } = useSelector(currentProcessSelector);
-
+    
     const attendedProcessVariables =
         isAttended && executionInfo
             ? context?.passedInVariables.map((variable) => ({
@@ -195,13 +211,28 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
         [options],
     );
 
+    const infoButton = (
+        <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(props.options.info) }}></span>}>   
+            <span>
+                <IconButton>
+                    <InfoOutlined/>
+                </IconButton>
+            </span>
+        </Tooltip>
+    ); 
+    
     return (
-        <AutocompleteWidget
-            {...props}
-            value={props.value}
-            groupBy={(option) => options[option].group}
-            options={optionValues}
-        />
+        <AutocompleteWrapper>
+            <AutocompleteWidget
+                {...props}
+                value={props.value}
+                groupBy={(option) => options[option].group}
+                options={optionValues}
+            />
+            <If condition={Boolean(props.options.info)}>
+                {infoButton}
+            </If>
+        </AutocompleteWrapper>
     );
 };
 

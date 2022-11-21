@@ -28,4 +28,14 @@ export const components: Components = {
             },
         },
     },
+    MuiTooltip: {
+        styleOverrides: {
+            tooltip: {
+                '& strong': {
+                    fontWeight: 900,
+                },
+            },
+
+        }
+    }
 };
