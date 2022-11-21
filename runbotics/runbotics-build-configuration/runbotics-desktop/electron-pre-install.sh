@@ -1,1 +1,0 @@
-find ./ -maxdepth 2 -type f -name "*.json"  -exec sed -i 's/workspace:^//g' {} \;

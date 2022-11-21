@@ -39,7 +39,7 @@ function ErrorListTemplate(props: ErrorListProps) {
     return <Alert severity="error">{alertMessage}</Alert>;
 }
 
-const DEBOUNCE_TIME = 1000;
+const DEBOUNCE_TIME = 500;
 const initialFormState = {
     id: null,
     formData: null,
@@ -48,37 +48,37 @@ const initialFormState = {
 const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const dispatch = useDispatch();
     const [isFormError, setIsFormError] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [formState, setFormState] = useState<FormState>(initialFormState);
     const formRefCallback = (node) => {
         if (node) setIsFormError(node.state.errors.length > 0);
     };
-    const [editMode, setEditMode] = useState(false);
-    const [appliedFormState, setAppliedFormState] = useState(props.formData);
-    const [formState, setFormState] = useState<FormState>(initialFormState);
+    const isFormDirty = !_.isEqual(formState.formData, props.formData);
     // Reference to the form state used in component cleanup
     const formValueRef = useRef<FormState>(initialFormState);
-
-    const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
-    const isFormDirty = !_.isEqual(formState.formData, appliedFormState);
     const isFormDirtyRef = useRef(isFormDirty);
-
-    useEffect(() => {
-        formValueRef.current = formState;
-        isFormDirtyRef.current = isFormDirty;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formState, appliedFormState]);
+    const editModeRef = useRef(editMode);
+    const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
-        setAppliedFormState(formState.formData);
         setEditMode(false);
         return props.onSubmit ? props.onSubmit(e, nativeEvent) : null;
     };
-
+    
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
         setFormState({ ...formState, formData: e.formData });
-        if (!editMode) dispatch(processActions.removeAppliedAction(props.id));
+        if (!editMode) { 
+            dispatch(processActions.removeAppliedAction(props.id));
+        }
     };
-
+    
+    useEffect(() => {
+        formValueRef.current = formState;
+        isFormDirtyRef.current = isFormDirty;
+        editModeRef.current = editMode;
+    }, [formState, editMode, isFormDirty]);
+    
     useEffect(() => {
         setFormState({
             id: props.id,
@@ -87,13 +87,17 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [props.formData, props.id]);
 
     useEffect(() => {
-        if (formState?.formData && isFormDirty && !isFormError) handleSubmit(formState);
+        if (formState?.formData && isFormDirty && !isFormError) { 
+            handleSubmit(formState); 
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedForm]);
     useEffect(
         () => () => {
-            if (isFormDirtyRef.current) handleSubmit(formValueRef.current);
+            if (isFormDirtyRef.current && editModeRef.current) {
+                handleSubmit(formValueRef.current);
+            }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [],

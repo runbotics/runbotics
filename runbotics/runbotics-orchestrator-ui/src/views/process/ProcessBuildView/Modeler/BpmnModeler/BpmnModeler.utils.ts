@@ -1,4 +1,5 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
+import _ from 'lodash';
 
 import { ModelerHTMLCanvasElement, ModelerRegistryElement } from './BpmnModeler.types';
 
@@ -141,4 +142,25 @@ export const centerCanvas = (viewer: BpmnIoModeler) => {
     } else {
         canvas.zoom('fit-viewport', 'auto');
     }
+};
+
+// Util for debugging modeler, (specificly auto apply)
+export const debugModeler = ({ modeler, isSaveDisabled, imported, commandStack, appliedActivities }) => {
+    const getModelerActivities = () => {
+        if (!modeler) return [];
+        const { _elements } = modeler.get('elementRegistry');
+        const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
+        return modelerActivities;
+    };
+
+    // eslint-disable-next-line no-console
+    console.table({
+        isSaveDisabled,
+        imported,
+        commandStack,
+        appliedActivities:
+            _.sortBy(appliedActivities),
+        modelerActivities: _.sortBy(getModelerActivities())
+    });
+
 };

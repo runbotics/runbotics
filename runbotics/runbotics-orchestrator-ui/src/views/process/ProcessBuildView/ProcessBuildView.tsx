@@ -56,7 +56,6 @@ const ProcessBuildView: FC = () => {
                     definition,
                 }),
             );
-            dispatch(processActions.clearModelerState());
             enqueueSnackbar(translate('Process.MainView.Toast.Save.Success'), {
                 variant: 'success',
                 autoHideDuration: SNACKBAR_DURATION,

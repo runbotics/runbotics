@@ -29,7 +29,7 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const onEditorStateChange = (editorState) => {
         setState(editorState);
         const json = stateToHTML(editorState.getCurrentContent());
-        props.onChange(json);
+        if(json !== props.value) props.onChange(json);
     };
 
     return (
