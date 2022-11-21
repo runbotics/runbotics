@@ -151,6 +151,24 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    collection: {
+                        'ui:options': {
+                            hint: 'This variable must be an array of elements',
+                        }
+                    },
+                    elementVariable: {
+                        'ui:options': {
+                            hint: `This is the name of the variable that will be used to access the current element in the collection. 
+                            Accesible under environment.variables.content.[item name]`,
+                        }
+                    },
+                    iterations: {
+                        'ui:options': {
+                            hint: 'This be an integer or variable that resolves to an integer',
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
