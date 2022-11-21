@@ -692,7 +692,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         },
                         required: ['method'],
                         dependencies: {
-                            method: {
+                            target: {
                                 oneOf: [
                                     {
                                         properties: {
