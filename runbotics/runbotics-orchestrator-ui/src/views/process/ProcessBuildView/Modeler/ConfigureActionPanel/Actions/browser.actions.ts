@@ -43,12 +43,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 },
             },
             uiSchema: {
-                'ui:order': ['input'],
-                input: {
-                    target: {
-                        'ui:widget': 'ElementAwareAutocomplete',
-                    },
-                },
+                'ui:order': ['input']
             },
             formData: {
                 input: {
