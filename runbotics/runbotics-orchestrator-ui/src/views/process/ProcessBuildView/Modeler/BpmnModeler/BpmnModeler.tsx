@@ -115,15 +115,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             eventBus.on('commandStack.changed', () => {
                 const { _stackIdx, _stack } = bpmnModeler.get('commandStack');
-                const isLastIndex = parseInt(_stackIdx) >= 0;
 
                 setCommandStack({
                     commandStackIdx: _stackIdx,
                     commandStackSize: _stack.length,
                 });
 
-                if (isLastIndex || imported) dispatch(processActions.setSaveDisabled(false));
-                else dispatch(processActions.setSaveDisabled(true));
             });
 
             eventBus.on('commandStack.shape.delete.preExecute', () => {
@@ -172,23 +169,23 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             setModeler(bpmnModeler);
 
-            // eslint-disable-next-line consistent-return
-            return () => dispatch(processActions.setSaveDisabled(true));
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
             if (!modeler) return;
             const { _elements } = modeler.get('elementRegistry');
-            const { _stackIdx } = modeler.get('commandStack');
             const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
 
             const isModelerInSync = _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
-            if ((isModelerInSync && parseInt(_stackIdx) > 0) || imported)
-            { dispatch(processActions.setSaveDisabled(false)); }
-            else { dispatch(processActions.setSaveDisabled(true)); }
+
+            if (imported || (isModelerInSync && commandStack.commandStackIdx >= 0) ){
+                dispatch(processActions.setSaveDisabled(false));
+            }else {
+                dispatch(processActions.setSaveDisabled(true));
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [appliedActivities, modeler]);
+        }, [appliedActivities, modeler, commandStack, imported]);
 
         useImperativeHandle(
             ref,
@@ -209,14 +206,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 const elementRegistry = modeler.get('elementRegistry');
                 const elementIds = Object.keys(elementRegistry._elements);
                 const activityIds = elementIds.filter((elm) => elm.split('_')[0] === 'Activity');
-                if (!imported) {
-                    dispatch(processActions.clearModelerState());
-                    dispatch(processActions.setAppliedActions(activityIds));
-                } else {
-                    dispatch(processActions.setAppliedActions(activityIds));
-                    setImported(false);
-                }
-
+                dispatch(processActions.setSaveDisabled(true));
+                dispatch(processActions.setAppliedActions(activityIds));
                 const canvas = modeler.get('canvas');
                 canvas.zoom('fit-viewport', 'auto');
             } catch (error) {
@@ -278,6 +269,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 onSave={() => {
                                     onSave();
                                     setCommandStack(initialCommandStackInfo);
+                                    setImported(false);
                                 }}
                                 onRunClick={() => setCurrentTab(ProcessBuildTab.RUN_INFO)}
                             />
