@@ -74,7 +74,7 @@ export type BrowserReadElementInput = {
 };
 
 export type BrowserPrintToPdfActionInput = {
-    target: 'Url' | 'Session';
+    method: 'URL' | 'Session';
     url?: string;
 };
 
