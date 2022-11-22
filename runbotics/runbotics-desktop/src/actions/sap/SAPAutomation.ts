@@ -35,12 +35,16 @@ class SAPAutomation extends StatefulActionHandler {
         return {};
     }
 
-    async startTransaction(input: SapTypes.SAPStartTransactionActionInput): Promise<SapTypes.SAPStartTransactionActionOutput> {
+    async startTransaction(
+        input: SapTypes.SAPStartTransactionActionInput,
+    ): Promise<SapTypes.SAPStartTransactionActionOutput> {
         this.sessions['session'].StartTransaction(input.transaction);
         return {};
     }
 
-    async endTransaction(input: SapTypes.SAPStartTransactionActionInput): Promise<SapTypes.SAPStartTransactionActionOutput> {
+    async endTransaction(
+        input: SapTypes.SAPStartTransactionActionInput,
+    ): Promise<SapTypes.SAPStartTransactionActionOutput> {
         const result = this.sessions['session'].EndTransaction();
         return {};
     }
@@ -65,7 +69,7 @@ class SAPAutomation extends StatefulActionHandler {
         const table = this.sessions['session'].FindById(input.target);
         const rowsCount = table.Rows.Count.__value;
         const columnsCount = table.Columns.Count.__value;
-        let array = [];
+        const array = [];
         for (let i = 0; i < rowsCount; i++) {
             const row = [];
             for (let j = 0; j < columnsCount; j++) {
@@ -108,6 +112,25 @@ class SAPAutomation extends StatefulActionHandler {
         return {};
     }
 
+    async openContextMenu(
+        input: SapTypes.SAPOpenContextMenuActionInput,
+    ): Promise<SapTypes.SAPOpenContextMenuActionOutput> {
+        this.sessions['session'].FindById(input.target).pressContextButton(input.menuId);
+        return {};
+    }
+    async selectFromContextMenu(
+        input: SapTypes.SAPSelectFromContextMenuActionInput,
+    ): Promise<SapTypes.SAPSelectFromContextMenuActionOutput> {
+        this.sessions['session'].FindById(input.target).selectContextMenuItem(input.optionId);
+        return {};
+    }
+    async clickToolbarButton(
+        input: SapTypes.SAPClickToolbarButtonActionInput,
+    ): Promise<SapTypes.SAPClickToolbarButtonActionOutput> {
+        this.sessions['session'].FindById(input.target).pressToolbarButton(input.toolId);
+        return {};
+    }
+
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
         const action: SapTypes.SAPActionRequest<any> = request as SapTypes.SAPActionRequest<any>;
         let output: any = {};
@@ -147,6 +170,15 @@ class SAPAutomation extends StatefulActionHandler {
                 break;
             case 'sap.select':
                 output = await this.select(action.input);
+                break;
+            case 'sap.openContextMenu':
+                output = await this.openContextMenu(action.input);
+                break;
+            case 'sap.selectFromContextMenu':
+                output = await this.selectFromContextMenu(action.input);
+                break;
+            case 'sap.clickToolbarButton':
+                output = await this.clickToolbarButton(action.input);
                 break;
             default:
                 throw new Error('Action not found');
