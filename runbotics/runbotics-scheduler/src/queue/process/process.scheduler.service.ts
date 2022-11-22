@@ -50,7 +50,6 @@ export class ProcessSchedulerService {
 
         const body = this.createStartProcessResponse(instantProcess, scheduled, orchestratorProcessInstanceId);
 
-
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
 
         return { orchestratorProcessInstanceId: body.orchestratorProcessInstanceId };

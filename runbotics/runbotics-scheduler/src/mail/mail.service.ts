@@ -1,8 +1,7 @@
-/* eslint-disable no-useless-escape */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
 import { Logger } from 'src/utils/logger';
-import { simpleParser } from 'mailparser';
+import { Attachment, simpleParser } from 'mailparser';
 import { ProcessService } from 'src/database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from 'src/config/serverConfig.service';
@@ -50,34 +49,37 @@ export class MailService {
     @Cron('0 * * * * *')
     private async readMailbox() {
         this.initializeServices();
-        this.logger.log('CONNECTING TO MAILBOX');
+        this.logger.log('>> CONNECTING TO MAILBOX');
         await this.client.connect();
         this.logger.log('MAILBOX CONNECTED');
         
         const lock = await this.client.getMailboxLock('INBOX');
-        const mailbox = await this.client.mailboxOpen('INBOX');
+        await this.client.mailboxOpen('INBOX');
 
         const processedMails: number[] = [];
         
         try {
             const messages = await this.client.fetch({ seen: false }, FETCH_MAILS_CONFIG);
 
-            for await (const msg of messages) { 
+            for await (const msg of messages) {
                 try {
+                    if (!this.hasTriggerAccess(msg.envelope.from[0].address)) {
+                        continue;
+                    }
+
                     this.logger.log(`PROCESSING EMAIL ${msg.uid}: "${msg.envelope.subject}" FROM ${msg.envelope.from.map(x => x.address)} | ${msg.envelope.date.toLocaleString()}`);
                     processedMails.push(msg.uid);
 
                     const process = await this.validateTitle(msg.envelope);
-                    const attendedVariables = await this.extractMailBody(msg.source);
+                    const variables = await this.extractMailBody(msg.source);
                     
-                    const input = {
-                        variables: attendedVariables
-                    };
+                    const input = { variables };
 
                     await this.queueService.createInstantJob({ process, user: null, input });
                 } catch (error) {
+                    this.logger.error(error.message, error);
                     await this.sendReplyMail(msg.envelope, error.message);
-                } 
+                }
             }
 
             if (processedMails.length) {
@@ -91,7 +93,7 @@ export class MailService {
             await this.client.mailboxClose();
             lock.release();
             await this.client.logout();
-            this.logger.log('MAILBOX DISCONNECTED');
+            this.logger.log('<< MAILBOX DISCONNECTED');
         }
 
     }
@@ -114,21 +116,51 @@ export class MailService {
             from: envelope.to[0].address,
             to: envelope.from[0].address,
             replyTo: envelope.replyTo[0].address,
-            inReplyTo: envelope.inReplyTo,
-            subject: `RE: ${envelope.subject}`,
-            text
+            inReplyTo: envelope.messageId,
+            subject: envelope.subject,
+            references: envelope.messageId,
+            text: `Error running process ${envelope.subject}\n\n${text}`,
         });
     }
 
     private async extractMailBody(body: Buffer) {
         try {
             const parsed = await simpleParser(body);
-            const jsonBody = JSON.parse(parsed.text); 
-            return jsonBody;
+            const input = this.parseMailBody(parsed.text);
+            return {
+                ...input,
+                ...this.extractAttachments(parsed.attachments)
+            };
         } catch (error) {
-            this.logger.error(`Wrong JSON body format: ${error.message}`);
-            throw new Error(`Wrong JSON body format: ${error.message}`);
+            this.logger.error(`Wrong body format: ${error.message}`);
+            throw new Error(`Wrong body format: ${error.message}`);
         }
+    }
+
+    private extractAttachments(attachments: Attachment[]) {
+        return attachments.reduce((acc, att) => {
+            const filename = att.filename.split('.').slice(0, -1).join('');
+            acc[filename] = `data:${att.contentType};base64,'${att.content.toString('base64')}`;
+            return acc;
+        }, {});
+    }
+
+    private parseMailBody(text: string) {
+        return text
+            .split(/\r?\n/)
+            .reduce((input, line, index) => {
+                if (!line) return input;
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const [key, value, _] = line.split('=');
+                if (!key || !value)
+                    throw new Error(`Invalid variable format at line ${index + 1}`);
+                input[key.trim()] = value.trim().replace(/['"]/g, '');
+                return input;
+            }, {});
+    }
+
+    private hasTriggerAccess(emailAdress: string) {
+        return emailAdress.includes('@all-for-one.com');
     }
 
 } 

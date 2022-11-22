@@ -10,7 +10,7 @@ import { MailService } from './mail.service';
         DatabaseModule,
         ConfigModule,
         QueueModule,
-        ScheduleModule.forRoot()
+        ScheduleModule.forRoot(),
     ],
     providers: [
         MailService

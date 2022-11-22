@@ -128,7 +128,6 @@ export class SchedulerProcessor {
             bot,
             scheduled
         );
-
     }
 
     @OnQueueActive()
