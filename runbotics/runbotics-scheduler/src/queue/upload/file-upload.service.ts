@@ -3,6 +3,7 @@ import Axios, { Method, AxiosResponse } from 'axios';
 import mime from 'mime-types';
 import { APICell } from 'src/types/FileUpload';
 import { Logger } from 'src/utils/logger';
+import { v4 as uuidv4 } from 'uuid';
 
 export class FileUploadService {
     private readonly logger = new Logger(FileUploadService.name);
@@ -18,8 +19,19 @@ export class FileUploadService {
     }
 
     private getFileInfo(base64File: string) {
-        const contentType = base64File.split(';')[0].split(':')[1];
-        return { contentType: contentType, extension: mime.extension(contentType) };
+        const prefix = base64File.split(';');
+        if (base64File.startsWith('filename:')) {
+            const fileName = prefix[0].split(':')[1];
+            const contentType = prefix[1].split(':')[1];
+            return {
+                fileName,
+                extension: mime.extension(contentType),
+                contentType
+            };
+        }
+        const contentType = prefix[0].split(':')[1];
+        const fileName = uuidv4();
+        return { contentType, extension: mime.extension(contentType), fileName };
     }
 
     private bufferFromBase64(base64File: string) {
@@ -96,12 +108,11 @@ export class FileUploadService {
         return downloadLink;
     }
 
-    async uploadFile(token: string, sharepointFileName: string, content: string, orchestratorProcessInstanceId: string) {
+    async uploadFile(token: string, content: string, orchestratorProcessInstanceId: string) {
         this.token = token;
         const spPath = `RunboticsTemp/${orchestratorProcessInstanceId}`;
         const fileInfo = this.getFileInfo(content);
-        const url = `https://graph.microsoft.com/v1.0/me/drive/root:/${spPath}/${sharepointFileName}.${fileInfo.extension}:/content`;
-
+        const url = `https://graph.microsoft.com/v1.0/me/drive/root:/${spPath}/${fileInfo.fileName}.${fileInfo.extension}:/content`;
         const authHeaders = this.getAuthHeader();
         const { data } = await FileUploadService.makeRequest().put<any>(url, {
             headers: {
