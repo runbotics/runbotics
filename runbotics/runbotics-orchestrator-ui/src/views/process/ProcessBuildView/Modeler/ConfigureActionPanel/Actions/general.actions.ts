@@ -19,8 +19,8 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Input'),
                                 type: 'object',
                                 additionalProperties: {
-                                    mainTitle: translate('Process.Details.Modeler.DetailsSidebar.Message.Label'),
-                                    subTitle: translate('Process.Details.Modeler.DetailsSidebar.Variable.Label'),
+                                    mainFieldLabel: translate('Process.Details.Modeler.DetailsSidebar.Message.Label'),
+                                    subFieldLabel: translate('Process.Details.Modeler.DetailsSidebar.Variable.Label'),
                                     type: 'string',
                                 },
                             },
@@ -32,9 +32,7 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input'],
             },
-            formData: {
-                input: {},
-            },
+            formData: {},
         },
     },
     'general.delay': {
