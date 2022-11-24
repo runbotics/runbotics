@@ -212,7 +212,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
     );
 
     const infoButton = (
-        <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(props.options.info) }}></span>}>   
+        <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(props.options?.info) }}></span>}>   
             <span>
                 <IconButton>
                     <InfoOutlined/>
@@ -229,7 +229,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
                 groupBy={(option) => options[option].group}
                 options={optionValues}
             />
-            <If condition={Boolean(props.options.info)}>
+            <If condition={Boolean(props.options?.info)}>
                 {infoButton}
             </If>
         </AutocompleteWrapper>
