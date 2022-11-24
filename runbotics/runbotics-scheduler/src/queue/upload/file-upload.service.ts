@@ -19,8 +19,12 @@ export class FileUploadService {
     }
 
     private getFileInfo(base64File: string) {
+        const filenamePrefix = /^filename:(.*);data:(.*);base64,(.*)$/;
+        const standardPrefix = /^data:(.*);base64,(.*)$/;
+
         const prefix = base64File.split(';');
-        if (base64File.startsWith('filename:')) {
+
+        if (filenamePrefix.test(base64File)) {
             const fileName = prefix[0].split(':')[1];
             const contentType = prefix[1].split(':')[1];
             return {
@@ -29,9 +33,14 @@ export class FileUploadService {
                 contentType
             };
         }
-        const contentType = prefix[0].split(':')[1];
-        const fileName = uuidv4();
-        return { contentType, extension: mime.extension(contentType), fileName };
+
+        if (standardPrefix.test(base64File)) {
+            const contentType = prefix[0].split(':')[1];
+            const fileName = uuidv4();
+            return { contentType, extension: mime.extension(contentType), fileName };
+        }
+
+        throw new Error('Expected following file format: filename:<name>data:<content-type>;base64,base64string or data:<content-type>;base64,base64string');
     }
 
     private bufferFromBase64(base64File: string) {
