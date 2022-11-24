@@ -16,6 +16,7 @@ type JSONSchema7Titles = JSONSchema7 & { mainTitle?: string, subTitle?: string }
 
 type AdditionalPropertiesFieldProps = {
     children: React.ReactElement;
+    classNames: string;
     disabled: boolean;
     id: string;
     label: string;
