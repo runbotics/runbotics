@@ -9,10 +9,8 @@ import useTranslations, { translate as t } from 'src/hooks/useTranslations';
 
 import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { useSelector } from 'src/store';
+import { globalVariableSelector } from 'src/store/slices/GlobalVariable';
 import { currentProcessSelector } from 'src/store/slices/Process';
-import { IGlobalVariable } from 'src/types/model/global-variable.model';
-
-import store from '../../../../../../store';
 
 import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
@@ -82,6 +80,7 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
     const context = useBpmnFormContext();
     const { translate } = useTranslations();
     const { executionInfo, isAttended } = useSelector(currentProcessSelector);
+    const { globalVariables } = useSelector(globalVariableSelector);
 
     const attendedProcessVariables =
         isAttended && executionInfo
@@ -140,72 +139,61 @@ const ElementAwareAutocompleteWidget: FC<WidgetProps> = (props) => {
                 result = [...dollarOutputs, ...hashOutputs, ...result];
             }
 
-            const assignGlobalVariablesElements = context.modeler
-                ?.get('elementRegistry')
-                .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
-                .filter(
-                    (element: BPMNElement) =>
-                        element.businessObject.actionId === 'variables.assignGlobalVariable',
-                );
-
-            const assignLocalVariablesElements = context.modeler
+            const assignVariablesElements = context.modeler
                 ?.get('elementRegistry')
                 .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
                 .filter(
                     (element: BPMNElement) =>
                         element.businessObject.actionId === 'variables.assign' ||
-                        element.businessObject.actionId === 'variables.assignList',
+                        element.businessObject.actionId === 'variables.assignList' ||
+                        element.businessObject.actionId === 'variables.assignGlobalVariable',
                 );
 
-            const globalVariables = assignGlobalVariablesElements
-                .map((assignGlobalVariablesElement) => {
-                    const inputOutput: CamundaInputOutputElement = assignGlobalVariablesElement.businessObject
-                        ?.extensionElements?.values[0] as CamundaInputOutputElement;
-                    if (inputOutput) {
-                        const [globalVariable] = inputOutput.inputParameters.filter(
-                            (inputParameter) => 
-                                inputParameter.name === 'globalVariable',
-                        );
-
-                        const globals = store.getState().globalVariable.globalVariables;
-                        if (globals) {
-                            const globalVariableName = (globals as IGlobalVariable[]).find((variable) => 
-                                variable.id === Number(globalVariable.value.substring(2, globalVariable.value.length - 1)))?.name;
-                            if (globalVariableName) {
-                                return {
-                                    label: globalVariableName,
-                                    value: globalVariableName,
-                                    group: translate(
-                                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
-                                    ),
-                                };
-                            }
-                        }
-                    }
-                    return undefined;
-                });
-
-            const variables = assignLocalVariablesElements
+            const variables = assignVariablesElements
                 .map((assignVariablesElement) => {
                     const inputOutput: CamundaInputOutputElement = assignVariablesElement.businessObject
                         ?.extensionElements?.values[0] as CamundaInputOutputElement;
-                    if (inputOutput) {
-                        const [variable] = inputOutput.inputParameters.filter(
-                            (inputParameter) => 
-                                inputParameter.name === 'variable',
-                        );
+
+                    if (!inputOutput) {
+                        return undefined;
+                    }
+                    const localVariable = inputOutput.inputParameters.find(
+                        (inputParameter) => 
+                            inputParameter.name === 'variable',
+                    );
+                    if (localVariable) {
                         return {
-                            label: variable.value,
-                            value: variable.value,
+                            label: localVariable.value,
+                            value: localVariable.value,
                             group: translate(
                                 'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
                             ),
                         };
                     }
+
+                    const globalVariable = inputOutput.inputParameters.find(
+                        (inputParameter) => 
+                            inputParameter.name === 'globalVariable',
+                    );
+                    if (globalVariable) {
+                        const numberPattern = new RegExp(/\d+/, 'g');
+                        const [globalVariableId] = globalVariable.value.match(numberPattern);
+                        const globalVariableName = globalVariables.find((variable) => 
+                            variable.id === Number(globalVariableId))?.name;
+                    
+                        if (globalVariableName) {
+                            return {
+                                label: globalVariableName,
+                                value: globalVariableName,
+                                group: translate(
+                                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
+                                ),
+                            };
+                        }
+                    }
                     return undefined;
                 })
                 .concat(attendedProcessVariables)
-                .concat(globalVariables)
                 .filter((variable) => variable !== undefined);
 
             const dollarVariables = variables.map((option) => ({
