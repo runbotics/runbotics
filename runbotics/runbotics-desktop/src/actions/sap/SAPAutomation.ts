@@ -25,7 +25,6 @@ class SAPAutomation extends StatefulActionHandler {
             const scriptingEngine = sapGuiAuto.GetScriptingEngine();
             const result = scriptingEngine.OpenConnection(input.connectionName, true);
             this.sessions['session'] = result.children[0];
-            this.sessions['session'].FindById('wnd[0]/usr/txtRSYST-MANDT').text = '100';
             this.sessions['session'].FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
             this.sessions['session'].FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
             this.sessions['session'].FindById('wnd[0]').SendVKey(0);

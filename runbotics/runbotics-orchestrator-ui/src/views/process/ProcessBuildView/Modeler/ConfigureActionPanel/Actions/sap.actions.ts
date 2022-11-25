@@ -525,8 +525,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'wnd[0]/titl/shellcont/shell',
-                    menuId: '%GOS_TOOLBOX',
+                    target: 'wnd[0]',
                 },
             },
         },
@@ -562,8 +561,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'wnd[0]/titl/shellcont/shell',
-                    optionId: '%GOS_VIEW_ATTA',
+                    target: 'wnd[0]',
                 },
             },
         },
@@ -599,8 +597,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'wnd[1]/usr/cntlCONTAINER_0100/shellcont/shell',
-                    toolId: '&FIND',
+                    target: 'wnd[0]',
                 },
             },
         },
