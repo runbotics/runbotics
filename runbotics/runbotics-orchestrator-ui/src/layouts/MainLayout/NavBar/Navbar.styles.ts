@@ -1,7 +1,8 @@
-import styled from 'styled-components';
 import {
     SxProps, Theme, SvgIcon, Typography,
 } from '@mui/material';
+import styled from 'styled-components';
+
 import { NAVBAR_MOBILE_WIDTH, NAVBAR_WIDTH, HEADER_HEIGHT } from 'src/utils/constants';
 
 interface NavbarDrawerProps {

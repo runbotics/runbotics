@@ -1,11 +1,10 @@
 import React, { FC, useState } from 'react';
+
 import { WidgetProps } from '@rjsf/core';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {
-    EditorState, ContentState, convertFromHTML,
-} from 'draft-js';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
+import { Editor } from 'react-draft-wysiwyg';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {
@@ -30,7 +29,7 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const onEditorStateChange = (editorState) => {
         setState(editorState);
         const json = stateToHTML(editorState.getCurrentContent());
-        props.onChange(json);
+        if(json !== props.value) props.onChange(json);
     };
 
     return (

@@ -1,14 +1,17 @@
-import { IconButton, Menu } from '@mui/material';
 import React, { VFC } from 'react';
+
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton, Menu } from '@mui/material';
 import { FeatureKey } from 'runbotics-common';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
 import BotCollectionDeleteOption from 'src/views/bot/BotCollectionView/Dialog/delete/BotCollectionDeleteOption';
 import BotCollectionIdentifierOption from
     'src/views/bot/BotCollectionView/Dialog/identifier/BotCollectionIdentifierOption';
 import BotCollectionModifyOption from 'src/views/bot/BotCollectionView/Dialog/modify/BotCollectionModifyOption';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import If from 'src/components/utils/If';
+
 import { BotCollectionTileProps } from './BotCollectionTile.types';
 
 const BotCollectionTileAction: VFC<BotCollectionTileProps> = ({ botCollection, displayMode }) => {

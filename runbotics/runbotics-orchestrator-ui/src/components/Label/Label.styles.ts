@@ -1,6 +1,8 @@
+import { alpha } from '@mui/material';
 import styled from 'styled-components';
-import { alpha } from '@mui/material/styles';
+
 import { Color } from './Label';
+
 
 export const Wrapper = styled.span<{ color: Color }>(({ theme, color }) => `
     font-family: ${theme.typography.fontFamily};

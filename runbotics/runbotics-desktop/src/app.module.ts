@@ -6,7 +6,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { MailActionHandler } from './actions/mail/MailHandler';
 import { LoopActionHandler } from './actions/loop/LoopActionHandler';
 import { JIRAActionHandler } from './actions/jira/JIRAActionHandler';
-import { HttpModule } from '@nestjs/common';
 import { BeeOfficeActionHandler } from './actions/beeoffice/BeeOfficeActionHandler';
 import { FileActionHandler } from './actions/files/FileActionHandler';
 import { VariablesActionHandler } from './actions/variables/VariablesActionHandler';
@@ -23,10 +22,6 @@ import { SharepointFileActionHandler } from './actions/sharepoint/SharepointFile
 @Global()
 @Module({
     imports: [
-        HttpModule.register({
-            timeout: 5000,
-            maxRedirects: 5,
-        }),
         MailerModule.forRootAsync({
             useFactory: () => ({
                 transport: {
@@ -75,5 +70,5 @@ import { SharepointFileActionHandler } from './actions/sharepoint/SharepointFile
     exports: [ConfigModule, DesktopRunnerService],
 })
 export class AppModule {
-    constructor() { }
+    constructor() {}
 }

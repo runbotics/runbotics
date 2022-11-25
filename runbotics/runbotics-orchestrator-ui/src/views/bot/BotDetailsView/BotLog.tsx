@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
-import { useParams } from 'react-router-dom';
-import { BotParams } from 'src/utils/types/BotParams';
+
+import { useRouter } from 'next/router';
+
 import HistoryTable from '../../../components/HistoryTable';
 
 const BotLog: FC = () => {
-    const { id } = useParams<BotParams>();
+    const router = useRouter();
+    const { id } = router.query;
     const botId = Number(id);
 
-    return (
-        <HistoryTable botId={botId} sx={{ paddingLeft: 0 }} />
-    );
+    return <HistoryTable botId={botId} sx={{ paddingLeft: 0 }} />;
 };
 export default BotLog;

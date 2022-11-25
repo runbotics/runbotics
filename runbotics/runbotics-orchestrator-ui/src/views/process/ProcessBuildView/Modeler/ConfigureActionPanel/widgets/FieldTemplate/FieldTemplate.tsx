@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { FieldTemplateProps } from '@rjsf/core';
 
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
+import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/material';
+import { FieldTemplateProps } from '@rjsf/core';
+import i18n from 'i18next';
+
 import { checkIfKeyExists, translate } from 'src/hooks/useTranslations';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
-import WrapIfAdditional from './WrapIfAdditional';
+import AdditionalPropertiesField from './AdditionalPropertiesField';
+
 
 const FieldTemplate = ({
     id,
@@ -30,23 +29,24 @@ const FieldTemplate = ({
 }: FieldTemplateProps) => {
     const [description, setDescription] = useState(rawDescription);
     const [errors, setErrors] = useState(rawErrors);
-
+    
     useEffect(() => {
         if (typeof rawDescription !== 'undefined') {
-            const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: " ", lowerCaseRest: true });
+            const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: ' ', lowerCaseRest: true });
             if (checkIfKeyExists(translateKey)) {
-                {/*@ts-ignore*/}
+                { /*@ts-ignore*/ }
                 setDescription(translate(translateKey));
             }
         };
-
+        
         if (rawErrors.length > 0) {
             const localRawErrors = [];
             
             rawErrors.forEach((rawError) => {
-                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawError, delimiter: " ", lowerCaseRest: true })}`;
+                const rawErrorNoRegex = rawError.replace(/".*"/g, '');
+                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawErrorNoRegex, delimiter: ' ', lowerCaseRest: true })}`;
                 if (checkIfKeyExists(translateKey)) {
-                    {/*@ts-ignore*/}
+                    { /*@ts-ignore*/ }
                     localRawErrors.push(translate(translateKey));
                 } else {
                     localRawErrors.push(rawError);
@@ -55,10 +55,10 @@ const FieldTemplate = ({
 
             setErrors(localRawErrors);
         }
-    }, [rawDescription, rawErrors]);
+    }, [rawDescription, rawErrors, i18n.language]);
 
     return (
-        <WrapIfAdditional
+        <AdditionalPropertiesField
             classNames={classNames}
             disabled={disabled}
             id={id}
@@ -87,7 +87,7 @@ const FieldTemplate = ({
                 )}
                 {rawHelp && <FormHelperText id={id}>{rawHelp}</FormHelperText>}
             </FormControl>
-        </WrapIfAdditional>
+        </AdditionalPropertiesField>
     );
 };
 

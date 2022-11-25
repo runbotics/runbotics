@@ -1,19 +1,21 @@
 import React, { FC, useEffect, useMemo } from 'react';
-import { io, Socket } from 'socket.io-client';
-import useAuth from 'src/hooks/useAuth';
 
-const uri = process.env.NODE_ENV === 'production'
-    ? `${window.location.origin}`
-    : 'http://localhost:4000';
+import { io, Socket } from 'socket.io-client';
+
+import useAuth from 'src/hooks/useAuth';
 
 export const SocketContext = React.createContext<Socket | null>(null);
 
-const SocketProvider: FC = ({ children }) => {
+interface SocketProviderProps {
+    uri: string;
+}
+
+const SocketProvider: FC<SocketProviderProps> = ({ children, uri }) => {
     const { isAuthenticated } = useAuth();
+
     const socket = useMemo(() => {
-        if (!isAuthenticated) {
-            return null;
-        }
+        if (!isAuthenticated) return null;
+
         const accessToken = window.localStorage.getItem('access_token');
 
         return io(uri, {
@@ -24,14 +26,12 @@ const SocketProvider: FC = ({ children }) => {
             },
             path: '/ws-ui/',
         });
-    }, [isAuthenticated]);
+    }, [isAuthenticated, uri]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => () => socket?.disconnect(), [isAuthenticated]);
 
-    return (
-        <SocketContext.Provider value={socket}>
-            {children}
-        </SocketContext.Provider>
-    );
+    return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };
 
 export default SocketProvider;

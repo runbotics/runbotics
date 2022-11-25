@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
-import Cookies from 'js-cookie';
-import {
-    Box, Button, Paper, Typography,
-} from '@mui/material';
+import React, { useState, useEffect, FC } from 'react';
+
+import { Box, Button, Paper, Typography } from '@mui/material';
 import Portal from '@mui/material/Portal';
+import Cookies from 'js-cookie';
+import styled from 'styled-components';
+
 import useSettings from 'src/hooks/useSettings';
-import { ThemeType } from 'src/utils/constants';
 import useTranslations from 'src/hooks/useTranslations';
+import { ThemeType } from 'src/utils/constants';
 
 const PREFIX = 'SettingsNotification';
 
@@ -48,14 +47,10 @@ const SettingsNotification: FC = () => {
     useEffect(() => {
         const settingsUpdated = Cookies.get('settingsUpdated');
 
-        if (!settingsUpdated) {
-            setOpen(true);
-        }
+        if (!settingsUpdated) setOpen(true);
     }, []);
 
-    if (!isOpen) {
-        return null;
-    }
+    if (!isOpen) return null;
 
     return (
         <StyledPortal>

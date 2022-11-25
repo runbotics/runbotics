@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { IBot } from 'runbotics-common';
-import { Page, PageRequestParams } from 'src/utils/types/page';
+
 import { IProcess } from 'src/types/model/process.model';
+import { Page, PageRequestParams } from 'src/utils/types/page';
 import URLBuilder from 'src/utils/URLBuilder';
 
 const botPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
@@ -30,7 +31,7 @@ export const getPage = createAsyncThunk<Page<IBot>, PageRequestParams<IBot>>(
 
 export const deleteById = createAsyncThunk<void, { id: IBot['id'] }>(
     'bots/:id',
-    ({ id }) => Axios.delete(`scheduler/bots/${id}`),
+    ({ id }) => Axios.delete(`/scheduler/bots/${id}`),
 );
 
 export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: number }>(

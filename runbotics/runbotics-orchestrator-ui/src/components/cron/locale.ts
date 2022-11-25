@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { DefaultLocale } from './types';
 
 const DEFAULT_LOCALE_EN: DefaultLocale = {

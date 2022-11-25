@@ -1,13 +1,16 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
+
 import { Button, Grid, SvgIcon, Tooltip } from '@mui/material';
-import { Role, IProcess } from 'runbotics-common';
 import { Send as SendIcon } from 'react-feather';
+import { Role, IProcess } from 'runbotics-common';
+
 import Secured from 'src/components/utils/Secured';
 import useTranslations from 'src/hooks/useTranslations';
+
+import { useSelector } from 'src/store';
+
 import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
-import { useSelector } from 'src/store';
-import _ from 'lodash';
 
 interface RunSavePanelProps {
     process: IProcess;

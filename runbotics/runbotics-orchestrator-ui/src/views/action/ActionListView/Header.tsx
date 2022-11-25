@@ -1,20 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
+import React, { FC } from 'react';
+
+import { Button, Grid, SvgIcon, Typography } from '@mui/material';
 import clsx from 'clsx';
-import {
-    Button, Grid, SvgIcon, Typography,
-} from '@mui/material';
-import {
-    PlusCircle as PlusIcon,
-} from 'react-feather';
+import { PlusCircle as PlusIcon } from 'react-feather';
+
+import { FeatureKey } from 'runbotics-common';
+import styled from 'styled-components';
+
+import If from 'src/components/utils/If';
+import useFeatureKey from 'src/hooks/useFeatureKey';
+import useTranslations from 'src/hooks/useTranslations';
+import { useDispatch } from 'src/store';
 import { setShowEditModal } from 'src/store/slices/Action/Action.thunks';
 import { defaultValue } from 'src/types/model/action.model';
-import { useDispatch } from 'src/store';
-import useTranslations from 'src/hooks/useTranslations';
-import useFeatureKey from 'src/hooks/useFeatureKey';
-import { FeatureKey } from 'runbotics-common';
-import If from 'src/components/utils/If';
 
 const PREFIX = 'Header';
 
@@ -61,11 +59,11 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                     <Button
                         color="secondary"
                         variant="contained"
-                        startIcon={(
+                        startIcon={
                             <SvgIcon fontSize="small">
                                 <PlusIcon />
                             </SvgIcon>
-                        )}
+                        }
                         onClick={() => {
                             dispatch(setShowEditModal({ show: true, action: { ...defaultValue } }));
                         }}

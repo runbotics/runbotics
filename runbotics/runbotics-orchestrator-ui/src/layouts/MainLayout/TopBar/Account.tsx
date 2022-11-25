@@ -1,22 +1,16 @@
-import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
-import type { FC } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import React, { useRef, useState, FC } from 'react';
+
+import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
+import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import {
-    Avatar,
-    Box,
-    Button,
-    Hidden,
-    Menu,
-    MenuItem,
-    Typography,
-    Link,
-} from '@mui/material';
+import styled from 'styled-components';
+
 import useAuth from 'src/hooks/useAuth';
+import useTranslations from 'src/hooks/useTranslations';
 import { useDispatch } from 'src/store';
 import { logout } from 'src/store/slices/Auth/Auth.thunks';
-import useTranslations from 'src/hooks/useTranslations';
+
 
 const PREFIX = 'Account';
 
@@ -47,7 +41,7 @@ const Root = styled.div(({ theme }) => ({
 }));
 
 const Account: FC = () => {
-    const history = useHistory();
+    const router = useRouter();
     const ref = useRef<HTMLDivElement>(null);
     const auth = useAuth();
     const { translate } = useTranslations();
@@ -66,7 +60,7 @@ const Account: FC = () => {
         try {
             handleClose();
             dispatch(logout());
-            history.push('/');
+            router.push('/login');
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
                 variant: 'error',
@@ -74,13 +68,14 @@ const Account: FC = () => {
         }
     };
 
-    if (!auth.isAuthenticated) {
-        return (
-            <Link className={classes.link} component={RouterLink} to="/login" underline="none" variant="body2">
+    if (!auth.isAuthenticated)
+    { return (
+        <RouterLink href="/login" passHref legacyBehavior>
+            <Link className={classes.link} underline="none" variant="body2">
                 {translate('Account.SignIn')}
             </Link>
-        );
-    }
+        </RouterLink>
+    ); }
 
     return (
         <Root>

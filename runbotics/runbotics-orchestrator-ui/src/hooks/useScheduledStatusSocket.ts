@@ -1,10 +1,13 @@
+import { useContext, useEffect } from 'react';
+
 import { useSnackbar } from 'notistack';
-import React, { useContext, useEffect } from 'react';
 import {
     IProcessInstance, IProcessInstanceEvent, ProcessInstanceStatus, WsMessage,
 } from 'runbotics-common';
+
 import { SocketContext } from 'src/providers/Socket.provider';
 import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
+
 import { useDispatch } from '../store';
 import { schedulerActions } from '../store/slices/Scheduler';
 import useTranslations from './useTranslations';
@@ -28,19 +31,19 @@ export const useScheduledStatusSocket = () => {
                 return;
             }
 
-            if (isFinishedStatus(processInstance.status)) {
-                dispatch(schedulerActions.removeActiveJob(processInstance));
-            }
+            if (isFinishedStatus(processInstance.status))
+            { dispatch(schedulerActions.removeActiveJob(processInstance)); }
 
-            if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
-                enqueueSnackbar(
-                    translate('Scheduler.ActiveProcess.Terminate.Success', {
-                        processName: processInstance.process.name,
-                    }), {
-                        variant: 'success',
-                    },
-                );
-            }
+
+            if (processInstance.status === ProcessInstanceStatus.TERMINATED)
+            { enqueueSnackbar(
+                translate('Scheduler.ActiveProcess.Terminate.Success', {
+                    processName: processInstance.process.name,
+                }), {
+                    variant: 'success',
+                },
+            ); }
+
         });
 
         socket.on(WsMessage.REMOVE_WAITING_SCHEDULE, (job: SchedulerJob) => {
@@ -69,6 +72,7 @@ export const useScheduledStatusSocket = () => {
             socket.off(WsMessage.ADD_WAITING_SCHEDULE);
             socket.off(WsMessage.PROCESS);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 };
 

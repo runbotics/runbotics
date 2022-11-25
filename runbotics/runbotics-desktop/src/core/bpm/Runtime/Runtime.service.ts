@@ -347,7 +347,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         // }
         // listener.removeAllListeners();
         delete this.engines[processInstanceId]
-        this.cleanTempDir(processInstanceId);
+        const isSubProcess = this.processInstances[processInstanceId].rootProcessInstanceId;
+        if (!isSubProcess) this.cleanTempDir(processInstanceId);
+
         setTimeout(() => {
             this.logger.log(`[${processInstanceId}] Cleaning instance`);
             delete this.processInstances[processInstanceId];
@@ -402,7 +404,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             this.logger.warn(`[${processInstanceId}] Process instance is not running`);
             return Promise.reject();
         }
-        
+
         for (const instanceId in this.processInstances) {
             this.logger.log(`[${instanceId}] Terminating process instance`);
             this.engines[instanceId].stop();

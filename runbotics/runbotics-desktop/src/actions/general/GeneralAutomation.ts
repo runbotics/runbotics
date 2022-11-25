@@ -43,7 +43,9 @@ class GeneralAutomation extends StatelessActionHandler {
             this.logger.log(key, value);
         }
         this.logger.log('process.cwd();', process.cwd());
-        return {};
+        return {
+            variables: input.variables,
+        };
     }
 
     async delay(input: DelayActionInput): Promise<DelayActionOutput> {

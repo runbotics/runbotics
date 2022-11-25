@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { translate } from 'src/hooks/useTranslations';
+import { IGlobalVariable } from 'src/types/model/global-variable.model';
+
 import { VariableType } from '../Variable.types';
 import { Validator, VariableState, VariableValue } from './VariableDetails.types';
 
@@ -13,20 +15,20 @@ export const initialVariableState: VariableState = {
 
 export const mapVariableToInnerState = (variable: IGlobalVariable | undefined): VariableState => {
     if (!variable) return initialVariableState;
-    if (variable?.type === VariableType.LIST) {
-        return {
-            ...variable,
-            type: VariableType.LIST,
-            value: (JSON.parse(variable?.value) as string[])
-                .map<VariableValue>((value) => ({ id: uuidv4(), value })),
-        };
-    }
-    if (variable?.type === VariableType.BOOLEAN) {
-        return {
-            ...variable,
-            type: VariableType.BOOLEAN,
-        };
-    }
+    if (variable?.type === VariableType.LIST) 
+    { return {
+        ...variable,
+        type: VariableType.LIST,
+        value: (JSON.parse(variable?.value) as string[])
+            .map<VariableValue>((value) => ({ id: uuidv4(), value })),
+    }; }
+    
+    if (variable?.type === VariableType.BOOLEAN) 
+    { return {
+        ...variable,
+        type: VariableType.BOOLEAN,
+    }; }
+    
     return { ...variable, type: VariableType.STRING };
 };
 

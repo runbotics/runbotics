@@ -1,9 +1,11 @@
 import React, { useMemo, useCallback } from 'react';
+
 import { Select, MenuItem } from '@mui/material';
-import { CustomSelectProps } from '../types';
-import DEFAULT_LOCALE_EN from '../locale';
-import { classNames, sort } from '../utils';
+
 import { parsePartArray, partToString, formatValue } from '../converter';
+import DEFAULT_LOCALE_EN from '../locale';
+import { CustomSelectProps } from '../types';
+import { classNames, sort } from '../utils';
 
 export default function CustomSelect(props: CustomSelectProps) {
     const {
@@ -21,23 +23,23 @@ export default function CustomSelect(props: CustomSelectProps) {
     } = props;
 
     const stringValue = useMemo(() => {
-        if (value && Array.isArray(value)) {
-            return value.map((item: number) => item.toString());
-        }
+        if (value && Array.isArray(value)) 
+        { return value.map((item: number) => item.toString()); }
+        
         return [];
     }, [value]);
 
     const options = useMemo(
         () => {
-            if (optionsList) {
-                return optionsList.map((option, index) => {
-                    const number = unit.min === 0 ? index : index + 1;
-                    return {
-                        value: number.toString(),
-                        label: option,
-                    };
-                });
-            }
+            if (optionsList) 
+            { return optionsList.map((option, index) => {
+                const number = unit.min === 0 ? index : index + 1;
+                return {
+                    value: number.toString(),
+                    label: option,
+                };
+            }); }
+            
             return [...Array(unit.total)].map((e, index) => {
                 const number = unit.min === 0 ? index : index + 1;
                 return {
@@ -49,12 +51,13 @@ export default function CustomSelect(props: CustomSelectProps) {
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
     const renderTag = useCallback(
+        // eslint-disable-next-line complexity
         (tagProps) => {
             const propsValue = tagProps;
 
-            if (!propsValue || Number.isNaN((propsValue[0]))) {
-                return <></>;
-            }
+            if (!propsValue || Number.isNaN((propsValue[0]))) 
+            { return <></>; }
+            
 
             const parsedArray = parsePartArray(propsValue, unit);
             const cronValue = partToString(parsedArray, unit, humanizeLabels, leadingZero, clockFormat);
@@ -75,16 +78,16 @@ export default function CustomSelect(props: CustomSelectProps) {
     const simpleClick = useCallback(
         (event) => {
             let newValueOption: number[] = event.target.value;
-            if (newValueOption.length === 0) {
-                newValueOption.push(0);
-            }
+            if (newValueOption.length === 0) 
+            { newValueOption.push(0); }
+            
             newValueOption = Array.isArray(newValueOption) ? sort(newValueOption) : [newValueOption];
             const newValue: number[] = newValueOption;
-            if (newValue.length === unit.total) {
-                setValue([]);
-            } else {
-                setValue(newValue);
-            }
+            if (newValue.length === unit.total) 
+            { setValue([]); }
+            else 
+            { setValue(newValue); }
+            
         },
         [setValue, unit.total],
     );

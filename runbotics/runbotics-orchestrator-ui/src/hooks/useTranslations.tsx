@@ -1,8 +1,10 @@
 import React from 'react';
+
+import { sanitize } from 'dompurify';
 import i18next from 'i18next';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
-import { sanitize } from 'dompurify';
+
 import { TranslationsDescriptors, Language } from '../translations/translations';
 
 const useTranslations = () => {
@@ -35,9 +37,9 @@ const useTranslations = () => {
 };
 
 export const isNamespaceLoaded = () => new Promise((resolve) => {
-    if (i18next.hasLoadedNamespace(i18next.language)) {
-        resolve(true);
-    }
+    if (i18next.hasLoadedNamespace(i18next.language)) 
+    { resolve(true); }
+    
 });
 
 export const translate = (

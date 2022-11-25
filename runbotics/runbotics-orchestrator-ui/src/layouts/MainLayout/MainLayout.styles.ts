@@ -1,5 +1,6 @@
-import { HEADER_HEIGHT, NAVBAR_MOBILE_WIDTH, NAVBAR_WIDTH } from 'src/utils/constants';
 import styled from 'styled-components';
+
+import { HEADER_HEIGHT, NAVBAR_MOBILE_WIDTH, NAVBAR_WIDTH } from 'src/utils/constants';
 
 interface MainProps {
     mobile?: boolean;

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+
 import { MenuItem } from '@mui/material';
 import { IBotCollection } from 'runbotics-common';
+
 import useTranslations from 'src/hooks/useTranslations';
+
 import BotCollectionIdentifierDialog from './BotCollectionIdentifierDialog';
 
 type IdentifierBotCollectionProps = {
@@ -16,9 +19,9 @@ const BotCollectionIdentifierOption = (props: IdentifierBotCollectionProps) => {
         <>
             <MenuItem onClick={() => setShow(true)}>{translate('Bot.Collection.Actions.Identifier')}</MenuItem>
             <BotCollectionIdentifierDialog
-                    botCollection={props.botCollection}
-                    open={show}
-                    onClose={() => setShow(false)}
+                botCollection={props.botCollection}
+                open={show}
+                onClose={() => setShow(false)}
             />
         </>
     );

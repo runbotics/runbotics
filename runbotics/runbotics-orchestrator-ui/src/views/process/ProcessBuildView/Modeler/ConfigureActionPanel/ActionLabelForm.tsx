@@ -1,16 +1,16 @@
 import React, { useEffect, useState, VFC } from 'react';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import DoneIcon from '@mui/icons-material/Done';
+
 import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Alert from '@mui/material/Alert';
-import If from 'src/components/utils/If';
-import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
-import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
+
+import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
+
 import i18n from 'i18next';
+
+import If from 'src/components/utils/If';
+import useTranslations, { checkIfKeyExists } from 'src/hooks/useTranslations';
+import { useBpmnFormContext } from 'src/providers/BpmnForm.provider';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
 type Props = {
@@ -23,13 +23,14 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
     const actionId = element.businessObject?.actionId;
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+    const translationKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
     
     useEffect(() => {
-        if (checkIfKeyExists(translateKey)) {
-            setTranslatedLabel(translate(translateKey));
+        if (checkIfKeyExists(translationKey)) {
+            setTranslatedLabel(translate(translationKey));
         }
-    }, [i18n.language])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [i18n.language, actionId]);
 
     useEffect(() => {
         setFormState({ editing: false, label: element.businessObject.label });

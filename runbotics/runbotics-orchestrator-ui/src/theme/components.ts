@@ -1,4 +1,4 @@
-import { Components } from '@mui/material/styles/components';
+import { Components } from '@mui/material';
 
 export const components: Components = {
     MuiTextField: {
@@ -28,4 +28,14 @@ export const components: Components = {
             },
         },
     },
+    MuiTooltip: {
+        styleOverrides: {
+            tooltip: {
+                '& strong': {
+                    fontWeight: 900,
+                },
+            },
+
+        }
+    }
 };

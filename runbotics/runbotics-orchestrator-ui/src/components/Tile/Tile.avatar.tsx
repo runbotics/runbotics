@@ -1,15 +1,21 @@
+import { VFC } from 'react';
+
 import { Avatar, Link } from '@mui/material';
+import RouterLink from 'next/link';
 import styled from 'styled-components';
-import React, { VFC } from 'react';
+
 import useTranslations from 'src/hooks/useTranslations';
-import { Link as RouterLink } from 'react-router-dom';
+
+
 import { getAvatarText } from './Tile.utils';
 
-const StyledAvatar = styled(Avatar)(({ theme }) => `
+const StyledAvatar = styled(Avatar)(
+    ({ theme }) => `
     && {
         background-color: ${theme.palette.primary.main};
     }
-`);
+`,
+);
 
 interface TileAvatarProps {
     title: string;
@@ -19,16 +25,24 @@ interface TileAvatarProps {
 const TileAvatar: VFC<TileAvatarProps> = ({ href, title }) => {
     const { translate } = useTranslations();
 
+    const AvatarWrapper = ({ children }) => {
+        if (href) 
+        { return (
+            <RouterLink href={href} passHref legacyBehavior>
+                <Link>{children}</Link>
+            </RouterLink>
+        ); }
+        
+
+        return children;
+    };
+
     return (
-        <Link
-            component={RouterLink}
-            variant="h5"
-            to={href}
-        >
+        <AvatarWrapper>
             <StyledAvatar aria-label={translate('Component.Tile.Avatar.AriaLabel')}>
                 {getAvatarText(title)}
             </StyledAvatar>
-        </Link>
+        </AvatarWrapper>
     );
 };
 

@@ -1,4 +1,5 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
 const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
@@ -18,6 +19,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                             variable: {
                                 title: translate('Process.Details.Modeler.Actions.Variable.Assign.Variable'),
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
 
                             value: {
@@ -118,6 +120,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getVariablesActions;

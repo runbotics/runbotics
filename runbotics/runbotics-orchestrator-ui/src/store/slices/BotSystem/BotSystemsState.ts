@@ -1,4 +1,4 @@
-import { IBotSystem } from "runbotics-common";
+import { IBotSystem } from 'runbotics-common';
 
 export interface BotSystemsState {
     loading: boolean;

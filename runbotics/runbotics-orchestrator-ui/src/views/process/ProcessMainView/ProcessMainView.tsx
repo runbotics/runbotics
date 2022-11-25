@@ -1,25 +1,29 @@
-import {
-    Divider, Grid, Tab, Tabs,
-} from '@mui/material';
 import React, { FC, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useSelector } from 'src/store';
-import useTranslations from 'src/hooks/useTranslations';
-import { ProcessTab } from 'src/utils/process-tab';
-import { ProcessParams } from '../../../utils/types/ProcessParams';
-import ProcessMainViewManager from './ProcessMainView.manager';
-import { ProcessTitle, ProcessInternalPage } from './ProcessMainView.styled';
-import { FeatureKey } from 'runbotics-common';
-import useAuth from 'src/hooks/useAuth';
-import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+
+import { Divider, Grid, Tab, Tabs } from '@mui/material';
+
 import i18n from 'i18next';
+import { useRouter } from 'next/router';
+import { FeatureKey } from 'runbotics-common';
+
+import { hasFeatureKeyAccess } from 'src/components/utils/Secured';
+import useAuth from 'src/hooks/useAuth';
+import useTranslations from 'src/hooks/useTranslations';
+import { useSelector } from 'src/store';
+import { ProcessTab } from 'src/utils/process-tab';
+
+
+
+
+import ProcessMainViewManager from './ProcessMainView.manager';
+import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
-    const history = useHistory();
+    const router = useRouter();
     const { process } = useSelector((state) => state.process.draft);
-    const { id, tab } = useParams<ProcessParams>();
+    const { id, tab } = router.query;
     const { translate } = useTranslations();
-    const { user } = useAuth()
+    const { user } = useAuth();
 
     const processTabs = [
         {
@@ -39,18 +43,21 @@ const ProcessMainView: FC = () => {
         },
     ];
 
-    const accessedTabs = useMemo(() => {
-        return processTabs.filter((tab) => {
-            if (tab.featureKeys) {
-                return hasFeatureKeyAccess(user, tab.featureKeys);
-            }
+    const accessedTabs = useMemo(
+        () =>
+            // eslint-disable-next-line @typescript-eslint/no-shadow
+            processTabs.filter((tab) => {
+                if (tab.featureKeys) return hasFeatureKeyAccess(user, tab.featureKeys);
 
-            return true;
-        });
-    }, [user, i18n.language]);
+                return true;
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [user, i18n.language],
+    );
 
     const handleMainTabsChange = (processTab: ProcessTab) => {
-        history.push(`/app/processes/${id}/${processTab}`);
+        router.push({ pathname: `/app/processes/${id}/${processTab}` });
     };
 
     return (
@@ -64,9 +71,10 @@ const ProcessMainView: FC = () => {
                         value={tab}
                         variant="scrollable"
                     >
-                        {accessedTabs.length > 1 && accessedTabs.map((processTab) => (
-                            <Tab key={processTab.value} label={processTab.label} value={processTab.value} />
-                        ))}
+                        {accessedTabs.length > 1 &&
+                            accessedTabs.map((processTab) => (
+                                <Tab key={processTab.value} label={processTab.label} value={processTab.value} />
+                            ))}
                     </Tabs>
                 </Grid>
                 <Grid item xs={6} mb={1} mt={1}>

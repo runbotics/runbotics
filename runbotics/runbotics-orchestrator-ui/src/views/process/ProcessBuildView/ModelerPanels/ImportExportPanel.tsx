@@ -1,8 +1,11 @@
 import React, { FC, SyntheticEvent } from 'react';
+
 import { Button, Grid, Tooltip } from '@mui/material';
 import { Role } from 'runbotics-common';
+
 import Secured from 'src/components/utils/Secured';
 import useTranslations from 'src/hooks/useTranslations';
+
 import FloatingGroup from '../FloatingGroup';
 import { FirstActionButton, ImportInput, StyledLabel } from './ModelerPanels.styled';
 

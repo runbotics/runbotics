@@ -1,14 +1,17 @@
-import _ from 'lodash';
-import { is } from 'bpmn-js/lib/util/ModelUtil';
+/* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
-import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
+import { is } from 'bpmn-js/lib/util/ModelUtil';
+
+import { translate } from 'src/hooks/useTranslations';
+
 import {
     BPMNElement, BPMNHelper, findPreviousElements, getInputParameters, getOutputParameters,
 } from './BPMN';
-import { translate } from 'src/hooks/useTranslations';
+import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
+
+
 import { ActionToBPMNElement } from './ConfigureActionPanel/ActionToBPMNElement';
 import { ParameterDestination } from './extensions/custom/CustomPalette';
-import { ProcessState } from 'src/store/slices/Process';
 
 const DEFAULT_OPTIONS = [
     { value: '${environment.services.run()}', name: translate('Process.Details.Options.ByValue.ContentScript') },
@@ -64,16 +67,16 @@ const disablePreviousElements = (modeler: BpmnModeler, element: BPMNElement, run
 };
 
 export const applyModelerElement = ({ modeler, element, action, additionalParameters }: ApplyModelerElementProps) => {
-    const bpmnHelper = BPMNHelper.from(modeler);
     const actionToBPMNElement: ActionToBPMNElement = ActionToBPMNElement.from(modeler);
 
     element.businessObject.disabled = additionalParameters?.disabled;
     if (additionalParameters?.runFromHere !== element.businessObject?.runFromHere) {
         disablePreviousElements(modeler, element, additionalParameters?.runFromHere);
     }
+
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
 
-    let data = {
+    const data = {
         input: {
             ...getInputParameters(element),
             ...(additionalParameters?.input ?? []),
@@ -88,9 +91,8 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         data.input,
         action ? action.form.schema : null,
     );
-    if (inputParams.length > 0) {
-        actionToBPMNElement.setInputParameters(element, inputParams);
-    }
+    if (inputParams.length > 0) { actionToBPMNElement.setInputParameters(element, inputParams); }
+
 
     if (additionalParameters?.output && action.output && action.output.assignVariables) {
         Object.entries(action.output.outputMethods).forEach((currentValue) => {
@@ -99,16 +101,15 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
             const output = data.output[key];
             if (output) {
                 Object.entries(data.output).forEach(([k, v]) => {
-                    if (value === v) {
+                    if (value === v || k !== 'variableName') {
                         delete data.output[k];
                     }
                 });
-
                 data.output[output] = value;
             }
-
         });
     }
+
 
     if (Object.keys(data.output).length > 0) {
         const outputParams = actionToBPMNElement.formDataToParameters(
@@ -118,5 +119,4 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         );
         actionToBPMNElement.setOutputParameters(element, outputParams);
     }
-    bpmnHelper.updateBusinessObject(element);
 };

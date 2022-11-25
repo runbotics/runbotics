@@ -1,7 +1,8 @@
 import React, { FC, useMemo } from 'react';
+
+import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import Autocomplete from '@mui/material/Autocomplete';
-import { TextField } from '@mui/material';
+
 import useProcessSearch from 'src/hooks/useProcessSearch';
 import { useSelector } from 'src/store';
 
@@ -13,14 +14,21 @@ interface GlobalVariableOption {
 const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     const { page: processesPage } = useSelector((state) => state.process.all);
     const { handleSearch, search } = useProcessSearch();
-    
+
     const {
         process: { name: processName },
     } = useSelector((state) => state.process.draft);
 
-    const options = useMemo(() => (processesPage?.content ? processesPage.content
-        .filter((process) => process.name !== processName)
-        .map<GlobalVariableOption>((process) => ({ id: process.id, name: process.name })) : []), [processesPage]);
+    const options = useMemo(
+        () =>
+            processesPage?.content
+                ? processesPage.content
+                    .filter((process) => process.name !== processName)
+                    .map<GlobalVariableOption>((process) => ({ id: process.id, name: process.name }))
+                : [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [processesPage],
+    );
 
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
 
@@ -37,7 +45,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
         <Autocomplete
             value={getValue()}
             options={options}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => (option as GlobalVariableOption).name}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField

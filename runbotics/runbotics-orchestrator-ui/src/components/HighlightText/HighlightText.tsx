@@ -13,7 +13,7 @@ const HighlightText: VFC<HighlightTextProps> = ({ text, matchingText, matchClass
     return (
         <>
             {text.split(matchRegex).map((nonBoldText, index, arr) => (
-                <React.Fragment key={index}>
+                <React.Fragment key={nonBoldText}>
                     {nonBoldText}
                     {index + 1 !== arr.length && <mark className={matchClassName}>{matches[index]}</mark>}
                 </React.Fragment>

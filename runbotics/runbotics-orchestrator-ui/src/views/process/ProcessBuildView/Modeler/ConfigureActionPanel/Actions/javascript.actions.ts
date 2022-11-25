@@ -1,6 +1,8 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
         id: 'typescript.run',
@@ -159,6 +161,6 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getJavascriptActions;

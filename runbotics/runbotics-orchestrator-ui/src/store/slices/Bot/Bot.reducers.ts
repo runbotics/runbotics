@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IBot } from 'runbotics-common';
+
 import { BotState } from './Bot.state';
 
 export const updateBot = (state: BotState, action: PayloadAction<IBot>) => {

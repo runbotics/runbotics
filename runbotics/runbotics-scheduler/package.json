@@ -1,7 +1,8 @@
 {
     "name": "runbotics-scheduler",
+    
+    "version": "2.4.0-SNAPSHOT.2",
 
-    "version": "2.3.0-SNAPSHOT.18",
     "description": "runbotics-scheduler",
     "author": {
         "name": "runbotics",
@@ -26,19 +27,20 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
-        "@nestjs/bull": "^0.4.2",
-        "@nestjs/cli": "^8.2.4",
-        "@nestjs/common": "^8.4.2",
-        "@nestjs/config": "^2.0.0",
-        "@nestjs/core": "^8.4.2",
-        "@nestjs/jwt": "^8.0.0",
-        "@nestjs/passport": "^8.2.1",
-        "@nestjs/platform-express": "^8.0.0",
-        "@nestjs/platform-socket.io": "^8.4.0",
-        "@nestjs/schematics": "^8.0.8",
-        "@nestjs/testing": "^8.4.2",
-        "@nestjs/typeorm": "^8.0.3",
-        "@nestjs/websockets": "^8.4.0",
+        "@nestjs/bull": "^0.6.1",
+        "@nestjs/cli": "^9.1.5",
+        "@nestjs/common": "^9.1.6",
+        "@nestjs/config": "^2.2.0",
+        "@nestjs/core": "^9.1.6",
+        "@nestjs/jwt": "^9.0.0",
+        "@nestjs/passport": "^9.0.0",
+        "@nestjs/platform-express": "^9.1.6",
+        "@nestjs/platform-socket.io": "^9.1.6",
+        "@nestjs/schematics": "^9.0.3",
+        "@nestjs/testing": "^9.1.6",
+        "@nestjs/typeorm": "^9.0.1",
+        "@nestjs/websockets": "^9.1.6",
+        "axios": "^0.21.1",
         "bull": "^4.2.1",
         "dayjs": "^1.11.0",
         "express": "^4.17.2",
@@ -59,7 +61,6 @@
         "winston-daily-rotate-file": "^4.6.0",
         "yup": "^0.32.11",
         "lodash": "^4.17.19",
-        "axios": "^0.21.1",
         "mime-types": "~2.1.35"
     },
     "devDependencies": {

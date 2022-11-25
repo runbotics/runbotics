@@ -1,6 +1,8 @@
 import { translate } from 'src/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: 'beeOffice.createNewTimetableActivity',
@@ -31,6 +33,18 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             category: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Category'),
+                                type: 'string',
+                            },
+                            specialization: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Specialization'
+                                ),
+                                type: 'string',
+                            },
+                            localization: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Localization'
+                                ),
                                 type: 'string',
                             },
                             date: {
@@ -69,6 +83,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     employee: '',
                     activity: '',
+                    category: '',
+                    specialization: '',
+                    localization: '',
                     date: '',
                     duration: '',
                     description: '',
@@ -469,6 +486,6 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-})
+});
 
 export default getBeeOfficeActions;

@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { getAll } from './Users.thunks';
+
 import { UsersState } from './Users.state';
+import { getAll } from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
@@ -14,7 +15,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAll.rejected, (state) => {
             state.loading = false;
-        })
+        });
 };
 
 export default buildUsersExtraReducers;

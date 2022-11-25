@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
-import { initialModelerState } from './Process.slice';
+
 import { ProcessState } from './Process.state';
 
 export const updateProcess = (state: ProcessState, action: PayloadAction<IProcess>) => {
@@ -15,19 +15,16 @@ export const addAppliedAction = (state: ProcessState, action: PayloadAction<stri
     if (!state.modeler.appliedActivities.includes(action.payload)) {
         state.modeler.appliedActivities = [...state.modeler.appliedActivities, action.payload];
     }
+
 };
 
 export const removeAppliedAction = (state: ProcessState, action: PayloadAction<string>) => {
     if (state.modeler.appliedActivities.includes(action.payload)) {
-        state.modeler.appliedActivities = state.modeler.appliedActivities.filter(
-            (activity) => activity !== action.payload,
-        );
+        state.modeler.appliedActivities = state.modeler.appliedActivities
+            .filter((activity) => activity !== action.payload);
     }
-};
 
-export const clearModelerState = (state: ProcessState) => {
-    state.modeler = initialModelerState;
-}
+};
 
 export const setSaveDisabled = (state: ProcessState, action: PayloadAction<boolean>) => {
     state.modeler.isSaveDisabled = action.payload;

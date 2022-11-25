@@ -1,6 +1,8 @@
 import { Drawer, Theme } from '@mui/material';
-import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH, DRAWER_WIDTH } from 'src/components/InfoPanel';
+
 import styled from 'styled-components';
+
+import { MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH, DRAWER_WIDTH } from 'src/components/InfoPanel';
 
 const prepareLeavingTransition = (theme: Theme) => theme.transitions.create(
     'width',

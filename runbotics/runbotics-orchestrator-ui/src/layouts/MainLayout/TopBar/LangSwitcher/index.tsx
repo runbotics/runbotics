@@ -1,14 +1,19 @@
-import useTranslations from 'src/hooks/useTranslations';
 import React, { ChangeEvent, useState } from 'react';
+
+import LanguageIcon from '@mui/icons-material/Language';
 import {
     Select, SvgIcon, InputLabel,
 } from '@mui/material';
+
+import useTranslations from 'src/hooks/useTranslations';
+
+import { useSelector } from 'src/store';
 import {
     languages, TranslationsDescriptors, DEFAULT_LANG, Language,
 } from 'src/translations/translations';
-import LanguageIcon from '@mui/icons-material/Language';
+
+
 import { LangFormControl, StyledMenuItem } from './LangSwitcher.styled';
-import { useSelector } from 'src/store';
 import LanguageChangeDialog from './LanguageChangeDialog';
 
 const LangSwitcher = () => {

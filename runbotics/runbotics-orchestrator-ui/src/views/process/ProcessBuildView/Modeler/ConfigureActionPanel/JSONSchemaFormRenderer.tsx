@@ -1,14 +1,18 @@
 import React, { FC, ReactNode, FormEvent, useEffect, useState, useRef } from 'react';
+
+import { Box, Button, Grid, Alert } from '@mui/material';
 import { ErrorListProps, FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import { Box, Button, Grid, Alert } from '@mui/material';
 import _ from 'lodash';
+
 import useDebounce from 'src/hooks/useDebounce';
 import { translate as t } from 'src/hooks/useTranslations';
-import { useDispatch, useSelector } from 'src/store';
+import { useDispatch } from 'src/store';
+
+import { processActions } from 'src/store/slices/Process';
+
 import AutocompleteWidget from './widgets/AutocompleteWidget';
 import FieldTemplate from './widgets/FieldTemplate';
-import { processActions } from 'src/store/slices/Process';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
@@ -35,7 +39,7 @@ function ErrorListTemplate(props: ErrorListProps) {
     return <Alert severity="error">{alertMessage}</Alert>;
 }
 
-const DEBOUNCE_TIME = 1000;
+const DEBOUNCE_TIME = 500;
 const initialFormState = {
     id: null,
     formData: null,
@@ -44,40 +48,37 @@ const initialFormState = {
 const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const dispatch = useDispatch();
     const [isFormError, setIsFormError] = useState(false);
-    const formRefCallback = (node) => {
-        if (node) {
-            setIsFormError(node.state.errors.length > 0);
-        }
-    };
     const [editMode, setEditMode] = useState(false);
-    const [appliedFormState, setAppliedFormState] = useState(props.formData);
     const [formState, setFormState] = useState<FormState>(initialFormState);
+    const formRefCallback = (node) => {
+        if (node) setIsFormError(node.state.errors.length > 0);
+    };
+    const isFormDirty = !_.isEqual(formState.formData, props.formData);
     // Reference to the form state used in component cleanup
     const formValueRef = useRef<FormState>(initialFormState);
-
-    const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
-    const isFormDirty = !_.isEqual(formState.formData, appliedFormState);
     const isFormDirtyRef = useRef(isFormDirty);
-
-    useEffect(() => {
-        formValueRef.current = formState;
-        isFormDirtyRef.current = isFormDirty;
-    }, [formState, appliedFormState]);
+    const editModeRef = useRef(editMode);
+    const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
-        setAppliedFormState(formState.formData);
         setEditMode(false);
         return props.onSubmit ? props.onSubmit(e, nativeEvent) : null;
     };
-
+    
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
         setFormState({ ...formState, formData: e.formData });
-        if (!editMode) {
+        if (!editMode) { 
             dispatch(processActions.removeAppliedAction(props.id));
         }
     };
-
+    
+    useEffect(() => {
+        formValueRef.current = formState;
+        isFormDirtyRef.current = isFormDirty;
+        editModeRef.current = editMode;
+    }, [formState, editMode, isFormDirty]);
+    
     useEffect(() => {
         setFormState({
             id: props.id,
@@ -86,15 +87,21 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [props.formData, props.id]);
 
     useEffect(() => {
-        if (formState?.formData && isFormDirty && !isFormError) {
-            handleSubmit(formState);
+        if (formState?.formData && isFormDirty && !isFormError) { 
+            handleSubmit(formState); 
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedForm]);
-    useEffect(() => {
-        return () => {
-            if (isFormDirtyRef.current) handleSubmit(formValueRef.current);
-        };
-    }, []);
+    useEffect(
+        () => () => {
+            if (isFormDirtyRef.current && editModeRef.current) {
+                handleSubmit(formValueRef.current);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [],
+    );
     return (
         <Grid item xs={12}>
             <Box px={1}>

@@ -1,4 +1,4 @@
-import { IProcessInstance } from "runbotics-common";
+import { IProcessInstance } from 'runbotics-common';
 
 export interface IActivity {
     executionId?: string;

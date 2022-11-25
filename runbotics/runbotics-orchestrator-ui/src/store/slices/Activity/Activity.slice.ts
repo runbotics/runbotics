@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RootState } from '../../index';
 import buildActivityExtraReducers from './Activity.extraReducers';
 import { ActivityState } from './Activity.state';
