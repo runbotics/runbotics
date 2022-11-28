@@ -293,12 +293,13 @@ class BrowserAutomation extends StatefulActionHandler {
         try {
             const pdfBuffer = await generatePdf(target, {});
 
-            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (err) => {
-                if (err) throw err;
+            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (error) => {
+                if (error) throw error;
                 this.logger.log(`File saved successfully at ${fileName}.pdf`);
             });
         } catch (error) {
             this.logger.error('Error occured while printing to pdf', error);
+            throw error;
         }
 
         return `${fileName}.pdf`;
