@@ -19,7 +19,7 @@ const customWidgets = {
     DraftJSEditor,
     GlobalVariableSelectWidget,
     FileDropzoneWidget,
-    BrowserTargetWidget
+    BrowserTargetWidget,
     TypographyWidget
 };
 
