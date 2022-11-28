@@ -4,7 +4,7 @@ import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
 import { startProcessSchema } from 'src/utils/pipes';
 import { Logger } from 'src/utils/logger';
 import { FeatureKeys } from 'src/auth/featureKey.decorator';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, ProcessTrigger } from 'runbotics-common';
 import { QueueService } from '../queue.service';
 
 @Controller('scheduler/trigger')
@@ -26,7 +26,7 @@ export class TriggerController {
             const process = await this.queueService.getProcessByInfo(processInfo);
             await this.queueService.validateProcessAccess({ process: process, user: request.user, triggered: true });
 
-            const response = await this.queueService.createInstantJob({ process, input, user: request.user });
+            const response = await this.queueService.createInstantJob({ process, input, user: request.user, trigger: ProcessTrigger.API });
             this.logger.log(`<= Process ${processInfo} successfully started`);
 
             return response;

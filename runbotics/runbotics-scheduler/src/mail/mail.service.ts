@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
 import { Logger } from 'src/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
@@ -7,6 +7,7 @@ import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from 'src/config/serverConfig.service';
 import { QueueService } from 'src/queue/queue.service';
 import { Cron } from '@nestjs/schedule';
+import { IProcessInstance, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -18,8 +19,10 @@ const FETCH_MAILS_CONFIG: FetchQueryObject = {
     flags: true,
 };
 
+const DEFAULT_MAILBOX = 'INBOX';
+
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
     private readonly logger = new Logger(MailService.name);
     private client: ImapFlow;
     private server: Transporter<SentMessageInfo>;
@@ -30,7 +33,26 @@ export class MailService {
         private readonly queueService: QueueService
     ) {}
 
+    onModuleInit() {
+        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
+            throw new Error('Wrong smtp mail config');
+        }
+
+        this.server = createTransport({
+            ...this.serverConfigService.sendEmailConfig,
+            secure: true
+        });
+    }
+
     private initializeServices() {
+        if (!this.serverConfigService.readEmailConfig.host || !this.serverConfigService.readEmailConfig.port) {
+            throw new Error('Wrong imap mail config');
+        }
+
+        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
+            throw new Error('Wrong smtp mail config');
+        }
+
         this.client = new ImapFlow({
             ...this.serverConfigService.readEmailConfig,
             secure: true,
@@ -39,22 +61,31 @@ export class MailService {
             },
             logger: false,
         });
-
-        this.server = createTransport({
-            ...this.serverConfigService.sendEmailConfig,
-            secure: true
-        });
     }
 
     @Cron('0 * * * * *')
     private async readMailbox() {
-        this.initializeServices();
-        this.logger.log('>> CONNECTING TO MAILBOX');
-        await this.client.connect();
-        this.logger.log('MAILBOX CONNECTED');
+        this.logger.log('>> Connecting to mailbox');
+
+        try {
+            this.initializeServices();
+        } catch (error) {
+            this.logger.error(error.message);
+            return;
+        }
+
+        await this.client.connect()
+            .then(() => {
+                this.logger.log('Success: Mailbox connected');
+            })
+            .catch(error => {
+                this.logger.error('Mail imap connection error: ', error);
+                throw new Error(error.message);
+            });
+
         
-        const lock = await this.client.getMailboxLock('INBOX');
-        await this.client.mailboxOpen('INBOX');
+        const lock = await this.client.getMailboxLock(DEFAULT_MAILBOX);
+        await this.client.mailboxOpen(DEFAULT_MAILBOX);
 
         const processedMails: number[] = [];
         
@@ -67,7 +98,9 @@ export class MailService {
                         continue;
                     }
 
-                    this.logger.log(`PROCESSING EMAIL ${msg.uid}: "${msg.envelope.subject}" FROM ${msg.envelope.from.map(x => x.address)} | ${msg.envelope.date.toLocaleString()}`);
+                    const sender = msg.envelope.from.map(x => x.address)[0];
+
+                    this.logger.log(`Processing email ${msg.uid}: "${msg.envelope.subject}" from ${sender} | ${msg.envelope.date.toLocaleString()}`);
                     processedMails.push(msg.uid);
 
                     const process = await this.validateTitle(msg.envelope);
@@ -75,17 +108,23 @@ export class MailService {
                     
                     const input = { variables };
 
-                    await this.queueService.createInstantJob({ process, user: null, input });
+                    await this.queueService.createInstantJob({
+                        process,
+                        input,
+                        user: null,
+                        trigger: ProcessTrigger.EMAIL,
+                        triggeredBy: sender.toLowerCase(),
+                    });
                 } catch (error) {
                     this.logger.error(error.message, error);
-                    await this.sendReplyMail(msg.envelope, error.message);
+                    await this.sendReplyErrorMail(msg.envelope, error.message);
                 }
             }
 
             if (processedMails.length) {
-                this.logger.log('MAILS PROCESSED: ', processedMails);
+                this.logger.log('Mails processsed: ', processedMails);
             } else {
-                this.logger.log('NO MAILS PROCESSED ');
+                this.logger.log('No mails processed ');
             }
 
             await this.client.messageFlagsAdd(processedMails, ['\\Seen']);
@@ -93,9 +132,40 @@ export class MailService {
             await this.client.mailboxClose();
             lock.release();
             await this.client.logout();
-            this.logger.log('<< MAILBOX DISCONNECTED');
+            this.logger.log('<< Mailbox disconnected');
+        }
+    }
+
+    public sendProcessInstanceResponseMail(processInstance: IProcessInstance, text: string) {
+        if (!processInstance.triggeredBy) {
+            this.logger.error('Error during sending response mail: Empty trigger email field');
+            return;
         }
 
+        const to = processInstance.triggeredBy;
+        const subject = `Re: ${processInstance.process.id}`;
+
+        this.logger.log(`Sending response mail to ${to}`);
+        
+        return this.server.sendMail({
+            from: this.serverConfigService.sendEmailConfig.auth.user,
+            to,
+            subject,
+            text: this.getProcessInstanceMailResponseText(processInstance),
+        });
+    }
+
+    private getProcessInstanceMailResponseText(processInstance: IProcessInstance) {
+
+        if (status === ProcessInstanceStatus.TERMINATED) {
+            return '';
+        }
+
+        if (status === ProcessInstanceStatus.ERRORED) {
+            return;
+        }
+
+        return 'Process ';
     }
 
     private async validateTitle(envelope: MessageEnvelopeObject) {
@@ -111,14 +181,13 @@ export class MailService {
         return process;
     }
 
-    private sendReplyMail(envelope: MessageEnvelopeObject, text: string) {
+    private sendReplyErrorMail(envelope: MessageEnvelopeObject, text: string) {
         return this.server.sendMail({
             from: envelope.to[0].address,
             to: envelope.from[0].address,
             replyTo: envelope.replyTo[0].address,
             inReplyTo: envelope.messageId,
             subject: envelope.subject,
-            references: envelope.messageId,
             text: `Error running process ${envelope.subject}\n\n${text}`,
         });
     }

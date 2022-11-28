@@ -3,20 +3,35 @@ import React from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
 import moment from 'moment';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, IUser, IProcessTrigger, ProcessTrigger } from 'runbotics-common';
 
 import useAuth from 'src/hooks/useAuth';
 import useTranslations from 'src/hooks/useTranslations';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
-import { getProcessInstanceStatusColor } from '../../utils/getProcessInstanceStatusColor';
-import Label from '../Label';
+import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
+import Label from '../../Label';
+import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column, RowCustomExpandedSpan } from '../Table';
-import { hasFeatureKeyAccess } from '../utils/Secured';
 
 const useProcessInstanceColumns = (): Column[] => {
     const { translate } = useTranslations();
-    const { user } = useAuth();
+    const { user: authUser } = useAuth();
+
+    const mapInitiatorLabel = (
+        user: IUser, trigger: IProcessTrigger, triggeredBy: string | undefined
+    ) => {
+        switch (trigger.name) {
+            case ProcessTrigger.SCHEDULER:
+                return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.login });
+            case ProcessTrigger.API:
+                return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.login });
+            case ProcessTrigger.EMAIL:
+                return translate('Component.HistoryTable.Rows.Initiator.Email', { email: triggeredBy });
+            default:
+                return user?.login;
+        }
+    };
 
     const columns = [
         {
@@ -70,14 +85,12 @@ const useProcessInstanceColumns = (): Column[] => {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            accessor: ({ user, scheduled }) =>
-                scheduled ? translate('Component.HistoryTable.Rows.Initiator', { login: user.login }) : user?.login,
+            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel(user, trigger, triggeredBy),
         },
     ];
 
     const accessedColumns = columns.filter((column) =>
-        column.featureKeys ? hasFeatureKeyAccess(user, column.featureKeys) : true,
+        column.featureKeys ? hasFeatureKeyAccess(authUser, column.featureKeys) : true,
     );
 
     return accessedColumns;

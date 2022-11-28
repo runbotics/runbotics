@@ -242,6 +242,7 @@ importers:
       clsx: ^1.1.1
       console-feed: ^3.4.0
       cronstrue: ^1.123.0
+      cross-env: ^7.0.3
       date-fns: ^2.28.0
       diagram-js: ^7.2.3
       dompurify: ^2.3.9
@@ -407,6 +408,7 @@ importers:
       '@types/yup': 0.28.3
       '@typescript-eslint/eslint-plugin': 5.41.0_kaix25freo22yagl4xip2b2sya
       '@typescript-eslint/parser': 5.12.1_znsan5ntfzyzwrqtg45l4b6tbm
+      cross-env: 7.0.3
       eslint: 8.26.0
       eslint-plugin-import: 2.25.4_eslint@8.26.0
       eslint-plugin-react: 7.28.0_eslint@8.26.0

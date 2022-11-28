@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { IProcessInstance } from 'runbotics-common';
 
-import { Column, RowCustomExpandedSpan } from 'src/components/Table';
+import { Column, RowCustomExpandedSpan } from 'src/components/tables/Table';
 import useTranslations from 'src/hooks/useTranslations';
 import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
 

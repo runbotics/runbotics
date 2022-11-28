@@ -1,7 +1,7 @@
 import { IProcess, IUser } from 'runbotics-common';
-import { ProcessInput } from './instant-process';
+import { ProcessInput, Trigger } from './instant-process';
 
-export interface StartProcessRequest {
+export interface StartProcessRequest extends Trigger {
     process: IProcess;
     input: ProcessInput;
     user: IUser;

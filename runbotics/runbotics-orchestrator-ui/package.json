@@ -11,7 +11,7 @@
     "sideEffects": false,
     "scripts": {
         "start": "next start",
-        "start:dev": "next dev",
+        "start:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "lint": "next lint",
         "lint:fix": "next lint --fix"
@@ -142,7 +142,8 @@
         "eslint-plugin-import": "^2.24.2",
         "eslint-plugin-react": "^7.26.0",
         "eslint-plugin-react-hooks": "^4.6.0",
-        "eslint": "8.26.0"
+        "eslint": "8.26.0",
+        "cross-env": "^7.0.3"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"

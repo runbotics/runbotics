@@ -41,27 +41,28 @@ export class ProcessSchedulerService {
         }
     }
 
-    async startProcess(instantProcess: InstantProcess, bot: IBot, scheduled: boolean) {
+    async startProcess(instantProcess: InstantProcess, bot: IBot) {
         const orchestratorProcessInstanceId = uuidv4();
 
         if (instantProcess.process?.isAttended) {
             await this.handleUploadedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
         }
 
-        const body = this.createStartProcessResponse(instantProcess, scheduled, orchestratorProcessInstanceId);
+        const body = this.createStartProcessResponse(instantProcess, orchestratorProcessInstanceId);
 
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
 
         return { orchestratorProcessInstanceId: body.orchestratorProcessInstanceId };
     }
 
-    private createStartProcessResponse(instantProcess: InstantProcess, scheduled: boolean, orchestratorProcessInstanceId: string) {
+    private createStartProcessResponse(instantProcess: InstantProcess, orchestratorProcessInstanceId: string) {
         return {
             orchestratorProcessInstanceId,
             processId: instantProcess.process.id,
             input: instantProcess.input,
+            trigger: instantProcess.trigger,
             ...(instantProcess.user && { userId: instantProcess.user.id }),
-            scheduled,
+            ...(instantProcess.triggeredBy && { triggeredBy: instantProcess.triggeredBy }),
         };
     }
 }

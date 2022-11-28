@@ -42,7 +42,7 @@ export class BotProcessService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
-            if (updatedProcessInstance.rootProcessInstanceId === null){
+            if (updatedProcessInstance.rootProcessInstanceId === null) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
         } catch (err) {
@@ -67,7 +67,8 @@ export class BotProcessService {
         instanceToSave.process = processInstance.process;
         instanceToSave.orchestratorProcessInstanceId = processInstance.orchestratorProcessInstanceId;
         instanceToSave.user = processInstance.user;
-        instanceToSave.scheduled = processInstance.scheduled;
+        instanceToSave.trigger = processInstance.trigger;
+        instanceToSave.triggeredBy = processInstance.triggeredBy;
         return instanceToSave;
     }
 

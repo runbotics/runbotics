@@ -16,7 +16,7 @@ import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
 import useTranslations from 'src/hooks/useTranslations';
 
-import If from '../utils/If';
+import If from '../../utils/If';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper } from './Table.styles';
 import { DataTableProps } from './Table.types';

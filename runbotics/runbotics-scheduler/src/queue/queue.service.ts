@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
-import { ValidateProcessAccessProps } from 'src/types/scheduled-process';
+import { ScheduledProcess, ValidateProcessAccessProps } from 'src/types/scheduled-process';
 import { Logger } from 'src/utils/logger';
 import {
     InstantProcess,
@@ -19,7 +19,7 @@ import {
     StartProcessResponse,
 } from 'src/types';
 import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
-import { IProcess, IScheduleProcess, WsMessage } from 'runbotics-common';
+import { IProcess, ProcessTrigger, WsMessage } from 'runbotics-common';
 import { UiGateway } from '../websocket/gateway/ui.gateway';
 import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
@@ -43,7 +43,7 @@ export class QueueService implements OnModuleInit {
         await this.botSchedulerService.initializeBotsStatuses();
     }
 
-    async createScheduledJob(scheduledProcess: IScheduleProcess) {
+    async createScheduledJob(scheduledProcess: ScheduledProcess) {
         this.logger.log(`Adding new scheduled job for process: ${scheduledProcess.process.name}`);
 
         await this.processQueue.add(scheduledProcess, {
@@ -63,7 +63,8 @@ export class QueueService implements OnModuleInit {
                 .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
     }
 
-    async createInstantJob({ process, input, user }: StartProcessRequest) {
+    async createInstantJob(params: StartProcessRequest) {
+        const { process, input } = params;
         this.logger.log(`Adding new instant job for process: ${process.name}`);
 
         await this.handleAttededProcess(process, input)
@@ -72,11 +73,8 @@ export class QueueService implements OnModuleInit {
                 throw new BadRequestException(err);
             });
 
-        const instantProcess: InstantProcess = {
-            process,
-            user,
-            input
-        };
+        const instantProcess: InstantProcess = params;
+
         const job = await this.processQueue
             .add(instantProcess, {
                 jobId: `${process.id}:${uuidv4()}`,
@@ -153,7 +151,7 @@ export class QueueService implements OnModuleInit {
         const scheduledProcesses = await this.scheduleProcessService.findAll();
         await Promise.all(
             scheduledProcesses
-                .map(process => this.createScheduledJob(process))
+                .map(process => this.createScheduledJob({ ...process, trigger: ProcessTrigger.SCHEDULER }))
         );
         this.logger.log(`Created ${scheduledProcesses.length} schedules`);
         this.logger.log('Queue successfully initialized');

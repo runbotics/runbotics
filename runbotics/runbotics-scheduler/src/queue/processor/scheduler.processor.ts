@@ -10,7 +10,6 @@ import {
 import { Logger } from 'src/utils/logger';
 import { SECOND, sleep } from 'src/utils/time';
 import {
-    isScheduledProcessJob,
     Job,
     MAX_RETRY_BOT_AVAILABILITY,
 } from 'src/utils/process';
@@ -51,7 +50,6 @@ export class SchedulerProcessor {
         job: Job
     ) {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
-        const scheduled = isScheduledProcessJob(job);
         while (--retry) {
             const availableBots = await this.botService.findByCollectionAndSystem(
                 collection,
@@ -70,11 +68,7 @@ export class SchedulerProcessor {
 
             if (this.isEveryBotDisconnected(availableBots)) {
                 const errorMessage = 'All bots are disconnected';
-                await this.processInstanceSchedulerService.saveFailedProcessInstance(
-                    job,
-                    scheduled,
-                    errorMessage
-                );
+                await this.processInstanceSchedulerService.saveFailedProcessInstance(job, errorMessage);
                 return Promise.reject(errorMessage);
             }
 
@@ -88,11 +82,7 @@ export class SchedulerProcessor {
         }
 
         const errorMessage = 'Timeout: all bots are busy';
-        await this.processInstanceSchedulerService.saveFailedProcessInstance(
-            job,
-            scheduled,
-            errorMessage
-        );
+        await this.processInstanceSchedulerService.saveFailedProcessInstance(job, errorMessage);
         return Promise.reject(errorMessage);
     }
 
@@ -108,8 +98,6 @@ export class SchedulerProcessor {
             job.id
         );
 
-        const scheduled = isScheduledProcessJob(job);
-
         const bot = await this.checkBotAvailability(
             process.botCollection,
             process.system,
@@ -123,11 +111,7 @@ export class SchedulerProcessor {
             job.id
         );
 
-        return await this.processSchedulerService.startProcess(
-            job.data,
-            bot,
-            scheduled
-        );
+        return this.processSchedulerService.startProcess(job.data, bot);
     }
 
     @OnQueueActive()

@@ -9,7 +9,7 @@ import { Row } from 'react-table';
 import { IProcessInstance } from 'runbotics-common';
 
 import InternalPage from 'src/components/pages/InternalPage';
-import { DataTableRow } from 'src/components/Table';
+import { DataTableRow } from 'src/components/tables/Table';
 import useScheduledStatusSocket from 'src/hooks/useScheduledStatusSocket';
 import useTranslations from 'src/hooks/useTranslations';
 import { useSelector, useDispatch } from 'src/store';

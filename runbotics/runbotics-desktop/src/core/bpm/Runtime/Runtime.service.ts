@@ -24,8 +24,13 @@ import { RunboticsLogger } from '../../../logger/RunboticsLogger';
 import { FieldResolver } from '../FieldResolver';
 import { IActivityOwner, IEnviroment } from '../bpmn.types';
 import {
-    DesktopTask, IActivityEventData, IBpmnEngineEvent, IProcessEventData, IStartProcessInstance,
-    RunBoticsExecutionEnvironment, BpmnProcessInstance,
+    DesktopTask,
+    IActivityEventData,
+    IBpmnEngineEvent,
+    IProcessEventData,
+    IStartProcessInstance,
+    RunBoticsExecutionEnvironment,
+    BpmnProcessInstance,
 } from './Runtime.types';
 import { BpmnEngineEvent } from './BpmnEngineEvent';
 import { mkdirSync, rmdirSync } from 'fs';
@@ -38,7 +43,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly onProcessChange = new BpmnEngineEvent<IProcessEventData>();
     private readonly onActivityChange = new BpmnEngineEvent<IActivityEventData>();
 
-    constructor(@Inject(forwardRef(() => DesktopRunnerService)) private desktopRunnerService: DesktopRunnerService) { }
+    constructor(@Inject(forwardRef(() => DesktopRunnerService)) private desktopRunnerService: DesktopRunnerService) {}
 
     onApplicationBootstrap() {
         this.monitor().then();
@@ -74,7 +79,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         } catch (error) {
             this.logger.log(`[${processInstanceId}] Process instance temp directory is clean`);
         }
-    }
+    };
 
     private async monitor() {
         while (true) {
@@ -90,15 +95,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const processInstanceId = uuidv4();
 
         const processInstance = {
+            ...request,
             id: processInstanceId,
-            process: request.process,
-            params: request.params,
             status: ProcessInstanceStatus.INITIALIZING,
-            user: { id: request.userId },
-            orchestratorProcessInstanceId: request.orchestratorProcessInstanceId,
-            variables: request.params.variables,
-            rootProcessInstanceId: request.rootProcessInstanceId,
-            scheduled: request.scheduled,
+            ...(request.userId && { user: { id: request.userId } }),
+            ...(request.trigger && { trigger: { name: request.trigger } }),
         };
         this.processInstances[processInstanceId] = processInstance;
         this.onProcessChange.publish({
@@ -138,8 +139,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnviroment).runbotic?.disabled
-                || api.content.parent?.type === 'bpmn:SubProcess')
+            if ((api.environment as IEnviroment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
                 return;
             this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
 
@@ -151,8 +151,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.end', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnviroment).runbotic?.disabled
-                || api.content.parent?.type === 'bpmn:SubProcess')
+            if ((api.environment as IEnviroment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
                 return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end`);
@@ -168,7 +167,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 });
                 return;
             }
-
 
             this.onActivityChange.publish({
                 processInstance,
@@ -273,7 +271,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 }, 50);
 
                 this.logger.log(`[${processInstanceId}] [${execution.environment.options.name}] process.end`);
-                this.logger.log(`[${processInstanceId}] [${execution.environment.options.name}] Process output`, { ...execution.environment.output });
+                this.logger.log(`[${processInstanceId}] [${execution.environment.options.name}] Process output`, {
+                    ...execution.environment.output,
+                });
                 this.logger.log(`[${processInstanceId}] [${execution.environment.options.name}] Process variables`, {
                     ...execution.definitions[0].environment.variables,
                 });
@@ -299,7 +299,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
-            variables: request.params.variables,
+            variables: request.variables,
             listener,
         };
 
@@ -333,7 +333,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
         this.engines[processInstanceId] = engine;
         return engine;
-    }
+    };
 
     private purgeEngine = (processInstanceId: string) => {
         this.logger.log(`[${processInstanceId}] Cleaning engine`);
@@ -346,7 +346,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         //     definition.broker.reset();
         // }
         // listener.removeAllListeners();
-        delete this.engines[processInstanceId]
+        delete this.engines[processInstanceId];
         const isSubProcess = this.processInstances[processInstanceId].rootProcessInstanceId;
         if (!isSubProcess) this.cleanTempDir(processInstanceId);
 
@@ -371,17 +371,21 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 return;
             }
 
-            this.logger.log(`[${processInstanceId}] [${executionId}] [${script}] Running desktop script`, desktopTask.input);
+            this.logger.log(
+                `[${processInstanceId}] [${executionId}] [${script}] Running desktop script`,
+                desktopTask.input,
+            );
 
             try {
                 const result = await this.desktopRunnerService.run({
                     script,
                     input: desktopTask.input,
                     processInstanceId,
-                    executionContext,
-                    userId: this.processInstances[processInstanceId].user.id,
-                    scheduled: this.processInstances[processInstanceId].scheduled,
                     rootProcessInstanceId: this.processInstances[processInstanceId].rootProcessInstanceId,
+                    userId: this.processInstances[processInstanceId].user?.id,
+                    executionContext,
+                    trigger: this.processInstances[processInstanceId].trigger.name as string,
+                    triggeredBy: this.processInstances[processInstanceId].triggeredBy,
                 });
                 this.logger.log(
                     `[${processInstanceId}] [${executionId}] [${script}] Desktop action executed successfully`,
@@ -396,7 +400,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 );
                 callback(new Error((e as Error)?.message));
             }
-        }
+        },
     });
 
     public terminateProcessInstance = async (processInstanceId: string): Promise<void> => {

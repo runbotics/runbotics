@@ -30,6 +30,7 @@ import { QueueService } from './queue.service';
         BullModule.registerQueueAsync({
             name: 'scheduler',
             imports: [ConfigModule],
+            inject: [ServerConfigService],
             useFactory: async (serverConfigService: ServerConfigService) => {
                 return {
                     createClient: (_, redisOpts) => {
@@ -46,7 +47,6 @@ import { QueueService } from './queue.service';
                     },
                 };
             },
-            inject: [ServerConfigService],
         })
     ],
     controllers: [
