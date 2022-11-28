@@ -5,7 +5,6 @@ import { Box, Typography, TypographyProps } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
 import If from 'src/components/utils/If';
-import { lightTheme } from 'src/theme/light';
 
 interface TypographyWidgetProps extends WidgetProps {
     options: {
@@ -20,7 +19,7 @@ const TypographyWidget: FC<TypographyWidgetProps> = ({ options }) => (
         <If condition={options.infoIcon}>
             <InfoOutlined
                 sx={{
-                    color: lightTheme.palette.infoIcon.default,
+                    color: (theme) => theme.palette.infoIcon.default
                 }}
             />
         </If>

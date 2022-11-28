@@ -1,19 +1,8 @@
 import { colors, ThemeOptions } from '@mui/material';
-import { palette } from '@mui/system';
 
 import { softShadows } from './shadows';
 
-type InfoIconPalette = ThemeOptions['palette'] & {
-    infoIcon?: {
-        default: string
-    }
-}
-interface ExtendedThemeOptions extends Omit<ThemeOptions, 'palette'> {
-    [x: string]: any;
-    palette: InfoIconPalette;
-}
-
-export const lightTheme: ExtendedThemeOptions = {
+export const lightTheme: ThemeOptions = {
     components: {
         MuiInputBase: {
             styleOverrides: {
@@ -51,5 +40,4 @@ export const lightTheme: ExtendedThemeOptions = {
         },
     },
     shadows: softShadows,
-    infoIcon: palette,
 };
