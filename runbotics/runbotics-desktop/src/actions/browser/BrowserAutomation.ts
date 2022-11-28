@@ -282,7 +282,7 @@ class BrowserAutomation extends StatefulActionHandler {
         // Prince requires absolute path
         const fileName = path.join(process.cwd(), 'temp', uuidv4());
 
-        if (input.target === 'Session') {
+        if (input.method === 'Session') {
             const source: string = await this.session?.executeScript('return document.body.outerHTML');
             writeFileSync(`${fileName}.html`, source, { encoding: 'utf8' });
             try {
@@ -294,7 +294,7 @@ class BrowserAutomation extends StatefulActionHandler {
             return `${fileName}.pdf`;
         }
 
-        if (input.target === 'Url' && input.url) {
+        if (input.method === 'URL' && input.url) {
             this.logger.log('Printing to pdf', input.url);
             // assigning browser to variable to before try/catch block
             // because it is not available in try/catch block

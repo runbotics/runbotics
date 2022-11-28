@@ -31,6 +31,9 @@ export const lightTheme: ThemeOptions = {
         secondary: {
             main: '#FBB040',
         },
+        infoIcon: {
+            default: colors.blueGrey[600], 
+        },
         text: {
             primary: '#000000',
             secondary: '#000000',
