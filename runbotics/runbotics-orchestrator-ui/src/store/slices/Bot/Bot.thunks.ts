@@ -31,7 +31,7 @@ export const getPage = createAsyncThunk<Page<IBot>, PageRequestParams<IBot>>(
 
 export const deleteById = createAsyncThunk<void, { id: IBot['id'] }>(
     'bots/:id',
-    ({ id }) => Axios.delete(`scheduler/bots/${id}`),
+    ({ id }) => Axios.delete(`/scheduler/bots/${id}`),
 );
 
 export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: number }>(
