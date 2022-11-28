@@ -138,6 +138,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -190,6 +195,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -239,6 +249,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -277,6 +292,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -310,6 +330,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -343,6 +368,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -379,6 +409,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -433,6 +468,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -486,6 +526,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -538,6 +583,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
@@ -648,6 +698,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    target: {
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
             },
             formData: {
                 input: {
