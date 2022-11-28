@@ -11,7 +11,6 @@ import path from 'path';
 import * as BrowserTypes from './BrowserAutomation.types';
 import { generatePdf, Target } from './utils';
 
-
 @Injectable()
 class BrowserAutomation extends StatefulActionHandler {
     private readonly logger = new RunboticsLogger(BrowserAutomation.name);
@@ -283,17 +282,21 @@ class BrowserAutomation extends StatefulActionHandler {
         const fileName = path.join(process.cwd(), 'temp', uuidv4());
         let target: Target;
 
-        if (input.target === 'Url' && input.url) target = { url: input.url };
-        if (input.target === 'Session') target = { content: await this.session?.executeScript('return document.body.outerHTML') };
+        if (input.target === 'Url' && input.url) {
+            target = { url: input.url };
+        }
+
+        if (input.target === 'Session') {
+            target = { content: await this.session?.executeScript('return document.body.outerHTML') };
+        }
 
         try {
-            generatePdf(target, {})
-                .then(pdfBuffer => {
-                    writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (err) => {
-                        if (err) throw err;
-                        this.logger.log(`File saved successfully at ${fileName}.pdf`);
-                    });
-                });
+            const pdfBuffer = await generatePdf(target, {});
+
+            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (err) => {
+                if (err) throw err;
+                this.logger.log(`File saved successfully at ${fileName}.pdf`);
+            });
         } catch (error) {
             this.logger.error('Error occured while printing to pdf', error);
         }

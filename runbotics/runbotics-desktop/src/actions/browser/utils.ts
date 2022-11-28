@@ -3,29 +3,16 @@ export type Target = { content?: string; url?: string };
 
 export async function generatePdf(file: Target, options?: Record<string, any>) {
     // we are using headless mode
-    let args = [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-    ];
+    let args = ['--no-sandbox', '--disable-setuid-sandbox'];
     if (options.args) {
         args = options.args;
         delete options.args;
     }
 
     const getChromiumPath = () => {
-        const isProd = process.env.NODE_ENV === 'production';
+        const isProd = !process.env.NODE_ENV;
         const isWin = process.platform === 'win32';
-        this.logger.log("env",
-            process.env.NODE_ENV,
-            isProd,
-            "isWin",
-            isWin,
-            process.platform,
-            'path',
-            Puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked'));
-
-        if (isProd && isWin) {
-            this.logger.log("isProd && isWin");
+        if (isWin && isProd) {
             return Puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked');
         }
         return Puppeteer.executablePath();
@@ -48,9 +35,8 @@ export async function generatePdf(file: Target, options?: Record<string, any>) {
         });
     }
 
-    return page.pdf(options)
-        .then(async function (data) {
-            await browser.close();
-            return Buffer.from(Object.values(data));
-        })
+    return page.pdf(options).then(async function (data) {
+        await browser.close();
+        return Buffer.from(Object.values(data));
+    });
 }
