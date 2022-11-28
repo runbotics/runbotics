@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Typography, TypographyProps } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
 import { WidgetProps } from '@rjsf/core';
 
 import If from 'src/components/utils/If';
+import { lightTheme } from 'src/theme/light';
 
 interface TypographyWidgetProps extends WidgetProps {
     options: {
@@ -20,7 +20,7 @@ const TypographyWidget: FC<TypographyWidgetProps> = ({ options }) => (
         <If condition={options.infoIcon}>
             <InfoOutlined
                 sx={{
-                    color: blueGrey[600],
+                    color: lightTheme.palette.infoIcon.default,
                 }}
             />
         </If>
