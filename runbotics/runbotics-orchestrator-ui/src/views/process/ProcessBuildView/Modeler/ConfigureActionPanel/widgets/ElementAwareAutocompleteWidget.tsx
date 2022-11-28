@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-lines-per-function */
 import React, { FC } from 'react';
 
@@ -186,17 +187,18 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
                             ),
                         };
                     }
-
                     const globalVariable = inputOutput.inputParameters.find(
                         (inputParameter) =>
                             inputParameter.name === 'globalVariable',
                     );
                     if (globalVariable) {
                         const numberPattern = new RegExp(/\d+/, 'g');
-                        const [globalVariableId] = globalVariable.value.match(numberPattern);
+                        const globalVariableId = globalVariable.value.match(numberPattern);
+                        if (!globalVariableId) {
+                            return undefined;
+                        }
                         const globalVariableName = globalVariables.find((variable) =>
-                            variable.id === Number(globalVariableId))?.name;
-
+                            variable.id === Number(globalVariableId[0]))?.name;
                         if (globalVariableName) {
                             return {
                                 label: globalVariableName,
