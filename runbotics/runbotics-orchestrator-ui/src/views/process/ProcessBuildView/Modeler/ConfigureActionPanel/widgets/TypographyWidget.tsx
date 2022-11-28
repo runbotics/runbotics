@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-import InfoIcon from '@mui/icons-material/Info';
-import { Box, Typography, TypographyTypeMap } from '@mui/material';
+import { InfoOutlined } from '@mui/icons-material';
+import { Box, Typography, TypographyProps } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
 import If from 'src/components/utils/If';
@@ -9,7 +9,7 @@ import If from 'src/components/utils/If';
 interface TypographyWidgetProps extends WidgetProps {
     options: {
         text: string;
-        variant: TypographyTypeMap['props']['variant'];
+        variant: TypographyProps['variant'];
         infoIcon: boolean;
     }
 }
@@ -17,11 +17,9 @@ interface TypographyWidgetProps extends WidgetProps {
 const TypographyWidget: FC<TypographyWidgetProps> = ({ options }) => (
     <Box display="flex" gap="5px" alignItems="center">
         <If condition={options.infoIcon}>
-            <InfoIcon
-                sx={{
-                    color: (theme) => theme.palette.secondary.main,
-                }}
-            />
+            <InfoOutlined sx={{
+                color: (theme) => theme.palette.action.active,
+            }} />
         </If>
         <Typography variant={options.variant}>
             {options.text}
