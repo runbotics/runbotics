@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Typography, TypographyProps } from '@mui/material';
+import { blueGrey } from '@mui/material/colors';
 import { WidgetProps } from '@rjsf/core';
 
 import If from 'src/components/utils/If';
@@ -17,9 +18,11 @@ interface TypographyWidgetProps extends WidgetProps {
 const TypographyWidget: FC<TypographyWidgetProps> = ({ options }) => (
     <Box display="flex" gap="5px" alignItems="center">
         <If condition={options.infoIcon}>
-            <InfoOutlined sx={{
-                color: (theme) => theme.palette.action.active,
-            }} />
+            <InfoOutlined
+                sx={{
+                    color: blueGrey[600],
+                }}
+            />
         </If>
         <Typography variant={options.variant}>
             {options.text}

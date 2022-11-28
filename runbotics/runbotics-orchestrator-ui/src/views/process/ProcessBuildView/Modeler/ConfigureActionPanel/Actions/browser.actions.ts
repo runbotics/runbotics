@@ -792,7 +792,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:widget': 'TypographyWidget',
                         'ui:options': {
                             text: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Session.Description'),
-                            variant: 'p',
+                            variant: 'subtitle1',
                             infoIcon: true,
                         },
                     },
