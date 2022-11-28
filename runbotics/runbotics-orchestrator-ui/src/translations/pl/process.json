@@ -303,6 +303,8 @@
     "Process.Details.Modeler.Actions.File.WriteFile.VariableText": "Przypisz daną wyjściową do zmiennej",
     "Process.Details.Modeler.Actions.General.Console.Log.Label": "Log do konsoli",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.General.ConsoleLog.Message": "Wiadomość",
+    "Process.Details.Modeler.Actions.General.ConsoleLog.Variable": "Zmienna",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Zmienne",
     "Process.Details.Modeler.Actions.General.Delay.Label": "Opóźnienie",
     "Process.Details.Modeler.Actions.General.Delay.Input": "Dane wejściowe",
@@ -612,5 +614,7 @@
     "Process.Modeler.ChangeLanguageTitle": "Czy na pewno chcesz zmienić język?",
     "Process.Modeler.LoseModelerChangesContent": "Wszystkie niezapisane zmiany kreatora procesu zostaną utracone.",
     "Process.Modeler.DialogCancel": "Anuluj",
-    "Process.Modeler.DialogConfirm": "Ok"
+    "Process.Modeler.DialogConfirm": "Ok",    
+    "Process.Details.Modeler.DetailsSidebar.Message.Label" : "Wiadomość",
+    "Process.Details.Modeler.DetailsSidebar.Variable.Label" : "Zmienna"
 }

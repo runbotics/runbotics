@@ -18,6 +18,6 @@
 
     
     "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Przypisz dane wyjściowe do zmiennej",
-    "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Ta właściwość jest wymagana"
-
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Ta właściwość jest wymagana",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Użyto niedozwolonych znaków"
 }

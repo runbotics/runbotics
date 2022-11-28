@@ -17,6 +17,6 @@
     "Action.Details.Dialog.LiveView": "LIVE VIEW",
 
     "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Assign the output to variable",
-    "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "is a required property"
-
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Is a required property",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Illegal characters were used"
 }
