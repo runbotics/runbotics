@@ -11,7 +11,7 @@ export const capitalizeFirstLetter = ({
     delimiter,
     join,
 }: CapitalizeFirstLetterParams) =>
-    !(text.trim().length === 0)
+    text.trim().length === 0
         ? text
         : text
             .trim()
