@@ -55,6 +55,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                     name={`${id}-key`}
                     onBlur={!readonly ? handleBlur : undefined}
                     type="text"
+                    InputLabelProps={{ shrink: true }}
                 />
             </Grid>
             <Grid item xs={12}>
