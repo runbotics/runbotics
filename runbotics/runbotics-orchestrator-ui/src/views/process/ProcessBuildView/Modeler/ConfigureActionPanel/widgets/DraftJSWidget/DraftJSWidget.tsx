@@ -1,6 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
 
-import { useTheme } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, ContentState, convertFromHTML } from 'draft-js';
@@ -10,6 +9,7 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import useTranslations from 'src/hooks/useTranslations';
 
+import { WrapperStyleObject, HoverWrapperStyleObject, ActiveWrapperStyleObject, ToolbarStyleObject, EditorStyleObject } from './DraftJSWidget.styles';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {
@@ -33,55 +33,14 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const [state, setState] = useState(parseContentToEditorState(props.value));
     const [isActive, setIsActive] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const theme = useTheme();
     
     
-    const wrapperStyleObject = useMemo(() => ({
-        margin: 1,
-        color: theme.palette.text.primary,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: theme.palette.action.disabled,
-    }), [theme.palette.action.disabled, theme.palette.text.primary]);
-    
-    const toolbarStyleObject = useMemo(() => ({
-        padding: '0.6rem',
-        borderRadius: 5,
-        borderBottomWidth: 1,
-        borderBottomStyle: 'solid',
-        borderBottomColor: theme.palette.action.disabled,
-    }), [theme.palette.action.disabled]);
-    
-    const hoverWrapperStyleObject = useMemo(() => ({
-        margin: 1,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: theme.palette.action.active,
-    }), [theme.palette.action.active]);
-    
-    const activeWrapperStyleObject = useMemo(() => ({
-        borderWidth: 2,
-        borderRadius: 5,
-        borderStyle: 'solid',
-        borderColor: theme.palette.primary.main,
-    }), [theme.palette.primary.main]);
-    
-    const editorStyleObject = {
-        paddingTop: 0,
-        paddingRight: '1rem',
-        paddingBottom: '1rem',
-        paddingLeft: '1rem',
-        minHeight: 200,
-        borderRadius: 5,
-    };
 
     const currentWrapperStyle = useMemo(() => {
-        if(isActive) return activeWrapperStyleObject;
-        else if(isHovered) return hoverWrapperStyleObject;
-        return wrapperStyleObject;
-    }, [isActive, isHovered, activeWrapperStyleObject, hoverWrapperStyleObject, wrapperStyleObject]);
+        if(isActive) return ActiveWrapperStyleObject();
+        else if(isHovered) return HoverWrapperStyleObject();
+        return WrapperStyleObject();
+    }, [isActive, isHovered]);
 
     const handleHoverEditorArea = () => {
         setIsHovered(true);
@@ -119,8 +78,8 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
                 editorClassName="editorClassName"
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
-                editorStyle={editorStyleObject}
-                toolbarStyle={toolbarStyleObject}
+                editorStyle={EditorStyleObject()}
+                toolbarStyle={ToolbarStyleObject()}
                 wrapperStyle={currentWrapperStyle}
                 localization={{ locale: i18next.language }}
                 placeholder={translate('Process.Details.Modeler.Actions.Mail.Send.Content.Placeholder')}
