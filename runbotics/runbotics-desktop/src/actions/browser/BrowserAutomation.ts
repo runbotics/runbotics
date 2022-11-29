@@ -282,7 +282,7 @@ class BrowserAutomation extends StatefulActionHandler {
         const fileName = path.join(process.cwd(), 'temp', uuidv4());
         let target: Target;
 
-        if (input.target === 'Url' && input.url) {
+        if (input.target === 'URL' && input.url) {
             target = { url: input.url };
         }
 
