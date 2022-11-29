@@ -285,7 +285,7 @@ class BrowserAutomation extends StatefulActionHandler {
         if (input.target === 'URL' && input.url) {
             target = { url: input.url };
         }
-        
+
         if (input.target === 'Session') {
             target = { content: await this.session?.executeScript('return document.body.outerHTML') };
         }
