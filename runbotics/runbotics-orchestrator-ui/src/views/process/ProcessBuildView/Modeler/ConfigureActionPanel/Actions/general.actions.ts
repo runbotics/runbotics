@@ -13,7 +13,7 @@ const getGeneralActions : () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: null,
+                        title: '',
                         properties: {
                             variables: {
                                 title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Input'),
