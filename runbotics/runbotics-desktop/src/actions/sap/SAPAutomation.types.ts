@@ -13,7 +13,10 @@ export type SAPActionRequest<I> = DesktopRunRequest<any> & {
         | 'sap.doubleClick'
         | 'sap.index'
         | 'sap.focus'
-        | 'sap.select';
+        | 'sap.select'
+        | 'sap.openContextMenu'
+        | 'sap.selectFromContextMenu'
+        | 'sap.clickToolbarButton';
 };
 
 // --- action
@@ -72,3 +75,24 @@ export type SAPSelectActionInput = {
     target: string;
 };
 export type SAPSelectActionOutput = any;
+
+// --- action
+export type SAPOpenContextMenuActionInput = {
+    target: string;
+    menuId: string;
+};
+export type SAPOpenContextMenuActionOutput = any;
+
+// --- action
+export type SAPSelectFromContextMenuActionInput = {
+    target: string;
+    optionId: string;
+};
+export type SAPSelectFromContextMenuActionOutput = any;
+
+// --- action
+export type SAPClickToolbarButtonActionInput = {
+    target: string;
+    toolId: string;
+};
+export type SAPClickToolbarButtonActionOutput = any;
