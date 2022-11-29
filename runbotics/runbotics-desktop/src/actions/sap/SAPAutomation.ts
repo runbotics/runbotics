@@ -118,12 +118,14 @@ class SAPAutomation extends StatefulActionHandler {
         this.sessions['session'].FindById(input.target).pressContextButton(input.menuId);
         return {};
     }
+
     async selectFromContextMenu(
         input: SapTypes.SAPSelectFromContextMenuActionInput,
     ): Promise<SapTypes.SAPSelectFromContextMenuActionOutput> {
         this.sessions['session'].FindById(input.target).selectContextMenuItem(input.optionId);
         return {};
     }
+
     async clickToolbarButton(
         input: SapTypes.SAPClickToolbarButtonActionInput,
     ): Promise<SapTypes.SAPClickToolbarButtonActionOutput> {

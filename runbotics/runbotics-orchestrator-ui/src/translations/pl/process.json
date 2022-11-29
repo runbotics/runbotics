@@ -428,7 +428,7 @@
     "Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Label": "SAP: Wybierz z Menu Kontekstowego",
     "Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.Target": "Cel",
-    "Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.OptionId": "Id opcji w menu",
+    "Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.OptionId": "Id opcji menu",
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label": "SAP: Wybierz z Paska Narzędzi",
     "Process.Details.Modeler.Actions.SAP.ClickToolbarButton.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.SAP.ClickToolbarButton.Target": "Cel",
