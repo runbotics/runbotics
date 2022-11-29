@@ -31,10 +31,10 @@ export class ProcessSchedulerService {
 
         for (const key of fileKeys) {
             const file = _.get(input.variables, key);
-            const downloadLink = await this.fileUploadService.uploadFile(token.token, `${key}_${uuidv4()}`, file, orchestratorProcessInstanceId)
+            const downloadLink = await this.fileUploadService.uploadFile(token.token, file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload file', err);
-                    throw new InternalServerErrorException('Failed uploading file to sharepoint');
+                    throw new InternalServerErrorException('Failed uploading file to sharepoint' + err?.message ?? '');
                 });
             this.logger.log(`Uploaded file ${key} to ${downloadLink}`);
             input.variables = _.set(input.variables, key, downloadLink);
