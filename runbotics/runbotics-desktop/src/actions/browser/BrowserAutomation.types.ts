@@ -2,21 +2,21 @@ import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type BrowserActionRequest<I> = DesktopRunRequest<any> & {
     script:
-        | 'browser.selenium.select'
-        | 'browser.selenium.open'
-        | 'browser.selenium.type'
-        | 'browser.selenium.click'
-        | 'browser.selenium.wait'
-        | 'browser.launch'
-        | 'browser.index'
-        | 'browser.selenium.printToPdf'
-        | 'browser.selenium.takeScreenshot'
-        | 'browser.selenium.elements.count'
-        | 'browser.selenium.element.attribute.change'
-        | 'browser.close'
-        | 'browser.read.attribute'
-        | 'browser.read.text'
-        | 'browser.read.input';
+    | 'browser.selenium.select'
+    | 'browser.selenium.open'
+    | 'browser.selenium.type'
+    | 'browser.selenium.click'
+    | 'browser.selenium.wait'
+    | 'browser.launch'
+    | 'browser.index'
+    | 'browser.selenium.printToPdf'
+    | 'browser.selenium.takeScreenshot'
+    | 'browser.selenium.elements.count'
+    | 'browser.selenium.element.attribute.change'
+    | 'browser.close'
+    | 'browser.read.attribute'
+    | 'browser.read.text'
+    | 'browser.read.input';
 };
 
 export type BrowserLaunchActionInput = {
@@ -74,7 +74,7 @@ export type BrowserReadElementInput = {
 };
 
 export type BrowserPrintToPdfActionInput = {
-    method: 'URL' | 'Session';
+    target: 'URL' | 'Session';
     url?: string;
 };
 
