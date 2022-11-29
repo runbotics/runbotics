@@ -25,7 +25,8 @@ plugins {
 }
 
 group = "com.runbotics"
-version = "2.4.0-SNAPSHOT.1"
+
+version = "2.4.0-SNAPSHOT.6"
 
 description = ""
 

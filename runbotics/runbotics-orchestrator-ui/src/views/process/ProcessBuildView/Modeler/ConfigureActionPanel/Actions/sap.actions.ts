@@ -494,6 +494,114 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'sap.openContextMenu': {
+        id: 'sap.openContextMenu',
+        label: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Label'),
+        script: 'sap.openContextMenu',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SAP.OpenContextMenu.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.OpenContextMenu.Target'),
+                                type: 'string',
+                            },
+                            menuId: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.OpenContextMenu.MenuId'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['target', 'menuId'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]',
+                },
+            },
+        },
+    },
+    'sap.selectFromContextMenu': {
+        id: 'sap.selectFromContextMenu',
+        label: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Label'),
+        script: 'sap.selectFromContextMenu',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.Target'),
+                                type: 'string',
+                            },
+                            optionId: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.SelectFromContextMenu.OptionId'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['target', 'optionId'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]',
+                },
+            },
+        },
+    },
+    'sap.clickToolbarButton': {
+        id: 'sap.clickToolbarButton',
+        label: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label'),
+        script: 'sap.clickToolbarButton',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.SAP.ClickToolbarButton.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.ClickToolbarButton.Target'),
+                                type: 'string',
+                            },
+                            toolId: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.ClickToolbarButton.ToolId'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['target', 'toolId'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]',
+                },
+            },
+        },
+    },
 });
 
 export default getSapActions;
