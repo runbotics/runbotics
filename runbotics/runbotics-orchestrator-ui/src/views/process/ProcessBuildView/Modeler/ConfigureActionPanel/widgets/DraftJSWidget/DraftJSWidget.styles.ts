@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material';
 
 
-export const WrapperStyleObject = () => {
+export const useWrapperStyleObject = () => {
     const theme = useTheme();
 
     return ({
@@ -14,7 +14,7 @@ export const WrapperStyleObject = () => {
     });
 };
 
-export const ToolbarStyleObject = () => {
+export const useToolbarStyleObject = () => {
     const theme = useTheme();
 
     return {
@@ -26,7 +26,7 @@ export const ToolbarStyleObject = () => {
     };
 };
 
-export const HoverWrapperStyleObject = () => {
+export const useHoverWrapperStyleObject = () => {
     const theme = useTheme();
 
     return {
@@ -38,7 +38,7 @@ export const HoverWrapperStyleObject = () => {
     };
 };
 
-export const ActiveWrapperStyleObject = () => {
+export const useActiveWrapperStyleObject = () => {
     const theme = useTheme();
 
     return {
@@ -49,7 +49,7 @@ export const ActiveWrapperStyleObject = () => {
     };
 };
 
-export const EditorStyleObject = () => ({
+export const useEditorStyleObject = () => ({
     paddingTop: 0,
     paddingRight: '1rem',
     paddingBottom: '1rem',

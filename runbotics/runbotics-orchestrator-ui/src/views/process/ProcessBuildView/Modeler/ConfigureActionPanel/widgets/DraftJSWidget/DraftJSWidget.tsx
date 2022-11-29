@@ -9,7 +9,7 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import useTranslations from 'src/hooks/useTranslations';
 
-import { WrapperStyleObject, HoverWrapperStyleObject, ActiveWrapperStyleObject, ToolbarStyleObject, EditorStyleObject } from './DraftJSWidget.styles';
+import { useWrapperStyleObject, useHoverWrapperStyleObject, useActiveWrapperStyleObject, useToolbarStyleObject, useEditorStyleObject } from './DraftJSWidget.styles';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {
@@ -33,14 +33,17 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const [state, setState] = useState(parseContentToEditorState(props.value));
     const [isActive, setIsActive] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    
-    
+    const activeWrapperStyleObject = useActiveWrapperStyleObject();
+    const hoverWrapperStyleObject = useHoverWrapperStyleObject();
+    const wrapperStyleObject = useWrapperStyleObject();
+    const editorStyleObject = useEditorStyleObject();
+    const toolbarStyleObject = useToolbarStyleObject();
 
     const currentWrapperStyle = useMemo(() => {
-        if(isActive) return ActiveWrapperStyleObject();
-        else if(isHovered) return HoverWrapperStyleObject();
-        return WrapperStyleObject();
-    }, [isActive, isHovered]);
+        if(isActive) return activeWrapperStyleObject;
+        else if(isHovered) return hoverWrapperStyleObject;
+        return wrapperStyleObject;
+    }, [isActive, isHovered, activeWrapperStyleObject, hoverWrapperStyleObject, wrapperStyleObject]);
 
     const handleHoverEditorArea = () => {
         setIsHovered(true);
@@ -78,8 +81,8 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
                 editorClassName="editorClassName"
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
-                editorStyle={EditorStyleObject()}
-                toolbarStyle={ToolbarStyleObject()}
+                editorStyle={editorStyleObject}
+                toolbarStyle={toolbarStyleObject}
                 wrapperStyle={currentWrapperStyle}
                 localization={{ locale: i18next.language }}
                 placeholder={translate('Process.Details.Modeler.Actions.Mail.Send.Content.Placeholder')}
