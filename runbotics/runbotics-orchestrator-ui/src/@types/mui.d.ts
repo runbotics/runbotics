@@ -13,6 +13,20 @@ declare module '@mui/material/styles/createPalette' {
     }
 }
 
+declare module '@mui/material/styles' {
+    interface Palette {
+      infoIcon: {
+        default: string
+      };
+    }
+    
+    interface PaletteOptions {
+        infoIcon: {
+            default: string
+          };
+    }
+  }
+
 declare module '@mui/material/styles/zIndex' {
     interface ZIndex extends MuiZIndex {
         header: number;
