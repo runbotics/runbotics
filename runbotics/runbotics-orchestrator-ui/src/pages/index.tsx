@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoadingScreen from 'src/components/utils/LoadingScreen';
+import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 
 const IndexPage = () => <LoadingScreen />;
 

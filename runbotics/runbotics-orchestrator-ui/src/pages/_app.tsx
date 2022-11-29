@@ -1,3 +1,4 @@
+import 'moment/locale/pl';
 import React, { FC } from 'react';
 
 import { CacheProvider, EmotionCache } from '@emotion/react';
@@ -11,22 +12,23 @@ import { I18nextProvider } from 'react-i18next';
 
 import { Provider } from 'react-redux';
 
-import { SettingsProvider } from 'src/contexts/SettingsContext';
-import MainLayout from 'src/layouts/MainLayout';
-import store from 'src/store';
-import createEmotionCache from 'src/utils/createEmotionCache';
+import { SettingsProvider } from '#src-app/contexts/SettingsContext';
+import MainLayout from '#src-app/layouts/MainLayout';
 
-import 'moment/locale/pl';
-import SnackbarProvider from '../providers/Snackbar.provider';
-import SocketProvider from '../providers/Socket.provider';
-import StylesProvider from '../providers/Styles.provider';
-import i18n from '../translations/i18n';
-import { DEFAULT_LANG } from '../translations/translations';
-import InitializeAuth from '../views/auth/InitializeAuth';
+
+import SnackbarProvider from '#src-app/providers/Snackbar.provider';
+import SocketProvider from '#src-app/providers/Socket.provider';
+import StylesProvider from '#src-app/providers/Styles.provider';
+import store from '#src-app/store';
+import i18n from '#src-app/translations/i18n';
+
+import { DEFAULT_LANG } from '#src-app/translations/translations';
+import createEmotionCache from '#src-app/utils/createEmotionCache';
+import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
 const { publicRuntimeConfig } = getConfig();
 
-import 'src/theme/cronStyles.css';
+import '#src-app/theme/cronStyles.css';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;
@@ -44,7 +46,7 @@ function App(props: AppProps) {
 
     if (router.pathname.startsWith('/app/')) {
         Layout = MainLayout;
-    }    
+    }
 
     return (
         <div style={{ height: '100%' }}>
