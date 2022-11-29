@@ -285,14 +285,12 @@ class BrowserAutomation extends StatefulActionHandler {
         if (input.target === 'URL' && input.url) {
             target = { url: input.url };
         }
-
+        
         if (input.target === 'Session') {
             target = { content: await this.session?.executeScript('return document.body.outerHTML') };
         }
-
         try {
             const pdfBuffer = await generatePdf(target, {});
-
             writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (error) => {
                 if (error) throw error;
                 this.logger.log(`File saved successfully at ${fileName}.pdf`);
