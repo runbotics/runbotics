@@ -13,7 +13,7 @@ import { DataTableRow } from 'src/components/tables/Table';
 import useScheduledStatusSocket from 'src/hooks/useScheduledStatusSocket';
 import useTranslations from 'src/hooks/useTranslations';
 import { useSelector, useDispatch } from 'src/store';
-import { schedulerActions, schedulerSelector, ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler';
+import { schedulerActions, schedulerSelector, ScheduledJob, QueueJob } from 'src/store/slices/Scheduler';
 
 
 import Header from './Header';
@@ -47,7 +47,7 @@ const SchedulerView = () => {
         if (rowData.process) router.push(`/app/processes/${rowData.process.id}/build`);
     };
 
-    const handleSchedulerJobRedirect = (rowData: SchedulerJob) => {
+    const handleSchedulerJobRedirect = (rowData: QueueJob) => {
         if (rowData.data.process) router.push(`/app/processes/${rowData.data.process.id}/build`);
     };
 
@@ -81,7 +81,7 @@ const SchedulerView = () => {
                     processes={activeJobs}
                     onRedirect={handleProcessInstanceRedirect}
                 />
-                <SchedulerTableContainer<SchedulerJob>
+                <SchedulerTableContainer<QueueJob>
                     columns={waitingProcessColumns}
                     title={translate('Scheduler.View.PendingProcesses.Title')}
                     processes={waitingJobs}

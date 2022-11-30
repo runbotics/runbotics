@@ -15,3 +15,4 @@ export { IAuthority, Role } from './api/authority.model';
 export { IFeatureKey, FeatureKey } from './api/feature-key.model'
 export { WsMessage, BotWsMessage } from './api/websocket.model';
 export { IProcessTrigger, ProcessTrigger } from './api/process-trigger.model';
+export * from './api/queue.model';

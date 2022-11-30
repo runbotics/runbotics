@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
 
-import { ScheduledJob, SchedulerJob } from './Scheduler.state';
+import { ScheduledJob, QueueJob } from './Scheduler.state';
 
 const processStatuses = [ProcessInstanceStatus.IN_PROGRESS, ProcessInstanceStatus.INITIALIZING];
 
@@ -18,7 +18,7 @@ export const getActiveJobs = createAsyncThunk<IProcessInstance[]>(
         .then((response) => response.data),
 );
 
-export const getWaitingJobs = createAsyncThunk<SchedulerJob[]>(
+export const getWaitingJobs = createAsyncThunk<QueueJob[]>(
     'scheduledJobs/getWaitingJobs',
     () => axios.get('/scheduler/jobs/waiting')
         .then((response) => response.data),

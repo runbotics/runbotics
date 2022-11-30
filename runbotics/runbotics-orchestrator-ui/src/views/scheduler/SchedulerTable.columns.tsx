@@ -5,9 +5,9 @@ import moment from 'moment';
 import { IProcessInstance } from 'runbotics-common';
 
 import { Column, RowCustomExpandedSpan } from 'src/components/tables/Table';
+import useInitiatorLabel from 'src/hooks/useInitiatorLabel';
 import useTranslations from 'src/hooks/useTranslations';
-import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
-
+import { ScheduledJob, QueueJob } from 'src/store/slices/Scheduler/Scheduler.state';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
 import DeleteScheduleButton from './DeleteScheduleButton';
@@ -16,61 +16,63 @@ import TerminateProcessButton from './TerminateProcessButton';
 
 export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
     const { translate } = useTranslations();
+    const { mapInitiatorLabel } = useInitiatorLabel();
 
     return [
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Id'),
-            width: '22%',
+            width: '20%',
             accessor: ({ id }) => id,
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Process'),
+            width: '17%',
             accessor: ({ process }) => process.name,
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Bot'),
-            accessor: ({ bot }) =>
-                // eslint-disable-next-line eqeqeq
-                bot != null ? bot.installationId : translate('Scheduler.ActiveProcess.Table.Rows.Bot.Deleted'),
+            width: '10%',
+            accessor: ({ bot }) => bot !== null
+                ? bot.installationId
+                : translate('Scheduler.ActiveProcess.Table.Rows.Bot.Deleted'),
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Step'),
-            // @ts-ignore
-            accessor: (({ step }) => step ? translate(`Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: step, delimiter: '.', join: '.' })}.Label`) : ''),
+            accessor: (({ step }) => step
+                // @ts-ignore
+                ? translate(`Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: step, delimiter: '.', join: '.' })}.Label`)
+                : ''),
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.StartTime'),
-            width: '20%',
+            width: '12%',
             accessor: ({ created }) => moment(created).format('DD/MM/YYYY HH:mm:ss'),
         },
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Initiator'),
-            width: '15%',
-            accessor: ({ user, scheduled }) =>
-                scheduled
-                    ? translate('Scheduler.ActiveProcess.Table.Rows.Initiator.Login', { login: user.login })
-                    : user.login,
+            width: '20%',
+            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel(user, trigger, triggeredBy),
         },
         {
             Header: ' ',
             id: 'button',
-            width: '20px',
-            Cell: ({ row }) =>
-                row.original.id ? (
-                    <TerminateProcessButton id={row.original.id} processName={row.original.process.name} />
-                ) : null,
+            width: '70px',
+            Cell: ({ row }) => row.original.id
+                ? <TerminateProcessButton id={row.original.id} processName={row.original.process.name} />
+                : null,
         },
     ];
 };
 
-export const useWaitingProcessColumns = (): Column<SchedulerJob>[] => {
+export const useWaitingProcessColumns = (): Column<QueueJob>[] => {
     const { translate } = useTranslations();
+    const { mapInitiatorLabel } = useInitiatorLabel();
 
     return [
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.JobId'),
-            width: '8%',
-            accessor: ({ data }) => data.id,
+            width: '20%',
+            accessor: ({ id }) => id.split(':')[1],
         },
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.Process'),
@@ -78,29 +80,26 @@ export const useWaitingProcessColumns = (): Column<SchedulerJob>[] => {
         },
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.BotCollection'),
+            width: '20%',
             accessor: ({ data }) => `${data.process.botCollection.name}`,
         },
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.BotSystem'),
+            width: '10%',
             accessor: ({ data }) => `${data.process.system.name}`,
         },
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.Initiator'),
-            accessor: ({ data }) =>
-                data.cron
-                    ? translate('Scheduler.WaitingProcess.Table.Rows.Initiator.Login', { login: data.user.login })
-                    : data.user.login,
+            width: '20%',
+            accessor: ({ data: { user, trigger, triggeredBy } }) => mapInitiatorLabel(user, trigger, triggeredBy),
         },
         {
             Header: ' ',
             id: 'button',
-            width: '20px',
-            Cell: ({ row }) =>
-                !row.original.data.isActive ? (
-                    <DeleteWaitingJobButton id={row.original.id} processName={row.original.data.process.name} />
-                ) : (
-                    <CircularProgress size="1.5rem" />
-                ),
+            width: '70px',
+            Cell: ({ row }) => !row.original.data.isActive
+                ? <DeleteWaitingJobButton id={row.original.id} processName={row.original.data.process.name} />
+                : <CircularProgress size="1.5rem" />,
         },
     ];
 };
@@ -112,19 +111,18 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) =>
-                row.original.cron ? (
-                    <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                        <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                            <ArrowForwardIosIcon fontSize="small" />
-                        </IconButton>
-                    </RowCustomExpandedSpan>
-                ) : null,
+            Cell: ({ row }) => row.original.cron ? (
+                <RowCustomExpandedSpan isExpanded={row.isExpanded}>
+                    <IconButton {...row.getToggleRowExpandedProps()} size="small">
+                        <ArrowForwardIosIcon fontSize="small" />
+                    </IconButton>
+                </RowCustomExpandedSpan>
+            ) : null,
             width: '20px',
         },
         {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.JobId'),
-            width: '8%',
+            Header: translate('Scheduler.ScheduledProcess.Table.Header.ScheduleId'),
+            width: '10%',
             accessor: ({ id }) => id,
         },
         {
@@ -133,27 +131,25 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.BotCollection'),
+            width: '20%',
             accessor: ({ process }) => process.botCollection.name,
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.BotSystem'),
+            width: '8%',
             accessor: ({ process }) => process.system.name,
         },
         {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.Initiator'),
-            accessor: ({ user, next, cron }) =>
-                next || cron
-                    ? translate('Scheduler.ScheduledProcess.Table.Rows.Initiator.Login', { login: user.login })
-                    : user.login,
+            Header: translate('Scheduler.ScheduledProcess.Table.Header.Creator'),
+            accessor: ({ user }) => user.login,
         },
         {
             Header: ' ',
             id: 'button',
-            width: '20px',
-            Cell: ({ row }) =>
-                row.original.id ? (
-                    <DeleteScheduleButton id={row.original.id} processName={row.original.process.name} />
-                ) : null,
+            width: '70px',
+            Cell: ({ row }) => row.original.id
+                ? <DeleteScheduleButton id={row.original.id} processName={row.original.process.name} />
+                : null,
         },
     ];
 };

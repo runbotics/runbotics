@@ -3,9 +3,10 @@ import React from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
 import moment from 'moment';
-import { FeatureKey, IUser, IProcessTrigger, ProcessTrigger } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import useAuth from 'src/hooks/useAuth';
+import useInitiatorLabel from 'src/hooks/useInitiatorLabel';
 import useTranslations from 'src/hooks/useTranslations';
 import { capitalizeFirstLetter } from 'src/utils/text';
 
@@ -17,21 +18,7 @@ import { Column, RowCustomExpandedSpan } from '../Table';
 const useProcessInstanceColumns = (): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
-
-    const mapInitiatorLabel = (
-        user: IUser, trigger: IProcessTrigger, triggeredBy: string | undefined
-    ) => {
-        switch (trigger.name) {
-            case ProcessTrigger.SCHEDULER:
-                return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.login });
-            case ProcessTrigger.API:
-                return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.login });
-            case ProcessTrigger.EMAIL:
-                return translate('Component.HistoryTable.Rows.Initiator.Email', { email: triggeredBy });
-            default:
-                return user?.login;
-        }
-    };
+    const { mapInitiatorLabel } = useInitiatorLabel();
 
     const columns = [
         {

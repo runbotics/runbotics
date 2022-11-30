@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
-import { InstantProcess, ProcessInput } from 'src/types';
-import { BotWsMessage, IBot, IProcess } from 'runbotics-common';
+import { InstantProcess, ProcessInput, BotWsMessage, IBot, IProcess } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { WebsocketService } from 'src/websocket/websocket.service';
 import { FileUploadService } from '../upload/file-upload.service';

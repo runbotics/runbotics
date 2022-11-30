@@ -6,7 +6,7 @@ import {
 } from 'runbotics-common';
 
 import { SocketContext } from 'src/providers/Socket.provider';
-import { ScheduledJob, SchedulerJob } from 'src/store/slices/Scheduler/Scheduler.state';
+import { ScheduledJob, QueueJob } from 'src/store/slices/Scheduler/Scheduler.state';
 
 import { useDispatch } from '../store';
 import { schedulerActions } from '../store/slices/Scheduler';
@@ -46,10 +46,10 @@ export const useScheduledStatusSocket = () => {
 
         });
 
-        socket.on(WsMessage.REMOVE_WAITING_SCHEDULE, (job: SchedulerJob) => {
+        socket.on(WsMessage.REMOVE_WAITING_SCHEDULE, (job: QueueJob) => {
             dispatch(schedulerActions.deleteWaitingJob(job));
         });
-        socket.on(WsMessage.ADD_WAITING_SCHEDULE, (job: SchedulerJob) => {
+        socket.on(WsMessage.ADD_WAITING_SCHEDULE, (job: QueueJob) => {
             dispatch(schedulerActions.addWaitingJob(job));
         });
 

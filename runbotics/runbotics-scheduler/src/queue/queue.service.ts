@@ -10,16 +10,13 @@ import {
 } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
-import { ScheduledProcess, ValidateProcessAccessProps } from 'src/types/scheduled-process';
+import { ValidateProcessAccessProps } from 'src/types/scheduled-process';
 import { Logger } from 'src/utils/logger';
-import {
-    InstantProcess,
-    ProcessInput,
-    StartProcessRequest,
-    StartProcessResponse,
-} from 'src/types';
+import { StartProcessRequest, StartProcessResponse } from 'src/types';
 import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
-import { IProcess, ProcessTrigger, WsMessage } from 'runbotics-common';
+import {
+    IProcess, ProcessTrigger, WsMessage, ScheduledProcess, InstantProcess, ProcessInput,
+} from 'runbotics-common';
 import { UiGateway } from '../websocket/gateway/ui.gateway';
 import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';

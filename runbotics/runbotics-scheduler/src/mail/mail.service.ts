@@ -7,7 +7,7 @@ import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from 'src/config/serverConfig.service';
 import { QueueService } from 'src/queue/queue.service';
 import { Cron } from '@nestjs/schedule';
-import { IProcessInstance, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
+import { ProcessTrigger } from 'runbotics-common';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -134,38 +134,6 @@ export class MailService implements OnModuleInit {
             await this.client.logout();
             this.logger.log('<< Mailbox disconnected');
         }
-    }
-
-    public sendProcessInstanceResponseMail(processInstance: IProcessInstance, text: string) {
-        if (!processInstance.triggeredBy) {
-            this.logger.error('Error during sending response mail: Empty trigger email field');
-            return;
-        }
-
-        const to = processInstance.triggeredBy;
-        const subject = `Re: ${processInstance.process.id}`;
-
-        this.logger.log(`Sending response mail to ${to}`);
-        
-        return this.server.sendMail({
-            from: this.serverConfigService.sendEmailConfig.auth.user,
-            to,
-            subject,
-            text: this.getProcessInstanceMailResponseText(processInstance),
-        });
-    }
-
-    private getProcessInstanceMailResponseText(processInstance: IProcessInstance) {
-
-        if (status === ProcessInstanceStatus.TERMINATED) {
-            return '';
-        }
-
-        if (status === ProcessInstanceStatus.ERRORED) {
-            return;
-        }
-
-        return 'Process ';
     }
 
     private async validateTitle(envelope: MessageEnvelopeObject) {
