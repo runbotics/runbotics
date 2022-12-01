@@ -82,7 +82,6 @@ public class ProcessInstance implements Serializable {
     @Column(name = "triggered_by")
     private String triggeredBy;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public UUID getId() {
         return id;
     }
@@ -247,7 +246,7 @@ public class ProcessInstance implements Serializable {
 
     public ProcessTrigger getTrigger() {
         return trigger;
-    }                                                       // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    }
 
     public void setTrigger(ProcessTrigger trigger) {
         this.trigger = trigger;

@@ -51,7 +51,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel(user, trigger, triggeredBy),
+            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
         },
         {
             Header: ' ',
@@ -91,7 +91,7 @@ export const useWaitingProcessColumns = (): Column<QueueJob>[] => {
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ data: { user, trigger, triggeredBy } }) => mapInitiatorLabel(user, trigger, triggeredBy),
+            accessor: ({ data: { user, trigger, triggeredBy } }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
         },
         {
             Header: ' ',

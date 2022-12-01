@@ -68,7 +68,7 @@ class GeneralAutomation extends StatelessActionHandler {
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: processes[0],
                 variables: request.input.variables,
-                userId: request?.userId,
+                userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
                 trigger: request.trigger as ProcessTrigger,

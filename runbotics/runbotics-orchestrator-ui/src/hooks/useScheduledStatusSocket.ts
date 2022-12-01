@@ -54,7 +54,7 @@ export const useScheduledStatusSocket = () => {
         });
 
         socket.on(WsMessage.REMOVE_SCHEDULE_PROCESS, (job: ScheduledJob) => {
-            dispatch(schedulerActions.removeScheduledProcess(job));
+            dispatch(schedulerActions.removeScheduledProcess(job.id));
         });
         socket.on(WsMessage.ADD_SCHEDULE_PROCESS, (job: ScheduledJob) => {
             dispatch(schedulerActions.addScheduledProcess(job));

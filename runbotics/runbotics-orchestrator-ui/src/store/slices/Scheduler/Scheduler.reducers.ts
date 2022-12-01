@@ -36,8 +36,8 @@ export const updateActiveJob = (state: SchedulerState, action: PayloadAction<IPr
     } : process));
 };
 
-export const removeScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob>) => {
-    state.scheduledJobs = state.scheduledJobs.filter((job) => job.id !== action.payload.id);
+export const removeScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob['id']>) => {
+    state.scheduledJobs = state.scheduledJobs.filter((job) => job.id !== action.payload);
 };
 
 export const addScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob>) => {

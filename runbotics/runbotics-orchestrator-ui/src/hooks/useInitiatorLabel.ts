@@ -6,12 +6,16 @@ const isProcessTrigger = (
     trigger: IProcessTrigger | ProcessTrigger
 ): trigger is ProcessTrigger => typeof trigger === 'string' && trigger in ProcessTrigger;
 
+interface InitiatorLabelParams {
+    user: IUser;
+    trigger: IProcessTrigger | ProcessTrigger;
+    triggeredBy: string | undefined;
+}
+
 const useInitiatorLabel = () => {
     const { translate } = useTranslations();
 
-    const mapInitiatorLabel = (
-        user: IUser, trigger: IProcessTrigger | ProcessTrigger, triggeredBy: string | undefined
-    ) => {
+    const mapInitiatorLabel = ({ user, trigger, triggeredBy }: InitiatorLabelParams) => {
         const triggerName = isProcessTrigger(trigger) ? trigger : trigger.name;
 
         switch (triggerName) {

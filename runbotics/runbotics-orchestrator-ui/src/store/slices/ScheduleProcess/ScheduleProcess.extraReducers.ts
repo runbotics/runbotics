@@ -4,7 +4,7 @@ import objFromArray from 'src/utils/objFromArray';
 
 import { ScheduleProcessState } from './ScheduleProcess.state';
 import {
-    getScheduledProcesses, getSchedulesByProcess, scheduleProcess,
+    getScheduledProcesses, getSchedulesByProcess, scheduleProcess, removeScheduledProcess,
 } from './ScheduleProcess.thunks';
 
 const buildScheduleProcessExtraReducers = (builder: ActionReducerMapBuilder<ScheduleProcessState>) => {

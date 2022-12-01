@@ -177,7 +177,7 @@ export class MailService implements OnModuleInit {
     private extractAttachments(attachments: Attachment[]) {
         return attachments.reduce((acc, att) => {
             const filename = att.filename.split('.').slice(0, -1).join('');
-            acc[filename] = `data:${att.contentType};base64,'${att.content.toString('base64')}`;
+            acc[filename] = `filename:${filename};data:${att.contentType};base64,'${att.content.toString('base64')}`;
             return acc;
         }, {});
     }
