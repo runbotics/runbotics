@@ -1,16 +1,10 @@
 import React from 'react';
 
-import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
+import MainView from '#src-landing/views/MainView';
 
-const IndexPage = () => <LoadingScreen />;
+const IndexPage = () => (
+    <MainView />
+);
 
-export default IndexPage;
-
-export function getServerSideProps() {
-    return {
-        redirect: {
-            destination: '/app/processes',
-            permanent: false,
-        },
-    };
-}
+export default withGuestGuard( IndexPage );

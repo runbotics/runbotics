@@ -29,6 +29,7 @@ import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 const { publicRuntimeConfig } = getConfig();
 
 import '#src-app/theme/cronStyles.css';
+import '#src-landing/scss/main.scss';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;

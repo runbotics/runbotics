@@ -1,10 +1,10 @@
-import type { FC } from 'react';
+import { FC } from 'react';
 
 import { useRouter } from 'next/router';
 
 import useAuth from '#src-app/hooks/useAuth';
+import BlankPage from '#src-app/utils/BlankPage';
 
-import LoadingScreen from '../utils/LoadingScreen';
 
 // eslint-disable-next-line react/display-name, complexity
 export const withGuestGuard = (Component: FC) => (props: any) => {
@@ -16,5 +16,5 @@ export const withGuestGuard = (Component: FC) => (props: any) => {
 
     if (isBrowser && isInitialised && !isAuthenticated) return <Component {...props} />;
 
-    return <LoadingScreen />;
+    return <BlankPage />;
 };

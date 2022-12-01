@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import SplashScreen from '#src-app/components/SplashScreen';
 import useAuth from '#src-app/hooks/useAuth';
 import { useDispatch } from '#src-app/store';
 import { initialize } from '#src-app/store/slices/Auth/Auth.thunks';
+import BlankPage from '#src-app/utils/BlankPage';
 
 const InitializeAuth = ({ children }) => {
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const InitializeAuth = ({ children }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!isInitialised) return <SplashScreen />;
+    if (!isInitialised) return <BlankPage />;
 
     return children;
 };
