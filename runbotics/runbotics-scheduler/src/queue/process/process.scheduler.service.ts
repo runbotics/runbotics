@@ -31,6 +31,7 @@ export class ProcessSchedulerService {
 
         for (const key of fileKeys) {
             const file = _.get(input.variables, key);
+            if (!file) continue;
             const downloadLink = await this.fileUploadService.uploadFile(token.token, file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload file', err);
