@@ -3,7 +3,6 @@ import React, { FC, ReactNode, FormEvent, useEffect, useState } from 'react';
 import { Box, Button, Grid, Alert } from '@mui/material';
 import { ErrorListProps, FormProps, IChangeEvent, ISubmitEvent, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
-import _ from 'lodash';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
@@ -35,11 +34,6 @@ const FormRenderer: FC<FormPropsExtended> = (props) => {
         
     };
 
-    const isDirty = React.useMemo(
-        () => !_.isEqual(props.formData, formState.formData),
-        [props.formData, formState.formData],
-    );
-
     useEffect(() => {
         setFormState({
             id: props.id,
@@ -51,7 +45,7 @@ const FormRenderer: FC<FormPropsExtended> = (props) => {
         setFormState({ ...formState, formData: e.formData });
     };
 
-    const handleSubmit = (e: ISubmitEvent<any>, nativeEvent: FormEvent<HTMLFormElement>) => props.onSubmit && !isFormError && isDirty ? props.onSubmit(e, nativeEvent) : null;
+    const handleSubmit = (e: ISubmitEvent<any>, nativeEvent: FormEvent<HTMLFormElement>) => props.onSubmit && !isFormError ? props.onSubmit(e, nativeEvent) : null;
 
     return (
         <Grid item xs={12}>
