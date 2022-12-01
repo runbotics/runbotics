@@ -6,6 +6,7 @@ import { Logger } from './utils/logger';
 import { DatabaseModule } from './database/database.module';
 import { QueueModule } from './queue/queue.module';
 import { MailModule } from './mail/mail.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { MailModule } from './mail/mail.module';
         DatabaseModule,
         QueueModule,
         MailModule,
+        WebsocketModule,
     ],
     providers: [
         StorageService, Logger

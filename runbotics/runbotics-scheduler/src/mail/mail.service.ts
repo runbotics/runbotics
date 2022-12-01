@@ -7,7 +7,7 @@ import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from 'src/config/serverConfig.service';
 import { QueueService } from 'src/queue/queue.service';
 import { Cron } from '@nestjs/schedule';
-import { ProcessTrigger } from 'runbotics-common';
+import { IProcessInstance, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -20,6 +20,8 @@ const FETCH_MAILS_CONFIG: FetchQueryObject = {
 };
 
 const DEFAULT_MAILBOX = 'INBOX';
+const EVERY_MINUTE_CRON = '0 * * * * *';
+const SEEN_FLAG = '\\Seen';
 
 @Injectable()
 export class MailService implements OnModuleInit {
@@ -33,7 +35,7 @@ export class MailService implements OnModuleInit {
         private readonly queueService: QueueService
     ) {}
 
-    onModuleInit() {
+    public onModuleInit() {
         if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
             throw new Error('Wrong smtp mail config');
         }
@@ -63,7 +65,7 @@ export class MailService implements OnModuleInit {
         });
     }
 
-    @Cron('0 * * * * *')
+    @Cron(EVERY_MINUTE_CRON)
     private async readMailbox() {
         this.logger.log('>> Connecting to mailbox');
 
@@ -127,13 +129,36 @@ export class MailService implements OnModuleInit {
                 this.logger.log('No mails processed ');
             }
 
-            await this.client.messageFlagsAdd(processedMails, ['\\Seen']);
+            await this.client.messageFlagsAdd(processedMails, [SEEN_FLAG]);
         } finally {
             await this.client.mailboxClose();
             lock.release();
             await this.client.logout();
             this.logger.log('<< Mailbox disconnected');
         }
+    }
+
+    public async sendProcessResultMail(processInstance: IProcessInstance) {
+        if (!processInstance.triggeredBy) return;
+
+        await this.server.sendMail({
+            from: this.serverConfigService.sendEmailConfig.auth.user,
+            to: processInstance.triggeredBy,
+            subject: `Re: ${processInstance.process.id}`,
+            text: this.getProcessResultMailText(processInstance),
+        });
+    }
+
+    private getProcessResultMailText(processInstance: IProcessInstance) {
+        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
+            return `An error occured during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
+        }
+        
+        if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
+            return `Process ${processInstance.process.id} execution was terminated`;
+        }
+
+        return `Process ${processInstance.process.id} execution has been completed successfully`;
     }
 
     private async validateTitle(envelope: MessageEnvelopeObject) {

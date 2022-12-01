@@ -26,7 +26,6 @@ import { QueueService } from './queue.service';
         ConfigModule,
         DatabaseModule,
         AuthModule,
-        WebsocketModule,
         BullModule.registerQueueAsync({
             name: 'scheduler',
             imports: [ConfigModule],

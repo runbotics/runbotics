@@ -8,6 +8,7 @@ import { BotStatus, IBot, IProcessInstance, ProcessInstanceStatus, WsMessage } f
 import { Connection } from 'typeorm';
 import { UiGateway } from '../gateway/ui.gateway';
 import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process.service.utils';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class BotProcessService {
@@ -19,6 +20,7 @@ export class BotProcessService {
         private readonly processService: ProcessService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
+        private readonly mailService: MailService,
     ) {}
 
     async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
@@ -42,8 +44,13 @@ export class BotProcessService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
+
             if (updatedProcessInstance.rootProcessInstanceId === null) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
+            }
+
+            if (isProcessInstanceFinished(processInstance.status)) {
+                await this.mailService.sendProcessResultMail(processInstance);
             }
         } catch (err) {
             this.logger.error('Process instance update error: rollback', err);
