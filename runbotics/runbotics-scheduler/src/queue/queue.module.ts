@@ -26,10 +26,10 @@ import { QueueService } from './queue.service';
         ConfigModule,
         DatabaseModule,
         AuthModule,
-        WebsocketModule,
         BullModule.registerQueueAsync({
             name: 'scheduler',
             imports: [ConfigModule],
+            inject: [ServerConfigService],
             useFactory: async (serverConfigService: ServerConfigService) => {
                 return {
                     createClient: (_, redisOpts) => {
@@ -46,7 +46,6 @@ import { QueueService } from './queue.service';
                     },
                 };
             },
-            inject: [ServerConfigService],
         })
     ],
     controllers: [
@@ -55,6 +54,7 @@ import { QueueService } from './queue.service';
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
         ProcessInstanceSchedulerService, BotSchedulerService, FileUploadService, QueueService,
-    ]
+    ],
+    exports: [QueueService]
 })
 export class QueueModule { }

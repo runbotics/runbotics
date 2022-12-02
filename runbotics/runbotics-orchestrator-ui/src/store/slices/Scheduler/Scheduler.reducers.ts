@@ -1,13 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcessInstance, IProcessInstanceEvent, IScheduleProcess } from 'runbotics-common';
 
-import { SchedulerJob, SchedulerState, ScheduledJob } from './Scheduler.state';
+import { QueueJob, SchedulerState, ScheduledJob } from './Scheduler.state';
 
 export const deleteWaitingJob = (state: SchedulerState, action: PayloadAction<IScheduleProcess>) => {
     state.waitingJobs = state.waitingJobs.filter((job) => job.id !== action.payload.id.toString());
 };
 
-export const addWaitingJob = (state: SchedulerState, action: PayloadAction<SchedulerJob>) => {
+export const addWaitingJob = (state: SchedulerState, action: PayloadAction<QueueJob>) => {
     const isUpdate = state.waitingJobs.find(({ id }) => id === action.payload.id);
     if (isUpdate) 
     { state.waitingJobs = state.waitingJobs.map(
@@ -36,8 +36,8 @@ export const updateActiveJob = (state: SchedulerState, action: PayloadAction<IPr
     } : process));
 };
 
-export const removeScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob>) => {
-    state.scheduledJobs = state.scheduledJobs.filter((job) => job.id !== action.payload.id);
+export const removeScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob['id']>) => {
+    state.scheduledJobs = state.scheduledJobs.filter((job) => job.id !== action.payload);
 };
 
 export const addScheduledProcess = (state: SchedulerState, action: PayloadAction<ScheduledJob>) => {

@@ -1,6 +1,7 @@
 import { IProcess } from "./process.model";
 import { IBot } from "./bot.model";
 import { IUser } from "./user.model";
+import { IProcessTrigger } from './process-trigger.model';
 
 export interface IProcessInstance {
     id?: string;
@@ -15,8 +16,9 @@ export interface IProcessInstance {
     user?: IUser;
     process?: IProcess;
     bot?: IBot;
-    scheduled?: boolean;
     error?: string | null;
+    trigger?: IProcessTrigger;
+    triggeredBy?: string;
     subProcesses?: IProcess[];
 }
 

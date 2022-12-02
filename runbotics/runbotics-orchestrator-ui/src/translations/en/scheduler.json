@@ -24,18 +24,18 @@
     "Scheduler.ActiveProcess.Terminate.Dialog.Title": "Terminate {{ processName }} process instance",
     "Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message": "Are you sure you want to terminate {{ processName }} process instance?",
 
-    "Scheduler.WaitingProcess.Table.Header.JobId": "JobId",
+    "Scheduler.WaitingProcess.Table.Header.JobId": "Job ID",
     "Scheduler.WaitingProcess.Table.Header.Process": "Process",
     "Scheduler.WaitingProcess.Table.Header.BotCollection": "Bot Collection",
     "Scheduler.WaitingProcess.Table.Header.BotSystem": "Bot System",
     "Scheduler.WaitingProcess.Table.Header.Initiator": "Initiator",
     "Scheduler.WaitingProcess.Table.Rows.Initiator.Login": "Scheduler ({{ login }})",
 
-    "Scheduler.ScheduledProcess.Table.Header.JobId": "JobId",
+    "Scheduler.ScheduledProcess.Table.Header.ScheduleId": "Schedule ID",
     "Scheduler.ScheduledProcess.Table.Header.Process": "Process",
     "Scheduler.ScheduledProcess.Table.Header.BotCollection": "Bot Collection",
     "Scheduler.ScheduledProcess.Table.Header.BotSystem": "Bot System",
-    "Scheduler.ScheduledProcess.Table.Header.Initiator": "Initiator",
+    "Scheduler.ScheduledProcess.Table.Header.Creator": "Creator",
     "Scheduler.ScheduledProcess.Table.Rows.Initiator.Login": "Scheduler ({{ login }})",
     "Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable": "Run {{ cron }}"
 }

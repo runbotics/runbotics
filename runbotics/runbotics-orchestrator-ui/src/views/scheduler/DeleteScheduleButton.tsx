@@ -15,6 +15,8 @@ import { Trash as TrashIcon } from 'react-feather';
 
 import useTranslations from 'src/hooks/useTranslations';
 
+import { schedulerActions } from 'src/store/slices/Scheduler';
+
 import { useDispatch } from '../../store';
 import { scheduleProcessActions } from '../../store/slices/ScheduleProcess';
 
@@ -28,6 +30,7 @@ const DeleteScheduleButton: VFC<DeleteScheduleButtonProps> = ({ id, processName 
     const [show, setShow] = useState(false);
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
+
     const changeVisibility = () => {
         setShow((prevState) => !prevState);
     };
@@ -35,9 +38,12 @@ const DeleteScheduleButton: VFC<DeleteScheduleButtonProps> = ({ id, processName 
     const handleDelete = async () => {
         setShow(false);
         await dispatch(scheduleProcessActions.removeScheduledProcess({ scheduleProcessId: id }))
-            .then(() => enqueueSnackbar(translate('Scheduler.Delete.ScheduledProcess.Success', { processName }), {
-                variant: 'success',
-            }))
+            .then(() => {
+                enqueueSnackbar(translate('Scheduler.Delete.ScheduledProcess.Success', { processName }), {
+                    variant: 'success',
+                });
+                dispatch(schedulerActions.removeScheduledProcess(id.toString()));
+            })
             .catch(() => enqueueSnackbar(translate('Scheduler.Delete.ScheduledProcess.Failed', { processName }), {
                 variant: 'error',
             }));

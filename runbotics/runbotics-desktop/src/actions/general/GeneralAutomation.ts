@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DesktopRunRequest, DesktopRunResponse, StatelessActionHandler } from 'runbotics-sdk';
 import { delay } from 'src/utils/delay';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
-import { IProcess, ProcessInstanceStatus } from 'runbotics-common';
+import { IProcess, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
 import { RuntimeService } from '../../core/bpm/Runtime';
 import { orchestratorAxios } from '../../config/axios-configuration';
 
@@ -39,7 +39,7 @@ class GeneralAutomation extends StatelessActionHandler {
     }
 
     async consoleLog(input: ConsoleLogActionInput): Promise<ConsoleLogActionOutput> {
-        for (let [key, value] of Object.entries(input.variables)) {
+        for (const [key, value] of Object.entries(input.variables)) {
             this.logger.log(key, value);
         }
         this.logger.log('process.cwd();', process.cwd());
@@ -67,20 +67,19 @@ class GeneralAutomation extends StatelessActionHandler {
             }
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: processes[0],
-                params: {
-                    variables: request.input.variables,
-                },
+                variables: request.input.variables,
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
-                scheduled: !!request.scheduled,
+                trigger: request.trigger as ProcessTrigger,
+                triggeredBy: request?.triggeredBy,
             });
-            let subscription = this.runtimeService.processChange().subscribe((data) => {
+            const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {
                         case ProcessInstanceStatus.COMPLETED:
                         case ProcessInstanceStatus.STOPPED:
-                            let result = {
+                            const result = {
                                 variables: {},
                             };
                             try {

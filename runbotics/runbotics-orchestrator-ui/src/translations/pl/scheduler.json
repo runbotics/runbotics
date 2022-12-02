@@ -24,18 +24,18 @@
     "Scheduler.ActiveProcess.Terminate.Dialog.Title": "Zakończ działanie instancji {{ processName }} procesu",
     "Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message": "Czy na pewno chcesz zakończyć działanie instancji {{ processName }} procesu?",
 
-    "Scheduler.WaitingProcess.Table.Header.JobId": "Id zadania",
+    "Scheduler.WaitingProcess.Table.Header.JobId": "ID Zadania",
     "Scheduler.WaitingProcess.Table.Header.Process": "Proces",
     "Scheduler.WaitingProcess.Table.Header.BotCollection": "Kolekcja botów",
     "Scheduler.WaitingProcess.Table.Header.BotSystem": "Typ bota",
     "Scheduler.WaitingProcess.Table.Header.Initiator": "Inicjator",
     "Scheduler.WaitingProcess.Table.Rows.Initiator.Login": "Dodano harmonogram ({{ login }})",
 
-    "Scheduler.ScheduledProcess.Table.Header.JobId": "Id zadania",
+    "Scheduler.ScheduledProcess.Table.Header.ScheduleId": "ID Harmonogramu",
     "Scheduler.ScheduledProcess.Table.Header.Process": "Proces",
     "Scheduler.ScheduledProcess.Table.Header.BotCollection": "Kolekcja botów",
     "Scheduler.ScheduledProcess.Table.Header.BotSystem": "Typ bota",
-    "Scheduler.ScheduledProcess.Table.Header.Initiator": "Inicjator",
+    "Scheduler.ScheduledProcess.Table.Header.Creator": "Twórca",
     "Scheduler.ScheduledProcess.Table.Rows.Initiator.Login": "Dodano harmonogram ({{ login }})",
     "Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable": "Uruchom {{ cron }}"
 }

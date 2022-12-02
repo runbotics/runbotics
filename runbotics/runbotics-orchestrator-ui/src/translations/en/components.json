@@ -51,11 +51,13 @@
     "Component.HistoryTable.Header.Finished": "Finished",
     "Component.HistoryTable.Header.Bot": "Bot",
     "Component.HistoryTable.Header.Initiator": "Initiator",
-    "Component.HistoryTable.Rows.Initiator": "Scheduler({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Scheduler": "Scheduler({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
 
     "Component.HistoryTable.Step.StartEvent": "Start event",
     "Component.HistoryTable.Step.EndEvent": "End event",
-    
+
     "Component.HistoryTable.Status.Completed": "COMPLETED",
     "Component.HistoryTable.Status.InProgress": "IN PROGRESS",
     "Component.HistoryTable.Status.Initializing": "INITIALIZING",

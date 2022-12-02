@@ -1,4 +1,4 @@
-import HistoryTable from './HistoryTable.content';
+import HistoryTable from './HistoryTable';
 
 export { default as useProcessInstanceColumns } from './HistoryTable.columns';
 export default HistoryTable;

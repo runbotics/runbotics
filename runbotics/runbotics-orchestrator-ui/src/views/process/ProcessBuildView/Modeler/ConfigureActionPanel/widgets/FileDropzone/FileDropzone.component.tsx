@@ -13,7 +13,8 @@ const FileDropzoneWidget: FC<WidgetProps> = (props) => {
         if (acceptedFiles.length <= 0) return;
         const reader = new FileReader();
         reader.onload = () => {
-            props.onChange(reader.result);
+            const filename = acceptedFiles[0].name.split('.')[0];
+            props.onChange(`filename:${filename};` + reader.result);
         };
         reader.readAsDataURL(acceptedFiles[0]);
         // eslint-disable-next-line react-hooks/exhaustive-deps

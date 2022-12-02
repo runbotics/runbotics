@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 
@@ -67,9 +68,6 @@ public class ProcessInstance implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
 
-    @Column
-    private boolean scheduled;
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "root_process_instance_id", referencedColumnName = "id")
     private Set<ProcessInstance> subProcesses;
@@ -77,7 +75,13 @@ public class ProcessInstance implements Serializable {
     @Column(name = "error")
     private String error;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne
+    @JoinColumn(name = "trigger", referencedColumnName = "name")
+    private ProcessTrigger trigger;
+
+    @Column(name = "triggered_by")
+    private String triggeredBy;
+
     public UUID getId() {
         return id;
     }
@@ -224,14 +228,6 @@ public class ProcessInstance implements Serializable {
         this.bot = bot;
     }
 
-    public boolean isScheduled() {
-        return scheduled;
-    }
-
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
     public Set<ProcessInstance> getSubProcesses() {
         return subProcesses;
     }
@@ -248,7 +244,21 @@ public class ProcessInstance implements Serializable {
         this.error = error;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public ProcessTrigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(ProcessTrigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public String getTriggeredBy() {
+        return triggeredBy;
+    }
+
+    public void setTriggeredBy(String triggeredBy) {
+        this.triggeredBy = triggeredBy;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -281,8 +291,9 @@ public class ProcessInstance implements Serializable {
             ", output='" + getOutput() + "'" +
             ", step='" + getStep() + "'" +
             ", user='" + getUser().getEmail() + "'" +
-            ", scheduled='" + isScheduled() + "'" +
             ", error='" + getError() + "'" +
+            ", trigger='" + getTrigger() + "'" +
+            ", triggeredBy='" + getTriggeredBy() + "'" +
             "}";
     }
 }

@@ -51,7 +51,9 @@
     "Component.HistoryTable.Header.Finished": "Zakończono",
     "Component.HistoryTable.Header.Bot": "Bot",
     "Component.HistoryTable.Header.Initiator": "Inicjator",
-    "Component.HistoryTable.Rows.Initiator": "Harmonogram ({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Scheduler": "Harmonogram({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
+    "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
 
     "Component.HistoryTable.Step.StartEvent": "Rozpoczęto zdarzenie",
     "Component.HistoryTable.Step.EndEvent": "Zakończono zdarzenie",
@@ -62,7 +64,7 @@
     "Component.HistoryTable.Status.ERRORED": "BŁĘDNY",
     "Component.HistoryTable.Status.STOPPED": "ZATRZYMANY",
     "Component.HistoryTable.Status.TERMINATED": "PRZERWANY",
-    
+
     "Component.HistoryTable.Status.Completed": "UKOŃCZONY",
     "Component.HistoryTable.Status.InProgress": "TRWA",
     "Component.HistoryTable.Status.Initializing": "INICJALIZOWANY",

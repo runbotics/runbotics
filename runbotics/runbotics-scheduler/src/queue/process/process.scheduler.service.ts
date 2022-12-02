@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
-import { InstantProcess, ProcessInput } from 'src/types';
-import { BotWsMessage, IBot, IProcess } from 'runbotics-common';
+import { InstantProcess, ProcessInput, BotWsMessage, IBot, IProcess } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { WebsocketService } from 'src/websocket/websocket.service';
 import { FileUploadService } from '../upload/file-upload.service';
@@ -30,7 +29,7 @@ export class ProcessSchedulerService {
             });
 
         for (const key of fileKeys) {
-            const file = _.get(input.variables, key);
+            const file = _.get(input?.variables, key);
             const downloadLink = await this.fileUploadService.uploadFile(token.token, file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload file', err);
@@ -41,28 +40,28 @@ export class ProcessSchedulerService {
         }
     }
 
-    async startProcess(instantProcess: InstantProcess, bot: IBot, scheduled: boolean) {
+    async startProcess(instantProcess: InstantProcess, bot: IBot) {
         const orchestratorProcessInstanceId = uuidv4();
 
         if (instantProcess.process?.isAttended) {
             await this.handleUploadedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
         }
 
-        const body = this.createStartProcessResponse(instantProcess, scheduled, orchestratorProcessInstanceId);
-
+        const body = this.createStartProcessResponse(instantProcess, orchestratorProcessInstanceId);
 
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
 
         return { orchestratorProcessInstanceId: body.orchestratorProcessInstanceId };
     }
 
-    private createStartProcessResponse(instantProcess: InstantProcess, scheduled: boolean, orchestratorProcessInstanceId: string) {
+    private createStartProcessResponse(instantProcess: InstantProcess, orchestratorProcessInstanceId: string) {
         return {
             orchestratorProcessInstanceId,
             processId: instantProcess.process.id,
             input: instantProcess.input,
-            userId: instantProcess.user.id,
-            scheduled,
+            trigger: instantProcess.trigger,
+            ...(instantProcess.user && { userId: instantProcess.user.id }),
+            ...(instantProcess.triggeredBy && { triggeredBy: instantProcess.triggeredBy }),
         };
     }
 }

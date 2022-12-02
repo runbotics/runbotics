@@ -6,6 +6,7 @@ export interface DesktopRunRequest<I> {
     processInstanceId: string;
     rootProcessInstanceId: string;
     userId: number;
-    scheduled?: boolean;
     executionContext: BpmnExecutionEventMessageApi;
+    trigger: string;
+    triggeredBy?: string;
 }

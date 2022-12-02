@@ -12,20 +12,16 @@ import useQuery from 'src/hooks/useQuery';
 import { useReplaceQueryParams } from 'src/hooks/useReplaceQueryParams';
 import { processInstanceEventActions } from 'src/store/slices/ProcessInstanceEvent';
 
-
-
-
-
-import { useDispatch, useSelector } from '../../store';
+import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
     ProcessInstanceRequestCriteria,
     processInstanceSelector,
-} from '../../store/slices/ProcessInstance';
-import { DefaultPageSize } from '../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
-import ResizableDrawer from '../ResizableDrawer';
+} from '../../../store/slices/ProcessInstance';
+import { DefaultPageSize } from '../../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
+import ResizableDrawer from '../../ResizableDrawer';
+import If from '../../utils/If';
 import Table from '../Table';
-import If from '../utils/If';
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
 
@@ -48,17 +44,19 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const tableRef = useRef<HTMLDivElement>(null);
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
-    const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
-    const processInstanceColumns = useProcessInstanceColumns();
     const router = useRouter();
     const { tab, id } = router.query;
     const query = useQuery();
     const pageFromUrl = query.get('page');
-    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = query.get('pageSize');
+    
+    const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
+    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
+    const processInstanceColumns = useProcessInstanceColumns();
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
     const replaceQueryParams = useReplaceQueryParams();
+
     useEffect(() => {
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
         if (pageNotAvailable) {
@@ -70,19 +68,16 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
 
     useEffect(() => {
         replaceQueryParams({ page, pageSize, tab, id });
-        dispatch(
-            processInstanceActions.getProcessInstancePage({
-                page,
-                size: pageSize,
-                filter: {
-                    equals: {
-                        ...(botId && { botId }),
-                        ...(processId && { processId }),
-                    },
+        dispatch(processInstanceActions.getProcessInstancePage({
+            page,
+            size: pageSize,
+            filter: {
+                equals: {
+                    ...(botId && { botId }),
+                    ...(processId && { processId }),
                 },
-            }),
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            },
+        }));
     }, [pageSize, page]);
 
     useImperativeHandle(ref, () => ({

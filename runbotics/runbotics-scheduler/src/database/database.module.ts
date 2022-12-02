@@ -13,6 +13,7 @@ import { ScheduleProcessModule } from './schedule-process/schedule-process.modul
 import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
 import { FeatureKeyModule } from './feature-key/feature-key.module';
+import { ProcessTriggerModule } from './process-trigger/process-trigger.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ScheduleProcessModule,
+        ProcessTriggerModule,
     ],
     exports: [
         TypeOrmModule,
@@ -57,6 +59,7 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ScheduleProcessModule,
+        ProcessTriggerModule,
     ]
 })
 export class DatabaseModule { }

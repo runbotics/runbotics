@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { useRouter } from 'next/router';
 
-import HistoryTable from '../../../components/HistoryTable';
+import HistoryTable from '../../../components/tables/HistoryTable';
 
 const BotLog: FC = () => {
     const router = useRouter();

@@ -1,7 +1,8 @@
 import { ProcessService } from 'src/database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Job, JobInformation, JobStatus, Queue } from 'bull';
+import { Job as QueueJob, JobInformation, JobStatus, Queue } from 'bull';
+import { Job } from 'src/utils/process';
 import { Logger } from 'src/utils/logger';
 
 import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
@@ -59,7 +60,7 @@ export class SchedulerService {
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.moveToCompleted();
-        this.logger.log(`Job with id: ${id} successfully deleted`);
+        this.logger.log(`QueueJob with id: ${id} successfully deleted`);
     }
 
     private async updateProcessForScheduledJob(jobs: Job[]) {
@@ -78,10 +79,10 @@ export class SchedulerService {
         return jobsWithProcesses;
     }
 
-    async getWaitingJobs() {
+    async getWaitingJobs(): Promise<Job[]> {
         this.logger.log('Getting waiting jobs');
-        const waitingJobs = await this.processQueue.getJobs(['waiting']);
-        const activeJobs = await this.processQueue.getJobs(['active']);
+        const waitingJobs = await this.processQueue.getJobs(['waiting']) as Job[];
+        const activeJobs = await this.processQueue.getJobs(['active']) as Job[];
         const waitingJobsWithProcesses = await this.updateProcessForScheduledJob(waitingJobs);
         const activeJobsWithProcesses = await this.updateProcessForScheduledJob(activeJobs);
         const newActive = activeJobsWithProcesses.map((job) => {
@@ -97,7 +98,7 @@ export class SchedulerService {
 
     async getJobById(id: number | string) {
         const job = await this.processQueue.getJob(id);
-        if (!job.data) {
+        if (!job?.data) {
             return Promise.reject();
         }
         const process = await this.processService.findById(Number(job.data.process.id));
