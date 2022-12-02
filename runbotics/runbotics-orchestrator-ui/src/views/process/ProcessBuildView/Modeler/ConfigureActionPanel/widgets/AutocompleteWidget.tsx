@@ -22,6 +22,7 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
         props.onChange(newValue || undefined);
     };
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
+
     return (
         <Autocomplete
             fullWidth
@@ -46,6 +47,7 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
                     onChange={(event) => onChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={!!props.rawErrors}
+                    helperText={props?.rawErrors ? props?.rawErrors.map((rawError) => rawError) : null}
                 />
             )}
             PopperComponent={(popperProps: PopperProps) => (

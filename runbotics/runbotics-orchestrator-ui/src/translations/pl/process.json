@@ -306,6 +306,7 @@
     "Process.Details.Modeler.Actions.General.ConsoleLog.Message": "Wiadomość",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variable": "Zmienna",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Zmienne",
+    "Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError": "Pole nie może być puste",
     "Process.Details.Modeler.Actions.General.Delay.Label": "Opóźnienie",
     "Process.Details.Modeler.Actions.General.Delay.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.General.Delay.Delay": "Opóźnienie",
