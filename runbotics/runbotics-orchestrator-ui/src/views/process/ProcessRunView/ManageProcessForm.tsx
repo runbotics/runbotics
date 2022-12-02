@@ -76,6 +76,7 @@ const ManageProcessForm: VFC = () => {
         <>
             <If condition={modalOpen}>
                 <ManageAttendedProcessModal
+                    key={process.id}
                     open={modalOpen}
                     setOpen={setModalOpen}
                     process={process}

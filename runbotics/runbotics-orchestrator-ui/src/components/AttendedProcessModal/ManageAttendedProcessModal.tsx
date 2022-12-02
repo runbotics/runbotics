@@ -76,16 +76,10 @@ function isJsonValid(str) {
 const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, process, onSubmit, onDelete }) => {
     const ref = React.useRef<any>();
     const submitFormRef = React.useRef<any>();
-    const [draft, setDraft] = useState<any>({ form: '{}' });
+    const [draft, setDraft] = useState<any>({ form: process?.executionInfo ? process.executionInfo : defaultForm });
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
     const isDeleteDisabled = !process?.executionInfo;
-
-    useEffect(() => {
-        if (process) 
-        { setDraft({ form: process?.executionInfo ? process.executionInfo : defaultForm }); }
-        
-    }, [process]);
 
     useEffect(() => {
         setLoading(true);
