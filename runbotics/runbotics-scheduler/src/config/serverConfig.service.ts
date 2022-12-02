@@ -21,6 +21,15 @@ export interface DatabaseSettings {
     database: string;
 }
 
+export interface EmailConfig {
+    host: string;
+    port: number;
+    auth: {
+        user: string;
+        pass: string;
+    };
+}
+
 @Injectable()
 export class ServerConfigService {
     constructor(private configService: ConfigService) { }
@@ -70,6 +79,28 @@ export class ServerConfigService {
 
     get sharepointPassword(): string {
         return this.configService.get('SHAREPOINT_PASSWORD');
+    }
+
+    get readEmailConfig(): EmailConfig {
+        return {
+            host: this.configService.get('RUNBOTICS_READ_EMAIL_HOST'),
+            port: this.configService.get('RUNBOTICS_READ_EMAIL_PORT'),
+            auth: {
+                user: this.configService.get('RUNBOTICS_EMAIL'),
+                pass: this.configService.get('RUNBOTICS_EMAIL_PASSWORD')
+            }
+        };
+    }
+    
+    get sendEmailConfig(): EmailConfig {
+        return {
+            host: this.configService.get('RUNBOTICS_SEND_EMAIL_HOST'),
+            port: this.configService.get('RUNBOTICS_SEND_EMAIL_PORT'),
+            auth: {
+                user: this.configService.get('RUNBOTICS_EMAIL'),
+                pass: this.configService.get('RUNBOTICS_EMAIL_PASSWORD')
+            }
+        };
     }
 
     get timezone(): string {

@@ -11,7 +11,6 @@ const BrowserTargetWidget = dynamic(() => import('./BrowserTargetWidget/BrowserT
 const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: false });
 
 const customWidgets = {
-    ElementAwareAutocomplete: ElementAwareAutocompleteWidget,
     TextWidget: ElementAwareAutocompleteWidget,
     ProcessNameSuggestionWidget,
     JsonViewWidget,

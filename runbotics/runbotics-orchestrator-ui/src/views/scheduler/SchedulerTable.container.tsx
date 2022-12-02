@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { Row } from 'react-table';
 
-import Table, { Column } from '../../components/Table';
+import Table, { Column } from '../../components/tables/Table';
 
 interface SchedulerTableContainerProps<T extends object> {
     title: string;

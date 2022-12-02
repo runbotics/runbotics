@@ -4,16 +4,10 @@ import {
     BpmnExecutionEventMessageContent,
 } from 'bpmn-engine';
 
-import {
-    IProcess,
-    ProcessInstanceEventStatus,
-    ProcessInstanceStatus,
-    IProcessInstance,
-} from 'runbotics-common';
+import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
+import { StartProcessMessageBody } from 'src/core/websocket/listeners/Process.listener.types';
 
-export interface BpmnProcessInstance extends IProcessInstance {
-    params: IProcessParams;
-    variables: Record<string, any>;
+export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
 }
 
@@ -48,13 +42,9 @@ export interface IProcessParams {
     variables: Record<string, any>;
 }
 
-export interface IStartProcessInstance {
+export interface IStartProcessInstance extends IProcessParams, Omit<StartProcessMessageBody, 'processId' | 'input'> {
     process: IProcess;
-    params: IProcessParams;
-    userId: number;
-    orchestratorProcessInstanceId: string;
     rootProcessInstanceId?: string;
-    scheduled: boolean;
 }
 
 export interface BpmnExecutionEventMessageContentError {

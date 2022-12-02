@@ -23,7 +23,5 @@ export const getSchedulesByProcess = createAsyncThunk<IScheduleProcess[], { proc
 
 export const removeScheduledProcess = createAsyncThunk<void, { scheduleProcessId: number }>(
     'scheduleProcess/removeScheduledProcess',
-    async ({ scheduleProcessId }) => {
-        await axios.delete(`/scheduler/schedule-processes/${scheduleProcessId}`);
-    },
+    ({ scheduleProcessId }) => axios.delete(`/scheduler/schedule-processes/${scheduleProcessId}`),
 );
