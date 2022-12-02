@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import styled from 'styled-components';
 
 
 export const useWrapperStyleObject = () => {
@@ -57,3 +58,14 @@ export const useEditorStyleObject = () => ({
     minHeight: 200,
     borderRadius: 5,
 });
+
+export const StyledContainer = styled.div`
+    position: relative;
+`;
+
+export const StyledIconWrapper = styled.div`
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 0.5rem;
+`;

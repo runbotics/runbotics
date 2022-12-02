@@ -7,9 +7,19 @@ import { stateToHTML } from 'draft-js-export-html';
 import i18next from 'i18next';
 import { Editor } from 'react-draft-wysiwyg';
 
+import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
 
-import { useWrapperStyleObject, useHoverWrapperStyleObject, useActiveWrapperStyleObject, useToolbarStyleObject, useEditorStyleObject } from './DraftJSWidget.styles';
+import { InfoButtonTooltip } from '../components/infoButtonTooltip';
+import {
+    useWrapperStyleObject,
+    useHoverWrapperStyleObject,
+    useActiveWrapperStyleObject,
+    useToolbarStyleObject,
+    useEditorStyleObject,
+    StyledContainer,
+    StyledIconWrapper
+} from './DraftJSWidget.styles';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {
@@ -38,6 +48,13 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const wrapperStyleObject = useWrapperStyleObject();
     const editorStyleObject = useEditorStyleObject();
     const toolbarStyleObject = useToolbarStyleObject();
+
+    const tooltip = typeof props.options?.info === 'string'
+        ? (
+            <StyledIconWrapper>
+                <InfoButtonTooltip message={props.options?.info}/>
+            </StyledIconWrapper>
+        ) : null;
 
     const currentWrapperStyle = useMemo(() => {
         if(isActive) return activeWrapperStyleObject;
@@ -69,7 +86,7 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     };
 
     return (
-        <div 
+        <StyledContainer 
             onMouseEnter={handleHoverEditorArea}
             onFocus={handleEnterEditorArea}
             onMouseLeave={handleLeaveEditorArea}
@@ -86,8 +103,19 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
                 wrapperStyle={currentWrapperStyle}
                 localization={{ locale: i18next.language }}
                 placeholder={translate('Process.Details.Modeler.Actions.Mail.Send.Content.Placeholder')}
+                toolbar={{
+                    list: { inDropdown: true },
+                    textAlign: { inDropdown: true },
+                    link: { inDropdown: true },
+                }}
             />
-        </div>
+            {/* <If condition={typeof props.options?.info === 'string'}>
+                <StyledIconWrapper>
+                    <InfoButtonTooltip message={props.options?.info}/>
+                </StyledIconWrapper>
+            </If> */}
+            {tooltip}
+        </StyledContainer>
     );
 };
 
