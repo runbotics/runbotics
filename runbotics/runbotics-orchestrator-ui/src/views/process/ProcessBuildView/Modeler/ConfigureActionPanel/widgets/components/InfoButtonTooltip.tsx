@@ -8,7 +8,7 @@ interface InfoButtonTooltipProps {
     message: string;
 }
 
-export const InfoButtonTooltip: FC<InfoButtonTooltipProps> = ({
+const InfoButtonTooltip: FC<InfoButtonTooltipProps> = ({
     message
 }) => (
     <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(message) }}></span>}>
@@ -19,3 +19,5 @@ export const InfoButtonTooltip: FC<InfoButtonTooltipProps> = ({
         </span>
     </Tooltip>
 );
+
+export default InfoButtonTooltip;

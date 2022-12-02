@@ -9,7 +9,7 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import useTranslations from 'src/hooks/useTranslations';
 
-import { InfoButtonTooltip } from '../components/infoButtonTooltip';
+import InfoButtonTooltip from '../components/InfoButtonTooltip';
 import {
     useWrapperStyleObject,
     useHoverWrapperStyleObject,

@@ -18,7 +18,7 @@ import { currentProcessSelector } from 'src/store/slices/Process';
 import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
 import AutocompleteWidget from './AutocompleteWidget';
-import { InfoButtonTooltip } from './components/infoButtonTooltip';
+import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 const services = [
     'environment.services.idt',
