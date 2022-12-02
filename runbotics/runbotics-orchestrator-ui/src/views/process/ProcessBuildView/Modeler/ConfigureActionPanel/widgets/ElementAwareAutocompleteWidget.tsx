@@ -2,12 +2,9 @@
 import React, { FC } from 'react';
 
 import { getVariablesForScope } from '@bpmn-io/extract-process-variables';
-import { InfoOutlined } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
-import { sanitize } from 'dompurify';
 import styled from 'styled-components';
 
 import If from 'src/components/utils/If';
@@ -21,6 +18,7 @@ import { currentProcessSelector } from 'src/store/slices/Process';
 import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
 import AutocompleteWidget from './AutocompleteWidget';
+import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 const services = [
     'environment.services.idt',
@@ -261,16 +259,6 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
         [options],
     );
 
-    const infoButton = (
-        <Tooltip title={<span dangerouslySetInnerHTML={{__html: sanitize(props.options?.info) }}></span>}>
-            <span>
-                <IconButton>
-                    <InfoOutlined/>
-                </IconButton>
-            </span>
-        </Tooltip>
-    );
-
     return (
         <AutocompleteWrapper>
             <AutocompleteWidget
@@ -280,7 +268,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
                 options={optionValues}
             />
             <If condition={Boolean(props.options?.info)}>
-                {infoButton}
+                <InfoButtonTooltip message={props.options?.info} />
             </If>
         </AutocompleteWrapper>
     );

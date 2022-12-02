@@ -46,6 +46,14 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     content: {
                         'ui:widget': 'DraftJSEditor',
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Mail.Send.Content.Info'),
+                        },
+                    },
+                    attachment: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Mail.Send.Attachment.Info'),
+                        }
                     },
                 },
             },
