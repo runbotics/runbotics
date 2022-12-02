@@ -6,7 +6,7 @@ import { ProcessService } from 'src/database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from 'src/config/serverConfig.service';
 import { QueueService } from 'src/queue/queue.service';
-import { Cron } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { IProcessInstance, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
@@ -22,6 +22,8 @@ const FETCH_MAILS_CONFIG: FetchQueryObject = {
 const DEFAULT_MAILBOX = 'INBOX';
 const EVERY_MINUTE_CRON = '0 * * * * *';
 const SEEN_FLAG = '\\Seen';
+const AUTHORISED_DOMAIN = 'all-for-one.com';
+const EMAIL_TRIGGER_CRON_JOB_NAME = 'email_trigger';
 
 @Injectable()
 export class MailService implements OnModuleInit {
@@ -32,12 +34,16 @@ export class MailService implements OnModuleInit {
     constructor(
         private readonly processService: ProcessService,
         private readonly serverConfigService: ServerConfigService,
-        private readonly queueService: QueueService
+        private readonly queueService: QueueService,
+        private readonly schedulerRegistry: SchedulerRegistry,
     ) {}
 
     public onModuleInit() {
-        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
-            throw new Error('Wrong smtp mail config');
+        try {
+            this.checkMailConfig();
+        } catch (e) {
+            this.logger.error(e);
+            return;
         }
 
         this.server = createTransport({
@@ -47,14 +53,6 @@ export class MailService implements OnModuleInit {
     }
 
     private initializeServices() {
-        if (!this.serverConfigService.readEmailConfig.host || !this.serverConfigService.readEmailConfig.port) {
-            throw new Error('Wrong imap mail config');
-        }
-
-        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
-            throw new Error('Wrong smtp mail config');
-        }
-
         this.client = new ImapFlow({
             ...this.serverConfigService.readEmailConfig,
             secure: true,
@@ -65,8 +63,33 @@ export class MailService implements OnModuleInit {
         });
     }
 
-    @Cron(EVERY_MINUTE_CRON)
+    private checkMailConfig() {
+        if (!this.serverConfigService.readEmailConfig.auth.user || !this.serverConfigService.readEmailConfig.auth.pass) {
+            throw new Error('Missing mail auth config: Email trigger won\'t be available');
+        }
+
+        if (!this.serverConfigService.readEmailConfig.host || !this.serverConfigService.readEmailConfig.port) {
+            throw new Error('Missing imap mail config: Email trigger won\'t be available');
+        }
+
+        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
+            throw new Error('Missing smtp mail config: Email trigger won\'t be available');
+        }
+    }
+
+    private isMailConfigProvided() {
+        return this.serverConfigService.sendEmailConfig.host && this.serverConfigService.sendEmailConfig.port
+            && this.serverConfigService.readEmailConfig.host && this.serverConfigService.readEmailConfig.port
+            && this.serverConfigService.readEmailConfig.auth.user && this.serverConfigService.readEmailConfig.auth.pass;
+    }
+
+    @Cron(EVERY_MINUTE_CRON, { name: EMAIL_TRIGGER_CRON_JOB_NAME })
     private async readMailbox() {
+        if (!this.isMailConfigProvided()) {
+            this.schedulerRegistry.deleteCronJob(EMAIL_TRIGGER_CRON_JOB_NAME);
+            return;
+        }
+
         this.logger.log('>> Connecting to mailbox');
 
         try {
@@ -222,7 +245,7 @@ export class MailService implements OnModuleInit {
     }
 
     private hasTriggerAccess(emailAdress: string) {
-        return emailAdress.includes('@all-for-one.com');
+        return emailAdress.includes(`@${AUTHORISED_DOMAIN}`);
     }
 
 } 
