@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { FeatureKey } from 'runbotics-common';
 
-import HistoryTable from 'src/components/HistoryTable';
+import HistoryTable from 'src/components/tables/HistoryTable';
 import If from 'src/components/utils/If';
 import LoadingScreen from 'src/components/utils/LoadingScreen';
 import useFeatureKey from 'src/hooks/useFeatureKey';

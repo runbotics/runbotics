@@ -6,7 +6,7 @@ import InternalPage from 'src/components/pages/InternalPage';
 import useProcessInstanceSocket from 'src/hooks/useProcessInstanceSocket';
 import useTranslations from 'src/hooks/useTranslations';
 
-import HistoryTable from '../../../components/HistoryTable';
+import HistoryTable from '../../../components/tables/HistoryTable';
 import Header from './Header';
 
 const HistoryListView: VFC = () => {

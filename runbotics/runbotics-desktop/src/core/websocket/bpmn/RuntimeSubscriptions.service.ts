@@ -53,7 +53,7 @@ export class RuntimeSubscriptionsService {
                                         processInstanceEvent.step = label;
                                     } else {
                                         processInstanceEvent.step = script;
-                                    } 
+                                    }
                             }
                             break;
                         case 'bpmn:EndEvent':
@@ -116,9 +116,10 @@ export class RuntimeSubscriptionsService {
                 process: {
                     id: Number(event.processInstance.process.id),
                 },
-                user: { id: event.processInstance.user.id },
+                user: event.processInstance.user,
                 rootProcessInstanceId: event.processInstance.rootProcessInstanceId,
-                scheduled: event.processInstance.scheduled,
+                trigger: event.processInstance.trigger,
+                triggeredBy: event.processInstance.triggeredBy,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:
@@ -127,7 +128,7 @@ export class RuntimeSubscriptionsService {
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
                         processInstance.input = JSON.stringify({
-                            ...event.processInstance.params,
+                            variables: event.processInstance.variables,
                         });
                     } catch (e) {
                         this.logger.error('Error preparing input');
@@ -150,7 +151,7 @@ export class RuntimeSubscriptionsService {
                     }
                     try {
                         processInstance.input = JSON.stringify({
-                            ...event.processInstance.params,
+                            variables: event.processInstance.variables,
                         });
                     } catch (e) {
                         this.logger.error('Error preparing input');

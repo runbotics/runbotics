@@ -1,26 +1,38 @@
 import {
-    IProcess, IProcessInstance, IScheduleProcess, IUser,
+    IProcess, IProcessInstance, IUser, InstantProcess, ScheduledProcess,
 } from 'runbotics-common';
 
 export interface SchedulerState {
     loading: boolean;
     scheduledJobs: ScheduledJob[];
     activeJobs: IProcessInstance[];
-    waitingJobs: SchedulerJob[];
+    waitingJobs: QueueJob[];
 }
 
-export interface SchedulerJob {
+export interface QueueJob {
     id: string;
-    data: IScheduleProcess;
     name: string;
-    attemptsMade: number;
-    delay: number;
+    data: InstantProcess | ScheduledProcess;
+    opts: JobOptions;
     progress: number;
-    processedOn: number;
-    finishedOn: unknown | null;
-    returnValue: unknown | null;
+    delay: number;
     timestamp: number;
-    opts: unknown;
+    attemptsMade: number;
+    stacktrace: unknown[];
+    returnValue: unknown | null;
+    finishedOn: number | null;
+    processedOn: number;
+}
+
+interface JobOptions {
+    repeat?: unknown;
+    jobId: string;
+    delay: number;
+    timestamp: number;
+    prevMilis: number;
+    removeOnComplete: boolean;
+    removeOnFail: boolean;
+    attempts: number;
 }
 
 export interface ScheduledJob {

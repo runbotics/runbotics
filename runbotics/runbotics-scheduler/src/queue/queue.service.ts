@@ -12,14 +12,11 @@ import { Job, Queue } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidateProcessAccessProps } from 'src/types/scheduled-process';
 import { Logger } from 'src/utils/logger';
-import {
-    InstantProcess,
-    ProcessInput,
-    StartProcessRequest,
-    StartProcessResponse,
-} from 'src/types';
+import { StartProcessRequest, StartProcessResponse } from 'src/types';
 import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
-import { IProcess, IScheduleProcess, WsMessage } from 'runbotics-common';
+import {
+    IProcess, ProcessTrigger, WsMessage, ScheduledProcess, InstantProcess, ProcessInput,
+} from 'runbotics-common';
 import { UiGateway } from '../websocket/gateway/ui.gateway';
 import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
@@ -43,7 +40,7 @@ export class QueueService implements OnModuleInit {
         await this.botSchedulerService.initializeBotsStatuses();
     }
 
-    async createScheduledJob(scheduledProcess: IScheduleProcess) {
+    async createScheduledJob(scheduledProcess: ScheduledProcess) {
         this.logger.log(`Adding new scheduled job for process: ${scheduledProcess.process.name}`);
 
         await this.processQueue.add(scheduledProcess, {
@@ -63,7 +60,8 @@ export class QueueService implements OnModuleInit {
                 .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
     }
 
-    async createInstantJob({ process, input, user }: StartProcessRequest) {
+    async createInstantJob(params: StartProcessRequest) {
+        const { process, input } = params;
         this.logger.log(`Adding new instant job for process: ${process.name}`);
 
         await this.handleAttededProcess(process, input)
@@ -72,11 +70,8 @@ export class QueueService implements OnModuleInit {
                 throw new BadRequestException(err);
             });
 
-        const instantProcess: InstantProcess = {
-            process,
-            user,
-            input
-        };
+        const instantProcess: InstantProcess = params;
+
         const job = await this.processQueue
             .add(instantProcess, {
                 jobId: `${process.id}:${uuidv4()}`,
@@ -119,9 +114,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async getProcessByInfo(processInfo: string | number) {
-        const process = isNaN(Number(processInfo))
-            ? await this.processService.findByName(processInfo as string)
-            : await this.processService.findById(Number(processInfo));
+        const process = this.processService.findByInfo(processInfo);
 
         if (!process) {
             this.logger.error(`Process ${processInfo} does not exist`);
@@ -135,16 +128,16 @@ export class QueueService implements OnModuleInit {
         const hasAccess = (process.createdBy.id === user?.id);
         const isPublic = process.isPublic;
         const isTriggerable = process?.isTriggerable;
-        const isAdmin = user.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;
+        const isAdmin = user?.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;
 
         if (!hasAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
-            throw new ForbiddenException(`User ${user?.login} does not have access to process ${process?.name} (${process?.id})`);
+            this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to process "${process?.name}" (${process?.id})`);
+            throw new ForbiddenException(`You do not have access to process "${process?.name}" (${process?.id})`);
         }
 
         if (triggered && !isTriggerable) {
-            this.logger.error(`Process ${process?.name} (${process?.id}) is not triggerable`);
-            throw new ForbiddenException(`Process ${process?.name} (${process?.id}) is not triggerable`);
+            this.logger.error(`Process "${process?.name}" (${process?.id}) is not triggerable`);
+            throw new ForbiddenException(`Process "${process?.name}" (${process?.id}) is not triggerable`);
         }
     }
 
@@ -155,7 +148,7 @@ export class QueueService implements OnModuleInit {
         const scheduledProcesses = await this.scheduleProcessService.findAll();
         await Promise.all(
             scheduledProcesses
-                .map(process => this.createScheduledJob(process))
+                .map(process => this.createScheduledJob({ ...process, trigger: ProcessTrigger.SCHEDULER }))
         );
         this.logger.log(`Created ${scheduledProcesses.length} schedules`);
         this.logger.log('Queue successfully initialized');
@@ -176,10 +169,10 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Cleared staled job(s)');
     }
     
-    private async handleAttededProcess(process: IProcess, input: ProcessInput) {
+    private async handleAttededProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
         
-        if (!input.variables) {
+        if (!input?.variables) {
             const err = 'You haven\'t provided variables for attended process';
             this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
             throw new BadRequestException(err);

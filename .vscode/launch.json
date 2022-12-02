@@ -2,18 +2,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node-terminal",
             "name": "scheduler debug",
+            "type": "node-terminal",
             "request": "launch",
             "command": "rushx start:debug",
             "cwd": "${workspaceFolder}/runbotics/runbotics-scheduler"
         },
         {
-            "type": "node-terminal",
             "name": "bot debug",
+            "type": "node-terminal",
             "request": "launch",
             "command": "rushx start:debug",
             "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
+        },
+        {
+            "name": "ui debug",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "rushx start:dev",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-orchestrator-ui",
         }
     ]
 }

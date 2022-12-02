@@ -20,7 +20,7 @@ import { AuthRequest } from 'src/types';
 import { ProcessService } from 'src/database/process/process.service';
 import { Logger } from 'src/utils/logger';
 import { FeatureKeys } from 'src/auth/featureKey.decorator';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, ProcessTrigger } from 'runbotics-common';
 
 @Controller('scheduler/schedule-processes')
 export class ScheduleProcessController {
@@ -48,7 +48,7 @@ export class ScheduleProcessController {
 
         const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process};
         const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
-        await this.queueService.createScheduledJob(newScheduleProcess);
+        await this.queueService.createScheduledJob({ ...newScheduleProcess, trigger: ProcessTrigger.SCHEDULER });
 
         this.logger.log(`<= Creation successful: schedule process ${newScheduleProcess.id}`);
         return newScheduleProcess;

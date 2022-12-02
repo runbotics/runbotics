@@ -1,6 +1,7 @@
 package com.runbotics.service.dto;
 
 import com.runbotics.domain.ProcessInstance;
+import com.runbotics.domain.ProcessTrigger;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -40,11 +41,13 @@ public class ProcessInstanceDTO implements Serializable {
 
     private BotDTO bot;
 
-    private boolean scheduled;
-
     private Set<ProcessInstance> subProcesses;
 
     private String error;
+
+    private ProcessTrigger trigger;
+
+    private String triggeredBy;
 
     public UUID getId() {
         return id;
@@ -142,14 +145,6 @@ public class ProcessInstanceDTO implements Serializable {
         this.bot = bot;
     }
 
-    public boolean isScheduled() {
-        return scheduled;
-    }
-
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
     public Set<ProcessInstance> getSubProcesses() {
         return subProcesses;
     }
@@ -164,6 +159,22 @@ public class ProcessInstanceDTO implements Serializable {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public ProcessTrigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(ProcessTrigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public String getTriggeredBy() {
+        return triggeredBy;
+    }
+
+    public void setTriggeredBy(String triggeredBy) {
+        this.triggeredBy = triggeredBy;
     }
 
     @Override
@@ -202,8 +213,9 @@ public class ProcessInstanceDTO implements Serializable {
             ", step='" + getStep() + "'" +
             ", process=" + getProcess() +
             ", bot=" + getBot() +
-            ", scheduled=" + isScheduled() +
             ", error=" + getError() +
+            ", trigger=" + getTrigger() +
+            ", triggeredBy=" + getTriggeredBy() +
             "}";
     }
 }
