@@ -1,6 +1,12 @@
 @import "#src-landing/scss/main";
 
+.root {
+  @include font-face-base;
+}
+
 .typography {
+  composes: root;
+
   &__primary {
     color: $text-color-dark;
   }
