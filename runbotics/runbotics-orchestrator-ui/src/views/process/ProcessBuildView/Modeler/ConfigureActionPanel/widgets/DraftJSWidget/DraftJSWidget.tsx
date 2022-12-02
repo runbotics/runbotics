@@ -7,7 +7,6 @@ import { stateToHTML } from 'draft-js-export-html';
 import i18next from 'i18next';
 import { Editor } from 'react-draft-wysiwyg';
 
-import If from 'src/components/utils/If';
 import useTranslations from 'src/hooks/useTranslations';
 
 import { InfoButtonTooltip } from '../components/infoButtonTooltip';
@@ -20,6 +19,7 @@ import {
     StyledContainer,
     StyledIconWrapper
 } from './DraftJSWidget.styles';
+import { isInfoTooltip } from './DraftJSWidgets.utils';
 
 const parseContentToEditorState = (text: string) => {
     if (text) {
@@ -49,10 +49,10 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
     const editorStyleObject = useEditorStyleObject();
     const toolbarStyleObject = useToolbarStyleObject();
 
-    const tooltip = typeof props.options?.info === 'string'
+    const tooltip = isInfoTooltip(props.options)
         ? (
             <StyledIconWrapper>
-                <InfoButtonTooltip message={props.options?.info}/>
+                <InfoButtonTooltip message={props.options.info}/>
             </StyledIconWrapper>
         ) : null;
 
@@ -109,11 +109,6 @@ const DraftJSEditor: FC<WidgetProps> = (props) => {
                     link: { inDropdown: true },
                 }}
             />
-            {/* <If condition={typeof props.options?.info === 'string'}>
-                <StyledIconWrapper>
-                    <InfoButtonTooltip message={props.options?.info}/>
-                </StyledIconWrapper>
-            </If> */}
             {tooltip}
         </StyledContainer>
     );
