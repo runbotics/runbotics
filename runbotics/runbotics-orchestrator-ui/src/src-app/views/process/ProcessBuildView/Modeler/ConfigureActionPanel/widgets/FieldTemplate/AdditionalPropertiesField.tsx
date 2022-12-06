@@ -50,7 +50,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
     return (
-        <Grid container key={`${id}-key`} alignItems="center" spacing={1}>
+        <Grid container key={`${id}-key`} alignItems="center" spacing={3}>
             <Grid item xs={12}>
                 <TextField
                     fullWidth
