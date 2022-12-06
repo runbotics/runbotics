@@ -90,6 +90,7 @@ interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
         info?: string;
     }
+    customErrors?: string;
 }
 
 const AutocompleteWrapper = styled.div`

@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import { Popper, PopperProps, TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
-const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }> = (props) => {
+const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string } & { customError?: string[] }> = (props) => {
     const [open, setOpen] = useState(false);
 
     const handleInputChange = (event: any, newInputValue: string) => {
@@ -46,8 +46,8 @@ const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string }
                     label={label}
                     onChange={(event) => onChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
-                    error={!!props.rawErrors}
-                    helperText={props?.rawErrors ? props?.rawErrors.map((rawError) => rawError) : null}
+                    error={!!props?.customErrors || !!props?.rawErrors}
+                    helperText={props?.customErrors ? props?.customErrors.map((customError) => customError) : null}
                 />
             )}
             PopperComponent={(popperProps: PopperProps) => (

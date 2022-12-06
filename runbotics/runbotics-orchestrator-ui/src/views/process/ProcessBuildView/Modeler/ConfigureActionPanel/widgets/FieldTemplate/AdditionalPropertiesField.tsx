@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { FC, useState } from 'react';
 
 import Remove from '@mui/icons-material/Remove';
@@ -41,6 +42,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     const formData = formProps.formData;
     const subFieldValue = (typeof formData === 'string' && formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
     const errorMessage = translate('Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError');
+    const isDisabled = disabled || readonly;
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
@@ -56,7 +58,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                     label={mainFieldLabel ? mainFieldLabel : 'Key'}
                     size="medium"
                     defaultValue={mainFieldValue}
-                    disabled={disabled || readonly}
+                    disabled={isDisabled}
                     id={`${id}-key`}
                     name={`${id}-key`}
                     onBlur={!readonly ? handleBlur : undefined}
@@ -68,18 +70,17 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
             <Grid item xs={12}>
                 <ElementAwareAutocompleteWidget
                     {...formProps}
-                    rawErrors={subFieldValue ? formProps.rawErrors : [errorMessage]}
-                    required
+                    customErrors={!subFieldValue && [errorMessage]}
                     label={subFieldLabel ? subFieldLabel : 'Value'}
                     defaultValue={subFieldValue}
                     value={subFieldValue}
-                    disabled={disabled || readonly}
+                    disabled={isDisabled}
                     type="text"
                 />
             </Grid>
             <Grid item>
-                <Button color="secondary" disabled={disabled || readonly} onClick={onDropPropertyClick(label)}>
-                    <Remove />
+                <Button color="secondary" disabled={isDisabled} onClick={onDropPropertyClick(label)}>
+                    <Remove/>
                     {translate('Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem')}
                 </Button>
             </Grid>
