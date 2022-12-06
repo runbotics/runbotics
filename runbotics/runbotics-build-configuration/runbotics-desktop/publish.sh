@@ -7,9 +7,7 @@ PACKAGE_VERSION=$(cat ./runbotics-desktop/package.json \
   | tr -d '[[:space:]]')
 echo Version is: $PACKAGE_VERSION
 
-echo "[INFO] runbotics-desktop - Docker build started";
-docker build -t runbotics/runbotics-desktop:${PACKAGE_VERSION} -t runbotics/runbotics-desktop:latest .
-echo "[INFO] runbotics-desktop - Docker build completed";
+sh build.sh
 
 echo "[INFO] runbotics-desktop - Docker push started";
 docker push runbotics/runbotics-desktop:${PACKAGE_VERSION}

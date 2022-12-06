@@ -1,5 +1,4 @@
 #!/bin/sh
-
 PACKAGE_VERSION=$(cat ./runbotics-scheduler/package.json \
   | grep version \
   | head -1 \
@@ -8,9 +7,7 @@ PACKAGE_VERSION=$(cat ./runbotics-scheduler/package.json \
   | tr -d '[[:space:]]')
 echo Version is: $PACKAGE_VERSION
 
-echo "[INFO] runbotics-scheduler - Docker build started";
-docker build -t runbotics/runbotics-scheduler:${PACKAGE_VERSION} -t runbotics/runbotics-scheduler:latest .
-echo "[INFO] runbotics-scheduler - Docker build completed";
+sh build.sh
 
 echo "[INFO] runbotics-scheduler - Docker push started";
 docker push runbotics/runbotics-scheduler:${PACKAGE_VERSION}

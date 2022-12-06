@@ -8,7 +8,12 @@
 
 ## Description
 
+The `runbotics-scheduler` package based on [Nest.js](https://nestjs.com) is responsible for:
 
+- bot connection
+- process triggering
+- process scheduling
+- process termination
 
 ## Running the app
 
@@ -34,6 +39,34 @@ $ rushx test:e2e
 
 # test coverage
 $ rushx test:cov
+```
+
+## Docker image
+
+To create your own `runbotics-scheduler` docker image follow the instructions:
+
+```bash
+# execute rush deploy
+$ sh build.sh
+
+# go to ~/runbotics/common/deploy/runbotics-scheduler
+
+# build docker image
+$ sh build.sh
+```
+
+## Windows installer
+```bash
+# execute rush deploy
+$ sh build.sh
+
+# go to ~/runbotics/common/deploy/runbotics-scheduler
+
+# build and install dependencies
+$ sh electron-install.sh
+
+# execute electron builder
+$ sh electron-build.sh
 ```
 
 See [Nest.js docs](https://docs.nestjs.com/) to learn about Nest.js feature.
