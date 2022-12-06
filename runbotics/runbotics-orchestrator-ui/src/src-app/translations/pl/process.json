@@ -312,7 +312,7 @@
     "Process.Details.Modeler.Actions.General.Delay.Delay": "Opóźnienie",
     "Process.Details.Modeler.Actions.General.Delay.Unit": "Jednostka",
     "Process.Details.Modeler.Actions.General.StartProcess.Label": "Uruchom proces",
-    "Process.Details.Modeler.Actions.GeneraFl.StartProcess.Input": "Dane wejściowe",
+    "Process.Details.Modeler.Actions.General.StartProcess.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.General.StartProcess.ProcessName": "Nazwa procesu",
     "Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess": "Zmienne przekazywane do procesu",
     "Process.Details.Modeler.Actions.General.StartProcess.Ouput": "Dane wyjściowe",
