@@ -25,7 +25,6 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     onDropPropertyClick,
     onKeyChange,
     readonly,
-    required,
     schema,
 }) => {
     const { translate } = useTranslations();
