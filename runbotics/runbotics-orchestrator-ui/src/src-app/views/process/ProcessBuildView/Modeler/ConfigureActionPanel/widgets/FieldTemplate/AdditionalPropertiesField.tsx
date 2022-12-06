@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { FC, useState } from 'react';
 
 import Remove from '@mui/icons-material/Remove';
@@ -53,7 +54,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
             <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    required={required}
+                    required
                     variant="outlined"
                     label={mainFieldLabel ? mainFieldLabel : 'Key'}
                     size="medium"
@@ -72,7 +73,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
             <Grid item xs={12}>
                 <ElementAwareAutocompleteWidget
                     {...formProps}
-                    required={required}
+                    required
                     customErrors={!subFieldValue && [errorMessage]}
                     label={subFieldLabel ? subFieldLabel : 'Value'}
                     defaultValue={subFieldValue}

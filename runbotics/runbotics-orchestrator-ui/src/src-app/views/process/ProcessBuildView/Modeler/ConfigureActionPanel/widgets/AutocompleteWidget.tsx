@@ -3,8 +3,9 @@ import React, { FC, useState } from 'react';
 import { Popper, PopperProps, TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
-const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string } & { customError?: string[] }> = ({customErrors, rawErrors}, props) => {
+const AutocompleteWidget: FC<WidgetProps & { groupBy?: (option: any) => string } & { customError?: string[] }> = (props) => {
     const [open, setOpen] = useState(false);
+    const {customErrors, rawErrors} = props;
 
     const handleInputChange = (event: any, newInputValue: string) => {
         if (event && newInputValue && (newInputValue.startsWith('$') || newInputValue.startsWith('#'))) 
