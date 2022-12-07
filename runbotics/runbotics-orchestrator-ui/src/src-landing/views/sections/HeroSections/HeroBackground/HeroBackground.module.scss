@@ -1,11 +1,14 @@
 @import "#src-landing/scss/main.scss";
 
+$ARROWS_HEIGHT: 176px;
+
 .root {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
   height: 100%;
+  isolation: isolate;
 }
 
 .heroBackground {
@@ -33,17 +36,16 @@
   z-index: -1;
   display: flex;
   position: relative;
-  bottom: 0;
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
-  height: 176px;
+  height: $ARROWS_HEIGHT;
   mix-blend-mode: soft-light;
 }
 
 .heroArrows {
   width: inherit;
-  height: 176px;
+  height: $ARROWS_HEIGHT;
   background-image: url("/images/hero-arrows.svg");
   background-repeat: no-repeat;
   background-position: right bottom;
@@ -62,7 +64,7 @@
 
 @media (max-width: $breakpoint-md) {
   .heroArch {
-    width: 70% !important;
+    width: 70%;
     height: auto;
   }
 

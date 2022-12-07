@@ -11,10 +11,15 @@ const HeroSection: FC = () => {
     return(
         <div className={styles.root}>
             <Typography variant='h1' color="secondary" className={styles.title}>
-                {translate('Landing.Hero.Title.Part.1')} <br />
-                <span className={styles.fontPrimary}>{translate('Landing.Hero.Title.Part.2')}</span> 
+                <div>{translate('Landing.Hero.Title.Part.1')}</div>
+                <div className={styles.fontPrimary}>{translate('Landing.Hero.Title.Part.2')}</div> 
             </Typography>
-            <Typography variant='body1' color="secondary" className={styles.subtitle} text={translate('Landing.Hero.Subtitle')} />
+            <Typography 
+                variant='body1'
+                color="secondary"
+                className={styles.subtitle}
+                text={translate('Landing.Hero.Subtitle')} 
+            />
         </div>
     ); 
 };

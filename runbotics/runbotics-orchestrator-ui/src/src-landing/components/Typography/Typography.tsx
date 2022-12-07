@@ -23,8 +23,8 @@ const Typography: FC<TypographyProps> = ({
     ].join(' ');
     
     return (
-        <TypographyRoot className={classes} {...props} dangerouslySetInnerHTML={text ? {__html: text} : undefined}>
-            {children}
+        <TypographyRoot className={classes} {...props}>
+            {text ?? children}
         </TypographyRoot>
     );
 };
