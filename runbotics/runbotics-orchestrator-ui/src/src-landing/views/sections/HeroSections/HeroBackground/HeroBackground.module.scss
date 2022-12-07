@@ -1,0 +1,91 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROWS_HEIGHT: 176px;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  height: 100%;
+  isolation: isolate;
+}
+
+.heroBackground {
+  z-index: -1;
+  object-fit: cover;
+}
+
+.heroArchWrapper {
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  mix-blend-mode: soft-light;
+}
+
+.heroArch {
+  position: absolute;
+  width: unset;
+  max-height: 100%;
+  height: 100%;
+}
+
+.heroFooter {
+  z-index: -1;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  height: $ARROWS_HEIGHT;
+  mix-blend-mode: soft-light;
+}
+
+.heroArrows {
+  width: inherit;
+  height: $ARROWS_HEIGHT;
+  background-image: url("/images/hero-arrows.svg");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: cover;
+}
+
+.heroTitleWrapper {
+  display: flex;
+  position: relative;
+  justify-content: flex-end;
+  align-items: flex-end;
+  max-width: 100%;
+  mix-blend-mode: soft-light;
+  object-position: center;
+}
+
+@media (max-width: $breakpoint-md) {
+  .heroArch {
+    width: 70%;
+    height: auto;
+  }
+
+  .heroArrows {
+    display: none;
+  }
+
+  .heroTitleWrapper,
+  .heroTitle {
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .heroFooter {
+    justify-content: center;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .heroArch {
+    display: none;
+  }
+}

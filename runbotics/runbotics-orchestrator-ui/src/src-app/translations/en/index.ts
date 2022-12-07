@@ -1,3 +1,5 @@
+import heroTranslations from '#src-landing/translations/pl/hero.json';
+
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
 import botTranslations from './bot.json';
@@ -30,5 +32,6 @@ const translationResources = {
     ...installTranslations,
     ...componentsTranslations,
     ...paletteTranslations,
+    ...heroTranslations
 };
 export default translationResources;

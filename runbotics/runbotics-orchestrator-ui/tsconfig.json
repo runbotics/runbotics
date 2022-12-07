@@ -21,7 +21,8 @@
     "downlevelIteration": true,
     "paths": {
       "#src-app/*": ["src/src-app/*"],
-      "#src-landing/*": ["src/src-landing/*"]
+      "#src-landing/*": ["src/src-landing/*"],
+      "#public/*": ["public/*"]
     }
   },
   "include": ["next-env.d.ts", "src"],

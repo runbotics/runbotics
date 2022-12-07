@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React from 'react';
 
-interface LayoutProps {};
+import styles from './Layout.module.scss';
 
-const Layout: FC<LayoutProps> = ({children}) => (
+const Layout = ({children}) => (
     <>
         <nav></nav>
-        <main>{children}</main>
+        <main className={styles.main}>{children}</main>
         <footer></footer>
     </>
 );
