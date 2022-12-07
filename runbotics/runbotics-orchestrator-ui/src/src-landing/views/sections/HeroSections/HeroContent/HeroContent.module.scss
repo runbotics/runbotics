@@ -1,0 +1,22 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  composes: root from "#src-landing/components/SectionContent/SectionContent.module.scss";
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.fontPrimary {
+  color: $text-color-dark;
+}
+
+.subtitle {
+  font-weight: $font-weight-regular;
+}
+
+@media (max-width: $breakpoint-sm) {
+  .title {
+    line-height: normal;
+  }
+}

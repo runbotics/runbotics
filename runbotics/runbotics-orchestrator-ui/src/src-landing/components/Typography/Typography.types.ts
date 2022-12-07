@@ -5,7 +5,9 @@ type TypographyVariant =
     'h4' |
     'h5' |
     'h6' |
-    'p'
+    'p' |
+    'body1' |
+    'body2'
 
 type TypographyColor =
     'primary' |
@@ -17,4 +19,5 @@ export interface TypographyProps {
     color?: TypographyColor;
     font?: 'Roboto' | 'Montserrat';
     className?: string;
+    text?: string;
 }
