@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import styles from './Typography.module.scss';
 import { TypographyProps } from './Typography.types';
+import { typographyVariantsMap } from './Typography.utils';
 
 const Typography: FC<TypographyProps> = ({
     variant,
@@ -9,9 +10,10 @@ const Typography: FC<TypographyProps> = ({
     children,
     font = 'Montserrat',
     className,
+    text,
     ...props
 }) => {
-    const TypographyRoot = variant || 'p'; 
+    const TypographyRoot = typographyVariantsMap[variant] || 'p'; 
     const classes = [
         styles.root,
         styles[`typography__${variant}`],
@@ -22,7 +24,7 @@ const Typography: FC<TypographyProps> = ({
     
     return (
         <TypographyRoot className={classes} {...props}>
-            {children}
+            {text ?? children}
         </TypographyRoot>
     );
 };
