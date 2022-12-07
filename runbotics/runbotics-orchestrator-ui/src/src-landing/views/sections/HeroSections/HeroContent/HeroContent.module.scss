@@ -13,6 +13,10 @@ $SUBTITLE-MAX-WIDTH: 550px;
   color: $text-color-dark;
 }
 
+.title {
+  margin-bottom: $margin-4;
+}
+
 .subtitle {
   max-width: $SUBTITLE-MAX-WIDTH;
 }
