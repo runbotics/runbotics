@@ -359,11 +359,6 @@
    */
     "projects": [
         {
-            "packageName": "runboticskit",
-            "projectFolder": "runboticskit",
-            "shouldPublish": false
-        },
-        {
             "packageName": "runbotics-orchestrator-ui",
             "projectFolder": "runbotics-orchestrator-ui"
         },
