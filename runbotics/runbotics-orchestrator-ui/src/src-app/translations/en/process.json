@@ -303,6 +303,7 @@
     "Process.Details.Modeler.Actions.General.ConsoleLog.Message": "Message",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variable": "Variable",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Variables",
+    "Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError": "Field cannot be empty",
     "Process.Details.Modeler.Actions.General.Delay.Label": "Delay",
     "Process.Details.Modeler.Actions.General.Delay.Input": "Input",
     "Process.Details.Modeler.Actions.General.Delay.Delay": "Delay",
@@ -625,7 +626,5 @@
     "Process.Modeler.ChangeLanguageTitle": "Are you sure you want to change the language?",
     "Process.Modeler.LoseModelerChangesContent": "All unsaved changes process wizard changes will be lost.",
     "Process.Modeler.DialogCancel": "Cancel",
-    "Process.Modeler.DialogConfirm": "Ok",
-    "Process.Details.Modeler.DetailsSidebar.Message.Label" : "Message",
-    "Process.Details.Modeler.DetailsSidebar.Variable.Label" : "Variable"
+    "Process.Modeler.DialogConfirm": "Ok"
 }
