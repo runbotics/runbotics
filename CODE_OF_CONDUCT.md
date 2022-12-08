@@ -35,7 +35,7 @@ Project maintainers have the right and responsibility to remove, edit, or reject
 
 This Code of Conduct applies to all project spaces, and it also applies when an individual is representing the project or its community in public spaces.
 
-The Code of Conduct also applies within project spaces and in public spaces whenever an individual is representing Runbotics or its community. Examples of representing a project or community include using an official project e-mail address or acting as an appointed or de facto representative at an online or offline event. 
+The Code of Conduct also applies within project spaces and in public spaces whenever an individual is representing RunBotics or its community. Examples of representing a project or community include using an official project e-mail address or acting as an appointed or de facto representative at an online or offline event. 
 
 
 ## Conflict Resolution

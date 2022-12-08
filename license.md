@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2022 Runbotics.
+Copyright (c) 2022 RunBotics.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

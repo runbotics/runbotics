@@ -20,4 +20,4 @@
 
 ---
 
-I agree to the terms of the Runbotics Contributor License Agreement.
+I agree to the terms of the RunBotics Contributor License Agreement.
