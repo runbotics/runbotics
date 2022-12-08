@@ -109,7 +109,6 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'object',
                                 additionalProperties: {
                                     type: 'string',
-                                    isRequired: false,
                                 },
                             },
                         },

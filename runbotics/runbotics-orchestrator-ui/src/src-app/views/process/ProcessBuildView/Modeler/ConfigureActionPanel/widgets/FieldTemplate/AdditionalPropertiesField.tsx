@@ -36,6 +36,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
         setMainFieldValue(event.target.value);
     };
 
+    // If any action schema has property "additionalProperties" then this custom map component "AdditionalPropertiesField" is rendered.
     if (!isAdditional) {
         return <>{children}</>;
     };
@@ -46,7 +47,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     const subFieldValue = (typeof formData === 'string' && formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
     const errorMessage = translate('Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError');
     const isDisabled = disabled || readonly;
-    const isRequired = required || formProps.schema?.isRequired;
+    const isRequired = required || Boolean(formProps.schema?.isRequired);
     const isMainFieldErrorDisplayed = isRequired && !mainFieldValue;
     const isSubFieldErrorDisplayed = isRequired && !subFieldValue;
 

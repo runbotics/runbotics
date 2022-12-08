@@ -4,8 +4,17 @@ import { Popper, PopperProps, TextField, Autocomplete } from '@mui/material';
 
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
-const AutocompleteWidget: FC<AutocompleteWidgetProps> = (props) => {
-    const { customErrors, rawErrors, label, required } = props;
+const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({ 
+    customErrors,
+    rawErrors,
+    label,
+    required,
+    value,
+    disabled,
+    options,
+    groupBy,
+    onChange,
+}) => {
     const [open, setOpen] = useState(false);
 
     const handleInputChange = (event: any, newInputValue: string) => {
@@ -20,8 +29,8 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = (props) => {
         setOpen(false);
     };
 
-    const onChange = (event: any, newValue: any) => {
-        props.onChange(newValue || undefined);
+    const handleChange = (event: any, newValue: any) => {
+        onChange(newValue || undefined);
     };
     return (
         <Autocomplete
@@ -32,23 +41,23 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = (props) => {
             autoHighlight
             open={open}
             freeSolo
-            value={props.value || ''}
-            onChange={onChange}
+            value={value || ''}
+            onChange={handleChange}
             onClose={handleOnClose}
-            disabled={props.disabled}
-            groupBy={props.groupBy}
+            disabled={disabled}
+            groupBy={groupBy}
             onInputChange={handleInputChange}
-            options={props.options['ui:options'] as any[]}
+            options={options['ui:options'] as any[]}
             renderInput={(params) => (
                 <TextField
                     {...params}
                     variant="outlined"
                     required={required}
                     label={label}
-                    onChange={(event) => onChange(event, event.target.value)}
+                    onChange={(event) => handleChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
-                    helperText={customErrors ? customErrors.map((customError) => customError) : null}
+                    helperText={customErrors ? customErrors[0] : null}
                 />
             )}
             PopperComponent={(popperProps: PopperProps) => (
