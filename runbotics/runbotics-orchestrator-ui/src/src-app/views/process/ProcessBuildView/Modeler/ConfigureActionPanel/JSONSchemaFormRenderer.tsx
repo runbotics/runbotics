@@ -13,7 +13,7 @@ import { useDispatch } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import AutocompleteWidget from './widgets/AutocompleteWidget';
+import AutocompleteWidget from './widgets/AutocompleteWidget/AutocompleteWidget';
 import FieldTemplate from './widgets/FieldTemplate';
 
 

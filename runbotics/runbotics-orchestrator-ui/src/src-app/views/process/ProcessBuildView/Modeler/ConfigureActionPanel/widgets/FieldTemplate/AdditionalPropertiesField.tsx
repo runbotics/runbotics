@@ -25,6 +25,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     onDropPropertyClick,
     onKeyChange,
     readonly,
+    required,
     schema,
 }) => {
     const { translate } = useTranslations();
@@ -45,6 +46,9 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     const subFieldValue = (typeof formData === 'string' && formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
     const errorMessage = translate('Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError');
     const isDisabled = disabled || readonly;
+    const isRequired = required || formProps.schema?.isRequired;
+    const isMainFieldErrorDisplayed = isRequired && !mainFieldValue;
+    const isSubFieldErrorDisplayed = isRequired && !subFieldValue;
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
@@ -53,7 +57,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
             <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    required
+                    required={isRequired}
                     variant="outlined"
                     label={mainFieldLabel ? mainFieldLabel : 'Key'}
                     size="medium"
@@ -65,15 +69,15 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                     onChange={handleMainFieldChange}
                     type="text"
                     InputLabelProps={{ shrink: true }}
-                    error={!mainFieldValue}
-                    helperText={!mainFieldValue && errorMessage}
+                    error={isMainFieldErrorDisplayed}
+                    helperText={isMainFieldErrorDisplayed ? errorMessage : null}
                 />
             </Grid>
             <Grid item xs={12}>
                 <ElementAwareAutocompleteWidget
                     {...formProps}
-                    required
-                    customErrors={!subFieldValue && [errorMessage]}
+                    required={isRequired}
+                    customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
                     label={subFieldLabel ? subFieldLabel : 'Value'}
                     defaultValue={subFieldValue}
                     value={subFieldValue}

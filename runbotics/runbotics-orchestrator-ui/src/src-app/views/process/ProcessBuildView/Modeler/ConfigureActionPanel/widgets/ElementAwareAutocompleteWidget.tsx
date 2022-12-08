@@ -7,10 +7,6 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import styled from 'styled-components';
 
-
-
-
-
 import If from '#src-app/components/utils/If';
 import useTranslations, { translate as t } from '#src-app/hooks/useTranslations';
 
@@ -21,7 +17,7 @@ import { currentProcessSelector } from '#src-app/store/slices/Process';
 
 import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
-import AutocompleteWidget from './AutocompleteWidget';
+import AutocompleteWidget from './AutocompleteWidget/AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 
