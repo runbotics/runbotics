@@ -17,7 +17,7 @@ import { currentProcessSelector } from '#src-app/store/slices/Process';
 
 import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
-import AutocompleteWidget from './AutocompleteWidget/AutocompleteWidget';
+import AutocompleteWidget from './AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 
