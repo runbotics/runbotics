@@ -1,0 +1,33 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  background-color: $palette-accent-primary;
+  display: flex;
+}
+
+.centeredWrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  @include font-face-base;
+  color: $text-color-light;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-h4;
+}
+
+.fontDark {
+  color: $text-color-dark;
+}
+
+.logosGrid {
+  display: flex;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+}
+
+.logoIcon {
+  max-width: 10rem;
+  height: auto;
+}

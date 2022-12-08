@@ -4,11 +4,13 @@ import Layout from '#src-landing/components/Layout';
 import TempLoginButton from '#src-landing/components/TempLoginButton/TempLoginButton';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import HeroSection from '#src-landing/views/sections/HeroSections';
+import IntegrationSection from '#src-landing/views/sections/IntegrationSections';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 
 const MainView = () => (
     <Layout>
         <HeroSection />
+        <IntegrationSection/>
         <BenefitsSection />
         <ProsSection />
         {/* Add your section here*/}
