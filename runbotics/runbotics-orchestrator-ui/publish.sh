@@ -7,7 +7,7 @@ PACKAGE_VERSION=$(cat package.json \
   | tr -d '[[:space:]]')
 echo Version is: $PACKAGE_VERSION
 
-sh build.sh
+sh build.sh $PACKAGE_VERSION
 
 echo "[INFO] runbotics-orchestrator-ui - Docker push started";
 docker push runbotics/runbotics-orchestrator-ui:${PACKAGE_VERSION}
