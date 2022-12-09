@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache Rush
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.rush
@@ -105,7 +105,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache Rush
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.rush
@@ -147,8 +147,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Cache Build Tools
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\Python311
+            C:\Windows\Microsoft.NET\Framework
+
       - name: Cache Rush
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.rush
