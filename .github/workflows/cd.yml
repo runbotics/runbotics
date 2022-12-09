@@ -54,11 +54,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Cache pnpm
+        uses: actions/cache@v3
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -98,11 +103,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Cache pnpm
+        uses: actions/cache@v3
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
