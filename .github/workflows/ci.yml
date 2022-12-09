@@ -70,10 +70,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: $RUSH install -t . --no-link
-
-      - name: Link dependencies
-        run: $RUSH link
+        run: $RUSH install -t .
 
       - name: Build
         run: $RUSH rebuild -t . --verbose
@@ -107,10 +104,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: $RUSH install -t . --no-link
-
-      - name: Link dependencies
-        run: $RUSH link
+        run: $RUSH install -t .
 
       - name: Build
         run: $RUSH rebuild -t . --verbose
@@ -150,10 +144,7 @@ jobs:
         run: npm config set msvs_version 2017
 
       - name: Install dependencies
-        run: $RUSH install -t . --no-link
-
-      - name: Link dependencies
-        run: $RUSH link
+        run: $RUSH install -t .
 
       - name: Build
         run: $RUSH rebuild -t . --verbose
