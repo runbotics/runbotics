@@ -144,10 +144,10 @@ jobs:
         run: npm config set msvs_version 2017
 
       - name: Install dependencies
-        run: $RUSH install -t .
+        run: ${{ env.RUSH }} install -t .
 
       - name: Build
-        run: $RUSH rebuild -t . --verbose
+        run: ${{ env.RUSH }} rebuild -t . --verbose
 
 
 
