@@ -368,8 +368,7 @@
         },
         {
             "packageName": "runbotics-common",
-            "projectFolder": "runbotics-common",
-            "shouldPublish": false
+            "projectFolder": "runbotics-common"
         },
         {
             "packageName": "runbotics-actions-windows",
@@ -377,7 +376,6 @@
         },
         {
             "packageName": "runbotics-sdk",
-            "shouldPublish": false,
             "projectFolder": "runbotics-sdk"
         },
         {

@@ -8,14 +8,21 @@ USER node
 
 RUN rm -rf runbotics-orchestrator-ui/.next
 
-RUN node common/scripts/install-run-rush.js install -t runbotics-orchestrator-ui
+ENV rush='node common/scripts/install-run-rush.js'
+ENV deploy_target='common/deploy/runbotics-orchestrator-ui'
 
-WORKDIR /usr/src/app/runbotics-orchestrator-ui
+RUN $rush install -t runbotics-orchestrator-ui
 
-RUN node ../common/scripts/install-run-rushx.js build
-RUN mkdir -p ../common/deploy/runbotics-orchestrator-ui;
+RUN $rush rebuild -t runbotics-orchestrator-ui
 
-RUN node ../common/scripts/install-run-rush.js deploy --scenario runbotics-orchestrator-ui --overwrite --target-folder ../common/deploy/runbotics-orchestrator-ui;
+RUN mkdir -p $deploy_target
+
+RUN $rush deploy \
+    --overwrite \
+    --scenario runbotics-orchestrator-ui \
+    --target-folder $deploy_target
+
+
 
 FROM node:14-alpine AS runner
 
