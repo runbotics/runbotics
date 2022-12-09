@@ -28,7 +28,6 @@ jobs:
           filters: |
             ui:
               - 'runbotics/runbotics-orchestrator-ui/**'
-              - 'runbotics/runboticskit/**'
               - 'runbotics/runbotics-common/**'
             scheduler:
               - 'runbotics/runbotics-scheduler/**'
