@@ -54,10 +54,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node $NODE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Login to DockerHub
@@ -79,7 +79,7 @@ jobs:
           push: true
           tags: |
             runbotics/runbotics-orchestrator-ui:latest
-            runbotics/runbotics-orchestrator-ui:$PACKAGE_VERSION
+            runbotics/runbotics-orchestrator-ui:${{ env.PACKAGE_VERSION }}
 
   push-scheduler:
     needs: changes-detection
@@ -98,10 +98,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node $NODE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Login to DockerHub

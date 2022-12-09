@@ -7,7 +7,7 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
-  PACKAGE_VERSION: 14.x
+  NODE_VERSION: 14.x
 
 jobs:
   changes-detection:
@@ -61,10 +61,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node $PACKAGE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: $PACKAGE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Install dependencies
@@ -92,10 +92,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node $PACKAGE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: $PACKAGE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
       - name: Install dependencies
@@ -123,10 +123,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node $PACKAGE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: $PACKAGE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Choco install build tools
         run: choco install python visualcpp-build-tools -y
