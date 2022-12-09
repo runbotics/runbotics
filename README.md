@@ -6,7 +6,7 @@ RunBotics is a process automation application that allows you to easily create a
 
 RunBotics via open-source distribution model enables you to extend its basic functionalities with your own custom logic. Available self-hosting makes automation accessible to everyone in individual circumstances.
 
-![RunBotics screenshot](https://github.com/runbotics/runbotics/blob/master/public/3_process_build_running.png)
+![RunBotics screenshot](https://github.com/runbotics/runbotics/blob/master/public/process_build.png)
 
 See more at [runbotics.com](https://www.runbotics.com)
 
