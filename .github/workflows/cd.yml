@@ -7,6 +7,7 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
+  NODE_VERSION: 14.x
 
 jobs:
   changes-detection:
@@ -49,18 +50,15 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-orchestrator-ui
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node $NODE_VERSION
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $NODE_VERSION
+          cache: pnpm
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -81,7 +79,7 @@ jobs:
           push: true
           tags: |
             runbotics/runbotics-orchestrator-ui:latest
-            runbotics/runbotics-orchestrator-ui:${{ env.PACKAGE_VERSION }}
+            runbotics/runbotics-orchestrator-ui:$PACKAGE_VERSION
 
   push-scheduler:
     needs: changes-detection
@@ -96,18 +94,15 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-scheduler
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node $NODE_VERSION
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $NODE_VERSION
+          cache: pnpm
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -156,18 +151,14 @@ jobs:
   #     run:
   #       working-directory: ./runbotics/runbotics-desktop
 
-  #   strategy:
-  #     matrix:
-  #       node-version: ['14.x']
-
   #   steps:
   #     - name: Checkout
   #       uses: actions/checkout@v3
 
-  #     - name: Install Node ${{ matrix.node-version }}
+  #     - name: Install Node $NODE_VERSION
   #       uses: actions/setup-node@v3
   #       with:
-  #         node-version: ${{ matrix.node-version }}
+  #         node-version: $NODE_VERSION
 
   #     - name: Login to DockerHub
   #       uses: docker/login-action@v2

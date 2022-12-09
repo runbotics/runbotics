@@ -7,6 +7,7 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
+  PACKAGE_VERSION: 14.x
 
 jobs:
   changes-detection:
@@ -56,18 +57,15 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-orchestrator-ui
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node $PACKAGE_VERSION
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $PACKAGE_VERSION
+          cache: pnpm
 
       - name: Install dependencies
         run: $RUSH install -t .
@@ -90,18 +88,15 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-scheduler
 
-    strategy:
-      matrix:
-        node-version: ['14.x']     
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node $PACKAGE_VERSION
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $PACKAGE_VERSION
+          cache: pnpm
 
       - name: Install dependencies
         run: $RUSH install -t .
@@ -124,18 +119,14 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-desktop
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node $PACKAGE_VERSION
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: $PACKAGE_VERSION
 
       - name: Choco install build tools
         run: choco install python visualcpp-build-tools -y
