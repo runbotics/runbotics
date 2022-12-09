@@ -1,20 +1,43 @@
 @import "#src-landing/scss/main.scss";
 
+$LOGO_ICONS_NORMAL_SCALE: 0.95;
+$LOGO_ICONS_SMALL_SCALE: 0.7;
+$LOGO_ICONS_TINY_SCALE: 0.6;
+
+@mixin logoIcon($scale) {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: all 250ms ease;
+  transform: scale($scale);
+  &:hover {
+    transform: scale($scale + 0.1);
+  }
+}
+
 .root {
   background-color: $palette-accent-primary;
-  display: flex;
+}
+
+.arrowIcon {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
 }
 
 .centeredWrapper {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 
 .title {
   @include font-face-base;
   color: $text-color-light;
   font-weight: $font-weight-bold;
-  font-size: $font-size-h4;
+  font-size: $font-size-h2;
 }
 
 .fontDark {
@@ -22,12 +45,204 @@
 }
 
 .logosGrid {
-  display: flex;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(250px,1fr))
+  // repeat(5, 1fr)
+  // 50px auto 100px 1fr
 }
 
-.logoIcon {
-  max-width: 10rem;
-  height: auto;
+.logosGrid div {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.logosGrid div {
+  &:nth-child(1){
+    @include logoIcon($LOGO_ICONS_SMALL_SCALE);
+    background-image: url("/images/logos/sap-logo-light.svg");
+    
+    &:hover {
+      background-image: url("/images/logos/sap-logo.svg");
+    }
+  }
+
+  &:nth-child(2) {
+    @include logoIcon($LOGO_ICONS_NORMAL_SCALE);
+    background-image: url("/images/logos/beeoffice-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/beeoffice-logo.svg");
+    }
+  }
+
+  &:nth-child(3) {
+    @include logoIcon($LOGO_ICONS_NORMAL_SCALE);
+    background-image: url("/images/logos/sharepoint-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/sharepoint-logo.svg");
+    }
+  }
+
+  &:nth-child(4) {
+    @include logoIcon($LOGO_ICONS_TINY_SCALE);
+    background-image: url("/images/logos/excel-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/excel-logo.svg");
+    }
+  }
+  
+  &:nth-child(5) {
+    @include logoIcon($LOGO_ICONS_SMALL_SCALE);
+    background-image: url("/images/logos/jira-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/jira-logo.svg");
+    }
+  }
+
+  &:nth-child(6) {
+    @include logoIcon($LOGO_ICONS_NORMAL_SCALE);
+    background-image: url("/images/logos/googlesheets-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/googlesheets-logo.svg");
+    }
+  }
+  
+  &:nth-child(7) {
+    @include logoIcon($LOGO_ICONS_SMALL_SCALE);
+    background-image: url("/images/logos/asana-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/asana-logo.svg");
+    }
+  }
+
+  &:nth-child(8) {
+    @include logoIcon($LOGO_ICONS_TINY_SCALE);
+    background-image: url("/images/logos/powerpoint-logo-light.svg");
+    &:hover {
+      background-image: url("/images/logos/powerpoint-logo.svg");
+    }
+  }
+}
+
+@media only screen and (min-width: $breakpoint-xl) {
+  $ARROW_ICON_WIDTH: 500px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-xl){
+  $ARROW_ICON_WIDTH: 500px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+
+  .centeredWrapper {
+    padding-bottom: $padding-10;
+    padding-left: $padding-10;
+    padding-right: $padding-10;
+  }
+
+  .title {
+    padding-top: $padding-6;
+    margin-left: $margin-5;
+  }
+
+  .logosGrid {
+    margin-top: $margin-7;
+    grid-gap: $margin-8;
+    margin-bottom: $margin-7;
+  }
+
+  .logosGrid div {
+    padding: $padding-5;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-lg){
+  $ARROW_ICON_WIDTH: 400px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+
+    .logosGrid {
+    grid-gap: $margin-3;
+    margin-bottom: $margin-3;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-md){
+  $ARROW_ICON_WIDTH: 350px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+
+  .logosGrid {
+    grid-gap: $margin-3;
+    margin-bottom: $margin-3;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-sm){
+  $ARROW_ICON_WIDTH: 300px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+
+  .centeredWrapper {
+    padding-bottom: $padding-4;
+    padding-left: $padding-4;
+    padding-right: $padding-4;
+  }
+
+  .title {
+    padding-top: $padding-2;
+    margin-left: $margin-2;
+  }
+
+  .logosGrid {
+    grid-gap: $margin-3;
+    margin-bottom: $margin-3;
+  }
+
+  .logosGrid div {
+    padding: $margin-2;
+  }
+}
+
+
+
+@media only screen and (max-width: $breakpoint-xs){
+  $ARROW_ICON_WIDTH: 200px;
+
+  .arrowIconWrapper {
+    width: $ARROW_ICON_WIDTH;
+  }
+
+  .centeredWrapper {
+    padding-bottom: $padding-0;
+    padding-left: $padding-0;
+    padding-right: $padding-0;
+  }
+
+  .title {
+    padding-top: $padding-0;
+    margin-left: $margin-0;
+  }
+
+  .logosGrid {
+    grid-gap: $margin-0;
+    margin-bottom: $margin-0;
+  }
+
+  .logosGrid div {
+    padding: $margin-0;
+  }
 }
