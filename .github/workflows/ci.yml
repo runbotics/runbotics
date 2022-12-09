@@ -1,12 +1,13 @@
 name: CI
 
 on:
-  push:
-    branches: ["develop", "master"]
   pull_request:
     branches: ["develop", "master"]
   workflow_dispatch:
-        
+
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+
 jobs:
   changes-detection:
     runs-on: ubuntu-latest
@@ -69,12 +70,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t . --no-link
+
+      - name: Link dependencies
+        run: $RUSH link
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t . --verbose
 
 
 
@@ -105,12 +107,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t . --no-link
+
+      - name: Link dependencies
+        run: $RUSH link
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t . --verbose
 
 
 
@@ -147,12 +150,13 @@ jobs:
         run: npm config set msvs_version 2017
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t . --no-link
+
+      - name: Link dependencies
+        run: $RUSH link
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t . --verbose
 
 
 

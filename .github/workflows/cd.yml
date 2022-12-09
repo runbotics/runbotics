@@ -5,6 +5,9 @@ on:
     branches: ['develop', 'master']
   workflow_dispatch:
 
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+
 jobs:
   changes-detection:
     runs-on: ubuntu-latest
@@ -113,15 +116,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Install dependencies
-        run: node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t .
 
       - name: Build
-        run: node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t .
 
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-scheduler
-          node ../common/scripts/install-run-rush.js deploy --scenario runbotics-scheduler --overwrite  --target-folder ../common/deploy/runbotics-scheduler
+          $RUSH deploy --scenario runbotics-scheduler \
+            --target-folder ../common/deploy/runbotics-scheduler \
+            --overwrite
 
       - name: Assign package version
         uses: nyaa8/package-version@v1
@@ -177,15 +182,15 @@ jobs:
   #       run: npm config set msvs_version 2017
 
   #     - name: Install dependencies
-  #       run: node ../common/scripts/install-run-rush.js install -t .
+  #       run: $RUSH install -t .
 
   #     - name: Build
-  #       run: node ../common/scripts/install-run-rush.js build -t .
+  #       run: $RUSH rebuild -t .
 
   #     - name: Rush deploy
   #       run: |
   #         mkdir -p ../common/deploy/runbotics-desktop
-  #         node ../common/scripts/install-run-rush.js deploy --overwrite  --target-folder ../common/deploy/runbotics-desktop
+  #         $RUSH deploy --overwrite --target-folder ../common/deploy/runbotics-desktop
 
   #     - name: Assign package version
   #       uses: nyaa8/package-version@v1
