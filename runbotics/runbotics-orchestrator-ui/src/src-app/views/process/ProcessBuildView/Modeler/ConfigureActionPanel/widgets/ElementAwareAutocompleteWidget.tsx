@@ -7,10 +7,6 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import styled from 'styled-components';
 
-
-
-
-
 import If from '#src-app/components/utils/If';
 import useTranslations, { translate as t } from '#src-app/hooks/useTranslations';
 
@@ -95,6 +91,7 @@ interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
         info?: string;
     }
+    customErrors?: string[];
 }
 
 const AutocompleteWrapper = styled.div`
