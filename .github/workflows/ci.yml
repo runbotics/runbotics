@@ -264,4 +264,4 @@ jobs:
       - name: Build
         run: |
           chmod +x ./gradlew
-          ./gradlew build --no-deamon -x test -x integrationTest -x compileTestJava
+          ./gradlew build --no-daemon -x test -x integrationTest -x compileTestJava
