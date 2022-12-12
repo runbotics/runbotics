@@ -54,12 +54,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Cache pnpm
-        uses: actions/cache@v3
-        with:
-          path: runbotics/common/temp/pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
-
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
@@ -102,12 +96,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Cache pnpm
-        uses: actions/cache@v3
-        with:
-          path: runbotics/common/temp/pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
 
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
@@ -226,11 +214,10 @@ jobs:
       run:
         working-directory: ./runbotics-orchestrator
 
-    strategy:
-      matrix:
-        java-version: [11]
-        java-distribution: ['adopt']
-        gradle-version: ['6.8.3']
+    env:
+      JAVA_VERSION: 11
+      JAVA_DISTRIBUTION: 'adopt'
+      GRADLE_VERSION: '6.8.3'
 
     steps:
       - name: Checkout
@@ -245,13 +232,13 @@ jobs:
       - name: Install Java JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java-version }}
-          distribution: ${{ matrix.java-distribution }}
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       - name: Install gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: ${{ matrix.gradle-version }}
+          gradle-version: ${{ env.GRADLE_VERSION }}
 
       - name: Build
         run: gradle bootJar -Pprod jibDockerBuild
