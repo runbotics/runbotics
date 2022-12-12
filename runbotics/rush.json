@@ -24,7 +24,7 @@
    * Specify one of: "pnpmVersion", "npmVersion", or "yarnVersion".  See the Rush documentation
    * for details about these alternatives.
    */
-    "pnpmVersion": "7.14.2",
+    "pnpmVersion": "7.18.1",
     // "npmVersion": "4.5.0",
     // "yarnVersion": "1.9.4",
     /**
@@ -368,8 +368,7 @@
         },
         {
             "packageName": "runbotics-common",
-            "projectFolder": "runbotics-common",
-            "shouldPublish": false
+            "projectFolder": "runbotics-common"
         },
         {
             "packageName": "runbotics-actions-windows",
@@ -377,7 +376,6 @@
         },
         {
             "packageName": "runbotics-sdk",
-            "shouldPublish": false,
             "projectFolder": "runbotics-sdk"
         },
         {

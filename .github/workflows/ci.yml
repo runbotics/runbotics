@@ -1,12 +1,14 @@
 name: CI
 
 on:
-  push:
-    branches: ["develop", "master"]
   pull_request:
     branches: ["develop", "master"]
   workflow_dispatch:
-        
+
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+  NODE_VERSION: 14.x
+
 jobs:
   changes-detection:
     runs-on: ubuntu-latest
@@ -55,26 +57,57 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-orchestrator-ui
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-
+
+      - name: Cache Next.js
+        id: cache-next
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-next
+        with:
+          path: runbotics/runbotics-orchestrator-ui/.next/cache
+          key: |
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}-${{ hashFiles('runbotics/runbotics-orchestrator-ui/**.[jt]s', 'runbotics/runbotics-orchestrator-ui/**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}-
+
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t .
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t . --verbose
 
 
 
@@ -91,26 +124,45 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-scheduler
 
-    strategy:
-      matrix:
-        node-version: ['14.x']     
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
+
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t .
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t . --verbose
 
 
 
@@ -127,32 +179,56 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-desktop
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-
+
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
       - name: Choco install build tools
-        run: choco install python visualcpp-build-tools -y
+        run: choco install visualcpp-build-tools -y
 
       - name: Set npm config VS version
         run: npm config set msvs_version 2017
 
       - name: Install dependencies
-        run: |
-          node ../common/scripts/install-run-rush.js install -t .
+        run: ${{ env.RUSH }} install -t .
 
       - name: Build
-        run: |
-          node ../common/scripts/install-run-rush.js build -t .
+        run: ${{ env.RUSH }} rebuild -t . --verbose
 
 
 
@@ -169,26 +245,35 @@ jobs:
       run:
         working-directory: ./runbotics-orchestrator
 
-    strategy:
-      matrix:
-        java-version: [11]
-        java-distribution: ['adopt']
-        gradle-version: ['6.8.3']
+    env:
+      JAVA_VERSION: 11
+      JAVA_DISTRIBUTION: 'adopt'
+      GRADLE_VERSION: '6.8.3'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Java JDK
+      - name: Install Java ${{ env.JAVA_VERSION }} JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java-version }}
-          distribution: ${{ matrix.java-distribution }}
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: gradle
 
-      - name: Install gradle
-        uses: gradle/gradle-build-action@v2
+      - name: Cache NPM dependencies
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-npm
         with:
-          gradle-version: ${{ matrix.gradle-version }}
+          path: ~/.npm
+          key: |
+            ${{ runner.os }}-api-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics-orchestrator/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-api-${{ env.CACHE_NAME }}-
 
       - name: Build
-        run: gradle build -x test -x integrationTest -x compileTestJava
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build -x test -x integrationTest -x compileTestJava
