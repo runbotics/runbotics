@@ -262,4 +262,6 @@ jobs:
           cache: gradle
 
       - name: Build
-        run: ./gradlew build --no-deamon -x test -x integrationTest -x compileTestJava
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build --no-deamon -x test -x integrationTest -x compileTestJava
