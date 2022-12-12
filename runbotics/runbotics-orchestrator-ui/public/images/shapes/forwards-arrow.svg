@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="arrow_forward_ios_black_24dp"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   version="1.1"
+   sodipodi:docname="forwards-arrow.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="false" />
+  <g
+     id="Group_187"
+     data-name="Group 187"
+     transform="matrix(-1,0,0,1,24,0)">
+    <path
+       id="Path_326"
+       data-name="Path 326"
+       d="M 24,0 H 0 v 24 h 24 z"
+       fill="none" />
+  </g>
+  <g
+     id="Group_188"
+     data-name="Group 188"
+     transform="matrix(-1,0,0,1,18,2)">
+    <path
+       id="Path_327"
+       data-name="Path 327"
+       d="M 18,20.23 16.23,22 6.23,12 16.23,2 18,3.77 9.77,12 Z"
+       transform="translate(-6.23,-2)" />
+  </g>
+</svg>

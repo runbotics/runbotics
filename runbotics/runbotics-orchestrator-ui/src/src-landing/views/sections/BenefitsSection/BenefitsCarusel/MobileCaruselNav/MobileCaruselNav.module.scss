@@ -1,0 +1,22 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  display: none;
+}
+
+.counter {
+  composes: counter from "../BenefitsCarusel.module.scss";
+}
+
+.counterCurrent {
+  composes: counterCurrent from "../BenefitsCarusel.module.scss";
+}
+
+@media (max-width: $breakpoint-sm) {
+  .root {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    width: 100%;
+  }
+}
