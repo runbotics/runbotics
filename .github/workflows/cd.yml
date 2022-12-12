@@ -5,6 +5,10 @@ on:
     branches: ['develop', 'master']
   workflow_dispatch:
 
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+  NODE_VERSION: 14.x
+
 jobs:
   changes-detection:
     runs-on: ubuntu-latest
@@ -46,18 +50,14 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-orchestrator-ui
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -93,18 +93,14 @@ jobs:
       run:
         working-directory: ./runbotics/runbotics-scheduler
 
-    strategy:
-      matrix:
-        node-version: ['14.x']
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ matrix.node-version }}
+      - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -113,15 +109,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Install dependencies
-        run: node ../common/scripts/install-run-rush.js install -t .
+        run: $RUSH install -t .
 
       - name: Build
-        run: node ../common/scripts/install-run-rush.js build -t .
+        run: $RUSH rebuild -t .
 
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-scheduler
-          node ../common/scripts/install-run-rush.js deploy --scenario runbotics-scheduler --overwrite  --target-folder ../common/deploy/runbotics-scheduler
+          $RUSH deploy --scenario runbotics-scheduler \
+            --target-folder ../common/deploy/runbotics-scheduler \
+            --overwrite
 
       - name: Assign package version
         uses: nyaa8/package-version@v1
@@ -151,18 +149,14 @@ jobs:
   #     run:
   #       working-directory: ./runbotics/runbotics-desktop
 
-  #   strategy:
-  #     matrix:
-  #       node-version: ['14.x']
-
   #   steps:
   #     - name: Checkout
   #       uses: actions/checkout@v3
 
-  #     - name: Install Node ${{ matrix.node-version }}
+  #     - name: Install Node $NODE_VERSION
   #       uses: actions/setup-node@v3
   #       with:
-  #         node-version: ${{ matrix.node-version }}
+  #         node-version: $NODE_VERSION
 
   #     - name: Login to DockerHub
   #       uses: docker/login-action@v2
@@ -177,15 +171,15 @@ jobs:
   #       run: npm config set msvs_version 2017
 
   #     - name: Install dependencies
-  #       run: node ../common/scripts/install-run-rush.js install -t .
+  #       run: $RUSH install -t .
 
   #     - name: Build
-  #       run: node ../common/scripts/install-run-rush.js build -t .
+  #       run: $RUSH rebuild -t .
 
   #     - name: Rush deploy
   #       run: |
   #         mkdir -p ../common/deploy/runbotics-desktop
-  #         node ../common/scripts/install-run-rush.js deploy --overwrite  --target-folder ../common/deploy/runbotics-desktop
+  #         $RUSH deploy --overwrite --target-folder ../common/deploy/runbotics-desktop
 
   #     - name: Assign package version
   #       uses: nyaa8/package-version@v1
@@ -220,11 +214,10 @@ jobs:
       run:
         working-directory: ./runbotics-orchestrator
 
-    strategy:
-      matrix:
-        java-version: [11]
-        java-distribution: ['adopt']
-        gradle-version: ['6.8.3']
+    env:
+      JAVA_VERSION: 11
+      JAVA_DISTRIBUTION: 'adopt'
+      GRADLE_VERSION: '6.8.3'
 
     steps:
       - name: Checkout
@@ -239,13 +232,13 @@ jobs:
       - name: Install Java JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java-version }}
-          distribution: ${{ matrix.java-distribution }}
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       - name: Install gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: ${{ matrix.gradle-version }}
+          gradle-version: ${{ env.GRADLE_VERSION }}
 
       - name: Build
         run: gradle bootJar -Pprod jibDockerBuild

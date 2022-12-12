@@ -5,7 +5,6 @@
         "./runbotics/runbotics-orchestrator-ui",
         "./runbotics/runbotics-common",
         "./runbotics/runbotics-actions-windows",
-        "./runbotics/runbotics-sdk",
-        "./runbotics/runboticskit"
+        "./runbotics/runbotics-sdk"
     ],
 }

@@ -5,8 +5,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-
-    "version": "2.4.0-SNAPSHOT.13",
+    "version": "2.4.0-SNAPSHOT.14",
     "private": true,
     "sideEffects": false,
     "scripts": {
@@ -85,7 +84,6 @@
         "redux-thunk": "^2.3.0",
         "uuid": "^8.3.2",
         "yup": "^0.32.11",
-        "runboticskit": "workspace:*",
         "diagram-js": "^7.2.3",
         "inherits": "^2.0.4",
         "min-dash": "^3.7.0",

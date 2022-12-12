@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  runbotics-postgresql:
+    container_name: runbotics-postgresql
+    image: postgres:13.2
+    volumes:
+      - runbotics:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=runbotics
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:5432:5432
+
+  runbotics-redis:
+    container_name: runbotics-redis
+    image: redis:6
+    ports:
+      - 6379:6379
+
+volumes:
+  runbotics:
+    external: true
+
+networks:
+  default:
+    name: runbotics
+    attachable: true
