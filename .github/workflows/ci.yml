@@ -261,6 +261,18 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: gradle
 
+      - name: Cache NPM dependencies
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-npm
+        with:
+          path: ~/.npm
+          key: |
+            ${{ runner.os }}-api-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics-orchestrator/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-api-${{ env.CACHE_NAME }}-
+
       - name: Build
         run: |
           chmod +x ./gradlew
