@@ -10,6 +10,7 @@ import ProsSection from '#src-landing/views/sections/ProsSection';
 const MainView = () => (
     <Layout>
         <HeroSection />
+        <BenefitsSection />
         <IntegrationSection/>
         <BenefitsSection />
         <ProsSection />

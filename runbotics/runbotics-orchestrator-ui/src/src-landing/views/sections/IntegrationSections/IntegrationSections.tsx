@@ -25,11 +25,11 @@ const IntegrationSection: FC = () => {
             <div className={styles.centeredWrapper}>
                 <Typography className={styles.title}>
                     {translate('Landing.Integration.Title.Part.1')}
-                    {' '}
+                    &nbsp;
                     <span className={styles.fontDark}>
                         {translate('Landing.Integration.Title.Part.2')}
                     </span>
-                    {' '}
+                    &nbsp;
                     {translate('Landing.Integration.Title.Part.3')}
                 </Typography>
                 <div className={styles.logosGrid}>
