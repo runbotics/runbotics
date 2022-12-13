@@ -10,7 +10,7 @@ import styles from './BenefitsContent.module.scss';
 
 
 const BenefitsContent: FC = () => (
-    <div className={styles.root}>
+    <article className={styles.root}>
         <Typography variant="h2" className={styles.title}>
             {translate('Landing.Benefits.Title')}
         </Typography>
@@ -23,7 +23,7 @@ const BenefitsContent: FC = () => (
             </Typography>
         </div>
         <Image src={benefitsArrows} className={styles.arrows} alt="" />
-    </div>
+    </article>
 );
 
 export default BenefitsContent;

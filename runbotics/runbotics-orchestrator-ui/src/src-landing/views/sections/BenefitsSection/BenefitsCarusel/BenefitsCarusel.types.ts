@@ -1,15 +1,10 @@
+import benefitsTranslation from '#src-landing/translations/en/benefits.json';
 
-type SlideTitleKey = 'Landing.Benefits.Slides.Repetitive.Title'
-    | 'Landing.Benefits.Slides.Efficiency.Title'
-    | 'Landing.Benefits.Slides.Accuracy.Title';
-
-type SlideDescriptionKey = 'Landing.Benefits.Slides.Repetitive.Description'
-    | 'Landing.Benefits.Slides.Efficiency.Description'
-    | 'Landing.Benefits.Slides.Accuracy.Description';
+type SlideTranslationKey = keyof typeof benefitsTranslation;
 
 export interface Slide {
-    titleKey: SlideTitleKey;
-    descriptionKey: SlideDescriptionKey;
+    titleKey: SlideTranslationKey;
+    descriptionKey: SlideTranslationKey;
     imageSrc: string;
     imageAlt: string;
 };

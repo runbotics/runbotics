@@ -57,7 +57,7 @@ const BenefitsCarusel: FC = () => {
                 <CaruselButton direction="backward" onClick={decrementSlide} />
             </div>  
             <div className={styles.contentWrapper}>
-                <div className={styles.content}>
+                <article className={styles.content}>
                     <div className={styles.iconWrapper}>
                         <Image src={SLIDES[currentSlide].imageSrc} height={36} width={36} alt={SLIDES[currentSlide].imageAlt}/>
                     </div>
@@ -67,7 +67,7 @@ const BenefitsCarusel: FC = () => {
                     <Typography variant="body3" className={styles.description} font="Roboto">
                         {translate(SLIDES[currentSlide].descriptionKey)}
                     </Typography>
-                </div>
+                </article>
             </div>
             <div className={styles.buttonWrapper}>
                 <CaruselButton direction="forward" onClick={incrementSlide} />

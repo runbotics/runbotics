@@ -4,7 +4,6 @@
   composes: root from "#src-landing/components/SectionContent/SectionContent.module.scss";
   display: grid;
   height: initial;
-  padding: 136px 0;
   grid-template-columns: repeat(
     auto-fit,
     minmax(calc($breakpoint-md / 2), 1fr)
