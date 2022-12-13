@@ -56,8 +56,14 @@
   }
   &__body2 {
     font-size: $font-size-body2;
+    line-height: $line-height-body2;
+  }
+
+  &__body3 {
+    font-size: $font-size-body3;
     line-height: $line-height-base;
   }
+
   &__Roboto {
     @include font-face-roboto;
   }

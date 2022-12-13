@@ -7,6 +7,7 @@ import { default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 
+import Script from 'next/script';
 import { I18nextProvider } from 'react-i18next';
 
 import { Provider } from 'react-redux';
@@ -30,6 +31,7 @@ import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 const { publicRuntimeConfig } = getConfig();
 
 import '#src-app/theme/cronStyles.css';
+import '#src-landing/scss/main.scss';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;
@@ -73,6 +75,7 @@ function App(props: AppProps) {
                     </SettingsProvider>
                 </Provider>
             </CacheProvider>
+            <Script src="https://cdn.jsdelivr.net/npm/container-query-polyfill@1/dist/container-query-polyfill.modern.js"/>
         </div>
     );
 }
