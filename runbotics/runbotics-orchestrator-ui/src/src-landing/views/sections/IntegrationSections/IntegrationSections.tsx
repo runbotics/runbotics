@@ -33,14 +33,14 @@ const IntegrationSection: FC = () => {
                     {translate('Landing.Integration.Title.Part.3')}
                 </Typography>
                 <div className={styles.logosGrid}>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
-                    <div/>
+                    <div className={styles.sapLogo}/>
+                    <div className={styles.beeofficeLogo}/>
+                    <div className={styles.jiraLogo}/>
+                    <div className={styles.asanaLogo}/>
+                    <div className={styles.sharepointLogo}/>
+                    <div className={styles.googlesheetsLogo}/>
+                    <div className={styles.excelLogo}/>
+                    <div className={styles.powerpointLogo}/>
                 </div>
             </div>
         </section>
