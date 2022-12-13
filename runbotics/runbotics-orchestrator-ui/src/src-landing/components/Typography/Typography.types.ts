@@ -7,7 +7,8 @@ type TypographyVariant =
     'h6' |
     'p' |
     'body1' |
-    'body2'
+    'body2' |
+    'body3'
 
 type TypographyColor =
     'primary' |

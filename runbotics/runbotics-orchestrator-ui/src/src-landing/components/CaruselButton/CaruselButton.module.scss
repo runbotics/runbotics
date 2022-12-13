@@ -1,0 +1,21 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  box-shadow: $box-shadow-primary;
+  background-color: $palette-background-primary;
+  padding: 12px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $box-shadow-primary;
+  }
+}

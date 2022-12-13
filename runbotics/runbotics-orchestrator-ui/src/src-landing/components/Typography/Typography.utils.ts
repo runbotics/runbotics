@@ -8,4 +8,5 @@ export const typographyVariantsMap = {
     'p': 'p',
     'body1': 'p',
     'body2': 'p',
+    'body3': 'p',
 } as const;
