@@ -64,4 +64,3 @@ common/temp/
 common/autoinstallers/*/.npmrc
 **/.rush/temp/
 common/changes/
-dist

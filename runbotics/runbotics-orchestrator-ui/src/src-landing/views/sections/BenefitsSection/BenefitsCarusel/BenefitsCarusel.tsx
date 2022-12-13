@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -32,7 +32,7 @@ const SLIDES: Slide[] = [
 ];
 
 const BenefitsCarusel: FC = () => {
-    const [currentSlide, setCurrentSlide] = React.useState(0);
+    const [currentSlide, setCurrentSlide] = useState(0);
 
     const incrementSlide = () => {
         if (currentSlide === SLIDES.length - 1) {

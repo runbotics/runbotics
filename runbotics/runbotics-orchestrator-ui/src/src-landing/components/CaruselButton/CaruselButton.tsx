@@ -10,10 +10,10 @@ import { CaruselButtonProps } from './CaruselButton.types';
 
 
 const CaruselButton: FC<CaruselButtonProps> = ({ onClick, direction }) => (
-    <button className={styles.root} onClick={() => onClick()}>
+    <button className={styles.root} onClick={onClick}>
         <Image 
             src={direction === 'forward' ? forwardArrow : backwardArrow} 
-            alt={`${direction}`} 
+            alt={direction} 
         />
     </button>
 );

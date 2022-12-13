@@ -1,6 +1,8 @@
+@import "#src-landing/scss/main.scss";
+
 .root {
-  box-shadow: 0px 16px 26px #0000000f;
-  background-color: #fff;
+  box-shadow: $box-shadow-primary;
+  background-color: $palette-background-primary;
   padding: 12px;
   border-radius: 50%;
   border: none;
@@ -14,6 +16,6 @@
 
   &:focus {
     outline: none;
-    box-shadow: 0px 16px 26px #0000000f;
+    box-shadow: $box-shadow-primary;
   }
 }
