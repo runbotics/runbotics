@@ -3,17 +3,21 @@ import React from 'react';
 import Layout from '#src-landing/components/Layout';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import HeroSection from '#src-landing/views/sections/HeroSections';
-
+import ProsSection from '#src-landing/views/sections/ProsSection';
+import Link from 'next/link';
+import TempLoginButton from './TempLoginButton';
 
 const MainView = () => (
-    <Layout>
-        <HeroSection />
-        <BenefitsSection />
-        {/* Add your section here*/}
+	<Layout>
+		<HeroSection />
+		<BenefitsSection />
+		<ProsSection />
+		{/* Add your section here*/}
 
-        {/* This div is used let us see if our section is contained */}
-        <div style={{ height:'100vh' }}></div>
-    </Layout>
+		{/* This div is used let us see if our section is contained */}
+		<div style={{ height: '100vh' }}></div>
+		<TempLoginButton />
+	</Layout>
 );
 
 export default MainView;
