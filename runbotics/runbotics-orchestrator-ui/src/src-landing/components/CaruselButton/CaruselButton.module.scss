@@ -1,22 +1,22 @@
 @import '#src-landing/scss/main.scss';
 
 .root {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 12px;
-	border: none;
-	border-radius: 50%;
-	background-color: $palette-background-primary;
-	box-shadow: $box-shadow-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border: none;
+  border-radius: 50%;
+  background-color: $palette-background-primary;
+  box-shadow: $box-shadow-primary;
 
-	&:hover {
-		cursor: pointer;
-		background-color: $palette-background-secondary;
-	}
+  &:hover {
+    cursor: pointer;
+    background-color: $palette-background-secondary;
+  }
 
-	&:focus {
-		outline: none;
-		box-shadow: $box-shadow-primary;
-	}
+  &:focus {
+    outline: none;
+    box-shadow: $box-shadow-primary;
+  }
 }
