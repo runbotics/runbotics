@@ -9,7 +9,7 @@ import heroTitleSrc from '#public/images/hero-RunBotics.png';
 import styles from './HeroBackground.module.scss';
 
 const HeroBackground: FC = ({ children }) => (
-    <section className={styles.root} id="hero">
+    <section className={styles.root} id="hero-section">
         <Image
             fill
             src={backgroundImageSrc}

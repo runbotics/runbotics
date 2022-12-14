@@ -69,7 +69,7 @@ const ProsSection = () => {
     const { translate } = useTranslations();
 
     return (
-        <section className={styles.root} id="pros">
+        <section className={styles.root} id="pros-section">
             <div className={styles.grid__head__1}></div>
             <div className={styles.grid__head__2}>
                 <Typography variant="h2">{translate('Landing.Pros.Title')}</Typography>
