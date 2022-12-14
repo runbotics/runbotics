@@ -69,10 +69,10 @@ const ProsSection = () => {
 	const { translate } = useTranslations();
 
 	return (
-		<section className={styles.root} id='pros'>
+		<section className={styles.root} id="pros">
 			<div className={styles.grid__head__1}></div>
 			<div className={styles.grid__head__2}>
-				<Typography variant='h2'>{translate('Landing.Pros.Title')}</Typography>
+				<Typography variant="h2">{translate('Landing.Pros.Title')}</Typography>
 			</div>
 			<div className={styles.grid__head__3}></div>
 			{TILES.map((tile) => (
@@ -83,8 +83,8 @@ const ProsSection = () => {
 						width={36}
 						height={36}
 					/>
-					<Typography variant='h4'>{translate(tile.title)}</Typography>
-					<Typography variant='body3' font='Roboto'>
+					<Typography variant="h4">{translate(tile.title)}</Typography>
+					<Typography variant="body3" font="Roboto">
 						{translate(tile.description)}
 					</Typography>
 				</GenericTile>
