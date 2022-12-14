@@ -10,28 +10,6 @@ RunBotics via open-source distribution model enables you to extend its basic fun
 
 See more at [runbotics.com](https://www.runbotics.com)
 
-## Installation
-
-### Requirements
-
-In order to run locally RunBotics you need to fulfill the following requirements on your development environment:
-
-- `Node.js 14`
-- `Java 11`
-- `windows-build-tools`
-- `@microsoft/rush`
-
-For more info see [runbotics](https://github.com/runbotics/runbotics/blob/master/runbotics/README.md) package details.
-
-### Packages
-
-RunBotics application relies on several packages. To get started see the instructions of each package listed below.
-
- - [runbotics-orchestrator](https://github.com/runbotics/runbotics/blob/master/runbotics-orchestrator) - CRUD API
- - [runbotics-orchestrator-ui](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-orchestrator-ui) - graphical interface for managing and building processes
- - [runbotics-scheduler](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-scheduler) - microservice focused on managing process execution
- - [runbotics-desktop](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-desktop) - standalone process executioner
-
 ## Contributing
 
 The main purpose of this repository is to continue evolving RunBotics. Development happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving RunBotics.
