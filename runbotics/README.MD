@@ -1,9 +1,9 @@
 # Prerequisites
 
-### windows-build-tools
+### Visual C++ Build Tools & Python
 
 ```bash
-$ npm install --global --production windows-build-tools
+$ choco install python visualcpp-build-tools
 ```
 
 ### @microsoft/rush
@@ -12,7 +12,7 @@ $ npm install --global --production windows-build-tools
 $ npm install --global @microsoft/rush
 ```
 
-### docker
+### Docker
 
 Install docker on your environment in a way that suits you then create a docker volume to save your local progress.
 
@@ -72,7 +72,8 @@ $ docker-compose -f db.yml down
 ```
 
 ### Services as containers
-Main docker compose [config](https://github.com/runbotics/runbotics/blob/master/runbotics/docker-compose.yml) provides all the packages as docker containers.
+Main docker compose [config](https://github.com/runbotics/runbotics/blob/master/runbotics/docker-compose.yml) provides the packages as docker containers, all you need to run by yourself is `runbotics-orchestrator-ui` to interact with app through user interface.
+
 ```bash
 # Create containers
 $ docker-compose up -d
