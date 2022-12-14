@@ -2,6 +2,8 @@
 
 $MIN-CARD-WIDTH: 280px;
 $ONE-COLUMN-BREAKPOINT: 600px;
+$ARROWS-WIDTH: 375px;
+$ARROWS-HEIGHT: 63px;
 
 .root {
   composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
@@ -47,6 +49,19 @@ $ONE-COLUMN-BREAKPOINT: 600px;
   &__head__2 {
     composes: head;
     grid-column: 1 / 3;
+    position: relative;
+  }
+
+  &__head__2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 35%;
+    background-image: url('/images/shapes/pros-arrows.svg');
+    background-repeat: no-repeat;
+    width: $ARROWS_WIDTH;
+    height: $ARROWS_HEIGHT;
   }
 
   &__head__3 {
@@ -62,6 +77,12 @@ $ONE-COLUMN-BREAKPOINT: 600px;
 
   .grid__head__1 {
     display: none;
+  }
+
+  .grid__head__2::before {
+    margin-left: unset;
+    right: 0;
+    left: auto;
   }
 }
 
