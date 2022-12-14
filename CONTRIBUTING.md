@@ -5,12 +5,30 @@
 - Read the [contributing guidelines](https://github.com/runbotics/runbotics/blob/master/CONTRIBUTING.md)
 - Read the [Code of Conduct](https://github.com/runbotics/runbotics/blob/master/CODE_OF_CONDUCT.md)
 - Read the [Contributor License Agreement (CLA)](https://github.com/runbotics/runbotics/blob/master/CONTRIBUTOR_LICENSE_AGREEMENT.md)
+- Check existing issues to make sure you don't create a duplicate
 
-## How to start
+## Installation
 
-To see how to setup local environment see [instructions](https://github.com/runbotics/runbotics/blob/master/runbotics/README.md).
+### Requirements
 
-Check existing issues to make sure you don't create a duplicate.
+In order to run locally RunBotics you need to fulfill the following requirements on your development environment:
+
+- `Windows OS`
+- `Node.js 14`
+- `Java 11`
+- `Visual C++ Build Tools`
+- `@microsoft/rush`
+
+For more info see [runbotics](https://github.com/runbotics/runbotics/blob/master/runbotics/README.md) package details.
+
+### Packages
+
+RunBotics application relies on several packages. To get started see the instructions of each package listed below.
+
+ - [runbotics-orchestrator](https://github.com/runbotics/runbotics/blob/master/runbotics-orchestrator) - CRUD API
+ - [runbotics-orchestrator-ui](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-orchestrator-ui) - graphical interface for managing and building processes
+ - [runbotics-scheduler](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-scheduler) - microservice focused on managing process execution
+ - [runbotics-desktop](https://github.com/runbotics/runbotics/blob/master/runbotics/runbotics-desktop) - standalone process executioner
 
 ## Pull requests
 
