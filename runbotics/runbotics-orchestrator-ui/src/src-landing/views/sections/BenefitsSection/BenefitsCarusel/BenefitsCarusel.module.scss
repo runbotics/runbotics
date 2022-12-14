@@ -1,4 +1,4 @@
-@import "#src-landing/scss/main.scss";
+@import '#src-landing/scss/main.scss';
 
 $BEFORE-X-OFFSET: 20px;
 $BEFORE-Y-OFFSET: 40px;
@@ -11,133 +11,133 @@ $CONTENT-WRAPPER-WIDTH: 532px;
 $CARD-CONTAINER-ICON-QUERY: 325px;
 
 .root {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  isolation: isolate;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    isolation: isolate;
 }
 
 .buttonWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-right: $BEFORE-X-OFFSET;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: $BEFORE-X-OFFSET;
 }
 
 .contentWrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: $CONTENT-WRAPPER-WIDTH;
-  height: 100%;
-  min-height: 500px;
-  margin: 0 $margin-2;
-  // padding to offset border radius for correct word wrapping
-  padding: 90px 30px 70px 20px;
-  border-radius: $CARD-BORDER-RADIUS;
-  background-color: $palette-background-primary;
-  box-shadow: $box-shadow-primary;
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: $CONTENT-WRAPPER-WIDTH;
     height: 100%;
-    background-color: $palette-accent-secondary;
-    transform: translate(-$BEFORE-X-OFFSET, calc($BEFORE-Y-OFFSET - 90px));
+    min-height: 500px;
+    margin: 0 $margin-2;
+    // padding to offset border radius for correct word wrapping
+    padding: 90px 30px 70px 20px;
     border-radius: $CARD-BORDER-RADIUS;
-    z-index: -1;
-  }
+    background-color: $palette-background-primary;
+    box-shadow: $box-shadow-primary;
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: $palette-accent-secondary;
+        transform: translate(-$BEFORE-X-OFFSET, calc($BEFORE-Y-OFFSET - 90px));
+        border-radius: $CARD-BORDER-RADIUS;
+        z-index: -1;
+    }
 }
 
 .content {
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
 }
 
 .iconWrapper {
-  height: 100%;
-  display: flex;
-  justify-content: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .title {
-  max-width: $CARD-TEXT-MAX-WIDTH;
-  margin-bottom: $margin-6;
+    max-width: $CARD-TEXT-MAX-WIDTH;
+    margin-bottom: $margin-6;
 }
 
 .description {
-  max-width: $CARD-TEXT-MAX-WIDTH;
+    max-width: $CARD-TEXT-MAX-WIDTH;
 }
 
 .counter {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  font-size: $font-size-h2;
-  color: $text-color-gray;
-  font-weight: $font-weight-bold;
-  min-width: $COUNTER-MIN-WIDTH;
-  text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: $font-size-h2;
+    color: $text-color-gray;
+    font-weight: $font-weight-bold;
+    min-width: $COUNTER-MIN-WIDTH;
+    text-align: right;
 }
 
 .counterCurrent {
-  margin-right: $margin-1;
-  color: $palette-accent-primary;
-  font-weight: $font-weight-bold;
-  font-size: $font-size-h1;
+    margin-right: $margin-1;
+    color: $palette-accent-primary;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-h1;
 }
 
 //SCSS variables do not work inside container queries
 @container (max-width: 325px) {
-  .iconWrapper {
-    height: initial;
-  }
+    .iconWrapper {
+        height: initial;
+    }
 }
 
 @media (max-width: $breakpoint-sm) {
-  .root {
-    align-items: center;
-    flex-direction: column;
-    gap: $margin-8;
-  }
-
-  .buttonWrapper {
-    display: none;
-  }
-
-  .contentWrapper {
-    width: calc(100% - 20px);
-    max-width: 520px;
-
-    &::before {
-      transform: translate(-5px, calc(20px - 90px));
+    .root {
+        align-items: center;
+        flex-direction: column;
+        gap: $margin-8;
     }
-  }
 
-  .iconWrapper {
-    justify-content: flex-start;
-    margin-bottom: $margin-6;
-  }
+    .buttonWrapper {
+        display: none;
+    }
 
-  .content {
-    padding-left: $padding-4;
-  }
+    .contentWrapper {
+        width: calc(100% - 20px);
+        max-width: 520px;
 
-  .counter {
-    position: relative;
-    min-width: none;
-    text-align: center;
-  }
+        &::before {
+            transform: translate(-5px, calc(20px - 90px));
+        }
+    }
 
-  .mobileNavWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: flex-end;
-  }
+    .iconWrapper {
+        justify-content: flex-start;
+        margin-bottom: $margin-6;
+    }
+
+    .content {
+        padding-left: $padding-4;
+    }
+
+    .counter {
+        position: relative;
+        min-width: none;
+        text-align: center;
+    }
+
+    .mobileNavWrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: flex-end;
+    }
 }

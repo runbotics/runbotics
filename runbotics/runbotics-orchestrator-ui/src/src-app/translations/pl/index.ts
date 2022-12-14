@@ -1,5 +1,6 @@
 import benefitsTranslations from '#src-landing/translations/pl/benefits.json';
 import heroTranslations from '#src-landing/translations/pl/hero.json';
+import prosTranslations from '#src-landing/translations/pl/pros.json';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
@@ -34,6 +35,7 @@ const translationResources = {
     ...componentsTranslations,
     ...paletteTranslations,
     ...heroTranslations,
-    ...benefitsTranslations
+    ...benefitsTranslations,
+    ...prosTranslations,
 };
 export default translationResources;
