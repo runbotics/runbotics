@@ -5,7 +5,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.4.0-SNAPSHOT.15",
+    "version": "2.4.0-SNAPSHOT.16",
     "private": true,
     "sideEffects": false,
     "scripts": {

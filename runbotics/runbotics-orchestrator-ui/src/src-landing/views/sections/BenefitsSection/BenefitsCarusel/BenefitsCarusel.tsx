@@ -18,17 +18,17 @@ const SLIDES: Slide[] = [
         titleKey: 'Landing.Benefits.Slides.Repetitive.Title',
     },
     {
-        descriptionKey: 'Landing.Benefits.Slides.Efficiency.Description',        
+        descriptionKey: 'Landing.Benefits.Slides.Efficiency.Description',
         imageSrc: '/images/shapes/hourglass.svg',
         imageAlt: 'Hourglass icon',
         titleKey: 'Landing.Benefits.Slides.Efficiency.Title',
     },
     {
-        descriptionKey: 'Landing.Benefits.Slides.Accuracy.Description',        
+        descriptionKey: 'Landing.Benefits.Slides.Accuracy.Description',
         imageSrc: '/images/shapes/layers.svg',
         imageAlt: 'Layers icon',
         titleKey: 'Landing.Benefits.Slides.Accuracy.Title',
-    }
+    },
 ];
 
 const BenefitsCarusel: FC = () => {
@@ -49,22 +49,34 @@ const BenefitsCarusel: FC = () => {
             setCurrentSlide(currentSlide - 1);
         }
     };
-    
 
     return (
         <div className={styles.root}>
             <div className={styles.buttonWrapper}>
                 <CaruselButton direction="backward" onClick={decrementSlide} />
-            </div>  
+            </div>
             <div className={styles.contentWrapper}>
                 <article className={styles.content}>
                     <div className={styles.iconWrapper}>
-                        <Image src={SLIDES[currentSlide].imageSrc} height={36} width={36} alt={SLIDES[currentSlide].imageAlt}/>
+                        <Image
+                            src={SLIDES[currentSlide].imageSrc}
+                            height={36}
+                            width={36}
+                            alt={SLIDES[currentSlide].imageAlt}
+                        />
                     </div>
-                    <Typography variant="h3" className={styles.title} color="accent">
+                    <Typography
+                        variant="h3"
+                        className={styles.title}
+                        color="accent"
+                    >
                         {translate(SLIDES[currentSlide].titleKey)}
                     </Typography>
-                    <Typography variant="body3" className={styles.description} font="Roboto">
+                    <Typography
+                        variant="body3"
+                        className={styles.description}
+                        font="Roboto"
+                    >
                         {translate(SLIDES[currentSlide].descriptionKey)}
                     </Typography>
                 </article>
@@ -72,10 +84,14 @@ const BenefitsCarusel: FC = () => {
             <div className={styles.buttonWrapper}>
                 <CaruselButton direction="forward" onClick={incrementSlide} />
                 <Typography variant="body1" className={styles.counter}>
-                    <span className={styles.counterCurrent}>{currentSlide + 1}</span> / {SLIDES.length}
+                    <span className={styles.counterCurrent}>
+                        {currentSlide + 1}
+                    </span>
+                    /&nbsp;
+                    {SLIDES.length}
                 </Typography>
             </div>
-            <MobileCaruselNav 
+            <MobileCaruselNav
                 currentSlide={currentSlide}
                 decrementSlide={decrementSlide}
                 incrementSlide={incrementSlide}

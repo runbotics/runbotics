@@ -8,7 +8,6 @@ import Typography from '#src-landing/components/Typography';
 
 import styles from './BenefitsContent.module.scss';
 
-
 const BenefitsContent: FC = () => (
     <article className={styles.root}>
         <Typography variant="h2" className={styles.title}>

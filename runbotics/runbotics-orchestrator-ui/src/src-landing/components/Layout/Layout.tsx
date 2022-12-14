@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './Layout.module.scss';
 
-const Layout = ({children}) => (
+const Layout = ({ children }) => (
     <>
         <nav></nav>
         <main className={styles.main}>{children}</main>

@@ -13,15 +13,15 @@ const Typography: FC<TypographyProps> = ({
     text,
     ...props
 }) => {
-    const TypographyRoot = typographyVariantsMap[variant] || 'p'; 
+    const TypographyRoot = typographyVariantsMap[variant] || 'p';
     const classes = [
         styles.root,
         styles[`typography__${variant}`],
         styles[`typography__${color}`],
         styles[`typography__${font}`],
-        className ?? ''
+        className ?? '',
     ].join(' ');
-    
+
     return (
         <TypographyRoot className={classes} {...props}>
             {text ?? children}
