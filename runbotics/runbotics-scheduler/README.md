@@ -15,6 +15,8 @@ The `runbotics-scheduler` package based on [Nest.js](https://nestjs.com) is resp
 - process scheduling
 - process termination
 
+It is available at `http://localhost:4000`.
+
 ## Running the app
 
 ```bash

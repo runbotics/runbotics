@@ -63,7 +63,7 @@ services:
     container_name: runbotics-desktop
     image: runbotics/runbotics-desktop:latest
     environment:
-      - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:3000
+      - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=admin
@@ -73,6 +73,7 @@ services:
       - RUNBOTICS_BOT_SYSTEM=LINUX
       - RUNBOTICS_LOGGER=winston
       - RUNBOTICS_EXTENSION_DIR=./extensions
+    restart: on-failure
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator

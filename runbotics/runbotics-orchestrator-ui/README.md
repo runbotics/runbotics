@@ -1,6 +1,6 @@
 ## Description
 
-The `runbotics-orchestrator-ui` package based on [Next.js](https://nextjs.org/) is a RunBotics frontend application.
+The `runbotics-orchestrator-ui` package based on [Next.js](https://nextjs.org/) is a RunBotics frontend application. It is available on port [3000](http://localhost:3000).
 
 ## Running the app
 
