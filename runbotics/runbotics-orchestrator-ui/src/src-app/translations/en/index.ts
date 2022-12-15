@@ -1,4 +1,4 @@
-import landingPageTranslations from '#src-landing/translations';
+import landingPageTranslations from '#src-landing/translations/en';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';

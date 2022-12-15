@@ -3,13 +3,13 @@
 $ARROW_ICON_WIDTH: 300px;
 
 .root {
-  background-color: $palette-accent-primary;
   position: relative;
+  background-color: $palette-accent-primary;
 }
 
 .arrowIconWrapper {
-  width: $ARROW_ICON_WIDTH;
   position: absolute;
+  width: $ARROW_ICON_WIDTH;
 }
 
 .arrowIcon {
@@ -22,10 +22,7 @@ $ARROW_ICON_WIDTH: 300px;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding-top: $padding-10;
-  padding-bottom: $padding-10;
-  padding-left: $padding-3;
-  padding-right: $padding-3;
+  padding: $padding-10 $padding-3;
 }
 
 .title {
@@ -48,13 +45,12 @@ $ARROW_ICON_WIDTH: 300px;
 }
 
 .logosGrid div {
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: $padding-4;
   width: 100%;
   height: 100%;
+  padding: $padding-4;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
