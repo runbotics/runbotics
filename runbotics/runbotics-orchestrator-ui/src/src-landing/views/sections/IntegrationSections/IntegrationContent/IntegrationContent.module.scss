@@ -1,24 +1,8 @@
 @import "#src-landing/scss/main.scss";
 
-$ARROW_ICON_WIDTH: 300px;
 
 .root {
-  position: relative;
-  background-color: $palette-accent-primary;
-}
-
-.arrowIconWrapper {
-  position: absolute;
-  width: $ARROW_ICON_WIDTH;
-}
-
-.arrowIcon {
-  width: 100%;
-  height: 100%;
-  filter: brightness(0) invert(1);
-}
-
-.centeredWrapper {
+  composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -123,7 +107,7 @@ $ARROW_ICON_WIDTH: 300px;
     padding-bottom: $padding-6;
   }
 
-  .centeredWrapper {
+  .root {
     padding-left: $padding-6;
     padding-right: $padding-6;
     padding-bottom: $padding-6;
@@ -143,7 +127,7 @@ $ARROW_ICON_WIDTH: 300px;
     padding-top: $padding-4;
   }
   
-  .centeredWrapper {
+  .root {
     padding-left: $padding-3;
     padding-right: $padding-3;
     padding-bottom: $padding-3;

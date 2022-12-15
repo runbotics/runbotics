@@ -1,3 +1,3 @@
-import IntegrationSection from './IntegrationSections';
+import IntegrationSection from './IntegrationSection';
 
 export default IntegrationSection;
