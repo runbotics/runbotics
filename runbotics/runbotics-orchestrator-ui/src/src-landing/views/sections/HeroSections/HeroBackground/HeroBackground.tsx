@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
-import heroArchSrc from '#public/images/hero-arch.svg';
-import backgroundImageSrc from '#public/images/hero-background.png';
-import heroTitleSrc from '#public/images/hero-RunBotics.png';
+import backgroundImageSrc from '#public/images/banners/hero-background.png';
+import heroTitleSrc from '#public/images/runBoticsLogo/hero-RunBotics.png';
+import heroArchSrc from '#public/images/shapes/hero-arch.svg';
 
 import styles from './HeroBackground.module.scss';
 

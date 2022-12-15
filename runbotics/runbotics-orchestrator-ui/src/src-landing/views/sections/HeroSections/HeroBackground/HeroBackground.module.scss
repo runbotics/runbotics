@@ -44,12 +44,12 @@ $ARROWS_HEIGHT: 176px;
 }
 
 .heroArrows {
-    width: inherit;
-    height: $ARROWS_HEIGHT;
-    background-image: url('/images/hero-arrows.svg');
-    background-repeat: no-repeat;
-    background-position: right bottom;
-    background-size: cover;
+  width: inherit;
+  height: $ARROWS_HEIGHT;
+  background-image: url('/images/shapes/arrows-right-square.svg');
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: cover;
 }
 
 .heroTitleWrapper {
