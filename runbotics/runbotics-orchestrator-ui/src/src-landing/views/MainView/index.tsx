@@ -6,6 +6,7 @@ import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import HeroSection from '#src-landing/views/sections/HeroSections';
 import IntegrationSection from '#src-landing/views/sections/IntegrationSections';
 import ProsSection from '#src-landing/views/sections/ProsSection';
+import RPASection from '#src-landing/views/sections/RPASections';
 
 const MainView = () => (
     <Layout>
@@ -13,6 +14,7 @@ const MainView = () => (
         <BenefitsSection />
         <IntegrationSection/>
         <BenefitsSection />
+        <RPASection />
         <ProsSection />
         {/* Add your section here*/}
 

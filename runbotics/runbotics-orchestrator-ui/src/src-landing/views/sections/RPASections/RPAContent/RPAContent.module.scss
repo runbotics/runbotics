@@ -1,0 +1,24 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+  z-index: 1;
+  color: $text-color-light;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  @include font-face-base;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-semi-bold;
+  padding-bottom: $padding-3;
+}
+
+.paragraph1, .paragraph2 {
+  padding-bottom: $padding-3;
+  font-size: $font-size-h5;
+}
