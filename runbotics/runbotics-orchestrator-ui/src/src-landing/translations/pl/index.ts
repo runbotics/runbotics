@@ -3,6 +3,7 @@ import heroTranslations from './hero.json';
 import industriesTranslation from './industries.json';
 import integrationTranslations from './integration.json';
 import prosTranslations from './pros.json';
+import rpaTranslations from './rpa.json';
 
 const landingPageTranslations = {
     ...heroTranslations,
@@ -10,6 +11,7 @@ const landingPageTranslations = {
     ...benefitsTranslations,
     ...prosTranslations,
     ...industriesTranslation
+    ...rpaTranslations,
 };
 
 export default landingPageTranslations;
