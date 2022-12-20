@@ -6,9 +6,7 @@ const RPABackground: FC = ({children}) => (
     <section className={styles.root}>
         <div className={styles.backgroundBanner}>
             <div className={styles.backgroundDimmer} />
-            {/* <div className={styles.threeArrowsWrapper}> */}
             <div className={styles.threeArrows} />
-            {/* </div> */}
             {children}
             <div className={styles.oneArrow}/>
         </div>
