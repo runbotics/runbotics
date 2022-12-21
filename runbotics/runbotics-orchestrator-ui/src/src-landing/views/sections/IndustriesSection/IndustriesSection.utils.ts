@@ -1,5 +1,5 @@
-import itImage from '#public/images/photos/it-industry.png';
 import businessImage from '#public/images/photos/business-industry.jpg';
+import itImage from '#public/images/photos/it-industry.png';
 import serviceImage from '#public/images/photos/service-industry.png';
 import transportImage from '#public/images/photos/transport-industry.png';
 
