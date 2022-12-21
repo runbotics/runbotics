@@ -64,6 +64,12 @@
         line-height: $line-height-base;
     }
 
+    &__nav {
+        font-size: $font-size-nav;
+        font-weight: $font-weight-semi-bold;
+        line-height: $line-height-nav;
+    }
+
     &__Roboto {
         @include font-face-roboto;
     }

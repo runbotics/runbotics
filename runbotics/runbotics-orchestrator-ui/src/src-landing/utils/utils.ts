@@ -1,0 +1,10 @@
+export const BENEFITS_SECTION_ID = 'benefits-section';
+export const HERO_SECTION_ID = 'hero-section';
+export const INTEGRATION_SECTION_ID = 'integration-section';
+export const PROS_SECTION_ID = 'pros-section';
+export const RPA_SECTION_ID = 'rpa-section';
+export const INDUSTRY_SECTORS_SECTION_ID = 'industry-sectors';
+export const OPEN_SOURCE_SECTION_ID = 'open-source';
+export const PARTNER_SECTION_ID = 'partner-section';
+export const TEMPLATE_SECTION_ID = 'template-section';
+export const CONTACT_US_SECTION_ID = 'contact-us';
