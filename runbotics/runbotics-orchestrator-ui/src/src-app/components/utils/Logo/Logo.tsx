@@ -15,16 +15,16 @@ const Logo: FC<LogoProps> = (props) => (
         {!props.simple && (
             <>
                 {!props.white ? (
-                    <Image priority src='/images/logo-white-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image priority src='/images/runBoticsLogo/logo-white-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
 
                 ) : (
-                    <Image priority src='/images/logo-black-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                    <Image priority src='/images/runBoticsLogo/logo-black-simp.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
                 )}
             </>
         )}
         {props.simple && (
             <>
-                <Image priority src='/images/logo-rectangle-white.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
+                <Image priority src='/images/runBoticsLogo/logo-rectangle-white.svg' height={LOGO_HEIGHT} width={LOGO_WIDTH} alt={ALT_TEXT} />
             </>
         )}
     </>

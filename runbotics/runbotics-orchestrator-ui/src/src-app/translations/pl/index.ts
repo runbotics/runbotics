@@ -1,6 +1,4 @@
-import benefitsTranslations from '#src-landing/translations/pl/benefits.json';
-import heroTranslations from '#src-landing/translations/pl/hero.json';
-import prosTranslations from '#src-landing/translations/pl/pros.json';
+import landingPageTranslations from '#src-landing/translations/pl';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
@@ -34,8 +32,6 @@ const translationResources = {
     ...installTranslations,
     ...componentsTranslations,
     ...paletteTranslations,
-    ...heroTranslations,
-    ...benefitsTranslations,
-    ...prosTranslations,
+    ...landingPageTranslations
 };
 export default translationResources;
