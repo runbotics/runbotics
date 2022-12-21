@@ -1,4 +1,7 @@
-import itImage from '#public/images/it-industry.png';
+import itImage from '#public/images/photos/it-industry.png';
+import businessImage from '#public/images/photos/business-industry.jpg';
+import serviceImage from '#public/images/photos/service-industry.png';
+import transportImage from '#public/images/photos/transport-industry.png';
 
 import { IndustrySlide } from '#src-landing/views/sections/IndustriesSection/IndustriesSection.types';
 
@@ -18,7 +21,7 @@ export const SLIDES: IndustrySlide[] = [
     {
         titleKey: 'Landing.Industries.Slides.Transport.Title',
         imgAltKey: 'Landing.Industries.Slides.Transport.ImgAlt',
-        img: itImage,
+        img: transportImage,
         links: [
             {
                 nameKey: 'Landing.Industries.Slides.Transport.Link.1.Name',
@@ -45,7 +48,7 @@ export const SLIDES: IndustrySlide[] = [
     {
         titleKey: 'Landing.Industries.Slides.Service.Title',
         imgAltKey: 'Landing.Industries.Slides.Service.ImgAlt',
-        img: itImage,
+        img: serviceImage,
         links: [
             {
                 nameKey: 'Landing.Industries.Slides.Service.Link.1.Name',
@@ -74,7 +77,7 @@ export const SLIDES: IndustrySlide[] = [
     {
         titleKey: 'Landing.Industries.Slides.Business.Title',
         imgAltKey: 'Landing.Industries.Slides.Business.ImgAlt',
-        img: itImage,
+        img: businessImage,
         links: [
             {
                 nameKey: 'Landing.Industries.Slides.Business.Link.1.Name',

@@ -41,7 +41,6 @@ const IndustriesSlide: FC<IndustriesSlideProps> = ({
                 <Image
                     src={slide.img}
                     alt={translate(slide.imgAltKey)}
-                    quality={100}
                     className={styles.cardImg}
                 />
                 <button
