@@ -6,10 +6,12 @@ import backgroundImageSrc from '#public/images/banners/hero-background.png';
 import heroTitleSrc from '#public/images/runBoticsLogo/hero-RunBotics.png';
 import heroArchSrc from '#public/images/shapes/hero-arch.svg';
 
+import { HERO_SECTION_ID } from '#src-landing/utils/utils';
+
 import styles from './HeroBackground.module.scss';
 
 const HeroBackground: FC = ({ children }) => (
-    <section className={styles.root} id="hero-section">
+    <section className={styles.root} id={HERO_SECTION_ID}>
         <Image
             fill
             src={backgroundImageSrc}

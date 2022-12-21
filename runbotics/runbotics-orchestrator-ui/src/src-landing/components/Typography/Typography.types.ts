@@ -8,7 +8,8 @@ type TypographyVariant =
     'p' |
     'body1' |
     'body2' |
-    'body3'
+    'body3' |
+    'nav'
 
 type TypographyColor =
     'primary' |

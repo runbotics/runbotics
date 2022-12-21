@@ -1,10 +1,11 @@
 import React from 'react';
 
+import Header from '../Header/Header'
 import styles from './Layout.module.scss';
 
 const Layout = ({ children }) => (
     <>
-        <nav></nav>
+        <Header />
         <main className={styles.main}>{children}</main>
         <footer></footer>
     </>

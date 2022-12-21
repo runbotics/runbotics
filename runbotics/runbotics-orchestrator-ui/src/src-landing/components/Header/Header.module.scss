@@ -1,0 +1,174 @@
+@import "#src-landing/scss/main.scss";
+
+$LOGO_WIDTH: 177px;
+$LOGO_HEIGHT: 48px;
+$HEADER_HEIGHT: 55px;
+
+.header {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  width: 100%;
+  background-image: linear-gradient(to right, $palette-background-primary 8%, hsl(0 0% 100% / 0.2));
+  backdrop-filter: blur(0.5rem);
+}
+
+.inner {
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin: $margin-0;
+  height: $HEADER_HEIGHT;
+  padding: $padding-0;
+}
+
+.logo { 
+  width: $LOGO_WIDTH;
+  height: $LOGO_HEIGHT;
+  margin-right: -$margin-1;
+}
+
+.nav-links {
+  justify-content: space-between;
+  gap: 30px;
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.list-item {
+  cursor: pointer;
+
+  & > *:hover {
+    color: $palette-accent-primary;
+  }
+}
+
+.btn {
+  justify-content: center;
+  align-items: center;
+  display: block;
+  border: 0;
+  border-radius: 100px;
+  min-height: 20px;
+  padding: $padding-1 $padding-2;
+  background-color: #000000;
+  cursor: pointer;
+
+  & > *:hover {
+    color: $text-color-light;
+  }
+}
+
+.contact-btn {
+  composes: btn;
+  margin-right: $margin-3;
+}
+
+.menu-icon {
+  display: none;
+}
+
+.log-in-btn {
+  display: none;
+}
+
+@media (max-width: $breakpoint-md) {
+  .log-in-btn {
+    composes: btn;
+    display: block;
+    width: 25%;
+    min-height: 40px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links-expanded, .hide-nav-links-expanded {
+    position: absolute;
+    z-index: 100;
+    top: $HEADER_HEIGHT + 2px;
+    left: 0;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    transition: all 0.3s;
+    width: 100%;
+    max-height: calc(100vh - $HEADER_HEIGHT);
+    padding: $padding-2 0;
+    background-image: linear-gradient(to right, $palette-background-primary 8%, hsl(0 0% 100% / 0.2));
+    backdrop-filter: blur(0.5rem);
+  }
+
+  .nav-links-expanded {
+    left: 0;
+  }
+
+  .hide-nav-links-expanded {
+    left: -100%;
+  }
+
+  .list-item {
+      text-align: center;
+      margin-top: $margin-1;
+      border-bottom: 2px solid $palette-accent-primary;
+  }
+
+  .list-item:last-child {
+    border-bottom: none;
+  }
+
+  .contact-btn {
+    display: none;
+  }
+
+  .menu-icon {
+    z-index: 100;
+    order: 4;
+    display: block;
+    user-select: none;
+    appearance: none;
+    margin-right: $margin-3;
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    
+    span {
+      z-index: 999;
+      position: relative;
+      display: block;
+      transform-origin: 0 0;
+      transition: 0.4s;
+      margin-bottom: 4px;
+      border-radius: 6px;
+      width: 33px;
+      height: 4px;
+      background-color: black;
+    }
+  }
+
+  .menu-icon:hover span:nth-child(2) {
+    transform: translateX(10px);
+  }
+
+  .menu-icon.is-active {
+    margin-top: $margin-1;
+  }
+  .menu-icon.is-active span:nth-child(1) {
+    transform: translate(0px, -4px) rotate(45deg);
+  }
+
+  .menu-icon.is-active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+
+  .menu-icon.is-active span:nth-child(3) {
+    transform: translate(-3px, 3px) rotate(-45deg);
+  }
+}
