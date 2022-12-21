@@ -5,7 +5,7 @@ import RPAContent from './RPAContent';
 
 const RPASection: FC = () => (
     <RPABackground>
-        <RPAContent />
+        <RPAContent/>
     </RPABackground>
 );
 
