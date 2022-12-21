@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Layout from '#src-landing/components/Layout';
-import TempLoginButton from '#src-landing/components/TempLoginButton/TempLoginButton';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import ContactSection from '#src-landing/views/sections/ContactSection';
 import HeroSection from '#src-landing/views/sections/HeroSections';
@@ -20,7 +19,6 @@ const MainView = () => (
         <IntegrationSection />
         <ContactSection />
         {/* Add your section here*/}
-        <TempLoginButton />
     </Layout>
 );
 

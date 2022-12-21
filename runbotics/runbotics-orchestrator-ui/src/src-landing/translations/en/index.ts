@@ -1,3 +1,4 @@
+import headerTranslations from './header.json';
 import benefitsTranslations from './benefits.json';
 import contactTranslations from './contact.json';
 import heroTranslations from './hero.json';
@@ -7,6 +8,7 @@ import prosTranslations from './pros.json';
 import rpaTranslations from './rpa.json';
 
 const landingPageTranslations = {
+    ...headerTranslations,
     ...heroTranslations,
     ...integrationTranslations,
     ...benefitsTranslations,
