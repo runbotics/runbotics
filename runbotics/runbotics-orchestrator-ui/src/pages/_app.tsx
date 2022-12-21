@@ -7,11 +7,9 @@ import { default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
 import Head from 'next/head';
 
-import Script from 'next/script';
 import { I18nextProvider } from 'react-i18next';
 
 import { Provider } from 'react-redux';
-
 
 import 'moment/locale/pl';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
@@ -26,7 +24,6 @@ import i18n from '#src-app/translations/i18n';
 import { DEFAULT_LANG } from '#src-app/translations/translations';
 import createEmotionCache from '#src-app/utils/createEmotionCache';
 import InitializeAuth from '#src-app/views/auth/InitializeAuth';
-
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -44,12 +41,17 @@ moment.locale(DEFAULT_LANG);
 const clientSideEmotionCache = createEmotionCache();
 
 function App(props: AppProps) {
-    const { Component, pageProps, emotionCache = clientSideEmotionCache, router } = props;
+    const {
+        Component,
+        pageProps,
+        emotionCache = clientSideEmotionCache,
+        router,
+    } = props;
     let Layout: FC = React.Fragment;
 
     if (router.pathname.startsWith('/app/')) {
         Layout = MainLayout;
-    }    
+    }
 
     return (
         <div style={{ height: '100%' }}>
@@ -63,7 +65,9 @@ function App(props: AppProps) {
                             <StylesProvider>
                                 <SnackbarProvider>
                                     <InitializeAuth>
-                                        <SocketProvider uri={props.runboticsEntrypointUrl}>
+                                        <SocketProvider
+                                            uri={props.runboticsEntrypointUrl}
+                                        >
                                             <Layout>
                                                 <Component {...pageProps} />
                                             </Layout>
@@ -75,7 +79,6 @@ function App(props: AppProps) {
                     </SettingsProvider>
                 </Provider>
             </CacheProvider>
-            <Script src="https://cdn.jsdelivr.net/npm/container-query-polyfill@1/dist/container-query-polyfill.modern.js"/>
         </div>
     );
 }
