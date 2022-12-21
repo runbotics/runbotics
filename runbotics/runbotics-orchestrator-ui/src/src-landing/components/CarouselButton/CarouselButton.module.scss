@@ -20,3 +20,13 @@
         box-shadow: $box-shadow-primary;
     }
 }
+
+.forwardArrow {
+    composes: root;
+    padding-left: 15px;
+}
+
+.backwardArrow {
+    composes: root;
+    padding-right: 15px;
+}
