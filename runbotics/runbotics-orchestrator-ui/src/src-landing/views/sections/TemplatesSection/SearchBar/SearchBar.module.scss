@@ -1,0 +1,63 @@
+@import "#src-landing/scss/main.scss";
+
+.wrapper {
+    position: relative;
+    width: 70%;
+    margin-top: $margin-8;
+    margin-bottom: $margin-8;
+}
+
+.searchBar {
+    z-index: 10;
+    border-radius: $margin-5;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgb($text-color-gray, 0.2);
+    background-color: rgb($text-color-gray, 0.05);
+    width: 100%;
+    padding: $padding-1 $padding-2;
+    outline: none;
+    font-weight: $font-weight-semi-bold;
+    font-size: $font-size-h6;
+    font-weight: $font-weight-semi-bold;
+    transition: border-color 100ms ease;
+    color: rgb($text-color-gray, 0.4);
+    background-image: url('#public/images/icons/search.svg');
+
+    &:focus {
+        border-color: $palette-accent-primary;
+        color: $palette-accent-primary;
+    }
+    
+    &::-webkit-input-placeholder {
+        color: rgb($text-color-gray, 0.4);
+        transition: color 200ms ease;
+    }
+    
+    &:focus::-webkit-input-placeholder {
+        color: $palette-accent-primary;
+    }
+}
+
+.searchIcon {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    right: 0;
+    height: 100%;
+    padding-right: $padding-2;
+
+    img {
+        width: $margin-4;
+        height: $margin-4;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .searchBar {
+        width: 90%;
+        margin-top: $margin-2;
+        margin-bottom: $margin-2;
+    }
+}

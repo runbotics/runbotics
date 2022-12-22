@@ -3,7 +3,7 @@
 .root {
     width: 100%;
     max-width: 1672px;
-    height: 100%;
+    height: fit-content;
     margin: 0 auto;
     padding: $y-content-padding $x-content-padding;
 }
