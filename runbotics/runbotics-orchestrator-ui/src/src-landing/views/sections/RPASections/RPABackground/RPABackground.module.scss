@@ -11,8 +11,8 @@ $MIN_CONTENT_WIDTH: 500px;
   background-position: center $position;
   background-repeat: no-repeat;
   mix-blend-mode: soft-light;
-  opacity: 1;
   z-index: 1;
+  isolation: isolate;
 }
 
 .root {

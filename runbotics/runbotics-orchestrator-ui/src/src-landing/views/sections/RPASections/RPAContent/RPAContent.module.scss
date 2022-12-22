@@ -3,6 +3,7 @@
 .root {
   composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
   z-index: 1;
+  isolation: isolate;
   color: $text-color-light;
 }
 
@@ -13,12 +14,10 @@
 
 .title {
   @include font-face-base;
-  font-size: $font-size-h2;
   font-weight: $font-weight-semi-bold;
   padding-bottom: $padding-3;
 }
 
-.paragraph1, .paragraph2 {
+.paragraph1 {
   padding-bottom: $padding-3;
-  font-size: $font-size-h5;
 }

@@ -11,7 +11,7 @@ const RPAContent: FC = () => {
     return (
         <div className={styles.root}>
             <div className={styles.contentWrapper}>
-                <Typography className={styles.title}>
+                <Typography variant="h2" className={styles.title}>
                     {translate('Landing.RPA.Title')}
                 </Typography>
                 <div className={styles.content}>
@@ -26,7 +26,7 @@ const RPAContent: FC = () => {
                             {translate('Landing.RPA.Content.Paragraph1.Part3')}
                         </Typography>
                     </div>
-                    <Typography className={styles.paragraph2}>
+                    <Typography>
                         {translate('Landing.RPA.Content.Paragraph2')}
                     </Typography>
                 </div>
