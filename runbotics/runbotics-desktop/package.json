@@ -1,8 +1,7 @@
 {
     "name": "runbotics-desktop",
     "private": true,
-
-    "version": "2.4.0-SNAPSHOT.17",
+    "version": "2.4.0-SNAPSHOT.18",
     "description": "runbotics-desktop",
     "license": "MIT",
     "author": {
