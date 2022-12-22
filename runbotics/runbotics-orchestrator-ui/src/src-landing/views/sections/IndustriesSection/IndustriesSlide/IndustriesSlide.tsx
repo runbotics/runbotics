@@ -42,6 +42,7 @@ const IndustriesSlide: FC<IndustriesSlideProps> = ({
                     src={slide.img}
                     alt={translate(slide.imgAltKey)}
                     className={styles.cardImg}
+                    placeholder="blur"
                 />
                 <button
                     className={styles.showMoreButton}

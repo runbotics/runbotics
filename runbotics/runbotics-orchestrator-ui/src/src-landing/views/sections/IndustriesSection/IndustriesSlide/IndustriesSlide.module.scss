@@ -7,16 +7,18 @@ $SLIDE-OPEN-IMG: 230px;
 $SLIDE-OPEN-CONTENT: 330px;
 $SLIDE-CLOSED-CONTENT: 400px;
 
+$TILE-BORDER-RADIUS: 20px 150px 20px 20px;
+
 .slide {
     $slide-width: calc(100% / var(--items-per-slider));
-
     position: relative;
     flex: 0 0 $slide-width;
-    //idk why, looks like shit without + 2px
     max-width: calc($slide-width - $SLIDER-FLEX-GAP + 2px);
+    //idk why, looks like shit without + 2px
     height: $SLIDE-HEIGHT;
     margin-bottom: $margin-5;
     background-color: #fff;
+    isolation: isolate;
 
     &__open {
         height: fit-content;
@@ -83,7 +85,7 @@ $SLIDE-CLOSED-CONTENT: 400px;
     width: 100%;
     height: 100%;
     transition: all 0.1s;
-    border-radius: 20px 150px 20px 20px;
+    border-radius: $TILE-BORDER-RADIUS;
 }
 
 .plusSign {
@@ -94,7 +96,7 @@ $SLIDE-CLOSED-CONTENT: 400px;
 .cardImg {
     width: 100%;
     height: 100%;
-    border-radius: 20px 150px 20px 20px;
+    border-radius: $TILE-BORDER-RADIUS;
     object-fit: cover;
     filter: brightness(80%);
 }
@@ -107,7 +109,7 @@ $SLIDE-CLOSED-CONTENT: 400px;
     width: 100%;
     height: $SLIDE-CLOSED-CONTENT;
     transition: all 0.2s;
-    border-radius: 20px 150px 20px 20px;
+    border-radius: $TILE-BORDER-RADIUS;
 }
 
 .contentUl {
