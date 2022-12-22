@@ -13,10 +13,9 @@ const MainView = () => (
     <Layout>
         <HeroSection />
         <BenefitsSection />
-        <IntegrationSection/>
-        <BenefitsSection />
         <ProsSection />
         <IndustriesSection />
+        <IntegrationSection />
         {/* Add your section here*/}
 
         {/* This div is used let us see if our section is contained */}

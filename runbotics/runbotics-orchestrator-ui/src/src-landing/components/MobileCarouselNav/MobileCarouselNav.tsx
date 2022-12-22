@@ -11,20 +11,23 @@ const MobileCarouselNav: FC<MobileCarouselNavProps> = ({
     incrementSlide,
     length,
     currentSlide,
-    className,
-}) => (
-    <div className={`${styles.root} ${className ?? ''}`}>
-        <CarouselButton direction="backward" onClick={decrementSlide} />
-        {currentSlide !== null ? (
-            <Typography variant="body1" className={styles.counter}>
-                <span className={styles.counterCurrent}>
-                    {currentSlide + 1}
-                </span>
-                /&nbsp;{length}
-            </Typography>
-        ) : null}
-        <CarouselButton direction="forward" onClick={incrementSlide} />
-    </div>
-);
+    className = '',
+}) => {
+    const hasCounter = currentSlide !== null;
+    return (
+        <div className={`${styles.root} ${className}`}>
+            <CarouselButton direction="backward" onClick={decrementSlide} />
+            {hasCounter ? (
+                <Typography variant="body1" className={styles.counter}>
+                    <span className={styles.counterCurrent}>
+                        {currentSlide + 1}
+                    </span>
+                    /&nbsp;{length}
+                </Typography>
+            ) : null}
+            <CarouselButton direction="forward" onClick={incrementSlide} />
+        </div>
+    );
+};
 
 export default MobileCarouselNav;

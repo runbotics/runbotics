@@ -8,7 +8,10 @@ const GenericTile: FC<GenericTileProps> = ({
     className,
     dataShadow,
 }) => (
-    <div className={`${styles.root} ${className}`} data-shadow={dataShadow}>
+    <div
+        className={`${styles.root} ${className}`}
+        data-shadow={dataShadow}
+    >
         {children}
     </div>
 );

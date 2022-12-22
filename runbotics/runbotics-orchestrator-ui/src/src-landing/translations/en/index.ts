@@ -4,7 +4,6 @@ import industriesTranslation from './industries.json';
 import integrationTranslations from './integration.json';
 import prosTranslations from './pros.json';
 
-
 const landingPageTranslations = {
     ...heroTranslations,
     ...integrationTranslations,

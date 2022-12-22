@@ -14,7 +14,6 @@ $TILE-BORDER-RADIUS: 20px 150px 20px 20px;
     position: relative;
     flex: 0 0 $slide-width;
     max-width: calc($slide-width - $SLIDER-FLEX-GAP + 2px);
-    //idk why, looks like shit without + 2px
     height: $SLIDE-HEIGHT;
     margin-bottom: $margin-5;
     background-color: #fff;
@@ -131,7 +130,7 @@ $TILE-BORDER-RADIUS: 20px 150px 20px 20px;
     justify-content: space-evenly;
     text-decoration: none;
     color: $text-color-dark;
-    gap: 45px;
+    gap: $margin-6;
 
     img {
         width: 15px;
