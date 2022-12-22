@@ -7,4 +7,4 @@ export interface Slide {
     descriptionKey: SlideTranslationKey;
     imageSrc: string;
     imageAlt: string;
-};
+}

@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
 
-
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -16,10 +15,6 @@ import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessMainViewManager from './ProcessMainView.manager';
 import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
-
-
-
-
 
 const ProcessMainView: FC = () => {
     const router = useRouter();

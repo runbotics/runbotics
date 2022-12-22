@@ -1,7 +1,9 @@
+@import '#src-landing/scss/main.scss';
+
 .root {
-    height: 100%;
     width: 100%;
     max-width: 1672px;
+    height: 100%;
     margin: 0 auto;
-    padding: 8.5rem 2rem;
+    padding: $y-content-padding $x-content-padding;
 }
