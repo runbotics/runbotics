@@ -8,6 +8,7 @@ import integrationTranslations from './integration.json';
 import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
 import prosTranslations from './pros.json';
+import templatesTranslations from './templates.json';
 import rpaTranslations from './rpa.json';
 
 const landingPageTranslations = {
@@ -18,6 +19,8 @@ const landingPageTranslations = {
     ...openSourceTranslations,
     ...partnerTranslations,
     ...prosTranslations,
+    ...industriesTranslation,
+    ...templatesTranslations,
     ...industriesTranslation,
     ...contactTranslations,
     ...rpaTranslations,
