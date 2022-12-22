@@ -3,8 +3,8 @@
 .root {
   composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
   z-index: 1;
-  isolation: isolate;
   color: $text-color-light;
+  isolation: isolate;
 }
 
 .contentWrapper {

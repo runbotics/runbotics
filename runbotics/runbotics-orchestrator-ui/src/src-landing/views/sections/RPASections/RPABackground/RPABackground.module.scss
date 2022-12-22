@@ -4,6 +4,7 @@ $ARROWS_HEIGHT: 450px;
 $MIN_CONTENT_WIDTH: 500px;
 
 @mixin backgroundArrowImage($image-url, $position) {
+  z-index: 1;
   align-self: center;
   width: 100%;
   height: $ARROWS_HEIGHT;
@@ -11,8 +12,6 @@ $MIN_CONTENT_WIDTH: 500px;
   background-position: center $position;
   background-repeat: no-repeat;
   mix-blend-mode: soft-light;
-  z-index: 1;
-  isolation: isolate;
 }
 
 .root {
@@ -20,6 +19,7 @@ $MIN_CONTENT_WIDTH: 500px;
   backdrop-filter: blur(4px);
   background-image: url('/images/banners/circuits-background.png');
   background-repeat: repeat-x;
+  isolation: isolate;
 }
 
 .backgroundBanner {
