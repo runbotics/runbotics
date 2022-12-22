@@ -3,12 +3,12 @@ import { FC, useState } from 'react';
 import Image from 'next/image';
 
 import { translate } from '#src-app/hooks/useTranslations';
-import CaruselButton from '#src-landing/components/CaruselButton';
+import CarouselButton from '#src-landing/components/CarouselButton';
+import MobileCarouselNav from '#src-landing/components/MobileCarouselNav';
 import Typography from '#src-landing/components/Typography';
 
-import styles from './BenefitsCarusel.module.scss';
-import { Slide } from './BenefitsCarusel.types';
-import MobileCaruselNav from './MobileCaruselNav';
+import styles from './BenefitsCarousel.module.scss';
+import { Slide } from './BenefitsCarousel.types';
 
 const SLIDES: Slide[] = [
     {
@@ -31,7 +31,7 @@ const SLIDES: Slide[] = [
     },
 ];
 
-const BenefitsCarusel: FC = () => {
+const BenefitsCarousel: FC = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const incrementSlide = () => {
@@ -53,7 +53,7 @@ const BenefitsCarusel: FC = () => {
     return (
         <div className={styles.root}>
             <div className={styles.buttonWrapper}>
-                <CaruselButton direction="backward" onClick={decrementSlide} />
+                <CarouselButton direction="backward" onClick={decrementSlide} />
             </div>
             <div className={styles.contentWrapper}>
                 <article className={styles.content}>
@@ -82,7 +82,7 @@ const BenefitsCarusel: FC = () => {
                 </article>
             </div>
             <div className={styles.buttonWrapper}>
-                <CaruselButton direction="forward" onClick={incrementSlide} />
+                <CarouselButton direction="forward" onClick={incrementSlide} />
                 <Typography variant="body1" className={styles.counter}>
                     <span className={styles.counterCurrent}>
                         {currentSlide + 1}
@@ -91,7 +91,7 @@ const BenefitsCarusel: FC = () => {
                     {SLIDES.length}
                 </Typography>
             </div>
-            <MobileCaruselNav
+            <MobileCarouselNav
                 currentSlide={currentSlide}
                 decrementSlide={decrementSlide}
                 incrementSlide={incrementSlide}
@@ -101,4 +101,4 @@ const BenefitsCarusel: FC = () => {
     );
 };
 
-export default BenefitsCarusel;
+export default BenefitsCarousel;

@@ -5,11 +5,11 @@ import Image from 'next/image';
 import backwardArrow from 'public/images/shapes/backwards-arrow.svg';
 import forwardArrow from 'public/images/shapes/forwards-arrow.svg';
 
-import styles from './CaruselButton.module.scss';
-import { CaruselButtonProps } from './CaruselButton.types';
+import styles from './CarouselButton.module.scss';
+import { CarouselButtonProps } from './CarouselButton.types';
 
-const CaruselButton: FC<CaruselButtonProps> = ({ onClick, direction }) => (
-    <button className={styles.root} onClick={onClick}>
+const CarouselButton: FC<CarouselButtonProps> = ({ onClick, direction }) => (
+    <button className={direction === 'forward' ? styles.forwardArrow : styles.backwardArrow} onClick={onClick}>
         <Image
             src={direction === 'forward' ? forwardArrow : backwardArrow}
             alt={direction}
@@ -17,4 +17,4 @@ const CaruselButton: FC<CaruselButtonProps> = ({ onClick, direction }) => (
     </button>
 );
 
-export default CaruselButton;
+export default CarouselButton;
