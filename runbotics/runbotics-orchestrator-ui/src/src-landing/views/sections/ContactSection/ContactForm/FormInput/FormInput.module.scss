@@ -1,0 +1,139 @@
+@import "#src-landing/scss/main.scss";
+
+$INPUT-BORDER-RADIUS: 30px;
+$INPUT-BORDER-THICKNESS: 2px;
+$INPUT-HEIGHT: 60px;
+$INPUT-INLINE-PADDING: 20px;
+
+$TEXT-AREA-BASE-HEIGHT: 200px;
+
+$CHECKBOX-WRAPPER-MAX-WIDTH: 450px;
+$CHECKBOX-SIZE: 26px;
+$CHECKBOX-BORDER-RADIUS: 6px;
+$CHECKBOX-TRANSFORM-Y: -1.2px;
+
+@mixin normalize-autocomplete {
+    background-color: transparent !important;
+    transition: background-color 600000s 0s, color 600000s 0s;
+}
+.label {
+    @include font-face-roboto;
+    position: absolute;
+    color: $text-color-dark;
+    font-weight: $font-weight-medium;
+    top: calc($font-size-body3 + 5px);
+    //2 px for border
+    left: $padding-5 + $INPUT-BORDER-THICKNESS;
+    transition: 0.2s ease all;
+    pointer-events: none;
+    background-color: $palette-background-primary;
+}
+
+.input {
+    @include font-face-roboto;
+    font-size: $font-size-body3;
+    color: $text-color-dark;
+    display: block;
+    width: 100%;
+    height: $INPUT-HEIGHT;
+    padding: 0 $INPUT-INLINE-PADDING;
+    border: #000 $INPUT-BORDER-THICKNESS solid;
+    border-radius: $INPUT-BORDER-RADIUS;
+    background: #fff;
+    caret-color: $palette-accent-primary;
+    padding-inline: $padding-5;
+
+    &:focus {
+        border-color: $palette-accent-primary;
+        background: $palette-background-primary;
+        outline: none;
+
+        ~ .label {
+            font-size: $font-size-caption;
+            color: $palette-accent-primary;
+            top: $font-size-body3 / -2;
+            padding-inline: $padding-1;
+        }
+    }
+
+    //to remove the default blue background on chrome autofill
+    &:-webkit-autofill,
+    &:-webkit-autofill:focus {
+        @include normalize-autocomplete;
+    }
+
+    &[data-autocompleted] {
+        @include normalize-autocomplete;
+    }
+
+}
+
+.input:not(:placeholder-shown) ~ .label {
+    font-size: $font-size-caption;
+    top: $font-size-body3 / -2;
+    padding-inline: $padding-1;
+}
+
+.textarea {
+    composes: input;
+    height: $TEXT-AREA-BASE-HEIGHT;
+    min-height: $INPUT-HEIGHT;
+    resize: vertical;
+    padding: $padding-3 $padding-5 + $INPUT-BORDER-THICKNESS;
+}
+
+.checkboxWrapper {
+    display: flex;
+    max-width: $CHECKBOX-WRAPPER-MAX-WIDTH;
+    gap: $margin-3;
+}
+
+
+.checkbox {
+    appearance: none;
+    background-color: $palette-background-primary;
+    padding: $padding-1;
+    margin: $INPUT-BORDER-THICKNESS 0;
+    font: inherit;
+    color: currentColor;
+    width: $CHECKBOX-SIZE;
+    height: $CHECKBOX-SIZE;
+    border: 1px solid currentColor;
+    border-radius: $CHECKBOX-BORDER-RADIUS;
+    transform: translateY($CHECKBOX-TRANSFORM-Y);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+.checkboxLabel {
+    @include font-face-roboto;
+    cursor: pointer;
+}
+
+.checkbox::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em $palette-accent-primary;
+}
+
+.checkbox:checked::before {
+    transform: scale(1);
+}
+
+.submit {
+    @include font-face-base;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-body2;
+    appearance: none;
+    border-radius: $INPUT-BORDER-RADIUS;
+    background-color: $palette-background-accent;
+    border: none;
+    padding: $padding-2 $padding-6;
+    cursor: pointer;
+}
