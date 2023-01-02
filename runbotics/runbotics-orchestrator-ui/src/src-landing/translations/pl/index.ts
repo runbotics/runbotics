@@ -12,7 +12,7 @@ const landingPageTranslations = {
     ...benefitsTranslations,
     ...prosTranslations,
     ...industriesTranslation,
-    ...contactTranslations
+    ...contactTranslations,
     ...rpaTranslations
 };
 
