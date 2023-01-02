@@ -4,8 +4,8 @@ import axios from '#src-app/utils/axios';
 import Typography from '#src-landing/components/Typography';
 
 import styles from './ContactForm.module.scss';
-import { FormState, InputProps } from './ContactForm.types';
-import { validate } from './ContactForm.utils';
+import { FormState, InputProps, Status } from './ContactForm.types';
+import { initialFormState, validate } from './ContactForm.utils';
 import { FormButton, FormCheckbox, FormInput, FormTextarea } from './FormInput';
 
 export const REQUIRED_FIELDS: (keyof FormState)[] = [
@@ -16,17 +16,11 @@ export const REQUIRED_FIELDS: (keyof FormState)[] = [
 ];
 
 const ContactForm: FC = () => {
-    const [error, setError] = useState<string | null>(null);
-    const [formState, setFormState] = useState<FormState>({
-        name: '',
-        company: '',
-        email: '',
-        checkbox: false,
-        message: '',
-    });
+    const [status, setStatus] = useState<Status | null>(null);
+    const [formState, setFormState] = useState<FormState>(initialFormState);
 
     const handleChange = ({ event }: InputProps) => {
-        setError(null);
+        setStatus(null);
         setFormState((prevState) => ({
             ...prevState,
             [event.target.id]: event.target.value,
@@ -51,14 +45,16 @@ const ContactForm: FC = () => {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (!validate(formState, REQUIRED_FIELDS)) {
-            setError('Please fill all required fields');
+            setStatus({ text: 'Please fill all required fields', type: 'error' });
         }
         axios
             .post('/api/contact', formState)
             .then((res) => {
+                setStatus({ text: res.data.message, type: 'success' });
+                setFormState(initialFormState);
             })
             .catch((err) => {
-                setError(err?.message);
+                setStatus({ text: err?.message, type: 'error' });
             });
     };
 
@@ -98,11 +94,11 @@ const ContactForm: FC = () => {
                     />
                 </div>
                 <div className={styles.formRow}>
-                    {(
-                        <Typography variant="body3" color="error" font="Roboto">
-                            {error}
+                    {status ? (
+                        <Typography variant="body3" color={status.type} font="Roboto">
+                            {status.text}
                         </Typography>
-                    ) ?? null}
+                    ) : null}
                 </div>
                 <div className={styles.formRow}>
                     <FormCheckbox

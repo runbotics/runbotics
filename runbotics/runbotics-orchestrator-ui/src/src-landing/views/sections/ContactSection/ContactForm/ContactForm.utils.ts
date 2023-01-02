@@ -10,3 +10,11 @@ export const validate = (
         }
         return acc;
     }, true);
+
+export const initialFormState: FormState = {
+    name: '',
+    company: '',
+    email: '',
+    checkbox: false,
+    message: '',
+};

@@ -14,7 +14,8 @@ type TypographyColor =
     'primary' |
     'secondary' |
     'accent' |
-    'error'
+    'error' |
+    'success'
 
 export interface TypographyProps {
     variant?: TypographyVariant;

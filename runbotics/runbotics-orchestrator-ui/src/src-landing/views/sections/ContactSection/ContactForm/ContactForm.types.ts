@@ -17,3 +17,8 @@ export interface FormState {
     checkbox: boolean;
     message: '';
 }
+
+export interface Status {
+    type: 'error' | 'success',
+    text: string
+}

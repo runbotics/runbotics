@@ -1,13 +1,13 @@
 import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 
-import { REQUIRED_FIELDS } from '#src-landing/views/sections/ContactSection/ContactSection';
+import { REQUIRED_FIELDS } from '#src-landing/views/sections/ContactSection/ContactForm/ContactForm';
 
 interface Body {
-  email: string;
-  company?: string;
-  message: string;
-  name: string;
+    email: string;
+    company?: string;
+    message: string;
+    name: string;
 }
 
 const validateBody = (body: NextRequest['body']) =>
@@ -18,7 +18,7 @@ const emailConfig = async (env) => {
         return {
             host: process.env.MAIL_HOST,
             port: process.env.MAIL_PORT,
-            secure: false,
+            secure: true,
             auth: {
                 user: process.env.MAIL_USERNAME,
                 pass: process.env.MAIL_PASSWORD,
@@ -42,8 +42,8 @@ const getEmailContent = ({ email, company, message, name }: Body) => {
 
     return {
         from: `${name} <${email}>`,
-        to: env === 'production' ? process.env.EMAIL_HOST : 'test@runbotics.com',
-        subject: `Message from ${name} ${company ? 'From ' + company : ''}`,
+        to: env === 'production' ? process.env.MAIL_HOST : 'test@runbotics.com',
+        subject: `Message from ${name} ${company ? 'At' + company : ''}`,
         text: `${message}`,
     };
 };
