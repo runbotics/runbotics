@@ -47,7 +47,7 @@ const ContactForm: FC = () => {
         if (!validate(formState, REQUIRED_FIELDS)) {
             setStatus({ text: 'Please fill all required fields', type: 'error' });
         }
-        axios
+        await axios
             .post('/api/contact', formState)
             .then((res) => {
                 setStatus({ text: res.data.message, type: 'success' });
