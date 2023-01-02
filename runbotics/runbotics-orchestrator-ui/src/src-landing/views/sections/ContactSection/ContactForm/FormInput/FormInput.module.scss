@@ -16,27 +16,28 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
     background-color: transparent !important;
     transition: background-color 600000s 0s, color 600000s 0s;
 }
+
 .label {
     @include font-face-roboto;
-    position: absolute;
-    color: $text-color-dark;
     font-weight: $font-weight-medium;
+    position: absolute;
     top: calc($font-size-body3 + 5px);
-    //2 px for border
     left: $padding-5 + $INPUT-BORDER-THICKNESS;
+    //2 px for border
     transition: 0.2s ease all;
     pointer-events: none;
+    color: $text-color-dark;
     background-color: $palette-background-primary;
 }
 
 .input {
     @include font-face-roboto;
     font-size: $font-size-body3;
-    color: $text-color-dark;
     display: block;
     width: 100%;
     height: $INPUT-HEIGHT;
     padding: 0 $INPUT-INLINE-PADDING;
+    color: $text-color-dark;
     border: #000 $INPUT-BORDER-THICKNESS solid;
     border-radius: $INPUT-BORDER-RADIUS;
     background: #fff;
@@ -45,13 +46,13 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
     &:focus {
         border-color: $palette-accent-primary;
-        background: $palette-background-primary;
         outline: none;
+        background: $palette-background-primary;
 
         ~ .label {
             font-size: $font-size-caption;
-            color: $palette-accent-primary;
             top: $font-size-body3 / -2;
+            color: $palette-accent-primary;
             padding-inline: $padding-1;
         }
     }
@@ -78,8 +79,8 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
     composes: input;
     height: $TEXT-AREA-BASE-HEIGHT;
     min-height: $INPUT-HEIGHT;
-    resize: vertical;
     padding: $padding-3 $padding-5 + $INPUT-BORDER-THICKNESS;
+    resize: vertical;
 }
 
 .checkboxWrapper {
@@ -90,20 +91,20 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
 
 .checkbox {
-    appearance: none;
-    background-color: $palette-background-primary;
-    padding: $padding-1;
-    margin: $INPUT-BORDER-THICKNESS 0;
     font: inherit;
-    color: currentColor;
+    display: grid;
     width: $CHECKBOX-SIZE;
     height: $CHECKBOX-SIZE;
+    margin: $INPUT-BORDER-THICKNESS 0;
+    padding: $padding-1;
+    cursor: pointer;
+    transform: translateY($CHECKBOX-TRANSFORM-Y);
+    color: currentColor;
     border: 1px solid currentColor;
     border-radius: $CHECKBOX-BORDER-RADIUS;
-    transform: translateY($CHECKBOX-TRANSFORM-Y);
-    display: grid;
+    background-color: $palette-background-primary;
+    appearance: none;
     place-content: center;
-    cursor: pointer;
 }
 
 .checkboxLabel {
@@ -112,14 +113,14 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 }
 
 .checkbox::before {
-    content: "";
     width: 0.65em;
     height: 0.65em;
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    content: "";
+    transition: 120ms transform ease-in-out;
     transform: scale(0);
     transform-origin: bottom left;
-    transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em $palette-accent-primary;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
 .checkbox:checked::before {
@@ -128,12 +129,12 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
 .submit {
     @include font-face-base;
-    font-weight: $font-weight-bold;
     font-size: $font-size-body2;
-    appearance: none;
-    border-radius: $INPUT-BORDER-RADIUS;
-    background-color: $palette-background-accent;
-    border: none;
+    font-weight: $font-weight-bold;
     padding: $padding-2 $padding-6;
     cursor: pointer;
+    border: none;
+    border-radius: $INPUT-BORDER-RADIUS;
+    background-color: $palette-background-accent;
+    appearance: none;
 }

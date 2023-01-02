@@ -1,0 +1,16 @@
+{
+    "Landing.Contact.Info.Title": "Contact Us",
+    "Landing.Contact.Info.Subtitle": "Let us create a solution that will fit you perfectly.",
+    "Landing.Contact.Info.Phone.Text": "+48 733 499 677",
+    "Landing.Contact.Info.Phone.IconAlt": "phone",
+    "Landing.Contact.Info.Email.Text": "contact@runbotics.com",
+    "Landing.Contact.Info.Email.IconAlt": "email",
+    "Landing.Contact.Info.Address.Text": "Poznań, Ratajczaka 19",
+    "Landing.Contact.Info.Address.IconAlt": "address",
+    "Landing.Contact.Form.Name": "Name",
+    "Landing.Contact.Form.Email": "Email",
+    "Landing.Contact.Form.Message": "Message",
+    "Landing.Contact.Form.Company": "Company",
+    "Landing.Contact.Form.Checkbox": "Contrary to popular belief, Lorem Ipsum is not simplyrandom text. Contrary to popular belief, Lorem Ipsum is not simplyrandom text. It has roots in a piece of classicaln contrary to popular belief, Lorem Ipsum",
+    "Landing.Contact.Form.Submit": "Submit"
+}

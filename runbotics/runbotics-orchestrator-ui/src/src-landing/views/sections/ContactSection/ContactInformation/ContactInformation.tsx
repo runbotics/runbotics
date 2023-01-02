@@ -1,0 +1,34 @@
+import { FC } from 'react';
+
+import Image from 'next/image';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+import Typography from '#src-landing/components/Typography';
+
+import styles from './ContactInformation.module.scss';
+import { CONTACT_INFO } from './ContactInformation.utils';
+
+const ContactInformation: FC = () => {
+    const { translate } = useTranslations();
+
+    return (
+        <div className={styles.root}>
+            <div className={styles.summary}>
+                <Typography variant="h2">{translate('Landing.Contact.Info.Title')}</Typography>
+                <Typography variant="body2">
+                    {translate('Landing.Contact.Info.Subtitle')}
+                </Typography>
+            </div>
+            <div className={styles.infoGrid}>
+                {CONTACT_INFO.map(({ icon, text, iconAlt }) => (
+                    <>
+                        <Image src={icon} alt={translate(iconAlt)} />
+                        <Typography variant="body2" className={styles.gridItemText}>{translate(text)}</Typography>
+                    </>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default ContactInformation;
