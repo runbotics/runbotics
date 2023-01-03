@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
 import Image from 'next/image';
-
+import Link from 'next/link';
 
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
 import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+
 import { 
-    BENEFITS_SECTION_ID, 
+    BENEFITS_SECTION_ID,
     INTEGRATION_SECTION_ID, 
     INDUSTRY_SECTORS_SECTION_ID,
     RPA_SECTION_ID,
@@ -21,30 +22,28 @@ import styles from './Header.module.scss';
 const Header = () => {
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
-    const scroll = (sectionId: string) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
-        setIsNavExpanded(false);
-    };
-
     const toggleNav = () => {
         setIsNavExpanded((prevState) => !prevState);
     };
 
-    const navMobileStyle = isNavExpanded
-        ? styles['nav-links-expanded']
-        : styles['hide-nav-links-expanded'];
+    const hideNav = () => {
+        if (isNavExpanded) {
+            setIsNavExpanded(false);
+        }
+    };
 
-    const iconMobileStyle = isNavExpanded ? styles['is-active'] : '';
+    const navMobileStyle = isNavExpanded
+        ? styles.navLinksExpanded
+        : styles.hideNavLinksExpanded;
+
+    const iconMobileStyle = isNavExpanded ? styles.isActive : '';
 
     return (
         <header className={styles.header}>
             <div className={styles.inner}>
                 <Image src={logo} className={styles.logo} alt="RunBotics logo" />
                 <button
-                    className={`${styles['menu-icon']} ${iconMobileStyle}`}
+                    className={`${styles.menuIcon} ${iconMobileStyle}`}
                     onClick={toggleNav}
                 >
                     <span></span>
@@ -52,35 +51,49 @@ const Header = () => {
                     <span></span>
                 </button>
                 <nav>
-                    <ul className={`${styles['nav-links']} ${navMobileStyle}`}>
-                        <li onClick={() => scroll(BENEFITS_SECTION_ID)} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.1')} />
+                    <ul className={`${styles.navLinkWrapper} ${navMobileStyle}`}>
+                        <li className={styles.listItem}>
+                            <Link href={`#${BENEFITS_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.RunBotics')}
+                            </Link>
                         </li>
-                        <li onClick={() => {scroll(RPA_SECTION_ID)}} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.2')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${RPA_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.RPA')}
+                            </Link>
                         </li>
-                        <li onClick={() => {scroll(INDUSTRY_SECTORS_SECTION_ID)}} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.3')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${INDUSTRY_SECTORS_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.ForWho')}
+                            </Link>
                         </li>
-                        <li onClick={() => {scroll(TEMPLATE_SECTION_ID)}} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.4')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${TEMPLATE_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.Resources')}
+                            </Link>
                         </li>
-                        <li onClick={() => scroll(INTEGRATION_SECTION_ID)} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.5')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${INTEGRATION_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.Integration')}
+                            </Link>
                         </li>
-                        <li onClick={() => scroll(PARTNER_SECTION_ID)} className={styles['list-item']}>
-                            <Typography variant="nav" color="primary" text={translate('Landing.Header.Nav.Option.6')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${PARTNER_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.Partners')}
+                            </Link>
                         </li>
-                        <li onClick={() => {}} className={`${styles['log-in-btn']} ${styles['list-item']}`}>
-                            <Typography variant="nav" color="accent" text={translate('Landing.Header.Nav.Button.2')} />
+                        <li className={styles.listItem}>
+                            <Link href={`#${CONTACT_US_SECTION_ID}`} className={styles.link} onClick={hideNav} scroll={false}>
+                                {translate('Landing.Header.Nav.Option.ContactUs')}
+                            </Link>
                         </li>
                     </ul>
                 </nav>
                 <div
-                    onClick={() => scroll(CONTACT_US_SECTION_ID)}
-                    className={styles['contact-btn']}
+                    onClick={() => {}}
+                    className={styles.logInBtn}
                 >
-                    <Typography variant="nav" color="accent" text={translate('Landing.Header.Nav.Button.1')} />
+                    <Typography variant="nav" color="accent" text={translate('Landing.Header.Nav.Button.LogIn')} />
                 </div>
             </div>
         </header>

@@ -1,10 +1,10 @@
 {
-    "Landing.Header.Nav.Option.1": "RunBotics",
-    "Landing.Header.Nav.Option.2": "RPA",
-    "Landing.Header.Nav.Option.3": "For who?",
-    "Landing.Header.Nav.Option.4": "Resources",
-    "Landing.Header.Nav.Option.5": "Integration",
-    "Landing.Header.Nav.Option.6": "Partners",
-    "Landing.Header.Nav.Button.1": "Contact us",
-    "Landing.Header.Nav.Button.2": "Log in"
+    "Landing.Header.Nav.Option.RunBotics": "RunBotics",
+    "Landing.Header.Nav.Option.RPA": "RPA",
+    "Landing.Header.Nav.Option.ForWho": "For who?",
+    "Landing.Header.Nav.Option.Resources": "Resources",
+    "Landing.Header.Nav.Option.Integration": "Integration",
+    "Landing.Header.Nav.Option.Partners": "Partners",
+    "Landing.Header.Nav.Option.ContactUs": "Contact us",
+    "Landing.Header.Nav.Button.LogIn": "Log in"
 }

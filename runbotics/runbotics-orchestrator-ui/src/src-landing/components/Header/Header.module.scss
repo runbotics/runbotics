@@ -1,23 +1,31 @@
 @import "#src-landing/scss/main.scss";
+@import '#src-landing/components/Typography/Typography.module.scss';
 
 $LOGO_WIDTH: 177px;
 $LOGO_HEIGHT: 48px;
 $HEADER_HEIGHT: 55px;
 
+.header::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(6px);
+}
+
 .header {
   position: fixed;
-  z-index: 999;
+  z-index: $header-z-index;
   top: 0;
   width: 100%;
-  background-image: linear-gradient(to right, $palette-background-primary 8%, hsl(0 0% 100% / 0.2));
-  backdrop-filter: blur(0.5rem);
+  background-image: $palette-background-gradient;  
 }
 
 .inner {
   position: relative;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  display: flex;
   margin: $margin-0;
   height: $HEADER_HEIGHT;
   padding: $padding-0;
@@ -26,34 +34,25 @@ $HEADER_HEIGHT: 55px;
 .logo { 
   width: $LOGO_WIDTH;
   height: $LOGO_HEIGHT;
-  margin-right: -$margin-1;
 }
 
-.nav-links {
-  justify-content: space-between;
-  gap: 30px;
+.navLinkWrapper {
   display: flex;
+  justify-content: space-evenly;
+  gap: 30px;
   list-style: none;
   padding: 0;
 }
 
-.list-item {
-  cursor: pointer;
-
-  & > *:hover {
-    color: $palette-accent-primary;
-  }
-}
-
 .btn {
+  display: inline-block;
   justify-content: center;
   align-items: center;
-  display: block;
   border: 0;
   border-radius: 100px;
   min-height: 20px;
   padding: $padding-1 $padding-2;
-  background-color: #000000;
+  background-color: $palette-background-tertiary;
   cursor: pointer;
 
   & > *:hover {
@@ -61,85 +60,75 @@ $HEADER_HEIGHT: 55px;
   }
 }
 
-.contact-btn {
+.logInBtn {
   composes: btn;
-  margin-right: $margin-3;
+  margin: 0 $margin-3;
 }
 
-.menu-icon {
+.menuIcon {
   display: none;
 }
 
-.log-in-btn {
-  display: none;
+.link {
+  @extend .typography__primary, .typography__nav, .typography__Montserrat;
+  text-decoration: none;
+
+  &:hover {
+      border-bottom: 2px solid $palette-background-tertiary;
+  }
 }
 
 @media (max-width: $breakpoint-md) {
-  .log-in-btn {
-    composes: btn;
-    display: block;
-    width: 25%;
-    min-height: 40px;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .nav-links-expanded, .hide-nav-links-expanded {
+  .navLinksExpanded::before, .hideNavLinksExpanded::before {
+    content: '';
     position: absolute;
-    z-index: 100;
-    top: $HEADER_HEIGHT + 2px;
+    z-index: $nested-blur-effect-z-index;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+  }
+
+  .navLinksExpanded, .hideNavLinksExpanded {
+    position: absolute;
+    top: $HEADER_HEIGHT;
     left: 0;
-    flex-direction: column;
-    align-items: center;
     display: flex;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    flex-direction: column;
+    align-items: left;
+    overflow-y: clip;
     transition: all 0.3s;
+    border-style: solid;
+    border-width: 2px 0;
+    border-color: $palette-background-tertiary;
     width: 100%;
     max-height: calc(100vh - $HEADER_HEIGHT);
     padding: $padding-2 0;
-    background-image: linear-gradient(to right, $palette-background-primary 8%, hsl(0 0% 100% / 0.2));
-    backdrop-filter: blur(0.5rem);
+    background-image: $palette-background-gradient;
   }
 
-  .nav-links-expanded {
+  .navLinksExpanded {
     left: 0;
   }
 
-  .hide-nav-links-expanded {
+  .hideNavLinksExpanded {
     left: -100%;
   }
 
-  .list-item {
-      text-align: center;
-      margin-top: $margin-1;
-      border-bottom: 2px solid $palette-accent-primary;
+  .listItem {
+    margin-left: $margin-3;
   }
 
-  .list-item:last-child {
-    border-bottom: none;
-  }
-
-  .contact-btn {
-    display: none;
-  }
-
-  .menu-icon {
-    z-index: 100;
-    order: 4;
+  .menuIcon {
     display: block;
     user-select: none;
     appearance: none;
-    margin-right: $margin-3;
+    margin-left: auto;
     border: none;
     outline: none;
     background: none;
     cursor: pointer;
     
     span {
-      z-index: 999;
       position: relative;
       display: block;
       transform-origin: 0 0;
@@ -148,27 +137,36 @@ $HEADER_HEIGHT: 55px;
       border-radius: 6px;
       width: 33px;
       height: 4px;
-      background-color: black;
+      background-color: $palette-background-tertiary;
     }
   }
 
-  .menu-icon:hover span:nth-child(2) {
+  .menuIcon span:last-child {
+    margin-bottom: $margin-0;
+  }
+
+  .menuIcon:hover span:nth-child(2) {
     transform: translateX(10px);
   }
 
-  .menu-icon.is-active {
-    margin-top: $margin-1;
+  .menuIcon.isActive {
+    margin-top: 3px;
+    margin-right: -$margin-1;
   }
-  .menu-icon.is-active span:nth-child(1) {
+  .menuIcon.isActive span:nth-child(1) {
     transform: translate(0px, -4px) rotate(45deg);
   }
 
-  .menu-icon.is-active span:nth-child(2) {
+  .menuIcon.isActive span:nth-child(2) {
     opacity: 0;
     transform: translateX(15px);
   }
 
-  .menu-icon.is-active span:nth-child(3) {
+  .menuIcon.isActive span:nth-child(3) {
     transform: translate(-3px, 3px) rotate(-45deg);
+  }
+
+  .link {
+    border-bottom: 2px solid $palette-accent-primary;
   }
 }
