@@ -4,8 +4,8 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 
 import forwardsArrow from '#public/images/shapes/forwards-arrow.svg';
-import plusSign from '#public/images/shapes/plus.svg';
 import minusSign from '#public/images/shapes/minus.svg';
+import plusSign from '#public/images/shapes/plus.svg';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
