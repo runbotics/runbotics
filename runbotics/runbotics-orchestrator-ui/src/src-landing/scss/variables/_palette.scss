@@ -1,4 +1,5 @@
 $accent-secondary-opacity: 0.32;
+$gradient-secondary-opacity: 0.2;
 
 $palette-accent-primary: #f7b80c;
 $palette-accent-secondary: rgba(
@@ -8,5 +9,17 @@ $palette-accent-secondary: rgba(
 
 $palette-background-primary: #ffffff;
 $palette-background-secondary: #f8f7ff;
+$palette-background-tertiary: #000000;
+
+$gradient-direction: to right;
+$gradient-background-secondary: rgba(
+  $palette-background-primary,
+  $gradient-secondary-opacity
+);
+$palette-background-gradient: linear-gradient(
+  $gradient-direction, 
+  $palette-background-primary 8%,
+  $gradient-background-secondary
+);
 
 $box-shadow-primary: 0px 16px 26px 2px rgba(0, 0, 0, 0.1);

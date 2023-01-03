@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Header from '../Header/Header'
+import Header from '#src-landing/components/Header';
+
 import styles from './Layout.module.scss';
 
 const Layout = ({ children }) => (
