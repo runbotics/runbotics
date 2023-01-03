@@ -123,7 +123,8 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
     background-color: $palette-background-accent;
     appearance: none;
     box-shadow: $box-shadow-primary;
-
+    transition: background-color 0.4s;
     &:hover {
+        background-color: $palette-background-accent-dark;
     }
 }

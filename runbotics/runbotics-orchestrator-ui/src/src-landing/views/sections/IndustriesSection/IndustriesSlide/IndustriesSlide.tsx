@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 
 import forwardsArrow from '#public/images/shapes/forwards-arrow.svg';
 import plusSign from '#public/images/shapes/plus.svg';
+import minusSign from '#public/images/shapes/minus.svg';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -14,7 +15,6 @@ import Typography from '#src-landing/components/Typography';
 import styles from './IndustriesSlide.module.scss';
 import { IndustriesSlideProps } from './IndustriesSlide.types';
 import { isVisible } from './IndustriesSlide.utils';
-
 
 const IndustriesSlide: FC<IndustriesSlideProps> = ({
     index,
@@ -52,7 +52,7 @@ const IndustriesSlide: FC<IndustriesSlideProps> = ({
                         {translate(slide.titleKey)}
                     </Typography>
                     <Image
-                        src={plusSign}
+                        src={openSlide === index ? minusSign : plusSign}
                         alt="plus sign"
                         className={styles.plusSign}
                     />

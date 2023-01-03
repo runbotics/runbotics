@@ -51,6 +51,7 @@ const ContactForm: FC = () => {
                 text: 'Landing.Contact.Form.Fill.Fields',
                 type: 'error',
             });
+            return;
         }
         await axios
             .post('/api/contact', formState)
