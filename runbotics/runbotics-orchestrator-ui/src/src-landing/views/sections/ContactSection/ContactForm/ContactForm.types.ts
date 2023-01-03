@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react';
 
+import ContactTranslation from '#src-landing/translations/en/contact.json';
+
 export type InputProps =
     | {
     type?: 'input';
@@ -15,10 +17,10 @@ export interface FormState {
     company: string;
     email: string;
     checkbox: boolean;
-    message: '';
+    message: string;
 }
 
 export interface Status {
     type: 'error' | 'success',
-    text: string
+    text: keyof typeof ContactTranslation
 }

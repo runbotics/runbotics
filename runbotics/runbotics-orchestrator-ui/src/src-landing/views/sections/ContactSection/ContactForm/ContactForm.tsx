@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 import axios from '#src-app/utils/axios';
 import Typography from '#src-landing/components/Typography';
 
@@ -16,7 +17,8 @@ export const REQUIRED_FIELDS: (keyof FormState)[] = [
 ];
 
 const ContactForm: FC = () => {
-    const [status, setStatus] = useState<Status | null>(null);
+    const { translate } = useTranslations();
+    const [status, setStatus] = useState<Status>(null);
     const [formState, setFormState] = useState<FormState>(initialFormState);
 
     const handleChange = ({ event }: InputProps) => {
@@ -45,16 +47,16 @@ const ContactForm: FC = () => {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (!validate(formState, REQUIRED_FIELDS)) {
-            setStatus({ text: 'Please fill all required fields', type: 'error' });
+            setStatus({ text: 'Landing.Contact.Form.Fill.Fields', type: 'error' });
         }
         await axios
             .post('/api/contact', formState)
-            .then((res) => {
-                setStatus({ text: res.data.message, type: 'success' });
+            .then(() => {
+                setStatus({ text: 'Landing.Contact.Form.Success', type: 'success' });
                 setFormState(initialFormState);
             })
-            .catch((err) => {
-                setStatus({ text: err?.message, type: 'error' });
+            .catch(() => {
+                setStatus({ text: 'Landing.Contact.Form.Error', type: 'error' });
             });
     };
 
@@ -64,7 +66,7 @@ const ContactForm: FC = () => {
                 <div className={styles.formRow}>
                     <FormInput
                         name="name"
-                        labelValue="Name"
+                        labelValue={translate('Landing.Contact.Form.Name')}
                         type="text"
                         onChange={handleInputChanged}
                     />
@@ -72,7 +74,7 @@ const ContactForm: FC = () => {
                 <div className={styles.formRow}>
                     <FormInput
                         name="company"
-                        labelValue="Company"
+                        labelValue={translate('Landing.Contact.Form.Company')}
                         type="text"
                         onChange={handleInputChanged}
                     />
@@ -80,15 +82,15 @@ const ContactForm: FC = () => {
                 <div className={styles.formRow}>
                     <FormInput
                         name="email"
-                        labelValue="Email"
+                        labelValue={translate('Landing.Contact.Form.Email')}
                         type="email"
                         onChange={handleInputChanged}
                     />
                 </div>
                 <div className={styles.formRow}>
                     <FormTextarea
-                        labelValue="Message"
                         name="message"
+                        labelValue={translate('Landing.Contact.Form.Message')}
                         type="text"
                         onChange={handleTextareaChanged}
                     />
@@ -96,15 +98,14 @@ const ContactForm: FC = () => {
                 <div className={styles.formRow}>
                     {status ? (
                         <Typography variant="body3" color={status.type} font="Roboto">
-                            {status.text}
+                            {translate(status.text)}
                         </Typography>
                     ) : null}
                 </div>
                 <div className={styles.formRow}>
                     <FormCheckbox
-                        labelValue="Contrary to popular belief, Lorem Ipsum is not simplyrandom text.
-                            It has roots in a piece of classicaln contrary to popular belief, Lorem Ipsum"
                         name="checkbox"
+                        labelValue={translate('Landing.Contact.Form.Checkbox')}
                         type="checkbox"
                         onChange={handleCheckboxChanged}
                     />

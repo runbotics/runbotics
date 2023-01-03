@@ -12,18 +12,19 @@ $CHECKBOX-SIZE: 26px;
 $CHECKBOX-BORDER-RADIUS: 6px;
 $CHECKBOX-TRANSFORM-Y: -1.2px;
 
+$LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
 @mixin normalize-autocomplete {
     background-color: transparent !important;
     transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 .label {
+    $LABEL-TOP: calc($font-size-body3 + 5px);
     @include font-face-roboto;
     font-weight: $font-weight-medium;
     position: absolute;
-    top: calc($font-size-body3 + 5px);
+    top: $LABEL-TOP;
     left: $padding-5 + $INPUT-BORDER-THICKNESS;
-    //2 px for border
     transition: 0.2s ease all;
     pointer-events: none;
     color: $text-color-dark;
@@ -51,7 +52,7 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
         ~ .label {
             font-size: $font-size-caption;
-            top: $font-size-body3 / -2;
+            top: $LABEL-TRANSFORM-Y;
             color: $palette-accent-primary;
             padding-inline: $padding-1;
         }
@@ -71,7 +72,7 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
 .input:not(:placeholder-shown) ~ .label {
     font-size: $font-size-caption;
-    top: $font-size-body3 / -2;
+    top: $LABEL-TRANSFORM-Y;
     padding-inline: $padding-1;
 }
 
@@ -113,8 +114,8 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 }
 
 .checkbox::before {
-    width: 0.65em;
-    height: 0.65em;
+    width: 0.75em;
+    height: 0.75em;
     content: "";
     transition: 120ms transform ease-in-out;
     transform: scale(0);

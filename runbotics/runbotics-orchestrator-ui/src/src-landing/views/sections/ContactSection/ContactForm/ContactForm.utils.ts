@@ -4,12 +4,8 @@ export const validate = (
     form: FormState,
     requiredFields: (keyof FormState)[]
 ) =>
-    requiredFields.reduce((acc, field) => {
-        if (!form[field]) {
-            return false;
-        }
-        return acc;
-    }, true);
+    requiredFields.every((field) => form[field]);
+
 
 export const initialFormState: FormState = {
     name: '',
