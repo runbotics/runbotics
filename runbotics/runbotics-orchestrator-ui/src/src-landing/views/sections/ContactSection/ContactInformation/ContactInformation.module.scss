@@ -1,4 +1,4 @@
-@import "#src-landing/scss/main.scss";
+@import '#src-landing/scss/main.scss';
 
 $INFO-MAX-WIDTH: 800px;
 
@@ -24,6 +24,9 @@ $INFO-MAX-WIDTH: 800px;
 
 .gridItemText {
     font-weight: $font-weight-semi-bold;
+    appearance: none;
+    text-decoration: none;
+    color: $text-color-dark;
 }
 
 @media (max-width: $breakpoint-md) {

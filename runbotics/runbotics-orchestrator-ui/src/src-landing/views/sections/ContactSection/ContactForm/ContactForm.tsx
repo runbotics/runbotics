@@ -47,16 +47,25 @@ const ContactForm: FC = () => {
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (!validate(formState, REQUIRED_FIELDS)) {
-            setStatus({ text: 'Landing.Contact.Form.Fill.Fields', type: 'error' });
+            setStatus({
+                text: 'Landing.Contact.Form.Fill.Fields',
+                type: 'error',
+            });
         }
         await axios
             .post('/api/contact', formState)
             .then(() => {
-                setStatus({ text: 'Landing.Contact.Form.Success', type: 'success' });
+                setStatus({
+                    text: 'Landing.Contact.Form.Success',
+                    type: 'success',
+                });
                 setFormState(initialFormState);
             })
             .catch(() => {
-                setStatus({ text: 'Landing.Contact.Form.Error', type: 'error' });
+                setStatus({
+                    text: 'Landing.Contact.Form.Error',
+                    type: 'error',
+                });
             });
     };
 
@@ -69,6 +78,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Name')}
                         type="text"
                         onChange={handleInputChanged}
+                        value={formState.name}
                     />
                 </div>
                 <div className={styles.formRow}>
@@ -77,6 +87,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Company')}
                         type="text"
                         onChange={handleInputChanged}
+                        value={formState.company}
                     />
                 </div>
                 <div className={styles.formRow}>
@@ -85,6 +96,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Email')}
                         type="email"
                         onChange={handleInputChanged}
+                        value={formState.email}
                     />
                 </div>
                 <div className={styles.formRow}>
@@ -93,11 +105,16 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Message')}
                         type="text"
                         onChange={handleTextareaChanged}
+                        value={formState.message}
                     />
                 </div>
                 <div className={styles.formRow}>
                     {status ? (
-                        <Typography variant="body3" color={status.type} font="Roboto">
+                        <Typography
+                            variant="body3"
+                            color={status.type}
+                            font="Roboto"
+                        >
                             {translate(status.text)}
                         </Typography>
                     ) : null}
@@ -108,6 +125,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Checkbox')}
                         type="checkbox"
                         onChange={handleCheckboxChanged}
+                        checked={formState.checkbox}
                     />
                     <FormButton labelValue="Submit" type="submit" />
                 </div>

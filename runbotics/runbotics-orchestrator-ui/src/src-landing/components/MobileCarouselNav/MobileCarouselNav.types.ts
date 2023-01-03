@@ -4,4 +4,6 @@ export interface MobileCarouselNavProps {
     length?: number;
     currentSlide?: number;
     className?: string;
+    isLastSlide?: boolean;
+    isFirstSlide?: boolean;
 }

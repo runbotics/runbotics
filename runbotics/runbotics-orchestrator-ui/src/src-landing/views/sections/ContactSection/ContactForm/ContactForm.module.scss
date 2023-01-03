@@ -1,4 +1,4 @@
-@import "#src-landing/scss/main.scss";
+@import '#src-landing/scss/main.scss';
 
 $FORM-MAX-WIDTH: 800px;
 .root {
@@ -12,7 +12,7 @@ $FORM-MAX-WIDTH: 800px;
     flex-direction: column;
     flex-wrap: wrap;
     width: 100%;
-    gap: $margin-4;
+    gap: $margin-6;
 }
 
 .formRow {

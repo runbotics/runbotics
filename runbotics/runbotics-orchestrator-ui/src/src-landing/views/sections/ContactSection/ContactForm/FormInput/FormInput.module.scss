@@ -1,9 +1,9 @@
-@import "#src-landing/scss/main.scss";
+@import '#src-landing/scss/main.scss';
 
-$INPUT-BORDER-RADIUS: 30px;
+$INPUT-BORDER-RADIUS: 10px;
 $INPUT-BORDER-THICKNESS: 2px;
 $INPUT-HEIGHT: 60px;
-$INPUT-INLINE-PADDING: 20px;
+$INPUT-INLINE-PADDING: 10px;
 
 $TEXT-AREA-BASE-HEIGHT: 200px;
 
@@ -13,10 +13,6 @@ $CHECKBOX-BORDER-RADIUS: 6px;
 $CHECKBOX-TRANSFORM-Y: -1.2px;
 
 $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
-@mixin normalize-autocomplete {
-    background-color: transparent !important;
-    transition: background-color 600000s 0s, color 600000s 0s;
-}
 
 .label {
     $LABEL-TOP: calc($font-size-body3 + 5px);
@@ -24,7 +20,7 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
     font-weight: $font-weight-medium;
     position: absolute;
     top: $LABEL-TOP;
-    left: $padding-5 + $INPUT-BORDER-THICKNESS;
+    left: $padding-3 + $INPUT-BORDER-THICKNESS;
     transition: 0.2s ease all;
     pointer-events: none;
     color: $text-color-dark;
@@ -43,7 +39,7 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
     border-radius: $INPUT-BORDER-RADIUS;
     background: #fff;
     caret-color: $palette-accent-primary;
-    padding-inline: $padding-5;
+    padding-inline: $padding-3;
 
     &:focus {
         border-color: $palette-accent-primary;
@@ -52,35 +48,24 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
 
         ~ .label {
             font-size: $font-size-caption;
-            top: $LABEL-TRANSFORM-Y;
+            top: calc($LABEL-TRANSFORM-Y - 12px);
+            background-color: transparent;
             color: $palette-accent-primary;
-            padding-inline: $padding-1;
         }
     }
-
-    //to remove the default blue background on chrome autofill
-    &:-webkit-autofill,
-    &:-webkit-autofill:focus {
-        @include normalize-autocomplete;
-    }
-
-    &[data-autocompleted] {
-        @include normalize-autocomplete;
-    }
-
 }
 
 .input:not(:placeholder-shown) ~ .label {
     font-size: $font-size-caption;
-    top: $LABEL-TRANSFORM-Y;
-    padding-inline: $padding-1;
+    top: calc($LABEL-TRANSFORM-Y - 12px);
+    background-color: transparent;
 }
 
 .textarea {
     composes: input;
     height: $TEXT-AREA-BASE-HEIGHT;
     min-height: $INPUT-HEIGHT;
-    padding: $padding-3 $padding-5 + $INPUT-BORDER-THICKNESS;
+    padding: $padding-3 $padding-3 + $INPUT-BORDER-THICKNESS;
     resize: vertical;
 }
 
@@ -89,7 +74,6 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
     max-width: $CHECKBOX-WRAPPER-MAX-WIDTH;
     gap: $margin-3;
 }
-
 
 .checkbox {
     font: inherit;
@@ -116,7 +100,7 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
 .checkbox::before {
     width: 0.75em;
     height: 0.75em;
-    content: "";
+    content: '';
     transition: 120ms transform ease-in-out;
     transform: scale(0);
     transform-origin: bottom left;
@@ -138,4 +122,8 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
     border-radius: $INPUT-BORDER-RADIUS;
     background-color: $palette-background-accent;
     appearance: none;
+    box-shadow: $box-shadow-primary;
+
+    &:hover {
+    }
 }

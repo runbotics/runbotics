@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import Image from 'next/image';
+import NextLink from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
@@ -14,7 +15,9 @@ const ContactInformation: FC = () => {
     return (
         <div className={styles.root}>
             <div className={styles.summary}>
-                <Typography variant="h2">{translate('Landing.Contact.Info.Title')}</Typography>
+                <Typography variant="h2">
+                    {translate('Landing.Contact.Info.Title')}
+                </Typography>
                 <Typography variant="body2">
                     {translate('Landing.Contact.Info.Subtitle')}
                 </Typography>
@@ -23,7 +26,26 @@ const ContactInformation: FC = () => {
                 {CONTACT_INFO.map(({ icon, text, iconAlt }) => (
                     <>
                         <Image src={icon} alt={translate(iconAlt)} />
-                        <Typography variant="body2" className={styles.gridItemText}>{translate(text)}</Typography>
+                        {translate(text).startsWith('http') ? (
+                            <NextLink
+                                href={translate(text)}
+                                className={styles.gridItemText}
+                            >
+                                <Typography
+                                    variant="body2"
+                                    className={styles.gridItemText}
+                                >
+                                    {translate(text)}
+                                </Typography>
+                            </NextLink>
+                        ) : (
+                            <Typography
+                                variant="body2"
+                                className={styles.gridItemText}
+                            >
+                                {translate(text)}
+                            </Typography>
+                        )}
                     </>
                 ))}
             </div>
