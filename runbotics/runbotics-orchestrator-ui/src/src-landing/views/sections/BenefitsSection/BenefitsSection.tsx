@@ -10,7 +10,7 @@ import styles from './BenefitsSection.module.scss';
 const BenefitsSection: FC = () => (
     <section className={styles.root} id={BENEFITS_SECTION_ID}>
         <BenefitsContent />
-        <BenefitsCarusel />
+        <BenefitsCarousel />
     </section>
 );
 

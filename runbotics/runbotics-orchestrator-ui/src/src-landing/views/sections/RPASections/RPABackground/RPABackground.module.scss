@@ -1,0 +1,62 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROWS_HEIGHT: 450px;
+$MIN_CONTENT_WIDTH: 500px;
+
+@mixin backgroundArrowImage($image-url, $position) {
+  z-index: 1;
+  align-self: center;
+  width: 100%;
+  height: $ARROWS_HEIGHT;
+  background-image: url($image-url);
+  background-position: center $position;
+  background-repeat: no-repeat;
+  mix-blend-mode: soft-light;
+}
+
+.root {
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  background-image: url('/images/banners/circuits-background.png');
+  background-repeat: repeat-x;
+  isolation: isolate;
+}
+
+.backgroundBanner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2fr minmax($MIN_CONTENT_WIDTH, 1fr) 1fr;
+  justify-content: center;
+}
+
+.backgroundDimmer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $text-color-dark;
+  opacity: 0.75;
+}
+
+.threeArrows {
+  @include backgroundArrowImage('/images/shapes/three-arrows-right.svg', right);
+}
+
+.oneArrow {
+  @include backgroundArrowImage('/images/shapes/arrow-right.svg', left);
+}
+  
+  @media (max-width: $breakpoint-sm) {
+    .backgroundBanner {
+      display: flex;
+    }
+
+    .threeArrows {
+      display: none;
+    }
+
+    .oneArrow {
+      display: none;
+    }
+  }
