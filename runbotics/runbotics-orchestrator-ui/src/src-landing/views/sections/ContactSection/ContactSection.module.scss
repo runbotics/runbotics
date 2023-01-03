@@ -6,7 +6,7 @@
     height: initial;
     grid-template-columns: repeat(
     auto-fit,
-                    minmax(calc($breakpoint-md / 2 - $padding-4), 1fr)
+    minmax(calc($breakpoint-md / 2 - $padding-4), 1fr)
   );
     grid-gap: 0;
     justify-items: center;
