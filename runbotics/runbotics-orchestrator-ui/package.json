@@ -39,7 +39,7 @@
         "@mui/icons-material": "^5.10.6",
         "@mui/material": "^5.10.12",
         "@mui/lab": "^5.0.0-alpha.106",
-        "@mui/system": "^5.4.1",
+        "@mui/system": "^5.11.2",
         "@mui/x-data-grid": "^5.17.0",
         "@reduxjs/toolkit": "^1.4.0",
         "@rjsf/core": "^4.2.0",

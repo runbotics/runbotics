@@ -115,7 +115,7 @@
     "devDependencies": {
         "@nestjs/cli": "^8.2.4",
         "@nestjs/schematics": "^8.0.8",
-        "@nestjs/testing": "^8.4.2",
+        "@nestjs/testing": "^9.2.1",
         "@types/asana": "^0.18.1",
         "@types/cron": "^2.0.0",
         "@types/jest": "^27.0.2",
