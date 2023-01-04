@@ -41,11 +41,13 @@ $GRID-GAPS: 27px 23px;
     }
 
     &__head__2 {
+        isolation: isolate;
         grid-column: 1 / 3;
         position: relative;
     }
 
     &__head__2::before {
+        z-index: -1;
         content: '';
         position: absolute;
         top: 0;

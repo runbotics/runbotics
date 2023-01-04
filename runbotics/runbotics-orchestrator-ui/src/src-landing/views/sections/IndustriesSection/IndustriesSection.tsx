@@ -9,7 +9,7 @@ import styles from './IndustriesSection.module.scss';
 const IndustriesSection = () => {
     const { translate } = useTranslations();
     return (
-        <section className={styles.root}>
+        <section className={styles.root} id="industires-section">
             <div className={styles.title}>
                 <Typography variant="h2">
                     <div>{translate('Landing.Industries.Title.Part.1')}</div>

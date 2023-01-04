@@ -5,7 +5,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.4.0-SNAPSHOT.19",
+    "version": "2.4.0-SNAPSHOT.20",
     "private": true,
     "sideEffects": false,
     "scripts": {
@@ -63,6 +63,7 @@
         "jwt-decode": "^2.2.0",
         "lodash": "^4.17.19",
         "moment": "^2.27.0",
+        "nodemailer": "^6.6.0",
         "node-sass": "^7.0.0",
         "notistack": "^2.0.8",
         "react": "^18.2.0",
