@@ -7,6 +7,7 @@
         "email": "contact@runbotics.com"
     },
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "rebuild": "rushx build",
         "start": "node index.js"
@@ -16,7 +17,12 @@
         "commander": "^9.4.1",
         "fs-extra": "^11.1.0",
         "console-read-write": "^0.1.1",
-        "comment-json": "^4.2.3"
+        "comment-json": "^4.2.3",
+        "figlet": "^1.5.2",
+        "inquirer": "^9.1.4"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^9.0.13"
     },
     "bin": {
         "rb": "index.js"

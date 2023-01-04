@@ -1,25 +1,17 @@
+#! /usr/bin/env node
+
 import { program } from 'commander';
-import { default as major } from './commands/major';
-import { default as minor } from './commands/minor';
-import { default as patch } from './commands/patch';
-import { default as prerelease } from './commands/prerelease';
+import version from './commands/version/index.js';
 
 program
-    .command('major')
-    .description('')
-    .action(major);
+    .command('version')
+    .description('Bumps all standalone RunBotics packages versions. If no option specified, prerelease is bumped by default.')
+    .option('--major', 'bump major')
+    .option('--minor', 'bump minor')
+    .option('--patch', 'bump patch')
+    .option('--prerelease', 'bump prerelease')
+    .option('--no-check', 'do not verify version with develop branch')
+    .action(version);
 
-program
-    .command('minor')
-    .description('')
-    .action(minor);
-
-program
-    .command('patch')
-    .description('')
-    .action(patch);
-
-program
-    .command('prerelease')
-    .description('')
-    .action(prerelease);
+program.showHelpAfterError();
+program.parse();
