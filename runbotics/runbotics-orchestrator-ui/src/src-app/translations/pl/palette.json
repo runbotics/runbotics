@@ -5,6 +5,7 @@
     "Palette.GlobalConnectTool": "Globalne połączenie",
     "Palette.Create.StartEvent": "Utwórz Zdarzenie Początkowe",
     "Palette.Create.EndEvent": "Utwórz Zdarzenie Końcowe",
+    "Palette.Create.IntermediateEvent": "Create Zdarzenie Pośrednie",
     "Palette.Create.ExclusiveGateway": "Utwórz Bramkę Logiczną",
     "Palette.Create.Group": "Utwórz Grupę"
 }
