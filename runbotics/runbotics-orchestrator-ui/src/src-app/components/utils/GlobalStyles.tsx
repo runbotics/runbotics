@@ -11,6 +11,7 @@ const GlobalStyles = createGlobalStyle(
     html {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
         width: 100%;
     }
 

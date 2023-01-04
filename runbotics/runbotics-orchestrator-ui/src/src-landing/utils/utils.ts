@@ -1,0 +1,10 @@
+export const BENEFITS_SECTION_ID = 'runbotics';
+export const HERO_SECTION_ID = 'heros';
+export const INTEGRATION_SECTION_ID = 'integration';
+export const PROS_SECTION_ID = 'pros';
+export const RPA_SECTION_ID = 'rpa';
+export const INDUSTRY_SECTORS_SECTION_ID = 'for-who';
+export const OPEN_SOURCE_SECTION_ID = 'open-source';
+export const PARTNER_SECTION_ID = 'partners';
+export const TEMPLATE_SECTION_ID = 'resources';
+export const CONTACT_US_SECTION_ID = 'contact-us';
