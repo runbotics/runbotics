@@ -1,6 +1,6 @@
-import headerTranslations from './header.json';
 import benefitsTranslations from './benefits.json';
 import contactTranslations from './contact.json';
+import headerTranslations from './header.json';
 import heroTranslations from './hero.json';
 import industriesTranslation from './industries.json';
 import integrationTranslations from './integration.json';
