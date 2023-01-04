@@ -19,4 +19,13 @@ module.exports = {
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
     },
+    modularizeImports: {
+        '@mui/icons-material': {
+            transform: '@mui/icons-material/{{member}}',
+        },
+        '@mui/material': {
+            transform: '@mui/material/{{member}}',
+        }
+    },
+
 };

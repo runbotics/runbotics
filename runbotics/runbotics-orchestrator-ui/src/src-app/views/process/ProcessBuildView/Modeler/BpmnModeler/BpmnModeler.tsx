@@ -55,11 +55,11 @@ import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
 import emptyBpmn from '../empty.bpmn';
 import Clipboard from '../extensions/Clipboard';
+import ModelerScripts from '../extensions/ModelerScripts';
 import ZoomScrollModule from '../extensions/zoomscroll';
 import modelerPalette from '../modeler-palette';
 import BasicModelerModule from '../Modeler.module';
 import { applyModelerElement } from '../utils';
-import ModelerScripts from '../extensions/ModelerScripts';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     'bpmn:ServiceTask',
@@ -120,7 +120,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useEffect(() => {
             if (prevLanguage !== i18n.language && modeler)
-                modeler._container.remove();
+            { modeler._container.remove(); }
 
             setPrevLanguage(i18n.language);
 
@@ -196,9 +196,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             action,
                         });
                         if (element.id.includes('Activity'))
-                            dispatch(
-                                processActions.addAppliedAction(element.id)
-                            );
+                        { dispatch(
+                            processActions.addAppliedAction(element.id)
+                        ); }
                     }
                     if (event.context.elements.length > 1) {
                         event.context.elements.forEach((element) => {
@@ -218,9 +218,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 action,
                             });
                             if (element.id.includes('Activity'))
-                                dispatch(
-                                    processActions.addAppliedAction(element.id)
-                                );
+                            { dispatch(
+                                processActions.addAppliedAction(element.id)
+                            ); }
                         });
                     }
                 }
@@ -309,12 +309,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useUpdateEffect(() => {
             if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION)
-                setSelectedElement(null);
+            { setSelectedElement(null); }
         }, [currentTab]);
 
         useUpdateEffect(() => {
             if (selectedElement)
-                setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
+            { setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION); }
         }, [selectedElement]);
 
         useEffect(() => {
