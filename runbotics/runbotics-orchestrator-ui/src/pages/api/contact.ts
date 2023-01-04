@@ -19,12 +19,12 @@ const { serverRuntimeConfig } = getConfig();
 const emailConfig = async (env) => {
     if (env === 'production') {
         return {
-            host: serverRuntimeConfig.mail_host,
-            port: serverRuntimeConfig.mail_port,
+            host: serverRuntimeConfig.mailHost,
+            port: serverRuntimeConfig.mailPort,
             secure: true,
             auth: {
-                user: serverRuntimeConfig.mail_username,
-                pass: serverRuntimeConfig.mail_password,
+                user: serverRuntimeConfig.mailUsername,
+                pass: serverRuntimeConfig.mailPassword,
             },
         };
     }
@@ -45,7 +45,7 @@ const getEmailContent = ({ email, company, message, name }: Body) => {
 
     return {
         from: `${name} <${email}>`,
-        to: env === 'production' ? serverRuntimeConfig.mail_username : 'test@runbotics.com',
+        to: env === 'production' ? serverRuntimeConfig.mailUsername : 'test@runbotics.com',
         subject: `Message from ${name} ${company ? 'At' + company : ''}`,
         text: `${message}`,
     };
@@ -70,6 +70,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
         message: `Email sent ${env !== 'production' ? nodemailer.getTestMessageUrl(info) : ''
-        }`,
+            }`,
     });
 }
