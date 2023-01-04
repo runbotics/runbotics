@@ -16,8 +16,7 @@ const getRemoteRbConfig = async () => {
             process.exit(1);
         });
 
-    // const remoteConfig = await exec('git show develop:runbotics/common/config/runbotics.json') // TODO: test
-    const remoteConfig = await exec('git show develop:runbotics/runbotics-scheduler/package.json')
+    const remoteConfig = await exec('git show develop:runbotics/common/config/runbotics.json')
         .then((data) => parse(data.stdout))
         .catch(() => {
             console.log(chalk.red('Error: Failed to retrieve develop config file'));

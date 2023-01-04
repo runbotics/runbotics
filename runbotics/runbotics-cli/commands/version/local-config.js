@@ -4,8 +4,10 @@ import { exec as nativeExec } from 'child_process';
 import fs from 'fs-extra';
 import { promisify } from 'util';
 
+import { RUNBOTICS_CONFIG_RELATIVE_PATH } from './utils.js';
+
 const { readJsonSync } = fs;
-const exec = promisify(nativeExec)
+const exec = promisify(nativeExec);
 
 const getLocalRbConfig = async () => {
     await exec('git config -l | grep remote.origin.url=https://github.com/runbotics/runbotics.git')
@@ -27,7 +29,7 @@ const getLocalRbConfig = async () => {
             process.exit(1);
         });
 
-    const rbConfigPath = join(rbRootDir, 'runbotics', 'common', 'config', 'runbotics.json');
+    const rbConfigPath = join(rbRootDir, RUNBOTICS_CONFIG_RELATIVE_PATH);
 
     const localConfig = readJsonSync(rbConfigPath);
 

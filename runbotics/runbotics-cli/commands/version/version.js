@@ -1,39 +1,17 @@
 import chalk from "chalk";
 import figlet from 'figlet';
 import { join } from "path";
-import { exec as nativeExec } from 'child_process';
-import { parse, stringify } from 'comment-json';
+import { stringify } from 'comment-json';
 import fs from 'fs-extra';
-import { promisify } from 'util';
 import inquirer from 'inquirer';
 
 import getLocalRbConfig from './local-config.js';
 import getRemoteRbConfig from './remote-config.js';
 import spawn from './spawn.js';
+import { PRERELEASE_ID, CONFIGS_RELATIVE_PATHS_MAP, RUNBOTICS_CONFIG_RELATIVE_PATH } from './utils.js';
 
-const { readJsonSync, writeJSONSync, writeFileSync } = fs;
+const { readJsonSync, writeFileSync } = fs;
 const { prompt } = inquirer;
-const exec = promisify(nativeExec);
-
-const PRERELEASE_ID = 'SNAPSHOT';
-const SCHEDULER_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-scheduler', 'package.json');
-const UI_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-orchestrator-ui', 'package.json');
-const BOT_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-desktop', 'package.json');
-const API_CONFIG_RELATIVE_PATH = join('runbotics-orchestrator', 'package.json');
-
-const CONFIGS_RELATIVE_PATHS_MAP = new Map([
-    [ 'scheduler', SCHEDULER_CONFIG_RELATIVE_PATH ],
-    [ 'orchestrator-ui', UI_CONFIG_RELATIVE_PATH ],
-    [ 'desktop', BOT_CONFIG_RELATIVE_PATH ],
-    [ 'orchestrator', API_CONFIG_RELATIVE_PATH ],
-]);
-
-// 1 - sprawdz czy w repo, sprawdz czy cos jest do zacommitowania, pobierz wersje z configu, jesli nie ma to rzuc blad
-// 2 /- git fetch developa
-// 3 /- pobierz wersje z developa i porownaj z aktualna, jesli sie nie zgadza to nakaż zrobić rebase
-// 4 /- w zaleznosci od opcji utwórz nową wersję
-// 5 /- nadpisz wersje we wszystkich plikach + globalny plik konfiguracyjny
-// 6 /- commit i push
 
 const getCurrentVersion = async (check) => {
     const { localConfig, rbRootDir } = await getLocalRbConfig();
@@ -86,7 +64,7 @@ const createNextVersion = (version, options) => {
     return `${major}.${minor}.${patch}.${parseInt(prerelease) + 1}`;
 };
 
-const overridePackageJson = (path, version) => {
+const overrideJsonVersion = (path, version) => {
     const original = readJsonSync(path);
     const newConfig = { ...original, version };
     writeFileSync(path, stringify(newConfig, null, 4));
@@ -116,7 +94,7 @@ const version = async ({ check, ...versionOptions }) => {
     for (const [ key, value ] of CONFIGS_RELATIVE_PATHS_MAP.entries()) {
         const absolutePath = join(rbRootDir, value);
         try {
-            overridePackageJson(absolutePath, nextVersion);
+            overrideJsonVersion(absolutePath, nextVersion);
         } catch (e) {
             const message = e.code === 'ENOENT' ? ` (No such file like "${absolutePath}")` : undefined;
             console.log(chalk.red(`Error: Could not overwrite ${key} version${message ? message : ''}`));
@@ -128,6 +106,14 @@ const version = async ({ check, ...versionOptions }) => {
         .catch(() => {
             process.exit(1);
         });
+
+    try {
+        overrideJsonVersion(join(rbRootDir, RUNBOTICS_CONFIG_RELATIVE_PATH), nextVersion);
+    } catch (e) {
+        const message = e.code === 'ENOENT' ? ` (No such file like "${absolutePath}")` : undefined;
+        console.log(chalk.red(`Error: Could not overwrite RunBotics config version${message ? message : ''}`));
+        process.exit(1);
+    }
 
     console.log(chalk.green('\nVersion overwritten'));
     console.log('Pushing changes to the remote\n');
