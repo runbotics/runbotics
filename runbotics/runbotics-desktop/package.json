@@ -8,6 +8,7 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
+    "license": "MIT",
     "main": "./dist/src/main.js",
     "scripts": {
         "pack": "electron-builder --dir",

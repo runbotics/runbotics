@@ -6,7 +6,6 @@
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "private": true,
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {

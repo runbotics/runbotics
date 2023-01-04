@@ -1,11 +1,11 @@
 {
     "name": "runbotics-actions-windows",
     "version": "1.0.0",
-    "license": "MIT",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
+    "license": "MIT",
     "type": "commonjs",
     "main": "dist/index.js",
     "module": "./dist/index.js",

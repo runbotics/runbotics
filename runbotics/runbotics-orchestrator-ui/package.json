@@ -1,12 +1,11 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "license": "MIT",
+    "version": "2.4.0-SNAPSHOT.25",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.4.0-SNAPSHOT.25",
-    "private": true,
+    "license": "MIT",
     "sideEffects": false,
     "scripts": {
         "start": "next start",

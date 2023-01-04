@@ -1,0 +1,24 @@
+{
+    "name": "runbotics-cli",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "runbotics",
+        "email": "contact@runbotics.com"
+    },
+    "main": "index.js",
+    "scripts": {
+        "rebuild": "rushx build",
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "chalk": "^5.2.0",
+        "commander": "^9.4.1",
+        "fs-extra": "^11.1.0",
+        "console-read-write": "^0.1.1",
+        "comment-json": "^4.2.3"
+    },
+    "bin": {
+        "rb": "index.js"
+    }
+}
