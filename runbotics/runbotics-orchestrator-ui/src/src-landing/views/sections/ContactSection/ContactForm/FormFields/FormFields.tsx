@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
 import { REQUIRED_FIELDS } from '../ContactForm';
-import styles from './FormInput.module.scss';
-import { SubmitProps, FormInputProps, CheckboxProps } from './FormInput.types';
+import styles from './FormFields.module.scss';
+import { CheckboxProps, FormInputProps, SubmitProps } from './FormFields.types';
 
 export const FormInput: FC<FormInputProps<HTMLInputElement>> = (props) => (
     <>

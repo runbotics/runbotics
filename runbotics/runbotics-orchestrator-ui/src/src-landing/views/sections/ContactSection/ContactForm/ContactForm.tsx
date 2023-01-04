@@ -7,7 +7,7 @@ import Typography from '#src-landing/components/Typography';
 import styles from './ContactForm.module.scss';
 import { FormState, InputProps, Status } from './ContactForm.types';
 import { initialFormState, validate } from './ContactForm.utils';
-import { FormButton, FormCheckbox, FormInput, FormTextarea } from './FormInput';
+import { FormButton, FormCheckbox, FormInput, FormTextarea } from './FormFields';
 
 export const REQUIRED_FIELDS: (keyof FormState)[] = [
     'name',
