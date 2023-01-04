@@ -1,8 +1,10 @@
+import { StaticImageData } from 'next/image';
+
 import prosTranslations from '#src-landing/translations/en/pros.json';
 
 export interface ProsTile {
     title: keyof typeof prosTranslations;
     description: keyof typeof prosTranslations;
-    icon: string;
+    icon: StaticImageData;
     iconAlt: keyof typeof prosTranslations;
 }

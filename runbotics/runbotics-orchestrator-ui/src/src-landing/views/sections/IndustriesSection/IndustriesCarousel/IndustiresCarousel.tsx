@@ -12,7 +12,8 @@ const IndustriesCarousel: FC<IndustriesCarouselProps> = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [openSlide, setOpenSlide] = useState<null | number>(null);
     const [sliderWidth, setSliderWidth] = useState<null | number>(null);
-
+    const isLastSlide = slides.length - sliderWidth === activeIndex;
+    const isFirstSlide = activeIndex === 0;
     const sliderRef = useRef<HTMLDivElement>(null);
 
     const handleForward = () => {
@@ -50,7 +51,11 @@ const IndustriesCarousel: FC<IndustriesCarouselProps> = ({ slides }) => {
     return (
         <div className={styles.root}>
             <div className={styles.buttonContainer}>
-                <CarouselButton direction="backward" onClick={handleBackward} />
+                <CarouselButton
+                    direction="backward"
+                    onClick={handleBackward}
+                    visible={!isFirstSlide}
+                />
             </div>
             <div className={styles.container}>
                 <div className={styles.slider} ref={sliderRef}>
@@ -68,12 +73,18 @@ const IndustriesCarousel: FC<IndustriesCarouselProps> = ({ slides }) => {
                 </div>
             </div>
             <div className={styles.buttonContainer}>
-                <CarouselButton direction="forward" onClick={handleForward} />
+                <CarouselButton
+                    direction="forward"
+                    onClick={handleForward}
+                    visible={!isLastSlide}
+                />
             </div>
             <MobileCarouselNav
                 incrementSlide={handleForward}
                 decrementSlide={handleBackward}
                 currentSlide={null}
+                isFirstSlide={isFirstSlide}
+                isLastSlide={isLastSlide}
                 className={styles.mobileNav}
             />
         </div>

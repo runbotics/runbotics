@@ -6,8 +6,8 @@ import arrowRightSrc from '#public/images/shapes/arrows-right-bottom-rounded-tra
 
 import styles from './IntegrationBackground.module.scss';
 
-const IntegrationBackground: FC = ({children}) => (
-    <section className={styles.root}>
+const IntegrationBackground: FC = ({ children }) => (
+    <section className={styles.root} id="integration-section">
         <div className={styles.arrowIconWrapper}>
             <Image
                 src={arrowRightSrc}

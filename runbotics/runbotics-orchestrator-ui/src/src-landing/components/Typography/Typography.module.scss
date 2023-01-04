@@ -10,11 +10,21 @@
     &__primary {
         color: $text-color-dark;
     }
+
     &__secondary {
         color: $text-color-light;
     }
+
     &__accent {
         color: $text-accent-color;
+    }
+
+    &__error {
+        color: $text-color-error;
+    }
+
+    &__success {
+        color: $text-color-success;
     }
 
     &__h1,
@@ -30,30 +40,37 @@
         font-size: $font-size-h1;
         line-height: $line-height-h1;
     }
+
     &__h2 {
         font-size: $font-size-h2;
         line-height: $line-height-h2;
     }
+
     &__h3 {
         font-size: $font-size-h3;
         line-height: $line-height-h3;
     }
+
     &__h4 {
         font-size: $font-size-h4;
         line-height: $line-height-h4;
     }
+
     &__h5 {
         font-size: $font-size-h5;
         line-height: $line-height-base;
     }
+
     &__h6 {
         font-size: $font-size-h6;
         line-height: $line-height-base;
     }
+
     &__body1 {
         font-size: $font-size-body1;
         line-height: $line-height-body1;
     }
+
     &__body2 {
         font-size: $font-size-body2;
         line-height: $line-height-body2;
@@ -67,6 +84,7 @@
     &__Roboto {
         @include font-face-roboto;
     }
+
     &__Montserrat {
         @include font-face-base;
     }
