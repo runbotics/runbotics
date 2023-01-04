@@ -1,3 +1,4 @@
+import getConfig from 'next/config';
 import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 
@@ -13,15 +14,17 @@ interface Body {
 const validateBody = (body: NextRequest['body']) =>
     REQUIRED_FIELDS.filter((field) => !body[field]);
 
+const { serverRuntimeConfig } = getConfig();
+
 const emailConfig = async (env) => {
     if (env === 'production') {
         return {
-            host: process.env.MAIL_HOST,
-            port: process.env.MAIL_PORT,
+            host: serverRuntimeConfig.mailHost,
+            port: serverRuntimeConfig.mailPort,
             secure: true,
             auth: {
-                user: process.env.MAIL_USERNAME,
-                pass: process.env.MAIL_PASSWORD,
+                user: serverRuntimeConfig.mailUsername,
+                pass: serverRuntimeConfig.mailPassword,
             },
         };
     }
@@ -42,7 +45,7 @@ const getEmailContent = ({ email, company, message, name }: Body) => {
 
     return {
         from: `${name} <${email}>`,
-        to: env === 'production' ? process.env.MAIL_USERNAME : 'test@runbotics.com',
+        to: env === 'production' ? serverRuntimeConfig.mailUsername : 'test@runbotics.com',
         subject: `Message from ${name} ${company ? 'At' + company : ''}`,
         text: `${message}`,
     };
