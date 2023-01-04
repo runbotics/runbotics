@@ -1,10 +1,11 @@
 import chalk from "chalk";
-import { exec as nativeExec, spawn as nativeSpawn } from 'child_process';
+import { exec as nativeExec } from 'child_process';
 import { parse } from 'comment-json';
 import { promisify } from 'util';
 
+import spawn from './spawn.js';
+
 const exec = promisify(nativeExec)
-const spawn = promisify(nativeSpawn)
 
 const getRemoteRbConfig = async () => {
     console.log('Fetching remote develop branch');

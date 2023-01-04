@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import figlet from 'figlet';
 import { join } from "path";
-import { exec as nativeExec, spawnSync } from 'child_process';
+import { exec as nativeExec } from 'child_process';
 import { parse, stringify } from 'comment-json';
 import fs from 'fs-extra';
 import { promisify } from 'util';
@@ -9,10 +9,11 @@ import inquirer from 'inquirer';
 
 import getLocalRbConfig from './local-config.js';
 import getRemoteRbConfig from './remote-config.js';
+import spawn from './spawn.js';
 
 const { readJsonSync, writeJSONSync, writeFileSync } = fs;
 const { prompt } = inquirer;
-const exec = promisify(nativeExec)
+const exec = promisify(nativeExec);
 
 const PRERELEASE_ID = 'SNAPSHOT';
 const SCHEDULER_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-scheduler', 'package.json');
@@ -27,12 +28,12 @@ const CONFIGS_RELATIVE_PATHS_MAP = new Map([
     [ 'orchestrator', API_CONFIG_RELATIVE_PATH ],
 ]);
 
-// 1 /- sprawdz czy w repo, sprawdz czy cos jest do zacommitowania, pobierz wersje z configu, jesli nie ma to rzuc blad
+// 1 - sprawdz czy w repo, sprawdz czy cos jest do zacommitowania, pobierz wersje z configu, jesli nie ma to rzuc blad
 // 2 /- git fetch developa
 // 3 /- pobierz wersje z developa i porownaj z aktualna, jesli sie nie zgadza to nakaż zrobić rebase
 // 4 /- w zaleznosci od opcji utwórz nową wersję
-// 5 - nadpisz wersje we wszystkich plikach
-// 6 - commit i push
+// 5 /- nadpisz wersje we wszystkich plikach + globalny plik konfiguracyjny
+// 6 /- commit i push
 
 const getCurrentVersion = async (check) => {
     const { localConfig, rbRootDir } = await getLocalRbConfig();
@@ -100,7 +101,7 @@ const version = async ({ check, ...versionOptions }) => {
 
     const nextVersion = createNextVersion(currentVersion, versionOptions);
 
-    console.log(chalk.blue(`Next version: ${nextVersion}\n`));
+    console.log(chalk.blue(`Next version:\t ${nextVersion}\n`));
 
     const { isConfirmed } = await prompt([
         { type: 'confirm', message: 'Do you want to continue?', name: 'isConfirmed' },
@@ -109,6 +110,8 @@ const version = async ({ check, ...versionOptions }) => {
     if (!isConfirmed) {
         process.exit(0);
     }
+
+    console.log('\nAltering config files\n');
 
     for (const [ key, value ] of CONFIGS_RELATIVE_PATHS_MAP.entries()) {
         const absolutePath = join(rbRootDir, value);
@@ -121,14 +124,19 @@ const version = async ({ check, ...versionOptions }) => {
         }
     }
 
-    console.log(chalk.green('Version overwritten'));
-    console.log('Pushing changes to the remote');
+    await spawn('sh', [ 'gradlew', 'setVersion', `-PnewVersion=${nextVersion}` ], { cwd: join(rbRootDir, 'runbotics-orchestrator'), stdio: 'inherit' })
+        .catch(() => {
+            process.exit(1);
+        });
 
-    spawnSync('git', [ 'add', '.' ], { stdio: 'inherit' });
-    spawnSync('git', [ 'commit', '--no-verify', `-m "bump app version to ${nextVersion}"` ], { stdio: 'inherit' });
-    spawnSync('git', [ 'push' ], { stdio: 'inherit' });
+    console.log(chalk.green('\nVersion overwritten'));
+    console.log('Pushing changes to the remote\n');
 
-    console.log(chalk.green('Operation executed successfully'));
+    // spawnSync('git', [ 'add', '.' ], { stdio: 'inherit' });
+    // spawnSync('git', [ 'commit', '--no-verify', '-m', `bump app version to ${nextVersion}` ], { stdio: 'inherit' });
+    // spawnSync('git', [ 'push' ], { stdio: 'inherit' });
+
+    console.log(chalk.green('\nOperation executed successfully'));
     process.exit(0);
 };
 
