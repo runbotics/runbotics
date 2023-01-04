@@ -20,7 +20,7 @@ const getLocalRbConfig = async () => {
         .catch(() => {
             console.log(chalk.red('Error: Commit your changes before bumping app version'));
             process.exit(1);
-        })
+        });
 
     const rbRootDir = await exec('git rev-parse --show-toplevel')
         .then((data) => data.stdout.trim())

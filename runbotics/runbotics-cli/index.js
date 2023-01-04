@@ -11,6 +11,7 @@ program
     .option('--patch', 'bump patch')
     .option('--prerelease', 'bump prerelease')
     .option('--no-check', 'do not verify version with develop branch')
+    .option('--no-push', 'do not commit and push altered files')
     .action(version);
 
 program.showHelpAfterError();

@@ -70,7 +70,7 @@ const overrideJsonVersion = (path, version) => {
     writeFileSync(path, stringify(newConfig, null, 4));
 };
 
-const version = async ({ check, ...versionOptions }) => {
+const version = async ({ push, check, ...versionOptions }) => {
     console.log(figlet.textSync("RunBotics"));
 
     console.log(chalk.bold('Running RunBotics version bump\n'));
@@ -116,11 +116,13 @@ const version = async ({ check, ...versionOptions }) => {
     }
 
     console.log(chalk.green('\nVersion overwritten'));
-    console.log('Pushing changes to the remote\n');
 
-    // spawnSync('git', [ 'add', '.' ], { stdio: 'inherit' });
-    // spawnSync('git', [ 'commit', '--no-verify', '-m', `bump app version to ${nextVersion}` ], { stdio: 'inherit' });
-    // spawnSync('git', [ 'push' ], { stdio: 'inherit' });
+    if (push) {
+        console.log('Pushing changes to the remote\n');
+        spawnSync('git', [ 'add', '.' ], { stdio: 'inherit' });
+        spawnSync('git', [ 'commit', '--no-verify', '-m', `bump app version to ${nextVersion}` ], { stdio: 'inherit' });
+        spawnSync('git', [ 'push' ], { stdio: 'inherit' });
+    }
 
     console.log(chalk.green('\nOperation executed successfully'));
     process.exit(0);

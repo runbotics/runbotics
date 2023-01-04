@@ -5,7 +5,7 @@ import { promisify } from 'util';
 
 import spawn from './spawn.js';
 
-const exec = promisify(nativeExec)
+const exec = promisify(nativeExec);
 
 const getRemoteRbConfig = async () => {
     console.log('Fetching remote develop branch');
