@@ -19,7 +19,7 @@ const Wrapper = styled(Card)<TileProps>`
 
     &:hover {
         ${({ hoverstyles }) =>
-            hoverstyles &&
+        hoverstyles &&
             `box-shadow: 0 .25rem 1rem 0 ${alpha('#8d8c8c', 0.4)}`};
     }
 `;

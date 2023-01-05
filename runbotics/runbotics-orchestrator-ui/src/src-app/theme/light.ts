@@ -1,5 +1,6 @@
-import { ThemeOptions } from '@mui/material/styles';
 import blueGrey from '@mui/material/colors/blueGrey';
+import { ThemeOptions } from '@mui/material/styles';
+
 import { softShadows } from './shadows';
 
 export const lightTheme: ThemeOptions = {

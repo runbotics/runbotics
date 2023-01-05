@@ -56,9 +56,9 @@ import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
 import emptyBpmn from '../empty.bpmn';
 import Clipboard from '../extensions/clipboard';
 import ModelerScripts from '../extensions/contextPad';
-import ZoomScrollModule from '../extensions/zoomscroll';
-import modelerPalette from '../modeler-palette';
 import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
+import modelerPalette from '../extensions/modelerPalette';
+import ZoomScrollModule from '../extensions/zoomscroll';
 import { applyModelerElement } from '../utils';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [

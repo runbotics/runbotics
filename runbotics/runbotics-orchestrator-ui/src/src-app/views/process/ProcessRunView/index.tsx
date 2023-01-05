@@ -50,9 +50,9 @@ const ProcessRunView: FC = () => {
 
     useEffect(() => {
         if (hasReadSchedulesAccess)
-            dispatch(
-                scheduleProcessActions.getSchedulesByProcess({ processId })
-            );
+        { dispatch(
+            scheduleProcessActions.getSchedulesByProcess({ processId })
+        ); }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -73,7 +73,7 @@ const ProcessRunView: FC = () => {
         process.id?.toString() !== id ||
         loading === LoadingType.PENDING
     )
-        return <LoadingScreen />;
+    { return <LoadingScreen />; }
 
     return (
         <Grid sx={{ padding: '24px' }}>

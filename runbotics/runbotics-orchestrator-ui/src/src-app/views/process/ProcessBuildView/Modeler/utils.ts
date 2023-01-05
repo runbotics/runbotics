@@ -10,7 +10,6 @@ import {
 } from './BPMN';
 import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
 
-
 import { ActionToBPMNElement } from './ConfigureActionPanel/ActionToBPMNElement';
 import { ParameterDestination } from './extensions/palette/CustomPalette';
 
