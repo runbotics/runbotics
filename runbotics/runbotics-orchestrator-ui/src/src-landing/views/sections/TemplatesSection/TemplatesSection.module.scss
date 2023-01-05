@@ -31,8 +31,8 @@ $NARROW_SCREEN_TILE_SIZE: 250px;
     grid-template-columns: repeat(auto-fill, minmax($WIDTH_SCREEN_TILE_SIZE, 1fr));
     grid-gap: $margin-4;
     width: 100%;
-    overflow: hidden;
     padding: $padding-8 $padding-4;
+    overflow: hidden;
 }
 
 @media (max-width: $breakpoint-sm) {

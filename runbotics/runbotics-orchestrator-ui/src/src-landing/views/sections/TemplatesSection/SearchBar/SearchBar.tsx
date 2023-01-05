@@ -3,7 +3,6 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 import searchIconSrc from '#public/images/icons/search.svg';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import styles from './SearchBar.module.scss';
