@@ -2,7 +2,7 @@
 
 import { Dictionary } from 'lodash';
 import { translate as t } from '#src-app/hooks/useTranslations';
-import { BPMNElementFactory, TaskType } from './BPMNElementFactory';
+import { BPMNElementFactory, TaskType } from '../elementFactory/ElementFactory';
 
 export enum ParameterDestination {
     Input = 'Input',

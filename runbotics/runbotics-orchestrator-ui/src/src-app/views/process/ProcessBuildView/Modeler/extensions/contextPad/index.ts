@@ -1,6 +1,4 @@
-import CustomContextPad from './custom/CustomContextPad';
-// import CustomPalette from './custom/CustomPalette';
-// import './ModelerScripts.scss';
+import CustomContextPad from '.';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

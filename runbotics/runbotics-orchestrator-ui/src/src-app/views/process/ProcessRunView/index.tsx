@@ -1,12 +1,10 @@
 import { FC, useEffect, useRef } from 'react';
 
-import { Card, Grid, Box, Typography, styled } from '@mui/material';
+import { Card, Grid, Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 
 import { FeatureKey } from 'runbotics-common';
-
-
-
 
 import HistoryTable from '#src-app/components/tables/HistoryTable';
 import If from '#src-app/components/utils/If';
@@ -14,15 +12,15 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
+import {
+    scheduleProcessActions,
+    scheduleProcessSelector,
+} from '#src-app/store/slices/ScheduleProcess';
 import LoadingType from '#src-app/types/loading';
 
 import RunProcessInstantly from './RunProcessInstantly';
 import SavedSchedule from './SavedSchedule';
 import ScheduleProcess from './ScheduleProcess';
-
-
-
 
 const ValidationSchedule = styled('div')(
     ({ theme }) => `
@@ -32,7 +30,7 @@ const ValidationSchedule = styled('div')(
     height: 100%;
     font-family: ${theme.typography.fontFamily};
     font-size: 0.875rem;
-`,
+`
 );
 
 const ProcessRunView: FC = () => {
@@ -42,14 +40,19 @@ const ProcessRunView: FC = () => {
     const processId = Number(id);
     const { process, loading } = useSelector((state) => state.process.draft);
     const { schedules } = useSelector(scheduleProcessSelector);
-    const hasReadHistoryAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_HISTORY_READ]);
+    const hasReadHistoryAccess = useFeatureKey([
+        FeatureKey.PROCESS_INSTANCE_HISTORY_READ,
+    ]);
     const hasReadSchedulesAccess = useFeatureKey([FeatureKey.SCHEDULE_READ]);
     const hasAddScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_ADD]);
 
     const { translate } = useTranslations();
 
     useEffect(() => {
-        if (hasReadSchedulesAccess) dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        if (hasReadSchedulesAccess)
+            dispatch(
+                scheduleProcessActions.getSchedulesByProcess({ processId })
+            );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -60,12 +63,17 @@ const ProcessRunView: FC = () => {
                 process: {
                     id: processId,
                 },
-            }),
+            })
         );
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 
-    if (!process || process.id?.toString() !== id || loading === LoadingType.PENDING) return <LoadingScreen />;
+    if (
+        !process ||
+        process.id?.toString() !== id ||
+        loading === LoadingType.PENDING
+    )
+        return <LoadingScreen />;
 
     return (
         <Grid sx={{ padding: '24px' }}>
@@ -76,12 +84,19 @@ const ProcessRunView: FC = () => {
                             <Grid container spacing={2}>
                                 <Grid item>
                                     <RunProcessInstantly
-                                        onRunClick={historyRef.current?.clearSelectedProcessInstance}
+                                        onRunClick={
+                                            historyRef.current
+                                                ?.clearSelectedProcessInstance
+                                        }
                                     />
                                 </Grid>
                                 <Grid item>
                                     <If condition={hasAddScheduleAccess}>
-                                        <ScheduleProcess onProcessScheduler={handleProcessSchedule} />
+                                        <ScheduleProcess
+                                            onProcessScheduler={
+                                                handleProcessSchedule
+                                            }
+                                        />
                                     </If>
                                 </Grid>
                             </Grid>
@@ -96,7 +111,9 @@ const ProcessRunView: FC = () => {
                     </Grid>
                     <If condition={schedules.length === 0}>
                         <Grid item>
-                            <ValidationSchedule>{translate('Process.Run.NoSchedules.Message')}</ValidationSchedule>
+                            <ValidationSchedule>
+                                {translate('Process.Run.NoSchedules.Message')}
+                            </ValidationSchedule>
                         </Grid>
                     </If>
                 </Card>

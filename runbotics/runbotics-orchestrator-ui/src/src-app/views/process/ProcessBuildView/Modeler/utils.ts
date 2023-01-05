@@ -12,7 +12,7 @@ import { IBpmnAction } from './ConfigureActionPanel/Actions/types';
 
 
 import { ActionToBPMNElement } from './ConfigureActionPanel/ActionToBPMNElement';
-import { ParameterDestination } from './extensions/custom/CustomPalette';
+import { ParameterDestination } from './extensions/palette/CustomPalette';
 
 
 const DEFAULT_OPTIONS = [

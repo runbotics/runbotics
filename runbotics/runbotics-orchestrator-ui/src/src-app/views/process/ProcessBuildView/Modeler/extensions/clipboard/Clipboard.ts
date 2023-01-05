@@ -1,4 +1,4 @@
-export default function Clipboard() {}
+export default function Clipboard() { }
 
 Clipboard.prototype.get = function () {
     return ClipboardStorage.get();

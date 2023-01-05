@@ -2,19 +2,19 @@ import React, { FC, useState } from 'react';
 
 import { JSONSchema7 } from 'json-schema';
 
-
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useBpmnFormContext } from '#src-app/providers/BpmnForm.provider';
 
-import { CamundaInputOutputElement, getInputParameters, getOutputParameters } from '../BPMN';
-import { ParameterDestination } from '../extensions/custom/CustomPalette';
+import {
+    CamundaInputOutputElement,
+    getInputParameters,
+    getOutputParameters,
+} from '../BPMN';
+import { ParameterDestination } from '../extensions/palette/CustomPalette';
 import { IFormData } from './Actions/types';
 import { ActionToBPMNElement } from './ActionToBPMNElement';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-
-
 
 const ElementFormRenderer: FC = () => {
     const { element, modeler } = useBpmnFormContext();
@@ -23,24 +23,31 @@ const ElementFormRenderer: FC = () => {
     const { translate } = useTranslations();
 
     const schema: JSONSchema7 = React.useMemo(() => {
-        const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
+        const inputOutputElement = element.businessObject?.extensionElements
+            ?.values[0] as CamundaInputOutputElement;
         let inputProperties = {};
         let outputProperties = {};
         if (inputOutputElement) {
-            inputProperties = inputOutputElement.inputParameters.reduce((previousValue, currentValue) => {
-                const newPrev = previousValue;
-                newPrev[currentValue.name] = {
-                    type: 'string',
-                };
-                return newPrev;
-            }, {});
-            outputProperties = inputOutputElement.outputParameters.reduce((previousValue, currentValue) => {
-                const newPrev = previousValue;
-                newPrev[currentValue.name] = {
-                    type: 'string',
-                };
-                return newPrev;
-            }, {});
+            inputProperties = inputOutputElement.inputParameters.reduce(
+                (previousValue, currentValue) => {
+                    const newPrev = previousValue;
+                    newPrev[currentValue.name] = {
+                        type: 'string',
+                    };
+                    return newPrev;
+                },
+                {}
+            );
+            outputProperties = inputOutputElement.outputParameters.reduce(
+                (previousValue, currentValue) => {
+                    const newPrev = previousValue;
+                    newPrev[currentValue.name] = {
+                        type: 'string',
+                    };
+                    return newPrev;
+                },
+                {}
+            );
         }
 
         return {
@@ -51,7 +58,9 @@ const ElementFormRenderer: FC = () => {
                     additionalProperties: {
                         type: 'string',
                     },
-                    title: translate('Process.Details.Modeler.ActionPanel.Form.Element.Input'),
+                    title: translate(
+                        'Process.Details.Modeler.ActionPanel.Form.Element.Input'
+                    ),
                     type: 'object',
                     properties: inputProperties,
                     required: [],
@@ -60,7 +69,9 @@ const ElementFormRenderer: FC = () => {
                     additionalProperties: {
                         type: 'string',
                     },
-                    title: translate('Process.Details.Modeler.ActionPanel.Form.Element.Output'),
+                    title: translate(
+                        'Process.Details.Modeler.ActionPanel.Form.Element.Output'
+                    ),
                     type: 'object',
                     properties: outputProperties,
                     required: [],
@@ -73,20 +84,27 @@ const ElementFormRenderer: FC = () => {
     const uiSchema = React.useMemo(() => ({}), []);
 
     const defaultFormData = React.useMemo(() => {
-        const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
+        const inputOutputElement = element.businessObject?.extensionElements
+            ?.values[0] as CamundaInputOutputElement;
         let input;
         let output = {};
         if (inputOutputElement) {
-            input = inputOutputElement.inputParameters.reduce((previousValue, currentValue) => {
-                const newPrev = previousValue;
-                newPrev[currentValue.name] = currentValue.value;
-                return newPrev;
-            }, {});
-            output = inputOutputElement.outputParameters.reduce((previousValue, currentValue) => {
-                const newPrev = previousValue;
-                newPrev[currentValue.name] = currentValue.value;
-                return newPrev;
-            }, {});
+            input = inputOutputElement.inputParameters.reduce(
+                (previousValue, currentValue) => {
+                    const newPrev = previousValue;
+                    newPrev[currentValue.name] = currentValue.value;
+                    return newPrev;
+                },
+                {}
+            );
+            output = inputOutputElement.outputParameters.reduce(
+                (previousValue, currentValue) => {
+                    const newPrev = previousValue;
+                    newPrev[currentValue.name] = currentValue.value;
+                    return newPrev;
+                },
+                {}
+            );
         }
 
         return {
@@ -111,11 +129,18 @@ const ElementFormRenderer: FC = () => {
             },
         };
 
-        const actionToBPMNElement: ActionToBPMNElement = ActionToBPMNElement.from(modeler);
-        const inputParams = actionToBPMNElement.formDataToParameters(ParameterDestination.Input, data.input);
+        const actionToBPMNElement: ActionToBPMNElement =
+            ActionToBPMNElement.from(modeler);
+        const inputParams = actionToBPMNElement.formDataToParameters(
+            ParameterDestination.Input,
+            data.input
+        );
         actionToBPMNElement.setInputParameters(element, inputParams);
 
-        const outputParams = actionToBPMNElement.formDataToParameters(ParameterDestination.Output, data.output);
+        const outputParams = actionToBPMNElement.formDataToParameters(
+            ParameterDestination.Output,
+            data.output
+        );
         actionToBPMNElement.setOutputParameters(element, outputParams);
 
         setSubmitted(event.formData);

@@ -10,7 +10,7 @@ import {
     ParameterList,
     ParameterMap,
     ParameterType,
-} from '../extensions/custom/CustomPalette';
+} from '../extensions/palette/CustomPalette';
 import { IBpmnAction } from './Actions/types';
 
 export enum TaskType {
