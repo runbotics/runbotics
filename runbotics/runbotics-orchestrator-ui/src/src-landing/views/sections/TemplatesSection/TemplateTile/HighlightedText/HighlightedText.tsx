@@ -1,21 +1,18 @@
 import React, { FC, useMemo} from 'react';
 
+import { HighlightedTextProps } from './HighlightedText.types';
 import { replaceRegExpUnallowedChars, createPattern } from './HighlightedText.utils';
 
-interface HighlightTextProps {
-    textSource: string;
-    styleClass: string;
-    highlight: string;
-};
-
-const HighlightedText:FC<HighlightTextProps> = ({
+const HighlightedText:FC<HighlightedTextProps> = ({
     textSource,
     styleClass,
     highlight,
 }) => {
     const textToHighlight = replaceRegExpUnallowedChars(highlight);
     const highlightPattern = createPattern(textToHighlight);
-    const highlightOccurences = useMemo(() => [...textSource.matchAll(highlightPattern)], [textSource, highlightPattern]);
+    const highlightOccurences = useMemo(() => [...textSource.matchAll(highlightPattern)], 
+        [textSource, highlightPattern]
+    );
     
     return (
         <>

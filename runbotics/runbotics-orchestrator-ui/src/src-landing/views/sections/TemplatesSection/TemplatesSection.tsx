@@ -25,7 +25,7 @@ const TemplatesSection: FC = () => {
         setSearchValue(event.target.value);
     };
 
-    const handleCategoryChange= (categoryKey: string) => {
+    const handleCategoryChange = (categoryKey: string) => {
         setSelectedCategory(categoryKey);
     };
     

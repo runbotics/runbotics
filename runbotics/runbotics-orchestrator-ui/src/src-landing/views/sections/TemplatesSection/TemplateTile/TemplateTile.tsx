@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import { integrationLogos } from '#public/images/logos';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
@@ -20,10 +21,8 @@ const TemplateTile:FC<TemplateTileProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    const translatedCategories = categories.length > 0 
-        // @ts-ignore
-        ? categories.map((categoryKey) => translate(`Landing.Templates.CategoriesBar.Category.${categoryKey}`)).join(', ')
-        : translate('Landing.Templates.CategoriesBar.Category.None');
+    // @ts-ignore
+    const translatedCategories = categories.map((categoryKey) => translate(`Landing.Templates.CategoriesBar.Category.${categoryKey}`)).join(', ');
 
     return (
         <div className={styles.root}>
@@ -44,13 +43,14 @@ const TemplateTile:FC<TemplateTileProps> = ({
                 </Typography>
             </div>
             <div className={styles.tileDetails}>
-                <Typography>
-                    {translate('Landing.Templates.TemplatesGrid.TemplateTile.Category')}
-                    <span className={styles.boldText}>
-                        {/* @ts-ignore */}
-                        &nbsp;{translatedCategories}
-                    </span>
-                </Typography>
+                <If condition={categories.length > 0}>
+                    <Typography>
+                        {translate('Landing.Templates.TemplatesGrid.TemplateTile.Category')}
+                        <span className={styles.boldText}>
+                            &nbsp;{translatedCategories}
+                        </span>
+                    </Typography>
+                </If>
                 <Typography>
                     {translate('Landing.Templates.TemplatesGrid.TemplateTile.Integrations')}
                 </Typography>

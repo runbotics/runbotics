@@ -8,8 +8,8 @@ import integrationTranslations from './integration.json';
 import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
 import prosTranslations from './pros.json';
-import templatesTranslations from './templates.json';
 import rpaTranslations from './rpa.json';
+import templatesTranslations from './templates.json';
 
 const landingPageTranslations = {
     ...headerTranslations,
