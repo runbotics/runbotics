@@ -4,13 +4,13 @@ import ContactTranslation from '#src-landing/translations/en/contact.json';
 
 export type InputProps =
     | {
-    type?: 'input';
-    event: ChangeEvent<HTMLInputElement>;
-}
+        type?: 'input';
+        event: ChangeEvent<HTMLInputElement>;
+    }
     | {
-    type: 'textarea';
-    event: ChangeEvent<HTMLTextAreaElement>;
-};
+        type: 'textarea';
+        event: ChangeEvent<HTMLTextAreaElement>;
+    };
 
 export interface FormState {
     name: string;
