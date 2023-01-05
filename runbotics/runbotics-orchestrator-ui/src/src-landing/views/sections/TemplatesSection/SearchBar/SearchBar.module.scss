@@ -13,7 +13,7 @@
     padding: $padding-1 $padding-2;
     font-weight: $font-weight-semi-bold;
     font-size: $font-size-h6;
-    color: $text-placeholder-inactive-color;
+    color: $text-placeholder-color;
     outline: none;
     border: 3px solid rgb($text-color-gray, 0.2);
     border-radius: $margin-5;
@@ -29,7 +29,7 @@
     }
     
     &::-webkit-input-placeholder {
-        color: $text-placeholder-inactive-color;
+        color: $text-placeholder-color;
         transition: color 200ms ease;
     }
     
@@ -54,9 +54,9 @@
 }
 
 @media (max-width: $breakpoint-sm) {
-    .searchBar {
-        width: 90%;
-        margin-top: $margin-2;
-        margin-bottom: $margin-2;
+    .wrapper {
+        width: 100%;
+        margin-top: $margin-3;
+        margin-bottom: $margin-3;
     }
 }
