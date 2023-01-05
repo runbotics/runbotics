@@ -8,6 +8,7 @@ import IndustriesSection from '#src-landing/views/sections/IndustriesSection';
 import IntegrationSection from '#src-landing/views/sections/IntegrationSections';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 import RPASection from '#src-landing/views/sections/RPASections';
+import TemplatesSection from '#src-landing/views/sections/TemplatesSection';
 
 const MainView = () => (
     <Layout>
@@ -16,6 +17,7 @@ const MainView = () => (
         <RPASection />
         <ProsSection />
         <IndustriesSection />
+        <TemplatesSection />
         <IntegrationSection />
         <ContactSection />
         {/* Add your section here*/}

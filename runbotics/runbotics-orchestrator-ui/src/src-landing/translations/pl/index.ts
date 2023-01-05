@@ -6,6 +6,7 @@ import industriesTranslation from './industries.json';
 import integrationTranslations from './integration.json';
 import prosTranslations from './pros.json';
 import rpaTranslations from './rpa.json';
+import templatesTranslations from './templates.json';
 
 const landingPageTranslations = {
     ...headerTranslations,
@@ -13,6 +14,8 @@ const landingPageTranslations = {
     ...integrationTranslations,
     ...benefitsTranslations,
     ...prosTranslations,
+    ...industriesTranslation,
+    ...templatesTranslations,
     ...industriesTranslation,
     ...contactTranslations,
     ...rpaTranslations
