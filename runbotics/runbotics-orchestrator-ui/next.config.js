@@ -28,6 +28,7 @@ module.exports = {
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
     },
+
     modularizeImports: {
         '@mui/icons-material': {
             transform: '@mui/icons-material/{{member}}',
@@ -37,4 +38,10 @@ module.exports = {
         }
     },
 
+    serverRuntimeConfig: {
+        mailHost: process.env.MAIL_HOST,
+        mailPort: process.env.MAIL_PORT,
+        mailUsername: process.env.MAIL_USERNAME,
+        mailPassword: process.env.MAIL_PASSWORD,
+    },
 };
