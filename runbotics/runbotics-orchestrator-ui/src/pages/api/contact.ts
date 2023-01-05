@@ -62,14 +62,15 @@ export default async function handler(req, res) {
             .status(400)
             .json({ message: `Please include: ${missingFields.join(', ')}` });
     }
-
     const emailContent = getEmailContent({ name, email, message, company });
     const transporter = nodemailer.createTransport(await emailConfig(env));
-
-    const info = await transporter.sendMail(emailContent);
-
-    return res.status(200).json({
-        message: `Email sent ${env !== 'production' ? nodemailer.getTestMessageUrl(info) : ''
-        }`,
-    });
+    try {
+        const info = await transporter.sendMail(emailContent);
+        return res.status(200).json({
+            message: `Email sent ${env !== 'production' ? nodemailer.getTestMessageUrl(info) : ''
+            }`,
+        });
+    } catch (e) {
+        return res.status(500).json({ message: `Something went wrong, ${JSON.stringify(e)}` });
+    }
 }
