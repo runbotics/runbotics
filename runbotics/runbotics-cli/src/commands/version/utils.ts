@@ -1,0 +1,24 @@
+import { join } from 'path';
+
+export const PRERELEASE_ID = 'SNAPSHOT';
+export const PRERELEASE = 'prerelease';
+
+export const RUNBOTICS_CONFIG_RELATIVE_PATH = join('runbotics', 'common', 'config', 'runbotics.json');
+export const SCHEDULER_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-scheduler', 'package.json');
+export const UI_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-orchestrator-ui', 'package.json');
+export const BOT_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-desktop', 'package.json');
+export const API_CONFIG_RELATIVE_PATH = join('runbotics-orchestrator', 'package.json');
+
+export const MONOREPO_CONFIGS_RELATIVE_PATHS = [
+    { name: 'scheduler', path: SCHEDULER_CONFIG_RELATIVE_PATH },
+    { name: 'orchestrator-ui', path: UI_CONFIG_RELATIVE_PATH },
+    { name: 'desktop', path: BOT_CONFIG_RELATIVE_PATH },
+];
+
+export const LISTR_RENDERER_OPTIONS = { showErrorMessage: false, showTimer: true, collapseErrors: false };
+
+export const containsVersion = (
+    json: any | null
+): json is { version: string } => json
+    && typeof json === 'object'
+    && json.version && typeof json.version === 'string';

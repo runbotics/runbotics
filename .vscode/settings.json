@@ -7,4 +7,12 @@
         "./runbotics/runbotics-actions-windows",
         "./runbotics/runbotics-sdk"
     ],
+    "conventionalCommits.scopes": [
+        "runbotics-orchestrator-ui",
+        "runbotics-scheduler",
+        "runbotics-desktop",
+        "runbotics-orchestrator",
+        "runbotics-common",
+        "runbotics-cli",
+    ],
 }

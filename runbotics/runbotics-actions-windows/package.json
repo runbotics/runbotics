@@ -18,6 +18,7 @@
         "./dist/PowerPointAutomation": "./dist/PowerPointAutomation.js"
     },
     "scripts": {
+        "postinstall": "rushx build",
         "build": "microbundle src/**/*.ts --no-compress --format cjs",
         "start": "microbundle watch src/**/*.ts --no-compress --format cjs"
     },
