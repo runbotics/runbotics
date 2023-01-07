@@ -14,11 +14,11 @@ const exec = promisify(nativeExec);
 const getLocalRbConfig = async () => {
     const rbRootDir = await getRepositoryPath();
 
-    // await exec('git diff --quiet HEAD')
-    //     .catch(() => {
-    //         console.log(chalk.red(`${Emoji.error} Error: Commit your changes before bumping app version`));
-    //         process.exit(1);
-    //     });
+    await exec('git diff --quiet HEAD')
+        .catch(() => {
+            console.log(chalk.red(`${Emoji.error} Error: Commit your changes before bumping app version`));
+            process.exit(1);
+        });
 
     const rbConfigPath = join(rbRootDir, RUNBOTICS_CONFIG_RELATIVE_PATH);
 

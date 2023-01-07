@@ -18,8 +18,7 @@ const getMonorepoParams = (options?: RunCommandOptions) => {
 };
 
 const startMonorepoPackage = (path: string, options?: RunCommandOptions) => {
-    process.chdir(path);
-    return spawn('rushx', getMonorepoParams(options), { shell: true, stdio: 'inherit' });
+    return spawn('rushx', getMonorepoParams(options), { cwd: path, shell: true, stdio: 'inherit' });
 };
 
 const run = async (packageArg: Package, options?: RunCommandOptions) => {
@@ -36,8 +35,7 @@ const run = async (packageArg: Package, options?: RunCommandOptions) => {
     switch(packageArg) {
         case 'api':
             log('runbotics-orchestrator');
-            process.chdir(join(rbRootDir, API_RELATIVE_PATH));
-            await spawn('sh', ['gradlew', '-x', 'webapp'], { shell: true, stdio: 'inherit' });
+            await spawn('sh', ['gradlew', '-x', 'webapp'], { cwd: join(rbRootDir, API_RELATIVE_PATH), shell: true, stdio: 'inherit' });
         case 'bot':
             log('runbotics-desktop');
             await startMonorepoPackage(join(rbRootDir, BOT_RELATIVE_PATH), options);

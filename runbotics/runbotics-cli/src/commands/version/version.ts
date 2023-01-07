@@ -86,7 +86,7 @@ const version = async ({ push, check, ...versionOptions }: VersionCommandOptions
     await alterFiles(rbRootDir, newVersion);
 
     if (push) {
-        await versionControl(newVersion);
+        await versionControl(rbRootDir, newVersion);
     } else {
         console.log(`\n${Emoji.skip} Skipping version control actions`)
     }
