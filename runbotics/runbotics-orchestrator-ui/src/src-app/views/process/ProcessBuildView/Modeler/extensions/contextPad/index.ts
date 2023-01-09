@@ -1,4 +1,4 @@
-import CustomContextPad from '.';
+import CustomContextPad from './CustomContextPad';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
