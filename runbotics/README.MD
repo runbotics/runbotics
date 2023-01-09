@@ -27,6 +27,12 @@ Install all the required dependencies via
 $ rush install
 ```
 
+Install tool to ease local development (running applications, bump version)
+
+```bash
+npm install -g @runbotics/runbotics-cli
+```
+
 # Docker environment
 
 Depending on your preferences you can either launch all the apps yourself or let docker containers do it for you based on latest images available on [dockerhub](https://hub.docker.com/u/runbotics).
