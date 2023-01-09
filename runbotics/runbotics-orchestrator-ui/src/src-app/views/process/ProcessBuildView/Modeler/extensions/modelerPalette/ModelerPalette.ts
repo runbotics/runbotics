@@ -5,7 +5,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { BpmnEntries, Entries, InheritedEntries } from './ModelerPalette.types';
 
 
-
 export default class ModelerPalette {
     constructor(palette) {
         palette.registerProvider(this);
@@ -54,6 +53,7 @@ export default class ModelerPalette {
                     'global-connect-tool': { title: translate('Palette.GlobalConnectTool') },
                     'tool-separator': {},
                     'create.start-event': { title: translate('Palette.Create.StartEvent') },
+                    'create.intermediate-event': { title: translate('Palette.Create.IntermediateEvent') },
                     'create.end-event': { title: translate('Palette.Create.EndEvent') },
                     'create.exclusive-gateway': { title: translate('Palette.Create.ExclusiveGateway') },
                     'create.group': { title: translate('Palette.Create.Group') },

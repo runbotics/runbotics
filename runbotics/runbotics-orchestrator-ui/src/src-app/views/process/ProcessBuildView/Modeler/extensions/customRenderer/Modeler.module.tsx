@@ -1,4 +1,4 @@
-import CustomRenderer from './extensions/custom/CustomRenderer';
+import CustomRenderer from './CustomRenderer';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

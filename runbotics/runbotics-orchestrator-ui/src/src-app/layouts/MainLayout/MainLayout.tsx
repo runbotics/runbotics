@@ -1,12 +1,9 @@
 import { useState, useMemo, FC } from 'react';
 
-import { useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import i18n from 'i18next';
-
-
-
-
 
 import { withAuthGuard } from '#src-app/components/guards/AuthGuard';
 import If from '#src-app/components/utils/If';
@@ -20,9 +17,6 @@ import NavBar from './NavBar';
 import { usePublicSections } from './NavBar/usePublicSections';
 import TopBar from './TopBar';
 
-
-
-
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
     const [isMenuShrinked, setIsMenuShrinked] = useState(true);
@@ -35,12 +29,14 @@ const MainLayout: FC = ({ children }) => {
         () =>
             publicSections.map((accessToSection) => {
                 const items = accessToSection.items.filter((item) =>
-                    item.featureKeys ? hasFeatureKeyAccess(user, item.featureKeys) : true,
+                    item.featureKeys
+                        ? hasFeatureKeyAccess(user, item.featureKeys)
+                        : true
                 );
                 return { ...accessToSection, items };
             }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [user, i18n.language],
+        [user, i18n.language]
     );
 
     const isNavBarVisible = accessedSections[0].items.length !== 1;
@@ -64,7 +60,11 @@ const MainLayout: FC = ({ children }) => {
                     accessedSections={accessedSections}
                 />
             </If>
-            <Main isNavbarVisible={isNavBarVisible} isShrinked={isMenuShrinked} mobile={mobile}>
+            <Main
+                isNavbarVisible={isNavBarVisible}
+                isShrinked={isMenuShrinked}
+                mobile={mobile}
+            >
                 <ContentContainer>
                     <Content>
                         {!loaded && <LoadingScreen />}
