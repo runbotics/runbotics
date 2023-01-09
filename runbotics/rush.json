@@ -359,28 +359,31 @@
    */
     "projects": [
         {
-            "packageName": "runbotics-orchestrator-ui",
-            "projectFolder": "runbotics-orchestrator-ui"
-        },
-        {
-            "packageName": "runbotics-desktop",
-            "projectFolder": "runbotics-desktop"
+            "packageName": "runbotics-actions-windows",
+            "projectFolder": "runbotics-actions-windows"
         },
         {
             "packageName": "runbotics-common",
             "projectFolder": "runbotics-common"
         },
         {
-            "packageName": "runbotics-actions-windows",
-            "projectFolder": "runbotics-actions-windows"
+            "packageName": "runbotics-desktop",
+            "projectFolder": "runbotics-desktop",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "runbotics-orchestrator-ui",
+            "projectFolder": "runbotics-orchestrator-ui",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "runbotics-scheduler",
+            "projectFolder": "runbotics-scheduler",
+            "shouldPublish": true
         },
         {
             "packageName": "runbotics-sdk",
             "projectFolder": "runbotics-sdk"
-        },
-        {
-            "packageName": "runbotics-scheduler",
-            "projectFolder": "runbotics-scheduler"
         }
         // {
         //   /**

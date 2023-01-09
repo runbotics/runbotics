@@ -14,11 +14,11 @@ export class ProcessInstanceService {
     ) {}
 
     findById(id: string): Promise<IProcessInstance> {
-        return this.processInstanceRepository.findOne({id}, {relations});
+        return this.processInstanceRepository.findOne({ where: { id }, relations });
     }
 
-    findAllByBotId(botId: number): Promise<IProcessInstance[]> {
-        return this.processInstanceRepository.find({where: {bot: botId}});
+    findAllByBotId(id: number): Promise<IProcessInstance[]> {
+        return this.processInstanceRepository.find({ where: { bot: { id } } });
     }
 
     save(process: IProcessInstance) {
@@ -26,7 +26,7 @@ export class ProcessInstanceService {
     }
 
     findAll(): Promise<IProcessInstance[]> {
-        return this.processInstanceRepository.find({relations});
+        return this.processInstanceRepository.find({ relations });
     }
 
     delete(id: IProcessInstance['id']) {

@@ -32,7 +32,7 @@ export class BotProcessService {
         await queryRunner.startTransaction();
         try {
             const incrementedProcessInstance = await this.incrementExecutionCount(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { id: incrementedProcessInstance.id });
+            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: incrementedProcessInstance.id } });
 
             await queryRunner.manager.createQueryBuilder()
                 .insert()
