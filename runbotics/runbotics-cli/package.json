@@ -1,5 +1,5 @@
 {
-    "name": "runbotics-cli",
+    "name": "@runbotics/runbotics-cli",
     "version": "1.0.0",
     "license": "MIT",
     "author": {
@@ -35,6 +35,13 @@
         "eslint": "^8.31.0",
         "microbundle": "^0.15.1",
         "typescript": "^4.9.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/runbotics/runbotics.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/runbotics"
     },
     "bin": {
         "rb": "dist/index.esm.js"
