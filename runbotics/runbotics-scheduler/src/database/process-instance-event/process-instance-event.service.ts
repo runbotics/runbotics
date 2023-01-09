@@ -17,6 +17,6 @@ export class ProcessInstanceEventService {
     }
 
     findByExecutionId(queryRunner: QueryRunner, executionId: string) {
-        return queryRunner.manager.findOne(ProcessInstanceEventEntity, { executionId }, { relations: ['processInstance'] });
+        return queryRunner.manager.findOne(ProcessInstanceEventEntity, { where: { executionId }, relations: ['processInstance'] });
     }
 }

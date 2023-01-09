@@ -91,7 +91,7 @@ export class BotProcessEventService {
         processInstanceEvent: IProcessInstanceEvent
     ) {
         const processInstance = await queryRunner.manager
-            .findOne(ProcessInstanceEntity, processInstanceEvent.processInstance.id);
+            .findOne(ProcessInstanceEntity, { where: { id: processInstanceEvent.processInstance.id } });
 
         if (processInstance) {
             await queryRunner.manager

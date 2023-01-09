@@ -12,6 +12,7 @@
     "types": "dist/index.d.ts",
     "type": "commonjs",
     "scripts": {
+        "postinstall": "rushx build",
         "build": "microbundle-crl --no-compress --format modern,cjs",
         "start": "microbundle-crl watch --no-compress --format modern,cjs"
     },
