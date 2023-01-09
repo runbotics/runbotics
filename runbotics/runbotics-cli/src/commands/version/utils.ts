@@ -18,7 +18,7 @@ export const MONOREPO_CONFIGS_RELATIVE_PATHS = [
 export const LISTR_RENDERER_OPTIONS = { showErrorMessage: false, showTimer: true, collapseErrors: false };
 
 export const containsVersion = (
-    json: any | null
-): json is { version: string } => json
+    json: unknown | null
+): json is { version: string } => json !== null
     && typeof json === 'object'
-    && json.version && typeof json.version === 'string';
+    && 'version' in json && typeof json.version === 'string';

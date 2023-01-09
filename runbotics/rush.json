@@ -363,6 +363,10 @@
             "projectFolder": "runbotics-actions-windows"
         },
         {
+            "packageName": "runbotics-cli",
+            "projectFolder": "runbotics-cli"
+        },
+        {
             "packageName": "runbotics-common",
             "projectFolder": "runbotics-common"
         },

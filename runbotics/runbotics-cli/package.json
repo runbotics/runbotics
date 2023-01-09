@@ -11,7 +11,9 @@
     "type": "module",
     "scripts": {
         "build": "microbundle --target node --format esm --no-compress --no-sourcemap",
-        "start": "node dist/index.esm.js"
+        "start": "node dist/index.esm.js",
+        "lint": "eslint \"src/**/*.ts\"",
+        "lint:fix": "eslint \"src/**/*.ts\" --fix"
     },
     "dependencies": {
         "chalk": "^5.2.0",
@@ -28,6 +30,9 @@
         "@types/fs-extra": "^9.0.13",
         "@types/inquirer": "^9.0.3",
         "@types/node": "^18.11.18",
+        "@typescript-eslint/eslint-plugin": "^5.48.0",
+        "@typescript-eslint/parser": "^5.48.0",
+        "eslint": "^8.31.0",
         "microbundle": "^0.15.1",
         "typescript": "^4.9.4"
     },

@@ -34,7 +34,7 @@ program
 
 program.hook('preAction', () => {
     logo();
-})
+});
 
 program
     .configureOutput({

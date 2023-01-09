@@ -21,13 +21,13 @@ It is available at `http://localhost:4000`.
 
 ```bash
 # development
-$ rushx start
-
-# watch mode
 $ rushx start:dev
 
+# debug
+$ rushx start:debug
+
 # production mode
-$ rushx start:prod
+$ rushx start
 ```
 
 ## Test

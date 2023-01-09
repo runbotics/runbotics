@@ -12,7 +12,7 @@ const spawn = (command: string, parameters?: string[], options?: any) => new Pro
         resolve(code);
     });
 
-    child.on('error', (e) => {
+    child.on('error', () => {
         reject();
     });
 });

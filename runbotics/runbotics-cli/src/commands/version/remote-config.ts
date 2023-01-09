@@ -15,7 +15,7 @@ const VERSIONS_VERIFICATION_STEP = 'Veryfing versions compatibility';
 const getRemoteRbConfig = async (localVersion: string) => {
     const job = new Listr<{ remoteVersion: string }>([{
         title: 'Fetching origin/develop branch',
-        task: () => spawn('git', [ 'fetch', 'origin', 'develop' ])
+        task: () => spawn('git', ['fetch', 'origin', 'develop'])
             .catch(() => {
                 throw new Error(`\n${Emoji.error} Error: Failed to fetch latest origin/develop from remote`);
             }),

@@ -36,7 +36,7 @@ const alterFiles = async (rbRootDir: string, newVersion: string) => {
                 const absolutePath = join(rbRootDir, API_CONFIG_RELATIVE_PATH);
                 try {
                     overrideJsonVersion(absolutePath, newVersion);
-                    await spawn('sh', [ 'gradlew', 'setVersion', `-PnewVersion=${newVersion}` ], { cwd: join(rbRootDir, 'runbotics-orchestrator') })
+                    await spawn('sh', ['gradlew', 'setVersion', `-PnewVersion=${newVersion}`], { cwd: join(rbRootDir, 'runbotics-orchestrator') });
                 } catch (e: any) {
                     const message = e.code === 'ENOENT' ? ` (No such file like "${absolutePath}")` : undefined;
                     throw new Error(chalk.red(`${Emoji.error} Error: Could not overwrite orchestrator config version${message ?? ''}`));

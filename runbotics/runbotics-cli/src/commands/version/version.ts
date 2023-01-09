@@ -12,16 +12,17 @@ import versionControl from './version-control';
 const { prompt } = inquirer;
 
 const getBumpType = (versionOptions: VersionOptions) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const providedOptions = Object.entries(versionOptions).filter(([_, value]) => value === true);
 
     if (providedOptions.length > 1) {
-        console.log(chalk.red(`${Emoji.error} Error: Options [${providedOptions.map(([key, _]) => `--${key}`).join(', ')}] cannot be used together`));
+        console.log(chalk.red(`${Emoji.error} Error: Options [${providedOptions.map(([key]) => `--${key}`).join(', ')}] cannot be used together`));
         process.exit(1);
     }
 
     if (providedOptions.length === 0) return PRERELEASE;
 
-    const [selectedOption, _] = providedOptions[0];
+    const [selectedOption] = providedOptions[0];
     return selectedOption;
 };
 
@@ -37,16 +38,16 @@ const getCurrentVersion = async (check: boolean) => {
 
     if (!check) {
         console.log(`${Emoji.skip} Skipping remote version sync`);
-        return [ localVersion, rbRootDir ];
+        return [localVersion, rbRootDir];
     }
 
     await verifyRemoteRbConfig(localVersion);
 
-    return [ localVersion, rbRootDir ];
-}
+    return [localVersion, rbRootDir];
+};
 
 const createNewVersion = (version: string, options: VersionOptions) => {
-    const [ major, minor, patch, prerelease ] = version.split('.');
+    const [major, minor, patch, prerelease] = version.split('.');
     if (options.major) {
         return `${parseInt(major) + 1}.0.0`;
     }
@@ -56,7 +57,7 @@ const createNewVersion = (version: string, options: VersionOptions) => {
     }
 
     if (options.patch) {
-        const mappedPatch = patch.split('-')[ 0 ];
+        const mappedPatch = patch.split('-')[0];
         return `${major}.${minor}.${parseInt(mappedPatch) + 1}`;
     }
 
@@ -69,7 +70,7 @@ const version = async ({ push, check, ...versionOptions }: VersionCommandOptions
     const bumpType = getBumpType(versionOptions);
 
     console.log(chalk.bold(`Running RunBotics ${bumpType} version bump\n`));
-    const [ currentVersion, rbRootDir ] = await getCurrentVersion(check);
+    const [currentVersion, rbRootDir] = await getCurrentVersion(check);
     const newVersion = createNewVersion(currentVersion, versionOptions);
     console.log(chalk.gray(`\nCurrent version: ${currentVersion}`));
     console.log(chalk.green(`New version:\t ${newVersion}\n`));
@@ -88,7 +89,7 @@ const version = async ({ push, check, ...versionOptions }: VersionCommandOptions
     if (push) {
         await versionControl(rbRootDir, newVersion);
     } else {
-        console.log(`\n${Emoji.skip} Skipping version control actions`)
+        console.log(`\n${Emoji.skip} Skipping version control actions`);
     }
 
     console.log(chalk.green.bold(`\nOperation executed successfully ${Emoji.confetti}`));

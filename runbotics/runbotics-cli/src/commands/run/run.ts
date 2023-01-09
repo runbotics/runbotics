@@ -36,12 +36,15 @@ const run = async (packageArg: Package, options?: RunCommandOptions) => {
         case 'api':
             log('runbotics-orchestrator');
             await spawn('sh', ['gradlew', '-x', 'webapp'], { cwd: join(rbRootDir, API_RELATIVE_PATH), shell: true, stdio: 'inherit' });
+            break;
         case 'bot':
             log('runbotics-desktop');
             await startMonorepoPackage(join(rbRootDir, BOT_RELATIVE_PATH), options);
+            break;
         case 'scheduler':
             log('runbotics-scheduler');
             await startMonorepoPackage(join(rbRootDir, SCHEDULER_RELATIVE_PATH), options);
+            break;
         default:
             log('runbotics-orchestrator-ui');
             await startMonorepoPackage(join(rbRootDir, UI_RELATIVE_PATH), options);

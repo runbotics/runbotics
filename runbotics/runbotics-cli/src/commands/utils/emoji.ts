@@ -3,4 +3,4 @@ export enum Emoji {
     error = '✖',
     skip = '⏩',
     confetti = '🎉',
-};
+}

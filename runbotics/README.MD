@@ -27,35 +27,6 @@ Install all the required dependencies via
 $ rush install
 ```
 
-# Local dependencies installation
-
-### runbotics-common
-
-1. Go to `runbotics-common` folder
-2. Build package via
-
-```bash
-$ rushx build
-```
-
-### runbotics-sdk
-
-1. Go to `runbotics-sdk` folder
-2. Build package via
-
-```bash
-$ rushx build
-```
-
-### runbotics-actions-windows
-
-1. Go to `runbotics-actions-windows` folder
-2. Build package via
-
-```bash
-$ rushx build
-```
-
 # Docker environment
 
 Depending on your preferences you can either launch all the apps yourself or let docker containers do it for you based on latest images available on [dockerhub](https://hub.docker.com/u/runbotics).
