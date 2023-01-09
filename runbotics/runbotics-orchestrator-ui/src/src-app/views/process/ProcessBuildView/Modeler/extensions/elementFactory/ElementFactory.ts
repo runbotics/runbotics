@@ -1,8 +1,6 @@
 /* eslint-disable eqeqeq */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-
-import { translate } from '#src-app/hooks/useTranslations';
 import { Position } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
 
 import {
@@ -12,8 +10,7 @@ import {
     ParameterMap,
     ParameterType,
     TaskConfiguration,
-} from './CustomPalette';
-
+} from '../palette/CustomPalette';
 
 export enum TaskType {
     'ServiceTask' = 'ServiceTask',
@@ -150,40 +147,4 @@ export class BPMNElementFactory {
         });
     }
 
-    public createSeleniumTask(seleniumTask: ISeleniumTask, additionalShapeAttrs?: Record<string, any>) {
-        const businessObject = {
-            implementation: '${environment.services.run()}',
-            runbotics: '',
-        };
-
-        return this.createTaskType(
-            TaskType.ServiceTask,
-            {
-                label: translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Label'),
-                businessObject: {
-                    ...businessObject,
-                },
-                inputParameters: {
-                    selenium: {
-                        name: translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Script'),
-                        value: 'selenium',
-                    },
-                    command: {
-                        name: translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Command'),
-                        value: seleniumTask.command,
-                    },
-                    target: {
-                        name: translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Target'),
-                        value: seleniumTask.target,
-                    },
-                    value: {
-                        name: translate('Process.Details.Modeler.Extensions.Tasks.Selenium.Value'),
-                        value: seleniumTask.value,
-                    },
-                },
-                outputParameters: {},
-            },
-            additionalShapeAttrs,
-        );
-    }
 }

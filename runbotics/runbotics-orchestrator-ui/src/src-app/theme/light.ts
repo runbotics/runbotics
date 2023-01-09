@@ -1,4 +1,5 @@
-import { colors, ThemeOptions } from '@mui/material';
+import blueGrey from '@mui/material/colors/blueGrey';
+import { ThemeOptions } from '@mui/material/styles';
 
 import { softShadows } from './shadows';
 
@@ -9,7 +10,7 @@ export const lightTheme: ThemeOptions = {
                 input: {
                     '&::placeholder': {
                         opacity: 1,
-                        color: colors.blueGrey[600],
+                        color: blueGrey[600],
                     },
                 },
             },
@@ -18,7 +19,7 @@ export const lightTheme: ThemeOptions = {
     palette: {
         mode: 'light',
         action: {
-            active: colors.blueGrey[600],
+            active: blueGrey[600],
         },
         background: {
             default: 'rgb(251, 251, 253)',
@@ -32,7 +33,7 @@ export const lightTheme: ThemeOptions = {
             main: '#FBB040',
         },
         infoIcon: {
-            default: colors.blueGrey[600], 
+            default: blueGrey[600],
         },
         text: {
             primary: '#000000',
