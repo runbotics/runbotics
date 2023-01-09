@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessTriggerEntity } from './process-trigger.entity';
-import { IProcessTrigger } from 'runbotics-common';
+import { IProcessTrigger, ProcessTrigger } from 'runbotics-common';
 
 @Injectable()
 export class ProcessTriggerService {
@@ -11,7 +11,7 @@ export class ProcessTriggerService {
         private processTriggerRepository: Repository<ProcessTriggerEntity>,
     ) {}
 
-    findByName(name: string): Promise<IProcessTrigger> {
+    findByName(name: ProcessTrigger): Promise<IProcessTrigger> {
         return this.processTriggerRepository.findOne({ where: { name } });
     }
 }

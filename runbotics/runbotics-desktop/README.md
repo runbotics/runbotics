@@ -14,13 +14,13 @@ The `runbotics-desktop` package based on [Nest.js](https://nestjs.com) is respon
 
 ```bash
 # development
-$ rushx start
-
-# watch mode
 $ rushx start:dev
 
+# debug
+$ rushx start:debug
+
 # production mode
-$ rushx start:prod
+$ rushx start
 ```
 
 ## Test
