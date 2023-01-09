@@ -55,7 +55,7 @@ import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
 import emptyBpmn from '../empty.bpmn';
 import Clipboard from '../extensions/clipboard';
-import ModelerScripts from '../extensions/contextPad';
+import ContextPad from '../extensions/contextPad';
 import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
 import ZoomScrollModule from '../extensions/zoomscroll';
@@ -139,7 +139,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         BasicModelerModule,
                         { clipboard: ['value', clipboard] },
                         ZoomScrollModule,
-                        ModelerScripts,
+                        ContextPad,
                     ],
                     moddleExtensions: {
                         camunda: RunboticModdleDescriptor,
