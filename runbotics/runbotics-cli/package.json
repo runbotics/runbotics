@@ -1,0 +1,49 @@
+{
+    "name": "@runbotics/runbotics-cli",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "runbotics",
+        "email": "contact@runbotics.com"
+    },
+    "main": "dist/index.js",
+    "source": "src/index.ts",
+    "type": "module",
+    "scripts": {
+        "build": "microbundle --target node --format esm --no-compress --no-sourcemap",
+        "start": "node dist/index.esm.js",
+        "lint": "eslint \"src/**/*.ts\"",
+        "lint:fix": "eslint \"src/**/*.ts\" --fix"
+    },
+    "dependencies": {
+        "chalk": "^5.2.0",
+        "commander": "^9.4.1",
+        "comment-json": "^4.2.3",
+        "console-read-write": "^0.1.1",
+        "figlet": "^1.5.2",
+        "fs-extra": "^11.1.0",
+        "inquirer": "^9.1.4",
+        "listr2": "^5.0.6"
+    },
+    "devDependencies": {
+        "@types/figlet": "^1.5.5",
+        "@types/fs-extra": "^9.0.13",
+        "@types/inquirer": "^9.0.3",
+        "@types/node": "^18.11.18",
+        "@typescript-eslint/eslint-plugin": "^5.48.0",
+        "@typescript-eslint/parser": "^5.48.0",
+        "eslint": "^8.31.0",
+        "microbundle": "^0.15.1",
+        "typescript": "^4.9.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/runbotics/runbotics.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/runbotics"
+    },
+    "bin": {
+        "rb": "dist/index.esm.js"
+    }
+}

@@ -19,15 +19,15 @@ export class BotService {
     }
 
     findById(id: number): Promise<IBot> {
-        return this.botRepository.findOne(id, {relations});
+        return this.botRepository.findOne({ where: { id }, relations});
     }
 
     findByInstallationId(installationId: string): Promise<IBot> {
-        return this.botRepository.findOne({installationId}, {relations});
+        return this.botRepository.findOne({ where: { installationId }, relations});
     }
 
-    findByUserId(userId: number): Promise<IBot> {
-        return this.botRepository.findOne({where: {userId}, relations});
+    findByUserId(id: number): Promise<IBot> {
+        return this.botRepository.findOne({ where: { user: { id } }, relations});
     }
 
     async findByCollectionAndSystem(

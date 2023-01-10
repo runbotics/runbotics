@@ -16,8 +16,8 @@ import {
     CreateConnectionProps,
     CalculateOffsetProps,
 } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
-import { TaskType } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/custom/BPMNElementFactory';
-import { ParameterDestination } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/custom/CustomPalette';
+import { TaskType } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/elementFactory/ElementFactory';
+import { ParameterDestination } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/palette/CustomPalette';
 
 function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
     // mapOfRelations holds necessary information to create connections between elements (shapes)
