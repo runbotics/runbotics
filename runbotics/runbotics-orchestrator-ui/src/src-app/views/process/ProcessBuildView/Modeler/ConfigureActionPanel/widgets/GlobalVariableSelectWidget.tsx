@@ -14,19 +14,27 @@ interface GlobalVariableOption {
 const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
     const { globalVariables } = useSelector(globalVariableSelector);
 
-    const options = useMemo(() => globalVariables
-        .map<GlobalVariableOption>((variable) => ({ id: variable.id, name: variable.name })),
-    [globalVariables]);
+    const options = useMemo(
+        () =>
+            globalVariables.map<GlobalVariableOption>((variable) => ({
+                id: variable.id,
+                name: variable.name,
+            })),
+        [globalVariables]
+    );
 
-    const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
+    const label = props.label
+        ? `${props.label} ${props.required ? '*' : ''}`
+        : '';
 
     const onChange = (event: any, newValue: GlobalVariableOption) => {
-        props.onChange(newValue ? newValue.id : undefined);
+        props.onChange(newValue ? newValue.id.toString() : undefined);
     };
 
     const getValue = () => {
-        const globalVariable = globalVariables
-            .find((variable) => variable.id === props.value);
+        const globalVariable = globalVariables.find(
+            (variable) => variable.id.toString() === props.value
+        );
         return globalVariable
             ? { id: globalVariable.id, name: globalVariable.name }
             : undefined;
