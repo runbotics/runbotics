@@ -1,4 +1,4 @@
-import { ProcessInput } from './instant-process';
+import { ProcessInput } from 'runbotics-common';
 
 export interface StartProcessMessage {
     orchestratorProcessInstanceId: string;

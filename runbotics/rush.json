@@ -24,7 +24,7 @@
    * Specify one of: "pnpmVersion", "npmVersion", or "yarnVersion".  See the Rush documentation
    * for details about these alternatives.
    */
-    "pnpmVersion": "7.14.2",
+    "pnpmVersion": "7.18.1",
     // "npmVersion": "4.5.0",
     // "yarnVersion": "1.9.4",
     /**
@@ -359,35 +359,31 @@
    */
     "projects": [
         {
-            "packageName": "runboticskit",
-            "projectFolder": "runboticskit",
-            "shouldPublish": false
-        },
-        {
-            "packageName": "runbotics-orchestrator-ui",
-            "projectFolder": "runbotics-orchestrator-ui"
-        },
-        {
-            "packageName": "runbotics-desktop",
-            "projectFolder": "runbotics-desktop"
-        },
-        {
-            "packageName": "runbotics-common",
-            "projectFolder": "runbotics-common",
-            "shouldPublish": false
-        },
-        {
             "packageName": "runbotics-actions-windows",
             "projectFolder": "runbotics-actions-windows"
         },
         {
-            "packageName": "runbotics-sdk",
-            "shouldPublish": false,
-            "projectFolder": "runbotics-sdk"
+            "packageName": "runbotics-common",
+            "projectFolder": "runbotics-common"
+        },
+        {
+            "packageName": "runbotics-desktop",
+            "projectFolder": "runbotics-desktop",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "runbotics-orchestrator-ui",
+            "projectFolder": "runbotics-orchestrator-ui",
+            "shouldPublish": true
         },
         {
             "packageName": "runbotics-scheduler",
-            "projectFolder": "runbotics-scheduler"
+            "projectFolder": "runbotics-scheduler",
+            "shouldPublish": true
+        },
+        {
+            "packageName": "runbotics-sdk",
+            "projectFolder": "runbotics-sdk"
         }
         // {
         //   /**

@@ -14,7 +14,7 @@ export class ScheduleProcessService {
     ) {}
 
     findById(id: number): Promise<IScheduleProcess> {
-        return this.scheduleProcessRepository.findOne({ id }, { relations });
+        return this.scheduleProcessRepository.findOne({ where: { id }, relations });
     }
 
     save(scheduleProcess: ScheduleProcessEntity) {
@@ -30,6 +30,6 @@ export class ScheduleProcessService {
     }
 
     findAllByProcess(processId: IProcess['id']) {
-        return this.scheduleProcessRepository.find({ where: { process: processId }, relations });
+        return this.scheduleProcessRepository.find({ where: { process: { id: processId } }, relations });
     }
 }

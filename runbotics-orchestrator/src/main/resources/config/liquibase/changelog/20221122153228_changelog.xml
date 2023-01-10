@@ -1,0 +1,82 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="szymczakm"  id="20221122153228-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_trigger"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="process_trigger">
+            <column type="varchar(50)" name="name">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
+        <insert tableName="process_trigger">
+            <column name="name">MANUAL</column>
+        </insert>
+        <insert tableName="process_trigger">
+            <column name="name">SCHEDULER</column>
+        </insert>
+        <insert tableName="process_trigger">
+            <column name="name">API</column>
+        </insert>
+        <insert tableName="process_trigger">
+            <column name="name">EMAIL</column>
+        </insert>
+    </changeSet>
+
+
+    <changeSet author="szymczakm"  id="20221122153228-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance" columnName="trigger" />
+            </not>
+        </preConditions>
+
+        <addColumn tableName="process_instance">
+            <column name="trigger" type="varchar(50)" defaultValue="MANUAL">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="process_instance"
+                                 baseColumnNames="trigger"
+                                 constraintName="fk_process_trigger"
+                                 referencedTableName="process_trigger"
+                                 referencedColumnNames="name"
+        />
+    </changeSet>
+
+
+    <changeSet author="szymczakm"  id="20221122153228-3">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="process_instance" columnName="scheduled" />
+                <columnExists tableName="process_instance" columnName="trigger" />
+            </and>
+        </preConditions>
+
+        <update tableName="process_instance">
+            <column name="trigger" value="SCHEDULER"/>
+            <where>scheduled=true</where>
+        </update>
+        <dropColumn tableName="process_instance" columnName="scheduled" />
+    </changeSet>
+
+
+    <changeSet author="szymczakm"  id="20221122153228-4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance" columnName="triggered_by" />
+            </not>
+        </preConditions>
+
+        <sql>
+            CREATE EXTENSION citext;
+        </sql>
+        <addColumn tableName="process_instance">
+            <column name="triggered_by" type="citext">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

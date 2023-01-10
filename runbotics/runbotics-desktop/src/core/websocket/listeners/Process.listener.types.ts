@@ -1,7 +1,10 @@
+import { ProcessTrigger } from 'runbotics-common';
+
 export interface StartProcessMessageBody {
     orchestratorProcessInstanceId: string;
     processId: number;
     input: any;
-    userId: number;
-    scheduled: boolean;
+    userId?: number;
+    trigger: ProcessTrigger;
+    triggeredBy?: string;
 }

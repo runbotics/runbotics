@@ -24,8 +24,6 @@ import { RuntimeService } from './core/bpm/Runtime';
 import { BackgroundPageApiRequestHandler } from './config/BackgroundPageApiRequestHandler';
 import { ProcessInstanceStatus } from 'runbotics-common';
 
-const fs = require('fs');
-
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
     private readonly logger = new RunboticsLogger(DesktopRunnerService.name);
@@ -142,7 +140,7 @@ export class DesktopRunnerService implements OnModuleInit {
                         .filter((dirent) => dirent.isDirectory())
                         .map((dirent) => dirent.name);
                     this.logger.log('Number of extensions found: ' + extensions.length);
-                    for (let dir of extensions) {
+                    for (const dir of extensions) {
                         const extensionPath = path.resolve(process.env.RUNBOTICS_EXTENSION_DIR + '/' + dir);
                         this.logger.log('Loading extension: ' + extensionPath);
                         await this.loadExternalModule(extensionPath);
@@ -164,7 +162,7 @@ export class DesktopRunnerService implements OnModuleInit {
                     if (data.processInstanceId == data.processInstance.rootProcessInstanceId) {
                         try {
                             if (this.handlerInstancesByMasterProcessInstanceId[data.processInstanceId]) {
-                                for (let handlerInstance of Object.values(
+                                for (const handlerInstance of Object.values(
                                     this.handlerInstancesByMasterProcessInstanceId[data.processInstanceId],
                                 )) {
                                     if (handlerInstance && handlerInstance.getType() == 'StatefulActionHandler') {
@@ -209,7 +207,7 @@ export class DesktopRunnerService implements OnModuleInit {
         }
 
         const handlers: Record<string, string> = module.default;
-        for (let [key, value] of Object.entries(handlers)) {
+        for (const [key, value] of Object.entries(handlers)) {
             if (this.dynamicHandlers[key]) {
                 this.logger.error('Handler: ' + key + ' cannot be imported as it already exists');
             } else {
@@ -229,18 +227,22 @@ export class DesktopRunnerService implements OnModuleInit {
 
     async run(request: DesktopRunRequest<any>): Promise<DesktopRunResponse<any>> {
         try {
-            for (let [key, service] of Object.entries(this.handlers)) {
+            for (const [key, service] of Object.entries(this.handlers)) {
                 if (request.script.startsWith(key)) {
                     return await service.run(request);
                 }
             }
         } catch (e) {
-            this.logger.error(`[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`, (e as Error).message, e);
+            this.logger.error(
+                `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
+                (e as Error).message,
+                e,
+            );
             throw e;
         }
 
         try {
-            for (let [key, service] of Object.entries(this.dynamicHandlers)) {
+            for (const [key, service] of Object.entries(this.dynamicHandlers)) {
                 if (request.script.startsWith(key)) {
                     let handlerInstance = get(this.handlerInstancesByMasterProcessInstanceId, [
                         request.rootProcessInstanceId,
@@ -268,7 +270,7 @@ export class DesktopRunnerService implements OnModuleInit {
                         if (handlerInstance && handlerInstance.getType() == 'StatelessActionHandler') {
                             this.logger.warn(
                                 `[${request.processInstanceId}] [${request.script}] Tearing down instance as it's stateless handler: ` +
-                                service.clazz,
+                                    service.clazz,
                             );
                             delete this.handlerInstancesByMasterProcessInstanceId[request.rootProcessInstanceId][
                                 service.clazz
@@ -294,7 +296,7 @@ export class DesktopRunnerService implements OnModuleInit {
 
     async resolveInternalModule(request: DesktopRunRequest<any>, clazz: string): Promise<any> {
         this.logger.log(`[${request.processInstanceId}] [${request.script}]  Resolving internal module: ` + clazz);
-        let module = require(clazz);
+        const module = require(clazz);
         if (!module.default) {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.script}]  Missing default export in module: ` + clazz,

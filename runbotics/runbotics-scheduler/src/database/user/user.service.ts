@@ -18,7 +18,7 @@ export class UserService {
     }
 
     findById(id: number): Promise<IUser> {
-        return this.userRepository.findOne(id, { relations });
+        return this.userRepository.findOne({ where: { id }, relations });
     }
 
     findByLogin(login: string): Promise<IUser> {

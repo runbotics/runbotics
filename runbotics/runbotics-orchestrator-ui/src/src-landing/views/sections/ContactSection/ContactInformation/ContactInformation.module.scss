@@ -1,0 +1,55 @@
+@import '#src-landing/scss/main.scss';
+
+$INFO-MAX-WIDTH: 800px;
+
+.root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $margin-16;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    gap: $margin-5;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: minmax(18px, 100px) 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: $margin-9;
+}
+
+.gridItemText {
+    font-weight: $font-weight-semi-bold;
+    color: $text-color-dark;
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        align-items: center;
+    }
+
+    .summary,
+    .infoGrid {
+        width: 100%;
+        max-width: $INFO-MAX-WIDTH;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .summary,
+    .infoGrid {
+        width: unset;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .infoGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+        gap: $margin-2;
+    }
+}

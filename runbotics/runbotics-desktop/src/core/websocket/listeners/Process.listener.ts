@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -49,13 +49,12 @@ export class ProcessListener {
     async startProcess(data: StartProcessMessageBody) {
         this.logger.log(`=> Incoming message to start process (id: ${data.processId})`);
 
-        const { processId, orchestratorProcessInstanceId, userId, input, scheduled } = data;
-        const process = await orchestratorAxios.get<IProcess>(`/api/processes/${processId}`, {
-            maxRedirects: 0,
-        })
+        const { processId, input, ...rest } = data;
+        const process = await orchestratorAxios
+            .get<IProcess>(`/api/processes/${processId}`, { maxRedirects: 0 })
             .then((response) => {
                 this.logger.log('Starting process: ' + response.data.name);
-                return response.data
+                return response.data;
             })
             .catch((error) => {
                 this.logger.error(`<= Error fetching process details (id: ${processId})`, error);
@@ -63,13 +62,9 @@ export class ProcessListener {
             });
 
         await this.runtimeService.startProcessInstance({
-            orchestratorProcessInstanceId,
             process,
-            userId,
-            params: {
-                variables: input?.variables ? input?.variables : {},
-            },
-            scheduled
+            variables: input?.variables ?? {},
+            ...rest,
         });
 
         this.logger.log(`<= Process successfully started (id: ${processId})`);

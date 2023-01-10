@@ -1,37 +1,30 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+The `runbotics-orchestrator-ui` package based on [Next.js](https://nextjs.org/) is a RunBotics frontend application. It is available on port [3000](http://localhost:3000).
 
-In the project directory, you can run:
+## Running the app
 
-### `npm start` or `yarn start`
+```bash
+# development
+$ rushx start:dev
 
-Runs the app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# production mode
+$ rushx start
+```
 
-The page will automatically reload if you make changes to the code.<br>
-You will see the build errors and lint warnings in the console.
+## Docker image
 
-<p align='center'>
-<img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
-</p>
+To create your own `runbotics-orchestrator-ui` docker image just execute shell script:
 
-### `npm test` or `yarn test`
+```bash
+$ sh build.sh
+```
 
-Runs the test watcher in an interactive mode.<br>
-By default, runs tests related to files changed since the last commit.
+## Learn More about Next.js
 
-[Read more about testing.](https://facebook.github.io/create-react-app/docs/running-tests)
+To learn more about Next.js, take a look at the following resources:
 
-### `npm run build` or `yarn build`
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-
-Your app is ready to be deployed.
-
-## User Guide
-
-You can find detailed instructions on using Create React App and many tips in [its documentation](https://facebook.github.io/create-react-app/).
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!

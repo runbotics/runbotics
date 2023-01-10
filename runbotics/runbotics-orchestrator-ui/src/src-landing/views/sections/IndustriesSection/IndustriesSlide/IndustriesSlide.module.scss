@@ -1,0 +1,162 @@
+@import '#src-landing/scss/main.scss';
+
+$SLIDER-FLEX-GAP: 25px;
+
+$SLIDE-HEIGHT: 500px;
+$SLIDE-OPEN-IMG: 230px;
+$SLIDE-OPEN-CONTENT: 330px;
+$SLIDE-CLOSED-CONTENT: 400px;
+
+$TILE-BORDER-RADIUS: 20px 150px 20px 20px;
+$SHOW-MORE-RADIUS: 0px 0px 20px 20px;
+
+.slide {
+    $slide-width: calc(100% / var(--items-per-slider));
+    position: relative;
+    flex: 0 0 $slide-width;
+    max-width: calc($slide-width - $SLIDER-FLEX-GAP + 2px);
+    height: $SLIDE-HEIGHT;
+    margin-bottom: $margin-5;
+    background-color: #fff;
+    isolation: isolate;
+
+    &__open {
+        height: fit-content;
+
+        div:first-child {
+            height: $SLIDE-OPEN-IMG;
+            button {
+                border-radius: 0px 53px 20px 20px;
+            }
+        }
+
+        div:last-child {
+            height: $SLIDE-OPEN-CONTENT;
+            margin-top: $SLIDE-OPEN-IMG;
+        }
+    }
+}
+
+.slide[data-shadow='false'] {
+    box-shadow: none;
+}
+
+.showMoreButton {
+    $padding-top: 36px;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: $padding-top 5% $padding-5 5%;
+    text-align: center;
+    opacity: 0.9;
+    border: none;
+    background: rgba(#000, $alpha: 0.5);
+    border-radius: $SHOW-MORE-RADIUS;
+    transition: all 0.4s;
+
+    h4 {
+        font-size: 22px;
+        font-weight: 500;
+    }
+
+    &:hover {
+        background: rgba(#000, $alpha: 0.7);
+        cursor: pointer;
+    }
+
+    &::before {
+        $BAR_HEIGHT: 2px;
+        position: absolute;
+        top: -$BAR_HEIGHT;
+        left: 0;
+        width: 90%;
+        height: $BAR_HEIGHT;
+        content: '';
+        background-color: #fff;
+        margin-inline: 5%;
+    }
+}
+
+.imgWrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s;
+    border-radius: $TILE-BORDER-RADIUS;
+}
+
+.plusSign {
+    width: 45px;
+    height: 45px;
+}
+
+.cardImg {
+    width: 100%;
+    height: 100%;
+    border-radius: $TILE-BORDER-RADIUS;
+    object-fit: cover;
+    filter: brightness(80%);
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: $SLIDE-CLOSED-CONTENT;
+    transition: all 0.4s;
+    border-radius: $TILE-BORDER-RADIUS;
+}
+
+.contentUl {
+    margin-block: $margin-5;
+    padding-inline: $padding-2;
+}
+
+.contentLi {
+    list-style: none;
+    padding-block: $padding-1;
+}
+
+.contentLink {
+    font-weight: $font-weight-bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    text-decoration: none;
+    color: $text-color-dark;
+    gap: $margin-6;
+
+    img {
+        width: 15px;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .slide__open {
+        div:last-child {
+            height: fit-content;
+        }
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    $SLIDE-CLOSED-CONTENT: 600px;
+
+    .content {
+        height: fit-content;
+    }
+}

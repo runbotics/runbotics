@@ -7,7 +7,6 @@ import { AuthModule } from '../auth/auth.module';
 import { BotController } from './bot/bot.controller';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { SchedulerController } from './scheduler/scheduler.controller';
-import { WebsocketModule } from '../websocket/websocket.module';
 import { ProcessController } from './process/process.controller';
 import { ProcessInstanceController } from './process-instance/process-instance.controller';
 import { ConfigModule } from 'src/config/config.module';
@@ -26,28 +25,26 @@ import { QueueService } from './queue.service';
         ConfigModule,
         DatabaseModule,
         AuthModule,
-        WebsocketModule,
         BullModule.registerQueueAsync({
             name: 'scheduler',
             imports: [ConfigModule],
-            useFactory: async (serverConfigService: ServerConfigService) => {
-                return {
-                    createClient: (_, redisOpts) => {
-                        const logger = new Logger(BullModule.name);
-                        const customRedisOpts = { ...redisOpts, ...serverConfigService.redisSettings };
-                        const redis = new IORedis(customRedisOpts);
-                        redis.on('error', async (err) => {
-                            logger.error('Redis error', err);
-                        });
-                        redis.on('connect', () => {
-                            logger.log('Redis connected');
-                        });
-                        return redis;
-                    },
-                };
-            },
             inject: [ServerConfigService],
-        })
+            useFactory: (serverConfigService: ServerConfigService) => ({
+                createClient: (_, redisOpts) => {
+                    const logger = new Logger(BullModule.name);
+                    const redis = new IORedis({ ...redisOpts, ...serverConfigService.redisSettings });
+
+                    redis.on('error', async (err) => {
+                        logger.error('Redis error', err);
+                    });
+                    redis.on('connect', () => {
+                        logger.log('Redis connected');
+                    });
+
+                    return redis;
+                },
+            }),
+        }),
     ],
     controllers: [
         SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController
@@ -55,6 +52,7 @@ import { QueueService } from './queue.service';
     providers: [
         SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
         ProcessInstanceSchedulerService, BotSchedulerService, FileUploadService, QueueService,
-    ]
+    ],
+    exports: [QueueService]
 })
 export class QueueModule { }

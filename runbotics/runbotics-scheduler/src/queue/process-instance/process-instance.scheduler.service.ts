@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
-import { BotWsMessage, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { WebsocketService } from 'src/websocket/websocket.service';
 import { Job } from 'src/utils/process';
 import { UiGateway } from 'src/websocket/gateway/ui.gateway';
@@ -17,17 +17,18 @@ export class ProcessInstanceSchedulerService {
         private readonly uiGateway: UiGateway
     ) { }
 
-    async saveFailedProcessInstance(job: Job, scheduled: boolean, errorMessage: string) {
+    async saveFailedProcessInstance(job: Job, errorMessage: string) {
         const status: ProcessInstanceStatus = ProcessInstanceStatus.ERRORED;
-        const processInstance = {
+        const processInstance: IProcessInstance = {
             id: uuidv4(),
             status,
             created: dayjs().toISOString(),
             updated: dayjs().toISOString(),
             user: job.data.user,
             process: job.data.process,
-            scheduled,
             error: errorMessage,
+            trigger: { name: job.data.trigger },
+            ...(job.data?.triggeredBy && { triggeredBy: job.data.triggeredBy }),
         };
         await this.processInstanceService.save(processInstance);
         this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);

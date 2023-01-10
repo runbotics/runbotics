@@ -1,0 +1,52 @@
+@import '#src-landing/scss/main.scss';
+
+$FORM-MAX-WIDTH: 800px;
+.root {
+    width: 100%;
+    height: fit-content;
+    max-width: $FORM-MAX-WIDTH;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: $margin-6;
+}
+
+.formRow {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $padding-3;
+    flex-wrap: wrap;
+}
+
+.submitRow {
+    composes: formRow;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+
+    img {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .formRow {
+        justify-content: center;
+    }
+
+    .submitRow {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: $margin-1;
+
+        img {
+            margin-inline: auto;
+        }
+    }
+}

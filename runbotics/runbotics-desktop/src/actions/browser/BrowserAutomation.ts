@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import { writeFile, writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { DesktopRunResponse } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
@@ -7,10 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
 import { RunIndex } from './IndexAction';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
-import Prince from 'prince';
-import Puppeteer from 'puppeteer';
 import path from 'path';
 import * as BrowserTypes from './BrowserAutomation.types';
+import { generatePdf, Target } from './utils';
 
 @Injectable()
 class BrowserAutomation extends StatefulActionHandler {
@@ -281,47 +280,27 @@ class BrowserAutomation extends StatefulActionHandler {
     ): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
         // Prince requires absolute path
         const fileName = path.join(process.cwd(), 'temp', uuidv4());
+        let target: Target;
+
+        if (input.target === 'URL' && input.url) {
+            target = { url: input.url };
+        }
 
         if (input.target === 'Session') {
-            const source: string = await this.session?.executeScript('return document.body.outerHTML');
-            writeFileSync(`${fileName}.html`, source, { encoding: 'utf8' });
-            try {
-                await Prince().inputs(`${fileName}.html`).output(`${fileName}.pdf`).execute();
-            } catch (error) {
-                this.logger.error('Error occured while printing to pdf', error);
-            }
-
-            return `${fileName}.pdf`;
+            target = { content: await this.session?.executeScript('return document.body.outerHTML') };
         }
-
-        if (input.target === 'Url' && input.url) {
-            this.logger.log('Printing to pdf', input.url);
-            // assigning browser to variable to before try/catch block
-            // because it is not available in try/catch block
-            const browser = await Puppeteer.launch({
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }).catch((e) => {
-                this.logger.error('error puppeteer', e);
-                throw e;
+        try {
+            const pdfBuffer = await generatePdf(target, {});
+            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (error) => {
+                if (error) throw error;
+                this.logger.log(`File saved successfully at ${fileName}.pdf`);
             });
-
-            try {
-                const page = await browser.newPage();
-                await page.goto(input.url, {
-                    waitUntil: ['load', 'networkidle0'], // wait for page to load completely
-                });
-                await page.pdf({
-                    path: `${fileName}.pdf`,
-                    format: 'A4',
-                });
-            } catch (e) {
-                this.logger.error('error while generating pdf', e);
-                throw e;
-            } finally {
-                await browser.close();
-            }
-            return `${fileName}.pdf`;
+        } catch (error) {
+            this.logger.error('Error occured while printing to pdf', error);
+            throw error;
         }
+
+        return `${fileName}.pdf`;
     }
 
     async tearDown() {

@@ -14,11 +14,11 @@ export class BotCollectionService {
     ) { }
 
     findById(id: string): Promise<IBotCollection> {
-        return this.botCollectionRepository.findOne({ id }, { relations });
+        return this.botCollectionRepository.findOne({ where: { id }, relations });
     }
 
-    findByName(botCollectionName: string): Promise<IBotCollection> {
-        return this.botCollectionRepository.findOne({ where: { botCollectionName }, relations });
+    findByName(name: string): Promise<IBotCollection> {
+        return this.botCollectionRepository.findOne({ where: { name }, relations });
     }
 
     async save(botCollection: IBotCollection) {

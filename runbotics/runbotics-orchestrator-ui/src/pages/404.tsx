@@ -5,9 +5,9 @@ import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import styled from 'styled-components';
 
-import Page from 'src/components/pages/Page';
-import Logo from 'src/components/utils/Logo';
-import useTranslations from 'src/hooks/useTranslations';
+import Page from '#src-app/components/pages/Page';
+import Logo from '#src-app/components/utils/Logo';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 const PREFIX = 'NotFoundView';
 

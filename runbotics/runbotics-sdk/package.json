@@ -11,6 +11,7 @@
     "source": "src/index.ts",
     "types": "dist/index.d.ts",
     "scripts": {
+        "postinstall": "rushx build",
         "build": "microbundle --no-compress --format modern,cjs",
         "start": "microbundle watch --no-compress --format modern,cjs"
     },

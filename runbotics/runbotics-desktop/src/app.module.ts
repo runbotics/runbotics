@@ -1,5 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 import { DesktopRunnerService } from './DesktopRunnerService';
 import { ImportActionHandler } from './actions/import/ImportActionHandler';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -23,10 +22,6 @@ import { SharepointFileActionHandler } from './actions/sharepoint/SharepointFile
 @Global()
 @Module({
     imports: [
-        HttpModule.register({
-            timeout: 5000,
-            maxRedirects: 5,
-        }),
         MailerModule.forRootAsync({
             useFactory: () => ({
                 transport: {
@@ -75,5 +70,5 @@ import { SharepointFileActionHandler } from './actions/sharepoint/SharepointFile
     exports: [ConfigModule, DesktopRunnerService],
 })
 export class AppModule {
-    constructor() { }
+    constructor() {}
 }

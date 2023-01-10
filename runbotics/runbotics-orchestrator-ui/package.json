@@ -1,16 +1,15 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "license": "MIT",
+    "version": "2.4.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
-    "version": "2.3.1",
-    "private": true,
+    "license": "MIT",
     "sideEffects": false,
     "scripts": {
         "start": "next start",
-        "start:dev": "next dev",
+        "start:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "lint": "next lint",
         "lint:fix": "next lint --fix"
@@ -40,7 +39,7 @@
         "@mui/icons-material": "^5.10.6",
         "@mui/material": "^5.10.12",
         "@mui/lab": "^5.0.0-alpha.106",
-        "@mui/system": "^5.4.1",
+        "@mui/system": "^5.11.2",
         "@mui/x-data-grid": "^5.17.0",
         "@reduxjs/toolkit": "^1.4.0",
         "@rjsf/core": "^4.2.0",
@@ -63,6 +62,7 @@
         "jwt-decode": "^2.2.0",
         "lodash": "^4.17.19",
         "moment": "^2.27.0",
+        "nodemailer": "^6.6.0",
         "node-sass": "^7.0.0",
         "notistack": "^2.0.8",
         "react": "^18.2.0",
@@ -84,7 +84,6 @@
         "redux-thunk": "^2.3.0",
         "uuid": "^8.3.2",
         "yup": "^0.32.11",
-        "runboticskit": "workspace:*",
         "diagram-js": "^7.2.3",
         "inherits": "^2.0.4",
         "min-dash": "^3.7.0",
@@ -99,7 +98,7 @@
         "styled-components": "^5.3.3",
         "cronstrue": "^1.123.0",
         "react-dropzone": "~14.2.2",
-        "next": "13.0.0",
+        "next": "13.1.1",
         "sass": "~1.55.0",
         "@emotion/cache": "~11.10.3",
         "@emotion/server": "~11.10.0",
@@ -108,7 +107,8 @@
         "eslint-plugin-simple-import-sort": "~8.0.0",
         "react-refresh": "~0.12.0",
         "@next/react-refresh-utils": "~13.0.0",
-        "@mui/x-date-pickers": "~5.0.7"
+        "@mui/x-date-pickers": "~5.0.7",
+        "sharp": "~0.31.2"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",
@@ -141,7 +141,8 @@
         "eslint-plugin-import": "^2.24.2",
         "eslint-plugin-react": "^7.26.0",
         "eslint-plugin-react-hooks": "^4.6.0",
-        "eslint": "8.26.0"
+        "eslint": "8.26.0",
+        "cross-env": "^7.0.3"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
