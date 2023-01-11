@@ -1,9 +1,9 @@
 echo $'[INFO] - runbotics-sdk install start\n'
-cd runbotics-sdk --ignore-scripts && pnpm install --ignore-scripts && cd ..
+cd runbotics-sdk && pnpm install --ignore-scripts && cd ..
 echo $'\n[INFO] - runbotics-sdk install finished'
 
 echo $'\n[INFO] - runbotics-common install start\n'
-cd runbotics-common --ignore-scripts && pnpm install --ignore-scripts && cd ..
+cd runbotics-common && pnpm install --ignore-scripts && cd ..
 echo $'\n[INFO] - runbotics-common install finished'
 
 echo $'\n[INFO] - runbotics-actions-windows install start\n'
