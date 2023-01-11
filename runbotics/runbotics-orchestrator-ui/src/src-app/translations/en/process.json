@@ -190,6 +190,7 @@
     "Process.Details.Modeler.Actions.Browser.Type.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Type.Target": "Target",
     "Process.Details.Modeler.Actions.Browser.Type.Value": "Value",
+    "Process.Details.Modeler.Actions.Browser.Type.Clear": "Clear field before typing",
     "Process.Details.Modeler.Actions.Browser.Selenium.Wait.Label": "Wait for element",
     "Process.Details.Modeler.Actions.Browser.Wait.Input": "Input",
     "Process.Details.Modeler.Actions.Browser.Wait.Target": "Target",

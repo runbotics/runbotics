@@ -205,6 +205,9 @@ class BrowserAutomation extends StatefulActionHandler {
 
     private async doType(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
+        if (input.clear) {
+            await element.clear();
+        }
         await element.sendKeys(input.value);
 
         return {};

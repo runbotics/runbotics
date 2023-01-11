@@ -37,6 +37,7 @@ export type BrowserOpenActionOutput = any;
 export type BrowserActionInput = {
     target: string;
     value: any;
+    clear?: boolean
 };
 export type BrowserClickActionOutput = any;
 

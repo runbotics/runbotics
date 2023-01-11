@@ -192,6 +192,7 @@
     "Process.Details.Modeler.Actions.Browser.Type.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Type.Target": "Cel",
     "Process.Details.Modeler.Actions.Browser.Type.Value": "Wartość",
+    "Process.Details.Modeler.Actions.Browser.Type.Clear": "Wyczyść pole przed wpisaniem",
     "Process.Details.Modeler.Actions.Browser.Selenium.Wait.Label": "Czekaj na element",
     "Process.Details.Modeler.Actions.Browser.Wait.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Browser.Wait.Target": "Cel",
