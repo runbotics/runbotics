@@ -27,7 +27,6 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
         label: translate('Process.Details.Modeler.Actions.Loop.Loop.Label'),
         script: 'loop.init',
         runner: Runner.DESKTOP_SCRIPT,
-        legacy: true,
         output: {
             assignVariables: false,
             outputMethods: {},
