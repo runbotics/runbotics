@@ -7,7 +7,7 @@ import { RuntimeService } from '../../core/bpm/Runtime';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 
 export type VariablesActionRequest<I> = DesktopRunRequest<any> & {
-    script: 'variables.assign' | 'variables.assignList' | 'variables.assignGlobalVariable' | 'variables.assignMultipleGlobalVariable';
+    script: 'variables.assign' | 'variables.assignList' | 'variables.assignGlobalVariable';
 };
 
 export type AssignVariableActionInput = {
@@ -68,11 +68,6 @@ export class VariablesActionHandler extends StatelessActionHandler {
                 output = await this.assignVariable(action.input, action);
                 break;
             case 'variables.assignGlobalVariable':
-                const globalVariableId: number = action.input.globalVariable;
-                const input = await this.fetchGlobalVariable(globalVariableId);
-                output = await this.assignVariable(input, action);
-                break;
-            case 'variables.assignMultipleGlobalVariable':
                 const globalVariableIds: number[] = action.input.globalVariables;
                 for (const globalVariableId of globalVariableIds) {
                     const input = await this.fetchGlobalVariable(globalVariableId);

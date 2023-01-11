@@ -197,36 +197,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         return undefined;
     };
 
-    const extractGlobalVariable = (inputOutput: CamundaInputOutputElement) => {
-        const globalVariable = inputOutput.inputParameters.find(
-            (inputParameter) => inputParameter.name === 'globalVariable'
-        );
-        if (globalVariable) {
-            const numberPattern = new RegExp(/\d+/, 'g');
-            const globalVariableId = globalVariable.value.match(numberPattern);
-            if (!globalVariableId) {
-                return undefined;
-            }
-            const globalVariableName = globalVariables.find(
-                (variable) => variable.id === Number(globalVariableId[0])
-            )?.name;
-
-            if (globalVariableName) {
-                return {
-                    label: globalVariableName,
-                    value: globalVariableName,
-                    group: translate(
-                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-                    ),
-                };
-            }
-        }
-        return undefined;
-    };
-
-    const extractMultipleGlobalVariables = (
-        inputOutput: CamundaInputOutputElement
-    ) => {
+    const extractGlobalVariables = (inputOutput: CamundaInputOutputElement) => {
         const globalVariableList = inputOutput.inputParameters.find(
             (inputParameter) => inputParameter.name === 'globalVariables'
         );
@@ -283,9 +254,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                         element.businessObject.actionId ===
                             'variables.assignList' ||
                         element.businessObject.actionId ===
-                            'variables.assignGlobalVariable' ||
-                        element.businessObject.actionId ===
-                            'variables.assignMultipleGlobalVariable'
+                            'variables.assignGlobalVariable'
                 );
 
             const variables = assignVariablesElements
@@ -299,8 +268,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                     }
                     return (
                         extractLocalVariable(inputOutput) ??
-                        extractGlobalVariable(inputOutput) ??
-                        extractMultipleGlobalVariables(inputOutput)
+                        extractGlobalVariables(inputOutput)
                     );
                 })
                 .concat(attendedProcessVariables)

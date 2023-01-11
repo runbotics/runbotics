@@ -88,57 +88,18 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
         id: 'variables.assignGlobalVariable',
         label: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'),
         script: 'variables.assignGlobalVariable',
-        legacy: true,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Input'),
-                        type: 'object',
-                        properties: {
-                            globalVariable: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable',
-                                ),
-                                type: 'number',
-                            },
-                        },
-                        required: ['globalVariable'],
-                    },
-                },
-            },
-            uiSchema: {
-                input: {
-                    globalVariable: {
-                        'ui:widget': 'GlobalVariableSelectWidget',
-                    },
-                },
-            },
-            formData: {
-                input: {
-                    globalVariable: undefined,
-                },
-            },
-        },
-    },
-    'variables.assignMultipleGlobalVariable': {
-        id: 'variables.assignMultipleGlobalVariable',
-        label: translate('Process.Details.Modeler.Actions.Variables.AssignMultipleGlobalVariable.Label'),
-        script: 'variables.assignMultipleGlobalVariable',
-        runner: Runner.DESKTOP_SCRIPT,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Input'),
                         type: 'object',
                         properties: {
                             globalVariables: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.Variables.AssignMultipleGlobalVariable.GlobalVariables',
+                                    'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.GlobalVariables',
                                 ),
                                 type: 'array',
                                 items: {

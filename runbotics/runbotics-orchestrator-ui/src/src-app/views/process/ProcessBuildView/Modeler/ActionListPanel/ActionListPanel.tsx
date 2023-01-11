@@ -192,15 +192,13 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                         return;
                     }
 
-                    const filteredItems = (
-                        actionName
-                            ? (items as IBpmnAction[]).filter(({ label }) =>
-                                label
-                                    .toLowerCase()
-                                    .includes(actionName.toLowerCase())
-                            )
-                            : (items as IBpmnAction[])
-                    ).filter((item) => !item?.legacy);
+                    const filteredItems = actionName
+                        ? (items as IBpmnAction[]).filter(({ label }) =>
+                            label
+                                .toLowerCase()
+                                .includes(actionName.toLowerCase())
+                        )
+                        : (items as IBpmnAction[]);
 
                     // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;

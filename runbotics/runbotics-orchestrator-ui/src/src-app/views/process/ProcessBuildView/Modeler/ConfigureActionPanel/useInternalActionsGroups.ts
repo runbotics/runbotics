@@ -44,7 +44,7 @@ const useInternalActionsGroups = (): Record<string, ActionsGroupsProperties> => 
         },
         loop: {
             label: translate('Process.Details.Modeler.ActionPanel.ActionsGroup.Loop'),
-            items: [internalBpmnActions['loop.loop'], internalBpmnActions['loop.init']],
+            items: [internalBpmnActions['loop.loop']],
         },
         api: {
             label: translate('Process.Details.Modeler.ActionPanel.ActionsGroup.API'),
