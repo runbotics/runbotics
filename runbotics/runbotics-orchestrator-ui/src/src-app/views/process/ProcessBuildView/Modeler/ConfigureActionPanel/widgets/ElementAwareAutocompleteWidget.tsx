@@ -210,6 +210,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
             const globalVariableName = globalVariables.find(
                 (variable) => variable.id === Number(globalVariableId[0])
             )?.name;
+
             if (globalVariableName) {
                 return {
                     label: globalVariableName,
@@ -219,6 +220,35 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                     ),
                 };
             }
+        }
+        return undefined;
+    };
+
+    const extractMultipleGlobalVariables = (
+        inputOutput: CamundaInputOutputElement
+    ) => {
+        const globalVariableList = inputOutput.inputParameters.find(
+            (inputParameter) => inputParameter.name === 'globalVariables'
+        );
+
+        if (globalVariableList) {
+            return globalVariableList.definition.items.map((item) => {
+                const globalVariableName = globalVariables.find(
+                    (variable) => variable.id === Number(item.value)
+                )?.name;
+
+                if (!globalVariableName) {
+                    return undefined;
+                }
+
+                return {
+                    label: globalVariableName,
+                    value: globalVariableName,
+                    group: translate(
+                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                    ),
+                };
+            });
         }
         return undefined;
     };
@@ -267,15 +297,15 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                     if (!inputOutput) {
                         return undefined;
                     }
-                    if (inputOutput.inputParameters) {
-                    }
                     return (
                         extractLocalVariable(inputOutput) ??
-                        extractGlobalVariable(inputOutput)
+                        extractGlobalVariable(inputOutput) ??
+                        extractMultipleGlobalVariables(inputOutput)
                     );
                 })
                 .concat(attendedProcessVariables)
-                .filter((variable) => variable !== undefined);
+                .filter((variable) => variable !== undefined)
+                .flatMap((item) => item);
 
             const dollarVariables = variables.map((option) => ({
                 ...option,

@@ -123,7 +123,6 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-
     'variables.assignMultipleGlobalVariable': {
         id: 'variables.assignMultipleGlobalVariable',
         label: translate('Process.Details.Modeler.Actions.Variables.AssignMultipleGlobalVariable.Label'),
