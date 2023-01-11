@@ -287,6 +287,10 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Browser.Type.Value'),
                                 type: 'string',
                             },
+                            clear: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Type.Clear'),
+                                type: 'boolean',
+                            },
                         },
                         required: ['target', 'value'],
                     },
@@ -304,6 +308,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     target: 'id=',
                     value: '',
+                    clear: false,
                 },
             },
         },
