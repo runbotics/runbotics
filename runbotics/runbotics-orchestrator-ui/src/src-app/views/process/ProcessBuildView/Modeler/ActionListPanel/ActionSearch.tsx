@@ -7,12 +7,17 @@ export type SearchBarProps = TextFieldProps & {
     onSearchPhraseChange: (value: string) => void;
 };
 
-const ActionSearch: VFC<SearchBarProps> = ({ onSearchPhraseChange, ...other }) => {
+const ActionSearch: VFC<SearchBarProps> = ({
+    onSearchPhraseChange,
+    ...other
+}) => {
     const [value, setValue] = useState('');
 
     const clear = () => setValue('');
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (
+        event
+    ) => {
         setValue(event.target.value);
     };
 
@@ -29,7 +34,10 @@ const ActionSearch: VFC<SearchBarProps> = ({ onSearchPhraseChange, ...other }) =
             size="small"
             InputProps={{
                 endAdornment: (
-                    <IconButton sx={{ visibility: value ? 'visible' : 'hidden' }} onClick={clear}>
+                    <IconButton
+                        sx={{ visibility: value ? 'visible' : 'hidden' }}
+                        onClick={clear}
+                    >
                         <ClearIcon />
                     </IconButton>
                 ),
