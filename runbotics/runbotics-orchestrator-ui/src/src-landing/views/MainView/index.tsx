@@ -18,7 +18,6 @@ const MainView = () => (
         <IndustriesSection />
         <IntegrationSection />
         <ContactSection />
-        {/* Add your section here*/}
     </Layout>
 );
 

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="31.991" viewBox="0 0 32 31.991">
+  <g id="Runbotics_sygnet_kolor-01" data-name="Runbotics sygnet kolor-01" transform="translate(-53.2 -53.2)">
+    <path id="Path_500" data-name="Path 500" d="M122.877,294.6h0s-.024,1.219,0,2.4v9.971h10.117L127.087,294.6Z" transform="translate(-64.006 -221.784)" fill="#fbb040"/>
+    <path id="Path_501" data-name="Path 501" d="M129.045,112.5h-6.168s-.024,1.211,0,2.4v7.557h6.013c3.608,0,5.851-1.544,5.851-4.973C134.741,113.979,132.263,112.5,129.045,112.5Z" transform="translate(-64.006 -54.481)" fill="#fbb040"/>
+    <g id="Group_220" data-name="Group 220" transform="translate(53.2 53.2)">
+      <path id="Path_502" data-name="Path 502" d="M219.6,53.2c6.094.333,10.182,3.965,10.182,9.678a9.161,9.161,0,0,1-7.273,9.434l6.7,12.871h8.865V53.2Z" transform="translate(-206.078 -53.2)" fill="#fbb040"/>
+      <path id="Path_503" data-name="Path 503" d="M76.9,62.878c0-5.713-4.079-9.353-10.182-9.678H53.2V85.192h5.745V75.213c-.024-1.178,0-2.389,0-2.389h4.2l5.908,12.368h7.265l-6.7-12.872C73.9,71.175,76.9,68.07,76.9,62.878ZM64.958,67.973H58.945V60.408c-.024-1.178,0-2.4,0-2.4h6.168c3.218,0,5.7,1.479,5.7,4.989C70.809,66.429,68.566,67.973,64.958,67.973Z" transform="translate(-53.2 -53.2)"/>
+    </g>
+  </g>
+</svg>
