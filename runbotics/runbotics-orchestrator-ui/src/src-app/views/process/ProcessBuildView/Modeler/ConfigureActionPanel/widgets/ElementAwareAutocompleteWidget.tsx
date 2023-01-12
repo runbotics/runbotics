@@ -8,7 +8,9 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
-import useTranslations, { translate as t } from '#src-app/hooks/useTranslations';
+import useTranslations, {
+    translate as t,
+} from '#src-app/hooks/useTranslations';
 
 import { useBpmnFormContext } from '#src-app/providers/BpmnForm.provider';
 import { useSelector } from '#src-app/store';
@@ -19,7 +21,6 @@ import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
 import AutocompleteWidget from './AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
-
 
 const services = [
     'environment.services.idt',
@@ -72,25 +73,36 @@ const services = [
 ].map((service) => ({
     value: `\${${service}}`,
     label: `\${${service}}`,
-    group: t('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services'),
+    group: t(
+        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services'
+    ),
 }));
 
-const utils = ['false', 'true', 'content.output', 'environment', 'environment.output'].map((util) => ({
+const utils = [
+    'false',
+    'true',
+    'content.output',
+    'environment',
+    'environment.output',
+].map((util) => ({
     value: `\${${util}}`,
     label: `\${${util}}`,
-    group: t('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'),
+    group: t(
+        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
+    ),
 }));
 
-const reduceList = (list: any[]) => list.reduce((previousValue, currentValue) => {
-    const newPrev = previousValue;
-    newPrev[currentValue.value] = currentValue;
-    return newPrev;
-}, {});
+const reduceList = (list: any[]) =>
+    list.reduce((previousValue, currentValue) => {
+        const newPrev = previousValue;
+        newPrev[currentValue.value] = currentValue;
+        return newPrev;
+    }, {});
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
         info?: string;
-    }
+    };
     customErrors?: string[];
 }
 
@@ -100,7 +112,9 @@ const AutocompleteWrapper = styled.div`
     align-items: center;
 `;
 
-const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props) => {
+const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
+    props
+) => {
     const context = useBpmnFormContext();
     const { translate } = useTranslations();
     const { executionInfo, isAttended } = useSelector(currentProcessSelector);
@@ -111,34 +125,47 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
             ? context?.passedInVariables.map((variable) => ({
                 label: variable,
                 value: variable,
-                group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'),
+                group: translate(
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                ),
             }))
             : [];
 
     const extractOutputs = (scope, rootElement) => {
         let variableOutputs = [];
-        if (rootElement.loopCharacteristics && rootElement.loopCharacteristics.elementVariable) {
+        if (
+            rootElement.loopCharacteristics &&
+            rootElement.loopCharacteristics.elementVariable
+        ) {
             const { elementVariable } = rootElement.loopCharacteristics;
             const localVariables = [
                 {
                     value: `\${environment.variables.content.${elementVariable}}`,
                     label: `\${environment.variables.content.${elementVariable}}`,
-                    group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local'),
+                    group: translate(
+                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local'
+                    ),
                 },
                 {
                     value: `#{${elementVariable}}`,
                     label: `#{${elementVariable}}`,
-                    group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local'),
+                    group: translate(
+                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Local'
+                    ),
                 },
             ];
             variableOutputs = [...localVariables, ...variableOutputs];
         }
 
-        const outputs: any[] = getVariablesForScope(scope, rootElement).map((option) => ({
-            label: option.name,
-            value: option.name,
-            group: translate('Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'),
-        }));
+        const outputs: any[] = getVariablesForScope(scope, rootElement).map(
+            (option) => ({
+                label: option.name,
+                value: option.name,
+                group: translate(
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'
+                ),
+            })
+        );
 
         const dollarOutputs = outputs.map((option) => ({
             ...option,
@@ -156,109 +183,120 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (props
 
     const extractLocalVariable = (inputOutput: CamundaInputOutputElement) => {
         const localVariable = inputOutput.inputParameters.find(
-            (inputParameter) =>
-                inputParameter.name === 'variable',
+            (inputParameter) => inputParameter.name === 'variable'
         );
         if (localVariable) {
             return {
                 label: localVariable.value,
                 value: localVariable.value,
                 group: translate(
-                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
                 ),
             };
         }
         return undefined;
     };
 
-    const extractGlobalVariable = (inputOutput: CamundaInputOutputElement) => {
-        const globalVariable = inputOutput.inputParameters.find(
-            (inputParameter) =>
-                inputParameter.name === 'globalVariable',
+    const extractGlobalVariables = (inputOutput: CamundaInputOutputElement) => {
+        const globalVariableList = inputOutput.inputParameters.find(
+            (inputParameter) => inputParameter.name === 'globalVariables'
         );
-        if (globalVariable) {
-            const numberPattern = new RegExp(/\d+/, 'g');
-            const globalVariableId = globalVariable.value.match(numberPattern);
-            if (!globalVariableId) {
-                return undefined;
-            }
-            const globalVariableName = globalVariables.find((variable) =>
-                variable.id === Number(globalVariableId[0]))?.name;
-            if (globalVariableName) {
+
+        if (globalVariableList) {
+            return globalVariableList.definition.items.map((item) => {
+                const globalVariableName = globalVariables.find(
+                    (variable) => variable.id === Number(item.value)
+                )?.name;
+
+                if (!globalVariableName) {
+                    return undefined;
+                }
+
                 return {
                     label: globalVariableName,
                     value: globalVariableName,
                     group: translate(
-                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables',
+                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
                     ),
                 };
-            }
+            });
         }
         return undefined;
     };
 
-    const options: Record<string, { label: string; value: any; group: any }> = React.useMemo(() => {
-        let result = [];
+    const options: Record<string, { label: string; value: any; group: any }> =
+        React.useMemo(() => {
+            let result = [];
 
-        const defaultOptions = [...services, ...utils];
-        result = [...defaultOptions, ...result];
+            const defaultOptions = [...services, ...utils];
+            result = [...defaultOptions, ...result];
 
-        if (!context?.element) {
-            return reduceList(result);
-        }
- 
-        const scope = BPMNHelperFunctions.getScope(context.element);
-        const rootElement = BPMNHelperFunctions.getParentElement(context.element);
+            if (!context?.element) {
+                return reduceList(result);
+            }
 
-        if (rootElement) {
-            result = [...extractOutputs(scope, rootElement), ...result];
-        }
-
-        const assignVariablesElements = context.modeler
-            ?.get('elementRegistry')
-            .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
-            .filter(
-                (element: BPMNElement) =>
-                    element.businessObject.actionId === 'variables.assign' ||
-                    element.businessObject.actionId === 'variables.assignList' ||
-                    element.businessObject.actionId === 'variables.assignGlobalVariable',
+            const scope = BPMNHelperFunctions.getScope(context.element);
+            const rootElement = BPMNHelperFunctions.getParentElement(
+                context.element
             );
 
-        const variables = assignVariablesElements
-            .map((assignVariablesElement) => {
-                const inputOutput: CamundaInputOutputElement = assignVariablesElement.businessObject
-                    ?.extensionElements?.values[0] as CamundaInputOutputElement;
+            if (rootElement) {
+                result = [...extractOutputs(scope, rootElement), ...result];
+            }
 
-                if (!inputOutput) {
-                    return undefined;
-                }
-                return extractLocalVariable(inputOutput) ?? extractGlobalVariable(inputOutput);
-            })
-            .concat(attendedProcessVariables)
-            .filter((variable) => variable !== undefined);
+            const assignVariablesElements = context.modeler
+                ?.get('elementRegistry')
+                .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
+                .filter(
+                    (element: BPMNElement) =>
+                        element.businessObject.actionId ===
+                            'variables.assign' ||
+                        element.businessObject.actionId ===
+                            'variables.assignList' ||
+                        element.businessObject.actionId ===
+                            'variables.assignGlobalVariable'
+                );
 
-        const dollarVariables = variables.map((option) => ({
-            ...option,
-            label: `\${environment.variables.${option.value}}`,
-            value: `\${environment.variables.${option.value}}`,
-        }));
-        const hashVariables = variables.map((option) => ({
-            ...option,
-            label: `#{${option.value}}`,
-            value: `#{${option.value}}`,
-        }));
+            const variables = assignVariablesElements
+                .map((assignVariablesElement) => {
+                    const inputOutput: CamundaInputOutputElement =
+                        assignVariablesElement.businessObject?.extensionElements
+                            ?.values[0] as CamundaInputOutputElement;
 
-        result = [...dollarVariables, ...hashVariables, ...result];
+                    if (!inputOutput) {
+                        return undefined;
+                    }
+                    return (
+                        extractLocalVariable(inputOutput) ??
+                        extractGlobalVariables(inputOutput)
+                    );
+                })
+                .concat(attendedProcessVariables)
+                .filter((variable) => variable !== undefined)
+                .flatMap((item) => item);
 
-        return reduceList(result);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [context?.element]);
+            const dollarVariables = variables.map((option) => ({
+                ...option,
+                label: `\${environment.variables.${option.value}}`,
+                value: `\${environment.variables.${option.value}}`,
+            }));
+            const hashVariables = variables.map((option) => ({
+                ...option,
+                label: `#{${option.value}}`,
+                value: `#{${option.value}}`,
+            }));
+
+            result = [...dollarVariables, ...hashVariables, ...result];
+
+            return reduceList(result);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [context?.element]);
 
     const optionValues = React.useMemo(
         () => ({
             'ui:options': Object.values(options).map((option) => option.value),
         }),
-        [options],
+        [options]
     );
 
     return (

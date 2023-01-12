@@ -5,10 +5,9 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
 
 export const ApiTemplate: TemplatesSchema = {
-    name: translate('Process.Details.Modeler.Templates.Api.Name'),
+    label: translate('Process.Details.Modeler.Templates.Api.Name'),
     id: 'api.test',
     type: ElementType.SERVICE_TASK,
-    label: 'api.request',
     bpmnAction: 'api.request',
     output: 'out',
     input: {

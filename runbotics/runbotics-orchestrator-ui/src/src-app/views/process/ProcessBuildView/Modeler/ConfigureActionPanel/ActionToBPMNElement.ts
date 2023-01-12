@@ -145,7 +145,7 @@ export class ActionToBPMNElement {
                 definition: this.bpmnFactory.create('camunda:List', {
                     items: parameterList.value.map((value) =>
                         this.bpmnFactory.create('camunda:Value', {
-                            value,
+                            value: value.toString(),
                         }),
                     ),
                 }),
