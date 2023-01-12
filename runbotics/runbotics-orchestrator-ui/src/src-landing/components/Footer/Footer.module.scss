@@ -1,0 +1,117 @@
+@import '#src-landing/scss/main.scss';
+
+$FOOTER_MIN_HEIGHT: 200px;
+
+.wrapper {
+    width: 100%;
+    min-height: $FOOTER_MIN_HEIGHT;
+    padding-left: $x-content-padding;
+    padding-right: $x-content-padding;
+    background-color: $palette-background-secondary;
+}
+
+.root {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    width: 100%;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $margin-4;
+    width: 100%;
+    padding-top: $padding-2;
+    padding-bottom: $padding-2;
+}
+
+.logo {
+    img {
+        display: block;
+    }
+}
+
+.scroll {
+    background: none;
+    outline: none;
+    border: none;
+    transition: transform 200ms ease;
+    
+    &:hover {
+        cursor: pointer;
+        
+        .arrow {
+            height: 25px;
+            &::after {
+                height: 15px;
+                width: 15px;
+            }
+        }
+
+        .verticalText {
+            letter-spacing: +1px;
+        }
+    }
+}
+
+.verticalText {
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    transition: letter-spacing 200ms ease;
+}
+
+.arrow {
+    position: relative;
+    width: 2px;
+    height: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: $margin-1;
+    background-color: $palette-accent-primary;
+    transition: height 200ms ease;
+    
+    &::after {
+        position: absolute;
+        left: 50%;
+        content: '';
+        transform: translate(-50%, 0);
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background-color: $palette-accent-primary;
+        transition: all 200ms ease;
+    }
+}
+
+.divider {
+    width: 90%;
+    height: 1px;
+    background-color: $palette-background-secondary-dark;
+}
+
+.copyright {
+    width: 100%;
+    padding-top: $padding-3;
+    padding-bottom: $padding-3;
+    text-align: center;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .top {
+        flex-direction: column;
+        gap: $margin-3;
+    }
+    
+    .divider {
+        width: 100%;
+    }
+
+    .scroll {
+        display: none;
+    }
+}
