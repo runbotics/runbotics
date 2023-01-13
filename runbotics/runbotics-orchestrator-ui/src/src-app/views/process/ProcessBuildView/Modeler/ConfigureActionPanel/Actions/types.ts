@@ -36,6 +36,7 @@ export type IFormData = Record<string, any> & {
     input?: Record<string, any>;
     output?: Record<string, any>;
     disabled?: boolean;
+    runFromHere?: boolean;
 };
 export type IForm = {
     schema: JSONSchema7;

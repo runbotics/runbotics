@@ -9,9 +9,11 @@ import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
 import i18n from 'i18next';
 
 import If from '#src-app/components/utils/If';
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-import { useBpmnFormContext } from '#src-app/providers/BpmnForm.provider';
+import useTranslations, {
+    checkIfKeyExists,
+} from '#src-app/hooks/useTranslations';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
+import { useSelector } from '#src-app/store';
 
 type Props = {
     onSubmit: (label: string) => void;
@@ -19,22 +21,40 @@ type Props = {
 
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const { translate } = useTranslations();
-    const { element, action } = useBpmnFormContext();
-    const [formState, setFormState] = useState({ editing: false, label: element.businessObject.label });
-    const actionId = element.businessObject?.actionId;
+    const { selectedElement, selectedAction } = useSelector(
+        (state) => state.process.modeler
+    );
+
+    const [formState, setFormState] = useState({
+        editing: false,
+        label: selectedElement.businessObject.label,
+    });
+    const actionId = selectedElement.businessObject?.actionId;
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    const translationKey = `Process.Details.Modeler.Actions.${actionId ? capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' }) : ''}.Label`;
-    
+    const translationKey = `Process.Details.Modeler.Actions.${
+        actionId
+            ? capitalizeFirstLetter({
+                  text: actionId,
+                  lowerCaseRest: false,
+                  delimiter: '.',
+                  join: '.',
+              })
+            : ''
+    }.Label`;
+
     useEffect(() => {
         if (checkIfKeyExists(translationKey)) {
             setTranslatedLabel(translate(translationKey));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, actionId]);
 
     useEffect(() => {
-        setFormState({ editing: false, label: element.businessObject.label });
-    }, [element, action]);
+        setFormState({
+            editing: false,
+            label: selectedElement.businessObject.label,
+        });
+    }, [selectedElement, selectedAction]);
 
     const handleChangeEditing = (editing: boolean) => {
         setFormState((prevState) => ({
@@ -56,14 +76,22 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     };
 
     const EditButtons = () => {
-        const isSameAsBefore = formState.label === element.businessObject.label;
+        const isSameAsBefore =
+            formState.label === selectedElement.businessObject.label;
 
         return (
             <>
                 <IconButton disabled={isSameAsBefore} type="submit">
                     <DoneIcon />
                 </IconButton>
-                <IconButton onClick={() => setFormState({ editing: false, label: element.businessObject.label })}>
+                <IconButton
+                    onClick={() =>
+                        setFormState({
+                            editing: false,
+                            label: selectedElement.businessObject.label,
+                        })
+                    }
+                >
                     <CloseIcon />
                 </IconButton>
             </>
@@ -71,8 +99,15 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     };
 
     const ActionNameLabel = () => (
-        <Stack direction="row" alignItems="center" gap={1} sx={{ mt: (theme) => theme.spacing(2) }}>
-            <Typography variant="h4">{formState.label ? formState.label : translatedLabel}</Typography>
+        <Stack
+            direction="row"
+            alignItems="center"
+            gap={1}
+            sx={{ mt: (theme) => theme.spacing(2) }}
+        >
+            <Typography variant="h4">
+                {formState.label ? formState.label : translatedLabel}
+            </Typography>
             <IconButton onClick={() => handleChangeEditing(true)}>
                 <EditIcon />
             </IconButton>
@@ -81,9 +116,12 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
 
     const ActionSystemLabel = () => (
         <>
-            {action && action.system && (
+            {selectedAction && selectedAction.system && (
                 <Alert severity="warning">
-                    {translate('Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title', { system: action.system })}
+                    {translate(
+                        'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
+                        { system: selectedAction.system }
+                    )}
                 </Alert>
             )}
         </>
@@ -94,7 +132,9 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
             <If condition={formState.editing} else={<ActionNameLabel />}>
                 <form onSubmit={handleSubmit}>
                     <TextField
-                        label={translate('Process.Details.Modeler.ActionPanel.Form.ActionName.Title')}
+                        label={translate(
+                            'Process.Details.Modeler.ActionPanel.Form.ActionName.Title'
+                        )}
                         variant="outlined"
                         value={formState.label}
                         onChange={onChange}

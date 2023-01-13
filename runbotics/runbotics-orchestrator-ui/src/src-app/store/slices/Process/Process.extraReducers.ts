@@ -13,6 +13,7 @@ import {
     getProcessesPage,
     partialUpdateProcess,
 } from './Process.thunks';
+import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
     builder
@@ -70,6 +71,12 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(fetchProcessById.fulfilled, (state, { payload }) => {
             state.draft.process = payload;
             state.draft.loading = LoadingType.IDLE;
+            if (payload?.isAttended && payload?.executionInfo) {
+                state.modeler.passedInVariables =
+                    extractNestedSchemaKeys(
+                        JSON.parse(payload.executionInfo).schema
+                    ) ?? [];
+            }
         })
         .addCase(fetchProcessById.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;

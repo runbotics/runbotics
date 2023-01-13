@@ -60,6 +60,7 @@ import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
 import ZoomScrollModule from '../extensions/zoomscroll';
 import { applyModelerElement } from '../utils';
+import ModelerProvider from '#src-app/providers/ModelerProvider';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     'bpmn:ServiceTask',
@@ -87,23 +88,21 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     ) => {
         const dispatch = useDispatch();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
-        const [selectedElement, setSelectedElement] =
-            useState<BPMNElement>(null);
-        const [commandStack, setCommandStack] = useState<CommandStackInfo>(
+        const modelerRef = useRef<BpmnIoModeler>(modeler);
+        const [commandStack] = useState<CommandStackInfo>(
             initialCommandStackInfo
         );
         const [imported, setImported] = useState(false);
         const [currentTab, setCurrentTab] = useState<ProcessBuildTab | null>(
             null
         );
-        const modelerRef = useRef<BpmnIoModeler>(modeler);
         const externalBpmnActions = useSelector(
             (state) => state.action.bpmnActions.byId
         );
         const appliedActivities = useSelector(
             (state) => state.process.modeler.appliedActivities
         );
-        const { isSaveDisabled } = useSelector(
+        const { isSaveDisabled, selectedElement } = useSelector(
             (state) => state.process.modeler
         );
 
@@ -119,8 +118,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [modeler, offsetTop]);
 
         useEffect(() => {
-            if (prevLanguage !== i18n.language && modeler) {
-                modeler._container.remove();
+            if (prevLanguage !== i18n.language && modelerRef?.current) {
+                modelerRef.current?._container.remove();
             }
 
             setPrevLanguage(i18n.language);
@@ -161,18 +160,20 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             eventBus.on('commandStack.changed', () => {
                 const { _stackIdx, _stack } = bpmnModeler.get('commandStack');
 
-                setCommandStack({
-                    commandStackIdx: _stackIdx,
-                    commandStackSize: _stack.length,
-                });
+                dispatch(
+                    processActions.setCommandStack({
+                        commandStackIdx: _stackIdx,
+                        commandStackSize: _stack.length,
+                    })
+                );
             });
 
             eventBus.on('commandStack.shape.delete.preExecute', () => {
-                setSelectedElement(null);
+                dispatch(processActions.setSelectedElement(null));
             });
 
             eventBus.on('commandStack.connection.delete.preExecute', () => {
-                setSelectedElement(null);
+                dispatch(processActions.setSelectedElement(null));
             });
 
             eventBus.on(
@@ -180,7 +181,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 (event: any) => {
                     if (event.context.elements.length === 1) {
                         const element = event.context.elements[0];
-                        setSelectedElement(element);
+                        dispatch(processActions.setSelectedElement(element));
                         const externalAction = _.cloneDeep(
                             externalBpmnActions[
                                 element?.businessObject.actionId
@@ -233,10 +234,10 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 if (
                     ELEMENTS_PROPERTIES_WHITELIST.includes(event.element.type)
                 ) {
-                    setSelectedElement(event.element);
+                    dispatch(processActions.setSelectedElement(event.element));
                 } else {
                     setCurrentTab(null);
-                    setSelectedElement(null);
+                    dispatch(processActions.setSelectedElement(null));
                 }
             });
 
@@ -255,8 +256,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
-            if (!modeler) return;
-            const { _elements } = modeler.get('elementRegistry');
+            if (!modelerRef.current) return;
+            const { _elements } = modelerRef.current?.get('elementRegistry');
             const modelerActivities = Object.keys(_elements).filter(
                 (elm) => elm.split('_')[0] === 'Activity'
             );
@@ -265,17 +266,21 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 _.sortBy(modelerActivities),
                 _.sortBy(appliedActivities)
             );
-
+            console.log(
+                imported ||
+                    (isModelerInSync && commandStack.commandStackIdx >= 0)
+            );
             if (
                 imported ||
                 (isModelerInSync && commandStack.commandStackIdx >= 0)
             ) {
-                dispatch(processActions.setSaveDisabled(false));
+                // dispatch(processActions.setSaveDisabled(false));
+                // debugger;
             } else {
-                dispatch(processActions.setSaveDisabled(true));
+                // dispatch(processActions.setSaveDisabled(true));
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [appliedActivities, modeler, commandStack, imported]);
+        }, [appliedActivities, modelerRef.current, commandStack, imported]);
 
         useImperativeHandle(
             ref,
@@ -292,15 +297,16 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         );
 
         const openBpmnDiagram = async (xml: any) => {
-            if (!modeler) return;
+            if (!modelerRef.current) return;
             try {
-                await modeler.importXML(xml);
-                const elementRegistry = modeler.get('elementRegistry');
+                await modelerRef.current.importXML(xml);
+                const elementRegistry =
+                    modelerRef.current?.get('elementRegistry');
                 const elementIds = Object.keys(elementRegistry._elements);
                 const activityIds = elementIds.filter(
                     (elm) => elm.split('_')[0] === 'Activity'
                 );
-                dispatch(processActions.setSaveDisabled(true));
+                // dispatch(processActions.setSaveDisabled(true));
                 dispatch(processActions.setAppliedActions(activityIds));
                 const canvas = modeler.get('canvas');
                 canvas.zoom('fit-viewport', 'auto');
@@ -312,7 +318,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useUpdateEffect(() => {
             if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) {
-                setSelectedElement(null);
+                dispatch(processActions.setSelectedElement(null));
             }
         }, [currentTab]);
 
@@ -323,24 +329,28 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [selectedElement]);
 
         useEffect(() => {
-            if (modeler) openBpmnDiagram(definition ?? emptyBpmn);
+            dispatch(processActions.setCommandStack(commandStack));
+        }, [commandStack]);
+
+        useEffect(() => {
+            if (modelerRef.current) openBpmnDiagram(definition ?? emptyBpmn);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [modeler, definition]);
 
         const onCopy = () => {
-            copy(modeler, selectedElement.id);
+            copy(modelerRef.current, selectedElement.id);
         };
 
         const onPaste = () => {
-            paste(modeler, selectedElement.id);
+            paste(modelerRef.current, selectedElement.id);
         };
 
         const onCenter = () => {
-            centerCanvas(modeler);
+            centerCanvas(modelerRef.current);
         };
 
         const onZoom = (step: number) => {
-            modeler?.get('zoomScroll').stepZoom(step);
+            modelerRef.current?.get('zoomScroll').stepZoom(step);
         };
 
         const canRedo =
@@ -349,11 +359,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const canUndo = !(commandStack.commandStackIdx + 1 > 0);
 
         const onUndo = () => {
-            modeler?.get('commandStack')?.undo();
+            modelerRef.current?.get('commandStack')?.undo();
         };
 
         const onRedo = () => {
-            modeler?.get('commandStack')?.redo();
+            modelerRef.current.get('commandStack')?.redo();
         };
 
         return (
@@ -367,74 +377,79 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     disabled={selectedElement === null}
                     onKeyDown={onPaste}
                 >
-                    <Wrapper offsetTop={offsetTop}>
-                        <ActionListPanel
-                            modeler={modeler}
-                            offsetTop={offsetTop}
-                        />
-                        <ModelerArea>
-                            <ModelerContainer id="bpmn-modeler" />
-                            <RunSavePanel
-                                process={process}
-                                onSave={() => {
-                                    onSave();
-                                    setCommandStack(initialCommandStackInfo);
-                                    setImported(false);
-                                }}
-                                onRunClick={() =>
-                                    setCurrentTab(ProcessBuildTab.RUN_INFO)
-                                }
+                    <ModelerProvider modelerRef={modelerRef}>
+                        <Wrapper offsetTop={offsetTop}>
+                            <ActionListPanel
+                                modeler={modeler}
+                                offsetTop={offsetTop}
                             />
-                            <ImportExportPanel
-                                onExport={onExport}
-                                onImport={(e) => {
-                                    onImport(e);
-                                    setImported(true);
-                                }}
-                            />
-                            <ModelerToolboxPanel
-                                onCenter={onCenter}
-                                onZoomIn={() => onZoom(1)}
-                                onZoomOut={() => onZoom(-1)}
-                                onUndo={onUndo}
-                                onRedo={onRedo}
-                                canUndo={canUndo}
-                                canRedo={canRedo}
-                            />
-                            {/* TODO <RouteLeavingGuard when={!isSaveDisabled} navigate={(path) => history.push(path)} /> */}
-                            <SidebarNavigationPanel
-                                selectedTab={currentTab}
-                                onTabToggle={(tabIndex) =>
-                                    setCurrentTab(tabIndex)
-                                }
-                            />
-                        </ModelerArea>
-                        <ResizableDrawer open={currentTab !== null}>
-                            <If
-                                condition={
-                                    currentTab ===
-                                    ProcessBuildTab.CONFIGURE_ACTION
-                                }
-                            >
-                                <BpmnFormProvider
-                                    element={selectedElement}
-                                    modeler={modeler}
+                            <ModelerArea>
+                                <ModelerContainer id="bpmn-modeler" />
+                                <RunSavePanel
                                     process={process}
-                                    commandStack={commandStack}
+                                    onSave={() => {
+                                        onSave();
+                                        dispatch(
+                                            processActions.setCommandStack(
+                                                initialCommandStackInfo
+                                            )
+                                        );
+                                        setImported(false);
+                                    }}
+                                    onRunClick={() =>
+                                        setCurrentTab(ProcessBuildTab.RUN_INFO)
+                                    }
+                                />
+                                <ImportExportPanel
+                                    onExport={onExport}
+                                    onImport={(e) => {
+                                        onImport(e);
+                                        setImported(true);
+                                    }}
+                                />
+                                <ModelerToolboxPanel
+                                    onCenter={onCenter}
+                                    onZoomIn={() => onZoom(1)}
+                                    onZoomOut={() => onZoom(-1)}
+                                    onUndo={onUndo}
+                                    onRedo={onRedo}
+                                    canUndo={canUndo}
+                                    canRedo={canRedo}
+                                />
+                                {/* TODO <RouteLeavingGuard when={!isSaveDisabled} navigate={(path) => history.push(path)} /> */}
+                                <SidebarNavigationPanel
+                                    selectedTab={currentTab}
+                                    onTabToggle={(tabIndex) =>
+                                        setCurrentTab(tabIndex)
+                                    }
+                                />
+                            </ModelerArea>
+                            <ResizableDrawer open={currentTab !== null}>
+                                <If
+                                    condition={
+                                        currentTab ===
+                                        ProcessBuildTab.CONFIGURE_ACTION
+                                    }
                                 >
-                                    <ConfigureActionPanel />
-                                </BpmnFormProvider>
-                            </If>
+                                    <BpmnFormProvider
+                                        element={selectedElement}
+                                        modeler={modeler}
+                                        process={process}
+                                    >
+                                        <ConfigureActionPanel />
+                                    </BpmnFormProvider>
+                                </If>
 
-                            <If
-                                condition={
-                                    currentTab === ProcessBuildTab.RUN_INFO
-                                }
-                            >
-                                <InfoPanel />
-                            </If>
-                        </ResizableDrawer>
-                    </Wrapper>
+                                <If
+                                    condition={
+                                        currentTab === ProcessBuildTab.RUN_INFO
+                                    }
+                                >
+                                    <InfoPanel />
+                                </If>
+                            </ResizableDrawer>
+                        </Wrapper>
+                    </ModelerProvider>
                 </Hotkeys>
             </Hotkeys>
         );

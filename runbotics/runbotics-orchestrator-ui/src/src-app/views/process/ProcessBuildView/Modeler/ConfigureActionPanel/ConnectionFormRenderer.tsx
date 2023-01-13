@@ -4,22 +4,19 @@ import { Box, Grid, Typography } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
-
-
 import useTranslations from '#src-app/hooks/useTranslations';
-
-import { useBpmnFormContext } from '#src-app/providers/BpmnForm.provider';
 
 import { BpmnConnectionFactory, IBpmnConnection } from '../BPMN';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import customWidgets from './widgets';
-
-
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
+import { useSelector } from '#src-app/store';
 
 const ConnectionFormRenderer = () => {
-    const { element, modeler } = useBpmnFormContext();
-    const connection: IBpmnConnection = element;
+    const { selectedElement } = useSelector((state) => state.process.modeler);
+    const { modelerRef } = useModelerContext();
+    const connection: IBpmnConnection = selectedElement;
     const { translate } = useTranslations();
 
     const schema: JSONSchema7 = React.useMemo(
@@ -27,11 +24,13 @@ const ConnectionFormRenderer = () => {
             type: 'object',
             oneOf: [
                 {
-                    title: translate('Process.Details.Modeler.ActionPanel.Form.Connection.Expression'),
+                    title: translate(
+                        'Process.Details.Modeler.ActionPanel.Form.Connection.Expression'
+                    ),
                     properties: {
                         expression: {
                             title: translate(
-                                'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression',
+                                'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
                             ),
                             type: 'string',
                         },
@@ -41,7 +40,7 @@ const ConnectionFormRenderer = () => {
             ],
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
+        []
     );
 
     const uiSchema = React.useMemo(
@@ -50,21 +49,24 @@ const ConnectionFormRenderer = () => {
                 // 'ui:widget': 'EditorWidget'
             },
         }),
-        [],
+        []
     );
 
     const defaultFormData = React.useMemo(
         () => ({
             expression: connection.businessObject.conditionExpression?.body,
         }),
-        [connection],
+        [connection]
     );
 
     const handleSubmit = (event: ISubmitEvent<IFormData>) => {
         const data: IFormData = {
             ...event.formData,
         };
-        BpmnConnectionFactory.from(modeler).setConditionExpression(connection, data.expression);
+        BpmnConnectionFactory.from(modelerRef.current).setConditionExpression(
+            connection,
+            data.expression
+        );
     };
 
     return (
