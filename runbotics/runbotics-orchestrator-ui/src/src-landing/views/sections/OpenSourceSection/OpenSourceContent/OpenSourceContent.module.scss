@@ -3,12 +3,14 @@
 $ICON_SIZE: 76px;
 $SEPARATOR_FIRST_DIM: 2px;
 $SEPARATOR_SECOND_DIM: 36px;
-$TITLE_MIN_HEIGHT: 175px;
 
 .content {
-    container-type: inline-size;
-    margin: auto;
+    width: 100%;
+    max-width: 1672px;
     height: 100%;
+    margin: 0 auto;
+    padding: $padding-10;
+    container-type: inline-size;
 }
 
 .layout {
@@ -24,7 +26,6 @@ $TITLE_MIN_HEIGHT: 175px;
     justify-content: left;
     align-items: center;
     gap: 40px;
-    margin-left: $margin-8;
 
     span {
         font-weight: 600;
@@ -35,16 +36,12 @@ $TITLE_MIN_HEIGHT: 175px;
 .card {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr 1fr;
     grid-column-gap: 1rem;
     grid-row-gap: 1rem;
-    grid-template-areas:
-    "icon title"
-    "text text";
 }
 
 .iconBackground {
-    grid-area: icon;
     justify-self: center;
     align-self: center;
     display: flex;
@@ -63,7 +60,6 @@ $TITLE_MIN_HEIGHT: 175px;
 }
 
 .title {
-    grid-area: title;
     align-self: center;
     font-weight: $font-weight-medium;
 }
@@ -83,13 +79,13 @@ $TITLE_MIN_HEIGHT: 175px;
 }
 
 @media (max-width: $breakpoint-md) {
+    .content {
+        padding: $y-content-padding $x-content-padding;
+    }
+
     .layout {
         grid-column-gap: 3rem;
         grid-row-gap: 2rem;  
-    }
-
-    .card {
-        grid-template-rows: $TITLE_MIN_HEIGHT auto;
     }
 }
 
@@ -100,8 +96,9 @@ $TITLE_MIN_HEIGHT: 175px;
         margin-left: 0;
     }
 
-    .card {
-        grid-template-rows: auto;
+    .separator {
+        width: $SEPARATOR_SECOND_DIM;
+        height: $SEPARATOR_FIRST_DIM;
     }
 
     .iconBackground {
@@ -111,8 +108,7 @@ $TITLE_MIN_HEIGHT: 175px;
         align-self: flex-start;
     }
 
-    .separator {
-        width: $SEPARATOR_SECOND_DIM;
-        height: $SEPARATOR_FIRST_DIM;
+    .card {
+        grid-template-rows: auto;
     }
 }

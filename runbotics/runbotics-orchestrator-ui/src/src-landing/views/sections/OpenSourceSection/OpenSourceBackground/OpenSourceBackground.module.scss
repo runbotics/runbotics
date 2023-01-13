@@ -3,22 +3,20 @@
 $IMAGE_HEIGHT: 500px;
 
 .root {
+    position: relative;
     width: 100%;
-    height: initial;
     background: $palette-background-tertiary;
-    isolation: isolate
+    isolation: isolate;
 }
 
 .backgroundBanner {
-    position: relative;
-    margin: 0 auto;
     min-height: $IMAGE_HEIGHT;
-    padding: $y-content-padding $x-content-padding;
 }
 
 .backgroundBanner::before {
     content: '';
     position: absolute;
+    z-index: -1;
     top: 0px;
     left: 0px;
     opacity: 0.25;
