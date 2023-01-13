@@ -47,8 +47,9 @@ const Header = () => {
                 <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
                 <Link href="/login" className={styles.logInBtn}>
                     <Typography
-                        variant="nav"
+                        variant="h6"
                         color="accent"
+                        className={styles.btnText}
                         text={translate('Landing.Header.Nav.Button.LogIn')}
                     />
                 </Link>
