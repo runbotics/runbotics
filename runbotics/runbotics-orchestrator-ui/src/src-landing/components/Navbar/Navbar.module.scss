@@ -77,11 +77,9 @@ $HEADER_HEIGHT: 55px;
             margin: 0;
             
             &:nth-child(-n+4) {
-                // background-color: lightgreen;
                 grid-column: span 3;
             }
             &:nth-child(n+5) {
-                // background-color: lightblue;
                 grid-column: span 4;
             }
         }

@@ -5,12 +5,15 @@ import { Typography } from '@mui/material';
 import Image from 'next/image';
 
 import runboticsLogoSrc from '#public/images/runBoticsLogo/logo-mini-sqr.svg';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 import Navbar from '../Navbar';
 import styles from './Footer.module.scss';
 
 const Footer: FC = () => {
-    const scrollTop = () => {
+    const { translate } = useTranslations();
+
+    const handleScrollTop = () => {
         window.scrollTo(0, 0);
     };
 
@@ -21,15 +24,15 @@ const Footer: FC = () => {
                     <Image src={runboticsLogoSrc} alt="RunBotics logo" />
                 </div>
                 <Navbar isNavExpanded={false} isMobileVisible={true} />
-                <button className={styles.scroll} onClick={scrollTop}>
+                <button className={styles.scrollTop} onClick={handleScrollTop}>
                     <div className={styles.arrow} />
-                    <Typography className={styles.verticalText} variant="h5">scroll to</Typography>
+                    <Typography className={styles.verticalText} variant="h5">{translate('Landing.Footer.ScrollTop')}</Typography>
                 </button>
             </div>
             <div className={styles.divider} />
             <div className={styles.copyright}>
                 <Typography>
-                    2022 &copy; RunBotics.com
+                    {new Date().getFullYear()} &copy; RunBotics.com
                 </Typography>
             </div>
         </div>

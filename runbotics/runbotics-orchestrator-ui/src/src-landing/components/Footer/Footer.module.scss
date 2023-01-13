@@ -1,22 +1,15 @@
 @import '#src-landing/scss/main.scss';
 
-$FOOTER_MIN_HEIGHT: 200px;
+$SCROLL_TOP_HEIGHT: 150px;
 
 .wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
-    min-height: $FOOTER_MIN_HEIGHT;
     padding-left: $x-content-padding;
     padding-right: $x-content-padding;
     background-color: $palette-background-secondary;
-}
-
-.root {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100%;
-    width: 100%;
 }
 
 .top {
@@ -35,17 +28,19 @@ $FOOTER_MIN_HEIGHT: 200px;
     }
 }
 
-.scroll {
+.scrollTop {
     background: none;
     outline: none;
     border: none;
-    transition: transform 200ms ease;
+    transition: transform 300ms ease;
+    padding: $padding-2;
+    height: $SCROLL_TOP_HEIGHT;
     
     &:hover {
         cursor: pointer;
         
         .arrow {
-            height: 25px;
+            height: 24px;
             &::after {
                 height: 15px;
                 width: 15px;
@@ -53,7 +48,7 @@ $FOOTER_MIN_HEIGHT: 200px;
         }
 
         .verticalText {
-            letter-spacing: +1px;
+            letter-spacing: 1px;
         }
     }
 }
@@ -62,7 +57,7 @@ $FOOTER_MIN_HEIGHT: 200px;
     writing-mode: vertical-lr;
     text-orientation: mixed;
     transform: rotate(180deg);
-    transition: letter-spacing 200ms ease;
+    transition: letter-spacing 300ms ease;
 }
 
 .arrow {
@@ -73,7 +68,7 @@ $FOOTER_MIN_HEIGHT: 200px;
     margin-right: auto;
     margin-bottom: $margin-1;
     background-color: $palette-accent-primary;
-    transition: height 200ms ease;
+    transition: height 300ms ease;
     
     &::after {
         position: absolute;
@@ -84,7 +79,8 @@ $FOOTER_MIN_HEIGHT: 200px;
         height: 10px;
         border-radius: 100%;
         background-color: $palette-accent-primary;
-        transition: all 200ms ease;
+        transition: all 300ms ease;
+
     }
 }
 
@@ -92,6 +88,8 @@ $FOOTER_MIN_HEIGHT: 200px;
     width: 90%;
     height: 1px;
     background-color: $palette-background-secondary-dark;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .copyright {
@@ -111,7 +109,7 @@ $FOOTER_MIN_HEIGHT: 200px;
         width: 100%;
     }
 
-    .scroll {
+    .scrollTop {
         display: none;
     }
 }
