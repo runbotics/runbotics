@@ -5,11 +5,10 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
 
 export const LoginTemplate: TemplatesSchema = {
-    name: translate('Process.Details.Modeler.Templates.Login.Name'),
+    label: translate('Process.Details.Modeler.Templates.Login.Name'),
     id: 'browser.login',
     type: ElementType.SERVICE_TASK,
     bpmnAction: 'browser.launch',
-    label: 'launchBrowser',
     input: {
         headless: true,
     },
