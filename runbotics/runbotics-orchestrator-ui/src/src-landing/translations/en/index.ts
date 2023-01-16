@@ -17,7 +17,7 @@ const landingPageTranslations = {
     ...industriesTranslation,
     ...contactTranslations,
     ...rpaTranslations,
-    ...footerTranslations,
+    ...footerTranslations
 };
 
 export default landingPageTranslations;

@@ -12,6 +12,7 @@ import styles from './Footer.module.scss';
 
 const Footer: FC = () => {
     const { translate } = useTranslations();
+    const currentYear = new Date().getFullYear();
 
     const handleScrollTop = () => {
         window.scrollTo(0, 0);
@@ -32,7 +33,7 @@ const Footer: FC = () => {
             <div className={styles.divider} />
             <div className={styles.copyright}>
                 <Typography>
-                    {new Date().getFullYear()} &copy; RunBotics.com
+                    {currentYear} &copy; RunBotics.com
                 </Typography>
             </div>
         </div>
