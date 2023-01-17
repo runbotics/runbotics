@@ -1,9 +1,6 @@
 @import '#src-landing/scss/main.scss';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
-$LOGO_WIDTH: 177px;
-$LOGO_HEIGHT: 48px;
-
 .header {
     position: fixed;
     z-index: $header-z-index;
@@ -91,10 +88,6 @@ $LOGO_HEIGHT: 48px;
         margin-bottom: $margin-0;
     }
 
-    .menuIcon:hover span:nth-child(2) {
-        transform: translateX(10px);
-    }
-
     .menuIcon.isActive {
         margin-top: 3px;
         margin-right: -$margin-1;
@@ -115,7 +108,7 @@ $LOGO_HEIGHT: 48px;
 
 @media (max-width: $breakpoint-xs) {
     .logInBtn {
-        border-radius: 4px;
-        padding: 2px;
+        border-radius: 8px;
+        padding: 4px 9px;
     }
 }

@@ -6,6 +6,7 @@ $ARROWS_MIN_HEIGHT: 400px;
     position: relative;
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     width: 100%;
     isolation: isolate;
 }
