@@ -47,7 +47,7 @@ const OpenSourceContent = () => (
                     {translate('Landing.OpenSource.Card.2.Title')}
                 </Typography>
                 <Typography variant="body3" color="secondary" font="Roboto" className={styles.text}>
-                    {translate('Landing.OpenSource.Card.1.Text')}
+                    {translate('Landing.OpenSource.Card.2.Text')}
                 </Typography>
             </div>
             <div className={styles.card}>
@@ -60,7 +60,7 @@ const OpenSourceContent = () => (
                     {translate('Landing.OpenSource.Card.3.Title.Part.2')}
                 </Typography>
                 <Typography variant="body3" color="secondary" font="Roboto" className={styles.text}>
-                    {translate('Landing.OpenSource.Card.1.Text')}
+                    {translate('Landing.OpenSource.Card.3.Text')}
                 </Typography>
             </div>
         </div>

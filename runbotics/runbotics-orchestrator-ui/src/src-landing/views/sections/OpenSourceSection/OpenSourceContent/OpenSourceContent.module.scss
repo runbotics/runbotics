@@ -5,10 +5,7 @@ $SEPARATOR_FIRST_DIM: 2px;
 $SEPARATOR_SECOND_DIM: 36px;
 
 .content {
-    width: 100%;
-    max-width: 1672px;
-    height: 100%;
-    margin: 0 auto;
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     padding: $padding-10;
     container-type: inline-size;
 }
