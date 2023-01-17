@@ -1,4 +1,4 @@
-$SCROLL_PADDING: 55px;
+@import './variables/_common.scss';
 
 * {
     box-sizing: border-box;
@@ -12,7 +12,7 @@ $SCROLL_PADDING: 55px;
 
 html {
     height: 100%;
-    scroll-padding: $SCROLL_PADDING;
+    scroll-padding: $HEADER_HEIGHT;
 
     &:body {
         line-height: 1.5;
