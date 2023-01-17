@@ -6,7 +6,6 @@ import { IProcess } from 'runbotics-common';
 
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import If from '#src-app/components/utils/If';
-import { CommandStackInfo } from '#src-app/store/slices/Process';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/BPMN';
 
 export interface BpmnFormContext {

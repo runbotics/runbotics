@@ -12,6 +12,7 @@ import useTranslations, {
     translate as t,
 } from '#src-app/hooks/useTranslations';
 
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { currentProcessSelector } from '#src-app/store/slices/Process';
@@ -20,7 +21,6 @@ import { BPMNElement, CamundaInputOutputElement } from '../../BPMN';
 import BPMNHelperFunctions from '../BPMNHelperFunctions';
 import AutocompleteWidget from './AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 
 const services = [
     'environment.services.idt',
@@ -127,12 +127,12 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
     const attendedProcessVariables =
         isAttended && executionInfo
             ? passedInVariables.map((variable) => ({
-                  label: variable,
-                  value: variable,
-                  group: translate(
-                      'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-                  ),
-              }))
+                label: variable,
+                value: variable,
+                group: translate(
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                ),
+            }))
             : [];
 
     const extractOutputs = (scope, rootElement) => {
@@ -248,19 +248,19 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
 
             const assignVariablesElements = context?.modelerRef
                 ? context.modelerRef?.current
-                      ?.get('elementRegistry')
-                      .filter((selectedElement: BPMNElement) =>
-                          is(selectedElement, 'bpmn:Task')
-                      )
-                      .filter(
-                          (selectedElement: BPMNElement) =>
-                              selectedElement.businessObject.actionId ===
+                    ?.get('elementRegistry')
+                    .filter((element: BPMNElement) =>
+                        is(element, 'bpmn:Task')
+                    )
+                    .filter(
+                        (element: BPMNElement) =>
+                            element.businessObject.actionId ===
                                   'variables.assign' ||
-                              selectedElement.businessObject.actionId ===
+                              element.businessObject.actionId ===
                                   'variables.assignList' ||
-                              selectedElement.businessObject.actionId ===
+                              element.businessObject.actionId ===
                                   'variables.assignGlobalVariable'
-                      )
+                    )
                 : [];
 
             const variables = assignVariablesElements

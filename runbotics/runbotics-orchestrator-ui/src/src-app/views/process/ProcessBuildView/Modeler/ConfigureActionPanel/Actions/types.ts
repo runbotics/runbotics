@@ -37,6 +37,7 @@ export type IFormData = Record<string, any> & {
     output?: Record<string, any>;
     disabled?: boolean;
     runFromHere?: boolean;
+    validationError?: boolean;
 };
 export type IForm = {
     schema: JSONSchema7;

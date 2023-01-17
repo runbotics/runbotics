@@ -1,5 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import BpmnModeler from 'bpmn-js/lib/Modeler';
+import { JSONSchema7Definition } from 'json-schema';
 import { Expressions } from 'runbotics-common';
 
 interface CamundaEntry {
@@ -66,6 +67,7 @@ export type ExtensionElements = {
 };
 
 export type BusinessObject = {
+    name: JSONSchema7Definition;
     $type: 'bpmn:SequenceFlow';
     actionId: string;
     disabled: boolean;
@@ -73,6 +75,7 @@ export type BusinessObject = {
     label: string;
     extensionElements?: ExtensionElements;
     runbotics?: string;
+    validationError?: boolean;
 };
 
 export type BPMNElement = {

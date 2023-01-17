@@ -1,21 +1,26 @@
-import React, { FC, ReactNode, FormEvent, useEffect, useState, useRef } from 'react';
+import React, {
+    FC,
+    ReactNode,
+    FormEvent,
+    useEffect,
+    useState,
+    useRef,
+} from 'react';
 
 import { Box, Button, Grid, Alert } from '@mui/material';
 import { ErrorListProps, FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import _ from 'lodash';
 
-
-
 import useDebounce from '#src-app/hooks/useDebounce';
 import { translate as t } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 
-import { processActions } from '#src-app/store/slices/Process';
+import { ModelerError, processActions } from '#src-app/store/slices/Process';
 
+import { IFormData } from './Actions/types';
 import AutocompleteWidget from './widgets/AutocompleteWidget';
 import FieldTemplate from './widgets/FieldTemplate';
-
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
@@ -24,20 +29,30 @@ const widgets = {
 };
 interface FormState {
     id: string;
-    formData: FormData;
+    formData: IFormData;
 }
 
 interface FormPropsExtended extends FormProps<any> {
     panel?: ReactNode;
-    onSubmit?: (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => void;
+    onSubmit?: (
+        e: any,
+        nativeEvent?: FormEvent<HTMLFormElement>,
+        error?: ModelerError
+    ) => void;
+    name?: string;
 }
 
 function ErrorListTemplate(props: ErrorListProps) {
     const { errors } = props;
     const alertMessage =
         errors.length > 1
-            ? t('Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList', { errors: errors.length })
-            : t('Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error');
+            ? t(
+                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
+                { errors: errors.length }
+            )
+            : t(
+                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error'
+            );
 
     return <Alert severity="error">{alertMessage}</Alert>;
 }
@@ -67,21 +82,25 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         setEditMode(false);
         return props.onSubmit ? props.onSubmit(e, nativeEvent) : null;
     };
-    
+
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
-        setFormState({ ...formState, formData: e.formData });
-        if (!editMode) { 
+        setFormState({
+            ...formState,
+            formData: { ...e.formData, validationError: e.errors?.length > 0 },
+        });
+        if (!editMode) {
             dispatch(processActions.removeAppliedAction(props.id));
         }
     };
-    
+
     useEffect(() => {
+        // Update the form state refs used in component cleanup
         formValueRef.current = formState;
         isFormDirtyRef.current = isFormDirty;
         editModeRef.current = editMode;
     }, [formState, editMode, isFormDirty]);
-    
+
     useEffect(() => {
         setFormState({
             id: props.id,
@@ -90,10 +109,9 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [props.formData, props.id]);
 
     useEffect(() => {
-        if (formState?.formData && isFormDirty && !isFormError) { 
-            handleSubmit(formState); 
+        if (formState?.formData && isFormDirty) {
+            handleSubmit(formState);
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedForm]);
     useEffect(
@@ -103,7 +121,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
+        []
     );
     return (
         <Grid item xs={12}>

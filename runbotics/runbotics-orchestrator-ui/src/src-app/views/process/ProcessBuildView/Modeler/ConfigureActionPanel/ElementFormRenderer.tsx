@@ -4,6 +4,10 @@ import { JSONSchema7 } from 'json-schema';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
+
+import { useSelector } from '#src-app/store';
+
 import {
     CamundaInputOutputElement,
     getInputParameters,
@@ -13,8 +17,6 @@ import { ParameterDestination } from '../extensions/palette/CustomPalette';
 import { IFormData } from './Actions/types';
 import { ActionToBPMNElement } from './ActionToBPMNElement';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
-import { useSelector } from '#src-app/store';
 
 const ElementFormRenderer: FC = () => {
     const { selectedElement } = useSelector((state) => state.process.modeler);

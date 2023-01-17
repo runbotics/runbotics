@@ -7,9 +7,12 @@ import { JSONSchema7 } from 'json-schema';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
+
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
 import { applyModelerElement } from '../utils';
@@ -17,7 +20,6 @@ import ActionLabelForm from './ActionLabelForm';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import customWidgets from './widgets';
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 
 const ActionFormRenderer: FC = () => {
     const { modelerRef } = useModelerContext();
@@ -30,12 +32,13 @@ const ActionFormRenderer: FC = () => {
 
     const defaultUISchema = React.useMemo<UiSchema>(() => {
         const cloned = { ...selectedAction.form.uiSchema };
-        if (cloned['ui:order'])
+        if (cloned['ui:order']) {
             cloned['ui:order'] = [
                 'disabled',
                 'runFromHere',
                 ...selectedAction.form.uiSchema['ui:order'],
             ];
+        }
 
         return cloned;
     }, [selectedAction.form.uiSchema]);
@@ -63,10 +66,25 @@ const ActionFormRenderer: FC = () => {
         [selectedAction.form.schema, i18n.language]
     );
 
+    const getActionLabel = () => {
+        if (selectedElement.businessObject.label !== '') {
+            return selectedElement.businessObject.label;
+        }
+        return translate(
+            //@ts-ignore
+            `Process.Details.Modeler.Actions.${capitalizeFirstLetter({
+                text: selectedAction.id,
+                lowerCaseRest: false,
+                delimiter: '.',
+                join: '.',
+            })}.Label`
+        );
+    };
+
     const defaultFormData = React.useMemo(() => {
         const { runFromHere, disabled } = selectedElement.businessObject;
 
-        let defaultParameters = {
+        const defaultParameters = {
             ...selectedAction.form.formData,
             disabled,
             runFromHere,
@@ -79,7 +97,7 @@ const ActionFormRenderer: FC = () => {
             ).reduce((acc, [key], index) => {
                 acc[
                     Object.keys(defaultParameters.output)[index] ||
-                        'variableName'
+                              'variableName'
                 ] = key;
                 return acc;
             }, {});
@@ -92,7 +110,6 @@ const ActionFormRenderer: FC = () => {
                 }
             }
         );
-
         return defaultParameters;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedAction, selectedElement, commandStack.commandStackIdx]);
@@ -108,9 +125,22 @@ const ActionFormRenderer: FC = () => {
                 output: event.formData.output,
                 disabled: event.formData.disabled,
                 runFromHere: event.formData.runFromHere,
+                validationError: event.formData.validationError,
             },
         });
+        if (!event.formData.disabled && event.formData.validationError) {
+            dispatch(
+                processActions.setError({
+                    elementId: selectedElement.id,
+                    elementName: getActionLabel(),
+                    message: 'message',
+                })
+            );
+        } else {
+            dispatch(processActions.removeError(selectedElement.id));
+        }
     };
+
     const updateLabel = (label: string) => {
         const bpmnHelper = BPMNHelper.from(modelerRef.current);
         const newElement = selectedElement;
@@ -125,17 +155,18 @@ const ActionFormRenderer: FC = () => {
                     <ActionLabelForm onSubmit={updateLabel} />
                 </Box>
             </Grid>
-            {defaultFormData && selectedAction ? (
-                <JSONSchemaFormRenderer
-                    id={selectedElement.id}
-                    key={selectedElement.id}
-                    schema={defaultSchema}
-                    uiSchema={defaultUISchema}
-                    formData={defaultFormData}
-                    onSubmit={handleSubmit}
-                    widgets={customWidgets}
-                />
-            ) : null}
+            {defaultFormData &&
+               selectedAction.id === selectedElement.businessObject.actionId ? (
+                    <JSONSchemaFormRenderer
+                        id={selectedElement.id}
+                        key={selectedElement.id}
+                        schema={defaultSchema}
+                        uiSchema={defaultUISchema}
+                        formData={defaultFormData}
+                        onSubmit={handleSubmit}
+                        widgets={customWidgets}
+                    />
+                ) : null}
         </>
     );
 };

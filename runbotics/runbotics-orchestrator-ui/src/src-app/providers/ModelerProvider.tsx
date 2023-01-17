@@ -19,16 +19,14 @@ interface ModelerProviderProps {
 const ModelerProvider: FC<ModelerProviderProps> = ({
     modelerRef,
     children,
-}) => {
-    return (
-        <ModelerContext.Provider
-            value={{
-                modelerRef,
-            }}
-        >
-            {children}
-        </ModelerContext.Provider>
-    );
-};
+}) => (
+    <ModelerContext.Provider
+        value={{
+            modelerRef,
+        }}
+    >
+        {children}
+    </ModelerContext.Provider>
+);
 
 export default ModelerProvider;

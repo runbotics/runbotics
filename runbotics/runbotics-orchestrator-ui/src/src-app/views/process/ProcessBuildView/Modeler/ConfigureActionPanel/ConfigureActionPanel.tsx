@@ -6,11 +6,12 @@ import _ from 'lodash';
 
 import { useDispatch, useSelector } from '#src-app/store';
 
+import { processActions } from '#src-app/store/slices/Process';
+
 import ActionFormRenderer from './ActionFormRenderer';
 import internalBpmnActions from './Actions';
 import LoopActionRenderer from './Actions/LoopActionRenderer';
 import ConnectionFormRenderer from './ConnectionFormRenderer';
-import { processActions } from '#src-app/store/slices/Process';
 
 // eslint-disable-next-line complexity
 const ConfigureActionPanel: FC = () => {

@@ -1,18 +1,25 @@
 import { IProcess, IProcessInstance } from 'runbotics-common';
-import BpmnModelerType from 'bpmn-js/lib/Modeler';
 
 import LoadingType from '#src-app/types/loading';
 import { Page } from '#src-app/utils/types/page';
-import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/BPMN';
+import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 
 export interface CommandStackInfo {
     commandStackSize: number;
     commandStackIdx: number
 }
 
+export interface ModelerError {
+    message: string;
+    elementName: string;
+    elementId: string;
+    appearedIdx: CommandStackInfo['commandStackIdx'];
+}
+
 export interface ModelerState {
     appliedActivities: string[];
+    errors: ModelerError[];
     isSaveDisabled: boolean;
     selectedElement?: BPMNElement;
     selectedAction?: IBpmnAction;

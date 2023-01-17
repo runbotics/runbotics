@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
+import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingType from '#src-app/types/loading';
 import objFromArray from '#src-app/utils/objFromArray';
 
@@ -13,7 +14,6 @@ import {
     getProcessesPage,
     partialUpdateProcess,
 } from './Process.thunks';
-import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
     builder

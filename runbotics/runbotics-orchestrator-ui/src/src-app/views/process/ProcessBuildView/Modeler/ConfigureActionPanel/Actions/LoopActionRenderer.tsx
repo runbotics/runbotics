@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 
 import { Box, Grid, Typography } from '@mui/material';
 
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -10,7 +11,6 @@ import { BPMNHelper, BpmnSubProcess } from '../../BPMN';
 import JSONSchemaFormRenderer from '../JSONSchemaFormRenderer';
 import customWidgets from '../widgets';
 import { IFormData } from './types';
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 
 const LoopActionRenderer: FC = () => {
     const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const LoopActionRenderer: FC = () => {
 
     const formatLoopBody = (collectionName: string) => {
         if (collectionName.startsWith('#'))
-            return `#{length(${collectionName.slice(2, -1)})}`;
+        { return `#{length(${collectionName.slice(2, -1)})}`; }
         return `${collectionName.slice(0, -1)}.length}`;
     };
 
@@ -77,13 +77,13 @@ const LoopActionRenderer: FC = () => {
         const { loopCardinality, collection } = loopCharacteristics;
 
         for (const [key, value] of Object.entries(formState.formData.input))
-            loopCharacteristics[key] = value;
+        { loopCharacteristics[key] = value; }
 
         if (loopType === 'Repeat')
-            loopCardinality.body = formState.formData.input.iterations;
+        { loopCardinality.body = formState.formData.input.iterations; }
 
         if (loopType === 'Collection' && collection)
-            loopCardinality.body = formatLoopBody(collection);
+        { loopCardinality.body = formatLoopBody(collection); }
 
         bpmnHelper.updateBusinessObject(selectedElement);
         dispatch(processActions.addAppliedAction(selectedElement.id));

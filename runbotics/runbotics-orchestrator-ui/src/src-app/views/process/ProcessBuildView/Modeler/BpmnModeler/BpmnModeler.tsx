@@ -13,19 +13,13 @@ import 'react-resizable/css/styles.css';
 import { RunboticModdleDescriptor } from 'runbotics-common';
 
 import InfoPanel from '#src-app/components/InfoPanel';
-
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
-
 import If from '#src-app/components/utils/If';
-
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
-
 import { translate } from '#src-app/hooks/useTranslations';
-
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
-
 import BpmnFormProvider from '#src-app/providers/BpmnForm.provider';
-
+import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import {
@@ -50,7 +44,6 @@ import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import ActionListPanel from '../ActionListPanel';
-import { BPMNElement } from '../BPMN';
 import internalBpmnActions from '../ConfigureActionPanel/Actions';
 import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
 import emptyBpmn from '../empty.bpmn';
@@ -60,7 +53,6 @@ import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
 import ZoomScrollModule from '../extensions/zoomscroll';
 import { applyModelerElement } from '../utils';
-import ModelerProvider from '#src-app/providers/ModelerProvider';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     'bpmn:ServiceTask',
@@ -89,9 +81,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const dispatch = useDispatch();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const modelerRef = useRef<BpmnIoModeler>(modeler);
-        const [commandStack] = useState<CommandStackInfo>(
-            initialCommandStackInfo
-        );
         const [imported, setImported] = useState(false);
         const [currentTab, setCurrentTab] = useState<ProcessBuildTab | null>(
             null
@@ -102,9 +91,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const appliedActivities = useSelector(
             (state) => state.process.modeler.appliedActivities
         );
-        const { isSaveDisabled, selectedElement } = useSelector(
-            (state) => state.process.modeler
-        );
+        const { isSaveDisabled, selectedElement, commandStack, errors } =
+            useSelector((state) => state.process.modeler);
 
         useNavigationLock(
             !isSaveDisabled,
@@ -166,14 +154,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         commandStackSize: _stack.length,
                     })
                 );
+                updateActivities();
             });
 
             eventBus.on('commandStack.shape.delete.preExecute', () => {
-                dispatch(processActions.setSelectedElement(null));
+                dispatch(processActions.resetSelectedElement());
             });
 
             eventBus.on('commandStack.connection.delete.preExecute', () => {
-                dispatch(processActions.setSelectedElement(null));
+                dispatch(processActions.resetSelectedElement());
             });
 
             eventBus.on(
@@ -182,6 +171,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     if (event.context.elements.length === 1) {
                         const element = event.context.elements[0];
                         dispatch(processActions.setSelectedElement(element));
+                        dispatch(processActions.setSelectedAction(null));
                         const externalAction = _.cloneDeep(
                             externalBpmnActions[
                                 element?.businessObject.actionId
@@ -201,6 +191,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             dispatch(
                                 processActions.addAppliedAction(element.id)
                             );
+                            updateActivities();
                         }
                     }
                     if (event.context.elements.length > 1) {
@@ -224,6 +215,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 dispatch(
                                     processActions.addAppliedAction(element.id)
                                 );
+                                updateActivities();
                             }
                         });
                     }
@@ -237,17 +229,19 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     dispatch(processActions.setSelectedElement(event.element));
                 } else {
                     setCurrentTab(null);
-                    dispatch(processActions.setSelectedElement(null));
+                    dispatch(processActions.resetSelectedElement());
                 }
             });
 
             eventBus.on('connection.removed', () => {
                 setCurrentTab(null);
+                updateActivities();
             });
 
             eventBus.on('shape.removed', (event: any) => {
                 setCurrentTab(null);
                 dispatch(processActions.removeAppliedAction(event.element.id));
+                updateActivities();
             });
 
             setModeler(bpmnModeler);
@@ -256,31 +250,13 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [readOnly, offsetTop, i18n.language]);
 
         useEffect(() => {
-            if (!modelerRef.current) return;
-            const { _elements } = modelerRef.current?.get('elementRegistry');
-            const modelerActivities = Object.keys(_elements).filter(
-                (elm) => elm.split('_')[0] === 'Activity'
-            );
-
-            const isModelerInSync = _.isEqual(
-                _.sortBy(modelerActivities),
-                _.sortBy(appliedActivities)
-            );
-            console.log(
-                imported ||
-                    (isModelerInSync && commandStack.commandStackIdx >= 0)
-            );
-            if (
-                imported ||
-                (isModelerInSync && commandStack.commandStackIdx >= 0)
-            ) {
-                // dispatch(processActions.setSaveDisabled(false));
-                // debugger;
-            } else {
-                // dispatch(processActions.setSaveDisabled(true));
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [appliedActivities, modelerRef.current, commandStack, imported]);
+            updateActivities();
+        }, [
+            appliedActivities,
+            modelerRef.current,
+            commandStack.commandStackIdx,
+            imported,
+        ]);
 
         useImperativeHandle(
             ref,
@@ -306,7 +282,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 const activityIds = elementIds.filter(
                     (elm) => elm.split('_')[0] === 'Activity'
                 );
-                // dispatch(processActions.setSaveDisabled(true));
+                dispatch(processActions.setSaveDisabled(true));
                 dispatch(processActions.setAppliedActions(activityIds));
                 const canvas = modeler.get('canvas');
                 canvas.zoom('fit-viewport', 'auto');
@@ -318,25 +294,49 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useUpdateEffect(() => {
             if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) {
-                dispatch(processActions.setSelectedElement(null));
+                dispatch(processActions.resetSelectedElement());
+                updateActivities();
             }
         }, [currentTab]);
 
         useUpdateEffect(() => {
             if (selectedElement) {
                 setCurrentTab(ProcessBuildTab.CONFIGURE_ACTION);
+                updateActivities();
             }
         }, [selectedElement]);
 
         useEffect(() => {
-            dispatch(processActions.setCommandStack(commandStack));
-        }, [commandStack]);
-
-        useEffect(() => {
-            if (modelerRef.current) openBpmnDiagram(definition ?? emptyBpmn);
+            if (modelerRef.current) {
+                openBpmnDiagram(definition ?? emptyBpmn);
+                updateActivities();
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [modeler, definition]);
 
+        const updateActivities = () => {
+            if (!modelerRef.current) return;
+            const { _elements } = modelerRef.current?.get('elementRegistry');
+            const modelerActivities = Object.keys(_elements).filter(
+                (elm) => elm.split('_')[0] === 'Activity'
+            );
+
+            const isModelerInSync = _.isEqual(
+                _.sortBy(modelerActivities),
+                _.sortBy(appliedActivities)
+            );
+
+            if (
+                imported ||
+                (isModelerInSync &&
+                    commandStack.commandStackIdx >= 0 &&
+                    errors.length === 0)
+            ) {
+                dispatch(processActions.setSaveDisabled(false));
+            } else {
+                dispatch(processActions.setSaveDisabled(true));
+            }
+        };
         const onCopy = () => {
             copy(modelerRef.current, selectedElement.id);
         };
@@ -416,7 +416,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                     canUndo={canUndo}
                                     canRedo={canRedo}
                                 />
-                                {/* TODO <RouteLeavingGuard when={!isSaveDisabled} navigate={(path) => history.push(path)} /> */}
                                 <SidebarNavigationPanel
                                     selectedTab={currentTab}
                                     onTabToggle={(tabIndex) =>

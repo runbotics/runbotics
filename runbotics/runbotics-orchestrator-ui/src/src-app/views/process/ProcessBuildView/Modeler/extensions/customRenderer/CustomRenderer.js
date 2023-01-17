@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
+import BaseRenderer from "diagram-js/lib/draw/BaseRenderer";
 
 import {
     append as svgAppend,
@@ -8,24 +8,24 @@ import {
     classes as svgClasses,
     create as svgCreate,
     remove as svgRemove,
-} from 'tiny-svg';
+} from "tiny-svg";
 
-import { getRoundRectPath } from 'bpmn-js/lib/draw/BpmnRenderUtil';
+import { getRoundRectPath } from "bpmn-js/lib/draw/BpmnRenderUtil";
 
-import { is, getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-import { getExtensionScriptLabel } from '../../utils';
-import { truncate } from 'lodash';
-import { CustomActionDescription } from '#src-app/utils/action';
-import store from '../../../../../../store';
-import internalBpmnActions from '../../ConfigureActionPanel/Actions';
-import { translate } from '#src-app/hooks/useTranslations';
-import { capitalizeFirstLetter } from '#src-app/utils/text';
+import { is, getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
+import { getExtensionScriptLabel } from "../../utils";
+import { truncate } from "lodash";
+import { CustomActionDescription } from "#src-app/utils/action";
+import store from "../../../../../../store";
+import internalBpmnActions from "../../ConfigureActionPanel/Actions";
+import { translate } from "#src-app/hooks/useTranslations";
+import { capitalizeFirstLetter } from "#src-app/utils/text";
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 1,
-    COLOR_GREEN = '#52B415',
-    COLOR_YELLOW = '#ffc800',
-    COLOR_RED = '#cc0000';
+    COLOR_RED = "#ff5e5e",
+    COLOR_GREY = "#e0e0e0",
+    COLOR_DEFAULT = "#bbbbbb";
 
 export default class CustomRenderer extends BaseRenderer {
     constructor(eventBus, bpmnRenderer) {
@@ -39,10 +39,22 @@ export default class CustomRenderer extends BaseRenderer {
         return !element.labelTarget;
     }
 
-    drawTextNode(label, parentNode, color = '#000', transformX = 0, transformY = 0, width = 240, height = 20) {
-        // const color = this.getColor(50);
-
-        const rect = drawRect(parentNode, width, height, TASK_BORDER_RADIUS, 'none');
+    drawTextNode(
+        label,
+        parentNode,
+        color = "#000",
+        transformX = 0,
+        transformY = 0,
+        width = 240,
+        height = 20
+    ) {
+        const rect = drawRect(
+            parentNode,
+            width,
+            height,
+            TASK_BORDER_RADIUS,
+            "none"
+        );
 
         svgAttr(rect, {
             x: -75,
@@ -51,13 +63,13 @@ export default class CustomRenderer extends BaseRenderer {
             opacity: 0,
         });
 
-        var text = svgCreate('text');
+        var text = svgCreate("text");
 
         svgAttr(text, {
             fill: color,
             transform: `translate(${transformX}, ${transformY})`,
-            textAnchor: 'middle',
-            dominantBaseline: 'middle',
+            textAnchor: "middle",
+            dominantBaseline: "middle",
             fontWeight: 500,
             x: width / 2 - 75,
             y: height / 2,
@@ -68,15 +80,21 @@ export default class CustomRenderer extends BaseRenderer {
         const actionId = label.actionId;
 
         if (actionId) {
-            const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: actionId, lowerCaseRest: false, delimiter: '.', join: '.' })}.Label`;
+            const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter(
+                { text: actionId, lowerCaseRest: false, delimiter: ".", join: "." }
+            )}.Label`;
 
             const translatedLabel = translate(translateKey);
 
-            svgAppend(text, document.createTextNode(label.title || translatedLabel || label.actionId));
+            svgAppend(
+                text,
+                document.createTextNode(
+                    label.title || translatedLabel || label.actionId
+                )
+            );
 
             svgAppend(parentNode, text);
         }
-
     }
 
     drawShape(parentNode, element) {
@@ -85,47 +103,74 @@ export default class CustomRenderer extends BaseRenderer {
         const label = this.getLabel(element);
 
         const disabled = getBusinessObject(element).disabled;
+        const validationError = getBusinessObject(element).validationError;
 
-        if (is(element, 'bpmn:Task')) {
-            const rect = drawRect(parentNode, 100, 80, TASK_BORDER_RADIUS, disabled ? '#e0e0e0' : '#bbbbbb');
+        if (is(element, "bpmn:Task")) {
+            const rect = drawRect(
+                parentNode,
+                100,
+                80,
+                TASK_BORDER_RADIUS,
+                disabled ? COLOR_GREY : validationError ? COLOR_RED : COLOR_DEFAULT
+            );
 
             // icon
+            console.log('color', disabled ? COLOR_GREY : validationError ? COLOR_RED : COLOR_DEFAULT);
             // prependTo(rect, parentNode)
             svgRemove(shape);
         }
 
         if (label && (label.title || label.actionId)) {
-            if (is(element, 'bpmn:SubProcess')) {
-                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, -30);
+            if (is(element, "bpmn:SubProcess")) {
+                this.drawTextNode(
+                    label,
+                    parentNode,
+                    disabled ? "#b3b3b3" : "#000",
+                    0,
+                    -30
+                );
             } else {
-                this.drawTextNode(label, parentNode, disabled ? '#b3b3b3' : '#000', 0, 90);
-                if (label.description && label.description != '') {
-                    this.drawTextNode(label.description, parentNode, disabled ? '#b3b3b3' : '#8d8d8d', 0, 105);
+                this.drawTextNode(
+                    label,
+                    parentNode,
+                    disabled ? "#b3b3b3" : "#000",
+                    0,
+                    90
+                );
+                if (label.description && label.description != "") {
+                    this.drawTextNode(
+                        label.description,
+                        parentNode,
+                        disabled ? "#b3b3b3" : "#8d8d8d",
+                        0,
+                        105
+                    );
                 }
             }
         }
 
         const implementation = this.getImplementation(element);
         if (implementation) {
-            const color = this.getColor(100);
-
-            const rect = drawRect(parentNode, 100, 20, TASK_BORDER_RADIUS, 'none');
+            const rect = drawRect(parentNode, 100, 20, TASK_BORDER_RADIUS, "none");
 
             svgAttr(rect, {
-                transform: 'translate(0, 85)',
+                transform: "translate(0, 85)",
             });
 
-            var text = svgCreate('text');
+            var text = svgCreate("text");
 
             svgAttr(text, {
-                fill: disabled ? '#b3b3b3' : '#000',
-                transform: 'translate(3, 75)',
-                fontSize: '10px',
+                fill: disabled ? "#b3b3b3" : "#000",
+                transform: "translate(3, 75)",
+                fontSize: "10px",
             });
 
             // svgClasses(text).add('djs-label')
 
-            svgAppend(text, document.createTextNode(getExtensionScriptLabel(implementation)));
+            svgAppend(
+                text,
+                document.createTextNode(getExtensionScriptLabel(implementation))
+            );
 
             svgAppend(parentNode, text);
             // const seleniumCommand = this.getSelenium(element)
@@ -138,54 +183,57 @@ export default class CustomRenderer extends BaseRenderer {
     }
 
     drawSeleniumCommand(parentNode, seleniumCommand, disabled) {
-        let commandText = svgCreate('text');
+        let commandText = svgCreate("text");
         svgAttr(commandText, {
-            fill: disabled ? '#b3b3b3' : '#000',
-            transform: 'translate(3, 45)',
-            fontSize: '10px',
+            fill: disabled ? "#b3b3b3" : "#000",
+            transform: "translate(3, 45)",
+            fontSize: "10px",
         });
-        svgAppend(commandText, document.createTextNode('C:' + seleniumCommand.command));
+        svgAppend(
+            commandText,
+            document.createTextNode("C:" + seleniumCommand.command)
+        );
         svgAppend(parentNode, commandText);
 
-        let targetText = svgCreate('text');
+        let targetText = svgCreate("text");
         svgAttr(targetText, {
-            fill: disabled ? '#b3b3b3' : '#000',
-            transform: 'translate(3, 55)',
-            fontSize: '10px',
+            fill: disabled ? "#b3b3b3" : "#000",
+            transform: "translate(3, 55)",
+            fontSize: "10px",
         });
         svgAppend(
             targetText,
             document.createTextNode(
-                'T:' +
+                "T:" +
                 truncate(seleniumCommand.target, {
-                    omission: '...',
+                    omission: "...",
                     length: 20,
-                }),
-            ),
+                })
+            )
         );
         svgAppend(parentNode, targetText);
 
-        let valueText = svgCreate('text');
+        let valueText = svgCreate("text");
         svgAttr(valueText, {
-            fill: disabled ? '#b3b3b3' : '#000',
-            transform: 'translate(3, 65)',
-            fontSize: '10px',
+            fill: disabled ? "#b3b3b3" : "#000",
+            transform: "translate(3, 65)",
+            fontSize: "10px",
         });
         svgAppend(
             valueText,
             document.createTextNode(
-                'V:' +
-                truncate(seleniumCommand.value ? seleniumCommand.value : '', {
-                    omission: '...',
+                "V:" +
+                truncate(seleniumCommand.value ? seleniumCommand.value : "", {
+                    omission: "...",
                     length: 20,
-                }),
-            ),
+                })
+            )
         );
         svgAppend(parentNode, valueText);
     }
 
     getShapePath(shape) {
-        if (is(shape, 'bpmn:Task')) {
+        if (is(shape, "bpmn:Task")) {
             return getRoundRectPath(shape, TASK_BORDER_RADIUS);
         }
 
@@ -202,16 +250,20 @@ export default class CustomRenderer extends BaseRenderer {
     getImplementation(element) {
         const businessObject = getBusinessObject(element);
         let { implementation } = businessObject;
-        if (businessObject.$type === 'bpmn:ManualTask') {
+        if (businessObject.$type === "bpmn:ManualTask") {
             if (businessObject.extensionElements) {
-                const extensionElements = getBusinessObject(businessObject.extensionElements);
-                const inputOutputs = extensionElements.values.filter((value) => value.$type == 'camunda:InputOutput');
+                const extensionElements = getBusinessObject(
+                    businessObject.extensionElements
+                );
+                const inputOutputs = extensionElements.values.filter(
+                    (value) => value.$type == "camunda:InputOutput"
+                );
                 if (inputOutputs && inputOutputs.length > 0) {
                     const inputOutput = inputOutputs[0];
                     if (inputOutput && inputOutput.inputParameters) {
                         inputOutput.inputParameters.forEach((inputParameter) => {
-                            if (inputParameter.name === 'component') {
-                                implementation = '${environment.services.run()}';
+                            if (inputParameter.name === "component") {
+                                implementation = "${environment.services.run()}";
                             }
                         });
                     }
@@ -235,23 +287,29 @@ export default class CustomRenderer extends BaseRenderer {
         let seleniumCommand;
         const businessObject = getBusinessObject(element);
         if (businessObject.extensionElements) {
-            const extensionElements = getBusinessObject(businessObject.extensionElements);
-            const inputOutputs = extensionElements.values.filter((value) => value.$type == 'camunda:InputOutput');
+            const extensionElements = getBusinessObject(
+                businessObject.extensionElements
+            );
+            const inputOutputs = extensionElements.values.filter(
+                (value) => value.$type == "camunda:InputOutput"
+            );
             if (inputOutputs && inputOutputs.length > 0) {
                 const inputOutput = inputOutputs[0];
                 if (inputOutput && inputOutput.inputParameters) {
                     if (
                         inputOutput.inputParameters.some(
                             (inputParameter) =>
-                                inputParameter.name === 'script' && inputParameter.value.startsWith('browser.selenium'),
+                                inputParameter.name === "script" &&
+                                inputParameter.value.startsWith("browser.selenium")
                         )
                     ) {
                         return {
-                            command: this.getParam(inputOutput.inputParameters, 'script').substring(
-                                'browser.selenium.'.length,
-                            ),
-                            target: this.getParam(inputOutput.inputParameters, 'target'),
-                            value: this.getParam(inputOutput.inputParameters, 'value'),
+                            command: this.getParam(
+                                inputOutput.inputParameters,
+                                "script"
+                            ).substring("browser.selenium.".length),
+                            target: this.getParam(inputOutput.inputParameters, "target"),
+                            value: this.getParam(inputOutput.inputParameters, "value"),
                         };
                     }
                 }
@@ -297,13 +355,19 @@ export default class CustomRenderer extends BaseRenderer {
         //     }
         //   }
         // }
-        const externalAction = store.getState().action.bpmnActions.byId[businessObject.actionId];
-        const action = externalAction ? externalAction : internalBpmnActions[businessObject.actionId];
+        const externalAction =
+            store.getState().action.bpmnActions.byId[businessObject.actionId];
+        const action = externalAction
+            ? externalAction
+            : internalBpmnActions[businessObject.actionId];
 
         const globalVariables = store.getState().globalVariable.globalVariables;
         if (action) {
             if (CustomActionDescription[businessObject.actionId]) {
-                description = CustomActionDescription[businessObject.actionId](element, globalVariables);
+                description = CustomActionDescription[businessObject.actionId](
+                    element,
+                    globalVariables
+                );
             }
             return {
                 title: businessObject.label,
@@ -311,7 +375,7 @@ export default class CustomRenderer extends BaseRenderer {
                 description: description,
             };
         } else {
-            if (is(element, 'bpmn:Task')) {
+            if (is(element, "bpmn:Task")) {
                 title = businessObject.name;
             }
         }
@@ -322,24 +386,23 @@ export default class CustomRenderer extends BaseRenderer {
         };
     }
 
-    getColor(suitabilityScore) {
-        if (suitabilityScore > 75) {
-            return COLOR_GREEN;
-        } else if (suitabilityScore > 25) {
-            return COLOR_YELLOW;
+    getColor(type) {
+        if (type === "disabled") {
+            return COLOR_GREY;
+        } else if (type === "validationError") {
+            return COLOR_RED;
+        } else {
         }
-
-        return COLOR_RED;
     }
 }
 
-CustomRenderer.$inject = ['eventBus', 'bpmnRenderer'];
+CustomRenderer.$inject = ["eventBus", "bpmnRenderer"];
 
 // helpers //////////
 
 // copied from https://github.com/bpmn-io/bpmn-js/blob/master/lib/draw/BpmnRenderer.js
 function drawRect(parentNode, width, height, borderRadius, color) {
-    const rect = svgCreate('rect');
+    const rect = svgCreate("rect");
 
     svgAttr(rect, {
         width: width,

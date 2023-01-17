@@ -10,7 +10,7 @@ import rootReducer from './rootReducer';
 
 const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false
-})
+});
 
 const store = configureStore({
     reducer: rootReducer,

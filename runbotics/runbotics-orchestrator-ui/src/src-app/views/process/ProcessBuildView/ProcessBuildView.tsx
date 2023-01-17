@@ -9,8 +9,6 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
-
-
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -21,10 +19,6 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import BpmnModeler, { ModelerImperativeHandle } from './Modeler/BpmnModeler';
 import { StyledCard } from './ProcessBuildView.styled';
-
-
-
-
 
 const BORDER_SIZE = 2;
 const SNACKBAR_DURATION = 1500;
@@ -57,8 +51,10 @@ const ProcessBuildView: FC = () => {
                 processActions.saveProcess({
                     ...process,
                     definition,
-                }),
+                })
             );
+
+            dispatch(processActions.clearErrors());
             enqueueSnackbar(translate('Process.MainView.Toast.Save.Success'), {
                 variant: 'success',
                 autoHideDuration: SNACKBAR_DURATION,
@@ -78,8 +74,9 @@ const ProcessBuildView: FC = () => {
                     ...process,
                     definition,
                 },
-            }),
+            })
         );
+        dispatch(processActions.clearErrors());
     };
 
     const handleExport = async () => {
@@ -89,10 +86,15 @@ const ProcessBuildView: FC = () => {
             type: 'text/plain',
         });
 
-        saveAs(blob, `${process.name}_${moment().format('YYYY_MM_DD_HH_mm')}.bpmn`);
+        saveAs(
+            blob,
+            `${process.name}_${moment().format('YYYY_MM_DD_HH_mm')}.bpmn`
+        );
     };
 
-    if (!process || process.id?.toString() !== id || actionsLoading) return <LoadingScreen />;
+    if (!process || process.id?.toString() !== id || actionsLoading) {
+        return <LoadingScreen />;
+    }
 
     return (
         <StyledCard offsetTop={offSet}>

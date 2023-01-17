@@ -6,12 +6,14 @@ import { JSONSchema7 } from 'json-schema';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useModelerContext } from '#src-app/providers/ModelerProvider';
+
+import { useSelector } from '#src-app/store';
+
 import { BpmnConnectionFactory, IBpmnConnection } from '../BPMN';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import customWidgets from './widgets';
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
-import { useSelector } from '#src-app/store';
 
 const ConnectionFormRenderer = () => {
     const { selectedElement } = useSelector((state) => state.process.modeler);

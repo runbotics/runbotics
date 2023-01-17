@@ -12,8 +12,8 @@ import If from '#src-app/components/utils/If';
 import useTranslations, {
     checkIfKeyExists,
 } from '#src-app/hooks/useTranslations';
-import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { useSelector } from '#src-app/store';
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 type Props = {
     onSubmit: (label: string) => void;
@@ -34,11 +34,11 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const translationKey = `Process.Details.Modeler.Actions.${
         actionId
             ? capitalizeFirstLetter({
-                  text: actionId,
-                  lowerCaseRest: false,
-                  delimiter: '.',
-                  join: '.',
-              })
+                text: actionId,
+                lowerCaseRest: false,
+                delimiter: '.',
+                join: '.',
+            })
             : ''
     }.Label`;
 
