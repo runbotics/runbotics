@@ -20,7 +20,6 @@ const MainView = () => (
         <OpenSourceSection />
         <IntegrationSection />      
         <ContactSection />
-        {/* Add your section here*/}
     </Layout>
 );
 

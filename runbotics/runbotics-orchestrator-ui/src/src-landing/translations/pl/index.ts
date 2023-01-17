@@ -1,5 +1,6 @@
 import benefitsTranslations from './benefits.json';
 import contactTranslations from './contact.json';
+import footerTranslations from './footer.json';
 import headerTranslations from './header.json';
 import heroTranslations from './hero.json';
 import industriesTranslation from './industries.json';
@@ -17,7 +18,8 @@ const landingPageTranslations = {
     ...prosTranslations,
     ...industriesTranslation,
     ...contactTranslations,
-    ...rpaTranslations
+    ...rpaTranslations,
+    ...footerTranslations
 };
 
 export default landingPageTranslations;
