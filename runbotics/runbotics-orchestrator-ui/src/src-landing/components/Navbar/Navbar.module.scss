@@ -1,10 +1,6 @@
 @import '#src-landing/scss/main.scss';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
-$LOGO_WIDTH: 177px;
-$LOGO_HEIGHT: 48px;
-$HEADER_HEIGHT: 55px;
-
 .navLinkWrapper {
     display: flex;
     justify-content: space-evenly;
@@ -14,7 +10,10 @@ $HEADER_HEIGHT: 55px;
 }
 
 .link {
-    @extend .typography__primary, .typography__nav, .typography__Montserrat;
+    @extend .typography__primary, .typography__Montserrat;
+    font-size: $font-size-h6;
+    line-height: $line-height-base;
+    font-weight: $font-weight-semi-bold;
     text-decoration: none;
 
     &:hover {
@@ -23,21 +22,10 @@ $HEADER_HEIGHT: 55px;
 }
 
 @media (max-width: $breakpoint-md) {
-    .navLinksExpanded::before,
-    .hideNavLinksExpanded::before {
-        content: '';
-        position: absolute;
-        z-index: $nested-blur-effect-z-index;
-        width: 100%;
-        height: 100%;
-        backdrop-filter: blur(6px);
-    }
-
     .navLinksExpanded,
     .hideNavLinksExpanded {
         position: absolute;
         top: $HEADER_HEIGHT;
-        left: 0;
         display: flex;
         flex-direction: column;
         overflow-y: clip;
@@ -55,6 +43,15 @@ $HEADER_HEIGHT: 55px;
         }
     }
 
+    .navLinksExpanded::before,
+    .hideNavLinksExpanded::before {
+        content: '';
+        position: absolute;
+        z-index: $nested-blur-effect-z-index;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(6px);
+    }
     
     .navLinksExpanded {
         left: 0;
