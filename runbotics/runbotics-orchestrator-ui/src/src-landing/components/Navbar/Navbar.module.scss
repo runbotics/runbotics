@@ -1,0 +1,106 @@
+@import '#src-landing/scss/main.scss';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+$LOGO_WIDTH: 177px;
+$LOGO_HEIGHT: 48px;
+$HEADER_HEIGHT: 55px;
+
+.navLinkWrapper {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 30px;
+    padding: 0;
+    list-style: none;
+}
+
+.link {
+    @extend .typography__primary, .typography__nav, .typography__Montserrat;
+    text-decoration: none;
+
+    &:hover {
+        border-bottom: 2px solid $palette-background-tertiary;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .navLinksExpanded::before,
+    .hideNavLinksExpanded::before {
+        content: '';
+        position: absolute;
+        z-index: $nested-blur-effect-z-index;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(6px);
+    }
+
+    .navLinksExpanded,
+    .hideNavLinksExpanded {
+        position: absolute;
+        top: $HEADER_HEIGHT;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        overflow-y: clip;
+        transition: all 0.3s;
+        border-style: solid;
+        border-width: 2px 0;
+        border-color: $palette-background-tertiary;
+        width: 100%;
+        max-height: calc(100vh - $HEADER_HEIGHT);
+        padding: $padding-2 0;
+        background-image: $palette-background-gradient;
+        
+        .link {
+            border-bottom: 2px solid $palette-accent-primary;
+        }
+    }
+
+    
+    .navLinksExpanded {
+        left: 0;
+    }
+
+    .hideNavLinksExpanded {
+        left: -100%;
+    }
+    
+    .listItem {
+        margin-left: $margin-3;
+    }
+    
+    .minimized {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+
+        .listItem {
+            text-align: center;
+            margin: 0;
+            
+            &:nth-child(-n+4) {
+                grid-column: span 3;
+            }
+            &:nth-child(n+5) {
+                grid-column: span 4;
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .minimized {
+        grid-template-columns: repeat(2, 1fr);
+        .listItem {        
+            &:nth-child(-n+4) {
+                grid-column: span 1;
+            }
+
+            &:nth-child(n+4) {
+                grid-column: span 1;
+            }
+
+            &:last-child {
+                grid-column: span 2;
+            }
+        }
+    }
+}

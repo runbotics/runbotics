@@ -3,7 +3,6 @@
 
 $LOGO_WIDTH: 177px;
 $LOGO_HEIGHT: 48px;
-$HEADER_HEIGHT: 55px;
 
 .header::before {
     content: '';
@@ -36,14 +35,6 @@ $HEADER_HEIGHT: 55px;
     height: $LOGO_HEIGHT;
 }
 
-.navLinkWrapper {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 30px;
-    list-style: none;
-    padding: 0;
-}
-
 .btn {
     display: inline-block;
     justify-content: center;
@@ -70,56 +61,7 @@ $HEADER_HEIGHT: 55px;
     display: none;
 }
 
-.link {
-    @extend .typography__primary, .typography__nav, .typography__Montserrat;
-    text-decoration: none;
-
-    &:hover {
-        border-bottom: 2px solid $palette-background-tertiary;
-    }
-}
-
 @media (max-width: $breakpoint-md) {
-    .navLinksExpanded::before,
-    .hideNavLinksExpanded::before {
-        content: '';
-        position: absolute;
-        z-index: $nested-blur-effect-z-index;
-        width: 100%;
-        height: 100%;
-        backdrop-filter: blur(6px);
-    }
-
-    .navLinksExpanded,
-    .hideNavLinksExpanded {
-        position: absolute;
-        top: $HEADER_HEIGHT;
-        left: 0;
-        display: flex;
-        flex-direction: column;
-        overflow-y: clip;
-        transition: all 0.3s;
-        border-style: solid;
-        border-width: 2px 0;
-        border-color: $palette-background-tertiary;
-        width: 100%;
-        max-height: calc(100vh - $HEADER_HEIGHT);
-        padding: $padding-2 0;
-        background-image: $palette-background-gradient;
-    }
-
-    .navLinksExpanded {
-        left: 0;
-    }
-
-    .hideNavLinksExpanded {
-        left: -100%;
-    }
-
-    .listItem {
-        margin-left: $margin-3;
-    }
-
     .menuIcon {
         display: block;
         user-select: none;
@@ -166,9 +108,5 @@ $HEADER_HEIGHT: 55px;
 
     .menuIcon.isActive span:nth-child(3) {
         transform: translate(-3px, 3px) rotate(-45deg);
-    }
-
-    .link {
-        border-bottom: 2px solid $palette-accent-primary;
     }
 }
