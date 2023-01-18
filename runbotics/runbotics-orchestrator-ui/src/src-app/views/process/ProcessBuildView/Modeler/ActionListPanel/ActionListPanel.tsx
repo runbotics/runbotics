@@ -4,24 +4,9 @@ import React, { FC, memo, useMemo, useState } from 'react';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import {
-    Badge,
-    ListItem,
-    ListItemText,
-    Typography,
-    Tab,
-    Tabs,
-    IconButton,
-    Box,
-    Drawer,
-    List
-} from '@mui/material';
+import { Badge, Tab, Tabs, IconButton, Box, Drawer } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
-
-import HighlightText from '#src-app/components/HighlightText';
-
-import If from '#src-app/components/utils/If';
 
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -42,7 +27,8 @@ import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 import { internalTemplates } from '../ConfigureActionPanel/Templates';
 import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
 import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
-import ListGroup, { Item } from '../ListGroup';
+import { Item } from '../ListGroup';
+import ActionList from './ActionList/ActionList';
 import {
     classes,
     Root,
@@ -111,7 +97,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [external, i18n.language, templatesGroups]);
 
-    const [groupsOpenState, dispatchGroups] = useGroupReducer(
+    const [openGroupsState, dispatchGroups] = useGroupReducer(
         Object.fromEntries(actionGroups.map(({ key }) => [key, false]))
     );
 
@@ -212,18 +198,15 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                         return null;
                     }
 
-                    // filter group's items
                     const filteredItems = actionName
                         ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                          (items as (IBpmnAction & TemplatesSchema)[]).filter(
-                              ({ label, name }) =>
-                                  (isTemplate ? name : label)
-                                      .toLowerCase()
-                                      .includes(actionName.toLowerCase())
-                          )
+                        (items as IBpmnAction[]).filter(({ label }) =>
+                            label
+                                .toLowerCase()
+                                .includes(actionName.toLowerCase())
+                        )
                         : (items as TemplatesSchema[]);
 
-                    // remove group if empty
                     // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;
 
@@ -308,72 +291,13 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                         setFilters={setFilters}
                         filterOptions={currentTabGroups}
                     />
-                    <List className={clsx(classes.list)}>
-                        <If
-                            condition={Boolean(filteredGroups.length)}
-                            else={
-                                <Typography
-                                    color="gray"
-                                    align="center"
-                                    sx={{ pt: 1 }}>
-                                    {translate(
-                                        'Process.Details.Modeler.ActionListPanel.NoResults'
-                                    )}
-                                </Typography>
-                            }>
-                            {filteredGroups.map(({ key, label, items }) => (
-                                <ListGroup
-                                    key={key}
-                                    label={label}
-                                    open={groupsOpenState[key]}
-                                    onToggle={open => {
-                                        dispatchGroups(
-                                            groupActions.updateGroup(key, open)
-                                        );
-                                    }}>
-                                    <List component="div" disablePadding>
-                                        {items.map((item: Item) => (
-                                            <ListItem
-                                                key={item.id}
-                                                button
-                                                className={classes.nested}
-                                                onClick={event =>
-                                                    handleItemClick(event, item)
-                                                }>
-                                                <ListItemText>
-                                                    <If
-                                                        condition={Boolean(
-                                                            filters.actionName
-                                                        )}
-                                                        else={
-                                                            filters.currentTab ===
-                                                            ListPanelTab.TEMPLATES
-                                                                ? item.name
-                                                                : item.label
-                                                        }>
-                                                        <HighlightText
-                                                            text={
-                                                                filters.currentTab ===
-                                                                ListPanelTab.TEMPLATES
-                                                                    ? item.name
-                                                                    : item.label
-                                                            }
-                                                            matchingText={
-                                                                filters.actionName
-                                                            }
-                                                            matchClassName={
-                                                                classes.highlight
-                                                            }
-                                                        />
-                                                    </If>
-                                                </ListItemText>
-                                            </ListItem>
-                                        ))}
-                                    </List>
-                                </ListGroup>
-                            ))}
-                        </If>
-                    </List>
+                    <ActionList
+                        groups={filteredGroups}
+                        dispatchGroups={dispatchGroups}
+                        handleItemClick={handleItemClick}
+                        openGroupsState={openGroupsState}
+                        filters={filters}
+                    />
                 </Box>
             </Drawer>
         </Root>

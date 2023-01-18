@@ -204,23 +204,23 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
             return undefined;
         };
 
-        const extractGlobalVariable = (
+        const extractGlobalVariables = (
             inputOutput: CamundaInputOutputElement
         ) => {
-            const globalVariable = inputOutput.inputParameters.find(
-                inputParameter => inputParameter.name === 'globalVariable'
+            const globalVariableList = inputOutput.inputParameters.find(
+                inputParameter => inputParameter.name === 'globalVariables'
             );
-            if (globalVariable) {
-                const numberPattern = new RegExp(/\d+/, 'g');
-                const globalVariableId =
-                    globalVariable.value.match(numberPattern);
-                if (!globalVariableId) {
-                    return undefined;
-                }
-                const globalVariableName = globalVariables.find(
-                    variable => variable.id === Number(globalVariableId[0])
-                )?.name;
-                if (globalVariableName) {
+
+            if (globalVariableList) {
+                return globalVariableList.definition.items.map(item => {
+                    const globalVariableName = globalVariables.find(
+                        variable => variable.id === Number(item.value)
+                    )?.name;
+
+                    if (!globalVariableName) {
+                        return undefined;
+                    }
+
                     return {
                         label: globalVariableName,
                         value: globalVariableName,
@@ -228,7 +228,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
                             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
                         )
                     };
-                }
+                });
             }
             return undefined;
         };
@@ -282,7 +282,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
                     }
                     return (
                         extractLocalVariable(inputOutput) ??
-                        extractGlobalVariable(inputOutput)
+                        extractGlobalVariables(inputOutput)
                     );
                 })
                 .concat(attendedProcessVariables)
@@ -299,6 +299,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
                 value: `#{${option.value}}`
             }));
 
+            result = [...dollarVariables, ...hashVariables, ...result];
             result = [...dollarVariables, ...hashVariables, ...result];
 
             return reduceList(result);

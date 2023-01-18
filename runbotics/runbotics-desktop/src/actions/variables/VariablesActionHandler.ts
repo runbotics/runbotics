@@ -68,9 +68,11 @@ export class VariablesActionHandler extends StatelessActionHandler {
                 output = await this.assignVariable(action.input, action);
                 break;
             case 'variables.assignGlobalVariable':
-                const globalVariableId: number = action.input.globalVariable;
-                const input = await this.fetchGlobalVariable(globalVariableId);
-                output = await this.assignVariable(input, action);
+                const globalVariableIds: number[] = action.input.globalVariables;
+                for (const globalVariableId of globalVariableIds) {
+                    const input = await this.fetchGlobalVariable(globalVariableId);
+                    output = await this.assignVariable(input, action);
+                }
                 break;
             default:
                 throw new Error('Action not found');

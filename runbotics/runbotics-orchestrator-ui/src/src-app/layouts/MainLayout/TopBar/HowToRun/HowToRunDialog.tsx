@@ -3,18 +3,19 @@ import React, { FC } from 'react';
 import {
     Avatar,
     Box,
-    colors,
     DialogContentText,
     Grid,
     Step,
     StepConnector,
     StepLabel,
     Stepper,
-    Dialog, DialogContent, DialogTitle, 
+    Dialog,
+    DialogContent,
+    DialogTitle,
 } from '@mui/material';
+import { red, green } from '@mui/material/colors';
 import clsx from 'clsx';
 import styled from 'styled-components';
-
 
 import useLocalStorage from '#src-app/hooks/useLocalStorage';
 
@@ -26,7 +27,6 @@ import { CustomStepIconProps } from './CustomSteps.types';
 import InstallStep from './InstallStep';
 import RunStep from './RunStep';
 import useInstallSteps from './useInstallSteps';
-
 
 const DIALOG_PREFIX = 'HowToRunDialog';
 const ICON_PREFIX = 'CustomStepIcon';
@@ -53,7 +53,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         paddingBottom: theme.spacing(3),
     },
     avatar: {
-        backgroundColor: colors.red[600],
+        backgroundColor: red[600],
     },
     stepper: {
         backgroundColor: 'transparent',
@@ -79,13 +79,16 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     },
 
     [`& .${iconClasses.completed}`]: {
-        backgroundColor: colors.green[700],
+        backgroundColor: green[700],
         color: theme.palette.secondary.contrastText,
     },
 }));
 
 const CustomStepIcon: FC<CustomStepIconProps> = ({
-    active, completed, icon, steps,
+    active,
+    completed,
+    icon,
+    steps,
 }) => {
     const Icon = steps[icon].icon;
 
@@ -109,7 +112,7 @@ interface HowToRunDialogProps {
 const HowToRunDialog: FC<HowToRunDialogProps> = ({ open, onClose }) => {
     const [activeStep, setActiveStep] = useLocalStorage('HowToRunDialog', 0);
     const { translate } = useTranslations();
-    const steps =  useInstallSteps();
+    const steps = useInstallSteps();
 
     const handleNext = (): void => {
         setActiveStep(+activeStep + 1);
@@ -131,14 +134,14 @@ const HowToRunDialog: FC<HowToRunDialogProps> = ({ open, onClose }) => {
                         <Stepper
                             activeStep={activeStep}
                             className={dialogClasses.stepper}
-                            connector={(
+                            connector={
                                 <CustomStepConnector
                                     classes={{
                                         vertical: dialogClasses.vertical,
                                         line: dialogClasses.line,
                                     }}
                                 />
-                            )}
+                            }
                             orientation="vertical"
                         >
                             {steps.map((step, index) => (
@@ -163,14 +166,27 @@ const HowToRunDialog: FC<HowToRunDialogProps> = ({ open, onClose }) => {
                                 {activeStep === 0 && (
                                     <InstallStep
                                         onBack={handleComplete}
-                                        onComplete={() => setActiveStep(+activeStep + 1)}
+                                        onComplete={() =>
+                                            setActiveStep(+activeStep + 1)
+                                        }
                                     />
                                 )}
                                 {activeStep === 1 && (
-                                    <ConnectStep onComplete={() => setActiveStep(+activeStep + 1)} />
+                                    <ConnectStep
+                                        onComplete={() =>
+                                            setActiveStep(+activeStep + 1)
+                                        }
+                                    />
                                 )}
-                                {activeStep === 2 && <RunStep onBack={handleComplete} onComplete={handleNext} />}
-                                {activeStep === 3 && <CompleteStep onComplete={handleComplete} />}
+                                {activeStep === 2 && (
+                                    <RunStep
+                                        onBack={handleComplete}
+                                        onComplete={handleNext}
+                                    />
+                                )}
+                                {activeStep === 3 && (
+                                    <CompleteStep onComplete={handleComplete} />
+                                )}
                             </Box>
                         </>
                     </Grid>

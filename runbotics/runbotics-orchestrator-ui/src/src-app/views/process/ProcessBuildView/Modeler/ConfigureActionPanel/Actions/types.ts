@@ -49,6 +49,7 @@ export type IBpmnAction = {
     id: string;
     runner: Runner;
     script: string;
+    legacy?: boolean;
     label: string;
     translateKey?: string;
     system?: ActionSystem;

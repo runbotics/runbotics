@@ -94,30 +94,36 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Variable.AssignGlobal.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Input'),
                         type: 'object',
                         properties: {
-                            globalVariable: {
+                            globalVariables: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.Variable.AssignGlobal.GlobalVariable',
+                                    'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.GlobalVariables',
                                 ),
-                                type: 'number',
+                                type: 'array',
+                                items: {
+                                    type: 'string',
+                                }
                             },
                         },
-                        required: ['globalVariable'],
+                        required: ['globalVariables'],
                     },
                 },
             },
             uiSchema: {
+                'ui:order': ['input'],
                 input: {
-                    globalVariable: {
-                        'ui:widget': 'GlobalVariableSelectWidget',
+                    globalVariables: {
+                        items: {
+                            'ui:widget': 'GlobalVariableSelectWidget',
+                        }
                     },
                 },
             },
             formData: {
                 input: {
-                    globalVariable: undefined,
+                    globalVariables: [],
                 },
             },
         },

@@ -59,7 +59,7 @@ export type Position = {
 };
 
 export type TemplatesSchema = {
-    name: string;
+    label: string;
     id: string;
     input?: Record<string, any>;
     output?: string;
