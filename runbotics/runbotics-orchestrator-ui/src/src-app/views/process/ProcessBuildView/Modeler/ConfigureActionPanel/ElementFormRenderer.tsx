@@ -2,16 +2,15 @@ import React, { FC, useState } from 'react';
 
 import { JSONSchema7 } from 'json-schema';
 
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
-
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 
 import { useSelector } from '#src-app/store';
 
 import {
     CamundaInputOutputElement,
     getInputParameters,
-    getOutputParameters,
+    getOutputParameters
 } from '../BPMN';
 import { ParameterDestination } from '../extensions/palette/CustomPalette';
 import { IFormData } from './Actions/types';
@@ -19,7 +18,7 @@ import { ActionToBPMNElement } from './ActionToBPMNElement';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const ElementFormRenderer: FC = () => {
-    const { selectedElement } = useSelector((state) => state.process.modeler);
+    const { selectedElement } = useSelector(state => state.process.modeler);
     const { modelerRef } = useModelerContext();
     // eslint-disable-next-line unused-imports/no-unused-vars
     const [submitted, setSubmitted] = useState({});
@@ -35,7 +34,7 @@ const ElementFormRenderer: FC = () => {
                 (previousValue, currentValue) => {
                     const newPrev = previousValue;
                     newPrev[currentValue.name] = {
-                        type: 'string',
+                        type: 'string'
                     };
                     return newPrev;
                 },
@@ -45,7 +44,7 @@ const ElementFormRenderer: FC = () => {
                 (previousValue, currentValue) => {
                     const newPrev = previousValue;
                     newPrev[currentValue.name] = {
-                        type: 'string',
+                        type: 'string'
                     };
                     return newPrev;
                 },
@@ -59,27 +58,27 @@ const ElementFormRenderer: FC = () => {
             properties: {
                 input: {
                     additionalProperties: {
-                        type: 'string',
+                        type: 'string'
                     },
                     title: translate(
                         'Process.Details.Modeler.ActionPanel.Form.Element.Input'
                     ),
                     type: 'object',
                     properties: inputProperties,
-                    required: [],
+                    required: []
                 },
                 output: {
                     additionalProperties: {
-                        type: 'string',
+                        type: 'string'
                     },
                     title: translate(
                         'Process.Details.Modeler.ActionPanel.Form.Element.Output'
                     ),
                     type: 'object',
                     properties: outputProperties,
-                    required: [],
-                },
-            },
+                    required: []
+                }
+            }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedElement]);
@@ -113,7 +112,7 @@ const ElementFormRenderer: FC = () => {
         return {
             disabled: false,
             input,
-            output,
+            output
         };
     }, [selectedElement]);
 
@@ -124,12 +123,12 @@ const ElementFormRenderer: FC = () => {
         const data: IFormData = {
             input: {
                 ...inputParameters,
-                ...event.formData.input,
+                ...event.formData.input
             },
             output: {
                 ...outputParameters,
-                ...event.formData.output,
-            },
+                ...event.formData.output
+            }
         };
 
         const actionToBPMNElement: ActionToBPMNElement =

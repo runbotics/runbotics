@@ -4,9 +4,8 @@ import { Box, Grid, Typography } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
-
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 
 import { useSelector } from '#src-app/store';
 
@@ -16,7 +15,7 @@ import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import customWidgets from './widgets';
 
 const ConnectionFormRenderer = () => {
-    const { selectedElement } = useSelector((state) => state.process.modeler);
+    const { selectedElement } = useSelector(state => state.process.modeler);
     const { modelerRef } = useModelerContext();
     const connection: IBpmnConnection = selectedElement;
     const { translate } = useTranslations();
@@ -34,12 +33,12 @@ const ConnectionFormRenderer = () => {
                             title: translate(
                                 'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
                             ),
-                            type: 'string',
-                        },
+                            type: 'string'
+                        }
                     },
-                    required: [],
-                },
-            ],
+                    required: []
+                }
+            ]
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         []
@@ -49,21 +48,21 @@ const ConnectionFormRenderer = () => {
         () => ({
             expression: {
                 // 'ui:widget': 'EditorWidget'
-            },
+            }
         }),
         []
     );
 
     const defaultFormData = React.useMemo(
         () => ({
-            expression: connection.businessObject.conditionExpression?.body,
+            expression: connection.businessObject.conditionExpression?.body
         }),
         [connection]
     );
 
     const handleSubmit = (event: ISubmitEvent<IFormData>) => {
         const data: IFormData = {
-            ...event.formData,
+            ...event.formData
         };
         BpmnConnectionFactory.from(modelerRef.current).setConditionExpression(
             connection,

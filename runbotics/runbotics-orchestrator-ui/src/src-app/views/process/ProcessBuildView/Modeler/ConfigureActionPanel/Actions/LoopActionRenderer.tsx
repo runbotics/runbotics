@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Box, Grid, Typography } from '@mui/material';
 
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -16,7 +16,7 @@ const LoopActionRenderer: FC = () => {
     const dispatch = useDispatch();
     const { modelerRef } = useModelerContext();
     const { selectedElement, selectedAction } = useSelector(
-        (state) => state.process.modeler
+        state => state.process.modeler
     );
 
     const isLoopElement = (ele: unknown): ele is BpmnSubProcess =>
@@ -33,9 +33,9 @@ const LoopActionRenderer: FC = () => {
                 iterations: '',
                 loopType: 'Repeat',
                 elementVariable: '',
-                collection: '',
+                collection: ''
             },
-            output: {},
+            output: {}
         };
 
         if (
@@ -62,8 +62,9 @@ const LoopActionRenderer: FC = () => {
     }, [selectedAction, selectedElement]);
 
     const formatLoopBody = (collectionName: string) => {
-        if (collectionName.startsWith('#'))
-        { return `#{length(${collectionName.slice(2, -1)})}`; }
+        if (collectionName.startsWith('#')) {
+            return `#{length(${collectionName.slice(2, -1)})}`;
+        }
         return `${collectionName.slice(0, -1)}.length}`;
     };
 
@@ -76,14 +77,17 @@ const LoopActionRenderer: FC = () => {
         const { loopCharacteristics } = selectedElement.businessObject;
         const { loopCardinality, collection } = loopCharacteristics;
 
-        for (const [key, value] of Object.entries(formState.formData.input))
-        { loopCharacteristics[key] = value; }
+        for (const [key, value] of Object.entries(formState.formData.input)) {
+            loopCharacteristics[key] = value;
+        }
 
-        if (loopType === 'Repeat')
-        { loopCardinality.body = formState.formData.input.iterations; }
+        if (loopType === 'Repeat') {
+            loopCardinality.body = formState.formData.input.iterations;
+        }
 
-        if (loopType === 'Collection' && collection)
-        { loopCardinality.body = formatLoopBody(collection); }
+        if (loopType === 'Collection' && collection) {
+            loopCardinality.body = formatLoopBody(collection);
+        }
 
         bpmnHelper.updateBusinessObject(selectedElement);
         dispatch(processActions.addAppliedAction(selectedElement.id));

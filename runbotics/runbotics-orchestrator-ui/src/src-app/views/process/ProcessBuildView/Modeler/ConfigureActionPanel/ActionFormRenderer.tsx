@@ -5,9 +5,9 @@ import { UiSchema } from '@rjsf/core';
 import i18n from 'i18next';
 import { JSONSchema7 } from 'json-schema';
 
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useModelerContext } from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -15,7 +15,12 @@ import { processActions } from '#src-app/store/slices/Process';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { BPMNHelper } from '../BPMN';
-import { applyModelerElement, getFormData, getFormSchema, getFormUiSchema } from '../utils';
+import {
+    applyModelerElement,
+    getFormData,
+    getFormSchema,
+    getFormUiSchema
+} from '../utils';
 import ActionLabelForm from './ActionLabelForm';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
@@ -24,15 +29,17 @@ import customWidgets from './widgets';
 const ActionFormRenderer: FC = () => {
     const { modelerRef } = useModelerContext();
     const { selectedElement, selectedAction, commandStack } = useSelector(
-        (state) => state.process.modeler
+        state => state.process.modeler
     );
 
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
-    const defaultUISchema = React.useMemo<UiSchema>(() => getFormUiSchema(selectedElement, selectedAction),
+    const defaultUISchema = React.useMemo<UiSchema>(
+        () => getFormUiSchema(selectedElement, selectedAction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [selectedAction.form.uiSchema]);
+        [selectedAction.form.uiSchema]
+    );
 
     const defaultSchema = React.useMemo<JSONSchema7>(
         () => getFormSchema(selectedElement, selectedAction),
@@ -50,15 +57,16 @@ const ActionFormRenderer: FC = () => {
                 text: selectedAction.id,
                 lowerCaseRest: false,
                 delimiter: '.',
-                join: '.',
+                join: '.'
             })}.Label`
         );
     };
 
-    const defaultFormData = React.useMemo(() => 
-        getFormData(selectedElement, selectedAction)
+    const defaultFormData = React.useMemo(
+        () => getFormData(selectedElement, selectedAction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    , [selectedAction, selectedElement, commandStack.commandStackIdx]);
+        [selectedAction, selectedElement, commandStack.commandStackIdx]
+    );
 
     const handleSubmit = (event: IFormData) => {
         dispatch(processActions.addAppliedAction(selectedElement.id));
@@ -70,8 +78,8 @@ const ActionFormRenderer: FC = () => {
                 input: event.formData.input,
                 output: event.formData.output,
                 disabled: event.formData.disabled,
-                runFromHere: event.formData.runFromHere,
-            },
+                runFromHere: event.formData.runFromHere
+            }
         });
     };
 
@@ -90,17 +98,17 @@ const ActionFormRenderer: FC = () => {
                 </Box>
             </Grid>
             {defaultFormData &&
-               selectedAction.id === selectedElement.businessObject.actionId ? (
-                    <JSONSchemaFormRenderer
-                        id={selectedElement.id}
-                        key={selectedElement.id}
-                        schema={defaultSchema}
-                        uiSchema={defaultUISchema}
-                        formData={defaultFormData}
-                        onSubmit={handleSubmit}
-                        widgets={customWidgets}
-                    />
-                ) : null}
+            selectedAction.id === selectedElement.businessObject.actionId ? (
+                <JSONSchemaFormRenderer
+                    id={selectedElement.id}
+                    key={selectedElement.id}
+                    schema={defaultSchema}
+                    uiSchema={defaultUISchema}
+                    formData={defaultFormData}
+                    onSubmit={handleSubmit}
+                    widgets={customWidgets}
+                />
+            ) : null}
         </>
     );
 };

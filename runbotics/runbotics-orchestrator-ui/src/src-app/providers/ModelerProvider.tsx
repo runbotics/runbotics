@@ -6,11 +6,7 @@ export interface ModelerContext {
     modelerRef?: MutableRefObject<BpmnModelerType>;
 }
 
-const ModelerContext = React.createContext<ModelerContext>(null);
-export const useModelerContext = () => {
-    const context = React.useContext<ModelerContext>(ModelerContext);
-    return context;
-};
+export const ModelerContext = React.createContext<ModelerContext>(null);
 
 interface ModelerProviderProps {
     modelerRef?: MutableRefObject<BpmnModelerType>;
@@ -18,13 +14,12 @@ interface ModelerProviderProps {
 
 const ModelerProvider: FC<ModelerProviderProps> = ({
     modelerRef,
-    children,
+    children
 }) => (
     <ModelerContext.Provider
         value={{
-            modelerRef,
-        }}
-    >
+            modelerRef
+        }}>
         {children}
     </ModelerContext.Provider>
 );

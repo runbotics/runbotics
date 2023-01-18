@@ -1,15 +1,12 @@
-import BpmnModeler from 'bpmn-js/lib/Modeler';
-
 import { IBpmnAction } from '../ConfigureActionPanel/Actions/types';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 
 export enum ListPanelTab {
     ACTIONS = 'ACTIONS',
-    TEMPLATES = 'TEMPLATES',
+    TEMPLATES = 'TEMPLATES'
 }
 
 export interface ActionListPanelProps {
-    modeler: BpmnModeler;
     offsetTop: number | null;
 }
 
