@@ -5,6 +5,7 @@ import Clipboard from '../extensions/clipboard';
 import ContextPad from '../extensions/contextPad';
 import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
+import searchModule from '../extensions/search';
 import ZoomScrollModule from '../extensions/zoomscroll';
 
 export const getBpmnModelerConfig = (offsetTop: number) => {
@@ -18,7 +19,8 @@ export const getBpmnModelerConfig = (offsetTop: number) => {
             BasicModelerModule,
             { clipboard: ['value', clipboard] },
             ZoomScrollModule,
-            ContextPad
+            ContextPad,
+            searchModule
         ],
         moddleExtensions: {
             camunda: RunboticModdleDescriptor

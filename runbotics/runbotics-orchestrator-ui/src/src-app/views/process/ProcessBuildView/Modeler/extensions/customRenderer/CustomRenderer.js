@@ -73,8 +73,6 @@ export default class CustomRenderer extends BaseRenderer {
             y: height / 2,
         });
 
-        // svgClasses(text).add('djs-label');
-
         const actionId = label.actionId;
 
         if (actionId) {
