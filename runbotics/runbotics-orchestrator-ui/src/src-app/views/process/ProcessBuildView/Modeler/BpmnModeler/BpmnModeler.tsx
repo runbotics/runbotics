@@ -94,7 +94,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             dispatch(
                 processActions.setError({
                     elementId: event.element.id,
-                    message: 'mess',
                     elementName: event.element.id
                 })
             );

@@ -7,14 +7,12 @@ import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/Con
 
 export interface CommandStackInfo {
     commandStackSize: number;
-    commandStackIdx: number
+    commandStackIdx: number;
 }
 
 export interface ModelerError {
-    message: string;
     elementName: string;
     elementId: string;
-    appearedIdx: CommandStackInfo['commandStackIdx'];
 }
 
 export interface ModelerState {
@@ -43,4 +41,7 @@ export interface ProcessState {
     };
 }
 
-export type StartProcessResponse = Pick<IProcessInstance, 'orchestratorProcessInstanceId'>;
+export type StartProcessResponse = Pick<
+    IProcessInstance,
+    'orchestratorProcessInstanceId'
+>;
