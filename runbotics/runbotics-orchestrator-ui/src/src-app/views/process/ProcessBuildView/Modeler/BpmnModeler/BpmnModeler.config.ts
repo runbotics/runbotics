@@ -7,7 +7,7 @@ import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
 import ZoomScrollModule from '../extensions/zoomscroll';
 
-export const BpmnModelerConfig = (offsetTop: number) => {
+export const getBpmnModelerConfig = (offsetTop: number) => {
     const clipboard = new Clipboard();
 
     return {

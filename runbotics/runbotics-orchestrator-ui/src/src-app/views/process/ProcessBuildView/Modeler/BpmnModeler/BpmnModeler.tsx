@@ -33,26 +33,25 @@ import {
     ModelerContainer,
     ModelerImperativeHandle,
     ModelerProps,
-    openBpmnDiagram,
+    initializeBpmnDiagram,
     paste,
     Wrapper
 } from '.';
+import internalBpmnActions from '../../../../../Actions';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import SidebarNavigationPanel from '../../SidebarNavigationPanel';
+import ActionFormPanel from '../ActionFormPanel/ConfigureActionPanel';
 import ActionListPanel from '../ActionListPanel';
-import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import ConfigureActionPanel from '../ConfigureActionPanel/ConfigureActionPanel';
-import emptyBpmn from '../empty.bpmn';
+import emptyBpmn from '../extensions/config/empty.bpmn';
 
+import { getFormData, getFormSchema } from '../helpers/elementForm';
 import {
     applyModelerElement,
-    getFormData,
-    getFormSchema,
     toggleValidationError
-} from '../utils';
-import { BpmnModelerConfig } from './BpmnModeler.config';
+} from '../helpers/elementManipulation';
+import { getBpmnModelerConfig } from './BpmnModeler.config';
 
 const ajv = new Ajv();
 const ELEMENTS_PROPERTIES_WHITELIST = [
@@ -121,7 +120,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             if (!offsetTop) return;
 
             const bpmnModeler: BpmnIoModeler = new BpmnIoModeler(
-                BpmnModelerConfig(offsetTop)
+                getBpmnModelerConfig(offsetTop)
             );
 
             const eventBus = bpmnModeler.get('eventBus');
@@ -139,11 +138,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             });
 
             eventBus.on('commandStack.shape.delete.preExecute', () => {
-                dispatch(processActions.resetSelectedElement());
+                dispatch(processActions.resetSelection());
             });
 
             eventBus.on('commandStack.connection.delete.preExecute', () => {
-                dispatch(processActions.resetSelectedElement());
+                dispatch(processActions.resetSelection());
             });
 
             eventBus.on(
@@ -186,7 +185,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     dispatch(processActions.setSelectedElement(event.element));
                 } else {
                     setCurrentTab(null);
-                    dispatch(processActions.resetSelectedElement());
+                    dispatch(processActions.resetSelection());
                 }
             });
 
@@ -250,7 +249,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useUpdateEffect(() => {
             if (currentTab !== ProcessBuildTab.CONFIGURE_ACTION) {
-                dispatch(processActions.resetSelectedElement());
+                dispatch(processActions.resetSelection());
                 updateActivities();
             }
         }, [currentTab]);
@@ -264,7 +263,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useEffect(() => {
             if (modelerRef.current) {
-                openBpmnDiagram(
+                initializeBpmnDiagram(
                     modelerRef.current,
                     definition ?? emptyBpmn
                 ).then(modelerActivities => {
@@ -386,7 +385,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                         currentTab ===
                                         ProcessBuildTab.CONFIGURE_ACTION
                                     }>
-                                    <ConfigureActionPanel />
+                                    <ActionFormPanel />
                                 </If>
                                 <If
                                     condition={

@@ -8,23 +8,23 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import ActionFormRenderer from './ActionFormRenderer';
-import internalBpmnActions from './Actions';
-import LoopActionRenderer from './Actions/LoopActionRenderer';
-import ConnectionFormRenderer from './ConnectionFormRenderer';
+import internalBpmnActions from '../../../../../Actions';
+import ActionFormRenderer from './renderers/ActionFormRenderer';
+import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
+import LoopActionRenderer from './renderers/LoopActionRenderer';
 
 // eslint-disable-next-line complexity
-const ConfigureActionPanel: FC = () => {
+const ActionFormPanel: FC = () => {
     const { selectedElement, selectedAction } = useSelector(
-        (state) => state.process.modeler
+        state => state.process.modeler
     );
 
     const dispatch = useDispatch();
     const CustomActionRenderer = new Map<string, FunctionComponent<any>>([
-        ['loop.loop', LoopActionRenderer],
+        ['loop.loop', LoopActionRenderer]
     ]);
     const externalBpmnActions = useSelector(
-        (state) => state.action.bpmnActions.byId
+        state => state.action.bpmnActions.byId
     );
 
     const actionId = selectedElement
@@ -51,7 +51,7 @@ const ConfigureActionPanel: FC = () => {
     }, [
         actionId,
         externalBpmnActions,
-        selectedElement?.businessObject.actionId,
+        selectedElement?.businessObject.actionId
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const CustomRenderer = React.useMemo(
@@ -70,4 +70,4 @@ const ConfigureActionPanel: FC = () => {
     );
 };
 
-export default ConfigureActionPanel;
+export default ActionFormPanel;

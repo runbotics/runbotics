@@ -1,8 +1,8 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
-import internalBpmnActions from './Actions';
-import { ActionToBPMNElement, TaskType } from './ActionToBPMNElement';
+import internalBpmnActions from '../../../../../../Actions';
+import { ActionToBPMNElement, TaskType } from '../ActionToBPMNElement';
 
 const customLoopHandler: Record<
     string,

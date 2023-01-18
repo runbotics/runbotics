@@ -3,7 +3,11 @@ import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7 } from 'json-schema';
 import _ from 'lodash';
 
-import { BPMNElement, CamundaInputOutputElement } from '../BPMN';
+import { IBpmnAction } from '../../../../../Actions/types';
+import {
+    BPMNElement,
+    CamundaInputOutputElement
+} from '../helpers/elementParameters';
 import {
     Parameter,
     ParameterDestination,
@@ -11,7 +15,6 @@ import {
     ParameterMap,
     ParameterType
 } from '../extensions/palette/CustomPalette';
-import { IBpmnAction } from './Actions/types';
 
 export enum TaskType {
     'ServiceTask' = 'ServiceTask',

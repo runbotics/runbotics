@@ -1,18 +1,18 @@
-import internalBpmnActions from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions';
+import internalBpmnActions from '#src-app/Actions';
 
 export enum ElementType {
     SERVICE_TASK = 'SERVICE_TASK',
     START_EVENT = 'START_EVENT',
     END_EVENT = 'END_EVENT',
     GATEWAY = 'GATEWAY',
-    MERGE = 'MERGE',
+    MERGE = 'MERGE'
 }
 
 export enum Direction {
     LEFT = 'left',
     RIGHT = 'right',
     TOP = 'top',
-    BOTTOM = 'bottom',
+    BOTTOM = 'bottom'
 }
 
 type StartEventElement = CommonElementProps;

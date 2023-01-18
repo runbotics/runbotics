@@ -1,8 +1,8 @@
 import { translate } from '#src-app/hooks/useTranslations';
 import {
     ElementType,
-    TemplatesSchema,
-} from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
+    TemplatesSchema
+} from '#src-app/views/process/ProcessBuildView/Modeler/templates/Template.types';
 
 export const ApiTemplate: TemplatesSchema = {
     label: translate('Process.Details.Modeler.Templates.Api.Name'),
@@ -13,9 +13,9 @@ export const ApiTemplate: TemplatesSchema = {
     input: {
         url: 'https://randomuser.me/api/',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        method: 'GET',
+        method: 'GET'
     },
     right: {
         type: ElementType.GATEWAY,
@@ -27,8 +27,8 @@ export const ApiTemplate: TemplatesSchema = {
             bpmnAction: 'variables.assign',
             input: {
                 value: '#{out.body}',
-                variable: 'body',
-            },
+                variable: 'body'
+            }
         },
         right: {
             type: ElementType.SERVICE_TASK,
@@ -36,10 +36,10 @@ export const ApiTemplate: TemplatesSchema = {
             bpmnAction: 'general.console.log',
             input: {
                 variables: {
-                    status: '#{out.status}',
-                },
+                    status: '#{out.status}'
+                }
             },
-            default: true,
-        },
-    },
+            default: true
+        }
+    }
 };

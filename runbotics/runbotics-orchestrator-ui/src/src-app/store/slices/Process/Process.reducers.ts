@@ -1,9 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
 
-import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/BPMN';
-
-import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
+import { IBpmnAction } from '#src-app/Actions/types';
+import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { ModelerError, ProcessState } from './Process.state';
 
@@ -59,7 +58,7 @@ export const setSelectedElement = (
     state.modeler.selectedElement = action.payload;
 };
 
-export const resetSelectedElement = (state: ProcessState) => {
+export const resetSelection = (state: ProcessState) => {
     state.modeler.selectedElement = null;
     state.modeler.selectedAction = null;
 };

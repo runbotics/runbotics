@@ -2,15 +2,15 @@ import React, { FC } from 'react';
 
 import { Box, Grid, Typography } from '@mui/material';
 
+import { IFormData } from '#src-app/Actions/types';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import { BPMNHelper, BpmnSubProcess } from '../../BPMN';
-import JSONSchemaFormRenderer from '../JSONSchemaFormRenderer';
+import { BPMNHelper, BpmnSubProcess } from '../../helpers/elementParameters';
 import customWidgets from '../widgets';
-import { IFormData } from './types';
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const LoopActionRenderer: FC = () => {
     const dispatch = useDispatch();

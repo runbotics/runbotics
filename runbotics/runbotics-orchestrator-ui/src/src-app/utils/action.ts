@@ -1,18 +1,24 @@
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
-import { BPMNElement, getInputParameters } from '#src-app/views/process/ProcessBuildView/Modeler/BPMN';
+import {
+    BPMNElement,
+    getInputParameters
+} from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-export const CustomActionDescription: Record<string, (element: BPMNElement, supplementarySource?: any[]) => string> = {
-    'general.startProcess': (element) => {
+export const CustomActionDescription: Record<
+    string,
+    (element: BPMNElement, supplementarySource?: any[]) => string
+> = {
+    'general.startProcess': element => {
         const inputParameters = getInputParameters(element);
 
         return inputParameters?.processName;
     },
-    'variables.assign': (element) => {
+    'variables.assign': element => {
         const inputParameters = getInputParameters(element);
 
         return `Assign to var: ${inputParameters.variable}`;
     },
-    'variables.assignList': (element) => {
+    'variables.assignList': element => {
         const inputParameters = getInputParameters(element);
 
         return `Assign to var: ${inputParameters.variable}`;
@@ -22,7 +28,10 @@ export const CustomActionDescription: Record<string, (element: BPMNElement, supp
 
         const inputParameters = getInputParameters(element);
 
-        return (supplementarySource as IGlobalVariable[])
-            .find((variable) => variable.id === inputParameters.globalVariable)?.name ?? '';
-    },
+        return (
+            (supplementarySource as IGlobalVariable[]).find(
+                variable => variable.id === inputParameters.globalVariable
+            )?.name ?? ''
+        );
+    }
 };

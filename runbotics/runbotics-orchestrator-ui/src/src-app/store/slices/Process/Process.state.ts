@@ -1,9 +1,9 @@
 import { IProcess, IProcessInstance } from 'runbotics-common';
 
+import { IBpmnAction } from '#src-app/Actions/types';
 import LoadingType from '#src-app/types/loading';
 import { Page } from '#src-app/utils/types/page';
-import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/BPMN';
-import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
+import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 export interface CommandStackInfo {
     commandStackSize: number;

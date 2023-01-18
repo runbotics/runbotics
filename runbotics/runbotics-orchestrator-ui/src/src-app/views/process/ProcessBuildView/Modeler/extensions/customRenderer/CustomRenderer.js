@@ -13,11 +13,9 @@ import {
 import { getRoundRectPath } from "bpmn-js/lib/draw/BpmnRenderUtil";
 
 import { is, getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
-import { getExtensionScriptLabel } from "../../utils";
-import { truncate } from "lodash";
 import { CustomActionDescription } from "#src-app/utils/action";
 import store from "../../../../../../store";
-import internalBpmnActions from "../../ConfigureActionPanel/Actions";
+import internalBpmnActions from "../../../../../../Actions";
 import { translate } from "#src-app/hooks/useTranslations";
 import { capitalizeFirstLetter } from "#src-app/utils/text";
 
@@ -166,70 +164,17 @@ export default class CustomRenderer extends BaseRenderer {
 
             // svgClasses(text).add('djs-label')
 
-            svgAppend(
-                text,
-                document.createTextNode(getExtensionScriptLabel(implementation))
-            );
-
+            // svgAppend(
+            //     text,
+            //     document.createTextNode(getExtensionScriptLabel(implementation))
+            // );
             svgAppend(parentNode, text);
-            // const seleniumCommand = this.getSelenium(element)
-            // if (seleniumCommand) {
-            //   this.drawSeleniumCommand(parentNode, seleniumCommand, disabled)
-            // }
         }
 
         return shape;
     }
 
-    drawSeleniumCommand(parentNode, seleniumCommand, disabled) {
-        let commandText = svgCreate("text");
-        svgAttr(commandText, {
-            fill: disabled ? "#b3b3b3" : "#000",
-            transform: "translate(3, 45)",
-            fontSize: "10px",
-        });
-        svgAppend(
-            commandText,
-            document.createTextNode("C:" + seleniumCommand.command)
-        );
-        svgAppend(parentNode, commandText);
 
-        let targetText = svgCreate("text");
-        svgAttr(targetText, {
-            fill: disabled ? "#b3b3b3" : "#000",
-            transform: "translate(3, 55)",
-            fontSize: "10px",
-        });
-        svgAppend(
-            targetText,
-            document.createTextNode(
-                "T:" +
-                truncate(seleniumCommand.target, {
-                    omission: "...",
-                    length: 20,
-                })
-            )
-        );
-        svgAppend(parentNode, targetText);
-
-        let valueText = svgCreate("text");
-        svgAttr(valueText, {
-            fill: disabled ? "#b3b3b3" : "#000",
-            transform: "translate(3, 65)",
-            fontSize: "10px",
-        });
-        svgAppend(
-            valueText,
-            document.createTextNode(
-                "V:" +
-                truncate(seleniumCommand.value ? seleniumCommand.value : "", {
-                    omission: "...",
-                    length: 20,
-                })
-            )
-        );
-        svgAppend(parentNode, valueText);
-    }
 
     getShapePath(shape) {
         if (is(shape, "bpmn:Task")) {
@@ -237,13 +182,6 @@ export default class CustomRenderer extends BaseRenderer {
         }
 
         return this.bpmnRenderer.getShapePath(shape);
-    }
-
-    getSuitabilityScore(element) {
-        const businessObject = getBusinessObject(element);
-        const { suitable } = businessObject;
-
-        return Number.isFinite(suitable) ? suitable : null;
     }
 
     getImplementation(element) {
@@ -279,41 +217,6 @@ export default class CustomRenderer extends BaseRenderer {
             return values[0].value;
         }
 
-        return null;
-    }
-
-    getSelenium(element) {
-        let seleniumCommand;
-        const businessObject = getBusinessObject(element);
-        if (businessObject.extensionElements) {
-            const extensionElements = getBusinessObject(
-                businessObject.extensionElements
-            );
-            const inputOutputs = extensionElements.values.filter(
-                (value) => value.$type == "camunda:InputOutput"
-            );
-            if (inputOutputs && inputOutputs.length > 0) {
-                const inputOutput = inputOutputs[0];
-                if (inputOutput && inputOutput.inputParameters) {
-                    if (
-                        inputOutput.inputParameters.some(
-                            (inputParameter) =>
-                                inputParameter.name === "script" &&
-                                inputParameter.value.startsWith("browser.selenium")
-                        )
-                    ) {
-                        return {
-                            command: this.getParam(
-                                inputOutput.inputParameters,
-                                "script"
-                            ).substring("browser.selenium.".length),
-                            target: this.getParam(inputOutput.inputParameters, "target"),
-                            value: this.getParam(inputOutput.inputParameters, "value"),
-                        };
-                    }
-                }
-            }
-        }
         return null;
     }
 
@@ -416,8 +319,4 @@ function drawRect(parentNode, width, height, borderRadius, color) {
     svgAppend(parentNode, rect);
 
     return rect;
-}
-
-function prependTo(newNode, parentNode, siblingNode) {
-    parentNode.insertBefore(newNode, siblingNode || parentNode.firstChild);
 }

@@ -152,21 +152,17 @@ export const centerCanvas = (viewer: BpmnIoModeler) => {
     }
 };
 
-export const openBpmnDiagram = async (
+export const initializeBpmnDiagram = async (
     modeler: BpmnIoModeler,
     xml: any
 ): Promise<string[]> => {
     if (!modeler) return [];
     try {
         await modeler.importXML(xml);
-        const elementRegistry = modeler?.get('elementRegistry');
-        const elementIds = Object.keys(elementRegistry._elements);
-        const activityIds = elementIds.filter(
-            elm => elm.split('_')[0] === 'Activity'
-        );
+        const modelerActivities = getModelerActivities(modeler);
         const canvas = modeler.get('canvas');
         canvas.zoom('fit-viewport', 'auto');
-        return activityIds;
+        return modelerActivities;
     } catch (error) {
         // eslint-disable-next-line no-console
         if (error) console.log('fail import xml');

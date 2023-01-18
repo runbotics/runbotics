@@ -1,5 +1,5 @@
-import { IBpmnAction } from '../ConfigureActionPanel/Actions/types';
-import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
+import { IBpmnAction } from '../../../../../Actions/types';
+import { TemplatesSchema } from '../templates/Template.types';
 
 export enum ListPanelTab {
     ACTIONS = 'ACTIONS',

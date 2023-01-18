@@ -1,4 +1,4 @@
-import { IBpmnAction } from './Actions/types';
+import { IBpmnAction } from '#src-app/Actions/types';
 
 export interface ActionsGroupsProperties {
     label: string;

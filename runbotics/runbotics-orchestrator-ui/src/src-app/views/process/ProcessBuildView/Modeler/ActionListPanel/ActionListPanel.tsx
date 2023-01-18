@@ -8,26 +8,26 @@ import { Badge, Tab, Tabs, IconButton, Box, Drawer } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
+import useInternalActionsGroups from '#src-app/hooks/useInternalActionsGroups';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
+import { useTemplatesGroups } from '#src-app/hooks/useTemplatesGroups';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
 import i18n from '#src-app/translations/i18n';
 
-import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
+import internalBpmnActions from '../../../../../Actions';
+import { IBpmnAction, Runner } from '../../../../../Actions/types';
+import { internalTemplates } from '../../../../../Templates';
 import {
     ActionToBPMNElement,
     TaskType
-} from '../ConfigureActionPanel/ActionToBPMNElement';
-import CustomLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
-import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
-import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
-import { internalTemplates } from '../ConfigureActionPanel/Templates';
-import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
-import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
-import { Item } from '../ListGroup';
+} from '../ActionFormPanel/ActionToBPMNElement';
+import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
+import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
+import { TemplatesSchema } from '../templates/Template.types';
+import { Item } from './ListGroup';
 import ActionList from './ActionList/ActionList';
 import {
     classes,
@@ -204,11 +204,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
 
                     const filteredItems = actionName
                         ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                        (items as IBpmnAction[]).filter(({ label }) =>
-                            label
-                                .toLowerCase()
-                                .includes(actionName.toLowerCase())
-                        )
+                          (items as IBpmnAction[]).filter(({ label }) =>
+                              label
+                                  .toLowerCase()
+                                  .includes(actionName.toLowerCase())
+                          )
                         : (items as TemplatesSchema[]);
 
                     // eslint-disable-next-line array-callback-return

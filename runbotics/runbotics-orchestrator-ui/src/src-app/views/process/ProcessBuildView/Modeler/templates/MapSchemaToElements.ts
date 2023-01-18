@@ -2,10 +2,10 @@
 /* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-import internalBpmnActions from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions';
-import {
-    ActionToBPMNElement,
-} from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/ActionToBPMNElement';
+import internalBpmnActions from '#src-app/Actions';
+import { ActionToBPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/ActionToBPMNElement';
+import { TaskType } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/elementFactory/ElementFactory';
+import { ParameterDestination } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/palette/CustomPalette';
 import {
     Direction,
     ElementType,
@@ -14,49 +14,74 @@ import {
     TemplatesSchema,
     Position,
     CreateConnectionProps,
-    CalculateOffsetProps,
-} from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
-import { TaskType } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/elementFactory/ElementFactory';
-import { ParameterDestination } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/palette/CustomPalette';
+    CalculateOffsetProps
+} from '#src-app/views/process/ProcessBuildView/Modeler/templates/Template.types';
 
 function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
     // mapOfRelations holds necessary information to create connections between elements (shapes)
     const mapOfRelations = new Map<string, MapRecord>();
     // arrayOfElements holds all elements (shapes) and connections that will be added to the diagram
     const arrOfShapesAndEdges = [];
-    const keysToMap: Direction[] = [Direction.RIGHT, Direction.TOP, Direction.BOTTOM, Direction.LEFT];
+    const keysToMap: Direction[] = [
+        Direction.RIGHT,
+        Direction.TOP,
+        Direction.BOTTOM,
+        Direction.LEFT
+    ];
     const actionToBPMNElement = ActionToBPMNElement.from(modeler);
     const elementFactory = modeler.get('elementFactory');
     const bpmnFactory = modeler.get('bpmnFactory');
 
     // function responsible for creating elements (shapes) based on the template schema
-    const createElement = (templateSchema: TemplatesSchema, position?: Position) => {
-        const {
-            type, input, output, label,
-        } = templateSchema;
+    const createElement = (
+        templateSchema: TemplatesSchema,
+        position?: Position
+    ) => {
+        const { type, input, output, label } = templateSchema;
         const { x, y } = position;
 
         switch (type) {
             case ElementType.SERVICE_TASK:
                 const serviceTaskElement = actionToBPMNElement.createElement(
                     TaskType.ServiceTask,
-                    internalBpmnActions[(templateSchema as ServiceTaskElement).bpmnAction],
+                    internalBpmnActions[
+                        (templateSchema as ServiceTaskElement).bpmnAction
+                    ],
                     {},
-                    { x, y },
+                    { x, y }
                 );
 
-                const inputParams = input
-                    && actionToBPMNElement.formDataToParameters(ParameterDestination.Input, {
-                        ...input,
-                        script: (templateSchema as ServiceTaskElement).bpmnAction,
-                    });
-                const outputParams = output
-                    && actionToBPMNElement.formDataToParameters(ParameterDestination.Output, {
-                        [output]: '${content.output[0]}',
-                    });
+                const inputParams =
+                    input &&
+                    actionToBPMNElement.formDataToParameters(
+                        ParameterDestination.Input,
+                        {
+                            ...input,
+                            script: (templateSchema as ServiceTaskElement)
+                                .bpmnAction
+                        }
+                    );
+                const outputParams =
+                    output &&
+                    actionToBPMNElement.formDataToParameters(
+                        ParameterDestination.Output,
+                        {
+                            [output]: '${content.output[0]}'
+                        }
+                    );
 
-                if (input) actionToBPMNElement.setInputParameters(serviceTaskElement, inputParams);
-                if (output) actionToBPMNElement.setOutputParameters(serviceTaskElement, outputParams);
+                if (input) {
+                    actionToBPMNElement.setInputParameters(
+                        serviceTaskElement,
+                        inputParams
+                    );
+                }
+                if (output) {
+                    actionToBPMNElement.setOutputParameters(
+                        serviceTaskElement,
+                        outputParams
+                    );
+                }
 
                 return serviceTaskElement;
             case ElementType.GATEWAY:
@@ -64,7 +89,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                     type: 'bpmn:ExclusiveGateway',
                     businessObject: bpmnFactory.create('bpmn:ExclusiveGateway'),
                     y,
-                    x,
+                    x
                 });
                 gatewayElement.businessObject.default = label;
                 return gatewayElement;
@@ -73,14 +98,14 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                     type: 'bpmn:StartEvent',
                     businessObject: bpmnFactory.create('bpmn:StartEvent'),
                     x,
-                    y,
+                    y
                 });
             case ElementType.END_EVENT:
                 return elementFactory.createShape({
                     type: 'bpmn:EndEvent',
                     businessObject: bpmnFactory.create('bpmn:EndEvent'),
                     x,
-                    y,
+                    y
                 });
             default:
                 return null;
@@ -88,19 +113,34 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
     };
     // eslint-disable-next-line complexity
     const calculateOffset = ({
-        element, direction, offsetValues, origin,
+        element,
+        direction,
+        offsetValues,
+        origin
     }: CalculateOffsetProps) => {
         const { type, shape } = element;
         let offset = 0;
-        const directionOfSubtracking = direction === Direction.LEFT || direction === Direction.RIGHT
-            ? 'width' : 'height';
+        const directionOfSubtracking =
+            direction === Direction.LEFT || direction === Direction.RIGHT
+                ? 'width'
+                : 'height';
         if (type === ElementType.GATEWAY) offset += offsetValues.gateway;
-        if (type === ElementType.START_EVENT || type === ElementType.END_EVENT) offset += offsetValues.event;
+        if (
+            type === ElementType.START_EVENT ||
+            type === ElementType.END_EVENT
+        ) {
+            offset += offsetValues.event;
+        }
         if (origin === 'target') {
-            if (direction === Direction.LEFT || direction === Direction.TOP) offset += shape[directionOfSubtracking];
+            if (direction === Direction.LEFT || direction === Direction.TOP) {
+                offset += shape[directionOfSubtracking];
+            }
         } else if (
-            direction === Direction.RIGHT || direction === Direction.BOTTOM
-        ) { offset += shape[directionOfSubtracking]; }
+            direction === Direction.RIGHT ||
+            direction === Direction.BOTTOM
+        ) {
+            offset += shape[directionOfSubtracking];
+        }
 
         return offset;
     };
@@ -112,7 +152,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             element,
             direction,
             offsetValues: { gateway: 20, event: 27 },
-            origin: 'source',
+            origin: 'source'
         });
 
         switch (direction) {
@@ -120,18 +160,18 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             case Direction.RIGHT:
                 return {
                     x: position.x + offset,
-                    y: position.y + 40,
+                    y: position.y + 40
                 };
             case Direction.TOP:
             case Direction.BOTTOM:
                 return {
                     x: position.x + 50,
-                    y: position.y + offset,
+                    y: position.y + offset
                 };
             default:
                 return {
                     x: position.x,
-                    y: position.y,
+                    y: position.y
                 };
         }
     };
@@ -143,7 +183,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             element,
             direction,
             offsetValues: { gateway: 22, event: 29 },
-            origin: 'target',
+            origin: 'target'
         });
 
         switch (direction) {
@@ -151,18 +191,18 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             case Direction.RIGHT:
                 return {
                     x: position.x + offset,
-                    y: position.y + 40,
+                    y: position.y + 40
                 };
             case Direction.TOP:
             case Direction.BOTTOM:
                 return {
                     x: position.x + 50,
-                    y: position.y + offset,
+                    y: position.y + offset
                 };
             default:
                 return {
                     x: position.x,
-                    y: position.y,
+                    y: position.y
                 };
         }
     };
@@ -174,12 +214,12 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             case ElementType.END_EVENT:
                 return {
                     x: position.x + 32,
-                    y: position.y + 25,
+                    y: position.y + 25
                 };
             case ElementType.GATEWAY:
                 return {
                     x: position.x + 25,
-                    y: position.y + 15,
+                    y: position.y + 15
                 };
             case ElementType.SERVICE_TASK:
             default:
@@ -187,7 +227,10 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
         }
     };
 
-    const calculateShapeWaypoints = (position: Position, direction: Direction) => {
+    const calculateShapeWaypoints = (
+        position: Position,
+        direction: Direction
+    ) => {
         const { x, y } = position;
         switch (direction) {
             case Direction.RIGHT:
@@ -205,7 +248,11 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
 
     // function responsible for creating all nessessary information and shapes
     // based on provided template and saving them to the mapOfRelations
-    const saveElementToMap = (templateSchema: TemplatesSchema, parent?: string, direction?: Direction) => {
+    const saveElementToMap = (
+        templateSchema: TemplatesSchema,
+        parent?: string,
+        direction?: Direction
+    ) => {
         const { type, label } = templateSchema;
         if (type === ElementType.MERGE) return;
 
@@ -213,13 +260,16 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
         const createChild = ([key, val]: [Direction, TemplatesSchema]) => {
             const edgeProps = {
                 expression: val.expression ? val.expression : null,
-                defaultEdge: val.default ? val.default : false,
+                defaultEdge: val.default ? val.default : false
             };
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            const label = val.type === ElementType.MERGE ? val.mergeByLabel : val.label;
+            const label =
+                val.type === ElementType.MERGE ? val.mergeByLabel : val.label;
             return { label, direction: key, edgeProps };
         };
-        const position = parent ? calculateShapeWaypoints(parentRecord.position, direction) : { x: 0, y: 0 };
+        const position = parent
+            ? calculateShapeWaypoints(parentRecord.position, direction)
+            : { x: 0, y: 0 };
         mapOfRelations.set(label, {
             type,
             position,
@@ -227,12 +277,15 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             shape: createElement(templateSchema, centerShape(type, position)),
             children: Object.entries(templateSchema)
                 .filter(([key]) => keysToMap.includes(key as Direction))
-                .map(createChild),
+                .map(createChild)
         });
     };
 
     const createConnection = ({
-        sourceElement, targetElement, direction, edgeProps,
+        sourceElement,
+        targetElement,
+        direction,
+        edgeProps
     }: CreateConnectionProps) => {
         const { expression, defaultEdge } = edgeProps;
 
@@ -240,12 +293,17 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             type: 'bpmn:SequenceFlow',
             source: sourceElement.shape,
             target: targetElement.shape,
-            waypoints: [adjustSourceEdge(sourceElement, direction), adjustTargetEdge(targetElement, direction)],
+            waypoints: [
+                adjustSourceEdge(sourceElement, direction),
+                adjustTargetEdge(targetElement, direction)
+            ]
         });
         if (expression) {
-            connection.businessObject.conditionExpression = modeler.get('bpmnFactory').create('bpmn:FormalExpression', {
-                body: expression,
-            });
+            connection.businessObject.conditionExpression = modeler
+                .get('bpmnFactory')
+                .create('bpmn:FormalExpression', {
+                    body: expression
+                });
         }
 
         // we have to add refrence to the connection to the source shape
@@ -254,7 +312,10 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             shape.businessObject.default = connection;
             // after altering shape we have to update it in mapOfRelations
             // before we can add it to the arrOfShapesAndEdges
-            mapOfRelations.set(sourceElement.label, { ...sourceElement, shape });
+            mapOfRelations.set(sourceElement.label, {
+                ...sourceElement,
+                shape
+            });
         }
         return connection;
     };
@@ -263,7 +324,10 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
     saveElementToMap(template);
     recursivelyCreateMapElement(template, template.label);
 
-    function recursivelyCreateMapElement(templateSchema: TemplatesSchema, parent?: string): void {
+    function recursivelyCreateMapElement(
+        templateSchema: TemplatesSchema,
+        parent?: string
+    ): void {
         Object.entries(templateSchema)
             .filter(([key]) => keysToMap.includes(key as Direction))
             .forEach(([key, ele]: [Direction, TemplatesSchema]) => {
@@ -272,15 +336,15 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
             });
     }
 
-    mapOfRelations.forEach((value) => {
-        value.children.forEach((child) => {
+    mapOfRelations.forEach(value => {
+        value.children.forEach(child => {
             const sourceElement = value;
             const targetElement = mapOfRelations.get(child.label);
             const connection = createConnection({
                 sourceElement,
                 targetElement,
                 direction: child.direction,
-                edgeProps: child.edgeProps,
+                edgeProps: child.edgeProps
             });
             arrOfShapesAndEdges.push(connection);
         });

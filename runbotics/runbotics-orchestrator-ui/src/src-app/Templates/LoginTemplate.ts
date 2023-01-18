@@ -1,8 +1,8 @@
 import { translate } from '#src-app/hooks/useTranslations';
 import {
     ElementType,
-    TemplatesSchema,
-} from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Template.types';
+    TemplatesSchema
+} from '#src-app/views/process/ProcessBuildView/Modeler/templates/Template.types';
 
 export const LoginTemplate: TemplatesSchema = {
     label: translate('Process.Details.Modeler.Templates.Login.Name'),
@@ -10,40 +10,40 @@ export const LoginTemplate: TemplatesSchema = {
     type: ElementType.SERVICE_TASK,
     bpmnAction: 'browser.launch',
     input: {
-        headless: true,
+        headless: true
     },
     right: {
         type: ElementType.SERVICE_TASK,
         bpmnAction: 'browser.selenium.open',
         label: 'openWebsite',
         input: {
-            target: 'https://runbotics-prod.clouddc.eu/',
+            target: 'https://runbotics-prod.clouddc.eu/'
         },
         right: {
             type: ElementType.SERVICE_TASK,
             bpmnAction: 'browser.selenium.type',
             label: 'typeEmail',
             input: {
-                target: 'css=input[name=\'email\'][type=\'email\']',
-                value: 'user@localhost',
+                target: "css=input[name='email'][type='email']",
+                value: 'user@localhost'
             },
             right: {
                 type: ElementType.SERVICE_TASK,
                 bpmnAction: 'browser.selenium.type',
                 label: 'typePassword',
                 input: {
-                    target: 'css=input[name=\'password\'][type=\'password\']',
-                    value: 'user',
+                    target: "css=input[name='password'][type='password']",
+                    value: 'user'
                 },
                 right: {
                     type: ElementType.SERVICE_TASK,
                     bpmnAction: 'browser.selenium.click',
                     label: 'submit',
                     input: {
-                        target: 'css=button[type=\'submit\']',
-                    },
-                },
-            },
-        },
-    },
+                        target: "css=button[type='submit']"
+                    }
+                }
+            }
+        }
+    }
 };

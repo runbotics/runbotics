@@ -1,4 +1,4 @@
-import { Item } from '../../ListGroup';
+import { Item } from '../ListGroup';
 import { Filters, GroupProperties } from '../ActionListPanel.types';
 import { GroupAction, GroupState } from '../useGroupsReducer';
 

@@ -1,6 +1,6 @@
+import { IBpmnAction } from '#src-app/Actions/types';
 import LoadingType from '#src-app/types/loading';
 import { IAction } from '#src-app/types/model/action.model';
-import { IBpmnAction } from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/Actions/types';
 
 export interface ActionState {
     draft: {

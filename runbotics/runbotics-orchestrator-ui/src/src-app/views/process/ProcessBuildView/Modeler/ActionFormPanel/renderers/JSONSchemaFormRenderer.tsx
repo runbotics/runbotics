@@ -4,7 +4,7 @@ import React, {
     FormEvent,
     useEffect,
     useState,
-    useRef,
+    useRef
 } from 'react';
 
 import { Box, Button, Grid, Alert } from '@mui/material';
@@ -18,14 +18,14 @@ import { useDispatch } from '#src-app/store';
 
 import { ModelerError, processActions } from '#src-app/store/slices/Process';
 
-import { IFormData } from './Actions/types';
-import AutocompleteWidget from './widgets/AutocompleteWidget';
-import FieldTemplate from './widgets/FieldTemplate';
+import { IFormData } from '../../../../../../Actions/types';
+import AutocompleteWidget from '../widgets/AutocompleteWidget';
+import FieldTemplate from '../widgets/FieldTemplate';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
 
 const widgets = {
-    Autocomplete: AutocompleteWidget,
+    Autocomplete: AutocompleteWidget
 };
 interface FormState {
     id: string;
@@ -47,12 +47,12 @@ function ErrorListTemplate(props: ErrorListProps) {
     const alertMessage =
         errors.length > 1
             ? t(
-                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
-                { errors: errors.length }
-            )
+                  'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
+                  { errors: errors.length }
+              )
             : t(
-                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error'
-            );
+                  'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error'
+              );
 
     return <Alert severity="error">{alertMessage}</Alert>;
 }
@@ -60,15 +60,15 @@ function ErrorListTemplate(props: ErrorListProps) {
 const DEBOUNCE_TIME = 500;
 const initialFormState = {
     id: null,
-    formData: null,
+    formData: null
 };
 
-const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
+const JSONSchemaFormRenderer: FC<FormPropsExtended> = props => {
     const dispatch = useDispatch();
     const [isFormError, setIsFormError] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [formState, setFormState] = useState<FormState>(initialFormState);
-    const formRefCallback = (node) => {
+    const formRefCallback = node => {
         if (node) setIsFormError(node.state.errors.length > 0);
     };
     const isFormDirty = !_.isEqual(formState.formData, props.formData);
@@ -87,7 +87,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         setEditMode(true);
         setFormState({
             ...formState,
-            formData: { ...e.formData, validationError: e.errors?.length > 0 },
+            formData: { ...e.formData, validationError: e.errors?.length > 0 }
         });
         if (!editMode) {
             dispatch(processActions.removeAppliedAction(props.id));
@@ -104,7 +104,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     useEffect(() => {
         setFormState({
             id: props.id,
-            formData: props.formData,
+            formData: props.formData
         });
     }, [props.formData, props.id]);
 
@@ -139,8 +139,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
                             widgets={{ ...widgets, ...props.widgets }}
                             formData={formState.formData}
                             onChange={handleChange}
-                            FieldTemplate={FieldTemplate}
-                        >
+                            FieldTemplate={FieldTemplate}>
                             <Button type="submit" style={{ display: 'none' }} />
                         </Form>
                     )}
