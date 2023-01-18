@@ -171,8 +171,8 @@ export const initializeBpmnDiagram = async (
 };
 
 export const getModelerActivities = modeler => {
-    const { _elements } = modeler?.get('elementRegistry');
-    return Object.keys(_elements).filter(
+    const { _elements } = modeler.get('elementRegistry');
+    return Object.keys(_elements ?? []).filter(
         elm => elm.split('_')[0] === 'Activity'
     );
 };

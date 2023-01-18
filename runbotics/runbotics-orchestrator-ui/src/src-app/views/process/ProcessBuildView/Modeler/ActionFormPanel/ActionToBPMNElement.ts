@@ -5,16 +5,16 @@ import _ from 'lodash';
 
 import { IBpmnAction } from '../../../../../Actions/types';
 import {
-    BPMNElement,
-    CamundaInputOutputElement
-} from '../helpers/elementParameters';
-import {
     Parameter,
     ParameterDestination,
     ParameterList,
     ParameterMap,
     ParameterType
 } from '../extensions/palette/CustomPalette';
+import {
+    BPMNElement,
+    CamundaInputOutputElement
+} from '../helpers/elementParameters';
 
 export enum TaskType {
     'ServiceTask' = 'ServiceTask',

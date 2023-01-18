@@ -19,7 +19,7 @@ import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const ConnectionFormRenderer = () => {
     const { selectedElement } = useSelector(state => state.process.modeler);
-    const { modelerRef } = useModelerContext();
+    const { modeler } = useModelerContext();
     const connection: IBpmnConnection = selectedElement;
     const { translate } = useTranslations();
 
@@ -67,7 +67,7 @@ const ConnectionFormRenderer = () => {
         const data: IFormData = {
             ...event.formData
         };
-        BpmnConnectionFactory.from(modelerRef.current).setConditionExpression(
+        BpmnConnectionFactory.from(modeler).setConditionExpression(
             connection,
             data.expression
         );

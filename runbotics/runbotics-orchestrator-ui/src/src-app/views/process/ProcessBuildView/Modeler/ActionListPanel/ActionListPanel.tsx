@@ -27,7 +27,6 @@ import {
 import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
 import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
 import { TemplatesSchema } from '../templates/Template.types';
-import { Item } from './ListGroup';
 import ActionList from './ActionList/ActionList';
 import {
     classes,
@@ -43,6 +42,7 @@ import {
 } from './ActionListPanel.types';
 import ActionSearch from './ActionSearch';
 import FilterModal from './FilterModal';
+import { Item } from './ListGroup';
 import useGroupReducer, { groupActions } from './useGroupsReducer';
 
 const filterModalInitialState: GroupFilters = {
@@ -53,7 +53,7 @@ const filterModalInitialState: GroupFilters = {
 
 // eslint-disable-next-line max-lines-per-function
 const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
-    const { modelerRef } = useModelerContext();
+    const { modeler } = useModelerContext();
     const [filters, setFilters] = useState<GroupFilters>(
         filterModalInitialState
     );
@@ -102,9 +102,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     );
 
     const handleAction = (event, action: IBpmnAction) => {
-        const actionToBPMNElement = ActionToBPMNElement.from(
-            modelerRef.current
-        );
+        const actionToBPMNElement = ActionToBPMNElement.from(modeler);
 
         let shape;
         switch (action.runner) {
@@ -126,7 +124,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                 break;
         }
 
-        modelerRef.current.get('create').start(event, shape);
+        modeler.get('create').start(event, shape);
     };
 
     // eslint-disable-next-line complexity
@@ -134,13 +132,9 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         if (!item) return;
         if (CustomLoopHandler[item.id]) {
             // Handler for loops - temporary solution, should be refactored/moved to templateHandler
-            CustomLoopHandler[item.id](event, modelerRef.current);
+            CustomLoopHandler[item.id](event, modeler);
         } else if (internalTemplates[item.id]) {
-            CustomTemplateHandler(
-                event,
-                modelerRef.current,
-                internalTemplates[item.id]
-            );
+            CustomTemplateHandler(event, modeler, internalTemplates[item.id]);
         } else if (byId[item.id]) {
             // Handler for external actions
             handleAction(event, byId[item.id]);
@@ -204,11 +198,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
 
                     const filteredItems = actionName
                         ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                          (items as IBpmnAction[]).filter(({ label }) =>
-                              label
-                                  .toLowerCase()
-                                  .includes(actionName.toLowerCase())
-                          )
+                        (items as IBpmnAction[]).filter(({ label }) =>
+                            label
+                                .toLowerCase()
+                                .includes(actionName.toLowerCase())
+                        )
                         : (items as TemplatesSchema[]);
 
                     // eslint-disable-next-line array-callback-return

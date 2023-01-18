@@ -47,12 +47,12 @@ function ErrorListTemplate(props: ErrorListProps) {
     const alertMessage =
         errors.length > 1
             ? t(
-                  'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
-                  { errors: errors.length }
-              )
+                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
+                { errors: errors.length }
+            )
             : t(
-                  'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error'
-              );
+                'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.Error'
+            );
 
     return <Alert severity="error">{alertMessage}</Alert>;
 }
@@ -68,9 +68,6 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = props => {
     const [isFormError, setIsFormError] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [formState, setFormState] = useState<FormState>(initialFormState);
-    const formRefCallback = node => {
-        if (node) setIsFormError(node.state.errors.length > 0);
-    };
     const isFormDirty = !_.isEqual(formState.formData, props.formData);
     // Reference to the form state used in component cleanup
     const formValueRef = useRef<FormState>(initialFormState);

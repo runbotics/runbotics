@@ -8,8 +8,8 @@ import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import { translate } from '#src-app/hooks/useTranslations';
 
-import ListGroup, { Item } from '../ListGroup';
 import { classes } from '../ActionListPanel.styles';
+import ListGroup, { Item } from '../ListGroup';
 import { groupActions } from '../useGroupsReducer';
 
 import { ActionListProps } from './ActionList.types';

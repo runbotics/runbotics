@@ -1,24 +1,21 @@
-import React, { FC, MutableRefObject } from 'react';
+import React, { FC } from 'react';
 
 import BpmnModelerType from 'bpmn-js/lib/Modeler';
 
 export interface ModelerContext {
-    modelerRef?: MutableRefObject<BpmnModelerType>;
+    modeler: BpmnModelerType;
 }
 
 export const ModelerContext = React.createContext<ModelerContext>(null);
 
 interface ModelerProviderProps {
-    modelerRef?: MutableRefObject<BpmnModelerType>;
+    modeler?: BpmnModelerType;
 }
 
-const ModelerProvider: FC<ModelerProviderProps> = ({
-    modelerRef,
-    children
-}) => (
+const ModelerProvider: FC<ModelerProviderProps> = ({ modeler, children }) => (
     <ModelerContext.Provider
         value={{
-            modelerRef
+            modeler
         }}>
         {children}
     </ModelerContext.Provider>

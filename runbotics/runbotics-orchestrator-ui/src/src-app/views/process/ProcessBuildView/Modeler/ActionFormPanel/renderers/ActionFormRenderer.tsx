@@ -24,12 +24,13 @@ import customWidgets from '../widgets';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const ActionFormRenderer: FC = () => {
-    const { modelerRef } = useModelerContext();
+    const { modeler } = useModelerContext();
     const { selectedElement, selectedAction, commandStack } = useSelector(
         state => state.process.modeler
     );
-
     const dispatch = useDispatch();
+    const elementMatchesAction =
+        selectedAction.id === selectedElement.businessObject.actionId;
 
     const defaultUISchema = React.useMemo<UiSchema>(
         () => getFormUiSchema(selectedElement, selectedAction),
@@ -52,7 +53,7 @@ const ActionFormRenderer: FC = () => {
     const handleSubmit = (event: IFormData) => {
         dispatch(processActions.addAppliedAction(selectedElement.id));
         applyModelerElement({
-            modeler: modelerRef.current,
+            modeler: modeler,
             element: selectedElement,
             action: selectedAction,
             additionalParameters: {
@@ -65,7 +66,7 @@ const ActionFormRenderer: FC = () => {
     };
 
     const updateLabel = (label: string) => {
-        const bpmnHelper = BPMNHelper.from(modelerRef.current);
+        const bpmnHelper = BPMNHelper.from(modeler);
         const newElement = selectedElement;
         newElement.businessObject.label = label;
         bpmnHelper.updateBusinessObject(newElement);
@@ -78,8 +79,7 @@ const ActionFormRenderer: FC = () => {
                     <ActionLabelForm onSubmit={updateLabel} />
                 </Box>
             </Grid>
-            {defaultFormData &&
-            selectedAction.id === selectedElement.businessObject.actionId ? (
+            {defaultFormData && elementMatchesAction ? (
                 <JSONSchemaFormRenderer
                     id={selectedElement.id}
                     key={selectedElement.id}

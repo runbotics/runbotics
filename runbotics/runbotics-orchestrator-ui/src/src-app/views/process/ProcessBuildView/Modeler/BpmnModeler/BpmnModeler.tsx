@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useState } from 'react';
 
 import Ajv from 'ajv';
 import 'bpmn-js/dist/assets/diagram-js.css';
@@ -68,7 +68,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     // eslint-disable-next-line max-lines-per-function
     ({ definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
-        const modelerRef = useRef<BpmnIoModeler>(null);
+        const [modeler, setModeler] = useState<BpmnIoModeler>(null);
+        const modelerRef = React.useRef<BpmnIoModeler>(null);
         const [imported, setImported] = useState(false);
         const [currentTab, setCurrentTab] = useState<ProcessBuildTab | null>(
             null
@@ -98,7 +99,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             );
 
             if (!event.element.businessObject.validationError) {
-                toggleValidationError(modelerRef.current, event.element, true);
+                toggleValidationError(modeler, event.element, true);
             }
         };
 
@@ -106,13 +107,13 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             dispatch(processActions.removeError(event.element.id));
 
             if (event.element.businessObject.validationError) {
-                toggleValidationError(modelerRef.current, event.element, false);
+                toggleValidationError(modeler, event.element, false);
             }
         };
 
         useEffect(() => {
-            if (prevLanguage !== i18n.language && modelerRef?.current) {
-                modelerRef.current?._container.remove();
+            if (prevLanguage !== i18n.language && modeler) {
+                modeler?._container.remove();
             }
 
             setPrevLanguage(i18n.language);
@@ -219,8 +220,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     handleValidForm(event);
                 }
             });
-
-            modelerRef.current = bpmnModeler;
+            setModeler(bpmnModeler);
+            // modeler = bpmnModeler;
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
@@ -228,7 +229,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             updateActivities();
         }, [
             appliedActivities,
-            modelerRef.current,
+            modeler,
             commandStack.commandStackIdx,
             imported
         ]);
@@ -262,25 +263,28 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [selectedElement]);
 
         useEffect(() => {
-            if (modelerRef.current) {
-                initializeBpmnDiagram(
-                    modelerRef.current,
-                    definition ?? emptyBpmn
-                ).then(modelerActivities => {
-                    dispatch(processActions.setSaveDisabled(true));
-                    dispatch(
-                        processActions.setAppliedActions(modelerActivities)
-                    );
-                    updateActivities();
-                });
+            if (modeler) {
+                initializeBpmnDiagram(modeler, definition ?? emptyBpmn).then(
+                    modelerActivities => {
+                        dispatch(processActions.setSaveDisabled(true));
+                        dispatch(
+                            processActions.setAppliedActions(modelerActivities)
+                        );
+                        updateActivities();
+                    }
+                );
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [modelerRef.current, definition]);
+        }, [modeler, definition]);
+
+        useEffect(() => {
+            modelerRef.current = modeler;
+        }, [modeler, offsetTop]);
 
         const updateActivities = () => {
-            if (!modelerRef.current) return;
-            const { _elements } = modelerRef.current?.get('elementRegistry');
-            const modelerActivities = Object.keys(_elements).filter(elm =>
+            if (!modeler) return;
+            const { _elements } = modeler.get('elementRegistry');
+            const modelerActivities = Object.keys(_elements)?.filter(elm =>
                 elm.startsWith('Activity')
             );
 
@@ -299,19 +303,19 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         };
 
         const onCopy = () => {
-            copy(modelerRef.current, selectedElement.id);
+            copy(modeler, selectedElement.id);
         };
 
         const onPaste = () => {
-            paste(modelerRef.current, selectedElement.id);
+            paste(modeler, selectedElement.id);
         };
 
         const onCenter = () => {
-            centerCanvas(modelerRef.current);
+            centerCanvas(modeler);
         };
 
         const onZoom = (step: number) => {
-            modelerRef.current?.get('zoomScroll').stepZoom(step);
+            modeler?.get('zoomScroll').stepZoom(step);
         };
 
         const canRedo =
@@ -320,11 +324,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const canUndo = !(commandStack.commandStackIdx + 1 > 0);
 
         const onUndo = () => {
-            modelerRef.current?.get('commandStack')?.undo();
+            modeler?.get('commandStack')?.undo();
         };
 
         const onRedo = () => {
-            modelerRef.current.get('commandStack')?.redo();
+            modeler.get('commandStack')?.redo();
         };
 
         return (
@@ -336,7 +340,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                     keyName="command+b,ctrl+b"
                     disabled={selectedElement === null}
                     onKeyDown={onPaste}>
-                    <ModelerProvider modelerRef={modelerRef}>
+                    <ModelerProvider modeler={modeler}>
                         <Wrapper offsetTop={offsetTop}>
                             <ActionListPanel offsetTop={offsetTop} />
                             <ModelerArea>

@@ -1,5 +1,5 @@
-import { Item } from '../ListGroup';
 import { Filters, GroupProperties } from '../ActionListPanel.types';
+import { Item } from '../ListGroup';
 import { GroupAction, GroupState } from '../useGroupsReducer';
 
 export interface ActionListProps {

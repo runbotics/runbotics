@@ -12,15 +12,30 @@ import { BPMNHelper, BpmnSubProcess } from '../../helpers/elementParameters';
 import customWidgets from '../widgets';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
+interface LoopParameters {
+    input: {
+        iterations: string;
+        loopType: LoopType;
+        elementVariable: string;
+        collection: string;
+    };
+    output: Record<string, unknown>;
+}
+
+enum LoopType {
+    REPEAT = 'Repeat',
+    COLLECTION = 'Collection'
+}
+
 const LoopActionRenderer: FC = () => {
     const dispatch = useDispatch();
-    const { modelerRef } = useModelerContext();
+    const { modeler } = useModelerContext();
     const { selectedElement, selectedAction } = useSelector(
         state => state.process.modeler
     );
 
-    const isLoopElement = (ele: unknown): ele is BpmnSubProcess =>
-        (ele as BpmnSubProcess)?.businessObject?.loopCharacteristics !==
+    const isLoopElement = (element: unknown): element is BpmnSubProcess =>
+        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !==
         undefined;
 
     const CUSTOM_FORMATS = { variableName: /(^\$.+)|(^#.+)/ };
@@ -28,10 +43,10 @@ const LoopActionRenderer: FC = () => {
     const defaultFormData = React.useMemo(() => {
         if (!isLoopElement(selectedElement)) return null;
 
-        const defaultParameters = {
+        const defaultParameters: LoopParameters = {
             input: {
                 iterations: '',
-                loopType: 'Repeat',
+                loopType: LoopType.REPEAT,
                 elementVariable: '',
                 collection: ''
             },
@@ -46,7 +61,7 @@ const LoopActionRenderer: FC = () => {
         ) {
             defaultParameters.input.iterations =
                 selectedElement.businessObject.loopCharacteristics.loopCardinality.body;
-            defaultParameters.input.loopType = 'Repeat';
+            defaultParameters.input.loopType = LoopType.REPEAT;
         } else {
             for (const [key] of Object.entries(
                 selectedAction.form.formData.input
@@ -55,7 +70,7 @@ const LoopActionRenderer: FC = () => {
                     selectedElement.businessObject.loopCharacteristics[key];
             }
 
-            defaultParameters.input.loopType = 'Collection';
+            defaultParameters.input.loopType = LoopType.COLLECTION;
         }
 
         return defaultParameters;
@@ -72,7 +87,7 @@ const LoopActionRenderer: FC = () => {
     const handleSubmit = (formState: IFormData) => {
         if (!isLoopElement(selectedElement)) return;
 
-        const bpmnHelper = BPMNHelper.from(modelerRef.current);
+        const bpmnHelper = BPMNHelper.from(modeler);
         const { loopType } = formState.formData.input;
         const { loopCharacteristics } = selectedElement.businessObject;
         const { loopCardinality, collection } = loopCharacteristics;
@@ -81,11 +96,11 @@ const LoopActionRenderer: FC = () => {
             loopCharacteristics[key] = value;
         }
 
-        if (loopType === 'Repeat') {
+        if (loopType === LoopType.REPEAT) {
             loopCardinality.body = formState.formData.input.iterations;
         }
 
-        if (loopType === 'Collection' && collection) {
+        if (loopType === LoopType.COLLECTION && collection) {
             loopCardinality.body = formatLoopBody(collection);
         }
 
