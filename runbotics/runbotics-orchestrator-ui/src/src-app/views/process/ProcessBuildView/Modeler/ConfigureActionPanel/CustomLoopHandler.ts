@@ -1,37 +1,42 @@
+import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
-import { ActionListPanelProps } from '../ActionListPanel';
 import internalBpmnActions from './Actions';
 import { ActionToBPMNElement, TaskType } from './ActionToBPMNElement';
 
-const customLoopHandler: Record<string, (event: any, props: ActionListPanelProps) => void> = {
-    'loop.loop': (event: any, props: ActionListPanelProps) => {
-        const actionToBPMNElement = ActionToBPMNElement.from(props.modeler);
+const customLoopHandler: Record<
+    string,
+    (event: any, modeler: BpmnIoModeler) => void
+> = {
+    'loop.loop': (event: any, modeler: BpmnIoModeler) => {
+        const actionToBPMNElement = ActionToBPMNElement.from(modeler);
 
-        const loopCardinality = props.modeler.get('bpmnFactory').create('bpmn:Expression');
+        const loopCardinality = modeler
+            .get('bpmnFactory')
+            .create('bpmn:Expression');
         loopCardinality.body = '1';
 
-        const multiInstanceLoopCharacteristics = props.modeler
+        const multiInstanceLoopCharacteristics = modeler
             .get('bpmnFactory')
             .create('bpmn:MultiInstanceLoopCharacteristics', {
                 isSequential: true,
                 collection: '',
                 elementVariable: '',
-                loopCardinality,
+                loopCardinality
             });
 
         const initLoopConfiguration = actionToBPMNElement.createElement(
             TaskType.SubProcess,
             _.cloneDeep(internalBpmnActions['loop.loop']),
             {
-                loopCharacteristics: multiInstanceLoopCharacteristics,
+                loopCharacteristics: multiInstanceLoopCharacteristics
             },
             {
-                isExpanded: true,
-            },
+                isExpanded: true
+            }
         );
 
-        props.modeler.get('create').start(event, [initLoopConfiguration]);
-    },
+        modeler.get('create').start(event, [initLoopConfiguration]);
+    }
 };
 export default customLoopHandler;

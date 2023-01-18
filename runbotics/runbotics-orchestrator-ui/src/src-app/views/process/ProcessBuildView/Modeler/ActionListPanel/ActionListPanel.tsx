@@ -21,7 +21,7 @@ import {
     ActionToBPMNElement,
     TaskType
 } from '../ConfigureActionPanel/ActionToBPMNElement';
-import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
+import CustomLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
 import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
 import { TemplatesSchema } from '../ConfigureActionPanel/Template.types';
 import { internalTemplates } from '../ConfigureActionPanel/Templates';
@@ -132,11 +132,15 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     // eslint-disable-next-line complexity
     const handleItemClick = (event, item: Item) => {
         if (!item) return;
-        if (customLoopHandler[item.id]) {
+        if (CustomLoopHandler[item.id]) {
             // Handler for loops - temporary solution, should be refactored/moved to templateHandler
-            customLoopHandler[item.id](event, props);
+            CustomLoopHandler[item.id](event, modelerRef.current);
         } else if (internalTemplates[item.id]) {
-            CustomTemplateHandler(event, props, internalTemplates[item.id]);
+            CustomTemplateHandler(
+                event,
+                modelerRef.current,
+                internalTemplates[item.id]
+            );
         } else if (byId[item.id]) {
             // Handler for external actions
             handleAction(event, byId[item.id]);
@@ -189,7 +193,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         () =>
             currentTabGroups
                 .map(group => {
-                    const { label, items, isTemplate } = group;
+                    const { label, items } = group;
                     const { groupNames, actionName } = filters;
 
                     // filter group by name
