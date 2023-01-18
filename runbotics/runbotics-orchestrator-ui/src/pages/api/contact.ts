@@ -46,7 +46,7 @@ const getEmailContent = ({ email, company, message, name }: Body) => {
     return {
         from: `${name} <${email}>`,
         to: env === 'production' ? serverRuntimeConfig.mailUsername : 'test@runbotics.com',
-        subject: `Message from ${name} ${company ? 'At' + company : ''}`,
+        subject: `Message from ${name} ${company ? 'At ' + company : ''}`,
         text: `${message}`,
     };
 };

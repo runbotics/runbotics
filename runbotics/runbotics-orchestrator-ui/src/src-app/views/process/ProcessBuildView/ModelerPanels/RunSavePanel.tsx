@@ -36,7 +36,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                     onRunClick={onRunClick}
                 />
                 <Secured authorities={[Role.ROLE_ADMIN]}>
-                    <Badge badgeContent={errors.length} color="error">
+                    <Badge badgeContent={errors.length} color="error" max={5}>
                         <Tooltip
                             title={
                                 isSaveDisabled

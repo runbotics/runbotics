@@ -1,5 +1,6 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 
+import Ajv from 'ajv';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
@@ -52,8 +53,10 @@ import ContextPad from '../extensions/contextPad';
 import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
 import modelerPalette from '../extensions/modelerPalette';
 import ZoomScrollModule from '../extensions/zoomscroll';
-import { applyModelerElement } from '../utils';
+import { applyModelerElement, getFormData, getFormSchema, toggleValidationError } from '../utils';
 
+
+const ajv = new Ajv();
 const ELEMENTS_PROPERTIES_WHITELIST = [
     'bpmn:ServiceTask',
     'bpmn:SequenceFlow',
@@ -93,13 +96,31 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         );
         const { isSaveDisabled, selectedElement, commandStack, errors } =
             useSelector((state) => state.process.modeler);
-
         useNavigationLock(
             !isSaveDisabled,
             translate('Process.Modeler.LoseModelerChangesContent')
         );
         //TODO - add a CUSTOM warning when the user tries to leave the page without saving
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
+        const handleInvalidForm = (event) => {
+            dispatch(processActions.setError({
+                elementId: event.element.id,
+                message: 'mess',
+                elementName: event.element.id
+            }));
+
+            if (!event.element.businessObject.validationError) {
+                toggleValidationError(modelerRef.current, event.element, true);
+            }
+        };
+
+        const handleValidForm = (event) => {
+            dispatch(processActions.removeError(event.element.id));
+
+            if (event.element.businessObject.validationError) {
+                toggleValidationError(modelerRef.current, event.element, false);
+            }
+        };
 
         useEffect(() => {
             modelerRef.current = modeler;
@@ -241,11 +262,26 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             eventBus.on('shape.removed', (event: any) => {
                 setCurrentTab(null);
                 dispatch(processActions.removeAppliedAction(event.element.id));
+                dispatch(processActions.removeError(event.element.id));
                 updateActivities();
             });
 
-            setModeler(bpmnModeler);
+            eventBus.on('shape.changed', (event: any) => {
+                if (!event.element.id.includes('Activity')
+                 || event.element.type.includes('bpmn:SubProcess')) return;
 
+                const formData = getFormData(event.element);
+                const validate = ajv.compile(getFormSchema(event.element));
+                const isValid = validate(formData);
+
+                if (!isValid && !formData.disabled) {
+                    handleInvalidForm(event);
+                } else {
+                    handleValidForm(event);
+                }
+            });
+
+            setModeler(bpmnModeler);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [readOnly, offsetTop, i18n.language]);
 

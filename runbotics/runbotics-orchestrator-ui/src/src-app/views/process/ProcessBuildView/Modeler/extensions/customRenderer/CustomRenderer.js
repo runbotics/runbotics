@@ -22,7 +22,7 @@ import { translate } from "#src-app/hooks/useTranslations";
 import { capitalizeFirstLetter } from "#src-app/utils/text";
 
 const HIGH_PRIORITY = 1500,
-    TASK_BORDER_RADIUS = 1,
+    TASK_BORDER_RADIUS = 5,
     COLOR_RED = "#ff5e5e",
     COLOR_GREY = "#e0e0e0",
     COLOR_DEFAULT = "#bbbbbb";
@@ -96,27 +96,26 @@ export default class CustomRenderer extends BaseRenderer {
             svgAppend(parentNode, text);
         }
     }
-
+    pickColor(businessObject) {
+        const { disabled, validationError } = businessObject;
+        if (disabled) return COLOR_GREY;
+        if (validationError) return COLOR_RED;
+        return COLOR_DEFAULT;
+    }
     drawShape(parentNode, element) {
         const shape = this.bpmnRenderer.drawShape(parentNode, element);
-        const businessObject = getBusinessObject(element);
         const label = this.getLabel(element);
-
-        const disabled = getBusinessObject(element).disabled;
-        const validationError = getBusinessObject(element).validationError;
+        const businessObject = getBusinessObject(element);
+        const { disabled } = businessObject;
 
         if (is(element, "bpmn:Task")) {
-            const rect = drawRect(
+            drawRect(
                 parentNode,
                 100,
                 80,
                 TASK_BORDER_RADIUS,
-                disabled ? COLOR_GREY : validationError ? COLOR_RED : COLOR_DEFAULT
+                this.pickColor(businessObject)
             );
-
-            // icon
-            console.log('color', disabled ? COLOR_GREY : validationError ? COLOR_RED : COLOR_DEFAULT);
-            // prependTo(rect, parentNode)
             svgRemove(shape);
         }
 

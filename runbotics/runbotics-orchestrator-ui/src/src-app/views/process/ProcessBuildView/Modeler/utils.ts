@@ -84,7 +84,6 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
     }
 
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
-    element.businessObject.validationError = additionalParameters?.validationError;
 
     const data = {
         input: {
@@ -129,6 +128,13 @@ export const applyModelerElement = ({ modeler, element, action, additionalParame
         );
         actionToBPMNElement.setOutputParameters(element, outputParams);
     }
+};
+
+export const toggleValidationError = (modeler: BpmnModeler, element: BPMNElement, validationError: boolean) => {
+    const bpmnHelper = BPMNHelper.from(modeler);
+    const newElement = element;
+    newElement.businessObject.validationError = validationError;
+    bpmnHelper.updateBusinessObject(newElement);
 };
 
 export const getActionFromElement = (selectedElement: BPMNElement): IBpmnAction => {

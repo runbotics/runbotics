@@ -14,8 +14,8 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { BPMNHelper, getInputParameters, getOutputParameters } from '../BPMN';
-import { applyModelerElement } from '../utils';
+import { BPMNHelper } from '../BPMN';
+import { applyModelerElement, getFormData, getFormSchema, getFormUiSchema } from '../utils';
 import ActionLabelForm from './ActionLabelForm';
 import { IFormData } from './Actions/types';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
@@ -30,38 +30,12 @@ const ActionFormRenderer: FC = () => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
-    const defaultUISchema = React.useMemo<UiSchema>(() => {
-        const cloned = { ...selectedAction.form.uiSchema };
-        if (cloned['ui:order']) {
-            cloned['ui:order'] = [
-                'disabled',
-                'runFromHere',
-                ...selectedAction.form.uiSchema['ui:order'],
-            ];
-        }
-
-        return cloned;
-    }, [selectedAction.form.uiSchema]);
+    const defaultUISchema = React.useMemo<UiSchema>(() => getFormUiSchema(selectedElement, selectedAction),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [selectedAction.form.uiSchema]);
 
     const defaultSchema = React.useMemo<JSONSchema7>(
-        () => ({
-            ...selectedAction.form.schema,
-            properties: {
-                disabled: {
-                    type: 'boolean',
-                    title: translate(
-                        'Process.Details.Modeler.ActionPanel.Form.Disabled.Title'
-                    ),
-                },
-                runFromHere: {
-                    type: 'boolean',
-                    title: translate(
-                        'Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'
-                    ),
-                },
-                ...selectedAction.form.schema.properties,
-            },
-        }),
+        () => getFormSchema(selectedElement, selectedAction),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [selectedAction.form.schema, i18n.language]
     );
@@ -81,38 +55,10 @@ const ActionFormRenderer: FC = () => {
         );
     };
 
-    const defaultFormData = React.useMemo(() => {
-        const { runFromHere, disabled } = selectedElement.businessObject;
-
-        const defaultParameters = {
-            ...selectedAction.form.formData,
-            disabled,
-            runFromHere,
-            input: getInputParameters(selectedElement),
-        };
-
-        if (selectedAction.output && selectedAction.output.assignVariables) {
-            defaultParameters.output = Object.entries(
-                getOutputParameters(selectedElement)
-            ).reduce((acc, [key], index) => {
-                acc[
-                    Object.keys(defaultParameters.output)[index] ||
-                              'variableName'
-                ] = key;
-                return acc;
-            }, {});
-        }
-
-        Object.entries(getOutputParameters(selectedElement)).forEach(
-            ([key, value]) => {
-                if (defaultParameters.output) {
-                    defaultParameters.output[key] = value;
-                }
-            }
-        );
-        return defaultParameters;
+    const defaultFormData = React.useMemo(() => 
+        getFormData(selectedElement, selectedAction)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedAction, selectedElement, commandStack.commandStackIdx]);
+    , [selectedAction, selectedElement, commandStack.commandStackIdx]);
 
     const handleSubmit = (event: IFormData) => {
         dispatch(processActions.addAppliedAction(selectedElement.id));
@@ -125,20 +71,8 @@ const ActionFormRenderer: FC = () => {
                 output: event.formData.output,
                 disabled: event.formData.disabled,
                 runFromHere: event.formData.runFromHere,
-                validationError: event.formData.validationError,
             },
         });
-        if (!event.formData.disabled && event.formData.validationError) {
-            dispatch(
-                processActions.setError({
-                    elementId: selectedElement.id,
-                    elementName: getActionLabel(),
-                    message: 'message',
-                })
-            );
-        } else {
-            dispatch(processActions.removeError(selectedElement.id));
-        }
     };
 
     const updateLabel = (label: string) => {
