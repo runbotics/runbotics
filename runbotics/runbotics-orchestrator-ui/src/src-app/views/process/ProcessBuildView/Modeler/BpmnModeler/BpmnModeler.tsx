@@ -99,7 +99,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             );
 
             if (!event.element.businessObject.validationError) {
-                toggleValidationError(modeler, event.element, true);
+                toggleValidationError(modelerRef.current, event.element, true);
             }
         };
 
@@ -107,7 +107,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             dispatch(processActions.removeError(event.element.id));
 
             if (event.element.businessObject.validationError) {
-                toggleValidationError(modeler, event.element, false);
+                toggleValidationError(modelerRef.current, event.element, false);
             }
         };
 
@@ -203,10 +203,10 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             });
 
             eventBus.on('shape.changed', (event: any) => {
-                if (
-                    !event.element.id.includes('Activity') ||
-                    event.element.type.includes('bpmn:SubProcess')
-                ) {
+                const isActivity = event.element.id.includes('Activity');
+                const isSubProcess =
+                    event.element.type.includes('bpmn:SubProcess');
+                if (!isActivity || isSubProcess) {
                     return;
                 }
 

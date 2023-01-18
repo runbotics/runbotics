@@ -22,7 +22,7 @@ import { IFormData } from '../../../../../../Actions/types';
 import AutocompleteWidget from '../widgets/AutocompleteWidget';
 import FieldTemplate from '../widgets/FieldTemplate';
 
-const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
+const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any>>;
 
 const widgets = {
     Autocomplete: AutocompleteWidget
@@ -65,7 +65,6 @@ const initialFormState = {
 
 const JSONSchemaFormRenderer: FC<FormPropsExtended> = props => {
     const dispatch = useDispatch();
-    const [isFormError, setIsFormError] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [formState, setFormState] = useState<FormState>(initialFormState);
     const isFormDirty = !_.isEqual(formState.formData, props.formData);
@@ -127,7 +126,6 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = props => {
                 <Box p={1}>
                     {formState.id === props.id && (
                         <Form
-                            ref={formRefCallback}
                             {...props}
                             onSubmit={handleSubmit}
                             ErrorList={ErrorListTemplate}

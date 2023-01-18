@@ -47,7 +47,7 @@ export type CamundaOutputParameter = CamundaParameter & {
 };
 
 enum ExtensionElementType {
-    'camunda:InputOutput' = 'camunda:InputOutput',
+    'camunda:InputOutput' = 'camunda:InputOutput'
 }
 
 export type ExtensionElement = {
@@ -119,14 +119,18 @@ export const getParameterValue = (parameter: CamundaParameter) => {
         return result;
     }
 
-    if (!parameter.definition) { return parameter.value; }
+    if (!parameter.definition) {
+        return parameter.value;
+    }
 
     switch (parameter.definition.$type) {
         case 'camunda:List':
-            return parameter.definition.items.map((item) => item.value);
+            return parameter.definition.items.map(item => item.value);
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
-            if (!map.entries) { return {}; }
+            if (!map.entries) {
+                return {};
+            }
 
             return map.entries.reduce((previousValue, currentValue) => {
                 const newPrev = previousValue;
@@ -138,26 +142,42 @@ export const getParameterValue = (parameter: CamundaParameter) => {
     }
 };
 
-export const getInputParameters = (element: BPMNElement): Record<string, any> => {
-    const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement) { return {}; }
+export const getInputParameters = (
+    element: BPMNElement
+): Record<string, any> => {
+    const inputOutputElement = element.businessObject?.extensionElements
+        ?.values[0] as CamundaInputOutputElement;
+    if (!inputOutputElement) {
+        return {};
+    }
 
-    return inputOutputElement.inputParameters.reduce((previousValue, currentValue) => {
-        const newPrev = previousValue;
-        newPrev[currentValue.name] = getParameterValue(currentValue);
-        return newPrev;
-    }, {});
+    return inputOutputElement.inputParameters.reduce(
+        (previousValue, currentValue) => {
+            const newPrev = previousValue;
+            newPrev[currentValue.name] = getParameterValue(currentValue);
+            return newPrev;
+        },
+        {}
+    );
 };
 
-export const getOutputParameters = (element: BPMNElement): Record<string, any> => {
-    const inputOutputElement = element.businessObject?.extensionElements?.values[0] as CamundaInputOutputElement;
-    if (!inputOutputElement || !inputOutputElement.outputParameters) { return {}; }
+export const getOutputParameters = (
+    element: BPMNElement
+): Record<string, any> => {
+    const inputOutputElement = element.businessObject?.extensionElements
+        ?.values[0] as CamundaInputOutputElement;
+    if (!inputOutputElement || !inputOutputElement.outputParameters) {
+        return {};
+    }
 
-    return inputOutputElement.outputParameters.reduce((previousValue, currentValue) => {
-        const newPrev = previousValue;
-        newPrev[currentValue.name] = getParameterValue(currentValue);
-        return newPrev;
-    }, {});
+    return inputOutputElement.outputParameters.reduce(
+        (previousValue, currentValue) => {
+            const newPrev = previousValue;
+            newPrev[currentValue.name] = getParameterValue(currentValue);
+            return newPrev;
+        },
+        {}
+    );
 };
 
 const findPreviousElement = (element: BPMNElement, array: BPMNElement[]) => {
@@ -193,20 +213,23 @@ export class BpmnConnectionFactory {
         return new BpmnConnectionFactory(
             modeler.get('bpmnFactory'),
             modeler.get('elementFactory'),
-            modeler.get('commandStack'),
+            modeler.get('commandStack')
         );
     }
 
     setConditionExpression(connection: IBpmnConnection, expression: string) {
-        const FormalExpression = this.bpmnFactory.create('bpmn:FormalExpression', {
-            body: expression,
-        });
+        const FormalExpression = this.bpmnFactory.create(
+            'bpmn:FormalExpression',
+            {
+                body: expression
+            }
+        );
         FormalExpression.$parent = connection.businessObject;
 
         this.commandStack.execute('properties-panel.update-businessobject', {
             element: connection,
             businessObject: connection.businessObject,
-            properties: { conditionExpression: FormalExpression },
+            properties: { conditionExpression: FormalExpression }
         });
     }
 }
@@ -225,13 +248,17 @@ export class BPMNHelper {
     }
 
     static from(modeler: BpmnModeler) {
-        return new BPMNHelper(modeler.get('bpmnFactory'), modeler.get('elementFactory'), modeler.get('commandStack'));
+        return new BPMNHelper(
+            modeler.get('bpmnFactory'),
+            modeler.get('elementFactory'),
+            modeler.get('commandStack')
+        );
     }
 
     updateBusinessObject(element: BPMNElement) {
         this.commandStack.execute('properties-panel.update-businessobject', {
             element,
-            businessObject: element.businessObject,
+            businessObject: element.businessObject
         });
     }
 }
