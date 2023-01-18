@@ -99,16 +99,16 @@ const ActionFormRenderer: FC = () => {
             </Grid>
             {defaultFormData &&
             selectedAction.id === selectedElement.businessObject.actionId ? (
-                <JSONSchemaFormRenderer
-                    id={selectedElement.id}
-                    key={selectedElement.id}
-                    schema={defaultSchema}
-                    uiSchema={defaultUISchema}
-                    formData={defaultFormData}
-                    onSubmit={handleSubmit}
-                    widgets={customWidgets}
-                />
-            ) : null}
+                    <JSONSchemaFormRenderer
+                        id={selectedElement.id}
+                        key={selectedElement.id}
+                        schema={defaultSchema}
+                        uiSchema={defaultUISchema}
+                        formData={defaultFormData}
+                        onSubmit={handleSubmit}
+                        widgets={customWidgets}
+                    />
+                ) : null}
         </>
     );
 };
