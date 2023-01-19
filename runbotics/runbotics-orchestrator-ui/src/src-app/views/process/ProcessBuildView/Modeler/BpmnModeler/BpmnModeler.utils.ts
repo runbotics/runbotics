@@ -1,7 +1,12 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
-import { ModelerHTMLCanvasElement, ModelerRegistryElement } from './BpmnModeler.types';
+import { CommandStackInfo, ModelerError } from '#src-app/store/slices/Process';
+
+import {
+    ModelerHTMLCanvasElement,
+    ModelerRegistryElement
+} from './BpmnModeler.types';
 
 /**
  * For the given modeler, copy an element to
@@ -38,7 +43,7 @@ export const copy = (modeler: any, elementId: any) => {
  *
  * @return {Function}
  */
-export const createReviver = (moddle) => {
+export const createReviver = moddle => {
     const elCache = {};
 
     /**
@@ -58,8 +63,9 @@ export const createReviver = (moddle) => {
         if (typeof object === 'object' && typeof object.$type === 'string') {
             const objectId = object.id;
 
-            if (objectId && elCache[objectId]) { return elCache[objectId]; }
-
+            if (objectId && elCache[objectId]) {
+                return elCache[objectId];
+            }
 
             const type = object.$type;
             const attrs = { ...object };
@@ -68,8 +74,9 @@ export const createReviver = (moddle) => {
 
             const newEl = moddle.create(type, attrs);
 
-            if (objectId) { elCache[objectId] = newEl; }
-
+            if (objectId) {
+                elCache[objectId] = newEl;
+            }
 
             return newEl;
         }
@@ -102,7 +109,7 @@ export const paste = (modeler, targetId) => {
     clipboard.set(parsedCopy);
 
     const pasteContext = {
-        element: elementRegistry.get(targetId),
+        element: elementRegistry.get(targetId)
     };
 
     // paste tree
@@ -112,22 +119,23 @@ export const paste = (modeler, targetId) => {
 export const centerToElement = (
     viewer: BpmnIoModeler,
     canvas: ModelerHTMLCanvasElement,
-    selectedElementId: string,
+    selectedElementId: string
 ) => {
     const elementRegistry = viewer.get('elementRegistry');
-    const elementBox: ModelerRegistryElement = elementRegistry.get(selectedElementId);
+    const elementBox: ModelerRegistryElement =
+        elementRegistry.get(selectedElementId);
     const currentViewbox = canvas.viewbox();
 
     const elementCenterPos = {
-        x: elementBox.x + (elementBox.width / 2),
-        y: elementBox.y + (elementBox.height / 2),
+        x: elementBox.x + elementBox.width / 2,
+        y: elementBox.y + elementBox.height / 2
     };
 
     canvas.viewbox({
         x: elementCenterPos.x - currentViewbox.width / 2,
         y: elementCenterPos.y - currentViewbox.height / 2,
         width: currentViewbox.width,
-        height: currentViewbox.height,
+        height: currentViewbox.height
     });
 };
 
@@ -144,23 +152,36 @@ export const centerCanvas = (viewer: BpmnIoModeler) => {
     }
 };
 
-// Util for debugging modeler, (specificly auto apply)
-export const debugModeler = ({ modeler, isSaveDisabled, imported, commandStack, appliedActivities }) => {
-    const getModelerActivities = () => {
-        if (!modeler) return [];
-        const { _elements } = modeler.get('elementRegistry');
-        const modelerActivities = Object.keys(_elements).filter((elm) => elm.split('_')[0] === 'Activity');
+export const initializeBpmnDiagram = async (
+    modeler: BpmnIoModeler,
+    xml: any
+): Promise<string[]> => {
+    if (!modeler) return [];
+    try {
+        await modeler.importXML(xml);
+        const modelerActivities = getModelerActivities(modeler);
+        const canvas = modeler.get('canvas');
+        canvas.zoom('fit-viewport', 'auto');
         return modelerActivities;
-    };
-
-    // eslint-disable-next-line no-console
-    console.table({
-        isSaveDisabled,
-        imported,
-        commandStack,
-        appliedActivities:
-            _.sortBy(appliedActivities),
-        modelerActivities: _.sortBy(getModelerActivities())
-    });
-
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        if (error) console.log('fail import xml');
+        return [];
+    }
 };
+
+export const getModelerActivities = modeler => {
+    const { _elements } = modeler.get('elementRegistry');
+    return Object.keys(_elements ?? []).filter(
+        elm => elm.split('_')[0] === 'Activity'
+    );
+};
+
+export const areActivitiesInSync = (modelerActivities, appliedActivities) =>
+    _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
+
+export const hasErrors = (
+    imported: boolean,
+    commandStack: CommandStackInfo,
+    errors: ModelerError[]
+) => imported || (commandStack.commandStackIdx >= 0 && errors.length === 0);

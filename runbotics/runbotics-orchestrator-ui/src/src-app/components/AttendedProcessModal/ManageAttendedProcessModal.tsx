@@ -10,9 +10,15 @@ import {
     Grid,
     LinearProgress,
     Tooltip,
-    Typography,
+    Typography
 } from '@mui/material';
-import { FormProps, IChangeEvent, ISubmitEvent, UiSchema, withTheme } from '@rjsf/core';
+import {
+    FormProps,
+    IChangeEvent,
+    ISubmitEvent,
+    UiSchema,
+    withTheme
+} from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
 import { IProcess } from 'runbotics-common';
@@ -20,24 +26,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/JSONSchemaFormRenderer';
+import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
 
-import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
 import ErrorBoundary from '../utils/ErrorBoundary';
 
 import If from '../utils/If';
 
 import { defaultForm } from './utils';
-
-
-
-
-
-
-
-
-
 
 interface AdminModalProps {
     process: IProcess;
@@ -54,19 +51,19 @@ const schema: JSONSchema7 = {
     properties: {
         form: {
             type: 'string',
-            title: 'Form',
-        },
+            title: 'Form'
+        }
     },
-    required: ['form'],
+    required: ['form']
 };
 
 const uiSchema: UiSchema = {
     form: {
         'ui:widget': 'EditorWidget',
         'ui:options': {
-            language: 'json',
-        },
-    },
+            language: 'json'
+        }
+    }
 };
 
 function isJsonValid(str) {
@@ -79,10 +76,18 @@ function isJsonValid(str) {
 }
 
 // eslint-disable-next-line complexity
-const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, process, onSubmit, onDelete }) => {
+const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
+    open,
+    setOpen,
+    process,
+    onSubmit,
+    onDelete
+}) => {
     const ref = React.useRef<any>();
     const submitFormRef = React.useRef<any>();
-    const [draft, setDraft] = useState<any>({ form: process?.executionInfo ? process.executionInfo : defaultForm });
+    const [draft, setDraft] = useState<any>({
+        form: process?.executionInfo ? process.executionInfo : defaultForm
+    });
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
     const isDeleteDisabled = !process?.executionInfo;
@@ -92,7 +97,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
         if (isJsonValid(draft.form)) {
             setLive({
                 id: uuidv4(),
-                definition: JSON.parse(draft.form),
+                definition: JSON.parse(draft.form)
             });
             setLoading(false);
         }
@@ -113,16 +118,22 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
                 onDelete();
                 setOpen(false);
             }}
-            disabled={isDeleteDisabled}
-        >
+            disabled={isDeleteDisabled}>
             {translate('Common.Delete')}
         </Button>
     );
 
     return (
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xl" fullWidth>
+        <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            maxWidth="xl"
+            fullWidth>
             <DialogTitle>
-                {translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title')} {process.name}
+                {translate(
+                    'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title'
+                )}{' '}
+                {process.name}
             </DialogTitle>
             <DialogContent>
                 <Grid container>
@@ -135,16 +146,22 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
                             uiSchema={uiSchema}
                             formData={draft}
                             onChange={handleChange}
-                            onSubmit={handleSubmit}
-                        >
-                            <Button ref={submitFormRef} type="submit" style={{ display: 'none' }} />
+                            onSubmit={handleSubmit}>
+                            <Button
+                                ref={submitFormRef}
+                                type="submit"
+                                style={{ display: 'none' }}
+                            />
                         </Form>
                     </Grid>
                     <Grid item xs={4}>
                         <Box px={2} pt={1}>
                             <Typography variant="h4" gutterBottom></Typography>
                         </Box>
-                        <LinearProgress variant={loading ? 'indeterminate' : 'determinate'} value={0} />
+                        <LinearProgress
+                            variant={loading ? 'indeterminate' : 'determinate'}
+                            value={0}
+                        />
 
                         {live && live?.id && live?.definition?.schema && (
                             <ErrorBoundary key={live.id}>
@@ -164,9 +181,8 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
                 <If condition={isDeleteDisabled} else={deleteButton}>
                     <Tooltip
                         title={translate(
-                            'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip',
-                        )}
-                    >
+                            'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip'
+                        )}>
                         <span>{deleteButton}</span>
                     </Tooltip>
                 </If>
@@ -181,8 +197,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({ open, setOpen, 
                     autoFocus
                     onClick={() => {
                         submitFormRef.current.click();
-                    }}
-                >
+                    }}>
                     {translate('Common.Save')}
                 </Button>
             </DialogActions>

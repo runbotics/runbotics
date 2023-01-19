@@ -51,6 +51,7 @@
     "Process.MainView.Toast.Save.Failed": "Process save failed",
     "Process.MainView.Tooltip.Save.Enabled": "Save process to database",
     "Process.MainView.Tooltip.Save.Disabled": "No changes found to save or changes are still applying",
+    "Process.MainView.Tooltip.Save.Errors": "Errors found in following actions: {{ errors }}",
     "Process.MainView.Tooltip.Run.Enabled": "Run this process",
     "Process.MainView.Tooltip.Import": "Import process from xml file",
     "Process.MainView.Tooltip.Export": "Download this process as xml file",

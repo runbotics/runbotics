@@ -6,11 +6,13 @@ import { IProcess } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ConfigureActionPanel/widgets';
+
+import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
 import ErrorBoundary from '../utils/ErrorBoundary';
 
 import FormRenderer from './FormRenderer';
+
 
 
 

@@ -1,16 +1,28 @@
 import { IProcess, IProcessInstance } from 'runbotics-common';
 
+import { IBpmnAction } from '#src-app/Actions/types';
 import LoadingType from '#src-app/types/loading';
 import { Page } from '#src-app/utils/types/page';
+import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 export interface CommandStackInfo {
     commandStackSize: number;
-    commandStackIdx: number
+    commandStackIdx: number;
+}
+
+export interface ModelerError {
+    elementName: string;
+    elementId: string;
 }
 
 export interface ModelerState {
     appliedActivities: string[];
+    errors: ModelerError[];
     isSaveDisabled: boolean;
+    selectedElement?: BPMNElement;
+    selectedAction?: IBpmnAction;
+    passedInVariables?: string[];
+    commandStack: CommandStackInfo;
 }
 
 export interface ProcessState {
@@ -29,4 +41,7 @@ export interface ProcessState {
     };
 }
 
-export type StartProcessResponse = Pick<IProcessInstance, 'orchestratorProcessInstanceId'>;
+export type StartProcessResponse = Pick<
+    IProcessInstance,
+    'orchestratorProcessInstanceId'
+>;

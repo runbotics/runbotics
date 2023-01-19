@@ -1,12 +1,20 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React, { FC, useEffect, useState } from 'react';
 
-import { Dialog, DialogActions, DialogContent, DialogTitle, SvgIcon, Button, TextField, Box } from '@mui/material';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    SvgIcon,
+    Button,
+    TextField,
+    Box
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
 import { IProcess } from 'runbotics-common';
-
 
 import useTranslations, { translate } from '#src-app/hooks/useTranslations';
 
@@ -14,24 +22,25 @@ import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
-import emptyBpmn from './ProcessBuildView/Modeler/empty.bpmn';
-
+import emptyBpmn from './ProcessBuildView/Modeler/extensions/config/empty.bpmn';
 
 enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
-    REQUIRED = 'REQUIRED',
+    REQUIRED = 'REQUIRED'
 }
 
 const inputErrorMessages: Record<InputErrorType, string> = {
-    [InputErrorType.NAME_NOT_AVAILABLE]: translate('Process.Add.Form.Error.NameNotAvailable'),
-    [InputErrorType.REQUIRED]: translate('Process.Add.Form.Error.Required'),
+    [InputErrorType.NAME_NOT_AVAILABLE]: translate(
+        'Process.Add.Form.Error.NameNotAvailable'
+    ),
+    [InputErrorType.REQUIRED]: translate('Process.Add.Form.Error.Required')
 };
 
 const defaultProcessInfo: IProcess = {
     isPublic: false,
     name: '',
     description: '',
-    definition: emptyBpmn,
+    definition: emptyBpmn
 };
 
 type AddProcessDialogProps = {
@@ -40,9 +49,15 @@ type AddProcessDialogProps = {
     onAdd: (process: IProcess) => void;
 };
 
-const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) => {
+const AddProcessDialog: FC<AddProcessDialogProps> = ({
+    open,
+    onClose,
+    onAdd
+}) => {
     const [name, setName] = useState<string | null>(null);
-    const [inputErrorType, setInputErrorType] = useState<InputErrorType | null>(null);
+    const [inputErrorType, setInputErrorType] = useState<InputErrorType | null>(
+        null
+    );
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -53,7 +68,9 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
             return;
         }
 
-        const isAvailable = await dispatch(processActions.isProcessAvailable({ processName: name }));
+        const isAvailable = await dispatch(
+            processActions.isProcessAvailable({ processName: name })
+        );
         if (isAvailable.meta.requestStatus === 'rejected') {
             setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
             return;
@@ -63,10 +80,14 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
 
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };
-            const result = await dispatch(processActions.createProcess(processInfo));
+            const result = await dispatch(
+                processActions.createProcess(processInfo)
+            );
             onAdd(result.payload);
         } catch (e) {
-            enqueueSnackbar(translate('Process.Add.Form.Error.General'), { variant: 'error' });
+            enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
+                variant: 'error'
+            });
         }
     };
 
@@ -89,7 +110,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
                         helperText={inputErrorMessages[inputErrorType]}
                         fullWidth
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={e => setName(e.target.value)}
                         required
                     />
                 </Box>
@@ -104,8 +125,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({ open, onClose, onAdd }) =
                     color="primary"
                     autoFocus
                     onClick={handleSubmit}
-                    aria-label={translate('Common.Submit')}
-                >
+                    aria-label={translate('Common.Submit')}>
                     {translate('Common.Save')}
                 </Button>
             </DialogActions>
@@ -132,11 +152,14 @@ const AddProcess = () => {
                     <SvgIcon fontSize="small">
                         <PlusIcon />
                     </SvgIcon>
-                }
-            >
+                }>
                 {translate('Process.Add.ActionName')}
             </Button>
-            <AddProcessDialog open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} />
+            <AddProcessDialog
+                open={showDialog}
+                onClose={() => setShowDialog(false)}
+                onAdd={handleAdd}
+            />
         </>
     );
 };

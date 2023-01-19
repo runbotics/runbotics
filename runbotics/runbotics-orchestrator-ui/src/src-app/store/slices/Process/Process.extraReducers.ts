@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
+import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingType from '#src-app/types/loading';
 import objFromArray from '#src-app/utils/objFromArray';
 
@@ -70,6 +71,12 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(fetchProcessById.fulfilled, (state, { payload }) => {
             state.draft.process = payload;
             state.draft.loading = LoadingType.IDLE;
+            if (payload?.isAttended && payload?.executionInfo) {
+                state.modeler.passedInVariables =
+                    extractNestedSchemaKeys(
+                        JSON.parse(payload.executionInfo).schema
+                    ) ?? [];
+            }
         })
         .addCase(fetchProcessById.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;

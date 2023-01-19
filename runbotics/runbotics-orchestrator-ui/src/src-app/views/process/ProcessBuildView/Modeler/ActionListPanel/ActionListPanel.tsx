@@ -8,49 +8,52 @@ import { Badge, Tab, Tabs, IconButton, Box, Drawer } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
+import useInternalActionsGroups from '#src-app/hooks/useInternalActionsGroups';
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
+import { useTemplatesGroups } from '#src-app/hooks/useTemplatesGroups';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
 import i18n from '#src-app/translations/i18n';
 
-import internalBpmnActions from '../ConfigureActionPanel/Actions';
-import { IBpmnAction, Runner } from '../ConfigureActionPanel/Actions/types';
+import internalBpmnActions from '../../../../../Actions';
+import { IBpmnAction, Runner } from '../../../../../Actions/types';
+import { internalTemplates } from '../../../../../Templates';
 import {
     ActionToBPMNElement,
-    TaskType,
-} from '../ConfigureActionPanel/ActionToBPMNElement';
-import customLoopHandler from '../ConfigureActionPanel/CustomLoopHandler';
-import CustomTemplateHandler from '../ConfigureActionPanel/CustomTemplateHandler';
-import { internalTemplates } from '../ConfigureActionPanel/Templates';
-import useInternalActionsGroups from '../ConfigureActionPanel/useInternalActionsGroups';
-import { useTemplatesGroups } from '../ConfigureActionPanel/useTemplatesGroups';
-import { Item } from '../ListGroup';
+    TaskType
+} from '../ActionFormPanel/ActionToBPMNElement';
+import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
+import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
+import { TemplatesSchema } from '../templates/Template.types';
 import ActionList from './ActionList/ActionList';
 import {
     classes,
     Root,
     drawerWidth,
-    ActionPanelToggler,
+    ActionPanelToggler
 } from './ActionListPanel.styles';
 import {
     ActionListPanelProps,
     Filters as GroupFilters,
     GroupProperties,
-    ListPanelTab,
+    ListPanelTab
 } from './ActionListPanel.types';
 import ActionSearch from './ActionSearch';
 import FilterModal from './FilterModal';
+import { Item } from './ListGroup';
 import useGroupReducer, { groupActions } from './useGroupsReducer';
 
 const filterModalInitialState: GroupFilters = {
     groupNames: [],
     actionName: null,
-    currentTab: ListPanelTab.ACTIONS,
+    currentTab: ListPanelTab.ACTIONS
 };
 
 // eslint-disable-next-line max-lines-per-function
-const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
+const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
+    const { modeler } = useModelerContext();
     const [filters, setFilters] = useState<GroupFilters>(
         filterModalInitialState
     );
@@ -58,21 +61,21 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     const [filterModalEl, setFilterModalEl] =
         useState<HTMLButtonElement | null>(null);
 
-    const { byId, external } = useSelector((state) => state.action.bpmnActions);
+    const { byId, external } = useSelector(state => state.action.bpmnActions);
     const internalActionsGroups = useInternalActionsGroups();
     const templatesGroups = useTemplatesGroups();
     const { translate } = useTranslations();
 
     const actionGroups: GroupProperties[] = useMemo(() => {
         const externalActionsGroup = external.map(
-            (externalId) => byId[externalId]
+            externalId => byId[externalId]
         );
         const completeActionsGroups = {
             ...internalActionsGroups,
             external: {
                 ...internalActionsGroups.external,
-                items: [...externalActionsGroup],
-            },
+                items: [...externalActionsGroup]
+            }
         };
 
         const getGroupList = (
@@ -83,7 +86,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                 key,
                 items,
                 label,
-                isTemplate,
+                isTemplate
             }));
 
         // prettier-ignore
@@ -99,7 +102,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     );
 
     const handleAction = (event, action: IBpmnAction) => {
-        const actionToBPMNElement = ActionToBPMNElement.from(props.modeler);
+        const actionToBPMNElement = ActionToBPMNElement.from(modeler);
 
         let shape;
         switch (action.runner) {
@@ -121,17 +124,17 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                 break;
         }
 
-        props.modeler.get('create').start(event, shape);
+        modeler.get('create').start(event, shape);
     };
 
     // eslint-disable-next-line complexity
     const handleItemClick = (event, item: Item) => {
         if (!item) return;
-        if (customLoopHandler[item.id]) {
+        if (CustomLoopHandler[item.id]) {
             // Handler for loops - temporary solution, should be refactored/moved to templateHandler
-            customLoopHandler[item.id](event, props);
+            CustomLoopHandler[item.id](event, modeler);
         } else if (internalTemplates[item.id]) {
-            CustomTemplateHandler(event, props, internalTemplates[item.id]);
+            CustomTemplateHandler(event, modeler, internalTemplates[item.id]);
         } else if (byId[item.id]) {
             // Handler for external actions
             handleAction(event, byId[item.id]);
@@ -149,24 +152,24 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
             value.length ? groupActions.openAll() : groupActions.closeAll()
         );
 
-        setFilters((filters) => ({
+        setFilters(filters => ({
             ...filters,
-            actionName: value || null,
+            actionName: value || null
         }));
     };
 
     const handleDrawerAction = () => {
-        setOpenDrawer((prevState) => !prevState);
+        setOpenDrawer(prevState => !prevState);
     };
 
     const onTabChange = (
         _event: React.SyntheticEvent,
         newValue: ListPanelTab
     ) => {
-        setFilters((filters) => ({
+        setFilters(filters => ({
             ...filters,
             groupNames: [],
-            currentTab: newValue,
+            currentTab: newValue
         }));
     };
 
@@ -183,30 +186,32 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
     const filteredGroups: GroupProperties[] = useMemo(
         () =>
             currentTabGroups
-                .map((group) => {
+                .map(group => {
                     const { label, items } = group;
                     const { groupNames, actionName } = filters;
 
+                    // filter group by name
+                    // eslint-disable-next-line array-callback-return
                     if (groupNames.length && !groupNames.includes(label)) {
-                        // eslint-disable-next-line array-callback-return
-                        return;
+                        return null;
                     }
 
                     const filteredItems = actionName
-                        ? (items as IBpmnAction[]).filter(({ label }) =>
+                        ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
+                        (items as IBpmnAction[]).filter(({ label }) =>
                             label
                                 .toLowerCase()
                                 .includes(actionName.toLowerCase())
                         )
-                        : (items as IBpmnAction[]);
+                        : (items as TemplatesSchema[]);
 
                     // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;
 
                     return { ...group, items: filteredItems };
                 })
-                .filter((el) => el),
-
+                .filter(el => el),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [actionGroups, filters]
     );
 
@@ -215,8 +220,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
             <ActionPanelToggler
                 onClick={handleDrawerAction}
                 open={openDrawer}
-                drawerWidth={drawerWidth}
-            >
+                drawerWidth={drawerWidth}>
                 <IconButton>
                     <ChevronRightIcon fontSize="medium" />
                 </IconButton>
@@ -227,28 +231,25 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                 open={openDrawer}
                 className={clsx(classes.drawer, {
                     [classes.drawerOpen]: openDrawer,
-                    [classes.drawerClose]: !openDrawer,
+                    [classes.drawerClose]: !openDrawer
                 })}
                 classes={{
                     paper: clsx(classes.drawerPaper, {
                         [classes.drawerOpen]: openDrawer,
-                        [classes.drawerClose]: !openDrawer,
-                    }),
-                }}
-            >
+                        [classes.drawerClose]: !openDrawer
+                    })
+                }}>
                 <Box
                     height={`calc(100vh - ${props.offsetTop}px)`}
                     display="flex"
-                    flexDirection="column"
-                >
+                    flexDirection="column">
                     <Tabs
                         scrollButtons="auto"
                         textColor="secondary"
                         value={filters.currentTab}
                         className={clsx(classes.tabs)}
                         onChange={onTabChange}
-                        variant="fullWidth"
-                    >
+                        variant="fullWidth">
                         <Tab
                             label={translate(
                                 'Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label'
@@ -273,14 +274,10 @@ const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
                             badgeContent={filters.groupNames.length}
                             color="primary"
                             overlap="circular"
-                            variant="dot"
-                        >
+                            variant="dot">
                             <IconButton
-                                onClick={(e) =>
-                                    setFilterModalEl(e.currentTarget)
-                                }
-                                className={classes.filterButton}
-                            >
+                                onClick={e => setFilterModalEl(e.currentTarget)}
+                                className={classes.filterButton}>
                                 <FilterAltOutlinedIcon />
                             </IconButton>
                         </Badge>

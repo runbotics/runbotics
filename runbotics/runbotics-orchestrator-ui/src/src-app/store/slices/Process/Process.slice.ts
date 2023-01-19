@@ -1,20 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { defaultProcessValue } from 'runbotics-common';
 
-
 import { RootState } from '#src-app/store';
 
 import LoadingType from '#src-app/types/loading';
 
 import buildProcessExtraReducers from './Process.extraReducers';
 import * as reducers from './Process.reducers';
-import { ProcessState } from './Process.state';
+import { ModelerState, ProcessState } from './Process.state';
 import * as processThunks from './Process.thunks';
 
-
-export const initialModelerState = {
-    appliedActivities: [],
+export const initialModelerState: ModelerState = {
+    selectedElement: null,
+    selectedAction: null,
     isSaveDisabled: true,
+    errors: [],
+    appliedActivities: [],
+    commandStack: {
+        commandStackSize: 0,
+        commandStackIdx: -1,
+    },
+    passedInVariables: [],
 };
 
 export const initialState: ProcessState = {
