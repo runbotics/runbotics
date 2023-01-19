@@ -9,6 +9,7 @@ import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
 import prosTranslations from './pros.json';
 import rpaTranslations from './rpa.json';
+import templatesTranslations from './templates.json';
 
 const landingPageTranslations = {
     ...headerTranslations,
@@ -18,6 +19,8 @@ const landingPageTranslations = {
     ...openSourceTranslations,
     ...partnerTranslations,
     ...prosTranslations,
+    ...industriesTranslation,
+    ...templatesTranslations,
     ...industriesTranslation,
     ...contactTranslations,
     ...rpaTranslations,
