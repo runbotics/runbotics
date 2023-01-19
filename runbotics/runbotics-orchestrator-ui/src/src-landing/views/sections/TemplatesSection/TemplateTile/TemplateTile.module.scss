@@ -1,5 +1,8 @@
 @import "#src-landing/scss/main.scss";
 
+$PC_INTEGRATION_MIN_WIDTH: 100px;
+$MOBILE_INTEGRATION_MIN_WIDTH: 60px;
+
 .root {
     display: flex;
     position:relative;
@@ -35,7 +38,7 @@
 .integrations {
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 2fr));
+    grid-template-columns: repeat(auto-fill, minmax($PC_INTEGRATION_MIN_WIDTH, 2fr));
     gap: $margin-4;
     
     & > * {
@@ -50,6 +53,6 @@
 
 @media (max-width: $breakpoint-sm) {
     .integrations {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax($MOBILE_INTEGRATION_MIN_WIDTH, 1fr));
     }
 }

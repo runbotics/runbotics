@@ -15,7 +15,7 @@ const SearchBar:FC<SearchBarProps> = ({
     const { translate } = useTranslations();
 
     return (
-        <div className={styles.wrapper}>
+        <div className={styles.root}>
             <div className={styles.searchIcon}>
                 <Image src={searchIconSrc} alt="search" />
             </div>

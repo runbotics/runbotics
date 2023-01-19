@@ -3,9 +3,14 @@ import React, { FC, useMemo } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import templatesTranslations from '#src-landing/translations/en/templates.json';
+
 import { categoriesTranslationKeys } from '../TemplatesSection.utils';
 import styles from './Categories.module.scss';
+
 import { CategoriesProps } from './Categories.types';
+
+const checkTranslationKey = (key: string): key is keyof typeof templatesTranslations => templatesTranslations.hasOwnProperty(key);
 
 const Categories: FC<CategoriesProps> = ({ 
     selectedCategoryKey, 
@@ -13,28 +18,28 @@ const Categories: FC<CategoriesProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    const categoriesList = useMemo(() => categoriesTranslationKeys.map((categoryKey) => {
-        // @ts-ignore
-        const categoryName = translate(`Landing.Templates.CategoriesBar.Category.${categoryKey}`);
-
-        return (
-            <div
-                key={categoryKey} 
-                onClick={() => handleCategoryChange(categoryKey)}
-            >
-                <Typography 
-                    className={`${styles.category} ${categoryKey === selectedCategoryKey ? styles.selected : ''}`} 
-                    data-text={categoryName}
-                >
-                    {categoryName}
-                </Typography>
-            </div>
-        );
-    }), [handleCategoryChange, selectedCategoryKey, translate]);
-
+    const translatedCategories = useMemo(() => categoriesTranslationKeys.map((categoryKey) => {
+        const translateKey = `Landing.Templates.CategoriesBar.Category.${categoryKey}`;
+        return checkTranslationKey(translateKey) ? translate(translateKey) : categoryKey;
+    }), [translate]);
+    
     return (
         <div className={styles.root}>
-            {categoriesList}
+            {
+                categoriesTranslationKeys.map((categoryKey, index) => (
+                    <div
+                        key={categoryKey} 
+                        onClick={() => handleCategoryChange(categoryKey)}
+                    >
+                        <Typography 
+                            className={`${styles.category} ${categoryKey === selectedCategoryKey ? styles.selected : ''}`} 
+                            data-text={translatedCategories[index]}
+                        >
+                            {translatedCategories[index]}
+                        </Typography>
+                    </div>
+                ))
+            }
         </div>
     );
 };

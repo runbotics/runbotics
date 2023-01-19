@@ -11,7 +11,7 @@ export enum categoriesNames {
     CATEGORY_FIVE = 'Five',
 }
 
-export const categoriesTranslationKeys: Array<string> = [
+export const categoriesTranslationKeys: Array<categoriesNames> = [
     categoriesNames.CATEGORY_ALL,
     categoriesNames.CATEGORY_ONE,
     categoriesNames.CATEGORY_TWO,

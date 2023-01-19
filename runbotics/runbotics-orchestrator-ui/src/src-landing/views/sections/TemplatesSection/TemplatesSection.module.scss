@@ -8,6 +8,7 @@ $NARROW_SCREEN_TILE_SIZE: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    --tiles-number: 6;
 }
 
 .title {
@@ -35,11 +36,18 @@ $NARROW_SCREEN_TILE_SIZE: 250px;
     overflow: hidden;
 }
 
+@media (max-width: $breakpoint-md) {
+    .templatesGrid {
+        --tiles-number: 4;
+    }
+}
+
 @media (max-width: $breakpoint-sm) {
     .templatesGrid {
         grid-template-columns: repeat(auto-fill, minmax($NARROW_SCREEN_TILE_SIZE, 1fr));
         padding-top: $padding-4;
         padding-bottom: $padding-4;
+        --tiles-number: 2;
     }
 }
 
