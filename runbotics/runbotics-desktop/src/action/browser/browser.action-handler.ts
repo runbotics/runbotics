@@ -1,6 +1,5 @@
 import { writeFile, writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
-import { DesktopRunResponse } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
@@ -67,7 +66,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         }
     }
 
-    async closeBrowser(request: BrowserTypes.BrowserActionRequest<any>): Promise<any> {
+    async closeBrowser() {
         await this.session?.quit();
         this.session = null;
     }
@@ -252,7 +251,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.launch':
                 return this.launchBrowser(request.input);
             case 'browser.close':
-                return this.closeBrowser(request);
+                return this.closeBrowser();
             case 'browser.selenium.open':
                 return this.openSite(request.input);
             case 'browser.selenium.type':

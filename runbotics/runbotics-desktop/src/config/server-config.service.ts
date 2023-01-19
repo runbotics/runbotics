@@ -10,7 +10,11 @@ export type ICredentials = {
 
 @Injectable()
 export class ServerConfigService {
-    constructor(private configService: ConfigService) { }
+    constructor(private configService: ConfigService) {}
+
+    get extensionsDirPath(): string {
+        return this.configService.get('RUNBOTICS_EXTENSION_DIR');
+    }
 
     get entrypointUrl(): string {
         return this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
