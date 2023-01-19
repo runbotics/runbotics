@@ -35,11 +35,10 @@ class ApplicationAutomation extends StatefulActionHandler {
 
         const execPromise = asyncExec(command);
         this.sessions['session'] = execPromise.child;
-        
-        execPromise
-            .catch((error) => {
-                throw new Error(error.stderr);
-            });
+
+        execPromise.catch((error) => {
+            throw new Error(error.stderr);
+        });
 
         return {};
     }

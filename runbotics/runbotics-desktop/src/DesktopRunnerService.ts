@@ -159,7 +159,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 case ProcessInstanceStatus.COMPLETED:
                 case ProcessInstanceStatus.STOPPED:
                 case ProcessInstanceStatus.ERRORED:
-                    if (data.processInstanceId == data.processInstance.rootProcessInstanceId) {
+                    if (!data.processInstance.rootProcessInstanceId) {
                         try {
                             if (this.handlerInstancesByMasterProcessInstanceId[data.processInstanceId]) {
                                 for (const handlerInstance of Object.values(
@@ -245,7 +245,7 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, service] of Object.entries(this.dynamicHandlers)) {
                 if (request.script.startsWith(key)) {
                     let handlerInstance = get(this.handlerInstancesByMasterProcessInstanceId, [
-                        request.rootProcessInstanceId,
+                        request.rootProcessInstanceId ?? request.processInstanceId,
                         service.clazz,
                     ]);
                     try {
@@ -261,7 +261,7 @@ export class DesktopRunnerService implements OnModuleInit {
                         }
                         set(
                             this.handlerInstancesByMasterProcessInstanceId,
-                            [request.rootProcessInstanceId, service.clazz],
+                            [request.rootProcessInstanceId ?? request.processInstanceId, service.clazz],
                             handlerInstance,
                         );
 
@@ -272,9 +272,9 @@ export class DesktopRunnerService implements OnModuleInit {
                                 `[${request.processInstanceId}] [${request.script}] Tearing down instance as it's stateless handler: ` +
                                     service.clazz,
                             );
-                            delete this.handlerInstancesByMasterProcessInstanceId[request.rootProcessInstanceId][
-                                service.clazz
-                            ];
+                            delete this.handlerInstancesByMasterProcessInstanceId[
+                                request.rootProcessInstanceId ?? request.processInstanceId
+                            ][service.clazz];
                             handlerInstance = null;
                         }
                     }

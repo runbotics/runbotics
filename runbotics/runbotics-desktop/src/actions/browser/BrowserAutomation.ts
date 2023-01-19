@@ -131,7 +131,7 @@ class BrowserAutomation extends StatefulActionHandler {
                 default:
             }
         } catch (e) {
-            this.logger.error('Error in browser autoatmion', e);
+            this.logger.error('Error in browser automation', e);
             throw e;
         }
         return {
@@ -273,7 +273,7 @@ class BrowserAutomation extends StatefulActionHandler {
             writeFileSync(filePath, image, { encoding: 'base64' });
             return filePath;
         } catch (e) {
-            this.logger.log('Error occured while taking screenshot', e);
+            this.logger.log('Error occurred while taking screenshot', e);
             throw e;
         }
     }
@@ -299,7 +299,7 @@ class BrowserAutomation extends StatefulActionHandler {
                 this.logger.log(`File saved successfully at ${fileName}.pdf`);
             });
         } catch (error) {
-            this.logger.error('Error occured while printing to pdf', error);
+            this.logger.error('Error occurred while printing to pdf', error);
             throw error;
         }
 
