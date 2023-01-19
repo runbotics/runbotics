@@ -53,9 +53,9 @@ const ActionFormPanel: FC = () => {
         externalBpmnActions,
         selectedElement?.businessObject.actionId
     ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const CustomRenderer = React.useMemo(
         () => CustomActionRenderer.get(selectedAction?.id),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [selectedAction?.id]
     );
 

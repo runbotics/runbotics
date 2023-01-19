@@ -1,8 +1,4 @@
-import { filter } from 'min-dash';
-
-import { translate } from '#src-app/hooks/useTranslations';
-import { TranslationsDescriptors } from '#src-app/translations/translations';
-import { capitalizeFirstLetter } from '#src-app/utils/text';
+import getElementLabel from '#src-app/utils/getElementLabel';
 
 import { BPMNElement } from '../../helpers/elementParameters';
 
@@ -40,7 +36,7 @@ export default class BpmnSearchProvider implements SearchProvider {
                     element !== rootElement && element.id.startsWith('Activity')
             )
             .map((element: BPMNElement) => ({
-                primaryTokens: matchAndSplit(getLabel(element), pattern),
+                primaryTokens: matchAndSplit(getElementLabel(element), pattern),
                 secondaryTokens: [],
                 element: element
             }))
@@ -49,12 +45,15 @@ export default class BpmnSearchProvider implements SearchProvider {
                     hasMatched(item.primaryTokens) ||
                     hasMatched(item.secondaryTokens)
             )
-            .sort((item: Result) => getLabel(item.element) + item.element.id);
+            .sort(
+                (item: Result) =>
+                    getElementLabel(item.element) + item.element.id
+            );
     }
 }
 
 const hasMatched = (tokens: Token[]): boolean => {
-    const matched = filter(tokens, (token: Token) => Boolean(token.matched));
+    const matched = tokens.filter((token: Token) => Boolean(token.matched));
 
     return matched.length > 0;
 };
@@ -81,18 +80,4 @@ const matchAndSplit = (text: string, pattern: string): Token[] => {
     if (afterMatch) tokens.push({ normal: afterMatch });
 
     return tokens;
-};
-
-const getLabel = (element: BPMNElement): string => {
-    if (element.businessObject.label) return element.businessObject.label;
-    const translateKey =
-        `Process.Details.Modeler.Actions.${capitalizeFirstLetter({
-            text: element.businessObject.actionId,
-            lowerCaseRest: false,
-            delimiter: '.',
-            join: '.'
-        })}.Label` as keyof TranslationsDescriptors;
-
-    const translatedLabel = translate(translateKey);
-    return translatedLabel;
 };

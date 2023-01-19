@@ -21,12 +21,25 @@ interface RunSavePanelProps {
 const RunSavePanel: FC<RunSavePanelProps> = ({
     onRunClick,
     onSave,
-    process,
+    process
 }) => {
     const { translate } = useTranslations();
     const { isSaveDisabled, errors } = useSelector(
-        (state) => state.process.modeler
+        state => state.process.modeler
     );
+    const getTooltip = () => {
+        const elementsWithErrors = errors.map(error => error.elementName);
+        if (elementsWithErrors.length > 0) {
+            return translate('Process.MainView.Tooltip.Save.Errors', {
+                errors: elementsWithErrors.join(', ')
+            });
+        }
+        if (isSaveDisabled) {
+            return translate('Process.MainView.Tooltip.Save.Disabled');
+        }
+
+        return translate('Process.MainView.Tooltip.Save.Enabled');
+    };
 
     return (
         <FloatingGroup horizontalPosition="right" verticalPosition="top">
@@ -37,17 +50,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                 />
                 <Secured authorities={[Role.ROLE_ADMIN]}>
                     <Badge badgeContent={errors.length} color="error" max={5}>
-                        <Tooltip
-                            title={
-                                isSaveDisabled
-                                    ? translate(
-                                        'Process.MainView.Tooltip.Save.Disabled'
-                                    )
-                                    : translate(
-                                        'Process.MainView.Tooltip.Save.Enabled'
-                                    )
-                            }
-                        >
+                        <Tooltip title={getTooltip()}>
                             <span>
                                 <Button
                                     onClick={onSave}
@@ -58,8 +61,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                                         <SvgIcon fontSize="small">
                                             <SendIcon />
                                         </SvgIcon>
-                                    }
-                                >
+                                    }>
                                     {translate('Common.Save')}
                                 </Button>
                             </span>

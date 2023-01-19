@@ -14,7 +14,7 @@ import InfoPanel from '#src-app/components/InfoPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
-import { translate } from '#src-app/hooks/useTranslations';
+import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -25,6 +25,8 @@ import {
 } from '#src-app/store/slices/Process';
 
 import { ProcessBuildTab } from '#src-app/types/sidebar';
+
+import getElementLabel from '#src-app/utils/getElementLabel';
 
 import {
     centerCanvas,
@@ -42,7 +44,7 @@ import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
 import SidebarNavigationPanel from '../../SidebarNavigationPanel';
-import ActionFormPanel from '../ActionFormPanel/ConfigureActionPanel';
+import ActionFormPanel from '../ActionFormPanel';
 import ActionListPanel from '../ActionListPanel';
 import emptyBpmn from '../extensions/config/empty.bpmn';
 
@@ -68,6 +70,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     // eslint-disable-next-line max-lines-per-function
     ({ definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
         const dispatch = useDispatch();
+        const { translate } = useTranslations();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const modelerRef = React.useRef<BpmnIoModeler>(null);
         const [imported, setImported] = useState(false);
@@ -94,7 +97,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             dispatch(
                 processActions.setError({
                     elementId: event.element.id,
-                    elementName: event.element.id
+                    elementName: getElementLabel(event.element)
                 })
             );
 
@@ -227,6 +230,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
         useEffect(() => {
             updateActivities();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
             appliedActivities,
             modeler,

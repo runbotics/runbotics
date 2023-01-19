@@ -86,7 +86,7 @@ export const setCommandStack = (
 
 export const setError = (
     state: ProcessState,
-    action: PayloadAction<Omit<ModelerError, 'appearedIdx'>>
+    action: PayloadAction<ModelerError>
 ) => {
     const errorIndex = state.modeler.errors.findIndex(
         error => error.elementId === action.payload.elementId
