@@ -22,13 +22,15 @@ const TemplateTile:FC<TemplateTileProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    const translatedCategories = useMemo(() => categories.map((categoryKey) => {
-        const translateKey = `Landing.Templates.CategoriesBar.Category.${categoryKey}`;
-        return checkTranslationKey(translateKey) 
-            ? translate(translateKey) 
-            : categoryKey;
-    })
-        .join(', '), [translate, categories]);
+    const translatedCategories = useMemo(() => categories
+        .map((categoryKey) => {
+            const translateKey = `Landing.Templates.CategoriesBar.Category.${categoryKey}`;
+            return checkTranslationKey(translateKey) 
+                ? translate(translateKey) 
+                : categoryKey;
+        })
+        .join(', '), [translate, categories]
+    );
     
     return (
         <div className={styles.root}>

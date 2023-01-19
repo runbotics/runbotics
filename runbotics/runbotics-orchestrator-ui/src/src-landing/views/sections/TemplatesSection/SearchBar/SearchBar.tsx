@@ -17,9 +17,14 @@ const SearchBar:FC<SearchBarProps> = ({
     return (
         <div className={styles.root}>
             <div className={styles.searchIcon}>
-                <Image src={searchIconSrc} alt="search" />
+                <Image src={searchIconSrc} alt={translate('Landing.Templates.SearchBar.ImgSearch')} />
             </div>
-            <input className={styles.searchBar} onChange={handleSearch} value={searchValue} placeholder={translate('Landing.Templates.SearchBar.Placeholder')} />
+            <input 
+                className={styles.searchBar} 
+                onChange={handleSearch} 
+                value={searchValue} 
+                placeholder={translate('Landing.Templates.SearchBar.Placeholder')} 
+            />
         </div>
     );
 };

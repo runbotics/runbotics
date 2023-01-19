@@ -20,7 +20,6 @@
     // to stop from flicking on focus/hover -> font-weight change
     &::before {
         content: attr(data-text);
-        content: attr(data-text) / "";
         height: 0;
         visibility: hidden;
         overflow: hidden;

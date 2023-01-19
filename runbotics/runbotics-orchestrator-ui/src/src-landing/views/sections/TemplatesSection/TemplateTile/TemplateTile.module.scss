@@ -5,14 +5,14 @@ $MOBILE_INTEGRATION_MIN_WIDTH: 60px;
 
 .root {
     display: flex;
-    position:relative;
+    position: relative;
     flex-direction: column;
     justify-content: space-between;
+    padding: $padding-4;
     border-radius: $margin-2;
     background-color: $palette-background-primary;
     box-shadow: $box-shadow-centered;
     transition: transform 200ms ease-in-out;
-    padding: $padding-4;
     isolation: isolate;
 
     &:hover {

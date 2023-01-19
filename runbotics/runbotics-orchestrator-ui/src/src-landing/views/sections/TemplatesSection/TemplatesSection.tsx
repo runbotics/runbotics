@@ -16,22 +16,41 @@ const TemplatesSection: FC = () => {
     const [searchValue, setSearchValue] = useState<string>('');
     const gridRef = useRef<HTMLDivElement>(null);
     const [maxDisplayedTiles, setMaxDisplayedTiles] = useState<number>(6);
+
+    const checkTemplateIncludes = (attribute: string, seekedValue: string) => attribute
+        .toLowerCase()
+        .includes(seekedValue.toLowerCase());
     
-    const filteredTemplates = useMemo(() => templates
-        .filter(template => selectedCategory === 'All' ? true : template.categories.includes(selectedCategory))
-        .filter(template => template.title.toLowerCase().includes(searchValue.toLowerCase()) 
-        || template.description.toLowerCase().includes(searchValue.toLowerCase())), [selectedCategory, searchValue]);
+    const filteredTemplates = useMemo(
+        () => templates
+            .filter(template => 
+                selectedCategory === 'All' 
+                    ? true 
+                    : template.categories.includes(selectedCategory)
+            )
+            .filter(template => 
+                checkTemplateIncludes(template.title, searchValue) 
+                || checkTemplateIncludes(template.description, searchValue)
+            ), 
+        [selectedCategory, searchValue]
+    );
     
-    const tiles = useMemo(() => filteredTemplates.slice(0, maxDisplayedTiles).map((template) => (
-        <TemplateTile
-            key={template.title}
-            title={template.title}
-            description={template.description}
-            categories={template.categories}
-            integrations={template.integrations}
-            highlight={searchValue}
-        />
-    )), [filteredTemplates, searchValue, maxDisplayedTiles]);
+    const tiles = useMemo(
+        () => 
+            filteredTemplates
+                .slice(0, maxDisplayedTiles)
+                .map((template) => (
+                    <TemplateTile
+                        key={template.title}
+                        title={template.title}
+                        description={template.description}
+                        categories={template.categories}
+                        integrations={template.integrations}
+                        highlight={searchValue}
+                    />
+                )), 
+        [filteredTemplates, searchValue, maxDisplayedTiles]
+    );
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(event.target.value);
