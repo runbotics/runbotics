@@ -61,7 +61,7 @@ const createNewVersion = (version: string, options: VersionOptions) => {
         return `${major}.${minor}.${parseInt(mappedPatch) + 1}`;
     }
 
-    if (!prerelease) return `${major}.${minor}.${patch}-${PRERELEASE_ID}.0`;
+    if (!prerelease) return `${major}.${parseInt(minor) + 1}.${patch}-${PRERELEASE_ID}.1`;
 
     return `${major}.${minor}.${patch}.${parseInt(prerelease) + 1}`;
 };

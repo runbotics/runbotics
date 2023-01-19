@@ -14,7 +14,7 @@ import firstCharUpperCase from './utils/first-upper';
 program
     .name('rb')
     .usage('[command] [options] <package>')
-    .version('2.0.0');
+    .version('2.1.0');
 
 program
     .description('Runs selected package in development mode')
