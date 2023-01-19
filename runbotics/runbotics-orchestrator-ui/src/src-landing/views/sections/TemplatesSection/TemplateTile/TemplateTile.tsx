@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import Image from 'next/image';
 
@@ -8,6 +8,7 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { checkTranslationKey } from '../TemplatesSection.utils';
 import HighlightedText from './HighlightedText';
 import styles from './TemplateTile.module.scss';
 import { TemplateTileProps } from './TemplateTile.types';
@@ -21,9 +22,14 @@ const TemplateTile:FC<TemplateTileProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    // @ts-ignore
-    const translatedCategories = categories.map((categoryKey) => translate(`Landing.Templates.CategoriesBar.Category.${categoryKey}`)).join(', ');
-
+    const translatedCategories = useMemo(() => categories.map((categoryKey) => {
+        const translateKey = `Landing.Templates.CategoriesBar.Category.${categoryKey}`;
+        return checkTranslationKey(translateKey) 
+            ? translate(translateKey) 
+            : categoryKey;
+    })
+        .join(', '), [translate, categories]);
+    
     return (
         <div className={styles.root}>
             <div className={styles.tileContent}>

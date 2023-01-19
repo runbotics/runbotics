@@ -3,14 +3,12 @@ import React, { FC, useMemo } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
-import templatesTranslations from '#src-landing/translations/en/templates.json';
-
-import { categoriesTranslationKeys } from '../TemplatesSection.utils';
+import { checkTranslationKey, categoriesTranslationKeys } from '../TemplatesSection.utils';
 import styles from './Categories.module.scss';
 
 import { CategoriesProps } from './Categories.types';
 
-const checkTranslationKey = (key: string): key is keyof typeof templatesTranslations => templatesTranslations.hasOwnProperty(key);
+
 
 const Categories: FC<CategoriesProps> = ({ 
     selectedCategoryKey, 
@@ -20,8 +18,11 @@ const Categories: FC<CategoriesProps> = ({
 
     const translatedCategories = useMemo(() => categoriesTranslationKeys.map((categoryKey) => {
         const translateKey = `Landing.Templates.CategoriesBar.Category.${categoryKey}`;
-        return checkTranslationKey(translateKey) ? translate(translateKey) : categoryKey;
+        return checkTranslationKey(translateKey) 
+            ? translate(translateKey) 
+            : categoryKey;
     }), [translate]);
+        
     
     return (
         <div className={styles.root}>

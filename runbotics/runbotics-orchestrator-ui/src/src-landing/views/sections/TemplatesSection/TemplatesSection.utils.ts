@@ -1,6 +1,9 @@
 import { integrationNames } from '#public/images/logos';
+import templatesTranslations from '#src-landing/translations/en/templates.json';
 
 import { templatesProps } from './TemplatesSection.types';
+
+export const checkTranslationKey = (key: string): key is keyof typeof templatesTranslations => templatesTranslations.hasOwnProperty(key);
 
 export enum categoriesNames {
     CATEGORY_ALL = 'All',
