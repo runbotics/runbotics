@@ -37,7 +37,7 @@ import { FINISHED_PROCESS_STATUSES } from './DesktopRunner.utils';
 export class DesktopRunnerService implements OnModuleInit {
     private readonly logger = new RunboticsLogger(DesktopRunnerService.name);
 
-    private readonly externalActionsWorkers: ExternalActionWorkerMap = new Map();
+    private readonly externalActionsWorkersMap: ExternalActionWorkerMap = new Map();
     private readonly externalHandlersMap: ExternalHandlersMap = new Map();
     private readonly internalHandlersMap: InternalHandlersInstancesMap = new Map();
     private readonly processHandlersInstancesMap: HandlersInstancesMap = new Map();
@@ -110,17 +110,7 @@ export class DesktopRunnerService implements OnModuleInit {
             if (!isRootProcessFinished) return;
 
             await this.clearHandlers();
-
-            try {
-                if (this.externalActionsWorkers.get(data.processInstanceId)) {
-                    this.externalActionsWorkers.get(data.processInstanceId).removeAllListeners('message');
-                    await this.externalActionsWorkers.get(data.processInstanceId).terminate();
-                }
-            } catch (e) {
-                this.logger.error('Error cleaning worker', e);
-            } finally {
-                this.externalActionsWorkers.delete(data.processInstanceId);
-            }
+            await this.clearActionWorkers(data.processInstanceId);
         });
     }
 
@@ -146,7 +136,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.logger.log(`Success: Extension ${extension} loaded`);
             }
         } catch (e) {
-            this.logger.error(`Error loading ${currentExtensionName ?? this.serverConfigService.extensionsDirPath}${': ' + e.message}`);
+            this.logger.error(`Error loading ${currentExtensionName ?? this.serverConfigService.extensionsDirPath} - ${e.message}`);
         }
     }
 
@@ -154,22 +144,37 @@ export class DesktopRunnerService implements OnModuleInit {
         try {
             if (this.processHandlersInstancesMap.size === 0) return;
 
-            await Promise.allSettled(Object.values(this.processHandlersInstancesMap)
+            const handlersNames = Array.from(this.processHandlersInstancesMap.keys()).join(', ');
+            this.logger.log(`Tearing down action handlers sessions [${handlersNames}]`);
+            await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
                 .map(handlerInstance => {
                     const hasTearDownMethod = handlerInstance
                         && handlerInstance instanceof StatefulActionHandler
                         && handlerInstance.tearDown;
 
                     if (hasTearDownMethod) {
-                        handlerInstance.tearDown();
+                        return handlerInstance.tearDown();
                     } else {
                         this.logger.error(`No tear down method in handler ${handlerInstance.constructor.name}`);
                     }
                 }));
         } catch (e) {
-            this.logger.error('Error cleaning handler', e);
+            this.logger.error('Error clearing handler', e);
         } finally {
             this.processHandlersInstancesMap.clear();
+        }
+    }
+
+    async clearActionWorkers(processInstanceId: string) {
+        try {
+            if (this.externalActionsWorkersMap.get(processInstanceId)) {
+                this.externalActionsWorkersMap.get(processInstanceId).removeAllListeners('message');
+                await this.externalActionsWorkersMap.get(processInstanceId).terminate();
+            }
+        } catch (e) {
+            this.logger.error('Error cleaning worker', e);
+        } finally {
+            this.externalActionsWorkersMap.delete(processInstanceId);
         }
     }
 
@@ -188,6 +193,8 @@ export class DesktopRunnerService implements OnModuleInit {
         }
 
         for (const [key, handlerName] of moduleEntries) {
+            // internalHandlersMap accepts only predefined keys but 'key' is a type of string
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (this.internalHandlersMap.get(key) || this.externalHandlersMap.get(key)) {
                 this.logger.error(`Handler ${key} cannot be imported. Key already exists`);
@@ -195,7 +202,7 @@ export class DesktopRunnerService implements OnModuleInit {
             }
 
             this.externalHandlersMap.set(key, {
-                module,
+                module: externalModule,
                 // External module has to provide simple import path via 'exports' field in package.json or exact path to the module
                 handlerName,
             });
@@ -207,12 +214,16 @@ export class DesktopRunnerService implements OnModuleInit {
         let handlerInstance;
         try {
             for (const [key, service] of this.internalHandlersMap) {
-                if (!request.script.startsWith(key)) continue;
+                if (!request.script.startsWith(key + '.')) continue;
+
+                handlerInstance = service;
+                this.processHandlersInstancesMap.set(service.constructor.name, service);
+
                 return await service.run(request);
             }
           
             for (const [key, service] of this.externalHandlersMap) {
-                if (!request.script.startsWith(key)) continue;
+                if (!request.script.startsWith(key + '.')) continue;
 
                 handlerInstance = this.processHandlersInstancesMap.get(service.handlerName);
 
@@ -238,8 +249,7 @@ export class DesktopRunnerService implements OnModuleInit {
         } finally {
             if (handlerInstance && handlerInstance instanceof StatelessActionHandler) {
                 this.logger.warn(
-                    `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ` +
-                        handlerInstance.constructor.name,
+                    `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`
                 );
                 this.processHandlersInstancesMap.delete(handlerInstance.constructor.name);
                 handlerInstance = null;

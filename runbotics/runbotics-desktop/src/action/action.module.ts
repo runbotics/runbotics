@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 
 import { CoreModule } from '#core';
+import { MailerModule } from '#mailer';
 
 import ApiRequestHandler from './api-request';
 import ApplicationActionHandler from './application';
@@ -45,6 +46,7 @@ const ALL_ACTION_HANDLERS = [
 
 @Module({
     imports: [
+        MailerModule,
         MicrosoftModule,
         forwardRef(() => CoreModule),
     ],

@@ -1,5 +1,4 @@
 import { StatelessActionHandler } from 'runbotics-sdk';
-import { DesktopRunResponse } from 'runbotics-sdk';
 
 import { Injectable } from '@nestjs/common';
 import { externalAxios } from '#config';

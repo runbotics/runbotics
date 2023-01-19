@@ -397,7 +397,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     result,
                 );
 
-                callback(null, result.output);
+                callback(null, result);
             } catch (e) {
                 this.logger.error(
                     `[${processInstanceId}] [${executionId}] [${script}] Error running desktop action`,

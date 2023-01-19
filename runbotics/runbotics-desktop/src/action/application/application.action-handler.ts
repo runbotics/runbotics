@@ -1,6 +1,4 @@
-import { DesktopRunRequest } from 'runbotics-sdk';
 import { StatefulActionHandler } from 'runbotics-sdk';
-import { DesktopRunResponse } from 'runbotics-sdk';
 import child from 'child_process';
 import { promisify } from 'util';
 import { RunboticsLogger } from '#logger';
@@ -9,8 +7,8 @@ import {
 } from './types';
 
 export default class ApplicationActionHandler extends StatefulActionHandler {
-    private sessions: Record<string, child.ChildProcess> = {};
     private readonly logger = new RunboticsLogger(ApplicationActionHandler.name);
+    private session: child.ChildProcess = null;
 
     constructor() {
         super();
@@ -28,7 +26,7 @@ export default class ApplicationActionHandler extends StatefulActionHandler {
         const asyncExec = promisify(child.exec);
 
         const execPromise = asyncExec(command);
-        this.sessions['session'] = execPromise.child;
+        this.session = execPromise.child;
 
         execPromise.catch((error) => {
             throw new Error(error.stderr);
@@ -39,8 +37,8 @@ export default class ApplicationActionHandler extends StatefulActionHandler {
 
     async close() {
         this.logger.error('Close action is not supported yet');
-        // this.sessions["session"].kill('SIGKILL');
-        delete this.sessions['session'];
+        // await this.session?.kill('SIGKILL');
+        this.session = null;
     }
 
     run(request: ApplicationActionRequest) {
@@ -55,6 +53,6 @@ export default class ApplicationActionHandler extends StatefulActionHandler {
     }
 
     async tearDown() {
-        delete this.sessions;
+        await this.close();
     }
 }

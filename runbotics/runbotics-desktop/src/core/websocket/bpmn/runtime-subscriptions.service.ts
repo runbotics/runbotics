@@ -41,18 +41,12 @@ export class RuntimeSubscriptionsService {
                         case 'bpmn:ServiceTask':
                             const eventBehaviour = (event.activity.owner as IActivityOwner).behaviour;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
-                            switch (desktopTask.input?.script) {
-                                case 'general.startProcess':
-                                    processInstanceEvent.step = `${eventBehaviour.label}: ${desktopTask.input?.processName}`;
-                                    break;
-                                default:
-                                    const label = eventBehaviour?.label;
-                                    const script = desktopTask.input?.script;
-                                    if (eventBehaviour?.label) {
-                                        processInstanceEvent.step = label;
-                                    } else {
-                                        processInstanceEvent.step = script;
-                                    }
+                            const label = eventBehaviour?.label;
+                            const script = desktopTask.input?.script;
+                            if (eventBehaviour?.label) {
+                                processInstanceEvent.step = label;
+                            } else {
+                                processInstanceEvent.step = script;
                             }
                             break;
                         case 'bpmn:EndEvent':
@@ -71,11 +65,11 @@ export class RuntimeSubscriptionsService {
                             // @ts-ignore
                             if (event.activity.content.isMultiInstance) {
                                 // @ts-ignore
-                                processInstanceEvent.log = `SubProcess: ${event.activity.content.type}  ${event.activity.content.input?.script} ${event.eventType} `;
+                                processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.activity.content.input?.script} ${event.eventType} `;
                             } else {
-                                processInstanceEvent.log = `SubProcess: ${event.activity.content.type} ${event.eventType} `;
+                                processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.eventType} `;
                             }
-                            processInstanceEvent.step = 'SubProcess';
+                            processInstanceEvent.step = 'Loop';
                             break;
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;

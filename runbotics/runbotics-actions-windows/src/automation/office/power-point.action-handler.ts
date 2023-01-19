@@ -26,8 +26,9 @@ export type PowerPointCloseActionOutput = any;
 
 @Injectable()
 export default class PowerPointActionHandler extends StatefulActionHandler {
-    private sessions: Record<string, any> = {};
-    private openedFiles: Record<string, any> = {};
+    private session = null;
+    private openedFiles = null;
+
     constructor() {
         super();
     }
@@ -35,19 +36,19 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async open(
         input: PowerPointOpenActionInput
     ): Promise<PowerPointOpenActionOutput> {
-        this.sessions["session"] = new winax.Object("PowerPoint.Application", {
+        this.session = new winax.Object("PowerPoint.Application", {
             activate: true,
         });
 
-        this.sessions["session"].Presentations.Open(input.filePath);
+        this.session.Presentations.Open(input.filePath);
 
-        this.openedFiles["session"] = input.filePath;
+        this.openedFiles = input.filePath;
     }
 
     async insertSlide(
         input: PowerPointInsertActionInput
     ): Promise<PowerPointInsertActionOutput> {
-        this.sessions["session"].ActivePresentation.Slides.InsertFromFile(
+        this.session.ActivePresentation.Slides.InsertFromFile(
             input.filePath,
             0
         );
@@ -56,15 +57,13 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async saveAs(
         input: PowerPointSaveActionInput
     ): Promise<PowerPointSaveActionOutput> {
-        this.sessions["session"].ActivePresentation.SaveAs(
-            this.openedFiles["session"]
-        );
+        this.session.ActivePresentation.SaveAs(this.openedFiles);
     }
 
-    async close(
-        input: PowerPointCloseActionInput
-    ): Promise<PowerPointCloseActionOutput> {
-        this.sessions["session"].Quit();
+    async close(): Promise<PowerPointCloseActionOutput> {
+        this.session?.Quit();
+        this.session = null;
+        this.openedFiles = null;
     }
 
     run(request: PowerPointActionRequest) {
@@ -76,13 +75,13 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
             case "powerpoint.save":
                 return this.saveAs(request.input);
             case "powerpoint.close":
-                return this.close(request.input);
+                return this.close();
             default:
                 throw new Error("Action not found");
         }
     }
 
     async tearDown() {
-        // throw new Error('Method not implemented.');
+        await this.close();
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DesktopRunRequest, StatefulActionHandler, DesktopRunResponse } from 'runbotics-sdk';
+import { StatefulActionHandler } from 'runbotics-sdk';
 import 'winax';
 
 import { RunboticsLogger } from '#logger';
@@ -9,8 +9,9 @@ import * as SapTypes from './types';
 
 @Injectable()
 export default class SapActionHandler extends StatefulActionHandler {
-    private sessions: Record<string, any> = {};
     private logger = new RunboticsLogger(SapActionHandler.name);
+    private session = null;
+
     constructor() {
         super();
     }
@@ -24,10 +25,10 @@ export default class SapActionHandler extends StatefulActionHandler {
             }
             const scriptingEngine = sapGuiAuto.GetScriptingEngine();
             const result = scriptingEngine.OpenConnection(input.connectionName, true);
-            this.sessions['session'] = result.children[0];
-            this.sessions['session'].FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
-            this.sessions['session'].FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
-            this.sessions['session'].FindById('wnd[0]').SendVKey(0);
+            this.session = result.children[0];
+            this.session.FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
+            this.session.FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
+            this.session.FindById('wnd[0]').SendVKey(0);
         } catch (e) {
             throw new Error(e?.description ?? e.message);
         }
@@ -38,21 +39,21 @@ export default class SapActionHandler extends StatefulActionHandler {
     async startTransaction(
         input: SapTypes.SAPStartTransactionActionInput,
     ): Promise<SapTypes.SAPStartTransactionActionOutput> {
-        this.sessions['session'].StartTransaction(input.transaction);
+        this.session.StartTransaction(input.transaction);
         return {};
     }
 
     async endTransaction() {
-        this.sessions['session'].EndTransaction();
+        await this.session?.EndTransaction();
     }
 
     async type(input: SapTypes.SAPTypeActionInput): Promise<SapTypes.SAPTypeActionOutput> {
-        const result = (this.sessions['session'].FindById(input.target).text = input.value);
+        const result = (this.session.FindById(input.target).text = input.value);
         return {};
     }
 
     async click(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
-        this.sessions['session'].FindById(input.target).press();
+        this.session.FindById(input.target).press();
         return {};
     }
 
@@ -63,7 +64,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async index(input: SapTypes.SAPIndexActionInput): Promise<SapTypes.SAPIndexActionOutput> {
-        const table = this.sessions['session'].FindById(input.target);
+        const table = this.session.FindById(input.target);
         const rowsCount = table.Rows.Count.__value;
         const columnsCount = table.Columns.Count.__value;
         const array = [];
@@ -85,48 +86,48 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async focus(input: SapTypes.SAPFocusActionInput): Promise<SapTypes.SAPFocusActionOutput> {
-        this.sessions['session'].FindById(input.target).setFocus();
+        this.session.FindById(input.target).setFocus();
         return {};
     }
 
-    async disconnect(input: any): Promise<any> {
-        this.sessions['session'].Parent.CloseConnection();
-        return {};
+    async disconnect() {
+        await this.session?.Parent.CloseConnection();
+        this.session = null;
     }
 
     async sendVKey(input: SapTypes.SAPSendVKeyActionInput): Promise<SapTypes.SAPSendVKeyActionOutput> {
-        this.sessions['session'].FindById('wnd[0]').SendVKey(SendVKeyMapper[input.virtualKey]);
+        this.session.FindById('wnd[0]').SendVKey(SendVKeyMapper[input.virtualKey]);
         return {};
     }
 
     async readText(input: SapTypes.SAPReadTextActionInput): Promise<SapTypes.SAPReadTextActionOutput> {
-        const result = this.sessions['session'].FindById(input.target).text;
+        const result = this.session.FindById(input.target).text;
         return result ? result.__value : null;
     }
 
     async select(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
-        this.sessions['session'].FindById(input.target).select();
+        this.session.FindById(input.target).select();
         return {};
     }
 
     async openContextMenu(
         input: SapTypes.SAPOpenContextMenuActionInput,
     ): Promise<SapTypes.SAPOpenContextMenuActionOutput> {
-        this.sessions['session'].FindById(input.target).pressContextButton(input.menuId);
+        this.session.FindById(input.target).pressContextButton(input.menuId);
         return {};
     }
 
     async selectFromContextMenu(
         input: SapTypes.SAPSelectFromContextMenuActionInput,
     ): Promise<SapTypes.SAPSelectFromContextMenuActionOutput> {
-        this.sessions['session'].FindById(input.target).selectContextMenuItem(input.optionId);
+        this.session.FindById(input.target).selectContextMenuItem(input.optionId);
         return {};
     }
 
     async clickToolbarButton(
         input: SapTypes.SAPClickToolbarButtonActionInput,
     ): Promise<SapTypes.SAPClickToolbarButtonActionOutput> {
-        this.sessions['session'].FindById(input.target).pressToolbarButton(input.toolId);
+        this.session.FindById(input.target).pressToolbarButton(input.toolId);
         return {};
     }
 
@@ -147,7 +148,7 @@ export default class SapActionHandler extends StatefulActionHandler {
             case 'sap.focus':
                 return this.focus(request.input);
             case 'sap.disconnect':
-                return this.disconnect(request.input);
+                return this.disconnect();
             case 'sap.sendVKey':
                 return this.sendVKey(request.input);
             case 'sap.readText':
@@ -168,10 +169,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async tearDown(): Promise<void> {
-        // if(this.sessions['session'] && this.sessions['session'].Parent) {
-        //     this.sessions['session'].Parent.CloseConnection();
-        // }
-
-        delete this.sessions['session'];
+        await this.endTransaction();
+        await this.disconnect();
     }
 }

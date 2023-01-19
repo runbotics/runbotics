@@ -16,7 +16,7 @@ import { generatePdf, Target } from './utils';
 export default class BrowserActionHandler extends StatefulActionHandler {
     private readonly logger = new RunboticsLogger(BrowserActionHandler.name);
 
-    session: WebDriver;
+    private session: WebDriver = null;
 
     constructor() {
         super();
@@ -60,7 +60,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             )
             .build();
         if (input.target) {
-            this.openSite({
+            await this.openSite({
                 target: input.target,
             });
         }
@@ -284,7 +284,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     }
 
     async tearDown() {
-        // await this.session?.quit();
-        this.session = null;
+        await this.closeBrowser();
     }
 }
