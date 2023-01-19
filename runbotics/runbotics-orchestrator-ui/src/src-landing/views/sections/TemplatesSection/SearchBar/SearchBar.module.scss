@@ -8,6 +8,7 @@
 }
 
 .searchBar {
+    @include font-face-base;
     z-index: 1;
     width: 100%;
     padding: $padding-1 $padding-2;

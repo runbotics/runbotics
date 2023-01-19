@@ -39,13 +39,6 @@ const TemplatesSection: FC = () => {
     
     const handleCategoryChange = (categoryKey: string) => {
         setSelectedCategory(categoryKey);
-        
-        console.log(selectedCategory);
-        console.log('================================');
-        templates.forEach((template) => {
-            console.log(template.categories);
-            console.log(template.categories.includes(selectedCategory));
-        });
     };
 
     const handleResize = () => {
