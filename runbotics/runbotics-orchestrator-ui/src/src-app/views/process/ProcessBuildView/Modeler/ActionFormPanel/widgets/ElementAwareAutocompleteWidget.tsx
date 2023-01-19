@@ -121,7 +121,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
             state => state.process.modeler
         );
 
-        const { modeler } = useModelerContext();
+        const context = useModelerContext();
         const { translate } = useTranslations();
         const { executionInfo, isAttended } = useSelector(
             currentProcessSelector
@@ -131,12 +131,12 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
         const attendedProcessVariables =
             isAttended && executionInfo
                 ? passedInVariables.map(variable => ({
-                    label: variable,
-                    value: variable,
-                    group: translate(
-                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-                    )
-                }))
+                      label: variable,
+                      value: variable,
+                      group: translate(
+                          'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                      )
+                  }))
                 : [];
 
         const extractOutputs = (scope, rootElement) => {
@@ -258,7 +258,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
             }
 
             const assignVariablesElements =
-                modeler
+                context?.modeler
                     ?.get('elementRegistry')
                     .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
                     .filter(
