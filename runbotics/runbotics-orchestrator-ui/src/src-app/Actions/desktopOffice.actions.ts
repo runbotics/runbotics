@@ -6,10 +6,10 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
-    'desktop.powerpoint.open': {
-        id: 'desktop.powerpoint.open',
+    'powerpoint.open': {
+        id: 'powerpoint.open',
         label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Open.Label'),
-        script: 'desktop.powerpoint.open',
+        script: 'powerpoint.open',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -50,10 +50,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.insert': {
+    'powerpoint.insert': {
         id: 'desktop.powerpoint.insert',
         label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Insert.Label'),
-        script: 'desktop.powerpoint.insert',
+        script: 'powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -96,10 +96,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.save': {
-        id: 'desktop.powerpoint.save',
+    'powerpoint.save': {
+        id: 'powerpoint.save',
         label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Save.Label'),
-        script: 'desktop.powerpoint.save',
+        script: 'powerpoint.save',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -133,10 +133,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.close': {
-        id: 'desktop.powerpoint.close',
+    'powerpoint.close': {
+        id: 'powerpoint.close',
         label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Close.Label'),
-        script: 'desktop.powerpoint.close',
+        script: 'powerpoint.close',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {

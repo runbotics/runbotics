@@ -2,6 +2,6 @@
 // export * from './automation/office/PowerPointAutomation';
 
 export default {
-    excel: "ExcelAutomation",
-    "desktop.powerpoint": "PowerPointAutomation",
+    excel: "ExcelActionHandler",
+    powerpoint: "PowerPointActionHandler",
 };

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -11,9 +11,9 @@ import { orchestratorAxios } from '../../../config/axios-configuration';
 import { BotWsMessage, IProcess } from 'runbotics-common';
 import { RuntimeService } from '../../bpm/Runtime';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
-import { AuthService } from '../auth/Auth.service';
+import { AuthService } from '../auth/auth.service';
 import { delay, SECOND } from '../../../utils/delay';
-import { StartProcessMessageBody } from './Process.listener.types';
+import { StartProcessMessageBody } from './process.listener.types';
 
 @Injectable()
 export class ProcessListener {
@@ -32,7 +32,7 @@ export class ProcessListener {
 
     @OnConnectError()
     async connectError(error: Error) {
-        this.logger.error(`Scheduler is unreachable`, error);
+        this.logger.error('Scheduler is unreachable', error);
         await delay(5 * SECOND);
         this.io.connect();
     }

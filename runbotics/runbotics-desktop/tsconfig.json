@@ -10,10 +10,48 @@
         "target": "es2017",
         "sourceMap": true,
         "outDir": "dist",
-        "baseUrl": "./",
+        "baseUrl": "./src",
         "incremental": true,
         "skipLibCheck": true,
         "allowJs": true,
         "resolveJsonModule": true,
+        "paths": {
+            "#action": [
+                "action"
+            ],
+            "#action/*": [
+                "action/*"
+            ],
+            "#mailer": [
+                "mailer"
+            ],
+            "#mailer/*": [
+                "mailer/*"
+            ],
+            "#core": [
+                "core"
+            ],
+            "#core/*": [
+                "core/*"
+            ],
+            "#config": [
+                "config"
+            ],
+            "#config/*": [
+                "config/*"
+            ],
+            "#utils": [
+                "utils"
+            ],
+            "#utils/*": [
+                "utils/*"
+            ],
+            "#logger": [
+                "logger"
+            ],
+            "#logger/*": [
+                "logger/*"
+            ],
+        }
     }
 }

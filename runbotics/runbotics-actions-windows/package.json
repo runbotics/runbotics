@@ -12,10 +12,10 @@
     "source": "src/index.ts",
     "exports": {
         ".": "./dist/index.js",
-        "./ExcelAutomation": "./dist/ExcelAutomation.js",
-        "./PowerPointAutomation": "./dist/PowerPointAutomation.js",
-        "./dist/ExcelAutomation": "./dist/ExcelAutomation.js",
-        "./dist/PowerPointAutomation": "./dist/PowerPointAutomation.js"
+        "./ExcelActionHandler": "./dist/excel.action-handler.js",
+        "./PowerPointActionHandler": "./dist/power-point.action-handler.js",
+        "./dist/ExcelActionHandler": "./dist/excel.action-handler.js",
+        "./dist/PowerPointActionHandler": "./dist/power-point.action-handler.js"
     },
     "scripts": {
         "postinstall": "rushx build",

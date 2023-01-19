@@ -1,0 +1,36 @@
+import { DesktopRunRequest } from 'runbotics-sdk';
+
+export type ResourceMapper = {
+    config: Record<string, string | string[]>;
+    hardcoded?: Record<string, any>;
+};
+
+export interface ApiResource {
+    url: string;
+    method?: string;
+    headers?: Record<string, string>;
+    dataSelector?: string;
+    mapper?: ResourceMapper;
+    body?: any;
+}
+
+export type ApiRequestActionRequest =
+| DesktopRunRequest<'api.request', ApiRequestInput>
+| DesktopRunRequest<'api.downloadFile', ApiDownloadFileInput>;
+
+
+export type ApiRequestInput = ApiResource & {
+    templateData?: Record<string, any>;
+};
+
+export type ApiRequestOutput<T> = {
+    data: T;
+    status: number;
+    statusText: string;
+};
+
+export type ApiDownloadFileOutput = string;
+
+export type ApiDownloadFileInput = {
+    url: string;
+};

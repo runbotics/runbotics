@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
-import { ServerConfigService } from '../../../config/ServerConfigService';
-import { StorageService } from '../../../config/StorageService';
+import { ServerConfigService } from '../../../config/server-config.service';
+import { StorageService } from '../../../config/storage.service';
 import { orchestratorAxios } from '../../../config/axios-configuration';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,10 +28,10 @@ export class AuthService {
                 maxRedirects: 0,
             },
         )
-        .catch((error) => {
-            this.logger.error('<= Error authenticating with server: ' + this.serverConfigService.entrypointUrl, error);
-            throw error;
-        });
+            .catch((error) => {
+                this.logger.error('<= Error authenticating with server: ' + this.serverConfigService.entrypointUrl, error);
+                throw error;
+            });
 
         const token = response.data['id_token'];
         orchestratorAxios.defaults.headers.Authorization = `Bearer ${token}`;

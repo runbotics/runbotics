@@ -1,4 +1,4 @@
-import { RunboticsLogger } from 'src/logger/RunboticsLogger';
+import { RunboticsLogger } from '#logger';
 import { IBpmnEngineEvent, ISubscription } from './Runtime.types';
 
 export class BpmnEngineEvent<T> implements IBpmnEngineEvent<T> {
