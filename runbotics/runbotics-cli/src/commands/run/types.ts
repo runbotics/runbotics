@@ -1,6 +1,6 @@
 export type Package = 'ui' | 'api' | 'scheduler' | 'bot';
 
 export interface RunCommandOptions {
-    dev?: boolean;
+    production?: boolean;
     debug?: boolean;
 }

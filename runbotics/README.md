@@ -14,11 +14,7 @@ $ npm install --global @microsoft/rush
 
 ### Docker
 
-Install docker on your environment in a way that suits you then create a docker volume to save your local progress.
-
-```bash
-$ docker volume create runbotics
-```
+Install docker on your environment in a way that suits you.
 
 # Dependencies installation
 Install all the required dependencies via
