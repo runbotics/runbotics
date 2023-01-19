@@ -131,12 +131,12 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
         const attendedProcessVariables =
             isAttended && executionInfo
                 ? passedInVariables.map(variable => ({
-                      label: variable,
-                      value: variable,
-                      group: translate(
-                          'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-                      )
-                  }))
+                    label: variable,
+                    value: variable,
+                    group: translate(
+                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                    )
+                }))
                 : [];
 
         const extractOutputs = (scope, rootElement) => {
