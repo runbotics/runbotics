@@ -29,12 +29,12 @@
         color: $palette-accent-primary;
     }
     
-    &::-webkit-input-placeholder {
+    &::placeholder {
         color: $text-placeholder-color;
         transition: color 200ms ease;
     }
     
-    &:focus::-webkit-input-placeholder {
+    &:focus::placeholder {
         color: $palette-accent-primary;
     }
 }
@@ -55,9 +55,8 @@
 }
 
 @media (max-width: $breakpoint-sm) {
-    .wrapper {
+    .root {
         width: 100%;
-        margin-top: $margin-3;
-        margin-bottom: $margin-3;
+        margin-inline: $margin-0 $margin-0;
     }
 }
