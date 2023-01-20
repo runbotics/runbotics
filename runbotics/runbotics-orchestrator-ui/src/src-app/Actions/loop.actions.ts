@@ -1,9 +1,9 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from '../types';
+import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-export const getLoopActions = (): Record<string, IBpmnAction> => ({
+const getLoopActions = (): Record<string, IBpmnAction> => ({
     'loop.loop': {
         id: 'loop.loop',
         label: translate('Process.Details.Modeler.Actions.Loop.Loop2.Label'),
@@ -97,3 +97,5 @@ export const getLoopActions = (): Record<string, IBpmnAction> => ({
         },
     },
 });
+
+export default getLoopActions;

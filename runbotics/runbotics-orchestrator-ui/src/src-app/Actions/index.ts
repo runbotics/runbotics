@@ -12,7 +12,7 @@ import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
 import getJavascriptActions from './javascript.actions';
 import getJiraActions from './jira.actions';
-import { getLoopActions } from './loop';
+import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
 import getSapActions from './sap.actions';
 import getSharepointExcelActions from './sharepointExcel.actions';

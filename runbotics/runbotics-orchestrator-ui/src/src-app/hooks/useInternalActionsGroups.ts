@@ -1,4 +1,3 @@
-import internalBpmnActions from '#src-app/Actions';
 import getApiActions from '#src-app/Actions/api.actions';
 import getApplicationActions from '#src-app/Actions/application.actions';
 import getAsanaActions from '#src-app/Actions/asana.actions';
@@ -11,6 +10,7 @@ import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
 import getJavascriptActions from '#src-app/Actions/javascript.actions';
 import getJiraActions from '#src-app/Actions/jira.actions';
+import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getSharepointExcelActions from '#src-app/Actions/sharepointExcel.actions';
@@ -55,7 +55,7 @@ const useInternalActionsGroups = (): Record<
             label: translate(
                 'Process.Details.Modeler.ActionPanel.ActionsGroup.Loop'
             ),
-            items: [internalBpmnActions['loop.loop']]
+            items: Object.values(getLoopActions())
         },
         api: {
             label: translate(
