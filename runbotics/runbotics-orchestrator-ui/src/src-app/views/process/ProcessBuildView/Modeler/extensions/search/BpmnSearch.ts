@@ -20,6 +20,7 @@ interface SearchProvider {
 export default class BpmnSearchProvider implements SearchProvider {
     private _elementRegistry: any;
     private _canvas: any;
+    static $inject: string[];
 
     constructor(elementRegistry: any, searchPad: any, canvas: any) {
         this._elementRegistry = elementRegistry;
@@ -81,3 +82,5 @@ const matchAndSplit = (text: string, pattern: string): Token[] => {
 
     return tokens;
 };
+
+BpmnSearchProvider.$inject = ['elementRegistry', 'searchPad', 'canvas'];
