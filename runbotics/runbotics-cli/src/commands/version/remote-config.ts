@@ -4,8 +4,7 @@ import { parse } from 'comment-json';
 import { Listr } from 'listr2';
 import { promisify } from 'util';
 
-import { Emoji } from '../utils/emoji';
-import spawn from './spawn';
+import { spawn, Emoji } from 'src/utils';
 import { containsVersion, LISTR_RENDERER_OPTIONS } from './utils';
 
 const exec = promisify(nativeExec);

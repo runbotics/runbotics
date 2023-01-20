@@ -5,10 +5,10 @@ import { IBpmnAction, Runner } from './types';
 
 
 const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
-    'variables.assign': {
-        id: 'variables.assign',
+    'variable.assign': {
+        id: 'variable.assign',
         label: translate('Process.Details.Modeler.Actions.Variables.Assign.Label'),
-        script: 'variables.assign',
+        script: 'variable.assign',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -44,10 +44,10 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'variables.assignList': {
-        id: 'variables.assignList',
+    'variable.assignList': {
+        id: 'variable.assignList',
         label: translate('Process.Details.Modeler.Actions.Variables.AssignList.Label'),
-        script: 'variables.assignList',
+        script: 'variable.assignList',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -84,10 +84,10 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'variables.assignGlobalVariable': {
-        id: 'variables.assignGlobalVariable',
+    'variable.assignGlobalVariable': {
+        id: 'variable.assignGlobalVariable',
         label: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'),
-        script: 'variables.assignGlobalVariable',
+        script: 'variable.assignGlobalVariable',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {

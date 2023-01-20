@@ -1,10 +1,14 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { IoClientModule } from 'nestjs-io-client';
-import { ConfigModule } from '../../config/RunBoticsConfigModule';
-import { ServerConfigService } from '../../config/ServerConfigService';
-import { AuthService } from './auth/Auth.service';
+import { ConfigModule } from '../../config/config.module';
+import { ServerConfigService } from '../../config/server-config.service';
+import { AuthService } from './auth/auth.service';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
-import { RuntimeService } from '../bpm/Runtime';
+import { ProcessListener } from './listeners/process.listener';
+import { WebsocketLogs } from './websocket-logs.service';
+import { WebsocketService } from './websocket.service';
+import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
+import { CoreModule } from '#core/core.module';
 
 @Module({
     imports: [
@@ -27,7 +31,14 @@ import { RuntimeService } from '../bpm/Runtime';
                 };
             },
         }),
+        forwardRef(() => CoreModule),
     ],
-    providers: [RuntimeService],
+    providers: [
+        AuthService,
+        ProcessListener,
+        WebsocketLogs,
+        WebsocketService,
+        RuntimeSubscriptionsService,
+    ],
 })
-export class WebsocketModule { }
+export class WebsocketModule {}

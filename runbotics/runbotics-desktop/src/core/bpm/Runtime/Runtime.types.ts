@@ -5,7 +5,7 @@ import {
 } from 'bpmn-engine';
 
 import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
-import { StartProcessMessageBody } from 'src/core/websocket/listeners/Process.listener.types';
+import { StartProcessMessageBody } from '#core/websocket/listeners/process.listener.types';
 
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;

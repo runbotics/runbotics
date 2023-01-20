@@ -15,14 +15,17 @@ import {
     IProcessInstance,
     IProcess,
 } from 'runbotics-common';
-import { Camunda } from '../CamundaExtension';
 import { v4 as uuidv4 } from 'uuid';
 import { EventEmitter } from 'events';
+import { mkdirSync, rmdirSync } from 'fs';
+
+import { RunboticsLogger } from '#logger';
+
+import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
-import { DesktopRunnerService } from '../../../DesktopRunnerService';
-import { RunboticsLogger } from '../../../logger/RunboticsLogger';
+import { DesktopRunnerService } from '../DesktopRunner';
 import { FieldResolver } from '../FieldResolver';
-import { IActivityOwner, IEnviroment } from '../bpmn.types';
+import { IActivityOwner, IEnvironment } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -33,7 +36,6 @@ import {
     BpmnProcessInstance,
 } from './Runtime.types';
 import { BpmnEngineEvent } from './BpmnEngineEvent';
-import { mkdirSync, rmdirSync } from 'fs';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -43,7 +45,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly onProcessChange = new BpmnEngineEvent<IProcessEventData>();
     private readonly onActivityChange = new BpmnEngineEvent<IActivityEventData>();
 
-    constructor(@Inject(forwardRef(() => DesktopRunnerService)) private desktopRunnerService: DesktopRunnerService) {}
+    constructor(
+        @Inject(forwardRef(() => DesktopRunnerService))
+        private desktopRunnerService: DesktopRunnerService,
+    ) {}
 
     onApplicationBootstrap() {
         this.monitor().then();
@@ -139,7 +144,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnviroment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
+            if ((api.environment as IEnvironment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
                 return;
             this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
 
@@ -151,7 +156,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.end', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnviroment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
+            if ((api.environment as IEnvironment).runbotic?.disabled || api.content.parent?.type === 'bpmn:SubProcess')
                 return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end`);
@@ -392,7 +397,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     result,
                 );
 
-                callback(null, result.output);
+                callback(null, result);
             } catch (e) {
                 this.logger.error(
                     `[${processInstanceId}] [${executionId}] [${script}] Error running desktop action`,

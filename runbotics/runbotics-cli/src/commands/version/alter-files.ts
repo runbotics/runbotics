@@ -4,9 +4,8 @@ import { stringify } from 'comment-json';
 import { Listr } from 'listr2';
 import fs from 'fs-extra';
 
-import spawn from './spawn';
+import { spawn, Emoji } from 'src/utils';
 import { MONOREPO_CONFIGS_RELATIVE_PATHS, RUNBOTICS_CONFIG_RELATIVE_PATH, API_CONFIG_RELATIVE_PATH, LISTR_RENDERER_OPTIONS } from './utils';
-import { Emoji } from '../utils/emoji';
 
 const { readJsonSync, writeFileSync } = fs;
 

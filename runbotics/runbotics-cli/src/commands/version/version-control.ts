@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { Listr } from 'listr2';
-import { Emoji } from '../utils/emoji';
-import spawn from './spawn';
+import { spawn, Emoji } from 'src/utils';
 import { LISTR_RENDERER_OPTIONS } from './utils';
 
 const versionControl = async (rbRootDir: string, nextVersion: string) => {

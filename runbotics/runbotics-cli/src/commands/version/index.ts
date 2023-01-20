@@ -1,3 +1,3 @@
-import { default as version } from './version';
+import version from './version';
 
 export default version;

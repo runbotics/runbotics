@@ -6,10 +6,10 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
-    'desktop.powerpoint.open': {
-        id: 'desktop.powerpoint.open',
-        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Open.Label'),
-        script: 'desktop.powerpoint.open',
+    'powerpoint.open': {
+        id: 'powerpoint.open',
+        label: translate('Process.Details.Modeler.Actions.Powerpoint.Open.Label'),
+        script: 'powerpoint.open',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -21,18 +21,18 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Input'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Open.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
-                                title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.FilePath'),
+                                title: translate('Process.Details.Modeler.Actions.PowerPoint.Open.FilePath'),
                                 type: 'string',
                             },
                         },
                         required: ['filePath'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Open.Output'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Open.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -50,10 +50,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.insert': {
+    'powerpoint.insert': {
         id: 'desktop.powerpoint.insert',
-        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Insert.Label'),
-        script: 'desktop.powerpoint.insert',
+        label: translate('Process.Details.Modeler.Actions.Powerpoint.Insert.Label'),
+        script: 'powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -65,12 +65,12 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Input'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.FilePath',
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.FilePath',
                                 ),
                                 type: 'string',
                             },
@@ -78,7 +78,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['filePath'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.CopySlide.Output'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -96,10 +96,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.save': {
-        id: 'desktop.powerpoint.save',
-        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Save.Label'),
-        script: 'desktop.powerpoint.save',
+    'powerpoint.save': {
+        id: 'powerpoint.save',
+        label: translate('Process.Details.Modeler.Actions.Powerpoint.Save.Label'),
+        script: 'powerpoint.save',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -111,13 +111,13 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Input'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Save.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Save.Output'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Save.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -133,10 +133,10 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.powerpoint.close': {
-        id: 'desktop.powerpoint.close',
-        label: translate('Process.Details.Modeler.Actions.Desktop.Powerpoint.Close.Label'),
-        script: 'desktop.powerpoint.close',
+    'powerpoint.close': {
+        id: 'powerpoint.close',
+        label: translate('Process.Details.Modeler.Actions.Powerpoint.Close.Label'),
+        script: 'powerpoint.close',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -148,7 +148,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.DesktopPowerPoint.Close.Input'),
+                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Close.Input'),
                         type: 'object',
                         properties: {},
                         required: [],

@@ -4,9 +4,8 @@ import { exec as nativeExec } from 'child_process';
 import fs from 'fs-extra';
 import { promisify } from 'util';
 
+import { getRepositoryPath, Emoji } from 'src/utils';
 import { RUNBOTICS_CONFIG_RELATIVE_PATH } from './utils';
-import getRepositoryPath from '../utils/repository-path';
-import { Emoji } from '../utils/emoji';
 
 const { readJsonSync } = fs;
 const exec = promisify(nativeExec);

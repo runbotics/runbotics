@@ -82,7 +82,8 @@ services:
 
 volumes:
   runbotics:
-    external: true
+    name: runbotics
+    external: false
 
 networks:
   default:

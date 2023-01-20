@@ -6,19 +6,41 @@ import { Argument, program } from 'commander';
 import version from './commands/version';
 import run from './commands/run';
 import logo from './commands/logo';
-import firstCharUpperCase from './commands/utils/first-upper';
+import docker from './commands/docker';
+import install from './commands/install';
+import update from './commands/update';
+import firstCharUpperCase from './utils/first-upper';
 
 program
     .name('rb')
     .usage('[command] [options] <package>')
-    .version('1.0.0');
+    .version('2.1.0');
 
 program
-    .description('Runs selected package')
+    .description('Runs selected package in development mode')
     .addArgument(new Argument('<package>', 'name of the package').choices(['ui', 'api', 'scheduler', 'bot']))
-    .option('-d, --dev', 'development mode')
-    .option('--debug', 'debug mode')
+    .option('-p, --production', 'runs package in production mode')
+    .option('-d, --debug', 'runs package in debug mode')
     .action(run);
+
+program
+    .command('docker')
+    .alias('d')
+    .description('Pulls latest images then create and start docker compose containers detached')
+    .addArgument(new Argument('[operation]', 'Specify type of the operation').choices(['pull', 'up', 'down']))
+    .action(docker);
+
+program
+    .command('install')
+    .alias('i')
+    .description('Runs "rush install" command')
+    .action(install);
+    
+program
+    .command('update')
+    .alias('u')
+    .description('Runs "rush update" command')
+    .action(update);
 
 program
     .command('version')

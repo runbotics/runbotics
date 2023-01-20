@@ -5,7 +5,7 @@ import { IBpmnAction, Runner } from './types';
 
 
 // eslint-disable-next-line max-lines-per-function
-const getFileActions: () => Record<string, IBpmnAction> = () => ({
+const getFileActions = (): Record<string, IBpmnAction> => ({
     'file.appendFile': {
         id: 'file.appendFile',
         label: translate('Process.Details.Modeler.Actions.File.AppendFile.Label'),
