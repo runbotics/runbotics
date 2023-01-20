@@ -1,10 +1,12 @@
 import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
 import fs from 'fs';
 import parse from 'csv-parser';
-import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 import { Injectable } from '@nestjs/common';
 
 import { RunboticsLogger } from '#logger';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 // ----
 export type WriteFileActionInput = {
