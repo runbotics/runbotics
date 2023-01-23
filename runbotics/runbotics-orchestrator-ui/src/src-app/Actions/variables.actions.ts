@@ -2,132 +2,150 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
-    'variable.assign': {
-        id: 'variable.assign',
-        label: translate('Process.Details.Modeler.Actions.Variables.Assign.Label'),
-        script: 'variable.assign',
+    'variables.assign': {
+        id: 'variables.assign',
+        label: translate(
+            'Process.Details.Modeler.Actions.Variables.Assign.Label'
+        ),
+        script: 'variables.assign',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Variable.Assign.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Variable.Assign.Input'
+                        ),
                         type: 'object',
                         properties: {
                             variable: {
-                                title: translate('Process.Details.Modeler.Actions.Variable.Assign.Variable'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Variable.Assign.Variable'
+                                ),
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: '^[a-zA-Z0-9_]*$'
                             },
 
                             value: {
                                 type: 'string',
-                                title: translate('Process.Details.Modeler.Actions.Variable.Assign.Value'),
-                            },
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Variable.Assign.Value'
+                                )
+                            }
                         },
-                        required: ['variable', 'value'],
-                    },
-                },
+                        required: ['variable', 'value']
+                    }
+                }
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input']
             },
             formData: {
                 input: {
                     variable: undefined,
-                    value: undefined,
-                },
-            },
-        },
+                    value: undefined
+                }
+            }
+        }
     },
-    'variable.assignList': {
-        id: 'variable.assignList',
-        label: translate('Process.Details.Modeler.Actions.Variables.AssignList.Label'),
-        script: 'variable.assignList',
+    'variables.assignList': {
+        id: 'variables.assignList',
+        label: translate(
+            'Process.Details.Modeler.Actions.Variables.AssignList.Label'
+        ),
+        script: 'variables.assignList',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Variable.AssignList.Input'
+                        ),
                         type: 'object',
                         properties: {
                             variable: {
-                                title: translate('Process.Details.Modeler.Actions.Variable.AssignList.Variable'),
-                                type: 'string',
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Variable.AssignList.Variable'
+                                ),
+                                type: 'string'
                             },
                             value: {
-                                title: translate('Process.Details.Modeler.Actions.Variable.AssignList.List'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Variable.AssignList.List'
+                                ),
                                 type: 'array',
                                 items: {
-                                    type: 'string',
-                                },
-                            },
+                                    type: 'string'
+                                }
+                            }
                         },
-                        required: ['variable', 'value'],
-                    },
-                },
+                        required: ['variable', 'value']
+                    }
+                }
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input']
             },
             formData: {
                 input: {
                     variable: undefined,
-                    value: [''],
-                },
-            },
-        },
+                    value: ['']
+                }
+            }
+        }
     },
-    'variable.assignGlobalVariable': {
-        id: 'variable.assignGlobalVariable',
-        label: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'),
-        script: 'variable.assignGlobalVariable',
+    'variables.assignGlobalVariable': {
+        id: 'variables.assignGlobalVariable',
+        label: translate(
+            'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'
+        ),
+        script: 'variables.assignGlobalVariable',
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Input'
+                        ),
                         type: 'object',
                         properties: {
                             globalVariables: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.GlobalVariables',
+                                    'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.GlobalVariables'
                                 ),
                                 type: 'array',
                                 items: {
-                                    type: 'string',
+                                    type: 'string'
                                 }
-                            },
+                            }
                         },
-                        required: ['globalVariables'],
-                    },
-                },
+                        required: ['globalVariables']
+                    }
+                }
             },
             uiSchema: {
                 'ui:order': ['input'],
                 input: {
                     globalVariables: {
                         items: {
-                            'ui:widget': 'GlobalVariableSelectWidget',
+                            'ui:widget': 'GlobalVariableSelectWidget'
                         }
-                    },
-                },
+                    }
+                }
             },
             formData: {
                 input: {
-                    globalVariables: [],
-                },
-            },
-        },
-    },
+                    globalVariables: []
+                }
+            }
+        }
+    }
 });
 
 export default getVariablesActions;

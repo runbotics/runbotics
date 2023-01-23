@@ -286,7 +286,8 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
                     );
                 })
                 .concat(attendedProcessVariables)
-                .filter(variable => variable !== undefined);
+                .filter(variable => variable !== undefined)
+                .flatMap(variable => variable);
 
             const dollarVariables = variables.map(option => ({
                 ...option,
