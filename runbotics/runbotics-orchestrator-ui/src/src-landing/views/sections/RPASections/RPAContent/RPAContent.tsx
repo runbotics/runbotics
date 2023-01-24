@@ -9,7 +9,7 @@ const RPAContent: FC = () => {
     const { translate } = useTranslations();
 
     return (
-        <div className={styles.root}>
+        <div>
             <div className={styles.title}>
                 <Typography>
                     {translate('Landing.RPA.Title.Part1')}

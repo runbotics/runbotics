@@ -4,7 +4,7 @@ $ARROWS_HEIGHT: 500px;
 $PC_CONTENT_PADDING: $padding-6 + $padding-2 + $padding-1 + $padding-2 + $padding-6;
 $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
 
-@mixin arrowBackground ($url, $width, $backgroundPosition, $right: auto, $left: auto) {
+@mixin addBackgroundImage ($url, $width, $backgroundPosition, $right: auto, $left: auto) {
     position: absolute;
     inset: 0 $right auto $left;
     width: $width;
@@ -16,7 +16,7 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
     mix-blend-mode: soft-light;
 }
 
-@mixin translateBackground ($translatePosition) {
+@mixin translateHorizontally ($translatePosition) {
     transform: translateX($translatePosition);
 }
 
@@ -57,23 +57,23 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
     padding-inline: $PC_CONTENT_PADDING;
 
     &::before {
-        @include arrowBackground(
+        @include addBackgroundImage(
             $url: '/images/shapes/RPA-arrows-long.svg',
             $width: 80vw, 
             $backgroundPosition: right,
             $left: 0
         );
-        @include translateBackground(calc(-100% + $PC_CONTENT_PADDING - $padding-2));
+        @include translateHorizontally(calc(-100% + $PC_CONTENT_PADDING - $padding-2));
     }
     
     &::after {
-        @include arrowBackground(
+        @include addBackgroundImage(
             $url: '/images/shapes/RPA-arrows-short.svg', 
             $width: 60vw, 
             $backgroundPosition: left, 
             $right: 0
         );
-        @include translateBackground(calc(100% - $PC_CONTENT_PADDING - $padding-2));
+        @include translateHorizontally(calc(100% - $PC_CONTENT_PADDING - $padding-2));
     }
 }
 
@@ -83,17 +83,16 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
     }
 }
 
-
 @media (max-width: $breakpoint-md) {
     .rightColumn {
         padding: $MOBILE_CONTENT_PADDING;
 
         &::before {
-            @include translateBackground(calc(-100% + $MOBILE_CONTENT_PADDING - $padding-2));
+            @include translateHorizontally(calc(-100% + $MOBILE_CONTENT_PADDING - $padding-2));
         }
         
         &::after {
-            @include translateBackground(calc(100% - $MOBILE_CONTENT_PADDING));
+            @include translateHorizontally(calc(100% - $MOBILE_CONTENT_PADDING));
         }
     }
 }
