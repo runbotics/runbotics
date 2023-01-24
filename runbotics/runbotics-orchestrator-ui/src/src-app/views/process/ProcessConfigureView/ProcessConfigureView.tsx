@@ -51,11 +51,13 @@ const ProcessConfigureView: VFC = () => {
     const handleSelectBotSystem = async (system: IBotSystem) => {
         await dispatch(processActions.updateBotSystem({ id: process.id, system }));
         setSelectedBotSystem(system);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
         await dispatch(processActions.updateBotCollection({ id: process.id, botCollection }));
         setSelectedBotCollection(botCollection);
+        await dispatch(processActions.fetchProcessById(process.id));
     };
 
     const handleAttendanceChange = async (isAttended: boolean) => {
