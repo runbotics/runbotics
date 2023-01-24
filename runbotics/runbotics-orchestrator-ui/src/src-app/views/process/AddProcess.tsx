@@ -11,6 +11,7 @@ import {
     TextField,
     Box
 } from '@mui/material';
+// import { set } from as'lodash';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
@@ -61,9 +62,11 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    // const processNameInputRef = useRef(null)
 
     const handleSubmit = async () => {
-        if (!name) {
+
+        if (!name || name.trim() === '') {
             setInputErrorType(InputErrorType.REQUIRED);
             return;
         }
@@ -91,8 +94,15 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         }
     };
 
+    const handleKeypress = e => {
+        if (e.code === 'Enter') {
+            handleSubmit();
+        }
+    };
+
     useEffect(() => {
         if (open) setName(null);
+        setInputErrorType(null);
     }, [open]);
 
     useEffect(() => {
@@ -111,7 +121,9 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
                         fullWidth
                         value={name}
                         onChange={e => setName(e.target.value)}
+                        onKeyPress={handleKeypress}
                         required
+                        autoFocus
                     />
                 </Box>
             </DialogContent>
@@ -123,7 +135,6 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
                     type="submit"
                     variant="contained"
                     color="primary"
-                    autoFocus
                     onClick={handleSubmit}
                     aria-label={translate('Common.Submit')}>
                     {translate('Common.Save')}
