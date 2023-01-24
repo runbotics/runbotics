@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
-import styles from './RPAContent.module.scss';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+
+import styles from './RPAContent.module.scss';
 
 const RPAContent: FC = () => {
     const { translate } = useTranslations();
