@@ -1,12 +1,11 @@
 @import "#src-landing/scss/main.scss";
 
-
 .root {
   composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding: $padding-10;
+  padding: $padding-12 $padding-10;
 }
 
 .title {
