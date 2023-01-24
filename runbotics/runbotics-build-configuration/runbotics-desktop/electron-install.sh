@@ -10,7 +10,7 @@ echo $'\n[INFO] - runbotics-common install finished'
 
 echo $'\n[INFO] - runbotics-actions-windows install start\n'
 cd runbotics-actions-windows && \
-pnpm add runbotics-sdk@file:../runbotics-sdk && \
+pnpm add runbotics-sdk@file:../runbotics-sdk --ignore-scripts && \
 pnpm install --ignore-scripts && cd ..
 echo $'\n[INFO] - runbotics-actions-windows install finished'
 
@@ -19,6 +19,7 @@ cp .npmrc ./runbotics-desktop && \
 cd runbotics-desktop && \
 pnpm add runbotics-common@file:../runbotics-common \
     runbotics-sdk@file:../runbotics-sdk \
-    runbotics-actions-windows@file:../runbotics-actions-windows && \
+    runbotics-actions-windows@file:../runbotics-actions-windows \
+    --ignore-scripts && \
 pnpm install --ignore-scripts && cd ..
 echo $'\n[INFO] - runbotics-desktop install finished'
