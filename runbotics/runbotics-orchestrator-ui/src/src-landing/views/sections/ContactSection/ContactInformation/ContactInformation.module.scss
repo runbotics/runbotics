@@ -25,6 +25,7 @@ $INFO-MAX-WIDTH: 800px;
 .gridItemText {
     font-weight: $font-weight-semi-bold;
     color: $text-color-dark;
+    word-break: break-all;
 }
 
 @media (max-width: $breakpoint-md) {

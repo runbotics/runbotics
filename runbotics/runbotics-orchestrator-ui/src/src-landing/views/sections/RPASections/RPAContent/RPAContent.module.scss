@@ -1,23 +1,12 @@
 @import "#src-landing/scss/main.scss";
 
-.root {
-  composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
-  z-index: 1;
-  color: $text-color-light;
-  isolation: isolate;
-}
-
-.contentWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
 .title {
-  @include font-face-base;
-  font-weight: $font-weight-semi-bold;
-  padding-bottom: $padding-3;
+    @include font-face-base;
+    font-weight: $font-weight-semi-bold;
+    font-size: $font-size-h2;
+    padding-bottom: $padding-4;
 }
 
-.paragraph1 {
-  padding-bottom: $padding-3;
+.paragraphs {
+    padding-bottom: $padding-4;
 }
