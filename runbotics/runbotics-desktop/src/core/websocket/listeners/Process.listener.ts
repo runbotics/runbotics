@@ -9,7 +9,7 @@ import {
 } from 'nestjs-io-client';
 import { orchestratorAxios } from '../../../config/axios-configuration';
 import { BotWsMessage, IProcess } from 'runbotics-common';
-import { RuntimeService } from '../../bpm/Runtime';
+import { RuntimeService } from '../../bpm/runtime';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
 import { AuthService } from '../auth/auth.service';
 import { delay, SECOND } from '../../../utils/delay';

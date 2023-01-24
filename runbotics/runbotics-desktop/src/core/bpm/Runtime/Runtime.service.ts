@@ -23,7 +23,7 @@ import { RunboticsLogger } from '#logger';
 
 import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
-import { DesktopRunnerService } from '../DesktopRunner';
+import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
 import { IActivityOwner, IEnvironment } from '../bpmn.types';
 import {
@@ -34,16 +34,16 @@ import {
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
     BpmnProcessInstance,
-} from './Runtime.types';
-import { BpmnEngineEvent } from './BpmnEngineEvent';
+} from './runtime.types';
+import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     engines: Record<string, BpmnEngine> = {};
     processInstances: Record<string, BpmnProcessInstance> = {};
     private readonly logger = new RunboticsLogger(RuntimeService.name);
-    private readonly onProcessChange = new BpmnEngineEvent<IProcessEventData>();
-    private readonly onActivityChange = new BpmnEngineEvent<IActivityEventData>();
+    private readonly processEventBus = new BpmnEngineEventBus<IProcessEventData>();
+    private readonly activityEventBus = new BpmnEngineEventBus<IActivityEventData>();
 
     constructor(
         @Inject(forwardRef(() => DesktopRunnerService))
@@ -51,13 +51,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     ) {}
 
     onApplicationBootstrap() {
-        this.monitor().then();
+        this.monitor();
     }
 
     onModuleDestroy() {
         for (const processInstance of Object.values(this.processInstances)) {
             this.logger.log(`Destroying running process instance ${processInstance.id}`);
-            this.onProcessChange.publish({
+            this.processEventBus.publish({
                 processInstanceId: processInstance.id,
                 eventType: ProcessInstanceStatus.ERRORED,
                 processInstance: { ...processInstance, error: 'Bot has been shut down' },
@@ -66,11 +66,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     processChange(): IBpmnEngineEvent<IProcessEventData> {
-        return this.onProcessChange.expose();
+        return this.processEventBus.expose();
     }
 
     activityChange(): IBpmnEngineEvent<IActivityEventData> {
-        return this.onActivityChange.expose();
+        return this.activityEventBus.expose();
     }
 
     private createTempDir() {
@@ -107,7 +107,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...(request.trigger && { trigger: { name: request.trigger } }),
         };
         this.processInstances[processInstanceId] = processInstance;
-        this.onProcessChange.publish({
+        this.processEventBus.publish({
             processInstanceId,
             eventType: ProcessInstanceStatus.INITIALIZING,
             processInstance,
@@ -136,7 +136,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 status: ProcessInstanceStatus.IN_PROGRESS,
             };
             this.processInstances[processInstanceId] = processInstance;
-            this.onProcessChange.publish({
+            this.processEventBus.publish({
                 processInstanceId: processInstance.id,
                 eventType: ProcessInstanceStatus.IN_PROGRESS,
                 processInstance,
@@ -148,7 +148,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 return;
             this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
 
-            this.onActivityChange.publish({
+            this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.IN_PROGRESS,
                 activity: api,
@@ -162,7 +162,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             this.logger.log(`${getActivityLogPrefix(api)} activity.end`);
 
             if (!this.processInstances[processInstance.id]) {
-                this.onActivityChange.publish({
+                this.activityEventBus.publish({
                     processInstance: {
                         ...processInstance,
                         status: ProcessInstanceStatus.TERMINATED,
@@ -173,7 +173,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 return;
             }
 
-            this.onActivityChange.publish({
+            this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.COMPLETED,
                 activity: api,
@@ -183,7 +183,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         listener.on('activity.stop', (api: BpmnExecutionEventMessageApi) => {
             this.logger.log(`${getActivityLogPrefix(api)} activity.stop`);
 
-            this.onActivityChange.publish({
+            this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.STOPPED,
                 activity: api,
@@ -193,7 +193,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         listener.on('activity.error', (api: BpmnExecutionEventMessageApi) => {
             this.logger.error(`${getActivityLogPrefix(api)} activity.error`);
 
-            this.onActivityChange.publish({
+            this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.ERRORED,
                 activity: api,
@@ -219,7 +219,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 }
                 this.processInstances[processInstanceId] = processInstance;
 
-                this.onProcessChange.publish({
+                this.processEventBus.publish({
                     processInstanceId,
                     eventType: ProcessInstanceStatus.ERRORED,
                     processInstance,
@@ -244,7 +244,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 this.logger.log(`[${processInstanceId}] [${execution.environment.options.name}] process.stop`);
                 this.logger.log(`[${processInstanceId}] Process output`, { ...execution.environment.output });
 
-                this.onProcessChange.publish({
+                this.processEventBus.publish({
                     processInstanceId,
                     processInstance,
                     eventType: ProcessInstanceStatus.TERMINATED,
@@ -268,7 +268,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 this.processInstances[processInstanceId] = processInstance;
 
                 setTimeout(() => {
-                    this.onProcessChange.publish({
+                    this.processEventBus.publish({
                         processInstanceId: processInstance.id,
                         eventType: ProcessInstanceStatus.COMPLETED,
                         processInstance: { ...processInstance },

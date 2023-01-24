@@ -1,8 +1,6 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import {
-    DesktopRunRequest, StatefulActionHandler, StatelessActionHandler
-} from 'runbotics-sdk';
+import { DesktopRunRequest, StatefulActionHandler } from 'runbotics-sdk';
 import { readdirSync } from 'fs';
 import path from 'path';
 
@@ -27,12 +25,12 @@ import SapActionHandler from '#action/sap';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
-import { RuntimeService } from '../Runtime';
+import { RuntimeService } from '../runtime';
 import {
     ActionHandler,
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
-} from './DesktopRunner.types';
-import { FINISHED_PROCESS_STATUSES } from './DesktopRunner.utils';
+} from './desktop-runner.types';
+import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {

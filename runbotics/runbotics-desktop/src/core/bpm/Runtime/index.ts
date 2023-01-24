@@ -1,2 +1,2 @@
-export * from './Runtime.service';
-export * from './Runtime.types';
+export * from './runtime.service';
+export * from './runtime.types';

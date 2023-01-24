@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
-import { RunboticsLogger } from '../../logger/RunboticsLogger';
+import { RunboticsLogger } from '#logger';
 
 @Injectable()
 export class WebsocketService implements OnApplicationBootstrap {
