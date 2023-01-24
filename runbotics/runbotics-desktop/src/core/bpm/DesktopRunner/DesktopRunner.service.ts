@@ -29,6 +29,7 @@ import { RunboticsLogger } from '#logger';
 
 import { RuntimeService } from '../Runtime';
 import {
+    ActionHandler,
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
 } from './DesktopRunner.types';
 import { FINISHED_PROCESS_STATUSES } from './DesktopRunner.utils';
@@ -130,7 +131,7 @@ export class DesktopRunnerService implements OnModuleInit {
 
             for (const extension of extensions) {
                 currentExtensionName = extension;
-                const extensionPath = path.resolve(`${this.serverConfigService.extensionsDirPath}/${extension}`);
+                const extensionPath = path.resolve(this.serverConfigService.extensionsDirPath, extension);
                 this.logger.log(`Loading ${extension} extension`);
                 await this.loadExternalModule(extensionPath);
                 this.logger.log(`Success: Extension ${extension} loaded`);
@@ -148,11 +149,10 @@ export class DesktopRunnerService implements OnModuleInit {
             this.logger.log(`Tearing down action handlers sessions [${handlersNames}]`);
             await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
                 .map(handlerInstance => {
-                    const hasTearDownMethod = handlerInstance
+                    if(handlerInstance
                         && handlerInstance instanceof StatefulActionHandler
-                        && handlerInstance.tearDown;
-
-                    if (hasTearDownMethod) {
+                        && handlerInstance.tearDown
+                    ) {
                         return handlerInstance.tearDown();
                     } else {
                         this.logger.error(`No tear down method in handler ${handlerInstance.constructor.name}`);
@@ -186,13 +186,13 @@ export class DesktopRunnerService implements OnModuleInit {
         }
 
         // Default export of the external module is an object that contains keys and names/paths of the exported handlers
-        const moduleEntries = Object.entries<string>(module);
+        const moduleEntries = Object.entries<ActionHandler>(module);
         if (moduleEntries.length === 0) {
             this.logger.error(`Module ${externalModule} handlers map has invalid structure or object is empty`);
             return;
         }
 
-        for (const [key, handlerName] of moduleEntries) {
+        for (const [key, handler] of moduleEntries) {
             // internalHandlersMap accepts only predefined keys but 'key' is a type of string
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -201,41 +201,31 @@ export class DesktopRunnerService implements OnModuleInit {
                 continue;
             }
 
-            this.externalHandlersMap.set(key, {
-                module: externalModule,
-                // External module has to provide simple import path via 'exports' field in package.json or exact path to the module
-                handlerName,
-            });
-            this.logger.log(`Success: Imported handler ${key} ${handlerName}`);
+            this.externalHandlersMap.set(key, handler);
+            this.logger.log(`Success: Imported handler ${key} ${handler.name}`);
         }
     }
 
     async run(request: DesktopRunRequest) {
-        let handlerInstance;
+        let handlerInstance = null;
         try {
-            for (const [key, service] of this.internalHandlersMap) {
+            for (const [key, handler] of this.internalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                handlerInstance = service;
-                this.processHandlersInstancesMap.set(service.constructor.name, service);
+                handlerInstance = handler;
+                this.processHandlersInstancesMap.set(handler.constructor.name, handler);
 
-                return await service.run(request);
+                return await handlerInstance.run(request);
             }
           
-            for (const [key, service] of this.externalHandlersMap) {
+            for (const [key, handler] of this.externalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                handlerInstance = this.processHandlersInstancesMap.get(service.handlerName);
+                const activeProcessInstance = this.processHandlersInstancesMap.get(handler.constructor.name);
 
-                if (!handlerInstance) {
-                    const file = `${service.module}/dist/${service.handlerName}`;
-                    delete require.cache[require.resolve(file)];
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    const Handler = require(file);
-                    handlerInstance = new Handler();
-                }
+                handlerInstance = activeProcessInstance ?? new handler();
 
-                this.processHandlersInstancesMap.set(service.handlerName, handlerInstance);
+                this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
 
                 return await handlerInstance.run(request);
             }
@@ -247,12 +237,12 @@ export class DesktopRunnerService implements OnModuleInit {
             );
             throw e;
         } finally {
-            if (handlerInstance && handlerInstance instanceof StatelessActionHandler) {
+            const isStatefulActionHandler = handlerInstance instanceof StatefulActionHandler;
+            if (handlerInstance && !isStatefulActionHandler) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`
                 );
                 this.processHandlersInstancesMap.delete(handlerInstance.constructor.name);
-                handlerInstance = null;
             }
         }
 

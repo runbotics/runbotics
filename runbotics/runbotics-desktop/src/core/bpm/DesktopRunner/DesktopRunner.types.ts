@@ -1,12 +1,10 @@
 import { StatefulActionHandler, StatelessActionHandler } from 'runbotics-sdk';
 import { Worker } from 'worker_threads';
 
-export interface ExternalHandler {
-    module: string;
-    handlerName: string;
-}
+// helper abstract class implementation type
+export type ActionHandler =  { new(): StatelessActionHandler | StatefulActionHandler };
 
-export type ExternalHandlersMap = Map<string, ExternalHandler>;
+export type ExternalHandlersMap = Map<string, any>;
 
 export type InternalHandlerKey =
 | 'api'
@@ -31,6 +29,6 @@ export type InternalHandlerKey =
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 
-export type HandlersInstancesMap<T = string> = Map<T, StatelessActionHandler | StatefulActionHandler>;
+export type HandlersInstancesMap<T = string> = Map<T, StatefulActionHandler | StatelessActionHandler>;
 
 export type ExternalActionWorkerMap = Map<string, Worker>;

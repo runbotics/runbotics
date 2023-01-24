@@ -10,13 +10,6 @@
     "main": "dist/index.js",
     "module": "./dist/index.js",
     "source": "src/index.ts",
-    "exports": {
-        ".": "./dist/index.js",
-        "./ExcelActionHandler": "./dist/excel.action-handler.js",
-        "./PowerPointActionHandler": "./dist/power-point.action-handler.js",
-        "./dist/ExcelActionHandler": "./dist/excel.action-handler.js",
-        "./dist/PowerPointActionHandler": "./dist/power-point.action-handler.js"
-    },
     "scripts": {
         "postinstall": "rushx build",
         "build": "microbundle src/**/*.ts --no-compress --format cjs",
@@ -36,7 +29,7 @@
         "@nestjs/common": "^8.4.2",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.5.5",
-        "winax": "^3.1.5"
+        "winax": "3.1.5"
     },
     "files": [
         "dist"
