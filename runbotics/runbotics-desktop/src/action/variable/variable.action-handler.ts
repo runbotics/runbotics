@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { GlobalVariableType, IGlobalVariable } from 'runbotics-common';
 import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
 
-import { RuntimeService } from '#core/bpm/Runtime';
+import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
 import { RunboticsLogger } from '#logger';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RuntimeService } from './Runtime';
+import { RuntimeService } from './runtime';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 import { ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-common';
 
@@ -12,7 +12,7 @@ export class ConsultantLoggerService {
             switch (event.activity.content.type) {
                 case 'bpmn:StartEvent':
                     if (event.eventType == ProcessInstanceEventStatus.COMPLETED) {
-                        this.logger.log(`Process started`, event, 'ConsultantLoggerService');
+                        this.logger.log('Process started', event, 'ConsultantLoggerService');
                     }
                     break;
                 case 'bpmn:ServiceTask':
@@ -24,7 +24,7 @@ export class ConsultantLoggerService {
                     );
                     break;
                 case 'bpmn:ErrorEventDefinition':
-                    this.logger.log(`ErrorEventDefinition`, 'ConsultantLoggerService');
+                    this.logger.log('ErrorEventDefinition', 'ConsultantLoggerService');
                     break;
                 case 'bpmn:ManualTask':
                     this.logger.log(
@@ -49,12 +49,12 @@ export class ConsultantLoggerService {
         });
 
         this.runtimeService.processChange().subscribe((event) => {
-            this.logger.log(`Process `, event.eventType, 'ConsultantLoggerService');
+            this.logger.log('Process ', event.eventType, 'ConsultantLoggerService');
 
             switch (event.eventType) {
                 case ProcessInstanceStatus.COMPLETED:
                 case ProcessInstanceStatus.STOPPED:
-                    this.logger.log(`Process output `, 'ConsultantLoggerService');
+                    this.logger.log('Process output ', 'ConsultantLoggerService');
                     break;
                 default:
                     break;

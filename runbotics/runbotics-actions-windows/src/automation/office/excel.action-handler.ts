@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import * as winax from "winax";
-import { DesktopRunRequest, StatelessActionHandler } from "runbotics-sdk";
+import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type ExcelActionRequest =
 | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
@@ -34,18 +33,24 @@ export type ExcelWriteSingleCellActionInput = {
 export type ExcelWriteSingleCellActionOutput = void;
 
 @Injectable()
-export default class ExcelActionHandler extends StatelessActionHandler {
+export default class ExcelActionHandler extends StatefulActionHandler {
+    private session = null;
+
     constructor() {
         super();
     }
 
     async open(input: ExcelOpenActionInput): Promise<ExcelOpenActionOutput> {
-        const excel = new winax.Object("Excel.Application", { activate: true });
+        if (process.platform !== 'win32') {
+            throw new Error('Excel actions can be run only on Windows bot');
+        }
+        const winax = await import('winax');
+        this.session = new winax.Object("Excel.Application", { activate: true });
 
-        excel.Workbooks.Open(input.filePath);
-        excel.Application.Visible = true;
+        this.session.Workbooks.Open(input.filePath);
+        this.session.Application.Visible = true;
         if (input.sheetName) {
-            excel.Worksheets(input.sheetName).Activate();
+            this.session.Worksheets(input.sheetName).Activate();
         }
 
         // if (input.mode) {
@@ -54,17 +59,16 @@ export default class ExcelActionHandler extends StatelessActionHandler {
         return {};
     }
 
-    async close(input: ExcelCloseActionInput): Promise<any> {
-        const excel = new winax.Object("Excel.Application", { activate: true });
-        excel.Quit();
+    async close(): Promise<any> {
+        this.session?.Quit();
+        this.session = null;
     }
 
     async getSingleCell(
         input: ExcelGetSingleCellActionInput
     ): Promise<ExcelGetSingleCellActionOutput> {
-        const excel = new winax.Object("Excel.Application", { activate: true });
-
-        const result = excel.ActiveSheet.Cells(
+        this.isApplicationOpen();
+        const result = this.session.ActiveSheet.Cells(
             Number(input.row),
             Number(input.column)
         );
@@ -74,14 +78,19 @@ export default class ExcelActionHandler extends StatelessActionHandler {
     async writeSingleCell(
         input: ExcelWriteSingleCellActionInput
     ): Promise<ExcelWriteSingleCellActionOutput> {
-        const excel = new winax.Object("Excel.Application", { activate: true });
-
-        const result = excel.ActiveSheet.Cells(
+        this.isApplicationOpen();
+        const result = this.session.ActiveSheet.Cells(
             Number(input.row),
             Number(input.column)
         );
         result.Value = input.value;
         return;
+    }
+
+    private isApplicationOpen() {
+        if (!this.session) {
+            throw new Error('Use open application action before');
+        }
     }
 
     run(request: ExcelActionRequest) {
@@ -93,9 +102,13 @@ export default class ExcelActionHandler extends StatelessActionHandler {
             case "excel.writeSingleCell":
                 return this.writeSingleCell(request.input);
             case "excel.close":
-                return this.close(request.input);
+                return this.close();
             default:
                 throw new Error("Action not found");
         }
+    }
+
+    async tearDown() {
+        await this.close();
     }
 }

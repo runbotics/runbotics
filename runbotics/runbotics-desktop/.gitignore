@@ -399,3 +399,5 @@ temp
 logs/
 
 cert/**
+
+extensions/**

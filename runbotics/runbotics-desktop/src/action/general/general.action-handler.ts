@@ -4,7 +4,7 @@ import { IProcess, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-commo
 
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
-import { RuntimeService } from '#core/bpm/Runtime';
+import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
 
 export type GeneralActionRequest =
