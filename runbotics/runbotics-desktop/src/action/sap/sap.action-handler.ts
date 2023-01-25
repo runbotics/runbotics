@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { StatefulActionHandler } from 'runbotics-sdk';
-import 'winax';
 
 import { RunboticsLogger } from '#logger';
 
@@ -17,8 +16,13 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async connect(input: SapTypes.SAPConnectActionInput): Promise<SapTypes.SAPConnectActionOutput> {
+        if (process.platform !== 'win32') {
+            throw new Error('SAP actions can be run only on Windows bot');
+        }
+        const winax = await import('winax');
+
         try {
-            const app = new ActiveXObject('SapROTWr.SapROTWrapper');
+            const app = new winax.ActiveXObject('SapROTWr.SapROTWrapper');
             const sapGuiAuto = app.GetROTEntry('SAPGUI');
             if (!sapGuiAuto) {
                 throw new Error('SAP application is not running');
@@ -39,6 +43,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     async startTransaction(
         input: SapTypes.SAPStartTransactionActionInput,
     ): Promise<SapTypes.SAPStartTransactionActionOutput> {
+        this.isApplicationOpen();
         this.session.StartTransaction(input.transaction);
         return {};
     }
@@ -48,22 +53,26 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async type(input: SapTypes.SAPTypeActionInput): Promise<SapTypes.SAPTypeActionOutput> {
+        this.isApplicationOpen();
         const result = (this.session.FindById(input.target).text = input.value);
         return {};
     }
 
     async click(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).press();
         return {};
     }
 
     async doubleClick(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
+        this.isApplicationOpen();
         await this.focus(input);
         await this.sendVKey({ virtualKey: 'F2' });
         return {};
     }
 
     async index(input: SapTypes.SAPIndexActionInput): Promise<SapTypes.SAPIndexActionOutput> {
+        this.isApplicationOpen();
         const table = this.session.FindById(input.target);
         const rowsCount = table.Rows.Count.__value;
         const columnsCount = table.Columns.Count.__value;
@@ -86,6 +95,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async focus(input: SapTypes.SAPFocusActionInput): Promise<SapTypes.SAPFocusActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).setFocus();
         return {};
     }
@@ -96,16 +106,19 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async sendVKey(input: SapTypes.SAPSendVKeyActionInput): Promise<SapTypes.SAPSendVKeyActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById('wnd[0]').SendVKey(SendVKeyMapper[input.virtualKey]);
         return {};
     }
 
     async readText(input: SapTypes.SAPReadTextActionInput): Promise<SapTypes.SAPReadTextActionOutput> {
+        this.isApplicationOpen();
         const result = this.session.FindById(input.target).text;
         return result ? result.__value : null;
     }
 
     async select(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).select();
         return {};
     }
@@ -113,6 +126,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     async openContextMenu(
         input: SapTypes.SAPOpenContextMenuActionInput,
     ): Promise<SapTypes.SAPOpenContextMenuActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).pressContextButton(input.menuId);
         return {};
     }
@@ -120,6 +134,7 @@ export default class SapActionHandler extends StatefulActionHandler {
     async selectFromContextMenu(
         input: SapTypes.SAPSelectFromContextMenuActionInput,
     ): Promise<SapTypes.SAPSelectFromContextMenuActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).selectContextMenuItem(input.optionId);
         return {};
     }
@@ -127,8 +142,15 @@ export default class SapActionHandler extends StatefulActionHandler {
     async clickToolbarButton(
         input: SapTypes.SAPClickToolbarButtonActionInput,
     ): Promise<SapTypes.SAPClickToolbarButtonActionOutput> {
+        this.isApplicationOpen();
         this.session.FindById(input.target).pressToolbarButton(input.toolId);
         return {};
+    }
+
+    private isApplicationOpen() {
+        if (!this.session) {
+            throw new Error('Use open application action before');
+        }
     }
 
     async run(request: SapTypes.SAPActionRequest) {

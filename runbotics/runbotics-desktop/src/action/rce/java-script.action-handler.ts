@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
 import * as vm from 'vm';
+import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';
 import ts from 'typescript';
 import moment from 'moment';
@@ -64,7 +65,8 @@ export default class JavaScriptActionHandler extends StatelessActionHandler {
         const script: VMScript = new VMScript(transpiled);
         const functionInSandbox = vm.run(script);
         const resultProxy = await functionInSandbox(input.functionParams);
-        const returned = structuredClone(resultProxy);
+        // use structuredClone when node 17
+        const returned = _.cloneDeep(resultProxy);
         return returned;
     }
 

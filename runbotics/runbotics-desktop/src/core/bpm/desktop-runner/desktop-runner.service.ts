@@ -183,7 +183,7 @@ export class DesktopRunnerService implements OnModuleInit {
             throw new Error(`Missing default export in external module: ${externalModule}`);
         }
 
-        // Default export of the external module is an object that contains keys and names/paths of the exported handlers
+        // Default export of the external module is an object that contains keys and handlers classes
         const moduleEntries = Object.entries<ActionHandler>(module);
         if (moduleEntries.length === 0) {
             this.logger.error(`Module ${externalModule} handlers map has invalid structure or object is empty`);

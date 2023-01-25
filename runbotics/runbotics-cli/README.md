@@ -3,9 +3,9 @@
 `runbotics-cli` is a CLI that helps in RunBotics application development. Supported commands:
 
 ```bash
-$ rb <package> # Runs selected package in development mode (choices: "ui", "api", "scheduler", "bot")
+$ rb <package> [options] # Runs selected package in development mode (choices: "ui", "api", "scheduler", "bot")
 
-$ rb docker|d [operation] # Pulls latest images then create and start docker compose containers detached
+$ rb docker|d [operation] # Pulls latest images then create and start docker compose containers detached (choices: "pull", "up", "down")
 
 $ rb install|i # Runs "rush install" command
 
