@@ -14,12 +14,12 @@ importers:
       rxjs: ^7.5.5
       tslib: ^2.3.0
       typescript: ^4.3.5
-      winax: 3.1.5
+      winax: 3.3.4
     dependencies:
       '@nestjs/common': 8.4.2_47vcjb2de6lyibr6g4enoa5lyu
       reflect-metadata: 0.1.13
       rxjs: 7.5.5
-      winax: 3.1.5
+      winax: 3.3.4
     devDependencies:
       microbundle: 0.13.3
       runbotics-sdk: link:../runbotics-sdk
@@ -551,12 +551,12 @@ importers:
 
   ../../runbotics-sdk:
     specifiers:
-      bpmn-engine: ^12.0.2
+      bpmn-engine: ^15.1.2
       microbundle: ^0.13.3
       rollup-plugin-typescript2: ^0.30.0
       typescript: ^4.3.5
     devDependencies:
-      bpmn-engine: 12.0.5
+      bpmn-engine: 15.1.2
       microbundle: 0.13.3
       rollup-plugin-typescript2: 0.30.0_mlekcu3rnjn2crm7jeentd6uom
       typescript: 4.6.2
@@ -7509,32 +7509,11 @@ packages:
       wrap-ansi: 7.0.0
     dev: true
 
-  /bpmn-elements/5.2.0:
-    resolution: {integrity: sha512-R3gl0N0+NZo9IB06jbBOOVK3x06cDPcLUyGcvBHsiqApa+7icey7/4EmADn0PAoY9bNrcG39uygcpWf9yWiBvA==}
-    dependencies:
-      iso8601-duration: 1.3.0
-      smqp: 5.1.3
-    dev: true
-
   /bpmn-elements/8.2.4:
     resolution: {integrity: sha512-DEOpgRERZcjkJXEiPpT0xSJsDU9C2LttMr7/G+Vfn3In79Met0q0wRG5h0X4vvDKY17oAS1Fozdf65oP2tgoRw==}
     dependencies:
       iso8601-duration: 2.1.1
       smqp: 6.1.0
-    dev: false
-
-  /bpmn-engine/12.0.5:
-    resolution: {integrity: sha512-KP0mlIKNQW34h/ny2BXFJSrVFpA/0yWKqWCzTvoZHGYMVSohltdsruRoIW9HA5B7ZA+TApEpktZq8LWYM0x40Q==}
-    engines: {node: '>=10'}
-    dependencies:
-      bpmn-elements: 5.2.0
-      bpmn-moddle: 7.1.3
-      debug: 4.3.4
-      moddle-context-serializer: 1.1.1_bpmn-moddle@7.1.3
-      smqp: 5.1.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /bpmn-engine/15.1.2:
     resolution: {integrity: sha512-1UMB+pJ/2/y/ZDa+yqkl1r+Dv45hDbvIL8vUAadzc5f4rlaVpNmuuUyX+7x/O9sZBFx8zA2R98hA1ehg4kj4Sg==}
@@ -7548,7 +7527,6 @@ packages:
       smqp: 6.1.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /bpmn-js-properties-panel/0.42.0_myd3etpauzr4w6mxmgl7igzek4:
     resolution: {integrity: sha512-RkKIRIrFZa2J0nzh9mCiDxICHwYveB0gdcwrI2fNvQlO5jf3+y0SJhqwU1fnei8J1EbZcw9ENhMH5UyJjL6tSQ==}
@@ -11971,13 +11949,8 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  /iso8601-duration/1.3.0:
-    resolution: {integrity: sha512-K4CiUBzo3YeWk76FuET/dQPH03WE04R94feo5TSKQCXpoXQt9E4yx2CnY737QZnSAI3PI4WlKo/zfqizGx52QQ==}
-    dev: true
-
   /iso8601-duration/2.1.1:
     resolution: {integrity: sha512-VGGpW30/R57FpG1J7RqqKBAaK7lIiudlZkQ5tRoO9hNlKYQNnhs60DQpXlPFBmp6I+kJ61PHkI3f/T7cR4wfbw==}
-    dev: false
 
   /isstream/0.1.2:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==}
@@ -12141,7 +12114,7 @@ packages:
       pretty-format: 27.5.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
+      ts-node: 10.9.1_enejclo4aqs7tch6uzuxkob3sa
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -13951,21 +13924,12 @@ packages:
       bpmn-moddle: 8.0.0
     dev: false
 
-  /moddle-context-serializer/1.1.1_bpmn-moddle@7.1.3:
-    resolution: {integrity: sha512-L/OuvXfi5QAliCMIpuKjU+lEH7EiA7+tJm9EDbT+zRWhETSCI+ZxdLNQzBPA0Bkf/Z8EFdMGqiGzwwitTXA4Ag==}
-    peerDependencies:
-      bpmn-moddle: '>=5'
-    dependencies:
-      bpmn-moddle: 7.1.3
-    dev: true
-
   /moddle-context-serializer/2.2.0_bpmn-moddle@7.1.3:
     resolution: {integrity: sha512-4+kbyihVWCZV4iR+cSpZXgFWFDQ0o34GqbIXlnq6pfOrs3pCcV2weCVgg8FE+KGYtEeinvFZc0wLB2gUfgenyQ==}
     peerDependencies:
       bpmn-moddle: '>=5'
     dependencies:
       bpmn-moddle: 7.1.3
-    dev: false
 
   /moddle-xml/10.1.0:
     resolution: {integrity: sha512-erWckwLt+dYskewKXJso9u+aAZ5172lOiYxSOqKCPTy7L/xmqH1PoeoA7eVC7oJTt3PqF5TkZzUmbjGH6soQBg==}
@@ -17115,14 +17079,8 @@ packages:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
 
-  /smqp/5.1.3:
-    resolution: {integrity: sha512-gnV9u3w8nZFWmXxDCuAtIVqfhS+KiGOKSpS//Enrqpxczl7+2c5shZ23xNaI5YYwWArzWuAYEyySWi+QZUSnAA==}
-    engines: {node: '>=10'}
-    dev: true
-
   /smqp/6.1.0:
     resolution: {integrity: sha512-ZRZ9YnYNIM9Cc8sWju4kkDcG3zzHqgu1sW3MtcUz466kcz1FSczV+FLyoKATzgYwcTdj8lBQD1pq+JOeFMcVVA==}
-    dev: false
 
   /socket.io-adapter/2.3.3:
     resolution: {integrity: sha512-Qd/iwn3VskrpNO60BeRyCyr8ZWw9CPZyitW4AQwmRZ8zCiyDiL+znRnWX6tDHXnWn1sJrM1+b6Mn6wEDJJ4aYQ==}
@@ -19045,14 +19003,6 @@ packages:
       string-width: 4.2.3
     dev: true
 
-  /winax/3.1.5:
-    resolution: {integrity: sha512-ZzjEcm5dkIVfFJ+NudBIakGzc3O/sykwvt8PTRUNEDpdd6+B28PRMqo/Vm0O7yWLwIPBmQHu5MS1JasvDJApHg==}
-    engines: {node: '>= 10.0.0'}
-    os: [win32]
-    hasBin: true
-    requiresBuild: true
-    dev: false
-
   /winax/3.3.4:
     resolution: {integrity: sha512-hwh/tFGGCZgrvoxgd8xqSYgnWYUHvqLUMTtKgV/qSEwy4MC31JUukhBlKbBlqpnuDkzMGpxavyI4YCyrdtagyA==}
     engines: {node: '>= 10.0.0'}
@@ -19060,7 +19010,6 @@ packages:
     hasBin: true
     requiresBuild: true
     dev: false
-    optional: true
 
   /windows-release/4.0.0:
     resolution: {integrity: sha512-OxmV4wzDKB1x7AZaZgXMVsdJ1qER1ed83ZrTYd5Bwq2HfJVg3DJS8nqlAG4sMoJ7mu8cuRmLEYyU13BKwctRAg==}
