@@ -7,7 +7,7 @@ import { TEMPLATE_SECTION_ID } from '#src-landing/utils/utils';
 import Categories from './Categories';
 import SearchBar from './SearchBar';
 import styles from './TemplatesSection.module.scss';
-import { categoriesNames, templates } from './TemplatesSection.utils';
+import { categoriesNames, templates, TEMPLATES_TITLE_ID } from './TemplatesSection.utils';
 import TemplateTile from './TemplateTile';
 
 const TemplatesSection: FC = () => {
@@ -79,8 +79,8 @@ const TemplatesSection: FC = () => {
     }, []);
     
     return (
-        <section className={styles.root} id={TEMPLATE_SECTION_ID}>
-            <Typography variant="h2" className={styles.title}>
+        <section className={styles.root} id={TEMPLATE_SECTION_ID} aria-labelledby={TEMPLATES_TITLE_ID}>
+            <Typography id={TEMPLATES_TITLE_ID} variant="h2" className={styles.title}>
                 <span className={styles.darkFont}>
                     {translate('Landing.Templates.Title.Part1')}
                 </span>

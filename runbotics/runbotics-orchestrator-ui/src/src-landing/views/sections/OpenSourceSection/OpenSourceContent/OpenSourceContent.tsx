@@ -8,13 +8,14 @@ import piggyBank from '#public/images/shapes/piggy-bank.svg';
 import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { OPEN_SOURCE_TITLE_ID } from '../OpenSourceSection.utils';
 import styles from './OpenSourceContent.module.scss';
 
 const OpenSourceContent = () => (
     <div className={styles.content}>
         <div className={styles.layout}>
             <div className={styles.heading}>
-                <Typography variant="h3" color="secondary">
+                <Typography id={OPEN_SOURCE_TITLE_ID} variant="h3" color="secondary">
                     {translate('Landing.OpenSource.Heading.Title')}
                 </Typography>
                 <div className={styles.separator} />

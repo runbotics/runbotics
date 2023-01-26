@@ -3,13 +3,12 @@ import AutoStoriesIcon from '#public/images/shapes/auto_stories.svg';
 import BrushIcon from '#public/images/shapes/brush.svg';
 import EventIcon from '#public/images/shapes/event.svg';
 import HighlightIcon from '#public/images/shapes/highlight.svg';
-import PresicionIcon from '#public/images/shapes/precision.svg';
+import PrecisionIcon from '#public/images/shapes/precision.svg';
 import SmartToyIcon from '#public/images/shapes/smart_toy.svg';
 import TuneIcon from '#public/images/shapes/tune.svg';
 import VisibilityIcon from '#public/images/shapes/visibility.svg';
 
 import { ProsTile } from './ProsSection.types';
-
 
 export const TILES: ProsTile[] = [
     {
@@ -33,7 +32,7 @@ export const TILES: ProsTile[] = [
     {
         title: 'Landing.Pros.Attended.Title',
         description: 'Landing.Pros.Attended.Description',
-        icon: PresicionIcon,
+        icon: PrecisionIcon,
         iconAlt: 'Landing.Pros.Attended.Icon.Alt',
     },
     {
@@ -67,3 +66,5 @@ export const TILES: ProsTile[] = [
         iconAlt: 'Landing.Pros.Actions.Icon.Alt',
     },
 ];
+
+export const PROS_TITLE_ID = 'pros-title';

@@ -3,6 +3,7 @@ import { FC } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 import styles from './IntegrationContent.module.scss';
 
 const IntegrationSection: FC = () => {
@@ -10,7 +11,7 @@ const IntegrationSection: FC = () => {
 
     return (
         <div className={styles.root}>
-            <Typography className={styles.title}>
+            <Typography id={INTEGRATIONS_TITLE_ID} className={styles.title} variant="h2">
                 {translate('Landing.Integration.Title.Part.1')}
                 &nbsp;
                 <span className={styles.fontDark}>

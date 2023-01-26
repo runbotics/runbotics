@@ -11,6 +11,7 @@ const Typography: FC<TypographyProps> = ({
     font = 'Montserrat',
     className,
     text,
+    id,
     ...props
 }) => {
     const TypographyRoot = typographyVariantsMap[variant] || 'p';
@@ -23,7 +24,7 @@ const Typography: FC<TypographyProps> = ({
     ].join(' ');
 
     return (
-        <TypographyRoot className={classes} {...props}>
+        <TypographyRoot id={id} className={classes} {...props}>
             {text ?? children}
         </TypographyRoot>
     );

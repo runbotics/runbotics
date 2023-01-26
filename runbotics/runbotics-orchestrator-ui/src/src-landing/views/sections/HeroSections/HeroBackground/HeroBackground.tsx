@@ -8,10 +8,11 @@ import heroArchSrc from '#public/images/shapes/hero-arch.svg';
 
 import { HERO_SECTION_ID } from '#src-landing/utils/utils';
 
+import { HERO_TITLE_ID } from '../HeroSection.utils';
 import styles from './HeroBackground.module.scss';
 
 const HeroBackground: FC = ({ children }) => (
-    <section className={styles.root} id={HERO_SECTION_ID}>
+    <section className={styles.root} id={HERO_SECTION_ID} aria-labelledby={HERO_TITLE_ID}>
         <Image
             fill
             src={backgroundImageSrc}
