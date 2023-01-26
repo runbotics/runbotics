@@ -89,7 +89,7 @@ const ProcessConfigureView: VFC = () => {
 
     return (
         <Container>
-            <Box width='fit-content'>
+            <Box width="fit-content">
                 <StyledPaper elevation={1}>
                     <BotSystemComponent
                         selectedBotSystem={selectedBotSystem}
@@ -97,7 +97,7 @@ const ProcessConfigureView: VFC = () => {
                     />
                 </StyledPaper>
             </Box>
-            <Box width='fit-content'>
+            <Box width="fit-content">
                 <StyledPaper elevation={1}>
                     <BotCollectionComponent
                         selectedBotCollection={selectedBotCollection}
@@ -105,7 +105,7 @@ const ProcessConfigureView: VFC = () => {
                     />
                 </StyledPaper>
             </Box>
-            <Box width='fit-content'>
+            <Box width="fit-content">
                 <AttendancePaper>
                     <ProcessAttendedComponent
                         isProcessAttended={attended}
@@ -114,7 +114,7 @@ const ProcessConfigureView: VFC = () => {
                     <ManageProcessForm />
                 </AttendancePaper>
             </Box>
-            <Box width='fit-content'>
+            <Box width="fit-content">
                 <StyledPaper>
                     <ProcessTriggerableComponent
                         isProcessTriggerable={triggerable}
