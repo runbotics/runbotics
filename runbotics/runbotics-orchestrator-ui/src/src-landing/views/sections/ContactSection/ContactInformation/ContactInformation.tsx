@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { CONTACT_TITLE_ID } from '../ContactSection.utils';
 import styles from './ContactInformation.module.scss';
 import { CONTACT_INFO } from './ContactInformation.utils';
 
@@ -15,7 +16,7 @@ const ContactInformation: FC = () => {
     return (
         <div className={styles.root}>
             <div className={styles.summary}>
-                <Typography variant="h2">
+                <Typography id={CONTACT_TITLE_ID} variant="h2">
                     {translate('Landing.Contact.Info.Title')}
                 </Typography>
                 <Typography variant="body2">

@@ -3,13 +3,14 @@ import { FC } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { HERO_TITLE_ID } from '../HeroSection.utils';
 import styles from './HeroContent.module.scss';
 
 const HeroSection: FC = () => {
     const { translate } = useTranslations();
     return (
         <div className={styles.root}>
-            <Typography variant="h1" color="secondary" className={styles.title}>
+            <Typography id={HERO_TITLE_ID} variant="h1" color="secondary" className={styles.title}>
                 <div>{translate('Landing.Hero.Title.Part.1')}</div>
                 <div className={styles.fontPrimary}>
                     {translate('Landing.Hero.Title.Part.2')}
