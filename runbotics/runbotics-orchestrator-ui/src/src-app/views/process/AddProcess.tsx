@@ -62,7 +62,6 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-    // const processNameInputRef = useRef(null)
 
     const handleSubmit = async () => {
 
@@ -94,7 +93,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         }
     };
 
-    const handleKeypress = e => {
+    const handleKeypress = (e: React.KeyboardEvent) => {
         if (e.code === 'Enter') {
             handleSubmit();
         }
