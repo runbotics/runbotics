@@ -32,7 +32,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['user', 'password', 'sid'],
+                        required: ['user', 'password', 'connectionName'],
                     },
                 },
             },
