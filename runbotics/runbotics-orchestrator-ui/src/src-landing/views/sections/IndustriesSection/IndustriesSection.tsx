@@ -10,7 +10,7 @@ import styles from './IndustriesSection.module.scss';
 const IndustriesSection = () => {
     const { translate } = useTranslations();
     return (
-        <section className={styles.root} id={INDUSTRY_SECTORS_SECTION_ID}>
+        <section className={styles.root} id={INDUSTRY_SECTORS_SECTION_ID} aria-labelledby={INDUSTRIES_TITLE_ID}>
             <div className={styles.title}>
                 <Typography variant="h2" id={INDUSTRIES_TITLE_ID}>
                     <div>{translate('Landing.Industries.Title.Part.1')}</div>

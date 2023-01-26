@@ -11,7 +11,7 @@ const IntegrationSection: FC = () => {
 
     return (
         <div className={styles.root}>
-            <Typography id={INTEGRATIONS_TITLE_ID} className={styles.title} variant="h2">
+            <Typography variant="h2" id={INTEGRATIONS_TITLE_ID} className={styles.title}>
                 {translate('Landing.Integration.Title.Part.1')}
                 &nbsp;
                 <span className={styles.fontDark}>

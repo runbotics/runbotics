@@ -16,8 +16,4 @@
         "runbotics-common",
         "runbotics-cli",
     ],
-    "cSpell.words": [
-        "Botics",
-        "Roboto"
-    ],
 }
