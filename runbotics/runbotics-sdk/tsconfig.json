@@ -1,10 +1,14 @@
 {
     "compilerOptions": {
-        "baseUrl": "./packages/runbotics-sdk",
+        "baseUrl": ".",
         "outDir": "dist",
-        "module": "esnext",
-        "lib": ["dom", "esnext"],
-        "moduleResolution": "node",
+        "module": "ESNext",
+        "target": "ESNext",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "moduleResolution": "NodeNext",
         "jsx": "react",
         "sourceMap": true,
         "declaration": true,
@@ -19,6 +23,12 @@
         "noUnusedParameters": false,
         "allowSyntheticDefaultImports": true
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist", "example"]
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "example"
+    ]
 }

@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.5.0-SNAPSHOT.10",
+    "version": "2.5.0-SNAPSHOT.13",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -24,7 +24,7 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "optionalDependencies": {
-        "winax": "^3.3.4"
+        "winax": "3.3.4"
     },
     "dependencies": {
         "@nestjs-modules/mailer": "^1.8.1",
@@ -57,7 +57,7 @@
         "runbotics-common": "workspace:^1.0.0",
         "runbotics-sdk": "workspace:^1.0.0",
         "rxjs": "^7.5.5",
-        "selenium-webdriver": "^4.7.1",
+        "selenium-webdriver": "4.0.0-beta.4",
         "socket.io": "^4.4.1",
         "socket.io-client": "^4.4.1",
         "source-map-support": "^0.5.20",
@@ -123,7 +123,7 @@
         "@typescript-eslint/parser": "^5.48.0",
         "@types/bpmn-moddle": "^5.1.6",
         "cross-env": "^7.0.3",
-        "electron-builder": "22.11.7",
+        "electron-builder": "^23.6.0",
         "eslint": "^8.31.0",
         "jest": "^27.2.5",
         "supertest": "^6.1.3",

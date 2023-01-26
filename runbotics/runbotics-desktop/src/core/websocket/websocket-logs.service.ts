@@ -1,22 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { ISubscription } from '../bpm/Runtime';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
-import * as fs from 'fs';
-import dayjs from 'dayjs';
-import { RunboticsLogger } from '#logger';
-import { ServerConfigService } from '#config';
 import readLine from 'readline';
 import { BotWsMessage } from 'runbotics-common';
+import * as fs from 'fs';
+import dayjs from 'dayjs';
+
+import { RunboticsLogger } from '#logger';
+import { ServerConfigService } from '#config';
+
+import { ISubscription } from '../bpm/runtime';
 
 @Injectable()
-export class WebsocketLogs {
+export class WebsocketLogsService {
+    private readonly logger = new RunboticsLogger(WebsocketLogsService.name);
+    readonly DATE_FORMAT = 'YYYY-MM-DD-HH';
+
     constructor(
         @InjectIoClientProvider() private readonly io: IoClient,
         private serverConfigService: ServerConfigService,
     ) {}
-
-    private readonly logger = new RunboticsLogger(WebsocketLogs.name);
-    readonly DATE_FORMAT = 'YYYY-MM-DD-HH';
 
     collectLogs = () => {
         function censor(censor) {
@@ -43,18 +45,9 @@ export class WebsocketLogs {
                 data: args,
             };
             try {
-                this.io.emit('log', JSON.stringify(log, censor(log)));
+                this.io.emit(BotWsMessage.LOG, JSON.stringify(log, censor(log)));
             } catch (e) {
-                error('Error sending logs to server', e);
-                try {
-                    this.io.emit(
-                        'logs',
-                        JSON.stringify({
-                            method: 'error',
-                            data: ['Error sending logs to server: '],
-                        }),
-                    );
-                } catch (e) {} // todo :OO
+                this.logger.error('Error sending logs to server', e);
             }
         };
         console.log = (...args: any[]) => {
@@ -78,7 +71,6 @@ export class WebsocketLogs {
 
         return {
             unsubscribe() {
-                // @ts-ignore
                 // Unhook(window.console);
                 console.log = log;
                 console.info = info;

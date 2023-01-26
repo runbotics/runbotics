@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import * as winax from "winax";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type PowerPointActionRequest =
@@ -36,6 +35,11 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async open(
         input: PowerPointOpenActionInput
     ): Promise<PowerPointOpenActionOutput> {
+        if (process.platform !== 'win32') {
+            throw new Error('PowerPoint actions can be run only on Windows bot');
+        }
+        const winax = await import('winax');
+
         this.session = new winax.Object("PowerPoint.Application", {
             activate: true,
         });
@@ -48,6 +52,7 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async insertSlide(
         input: PowerPointInsertActionInput
     ): Promise<PowerPointInsertActionOutput> {
+        this.isApplicationOpen();
         this.session.ActivePresentation.Slides.InsertFromFile(
             input.filePath,
             0
@@ -57,6 +62,7 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async saveAs(
         input: PowerPointSaveActionInput
     ): Promise<PowerPointSaveActionOutput> {
+        this.isApplicationOpen();
         this.session.ActivePresentation.SaveAs(this.openedFiles);
     }
 
@@ -64,6 +70,12 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
         this.session?.Quit();
         this.session = null;
         this.openedFiles = null;
+    }
+
+    private isApplicationOpen() {
+        if (!this.session) {
+            throw new Error('Use open application action before');
+        }
     }
 
     run(request: PowerPointActionRequest) {

@@ -20,8 +20,8 @@ const MainView = () => (
         <ProsSection />
         <IndustriesSection />
         <OpenSourceSection />
-        <IntegrationSection />
         <TemplatesSection />
+        <IntegrationSection />
         <PartnerSection />
         <ContactSection />
     </Layout>

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DesktopTask, RuntimeService } from '#core/bpm/Runtime';
+import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
     BotWsMessage,
