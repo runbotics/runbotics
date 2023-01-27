@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, FormEvent, useEffect, useState } from 'react';
 
 import {
     Dialog,
@@ -11,7 +11,6 @@ import {
     TextField,
     Box
 } from '@mui/material';
-// import { set } from as'lodash';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
@@ -62,10 +61,18 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const isFieldEmpty = name ? name.trim() === '' : false;
 
-    const handleSubmit = async () => {
+    const handleClose = () => {
+        setName('');
+        setInputErrorType(null);
+        onClose();
+    };
+    
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
 
-        if (!name || name.trim() === '') {
+        if (!name || isFieldEmpty) {
             setInputErrorType(InputErrorType.REQUIRED);
             return;
         }
@@ -78,7 +85,6 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             return;
         }
 
-        setInputErrorType(null);
 
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };
@@ -93,11 +99,6 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         }
     };
 
-    const handleKeypress = (e: React.KeyboardEvent) => {
-        if (e.code === 'Enter') {
-            handleSubmit();
-        }
-    };
 
     useEffect(() => {
         if (open) setName(null);
@@ -109,37 +110,38 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
     }, [name]);
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
-            <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
-            <DialogContent>
-                <Box sx={{ pt: 1, pb: 3 }}>
-                    <TextField
-                        label={translate('Process.Add.Form.Fields.Name')}
-                        error={inputErrorType !== null}
-                        helperText={inputErrorMessages[inputErrorType]}
-                        fullWidth
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        onKeyPress={handleKeypress}
-                        required
-                        autoFocus
-                    />
-                </Box>
-            </DialogContent>
-            <DialogActions>
-                <Button color="primary" onClick={onClose}>
-                    {translate('Common.Cancel')}
-                </Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    aria-label={translate('Common.Submit')}>
-                    {translate('Common.Save')}
-                </Button>
-            </DialogActions>
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+            <form onSubmit={handleSubmit} noValidate>
+                <DialogTitle>{translate('Process.Add.Title')}</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ pt: 1, pb: 3 }}>
+                        <TextField
+                            label={translate('Process.Add.Form.Fields.Name')}
+                            error={inputErrorType !== null}
+                            helperText={inputErrorMessages[inputErrorType]}
+                            fullWidth
+                            value={name}
+                            onChange={e => setName(e.target.value)}
+                            required
+                            autoFocus
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary" onClick={onClose}>
+                        {translate('Common.Cancel')}
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        aria-label={translate('Common.Submit')}>
+                        {translate('Common.Save')}
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog>
+     
     );
 };
 

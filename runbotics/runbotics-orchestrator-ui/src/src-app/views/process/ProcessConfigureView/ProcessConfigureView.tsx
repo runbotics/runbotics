@@ -60,7 +60,7 @@ const ProcessConfigureView: VFC = () => {
     const handleSelectBotSystem = async (system: IBotSystem) => {
         await dispatch(processActions.updateBotSystem({ id: process.id, system }));
         setSelectedBotSystem(system);
-        fetchProcess();
+        await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
@@ -68,7 +68,7 @@ const ProcessConfigureView: VFC = () => {
             processActions.updateBotCollection({ id: process.id, botCollection })
         );
         setSelectedBotCollection(botCollection);
-        fetchProcess();
+        await fetchProcess();
     };
 
     const handleAttendanceChange = async (isAttended: boolean) => {
@@ -76,7 +76,7 @@ const ProcessConfigureView: VFC = () => {
             processActions.updateAttendedance({ ...process, isAttended })
         );
         setAttended(isAttended);
-        fetchProcess();
+        await fetchProcess();
     };
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
@@ -84,7 +84,7 @@ const ProcessConfigureView: VFC = () => {
             processActions.updateTriggerable({ ...process, isTriggerable })
         );
         setTriggerable(isTriggerable);
-        fetchProcess();
+        await fetchProcess();
     };
 
     return (

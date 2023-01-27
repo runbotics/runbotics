@@ -15,6 +15,6 @@ sed -i '/winax/d' ./runbotics-actions-windows/package.json;
 
 rush update;
 
-git restore .
+git restore .;
 
 exit 0;
