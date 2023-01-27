@@ -22,7 +22,7 @@ const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, se
     const sidebarTabs = useMemo(() => {
         const tabs: TabInfo[] = [];
         if (hasReadProcessInfoAccess)
-        { tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') }); }
+        { tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') }, {value: ProcessBuildTab.PROCESS_VARIABLES, label: translate('Process.MainView.Sidebar.ProcessVariables')}); }
 
         return tabs;
         // eslint-disable-next-line react-hooks/exhaustive-deps
