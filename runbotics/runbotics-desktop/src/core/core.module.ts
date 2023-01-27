@@ -5,6 +5,7 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { DesktopRunnerService } from './bpm/desktop-runner';
 import { RuntimeService } from './bpm/runtime';
 import { ActionModule } from '#action';
+import { LoopHandlerService } from './bpm/loop-handler';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { ActionModule } from '#action';
     providers: [
         RuntimeService,
         DesktopRunnerService,
+        LoopHandlerService
     ],
     exports: [
         RuntimeService,
