@@ -47,6 +47,7 @@
     "Process.MainView.Tabs.Configure.Title": "Configure",
     "Process.MainView.Meta.Title": "Process Details",
     "Process.MainView.Sidebar.RunInfo": "Run info",
+    "Process.MainView.Sidebar.ProcessVariables": "Process Variables",
     "Process.MainView.Toast.Save.Success": "Process saved successfully",
     "Process.MainView.Toast.Save.Failed": "Process save failed",
     "Process.MainView.Tooltip.Save.Enabled": "Save process to database",
