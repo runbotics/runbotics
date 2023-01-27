@@ -77,6 +77,8 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
+                    if(event.loopProps) processInstanceEvent.loopProps = event.loopProps;
+
                     switch (event.eventType) {
                         case ProcessInstanceEventStatus.COMPLETED:
                         case ProcessInstanceEventStatus.STOPPED:

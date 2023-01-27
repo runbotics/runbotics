@@ -1,18 +1,13 @@
-import { RunboticsLogger } from '#logger';
 import { Injectable } from '@nestjs/common';
 import { BpmnExecutionEventMessageApi } from 'bpmn-engine';
-interface LoopHandlerState {
-    iteration: number;
-    loopId: string;
-    iterationsData: Record<number, unknown>;
-}
+import { LoopProps } from 'runbotics-common/dist/model/api/loop-props';
+
 
 @Injectable()
 export class LoopHandlerService {
-    private readonly logger = new RunboticsLogger(LoopHandlerService.name);
-    private loopState: Map<string, LoopHandlerState> = new Map();
+    private loopState: Map<string, LoopProps> = new Map();
 
-    private getInitialLoopState(loopId: string): LoopHandlerState {
+    private getInitialLoopState(loopId: string): LoopProps{
         return {
             iteration: 0,
             loopId: loopId,
@@ -35,21 +30,20 @@ export class LoopHandlerService {
         }
     }
 
-    isPartOfLoop(api: BpmnExecutionEventMessageApi): boolean {
+    public isPartOfLoop(api: BpmnExecutionEventMessageApi): boolean {
         if(this.isLoopStart(api)) return true;
         if (!this.loopState.has(api.content?.parent?.id)) return false;
         return true;
     }
     
-    handleLoopElement(api: BpmnExecutionEventMessageApi) {
-        if (!this.isPartOfLoop(api)) return;
+    public handleLoopElement(api: BpmnExecutionEventMessageApi) {
         if (this.isLoopStart(api))
             this.loopState.set(api.id, this.getInitialLoopState(api.id));
         if (api.type === 'bpmn:StartEvent')
             this.addIteration(api.content?.parent?.id);    
     }
 
-    shouldElementBeSkipped(api: BpmnExecutionEventMessageApi): boolean {
+    public static shouldElementBeSkipped(api: BpmnExecutionEventMessageApi): boolean {
         const isPartOfSubProcess = api.content?.parent?.type === 'bpmn:SubProcess';
         const isStartEvent = api.type === 'bpmn:StartEvent';
         const isEndEvent = api.type === 'bpmn:EndEvent';
@@ -57,7 +51,8 @@ export class LoopHandlerService {
         if(isPartOfSubProcess && (isStartEvent || isEndEvent)) return true;
         return false;
     }
-    getLoopData(api: BpmnExecutionEventMessageApi) {
+
+    public getLoopData(api: BpmnExecutionEventMessageApi) {
         if(this.isLoopStart(api)) return this.loopState.get(api.id);
         return this.loopState.get(api.content?.parent?.id) ?? null;
     }

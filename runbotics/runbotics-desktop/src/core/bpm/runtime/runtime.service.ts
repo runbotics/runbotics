@@ -179,20 +179,17 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             if (this.loopHandlerService.isPartOfLoop(api)) {
                 this.loopHandlerService.handleLoopElement(api);
             }
-
             if (this.loopHandlerService.shouldElementBeSkipped(api)) return;
 
-            const loopData = this.loopHandlerService.getLoopData(api);
-
             this.logger.log(
-                `${getActivityLogPrefix(api)} activity.start ${
-                    loopData ? 'iteration: ' + loopData.iteration : ''
-                }`
+                `${getActivityLogPrefix(api)} activity.start`
             );
+            
             this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.IN_PROGRESS,
                 activity: api,
+                loopProps: this.loopHandlerService.getLoopData(api) ?? null 
             });
         });
 
@@ -219,6 +216,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 processInstance,
                 eventType: ProcessInstanceEventStatus.COMPLETED,
                 activity: api,
+                loopProps: this.loopHandlerService.getLoopData(api) ?? null 
             });
         });
 
