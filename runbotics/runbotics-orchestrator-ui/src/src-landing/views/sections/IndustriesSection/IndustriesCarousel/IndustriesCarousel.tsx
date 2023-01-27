@@ -1,12 +1,12 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
 import CarouselButton from '#src-landing/components/CarouselButton';
-
+import MobileCarouselNav from '#src-landing/components/MobileCarouselNav';
 import IndustriesSlide from '#src-landing/views/sections/IndustriesSection/IndustriesSlide/IndustriesSlide';
 
-import MobileCarouselNav from '../../../../components/MobileCarouselNav';
-import { IndustriesCarouselProps } from './IndustiresCarousel.types';
 import styles from './IndustriesCarousel.module.scss';
+import { IndustriesCarouselProps } from './IndustriesCarousel.types';
+
 
 const IndustriesCarousel: FC<IndustriesCarouselProps> = ({ slides }) => {
     const [activeIndex, setActiveIndex] = useState(0);

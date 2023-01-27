@@ -5,6 +5,8 @@ import transportImage from '#public/images/photos/transport-industry.png';
 
 import { IndustrySlide } from '#src-landing/views/sections/IndustriesSection/IndustriesSection.types';
 
+export const INDUSTRIES_TITLE_ID = 'industries-title';
+
 export const SLIDES: IndustrySlide[] = [
     {
         titleKey: 'Landing.Industries.Slides.IT.Title',
