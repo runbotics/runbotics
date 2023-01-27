@@ -9,11 +9,12 @@ import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 import { CONTACT_US_SECTION_ID } from '#src-landing/utils/utils';
 
+import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
 import styles from './PartnerContent.module.scss';
 
 const PartnerContent = () => (
     <div className={styles.content}>
-        <Typography variant="h3" color="secondary">
+        <Typography id={PARTNER_TITLE_ID} variant="h3" color="secondary">
             {translate('Landing.Partner.Title.Part.1')}
         </Typography>
         <Image src={a41Logo} className={styles.logo} alt="" />

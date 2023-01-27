@@ -5,6 +5,8 @@ import { templatesProps } from './TemplatesSection.types';
 
 export const checkTranslationKey = (key: string): key is keyof typeof templatesTranslations => templatesTranslations.hasOwnProperty(key);
 
+export const TEMPLATES_TITLE_ID = 'templates-title';
+
 export enum categoriesNames {
     CATEGORY_ALL = 'All',
     CATEGORY_ONE= 'One',

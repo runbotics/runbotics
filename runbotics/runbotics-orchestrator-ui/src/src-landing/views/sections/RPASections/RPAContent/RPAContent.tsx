@@ -3,6 +3,7 @@ import { FC } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { RPA_TITLE_ID } from '../RPASection.utils';
 import styles from './RPAContent.module.scss';
 
 const RPAContent: FC = () => {
@@ -10,7 +11,7 @@ const RPAContent: FC = () => {
 
     return (
         <div>
-            <div className={styles.title}>
+            <div className={styles.title} id={RPA_TITLE_ID}>
                 <Typography>
                     {translate('Landing.RPA.Title.Part1')}
                 </Typography>
