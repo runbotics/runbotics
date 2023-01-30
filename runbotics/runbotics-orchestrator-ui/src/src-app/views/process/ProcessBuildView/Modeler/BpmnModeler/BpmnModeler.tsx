@@ -11,6 +11,7 @@ import Hotkeys from 'react-hot-keys';
 import 'react-resizable/css/styles.css';
 
 import InfoPanel from '#src-app/components/InfoPanel';
+import ProcessVariablesGlobal from '#src-app/components/ProcessVariablesPanel/VariablesPanel/ProcessVariablesGlobal';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
@@ -400,6 +401,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                         currentTab === ProcessBuildTab.RUN_INFO
                                     }>
                                     <InfoPanel />
+                                </If>
+                                <If
+                                    condition={
+                                        currentTab === ProcessBuildTab.PROCESS_VARIABLES
+                                    }>
+                                    <ProcessVariablesGlobal />
                                 </If>
                             </ResizableDrawer>
                         </Wrapper>
