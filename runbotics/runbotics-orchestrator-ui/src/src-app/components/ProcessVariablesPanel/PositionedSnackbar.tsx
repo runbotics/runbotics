@@ -7,28 +7,34 @@ export interface State extends SnackbarOrigin {
   open: boolean;
 }
 
-export default function PositionedSnackbar({open, buttonText, message, handleCopy}) {
+export default function PositionedSnackbar({buttonText, message, handleCopy}) {
     const [state, setState] = React.useState<State>({
-        open: open,
+        open: false,
         vertical: 'top',
         horizontal: 'center',
     });
     const { vertical, horizontal } = state;
 
     const handleClick = (newState: SnackbarOrigin) => () => {
+        console.log('handlingClick');
         handleCopy();
         setState({ open: true, ...newState });
+        console.log(open);
     };
 
     const handleClose = () => {
+        console.log('handleClose');
         setState({ ...state, open: false });
     };
+
+
  
     return (
         <>
             <Snackbar
                 anchorOrigin={{ vertical, horizontal }}
-                open={open}
+                autoHideDuration={2000}
+                open={state.open}
                 onClose={handleClose}
                 message={message}
                 key={vertical + horizontal}
