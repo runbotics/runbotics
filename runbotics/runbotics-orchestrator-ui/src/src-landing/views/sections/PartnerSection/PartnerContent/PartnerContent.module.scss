@@ -7,7 +7,7 @@ $A41LOGO_HEIGHT: 100px;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    row-gap: 100px;
+    row-gap: 140px;
     padding: $padding-10;
 }
 
@@ -72,10 +72,6 @@ $A41LOGO_HEIGHT: 100px;
         grid-template-columns: 1fr 1fr;
     }
 
-    .btnSpace {
-        justify-self: center;
-    }
-
     .btn {
         padding: 18px 70px;
     }
@@ -89,6 +85,7 @@ $A41LOGO_HEIGHT: 100px;
     .btnSpace {
         grid-column: 1;
         grid-row: 3;
+        justify-self: center;
     }
 
     .btn {

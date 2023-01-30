@@ -1,3 +1,4 @@
+export const MAIN_CONTENT_ID = 'main-content';
 export const BENEFITS_SECTION_ID = 'runbotics';
 export const HERO_SECTION_ID = 'heros';
 export const INTEGRATION_SECTION_ID = 'integration';
