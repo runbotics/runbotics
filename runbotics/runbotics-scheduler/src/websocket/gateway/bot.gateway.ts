@@ -94,6 +94,17 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, socket.bot);
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
+    @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT)
+    async listenForProcessInstanceLoopEvent(
+        @ConnectedSocket() socket: BotAuthSocket,
+        @MessageBody() processInstanceEvent: IProcessInstanceEvent,
+    ) {
+        const installationId = socket.bot.installationId;
+        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        // await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+        this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+    }
 
     @UseGuards(WsBotJwtGuard)
     @SubscribeMessage(BotWsMessage.LOG)

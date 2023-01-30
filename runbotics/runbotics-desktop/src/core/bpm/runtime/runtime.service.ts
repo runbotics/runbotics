@@ -177,7 +177,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
             if (this.loopHandlerService.isPartOfLoop(api)) {
-                this.loopHandlerService.handleLoopElement(api);
+                this.loopHandlerService.loopActivityEnd(api);
             }
             if (this.loopHandlerService.shouldElementBeSkipped(api)) return;
 
@@ -197,6 +197,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
+
+            if (this.loopHandlerService.isPartOfLoop(api)) {
+                this.loopHandlerService.loopActivityEnd(api);
+            }
 
             if (this.loopHandlerService.shouldElementBeSkipped(api)) return;
 
@@ -418,19 +422,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private purgeEngine = (processInstanceId: string) => {
         this.logger.log(`[${processInstanceId}] Cleaning engine`);
-
-        // this.engines[processInstanceId].stop()
-        // this.engines[processInstanceId].broker.reset();
-        // const definitions = await this.engines[processInstanceId].getDefinitions();
-        // for(let definition of definitions){
-        //     // definition.stop();
-        //     definition.broker.reset();
-        // }
-        // listenerNaNpxoveAllListeners();
         delete this.engines[processInstanceId];
         const isSubProcess =
             this.processInstances[processInstanceId].rootProcessInstanceId;
-        if (!isSubProcess) this.cleanTempDir(processInstanceId);
+        if (!isSubProcess) {
+            this.cleanTempDir(processInstanceId);
+            this.loopHandlerService.cleanUp();
+        }
 
         setTimeout(() => {
             this.logger.log(`[${processInstanceId}] Cleaning instance`);

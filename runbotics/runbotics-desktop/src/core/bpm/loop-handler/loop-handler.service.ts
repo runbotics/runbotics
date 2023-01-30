@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { BpmnExecutionEventMessageApi } from 'bpmn-engine';
 import { LoopProps } from 'runbotics-common/dist/model/api/loop-props';
 
-
 @Injectable()
 export class LoopHandlerService {
     private loopState: Map<string, LoopProps> = new Map();
 
-    private getInitialLoopState(loopId: string): LoopProps{
+    private getInitialLoopState(loopId: string): LoopProps {
         return {
             iteration: 0,
             loopId: loopId,
@@ -22,6 +21,12 @@ export class LoopHandlerService {
         });
     }
 
+    private findElementInMap(partOfId: string) {
+        return Array.from(this.loopState.keys()).find((key) =>
+            key.includes(partOfId)
+        );
+    }
+
     private isLoopStart(api: any): boolean {
         if (api.content?.input?.script === 'loop.loop') {
             return true;
@@ -30,30 +35,50 @@ export class LoopHandlerService {
         }
     }
 
-    public isPartOfLoop(api: BpmnExecutionEventMessageApi): boolean {
-        if(this.isLoopStart(api)) return true;
-        if (!this.loopState.has(api.content?.parent?.id)) return false;
-        return true;
-    }
-    
-    public handleLoopElement(api: BpmnExecutionEventMessageApi) {
+    loopActivityStart(api: BpmnExecutionEventMessageApi) {
         if (this.isLoopStart(api))
-            this.loopState.set(api.id, this.getInitialLoopState(api.id));
-        if (api.type === 'bpmn:StartEvent')
-            this.addIteration(api.content?.parent?.id);    
+            this.loopState.set(
+                api.executionId,
+                this.getInitialLoopState(api.executionId)
+            );
+        if (api.type === 'bpmn:StartEvent') {
+            this.addIteration(this.findElementInMap(api.content?.parent?.id));
+        }
     }
 
-    public static shouldElementBeSkipped(api: BpmnExecutionEventMessageApi): boolean {
-        const isPartOfSubProcess = api.content?.parent?.type === 'bpmn:SubProcess';
+    loopActivityEnd(api: BpmnExecutionEventMessageApi) {
+        if(this.isLoopStart(api)){
+            this.loopState.delete(this.findElementInMap(api.id));
+        }
+    }
+
+    public isPartOfLoop(api: BpmnExecutionEventMessageApi): boolean {
+        if (this.isLoopStart(api)) return true;
+        if (!this.loopState.has(this.findElementInMap(api.content?.parent?.id)))
+            return false;
+        return true;
+    }
+
+    public shouldElementBeSkipped(api: BpmnExecutionEventMessageApi): boolean {
+        const isPartOfSubProcess =
+            api.content?.parent?.type === 'bpmn:SubProcess';
         const isStartEvent = api.type === 'bpmn:StartEvent';
         const isEndEvent = api.type === 'bpmn:EndEvent';
 
-        if(isPartOfSubProcess && (isStartEvent || isEndEvent)) return true;
+        if (isPartOfSubProcess && (isStartEvent || isEndEvent)) return true;
         return false;
     }
 
     public getLoopData(api: BpmnExecutionEventMessageApi) {
-        if(this.isLoopStart(api)) return this.loopState.get(api.id);
-        return this.loopState.get(api.content?.parent?.id) ?? null;
+        // if(this.isLoopStart(api)) return this.loopState.get(api.id);
+        return (
+            this.loopState.get(
+                this.findElementInMap(api.content?.parent?.id)
+            ) ?? null
+        );
+    }
+
+    public cleanUp() {
+        this.loopState.clear();
     }
 }

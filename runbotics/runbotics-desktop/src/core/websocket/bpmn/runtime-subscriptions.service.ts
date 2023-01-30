@@ -16,15 +16,18 @@ import dayjs from 'dayjs';
 export class RuntimeSubscriptionsService {
     constructor(
         private readonly runtimeService: RuntimeService,
-        @InjectIoClientProvider() private readonly io: IoClient,
+        @InjectIoClientProvider() private readonly io: IoClient
     ) {}
 
-    private readonly logger = new RunboticsLogger(RuntimeSubscriptionsService.name);
+    private readonly logger = new RunboticsLogger(
+        RuntimeSubscriptionsService.name
+    );
 
     subscribeActivityEvents() {
         this.runtimeService.activityChange().subscribe(async (event) => {
             if (event.activity.content.type) {
-                const desktopTask: DesktopTask = event.activity.content as DesktopTask;
+                const desktopTask: DesktopTask = event.activity
+                    .content as DesktopTask;
                 const processInstanceEvent: IProcessInstanceEvent = {
                     created: dayjs().toISOString(),
                     processInstance: event.processInstance,
@@ -39,7 +42,9 @@ export class RuntimeSubscriptionsService {
                 try {
                     switch (event.activity.content.type) {
                         case 'bpmn:ServiceTask':
-                            const eventBehaviour = (event.activity.owner as IActivityOwner).behaviour;
+                            const eventBehaviour = (
+                                event.activity.owner as IActivityOwner
+                            ).behaviour;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
                             const label = eventBehaviour?.label;
                             const script = desktopTask.input?.script;
@@ -77,7 +82,8 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    if(event.loopProps) processInstanceEvent.loopProps = event.loopProps;
+                    if (event.loopProps)
+                        processInstanceEvent.loopProps = event.loopProps;
 
                     switch (event.eventType) {
                         case ProcessInstanceEventStatus.COMPLETED:
@@ -86,15 +92,24 @@ export class RuntimeSubscriptionsService {
                             processInstanceEvent.output = JSON.stringify({
                                 ...desktopTask?.output,
                             });
-                            processInstanceEvent.finished = dayjs().toISOString();
+                            processInstanceEvent.finished =
+                                dayjs().toISOString();
                             break;
                     }
 
                     // DevConsole.log('Sending process change to server', event, 'WebsocketService');
 
-                    this.io.emit(BotWsMessage.PROCESS_INSTANCE_EVENT, processInstanceEvent);
+                    this.io.emit(
+                        event.loopProps
+                            ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
+                            : BotWsMessage.PROCESS_INSTANCE_EVENT,
+                        processInstanceEvent
+                    );
                 } catch (e) {
-                    this.logger.error('Error occurred while sending process instance', e);
+                    this.logger.error(
+                        'Error occurred while sending process instance',
+                        e
+                    );
                 }
             }
         });
@@ -104,7 +119,8 @@ export class RuntimeSubscriptionsService {
         this.runtimeService.processChange().subscribe(async (event) => {
             const processInstance: IProcessInstance = {
                 id: event.processInstanceId,
-                orchestratorProcessInstanceId: event.processInstance.orchestratorProcessInstanceId,
+                orchestratorProcessInstanceId:
+                    event.processInstance.orchestratorProcessInstanceId,
                 // @ts-ignore
                 status: event.eventType.toString(),
                 updated: dayjs().toISOString(),
@@ -112,7 +128,8 @@ export class RuntimeSubscriptionsService {
                     id: Number(event.processInstance.process.id),
                 },
                 user: event.processInstance.user,
-                rootProcessInstanceId: event.processInstance.rootProcessInstanceId,
+                rootProcessInstanceId:
+                    event.processInstance.rootProcessInstanceId,
                 trigger: event.processInstance.trigger,
                 triggeredBy: event.processInstance.triggeredBy,
             };
@@ -167,7 +184,9 @@ export class RuntimeSubscriptionsService {
                         });
                     } finally {
                         if (processInstance.output.length > 10000)
-                            processInstance.output = JSON.stringify({ message: 'Exceeded max length' });
+                            processInstance.output = JSON.stringify({
+                                message: 'Exceeded max length',
+                            });
                     }
                     break;
             }
