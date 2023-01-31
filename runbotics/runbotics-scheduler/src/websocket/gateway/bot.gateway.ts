@@ -101,9 +101,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
         const installationId = socket.bot.installationId;
-        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         // await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
-        this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 
     @UseGuards(WsBotJwtGuard)

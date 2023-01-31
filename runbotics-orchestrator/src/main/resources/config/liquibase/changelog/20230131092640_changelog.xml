@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="20230131092640-1" author="marciniakf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_instance_loop_event"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_instance_loop_event">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="created" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="log" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="step" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="process_instance_id" type="UUID"/>
+
+
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_process_instance_loop_event_process_instance_id"
+            baseColumnNames="process_instance_id"
+            baseTableName="process_instance_loop_event"
+            referencedColumnNames="id"
+            referencedTableName="process_instance"
+            deferrable="false"
+            initiallyDeferred="false"
+            validate="true"
+            onDelete="CASCADE"
+        />
+    </changeSet>
+</databaseChangeLog>
