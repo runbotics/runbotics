@@ -8,8 +8,8 @@ import { Box, Tab } from '@mui/material';
 
 
 const ProcessVariablesTabs = ({tabs}) => {
-    const [tabIdx, setTabIdx] = useState(1);
-    const [value, setValue] = React.useState('1');
+    const [tabIdx, setTabIdx] = useState(0);
+    const [value, setValue] = React.useState('0');
    
 
     const tabsJSX = tabs.map((tab, index) => (
@@ -18,12 +18,9 @@ const ProcessVariablesTabs = ({tabs}) => {
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        console.log(newValue);
         setValue(newValue);
         setTabIdx(+newValue);
     };
-
-    console.log('rerendered');
 
     return (
         <TabContext value={value}>
