@@ -61,7 +61,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
-    const isFieldEmpty = name ? name.trim() === '' : false;
+    const isFieldEmpty = Boolean(name?.trim().length === 0);
 
     const handleClose = () => {
         setName('');
