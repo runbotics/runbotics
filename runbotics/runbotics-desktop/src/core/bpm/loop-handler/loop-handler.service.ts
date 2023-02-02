@@ -1,84 +1,106 @@
 import { Injectable } from '@nestjs/common';
 import { BpmnExecutionEventMessageApi } from 'bpmn-engine';
-import { LoopProps } from 'runbotics-common/dist/model/api/loop-props';
+import { LoopProps } from './loop-handler.types';
 
 @Injectable()
 export class LoopHandlerService {
-    private loopState: Map<string, LoopProps> = new Map();
+    private loopState = new Map<string, LoopProps>();
 
-    private getInitialLoopState(loopId: string): LoopProps {
-        return {
-            iteration: 0,
-            loopId: loopId,
-            iterationsData: {},
-        };
+    public handleActivityStart(api: BpmnExecutionEventMessageApi) {
+        if (this.isLoopElement(api)) {
+            this.createLoop(api);
+        }
+
+        if (this.isStartEvent(api)) {
+            this.incrementIterationNumber(
+                this.getLoopExecutionId(api.content?.parent?.id)
+            );
+        }
     }
 
-    private addIteration(id) {
-        this.loopState.set(id, {
-            ...this.loopState.get(id),
-            iteration: this.loopState.get(id).iteration + 1,
-        });
+    public handleActivityEnd(api: BpmnExecutionEventMessageApi) {
+        if (this.isLoopElement(api)) {
+            this.deleteLoop(api.id);
+        }
     }
 
-    private findElementInMap(partOfId: string) {
-        return Array.from(this.loopState.keys()).find((key) =>
-            key.includes(partOfId)
+    public isInLoop(api: BpmnExecutionEventMessageApi): boolean {
+        return (
+            this.isLoopElement(api) ||
+            this.loopState.has(this.getLoopExecutionId(api.content?.parent?.id))
         );
     }
 
-    private isLoopStart(api: any): boolean {
-        if (api.content?.input?.script === 'loop.loop') {
-            return true;
-        } else {
-            return false;
-        }
+    public shouldSkipElement(api: BpmnExecutionEventMessageApi): boolean {
+        return (
+            this.isSubProcessEvent(api) &&
+            (this.isStartEvent(api) || this.isEndEvent(api))
+        );
     }
 
-    loopActivityStart(api: BpmnExecutionEventMessageApi) {
-        if (this.isLoopStart(api))
-            this.loopState.set(
-                api.executionId,
-                this.getInitialLoopState(api.executionId)
-            );
-        if (api.type === 'bpmn:StartEvent') {
-            this.addIteration(this.findElementInMap(api.content?.parent?.id));
-        }
-    }
-
-    loopActivityEnd(api: BpmnExecutionEventMessageApi) {
-        if(this.isLoopStart(api)){
-            this.loopState.delete(this.findElementInMap(api.id));
-        }
-    }
-
-    public isPartOfLoop(api: BpmnExecutionEventMessageApi): boolean {
-        if (this.isLoopStart(api)) return true;
-        if (!this.loopState.has(this.findElementInMap(api.content?.parent?.id)))
-            return false;
-        return true;
-    }
-
-    public shouldElementBeSkipped(api: BpmnExecutionEventMessageApi): boolean {
-        const isPartOfSubProcess =
-            api.content?.parent?.type === 'bpmn:SubProcess';
-        const isStartEvent = api.type === 'bpmn:StartEvent';
-        const isEndEvent = api.type === 'bpmn:EndEvent';
-
-        if (isPartOfSubProcess && (isStartEvent || isEndEvent)) return true;
-        return false;
-    }
-
-    public getLoopData(api: BpmnExecutionEventMessageApi) {
-        // if(this.isLoopStart(api)) return this.loopState.get(api.id);
+    public getLoopData(api: BpmnExecutionEventMessageApi): LoopProps | null {
         return (
             this.loopState.get(
-                this.findElementInMap(api.content?.parent?.id)
+                this.getLoopExecutionId(api.content?.parent?.id)
             ) ?? null
         );
     }
 
     public cleanUp() {
         this.loopState.clear();
+    }
+
+    private getLoopProps(loopId: string): LoopProps {
+        return {
+            iterationNumber: 0,
+            loopId,
+            iterationElement: null,
+        };
+    }
+
+    private incrementIterationNumber(loopId: string) {
+        const loop = this.loopState.get(loopId);
+        if (!loop) return;
+
+        this.loopState.set(loopId, {
+            ...loop,
+            iterationNumber: loop.iterationNumber + 1,
+        });
+    }
+
+    /***
+     * Returns the executionId of the loop element inside the state
+     * @param activityId - the id of the activity (e.g. 'Activity_112123')
+     * @returns the executionId of the loop element (e.g. 'Activity_112123_672123')
+     * @example getLoopExecutionId('Activity_112123') => 'Activity_112123_672123'
+     */
+    private getLoopExecutionId(activityId: string): string | undefined {
+        return Array.from(this.loopState.keys()).find((key) =>
+            key.includes(activityId)
+        );
+    }
+
+    private isLoopElement(api: any): boolean {
+        return api.content?.input?.script === 'loop.loop';
+    }
+
+    private createLoop(api: BpmnExecutionEventMessageApi) {
+        this.loopState.set(api.executionId, this.getLoopProps(api.executionId));
+    }
+
+    private deleteLoop(activityId: string) {
+        this.loopState.delete(this.getLoopExecutionId(activityId));
+    }
+
+    private isSubProcessEvent(api: BpmnExecutionEventMessageApi): boolean {
+        return api.content?.parent?.type === 'bpmn:SubProcess';
+    }
+
+    private isStartEvent(api: BpmnExecutionEventMessageApi): boolean {
+        return api.content?.type === 'bpmn:StartEvent';
+    }
+
+    private isEndEvent(api: BpmnExecutionEventMessageApi): boolean {
+        return api.content?.type === 'bpmn:EndEvent';
     }
 }

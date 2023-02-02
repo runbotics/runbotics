@@ -28,7 +28,7 @@ export class RuntimeSubscriptionsService {
             if (event.activity.content.type) {
                 const desktopTask: DesktopTask = event.activity
                     .content as DesktopTask;
-                const processInstanceEvent: IProcessInstanceEvent = {
+                let processInstanceEvent: IProcessInstanceEvent = {
                     created: dayjs().toISOString(),
                     processInstance: event.processInstance,
                     executionId: event.activity.executionId,
@@ -37,6 +37,7 @@ export class RuntimeSubscriptionsService {
                     }),
                     status: event.eventType,
                     error: event.activity.content.error?.description,
+                    script: desktopTask.input?.script,
                 };
 
                 try {
@@ -83,7 +84,7 @@ export class RuntimeSubscriptionsService {
                     }
 
                     if (event.loopProps)
-                        processInstanceEvent.loopProps = event.loopProps;
+                        processInstanceEvent = {...processInstanceEvent, ...(event.loopProps)};
 
                     switch (event.eventType) {
                         case ProcessInstanceEventStatus.COMPLETED:

@@ -1,4 +1,3 @@
-import { LoopProps } from './loop-props';
 import { IProcessInstance } from './process-instance.model';
 
 export interface IProcessInstanceEvent {
@@ -13,7 +12,13 @@ export interface IProcessInstanceEvent {
     finished?: string | null;
     status?: ProcessInstanceEventStatus | null;
     error?: string | null;
-    loopProps?: LoopProps | null;
+    script?: string;
+}
+
+export interface IProcessInstanceLoopEvent extends IProcessInstanceEvent {
+    iterationNumber: number;
+    loopId: string;
+    iterationElement: string;
 }
 
 export enum ProcessInstanceEventStatus {

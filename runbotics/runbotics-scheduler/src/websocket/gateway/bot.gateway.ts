@@ -13,7 +13,7 @@ import { Logger } from 'src/utils/logger';
 import { AuthService } from 'src/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
-import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
 import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
@@ -98,11 +98,11 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT)
     async listenForProcessInstanceLoopEvent(
         @ConnectedSocket() socket: BotAuthSocket,
-        @MessageBody() processInstanceEvent: IProcessInstanceEvent,
+        @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        // await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+        await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
         this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 

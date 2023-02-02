@@ -5,6 +5,7 @@ import {
     IBot,
     IProcessInstance,
     IProcessInstanceEvent,
+    IProcessInstanceLoopEvent,
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
     WsMessage,
@@ -13,6 +14,8 @@ import { Connection, QueryRunner } from 'typeorm';
 import { UiGateway } from '../gateway/ui.gateway';
 import { ProcessInstanceEventEntity } from 'src/database/process-instance-event/process-instance-event.entity';
 import { ProcessInstanceEntity } from 'src/database/process-instance/process-instance.entity';
+import { ProcessInstanceLoopEventEntity } from 'src/database/process-instance-loop-event/process-instance-loop-event.entity';
+import { ProcessInstanceLoopEventService } from 'src/database/process-instance-loop-event/process-instance-loop-event.service';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -29,10 +32,10 @@ export class BotProcessEventService {
 
     constructor(
         private readonly processInstanceEventService: ProcessInstanceEventService,
+        private readonly processInstanceLoopEventService: ProcessInstanceLoopEventService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway
-    ) {
-    }
+    ) {}
 
     async updateProcessInstanceEvent(
         processInstanceEvent: IProcessInstanceEvent,
@@ -60,7 +63,8 @@ export class BotProcessEventService {
                 .into(ProcessInstanceEventEntity)
                 .values(processInstanceEvent)
                 .orUpdate(
-                    processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
+                    processInstanceEvent.status ===
+                        ProcessInstanceEventStatus.IN_PROGRESS
                         ? STARTED_UPDATE_FIELDS
                         : COMPLETED_UPDATE_FIELDS,
                     ['execution_id']
@@ -69,17 +73,88 @@ export class BotProcessEventService {
             await this.updateProcessInstance(queryRunner, processInstanceEvent);
             await queryRunner.commitTransaction();
 
-            const updatedProcessInstanceEvent = await this.processInstanceEventService
-                .findByExecutionId(queryRunner, processInstanceEvent.executionId);
+            const updatedProcessInstanceEvent =
+                await this.processInstanceEventService.findByExecutionId(
+                    queryRunner,
+                    processInstanceEvent.executionId
+                );
 
-            if (updatedProcessInstanceEvent.processInstance.rootProcessInstanceId === null) {
+            if (
+                updatedProcessInstanceEvent.processInstance
+                    .rootProcessInstanceId === null
+            ) {
                 this.uiGateway.server.emit(
                     WsMessage.PROCESS_INSTANCE_EVENT,
                     updatedProcessInstanceEvent
                 );
             }
         } catch (err) {
-            this.logger.error('Process instance event update error: rollback', err);
+            this.logger.error(
+                'Process instance event update error: rollback',
+                err
+            );
+            await queryRunner.rollbackTransaction();
+        } finally {
+            await queryRunner.release();
+        }
+    }
+
+    async updateProcessInstanceLoopEvent(
+        processInstanceEvent: IProcessInstanceLoopEvent,
+        bot: IBot
+    ) {
+        const queryRunner = this.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            await queryRunner.manager
+                .createQueryBuilder()
+                .insert()
+                .into(ProcessInstanceEntity)
+                .values({
+                    ...processInstanceEvent.processInstance,
+                    status: ProcessInstanceStatus.INITIALIZING,
+                    bot,
+                } as IProcessInstance)
+                .orIgnore()
+                .execute();
+
+            await queryRunner.manager
+                .createQueryBuilder()
+                .insert()
+                .into(ProcessInstanceLoopEventEntity)
+                .values(processInstanceEvent)
+                .orUpdate(
+                    processInstanceEvent.status ===
+                        ProcessInstanceEventStatus.IN_PROGRESS
+                        ? STARTED_UPDATE_FIELDS
+                        : COMPLETED_UPDATE_FIELDS,
+                    ['execution_id']
+                )
+                .execute();
+            await this.updateProcessInstance(queryRunner, processInstanceEvent);
+            await queryRunner.commitTransaction();
+
+            const updatedProcessInstanceEvent =
+                await this.processInstanceLoopEventService.findByExecutionId(
+                    queryRunner,
+                    processInstanceEvent.executionId
+                );
+
+            if (
+                updatedProcessInstanceEvent.processInstance
+                    .rootProcessInstanceId === null
+            ) {
+                this.uiGateway.server.emit(
+                    WsMessage.PROCESS_INSTANCE_EVENT,
+                    updatedProcessInstanceEvent
+                );
+            }
+        } catch (err) {
+            this.logger.error(
+                'Process instance event update error: rollback',
+                err
+            );
             await queryRunner.rollbackTransaction();
         } finally {
             await queryRunner.release();
@@ -90,8 +165,10 @@ export class BotProcessEventService {
         queryRunner: QueryRunner,
         processInstanceEvent: IProcessInstanceEvent
     ) {
-        const processInstance = await queryRunner.manager
-            .findOne(ProcessInstanceEntity, { where: { id: processInstanceEvent.processInstance.id } });
+        const processInstance = await queryRunner.manager.findOne(
+            ProcessInstanceEntity,
+            { where: { id: processInstanceEvent.processInstance.id } }
+        );
 
         if (processInstance) {
             await queryRunner.manager

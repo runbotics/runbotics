@@ -176,15 +176,14 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
-            if (this.loopHandlerService.isPartOfLoop(api)) {
-                this.loopHandlerService.loopActivityEnd(api);
+            if (this.loopHandlerService.isInLoop(api)) {
+                this.loopHandlerService.handleActivityStart(api);
             }
-            if (this.loopHandlerService.shouldElementBeSkipped(api)) return;
+            if (this.loopHandlerService.shouldSkipElement(api)) return;
 
             this.logger.log(
                 `${getActivityLogPrefix(api)} activity.start`
-            );
-            
+            ); 
             this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.IN_PROGRESS,
@@ -198,11 +197,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
 
-            if (this.loopHandlerService.isPartOfLoop(api)) {
-                this.loopHandlerService.loopActivityEnd(api);
+            if (this.loopHandlerService.isInLoop(api)) {
+                this.loopHandlerService.handleActivityEnd(api);
             }
 
-            if (this.loopHandlerService.shouldElementBeSkipped(api)) return;
+            if (this.loopHandlerService.shouldSkipElement(api)) return;
 
             if (!this.processInstances[processInstance.id]) {
                 this.activityEventBus.publish({

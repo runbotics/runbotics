@@ -221,11 +221,8 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, handler] of this.externalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                const activeProcessInstance = this.processHandlersInstancesMap.get(handler.constructor.name);
-
-                handlerInstance = activeProcessInstance ?? new handler();
-
-                this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
+                handlerInstance = handler;
+                this.processHandlersInstancesMap.set(handler.constructor.name, handler);
 
                 return await handlerInstance.run(request);
             }

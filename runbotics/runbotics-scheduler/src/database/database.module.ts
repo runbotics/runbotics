@@ -14,6 +14,7 @@ import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
 import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { ProcessTriggerModule } from './process-trigger/process-trigger.module';
+import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { ProcessTriggerModule } from './process-trigger/process-trigger.module';
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
         ProcessTriggerModule,
     ],
@@ -58,6 +60,7 @@ import { ProcessTriggerModule } from './process-trigger/process-trigger.module';
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
         ProcessTriggerModule,
     ]

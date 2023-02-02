@@ -1,10 +1,10 @@
 import { Entity, Column, ManyToOne, JoinColumn, Generated, PrimaryColumn } from 'typeorm';
 import { ProcessInstanceEntity } from '../process-instance/process-instance.entity';
-import { IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus } from 'runbotics-common';
+import { IProcessInstance, IProcessInstanceLoopEvent, ProcessInstanceEventStatus } from 'runbotics-common';
 import { dateTransformer, numberTransformer } from '../database.utils';
 
-@Entity({ name: 'process_instance_event' })
-export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
+@Entity({ name: 'process_instance_loop_event' })
+export class ProcessInstanceLoopEventEntity implements IProcessInstanceLoopEvent {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
@@ -17,7 +17,6 @@ export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
 
     @Column()
         step: string;
-        
     @Column()
         script: string;
 
@@ -42,5 +41,12 @@ export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
 
     @Column()
         status: ProcessInstanceEventStatus;
+    @Column({name: 'iteration_number'})
+        iterationNumber: number;
 
+    @Column({name: 'iteration_element'})
+        iterationElement: string;
+        
+    @Column({name: 'loop_id'})
+        loopId: string;
 }
