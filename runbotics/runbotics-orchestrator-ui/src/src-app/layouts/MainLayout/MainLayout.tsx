@@ -19,7 +19,7 @@ import TopBar from './TopBar';
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
-    const [isMenuShrinked, setIsMenuShrinked] = useState(true);
+    const [isMenuShrank, setIsMenuShrank] = useState(true);
     const theme = useTheme();
     const mobile = useMediaQuery(theme.breakpoints.down('md'));
     const publicSections = usePublicSections();
@@ -46,7 +46,7 @@ const MainLayout: FC = ({ children }) => {
     }, []);
 
     const handleMenuShowToggle = () => {
-        setIsMenuShrinked((prevIsMenuShrinked) => !prevIsMenuShrinked);
+        setIsMenuShrank((prevIsMenuShrank) => !prevIsMenuShrank);
     };
 
     return (
@@ -54,7 +54,7 @@ const MainLayout: FC = ({ children }) => {
             <TopBar />
             <If condition={isNavBarVisible}>
                 <NavBar
-                    isShrinked={isMenuShrinked}
+                    isShrank={isMenuShrank}
                     mobile={mobile}
                     onMenuShowToggleChange={handleMenuShowToggle}
                     accessedSections={accessedSections}
@@ -62,7 +62,7 @@ const MainLayout: FC = ({ children }) => {
             </If>
             <Main
                 isNavbarVisible={isNavBarVisible}
-                isShrinked={isMenuShrinked}
+                isShrank={isMenuShrank}
                 mobile={mobile}
             >
                 <ContentContainer>
