@@ -16,13 +16,10 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async connect(input: SapTypes.SAPConnectActionInput): Promise<SapTypes.SAPConnectActionOutput> {
-        if (process.platform !== 'win32') {
-            throw new Error('SAP actions can be run only on Windows bot');
-        }
-        const winax = await import('winax');
+        await import('winax');
 
         try {
-            const app = new winax.ActiveXObject('SapROTWr.SapROTWrapper');
+            const app = new ActiveXObject('SapROTWr.SapROTWrapper');
             const sapGuiAuto = app.GetROTEntry('SAPGUI');
             if (!sapGuiAuto) {
                 throw new Error('SAP application is not running');
@@ -154,6 +151,10 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async run(request: SapTypes.SAPActionRequest) {
+        if (process.platform !== 'win32') {
+            throw new Error('SAP actions can be run only on Windows bot');
+        }
+
         switch (request.script) {
             case 'sap.connect':
                 return this.connect(request.input);
