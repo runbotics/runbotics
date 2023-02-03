@@ -40,6 +40,7 @@
     background-color: $palette-background-tertiary;
     text-align: center;
     cursor: pointer;
+    text-decoration: none;
 
     & > *:hover {
         color: $text-color-light;
@@ -49,15 +50,26 @@
 .logInBtn {
     composes: btn;
     margin: 0 $margin-3;
-    text-decoration: none;
-}
-
-.btnText {
-    font-weight: $font-weight-semi-bold;
 }
 
 .menuIcon {
     display: none;
+}
+
+.skipNavLink {
+    composes: btn;
+    position: absolute;
+    z-index: $header-z-index;
+    left: $LOGO_WIDTH - 10px;
+    transform: translateY(-200%);
+}
+
+.skipNavLink:focus {
+    transform: translateY(0);
+}
+
+.btnText {
+    font-weight: $font-weight-semi-bold;
 }
 
 @media (max-width: $breakpoint-md) {
@@ -107,7 +119,7 @@
 }
 
 @media (max-width: $breakpoint-xs) {
-    .logInBtn {
+    .btn {
         border-radius: 8px;
         padding: 4px 9px;
     }
