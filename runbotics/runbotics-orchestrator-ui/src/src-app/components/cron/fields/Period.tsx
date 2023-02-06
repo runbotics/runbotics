@@ -4,7 +4,7 @@ import { Select, MenuItem, SvgIcon } from '@mui/material';
 import { Calendar as CalendarIcon } from 'react-feather';
 
 import DEFAULT_LOCALE_EN from '../locale';
-import { PeriodProps } from '../types';
+import { PeriodProps, PeriodTypes } from '../types';
 import { classNames } from '../utils';
 
 // eslint-disable-next-line complexity
@@ -12,27 +12,27 @@ export default function Period(props: PeriodProps) {
     const { value, setValue, locale, className, disabled, readOnly, shortcuts } = props;
     let options = [
         {
-            value: 'year',
+            value: PeriodTypes.YEAR,
             label: locale.yearOption || DEFAULT_LOCALE_EN.yearOption,
         },
         {
-            value: 'month',
+            value: PeriodTypes.MONTH,
             label: locale.monthOption || DEFAULT_LOCALE_EN.monthOption,
         },
         {
-            value: 'week',
+            value: PeriodTypes.WEEK,
             label: locale.weekOption || DEFAULT_LOCALE_EN.weekOption,
         },
         {
-            value: 'day',
+            value: PeriodTypes.DAY,
             label: locale.dayOption || DEFAULT_LOCALE_EN.dayOption,
         },
         {
-            value: 'hour',
+            value: PeriodTypes.HOUR,
             label: locale.hourOption || DEFAULT_LOCALE_EN.hourOption,
         },
         {
-            value: 'minute',
+            value: PeriodTypes.MINUTE,
             label: locale.minuteOption || DEFAULT_LOCALE_EN.minuteOption,
         },
     ];
@@ -41,7 +41,7 @@ export default function Period(props: PeriodProps) {
     { options = [
         ...options,
         {
-            value: 'reboot',
+            value: PeriodTypes.REBOOT,
             label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
         },
     ]; }

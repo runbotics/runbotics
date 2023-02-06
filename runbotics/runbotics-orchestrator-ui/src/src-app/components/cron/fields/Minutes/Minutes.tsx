@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 
-import CustomSelect from '../components/CustomSelect';
-import { UNITS } from '../constants';
-import DEFAULT_LOCALE_EN from '../locale';
-import { MinutesProps, PeriodTypes } from '../types';
-import { classNames } from '../utils';
+import CustomSelect from '../../components/CustomSelect';
+import { UNITS } from '../../constants';
+import DEFAULT_LOCALE_EN from '../../locale';
+import { PeriodTypes } from '../../types';
+import { classNames } from '../../utils';
+import { MinutesProps } from './Minutes.types';
 
 // eslint-disable-next-line complexity
 export default function Minutes({ 

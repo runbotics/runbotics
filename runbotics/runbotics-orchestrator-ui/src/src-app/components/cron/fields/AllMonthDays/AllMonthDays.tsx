@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
 import PeriodDefinition from '../../components/PeriodDefinition/';
-import { AllMonthDaysProps } from '../../types';
+import { AllMonthDaysProps } from './AllMonthDays.types';
 
-import MonthDays from './MonthDays';
-import NthMonthDays from './NthMonthDays';
+import MonthDays from './MonthDays/';
+import NthMonthDays from './NthMonthDays/';
 
 // eslint-disable-next-line complexity
 const AllMonthDays: FC<AllMonthDaysProps> = ({

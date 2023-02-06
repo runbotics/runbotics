@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
-import CustomSelect from '../../components/CustomSelect';
-import { UNITS } from '../../constants';
-import DEFAULT_LOCALE_EN from '../../locale';
-import { NthMonthDaysProps } from '../../types';
+import CustomSelect from '../../../components/CustomSelect';
+import { UNITS } from '../../../constants';
+import DEFAULT_LOCALE_EN from '../../../locale';
+import { NthMonthDaysProps } from './NthMonthDays.types';
 
 // eslint-disable-next-line complexity
 const NthMonthDays: FC<NthMonthDaysProps>= ({ 

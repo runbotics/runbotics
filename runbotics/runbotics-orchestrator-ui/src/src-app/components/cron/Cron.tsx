@@ -6,9 +6,9 @@ import { setValuesFromCronString, getCronStringFromValues } from './converter';
 import { ClearButton } from './Cron.styles';
 import AllMonthDays from './fields/AllMonthDays/';
 import AllWeekDays from './fields/AllWeekDays/';
-import Hours from './fields/Hours';
-import Minutes from './fields/Minutes';
-import Months from './fields/Months';
+import Hours from './fields/Hours/Hours';
+import Minutes from './fields/Minutes/Minutes';
+import Months from './fields/Months/Months';
 import Period from './fields/Period';
 import DEFAULT_LOCALE_EN from './locale';
 import { CronProps, PeriodType, PeriodTypes } from './types';
@@ -48,6 +48,8 @@ export default function Cron({
     const [valueCleared, setValueCleared] = useState<boolean>(false);
     const previousValueCleared = usePrevious(valueCleared);
     const localeJSON = JSON.stringify(locale);
+
+    console.log(monthDays)
 
     useEffect(
         () => {

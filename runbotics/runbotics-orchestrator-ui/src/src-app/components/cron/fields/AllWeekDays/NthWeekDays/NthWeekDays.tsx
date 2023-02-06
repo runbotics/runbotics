@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 
-import CustomSelect from '../../components/CustomSelect';
-import { UNITS } from '../../constants';
-import DEFAULT_LOCALE_EN from '../../locale';
-import { NthWeekDaysProps, PeriodTypes } from '../../types';
+import CustomSelect from '../../../components/CustomSelect';
+import { UNITS } from '../../../constants';
+import DEFAULT_LOCALE_EN from '../../../locale';
+import { PeriodTypes } from '../../../types';
+import { NthWeekDaysProps } from './NthWeekDays.types';
 
 // eslint-disable-next-line complexity
 const NthWeekDays: FC<NthWeekDaysProps>= ({ 

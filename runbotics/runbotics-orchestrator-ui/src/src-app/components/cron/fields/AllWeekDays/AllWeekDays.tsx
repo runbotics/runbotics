@@ -1,7 +1,8 @@
 import { FC } from 'react';
 
 import PeriodDefinition from '../../components/PeriodDefinition/';
-import { AllWeekDaysProps, PeriodTypes } from '../../types';
+import { PeriodTypes } from '../../types';
+import { AllWeekDaysProps } from './AllWeekDays.types';
 import NthWeekDays from './NthWeekDays';
 import WeekDays from './WeekDays';
 

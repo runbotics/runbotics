@@ -231,64 +231,9 @@ export interface PeriodProps extends Omit<FieldProps, 'value' | 'setValue' | 'pe
     shortcuts: Shortcuts;
 }
 
-export interface MonthsProps extends FieldProps {
-    humanizeLabels: boolean;
-}
-
-export interface AllMonthDaysProps extends Omit<FieldProps, 'setValue'> {
-    humanizeLabels: boolean;
-    monthDays: number[];
-    setMonthDays: SetValueNumbersOrUndefined;
-    nthMonthDays: number[];
-    setNthMonthDays: SetValueNumbersOrUndefined;
-    leadingZero: LeadingZero;
-}
-
-export interface NthMonthDaysProps extends Omit<FieldProps, 'setValue'> {
-    humanizeLabels: boolean;
-    setValue: SetValueNumbersOrUndefined;
-}
-
-export interface MonthDaysProps extends FieldProps {
-    humanizeLabels: boolean;
-    weekDays?: number[];
-    leadingZero: LeadingZero;
-}
-
-export interface AllWeekDaysProps {
-    locale: Locale;
-    humanizeLabels: boolean;
-    disabled: boolean;
-    readOnly: boolean;
-    periodForRender: PeriodTypes;
-    weekDays: number[];
-    setWeekDays: (weekDays: number[]) => void;
-    nthWeekDays: number[];
-    setNthWeekDays: (nthWeekDays: number[]) => void;
-    isMonthPeriodDisplayed: boolean;
-    isWeekPeriodDisplayed: boolean;
-}
-
 export interface WeekDaysProps extends FieldProps {
     humanizeLabels: boolean;
     isWeekPeriodDisplayed: boolean;
-}
-
-export interface NthWeekDaysProps extends Omit<FieldProps, 'setValue'> {
-    humanizeLabels: boolean;
-    setValue: SetValueNumbersOrUndefined;
-    isAnyWeekDaySelected: boolean;
-    isMonthPeriodDisplayed: boolean;
-}
-
-export interface HoursProps extends FieldProps {
-    leadingZero: LeadingZero;
-    clockFormat?: ClockFormat;
-}
-
-export interface MinutesProps extends FieldProps {
-    leadingZero: LeadingZero;
-    clockFormat?: ClockFormat;
 }
 
 export interface CustomSelectProps

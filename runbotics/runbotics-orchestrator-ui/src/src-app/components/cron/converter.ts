@@ -269,12 +269,15 @@ function parseCronArray(cronObj: cronObjProps, humanizeValue?: boolean) {
                 resultArr[4] += newPart;
             };
         } else if (unit.type === 'nth-month-days') {
-            if (Number(newPart) === 0 && newPart !== '*') {
+            if (Number(newPart) === 0) {
                 newPart = 'L';
             } else if (Number(newPart) === 1) {
                 newPart = 'LW';
             }
-            resultArr[2] = newPart;
+
+            if(resultArr[2] === '*') {
+                resultArr[2] = newPart;
+            }
         } else {
             resultArr.push(newPart);
         }

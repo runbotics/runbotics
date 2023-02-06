@@ -1,9 +1,9 @@
 import React from 'react';
 
-import CustomSelect from '../../components/CustomSelect';
-import { UNITS } from '../../constants';
-import DEFAULT_LOCALE_EN from '../../locale';
-import { WeekDaysProps } from '../../types';
+import CustomSelect from '../../../components/CustomSelect';
+import { UNITS } from '../../../constants';
+import DEFAULT_LOCALE_EN from '../../../locale';
+import { WeekDaysProps } from '../../../types';
 
 // eslint-disable-next-line complexity
 const WeekDays = ({ 

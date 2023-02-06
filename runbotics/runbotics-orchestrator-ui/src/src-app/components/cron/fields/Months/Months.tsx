@@ -1,16 +1,22 @@
 import React, { useMemo } from 'react';
 
-import CustomSelect from '../components/CustomSelect';
-import { UNITS } from '../constants';
-import DEFAULT_LOCALE_EN from '../locale';
-import { MonthsProps } from '../types';
-import { classNames } from '../utils';
+import CustomSelect from '../../components/CustomSelect';
+import { UNITS } from '../../constants';
+import DEFAULT_LOCALE_EN from '../../locale';
+import { classNames } from '../../utils';
+import { MonthsProps } from './Months.types';
 
 // eslint-disable-next-line complexity
-export default function Months(props: MonthsProps) {
-    const {
-        value, setValue, locale, className, humanizeLabels, disabled, readOnly, period,
-    } = props;
+export function Months ({
+    value, 
+    setValue, 
+    locale, 
+    className, 
+    humanizeLabels, 
+    disabled, 
+    readOnly, 
+    period,
+}: MonthsProps) {
     const optionsList = locale.months || DEFAULT_LOCALE_EN.months;
 
     const internalClassName = useMemo(
@@ -48,4 +54,4 @@ export default function Months(props: MonthsProps) {
             />
         </div>
     );
-}
+};
