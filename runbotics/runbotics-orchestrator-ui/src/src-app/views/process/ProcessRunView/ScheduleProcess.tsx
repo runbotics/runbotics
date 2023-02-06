@@ -7,11 +7,12 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import * as yup from 'yup';
 
-import Cron from '#src-app/components/cron';
-import useTranslations from '#src-app/hooks/useTranslations';
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
+
+import Cron from '#src-app/components/cron';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 const SubmitButton = styled(Button)(
     ({ theme }) => `
