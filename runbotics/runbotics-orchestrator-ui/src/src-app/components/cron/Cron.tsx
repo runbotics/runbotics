@@ -4,14 +4,12 @@ import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import If from '../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 import { ClearButton } from './Cron.styles';
-import AllMonthDays from './fields/AllMonthDays';
-import AllWeekDays from './fields/AllWeekDays';
+import AllMonthDays from './fields/AllMonthDays/';
+import AllWeekDays from './fields/AllWeekDays/';
 import Hours from './fields/Hours';
 import Minutes from './fields/Minutes';
 import Months from './fields/Months';
 import Period from './fields/Period';
-// import NthWeekDays from './fields/AllWeekDays/NthWeekDays';
-// import WeekDays from './fields/AllWeekDays/WeekDays';
 import DEFAULT_LOCALE_EN from './locale';
 import { CronProps, PeriodType, PeriodTypes } from './types';
 import { classNames, setError, usePrevious } from './utils';
@@ -65,6 +63,7 @@ export default function Cron({
                 setMinutes,
                 setHours,
                 setMonthDays,
+                setNthMonthDays,
                 setMonths,
                 setWeekDays,
                 setNthWeekDays,
@@ -91,6 +90,7 @@ export default function Cron({
                     setMinutes,
                     setHours,
                     setMonthDays,
+                    setNthMonthDays,
                     setMonths,
                     setWeekDays,
                     setNthWeekDays,

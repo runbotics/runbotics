@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
+import PeriodDefinition from '../../components/PeriodDefinition/';
 import { AllMonthDaysProps } from '../../types';
 
-import PeriodDefinition from '../Components/PeriodDefinition';
 import MonthDays from './MonthDays';
 import NthMonthDays from './NthMonthDays';
 

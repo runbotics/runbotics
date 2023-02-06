@@ -1,26 +1,12 @@
 import { FC } from 'react';
 
-import { PeriodTypes, Locale} from '../../types';
-import PeriodDefinition from '../Components/PeriodDefinition';
+import PeriodDefinition from '../../components/PeriodDefinition/';
+import { AllWeekDaysProps, PeriodTypes } from '../../types';
 import NthWeekDays from './NthWeekDays';
 import WeekDays from './WeekDays';
 
-interface AllWeekDaysProps {
-    locale: Locale;
-    humanizeLabels: boolean;
-    disabled: boolean;
-    readOnly: boolean;
-    periodForRender: PeriodTypes;
-    weekDays: number[];
-    setWeekDays: (weekDays: number[]) => void;
-    nthWeekDays: number[];
-    setNthWeekDays: (nthWeekDays: number[]) => void;
-    isMonthPeriodDisplayed: boolean;
-    isWeekPeriodDisplayed: boolean;
-}
-
 // eslint-disable-next-line complexity
-const AllWeekDays: FC<AllWeekDaysProps>= ({ 
+const AllWeekDays: FC<AllWeekDaysProps> = ({ 
     locale,
     humanizeLabels,
     disabled,

@@ -37,6 +37,7 @@ export function setValuesFromCronString(
     setMinutes: SetValueNumbersOrUndefined,
     setHours: SetValueNumbersOrUndefined,
     setMonthDays: SetValueNumbersOrUndefined,
+    setNthMonthDays: SetValueNumbersOrUndefined,
     setMonths: SetValueNumbersOrUndefined,
     setWeekDays: SetValueNumbersOrUndefined,
     setNthWeekDays: SetValueNumbersOrUndefined,
@@ -90,6 +91,7 @@ export function setValuesFromCronString(
             setMonths(cronParts[3]);
             setWeekDays(cronParts[4]);
             setNthWeekDays([]); // initialized empty value
+            setNthMonthDays([]); // initialized empty value
         } catch (err) {
             // Specific errors are not handle (yet)
             error = true;
@@ -252,9 +254,7 @@ export function formatValue(
  */
 
 function parseCronArray(cronObj: cronObjProps, humanizeValue?: boolean) {
-    for (const cronArr in cronObj) {
-        if (Object[cronArr]?.length < 0) throw new Error('Invalid cron array');
-    }
+    if (Object.keys(cronObj).length !== 7) throw new Error('Invalid cron array');
 
     const resultArr = [];
 

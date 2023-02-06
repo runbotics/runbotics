@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
 import { ButtonProps, SelectProps } from '@mui/material';
-// External props
 
 export enum PeriodTypes {
     YEAR = 'year',
@@ -22,12 +21,6 @@ export type PeriodType = PeriodTypes.YEAR
     | PeriodTypes.MINUTE 
     | PeriodTypes.REBOOT;
 
-export type SpecialCharacters = '*' 
-    | '?' 
-    | 'L' 
-    | 'W' 
-    | '#';
-
 export interface CronProps {
     /**
      * Cron value, the component is by design a controled component.
@@ -40,7 +33,7 @@ export interface CronProps {
     /**
      * Set the cron value, similar to onChange.
      * The naming tells you that you have to set the value by yourself.
-    *
+     *
      * required
      */
     setValue: SetValue;
@@ -76,7 +69,7 @@ export interface CronProps {
      * Define the default period when the default value is empty.
      *
      * Default: 'day'
-    */
+     */
     defaultPeriod?: PeriodType;
 
     /**
@@ -102,7 +95,7 @@ export interface CronProps {
 
     /**
      * Support cron shortcuts.
-    *
+     *
      * Default: ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly']
      */
     shortcuts?: Shortcuts;
@@ -204,7 +197,6 @@ export type OnErrorFunction = (error: CronError) => void;
 export type OnError = OnErrorFunction | Dispatch<SetStateAction<CronError>> | undefined;
 export type ClearButtonProps = Omit<ButtonProps, 'onClick'>;
 export type ClearButtonAction = 'empty' | 'fill-with-every' | string;
-// export type PeriodType = 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'reboot' | string;
 export type AllowEmpty = 'always' | 'never' | 'for-default-value' | string;
 export type CronType = 'period' | 'months' | 'month-days' | 'week-days' | 'hours' | 'minutes' | string;
 export type LeadingZeroType = 'month-days' | 'hours' | 'minutes' | string;
@@ -248,7 +240,7 @@ export interface AllMonthDaysProps extends Omit<FieldProps, 'setValue'> {
     monthDays: number[];
     setMonthDays: SetValueNumbersOrUndefined;
     nthMonthDays: number[];
-    setNthMonthDays: SetValueSpecialCharacters;
+    setNthMonthDays: SetValueNumbersOrUndefined;
     leadingZero: LeadingZero;
 }
 
@@ -263,6 +255,20 @@ export interface MonthDaysProps extends FieldProps {
     leadingZero: LeadingZero;
 }
 
+export interface AllWeekDaysProps {
+    locale: Locale;
+    humanizeLabels: boolean;
+    disabled: boolean;
+    readOnly: boolean;
+    periodForRender: PeriodTypes;
+    weekDays: number[];
+    setWeekDays: (weekDays: number[]) => void;
+    nthWeekDays: number[];
+    setNthWeekDays: (nthWeekDays: number[]) => void;
+    isMonthPeriodDisplayed: boolean;
+    isWeekPeriodDisplayed: boolean;
+}
+
 export interface WeekDaysProps extends FieldProps {
     humanizeLabels: boolean;
     isWeekPeriodDisplayed: boolean;
@@ -270,7 +276,7 @@ export interface WeekDaysProps extends FieldProps {
 
 export interface NthWeekDaysProps extends Omit<FieldProps, 'setValue'> {
     humanizeLabels: boolean;
-    setValue: SetValueSpecialCharacters;
+    setValue: SetValueNumbersOrUndefined;
     isAnyWeekDaySelected: boolean;
     isMonthPeriodDisplayed: boolean;
 }
@@ -320,8 +326,6 @@ export interface CustomSelectProps
 }
 
 export type SetValueNumbersOrUndefined = Dispatch<SetStateAction<number[] | undefined>>;
-export type SetValueSpecialCharacters = Dispatch<SetStateAction<Array<SpecialCharacters | number> | undefined>>;
-export type SetValueSpecialExpression = Dispatch<SetStateAction<(SpecialCharacters | number)[] | undefined>>;
 export type SetValuePeriod = Dispatch<SetStateAction<PeriodType>>;
 export type SetInternalError = Dispatch<SetStateAction<boolean>>;
 

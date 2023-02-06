@@ -2,13 +2,7 @@ import { FC } from 'react';
 
 import { PeriodText } from '../../Cron.styles';
 import DEFAULT_LOCALE_EN from '../../locale';
-import { Locale } from '../../types';
-
-interface PeriodDefinitionProps {
-    isDisplayed: boolean;
-    locale: Locale;
-    localeKey: string;
-}
+import { PeriodDefinitionProps } from './PeriodDefinition.types';
 
 const PeriodDefinition: FC<PeriodDefinitionProps>= ({
     isDisplayed,
