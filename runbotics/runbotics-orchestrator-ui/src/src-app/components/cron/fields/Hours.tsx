@@ -6,10 +6,17 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { HoursProps } from '../types';
 import { classNames } from '../utils';
 
-export default function Hours(props: HoursProps) {
-    const {
-        value, setValue, locale, className, disabled, readOnly, leadingZero, clockFormat, period,
-    } = props;
+export default function Hours({
+    value, 
+    setValue, 
+    locale, 
+    className, 
+    disabled, 
+    readOnly, 
+    leadingZero, 
+    clockFormat, 
+    period,
+}: HoursProps) {
     const internalClassName = useMemo(
         () => classNames({
             'react-js-cron-field': true,

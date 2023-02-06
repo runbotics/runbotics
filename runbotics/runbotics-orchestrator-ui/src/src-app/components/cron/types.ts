@@ -3,6 +3,31 @@ import { Dispatch, SetStateAction } from 'react';
 import { ButtonProps, SelectProps } from '@mui/material';
 // External props
 
+export enum PeriodTypes {
+    YEAR = 'year',
+    MONTH = 'month',
+    WEEK = 'week',
+    DAY = 'day',
+    HOUR = 'hour',
+    MINUTE = 'minute',
+    REBOOT = 'reboot',
+}
+
+export type PeriodType = PeriodTypes.YEAR 
+    | PeriodTypes.MONTH 
+    | PeriodTypes.WEEK 
+    | PeriodTypes.DAY 
+    | PeriodTypes.HOUR 
+    | PeriodTypes.HOUR 
+    | PeriodTypes.MINUTE 
+    | PeriodTypes.REBOOT;
+
+export type SpecialCharacters = '*' 
+    | '?' 
+    | 'L' 
+    | 'W' 
+    | '#';
+
 export interface CronProps {
     /**
      * Cron value, the component is by design a controled component.
@@ -15,7 +40,7 @@ export interface CronProps {
     /**
      * Set the cron value, similar to onChange.
      * The naming tells you that you have to set the value by yourself.
-     *
+    *
      * required
      */
     setValue: SetValue;
@@ -51,7 +76,7 @@ export interface CronProps {
      * Define the default period when the default value is empty.
      *
      * Default: 'day'
-     */
+    */
     defaultPeriod?: PeriodType;
 
     /**
@@ -63,58 +88,58 @@ export interface CronProps {
 
     /**
      * Make the cron component read-only.
-     *
+    *
      * Default: false
-     */
+    */
     readOnly?: boolean;
 
     /**
      * Define if empty should trigger an error.
-     *
-     * Default: 'for-default-value'
-     */
-    allowEmpty?: AllowEmpty;
+    *
+    * Default: 'for-default-value'
+    */
+   allowEmpty?: AllowEmpty;
 
     /**
      * Support cron shortcuts.
-     *
+    *
      * Default: ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly']
      */
     shortcuts?: Shortcuts;
-
+    
     /**
      * Define the clock format.
      */
     clockFormat?: ClockFormat;
-
+    
     /**
      * Display the clear button.
-     *
-     * Default: true
-     */
+    *
+    * Default: true
+    */
     clearButton?: boolean;
 
     clearButtonProps?: ClearButtonProps;
-
+    
     /**
      * Define the clear button action.
-     *
+    *
      * Default: 'fill-with-every'
      */
     clearButtonAction?: ClearButtonAction;
 
     /**
      * Display error style (red border and background).
-     *
+    *
      * Display: true
-     */
+    */
     displayError?: boolean;
 
     /**
      * Triggered when the cron component detects an error with the value.
      */
     onError?: OnError;
-
+    
     /**
      * Change the component language.
      * Can also be used to remove prefix and suffix.
@@ -124,7 +149,7 @@ export interface CronProps {
      *
      * The order of the 'locale' properties 'weekDays', 'months', 'altMonths'
      * and 'altWeekDays' is important! The index will be used as value.
-     *
+    *
      * Default './locale.ts'
      */
     locale?: Locale;
@@ -151,6 +176,7 @@ export interface Locale {
     prefixMonthDays?: string;
     prefixWeekDays?: string;
     prefixWeekDaysForMonthAndYearPeriod?: string;
+    suffixWeekDays?: string;
     prefixHours?: string;
     prefixMinutes?: string;
     prefixMinutesForHourPeriod?: string;
@@ -158,9 +184,13 @@ export interface Locale {
     errorInvalidCron?: string;
     clearButtonText?: string;
     weekDays?: string[];
-    months?: string[];
     altWeekDays?: string[];
+    nthWeekDays?: string[];
+    altNthWeekDays?: string[];
+    months?: string[];
     altMonths?: string[];
+    nthMonthDays?: string[];
+    altNthMonthDays?: string[];
 }
 export type SetValueFunction = (value: string) => void;
 export type SetValue = SetValueFunction | Dispatch<SetStateAction<string>>;
@@ -174,7 +204,7 @@ export type OnErrorFunction = (error: CronError) => void;
 export type OnError = OnErrorFunction | Dispatch<SetStateAction<CronError>> | undefined;
 export type ClearButtonProps = Omit<ButtonProps, 'onClick'>;
 export type ClearButtonAction = 'empty' | 'fill-with-every' | string;
-export type PeriodType = 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'reboot' | string;
+// export type PeriodType = 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'reboot' | string;
 export type AllowEmpty = 'always' | 'never' | 'for-default-value' | string;
 export type CronType = 'period' | 'months' | 'month-days' | 'week-days' | 'hours' | 'minutes' | string;
 export type LeadingZeroType = 'month-days' | 'hours' | 'minutes' | string;
@@ -202,30 +232,59 @@ export interface FieldProps {
     readOnly: boolean;
     period: PeriodType;
 }
+
 export interface PeriodProps extends Omit<FieldProps, 'value' | 'setValue' | 'period'> {
     value: PeriodType;
     setValue: SetValuePeriod;
     shortcuts: Shortcuts;
 }
+
 export interface MonthsProps extends FieldProps {
     humanizeLabels: boolean;
 }
+
+export interface AllMonthDaysProps extends Omit<FieldProps, 'setValue'> {
+    humanizeLabels: boolean;
+    monthDays: number[];
+    setMonthDays: SetValueNumbersOrUndefined;
+    nthMonthDays: number[];
+    setNthMonthDays: SetValueSpecialCharacters;
+    leadingZero: LeadingZero;
+}
+
+export interface NthMonthDaysProps extends Omit<FieldProps, 'setValue'> {
+    humanizeLabels: boolean;
+    setValue: SetValueNumbersOrUndefined;
+}
+
 export interface MonthDaysProps extends FieldProps {
+    humanizeLabels: boolean;
     weekDays?: number[];
     leadingZero: LeadingZero;
 }
+
 export interface WeekDaysProps extends FieldProps {
     humanizeLabels: boolean;
-    monthDays?: number[];
+    isWeekPeriodDisplayed: boolean;
 }
+
+export interface NthWeekDaysProps extends Omit<FieldProps, 'setValue'> {
+    humanizeLabels: boolean;
+    setValue: SetValueSpecialCharacters;
+    isAnyWeekDaySelected: boolean;
+    isMonthPeriodDisplayed: boolean;
+}
+
 export interface HoursProps extends FieldProps {
     leadingZero: LeadingZero;
     clockFormat?: ClockFormat;
 }
+
 export interface MinutesProps extends FieldProps {
     leadingZero: LeadingZero;
     clockFormat?: ClockFormat;
 }
+
 export interface CustomSelectProps
     extends Omit<
     SelectProps,
@@ -257,10 +316,15 @@ export interface CustomSelectProps
     clockFormat?: ClockFormat;
     period: PeriodType;
     unit: Unit;
+    isMultiple?: boolean;
 }
+
 export type SetValueNumbersOrUndefined = Dispatch<SetStateAction<number[] | undefined>>;
+export type SetValueSpecialCharacters = Dispatch<SetStateAction<Array<SpecialCharacters | number> | undefined>>;
+export type SetValueSpecialExpression = Dispatch<SetStateAction<(SpecialCharacters | number)[] | undefined>>;
 export type SetValuePeriod = Dispatch<SetStateAction<PeriodType>>;
 export type SetInternalError = Dispatch<SetStateAction<boolean>>;
+
 export interface DefaultLocale {
     everyText: string;
     emptyMonths: string;
@@ -283,6 +347,7 @@ export interface DefaultLocale {
     prefixMonthDays: string;
     prefixWeekDays: string;
     prefixWeekDaysForMonthAndYearPeriod: string;
+    suffixWeekDays: string;
     prefixHours: string;
     prefixMinutes: string;
     prefixMinutesForHourPeriod: string;
@@ -290,8 +355,12 @@ export interface DefaultLocale {
     errorInvalidCron: string;
     clearButtonText: string;
     weekDays: string[];
+    nthWeekDays?: string[];
     months: string[];
-    altWeekDays: string[];
+    nthMonthDays?: string[];
+    altNthMonthDays?: string[];
+    altWeekDays?: string[];
+    altNthWeekDays?: string[];
     altMonths: string[];
 }
 export type CronValues = { [key in CronType]: number[] | string | undefined };
@@ -312,4 +381,14 @@ export interface Unit {
 export interface Clicks {
     time: number;
     value: number;
+}
+
+export interface cronObjProps {
+    newMinutes: number[],
+    newHours: number[],
+    newMonthDays: number[],
+    newNthMonthDays?: number[],
+    newMonths: number[],
+    newWeekDays: number[],
+    newNthWeekDays?: number[],
 }

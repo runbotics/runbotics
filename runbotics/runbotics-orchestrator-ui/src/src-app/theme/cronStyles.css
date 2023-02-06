@@ -14,6 +14,7 @@
     margin-bottom: 10px;
 }
 .react-js-cron-field > span {
+    /* styled component in Cron.styles.ts */
     margin-left: 5px;
     font-weight: bold;
 }
@@ -104,10 +105,7 @@ div.react-js-cron-custom-select .ant-select-selection-placeholder {
     min-width: 0 !important;
     width: auto !important;
 }
-.react-js-cron-clear-button {
-    margin-left: 20px;
-    margin-bottom: 10px;
-}
+
 .react-js-cron-disabled .react-js-cron-select.ant-select-disabled {
     background: #f5f5f5;
 }

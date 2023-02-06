@@ -30,6 +30,7 @@ export const SUPPORTED_SHORTCUTS: ShortcutsValues[] = [
         value: '0 * * * *',
     },
 ];
+// DO NOT CHANGE ORDER
 export const UNITS: Unit[] = [
     {
         type: 'minutes',
@@ -68,5 +69,23 @@ export const UNITS: Unit[] = [
         // Only used internally for Cron syntax
         // alt values used for labels are in ./locale.ts file
         alt: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
+    },
+    {
+        type: 'nth-week-days',
+        min: 0,
+        max: 4,
+        total: 5,
+        // DO NO EDIT
+        // Only used internally for Cron syntax
+        // alt values used for labels are in ./locale.ts file
+        alt: ['1st', '2nd', '3rd', '4th', 'last'],
+    },
+    {
+        type: 'nth-month-days',
+        min: 0,
+        max: 1,
+        total: 2,
+        // DO NO EDIT
+        alt: ['last', 'last-weekday']
     },
 ];

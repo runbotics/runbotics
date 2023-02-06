@@ -7,49 +7,61 @@ import DEFAULT_LOCALE_EN from '../locale';
 import { CustomSelectProps } from '../types';
 import { classNames, sort } from '../utils';
 
-export default function CustomSelect(props: CustomSelectProps) {
-    const {
-        value,
-        setValue,
-        locale,
-        className,
-        humanizeLabels,
-        disabled,
-        readOnly,
-        leadingZero,
-        clockFormat,
-        optionsList,
-        unit,
-    } = props;
-
-    const stringValue = useMemo(() => {
-        if (value && Array.isArray(value)) 
-        { return value.map((item: number) => item.toString()); }
-        
-        return [];
-    }, [value]);
+export default function CustomSelect({
+    value,
+    setValue,
+    locale,
+    className,
+    humanizeLabels,
+    disabled,
+    readOnly,
+    leadingZero,
+    clockFormat,
+    optionsList,
+    unit,
+    isMultiple = true,
+}: CustomSelectProps) {
+    const stringValue = useMemo(
+        () => 
+            (value && Array.isArray(value)) 
+                ? value.map((item: number) => item.toString())
+                : [],
+        [value]
+    );
 
     const options = useMemo(
-        () => {
-            if (optionsList) 
-            { return optionsList.map((option, index) => {
-                const number = unit.min === 0 ? index : index + 1;
-                return {
-                    value: number.toString(),
-                    label: option,
-                };
-            }); }
-            
-            return [...Array(unit.total)].map((e, index) => {
-                const number = unit.min === 0 ? index : index + 1;
-                return {
-                    value: number.toString(),
-                    label: formatValue(number, unit, humanizeLabels, leadingZero, clockFormat),
-                };
-            });
-        },
+        () => optionsList 
+            ? (
+                optionsList.map(
+                    (option, index) => {
+                        const number = unit.min === 0 ? index : index + 1;
+
+                        return {
+                            value: number.toString(),
+                            label: option,
+                        };
+                    }
+                )
+            ) 
+            : (
+                [...Array(unit.total)].map((e, index) => {
+                    const number = unit.min === 0 ? index : index + 1;
+
+                    return {
+                        value: number.toString(),
+                        label: formatValue(
+                            number,
+                            unit,
+                            humanizeLabels,
+                            leadingZero,
+                            clockFormat
+                        ),
+                    };
+                })
+            ), 
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
+        
     const renderTag = useCallback(
         // eslint-disable-next-line complexity
         (tagProps) => {
@@ -103,7 +115,7 @@ export default function CustomSelect(props: CustomSelectProps) {
 
     return (
         <Select
-            multiple
+            multiple={isMultiple}
             open={readOnly ? false : undefined}
             value={stringValue}
             onChange={simpleClick}

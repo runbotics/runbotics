@@ -3,12 +3,21 @@ import React, { useMemo } from 'react';
 import CustomSelect from '../components/CustomSelect';
 import { UNITS } from '../constants';
 import DEFAULT_LOCALE_EN from '../locale';
-import { MinutesProps } from '../types';
+import { MinutesProps, PeriodTypes } from '../types';
 import { classNames } from '../utils';
 
 // eslint-disable-next-line complexity
-export default function Minutes(props: MinutesProps) {
-    const { value, setValue, locale, className, disabled, readOnly, leadingZero, clockFormat, period } = props;
+export default function Minutes({ 
+    value, 
+    setValue, 
+    locale, 
+    className, 
+    disabled, 
+    readOnly, 
+    leadingZero, 
+    clockFormat, 
+    period 
+}: MinutesProps) {
     const internalClassName = useMemo(
         () =>
             classNames({
@@ -20,17 +29,40 @@ export default function Minutes(props: MinutesProps) {
         [className],
     );
 
+    const fieldPrefix = useMemo(
+        () =>
+            period === PeriodTypes.HOUR 
+                ? (
+                    <span>
+                        {locale.prefixMinutesForHourPeriod || DEFAULT_LOCALE_EN.prefixMinutesForHourPeriod}
+                    </span>
+                ) 
+                : (
+                    <span>
+                        {locale.prefixMinutes || DEFAULT_LOCALE_EN.prefixMinutes}
+                    </span>
+                ),
+        [period, locale.prefixMinutesForHourPeriod, locale.prefixMinutes]
+    );
+
+    const fieldSuffix = useMemo(
+        () =>
+            period === PeriodTypes.HOUR
+                ? (
+                    <span>
+                        {locale.suffixMinutesForHourPeriod || DEFAULT_LOCALE_EN.suffixMinutesForHourPeriod}
+                    </span>
+                ) 
+                : null,
+        [period, locale.suffixMinutesForHourPeriod]
+    );
+
     return (
         <div className={internalClassName}>
-            {period === 'hour'
-                ? locale.prefixMinutesForHourPeriod !== '' && (
-                    <span>{locale.prefixMinutesForHourPeriod || DEFAULT_LOCALE_EN.prefixMinutesForHourPeriod}</span>
-                )
-                : locale.prefixMinutes !== '' && <span>{locale.prefixMinutes || DEFAULT_LOCALE_EN.prefixMinutes}</span>}
-
+            {fieldPrefix}
             <CustomSelect
                 placeholder={
-                    period === 'hour'
+                    period === PeriodTypes.HOUR
                         ? locale.emptyMinutesForHourPeriod || DEFAULT_LOCALE_EN.emptyMinutesForHourPeriod
                         : locale.emptyMinutes || DEFAULT_LOCALE_EN.emptyMinutes
                 }
@@ -45,10 +77,7 @@ export default function Minutes(props: MinutesProps) {
                 clockFormat={clockFormat}
                 period={period}
             />
-
-            {period === 'hour' && locale.suffixMinutesForHourPeriod !== '' && (
-                <span>{locale.suffixMinutesForHourPeriod || DEFAULT_LOCALE_EN.suffixMinutesForHourPeriod}</span>
-            )}
+            {fieldSuffix}
         </div>
     );
 }
