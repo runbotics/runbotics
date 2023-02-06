@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import CustomSelect from '../../components/CustomSelect';
 import { UNITS } from '../../constants';
@@ -7,7 +7,7 @@ import { classNames } from '../../utils';
 import { MonthsProps } from './Months.types';
 
 // eslint-disable-next-line complexity
-export default function Months ({
+const Months: FC<MonthsProps> = ({
     value, 
     setValue, 
     locale, 
@@ -16,7 +16,7 @@ export default function Months ({
     disabled, 
     readOnly, 
     period,
-}: MonthsProps) {
+}) => {
     const optionsList = locale.months || DEFAULT_LOCALE_EN.months;
 
     const internalClassName = useMemo(
@@ -55,3 +55,5 @@ export default function Months ({
         </div>
     );
 };
+
+export default Months;

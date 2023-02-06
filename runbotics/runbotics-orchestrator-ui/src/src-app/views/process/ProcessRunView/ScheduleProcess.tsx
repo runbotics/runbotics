@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import * as yup from 'yup';
 
 import Cron from '#src-app/components/cron';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';

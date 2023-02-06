@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, FC } from 'react';
 
 import CustomSelect from '../../components/CustomSelect';
 import { UNITS } from '../../constants';
@@ -6,7 +6,7 @@ import DEFAULT_LOCALE_EN from '../../locale';
 import { classNames } from '../../utils';
 import { HoursProps } from './Hours.types';
 
-export default function Hours({
+const Hours: FC<HoursProps> = ({
     value, 
     setValue, 
     locale, 
@@ -16,7 +16,7 @@ export default function Hours({
     leadingZero, 
     clockFormat, 
     period,
-}: HoursProps) {
+}) => {
     const internalClassName = useMemo(
         () => classNames({
             'react-js-cron-field': true,
@@ -46,4 +46,6 @@ export default function Hours({
             />
         </div>
     );
-}
+};
+
+export default Hours;

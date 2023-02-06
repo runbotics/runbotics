@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import CustomSelect from '../../components/CustomSelect';
 import { UNITS } from '../../constants';
@@ -8,7 +8,7 @@ import { classNames } from '../../utils';
 import { MinutesProps } from './Minutes.types';
 
 // eslint-disable-next-line complexity
-export default function Minutes({ 
+const Minutes: FC<MinutesProps> = ({ 
     value, 
     setValue, 
     locale, 
@@ -18,7 +18,7 @@ export default function Minutes({
     leadingZero, 
     clockFormat, 
     period 
-}: MinutesProps) {
+}) => {
     const internalClassName = useMemo(
         () =>
             classNames({
@@ -81,4 +81,7 @@ export default function Minutes({
             {fieldSuffix}
         </div>
     );
-}
+};
+
+export default Minutes;
+
