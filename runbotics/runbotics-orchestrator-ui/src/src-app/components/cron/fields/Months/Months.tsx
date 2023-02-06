@@ -7,7 +7,7 @@ import { classNames } from '../../utils';
 import { MonthsProps } from './Months.types';
 
 // eslint-disable-next-line complexity
-export function Months ({
+export default function Months ({
     value, 
     setValue, 
     locale, 
