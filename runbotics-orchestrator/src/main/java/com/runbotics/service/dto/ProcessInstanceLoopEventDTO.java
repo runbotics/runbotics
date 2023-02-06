@@ -9,7 +9,7 @@ import javax.persistence.Lob;
 /**
  * A DTO for the {@link com.runbotics.domain.ProcessInstanceEvent} entity.
  */
-public class ProcessInstanceEventDTO implements Serializable {
+public class ProcessInstanceLoopEventDTO implements Serializable {
 
     private Long id;
 
@@ -37,6 +37,36 @@ public class ProcessInstanceEventDTO implements Serializable {
     private ProcessInstanceEventStatus status;
 
     private String error;
+
+    private String iterationNumber;
+
+    private String iterationElement;
+
+    private String loopId;
+
+    public String getIterationNumber() {
+        return iterationNumber;
+    }
+
+    public void setIterationNumber(String iterationNumber) {
+        this.iterationNumber = iterationNumber;
+    }
+
+    public String getIterationElement() {
+        return iterationElement;
+    }
+
+    public void setIterationElement(String iterationElement) {
+        this.iterationElement = iterationElement;
+    }
+
+    public String getLoopId() {
+        return loopId;
+    }
+
+    public void setLoopId(String loopId) {
+        this.loopId = loopId;
+    }
 
     public Long getId() {
         return id;
@@ -139,15 +169,15 @@ public class ProcessInstanceEventDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ProcessInstanceEventDTO)) {
+        if (!(o instanceof ProcessInstanceLoopEventDTO)) {
             return false;
         }
 
-        ProcessInstanceEventDTO processInstanceEventDTO = (ProcessInstanceEventDTO) o;
+        ProcessInstanceLoopEventDTO ProcessInstanceLoopEventDTO = (ProcessInstanceLoopEventDTO) o;
         if (this.id == null) {
             return false;
         }
-        return Objects.equals(this.id, processInstanceEventDTO.id);
+        return Objects.equals(this.id, ProcessInstanceLoopEventDTO.id);
     }
 
     @Override
@@ -158,13 +188,16 @@ public class ProcessInstanceEventDTO implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "ProcessInstanceEventDTO{" +
+        return "ProcessInstanceLoopEventDTO{" +
             "id=" + getId() +
             ", created='" + getCreated() + "'" +
             ", log='" + getLog() + "'" +
             ", step='" + getStep() + "'" +
             ", processInstance='" + getProcessInstance() + "'" +
             ", executionId='" + getExecutionId() + "'" +
+            ", iterationElement='" + getIterationElement() + "'" +
+            ", iterationNumber='" + getIterationNumber() + "'" +
+            ", loopId='" + getLoopId() + "'" +
             ", script='" + getScript() + "'" +
             ", input='" + getInput() + "'" +
             ", output='" + getOutput() + "'" +
