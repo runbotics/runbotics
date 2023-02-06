@@ -1,9 +1,17 @@
-import { getProcessVariables } from '@bpmn-io/extract-process-variables';
+
+
+import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 
+
 import { currentProcessSelector } from '#src-app/store/slices/Process';
+
+
+
+
+import { BPMNElement, CamundaInputOutputElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { useModelerContext } from './useModelerContext';
 
@@ -18,31 +26,130 @@ const useProcessVariables = () => {
     const context = useModelerContext();
     const { executionInfo, isAttended } = useSelector(currentProcessSelector);
     const { passedInVariables } = useSelector((state) => state.process.modeler);
+    
+    const getGlobalVariablesUsedInProcess = () => {
+        const assignVariablesElements =
+                context?.modeler
+                    ?.get('elementRegistry')
+                    .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
+                    .filter(
+                        (element: BPMNElement) =>
+                            element.businessObject.actionId ===
+                                'variables.assign' ||
+                            element.businessObject.actionId ===
+                                'variables.assignList' ||
+                            element.businessObject.actionId ===
+                                'variables.assignGlobalVariable'
+                    ) ?? [];
 
+        const extractGlobalVariables = (
+            inputOutput: CamundaInputOutputElement
+        ) => {
+            const globalVariableList = inputOutput.inputParameters.find(
+                inputParameter => inputParameter.name === 'globalVariables'
+            );
+    
+            if (globalVariableList) {
+                return globalVariableList.definition.items.map(item => {
+                    const globalVariableName = globalVariables.find(
+                        variable => variable.id === Number(item.value)
+                    )?.name;
+    
+                    if (!globalVariableName) {
+                        return undefined;
+                    }
+    
+                    return {
+                        name: globalVariableName,
+                        tag: VariableTag.Global,
+                    };
+                });
+            }
+
+            return [];
+        };
+
+        const variables = assignVariablesElements
+            .map(assignVariablesElement => {
+                // console.log('assignVariablesElement', assignVariablesElement);
+                const inputOutput: CamundaInputOutputElement =
+                        assignVariablesElement.businessObject?.extensionElements
+                            ?.values[0] as CamundaInputOutputElement;
+
+                // console.log('inputOutput', inputOutput);
+                if (!inputOutput) {
+                    return undefined;
+                }
+
+                return (
+                    extractGlobalVariables(inputOutput)
+                );
+            });
+            
+        return [...(variables[0] ?? []), ...(variables[1] ?? [])];
+    };
+
+
+    const taggedGlobalVariables = getGlobalVariablesUsedInProcess();  
+    
+    
     const getActionVariables = () => {
         const canvas = context?.modeler?.get('canvas');
         const rootElement = canvas.getRootElement();
-        const processVariables = getProcessVariables(
-            rootElement.businessObject
-        );
+        const assignValueActions = rootElement.businessObject.flowElements.filter(item => item.actionId === 'variables.assign');
+        // const proba = rootElement.children.filter(item => item.type === 'bpmn:ServiceTask' && item.businessObject.actionId === 'variables.assign');
+        // console.log(assignValueActions);
 
-        return processVariables;
+        const processVariables = assignValueActions.map(element => {
+            const variableInfo = element.extensionElements.values[0].inputParameters;
+
+            const assignedVariables = variableInfo.filter(item => item.name === 'variable');
+          
+            return assignedVariables;
+        }); 
+
+        console.log(processVariables);
+           
+
+        const taggedAssignedVariables = processVariables.map(variable => ({
+            name: variable[0].value,
+            tag: VariableTag.ActionAssigned
+        }));
+
+        console.log(...taggedAssignedVariables);
+
+
+        // const processVariables = getProcessVariables(
+        //     rootElement.businessObject
+        // );
+        
+        // const processScopeVariables = getVariablesForScope('Process_1', 
+        //     rootElement.businessObject
+        // );
+            
+        // console.log('process variables', processVariables);
+        return [...taggedAssignedVariables];
     };
 
-    const taggedActionVariables = getActionVariables().map(
-        (actionVariable) => ({
-            name: `#{${actionVariable.name}}`,
-            tag: VariableTag.ActionAssigned,
-        })
-    );
+    const taggedActionVariables = getActionVariables();
+            
+    // const taggedGlobalVariables = globalVariablesInProcess.length > 0
+    //     ? globalVariablesInProcess.map((item) => ({
+    //         name: `#{${item.name}}`,
+    //         tag: VariableTag.Global,
+    //     }))
+    //     : [];
 
-    const taggedGlobalVariables =
-        globalVariables.length > 0
-            ? globalVariables.map((item) => ({
-                name: `#{${item.name}}`,
-                tag: VariableTag.Global,
-            }))
-            : [];
+
+
+    // const taggedGlobalVariables = globalVariablesInProcess;
+    // const taggedGlobalVariables = globalVariablesInProcess.length === 0 ? [] :
+    //     globalVariablesInProcess.map((item) => ({
+    //         name: `#{${item.name}}`,
+    //         tag: VariableTag.Global,
+    //     }));
+            
+
 
     const taggedAttendedVariables =
         isAttended && executionInfo
@@ -52,12 +159,6 @@ const useProcessVariables = () => {
             }))
             : [];
 
-    // console.log(passedInVariables);
-    console.log('globalVariables', taggedGlobalVariables);
-    console.log('actionVariables', taggedActionVariables);
-    console.log('attended', taggedAttendedVariables);
-
-    // console.log('attended', attendedProcessVariables);
     return {
         taggedGlobalVariables,
         taggedActionVariables,

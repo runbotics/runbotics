@@ -11,7 +11,8 @@ import Hotkeys from 'react-hot-keys';
 import 'react-resizable/css/styles.css';
 
 import InfoPanel from '#src-app/components/InfoPanel';
-import ProcessVariablesGlobal from '#src-app/components/ProcessVariablesPanel/VariablesPanel/ProcessVariablesGlobal';
+
+import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
@@ -55,6 +56,8 @@ import {
     toggleValidationError
 } from '../helpers/elementManipulation';
 import { getBpmnModelerConfig } from './BpmnModeler.config';
+
+
 
 const ajv = new Ajv();
 const ELEMENTS_PROPERTIES_WHITELIST = [
@@ -406,7 +409,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                     condition={
                                         currentTab === ProcessBuildTab.PROCESS_VARIABLES
                                     }>
-                                    <ProcessVariablesGlobal />
+                                    <VariablesPanel />
                                 </If>
                             </ResizableDrawer>
                         </Wrapper>

@@ -2,6 +2,7 @@
 /* eslint-disable max-lines-per-function */
 import React, { useState } from 'react';
 
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
@@ -11,10 +12,12 @@ import {
     Typography,
     Chip,
 } from '@mui/material';
+import {teal} from '@mui/material/colors';
 
 import useProcessVariables, { VariableTag } from '#src-app/hooks/useProcessVariables';
 
 import PositionedSnackbar from '../PositionedSnackbar';
+
 
 const VariablesPanel = () => {
     const {
@@ -23,7 +26,7 @@ const VariablesPanel = () => {
         taggedAttendedVariables,
     } = useProcessVariables();
 
-    const [expanded, setExpanded] = useState(taggedActionVariables[0].name);
+    const [expanded, setExpanded] = useState<string | null>(null);
 
     const allProcessVariables = [
         ...taggedActionVariables,
@@ -31,32 +34,28 @@ const VariablesPanel = () => {
         ...taggedAttendedVariables,
     ];
 
+    console.log('all', allProcessVariables);
+
     const handleCopy = (valueToCopy: String) => {
         navigator.clipboard.writeText(valueToCopy.toString());
     };
 
-    const handleChange =
-        (panel: string) =>
-            (event: React.SyntheticEvent, isExpanded: boolean) => {
-                setExpanded(isExpanded ? panel : false);
-            };
-
     const getTagColor = (tag: VariableTag) => {
         switch (tag) {
             case VariableTag.ActionAssigned:
-                return 'chocolate';
+                return teal[400];
             case VariableTag.InputOutput:
-                return 'darkslateblue';
+                return teal[700];
             default:
-                return 'grey';
+                return teal[900];
         }
     };
 
-    const allProcessVariablesJSX = allProcessVariables.map((variableValue) => (
+    const allProcessVariablesJSX = allProcessVariables?.map((variableValue) => (
         <Accordion
             key={variableValue.name}
             expanded={expanded === variableValue.name}
-            onChange={handleChange(variableValue.name)}
+            onChange={() => setExpanded(variableValue.name)}
         >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
