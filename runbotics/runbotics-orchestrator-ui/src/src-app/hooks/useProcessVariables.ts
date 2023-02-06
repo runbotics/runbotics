@@ -71,12 +71,10 @@ const useProcessVariables = () => {
 
         const variables = assignVariablesElements
             .map(assignVariablesElement => {
-                // console.log('assignVariablesElement', assignVariablesElement);
                 const inputOutput: CamundaInputOutputElement =
                         assignVariablesElement.businessObject?.extensionElements
                             ?.values[0] as CamundaInputOutputElement;
 
-                // console.log('inputOutput', inputOutput);
                 if (!inputOutput) {
                     return undefined;
                 }
@@ -90,16 +88,13 @@ const useProcessVariables = () => {
     };
 
 
-    const taggedGlobalVariables = getGlobalVariablesUsedInProcess();  
     
     
     const getActionVariables = () => {
         const canvas = context?.modeler?.get('canvas');
         const rootElement = canvas.getRootElement();
         const assignValueActions = rootElement.businessObject.flowElements.filter(item => item.actionId === 'variables.assign');
-        // const proba = rootElement.children.filter(item => item.type === 'bpmn:ServiceTask' && item.businessObject.actionId === 'variables.assign');
-        // console.log(assignValueActions);
-
+        
         const processVariables = assignValueActions.map(element => {
             const variableInfo = element.extensionElements.values[0].inputParameters;
 
@@ -107,49 +102,19 @@ const useProcessVariables = () => {
           
             return assignedVariables;
         }); 
-
-        console.log(processVariables);
-           
-
+       
+        
         const taggedAssignedVariables = processVariables.map(variable => ({
             name: variable[0].value,
             tag: VariableTag.ActionAssigned
         }));
-
-        console.log(...taggedAssignedVariables);
-
-
-        // const processVariables = getProcessVariables(
-        //     rootElement.businessObject
-        // );
         
-        // const processScopeVariables = getVariablesForScope('Process_1', 
-        //     rootElement.businessObject
-        // );
-            
-        // console.log('process variables', processVariables);
         return [...taggedAssignedVariables];
     };
-
+    
+    
+    const taggedGlobalVariables = getGlobalVariablesUsedInProcess();  
     const taggedActionVariables = getActionVariables();
-            
-    // const taggedGlobalVariables = globalVariablesInProcess.length > 0
-    //     ? globalVariablesInProcess.map((item) => ({
-    //         name: `#{${item.name}}`,
-    //         tag: VariableTag.Global,
-    //     }))
-    //     : [];
-
-
-
-    // const taggedGlobalVariables = globalVariablesInProcess;
-    // const taggedGlobalVariables = globalVariablesInProcess.length === 0 ? [] :
-    //     globalVariablesInProcess.map((item) => ({
-    //         name: `#{${item.name}}`,
-    //         tag: VariableTag.Global,
-    //     }));
-            
-
 
     const taggedAttendedVariables =
         isAttended && executionInfo
