@@ -60,7 +60,7 @@ const useProcessVariables = () => {
                     }
     
                     return {
-                        name: globalVariableName,
+                        name: `#${globalVariableName}`,
                         tag: VariableTag.Global,
                     };
                 });
@@ -93,19 +93,29 @@ const useProcessVariables = () => {
     const getActionVariables = () => {
         const canvas = context?.modeler?.get('canvas');
         const rootElement = canvas.getRootElement();
-        const assignValueActions = rootElement.businessObject.flowElements.filter(item => item.actionId === 'variables.assign');
-        
-        const processVariables = assignValueActions.map(element => {
-            const variableInfo = element.extensionElements.values[0].inputParameters;
+        const allActionsWithVariables = rootElement.businessObject.flowElements.filter(item => item.id.includes('Activity_'));
 
-            const assignedVariables = variableInfo.filter(item => item.name === 'variable');
-          
-            return assignedVariables;
-        }); 
-       
+        if (!allActionsWithVariables) {
+            return [];
+        }
+
+        const allActionVariables = allActionsWithVariables.map(element => {
+            if (element.actionId === 'variables.assign' ||  element.actionId === 'variables.assignList') {
+                const variableInfo = element.extensionElements.values[0].inputParameters;
+                return  variableInfo.filter(item => item.name === 'variable');
+            } 
+            const variableInfo = element.extensionElements.values[0].outputParameters;
+    
+            if (!variableInfo) {
+                return [];
+            }
+    
+            return variableInfo.filter(item => item.name === 'variableName');
+
+        }).filter(item => item.length > 0 );
         
-        const taggedAssignedVariables = processVariables.map(variable => ({
-            name: variable[0].value,
+        const taggedAssignedVariables = allActionVariables.map(variable => ({
+            name: `#${variable[0].value}`,
             tag: VariableTag.ActionAssigned
         }));
         

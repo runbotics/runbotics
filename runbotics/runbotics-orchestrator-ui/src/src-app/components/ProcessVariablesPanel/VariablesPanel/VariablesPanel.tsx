@@ -34,8 +34,6 @@ const VariablesPanel = () => {
         ...taggedAttendedVariables,
     ];
 
-    console.log('all', allProcessVariables);
-
     const handleCopy = (valueToCopy: String) => {
         navigator.clipboard.writeText(valueToCopy.toString());
     };
