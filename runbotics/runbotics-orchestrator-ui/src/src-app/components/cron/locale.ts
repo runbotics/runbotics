@@ -1,6 +1,6 @@
-import { DefaultLocale } from './types';
-
 import { translate } from '#src-app/hooks/useTranslations';
+
+import { DefaultLocale } from './types';
 
 const DEFAULT_LOCALE_EN: DefaultLocale = {
     everyText: translate('Component.Cron.Locale.Every'),
