@@ -3,12 +3,11 @@ import React, { FC } from 'react';
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
-import DEFAULT_LOCALE_EN from '../../locale';
 import { PeriodType } from '../../types';
-import { MinutesProps } from './Minutes.types';
+import { MinutesSelectProps } from './MinutesSelect.types';
 
 // eslint-disable-next-line complexity
-const Minutes: FC<MinutesProps> = ({ 
+const MinutesSelect: FC<MinutesSelectProps> = ({ 
     value, 
     setValue, 
     locale, 
@@ -31,11 +30,6 @@ const Minutes: FC<MinutesProps> = ({
             localeKey='prefixMinutes'
         />
         <CustomSelect
-            placeholder={
-                period === PeriodType.HOUR
-                    ? locale.emptyMinutesForHourPeriod || DEFAULT_LOCALE_EN.emptyMinutesForHourPeriod
-                    : locale.emptyMinutes || DEFAULT_LOCALE_EN.emptyMinutes
-            }
             value={value}
             unit={UNITS[UnitIndex.MINUTES]}
             setValue={setValue}
@@ -55,5 +49,5 @@ const Minutes: FC<MinutesProps> = ({
     </>
 );
 
-export default Minutes;
+export default MinutesSelect;
 

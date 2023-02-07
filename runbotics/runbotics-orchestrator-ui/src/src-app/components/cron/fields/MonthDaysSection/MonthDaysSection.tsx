@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
 import PeriodDefinition from '../../components/PeriodDefinition';
-import MonthDays from './MonthDays';
 import { MonthDaysSectionProps } from './MonthDaysSection.types';
-import NthMonthDays from './NthMonthDays';
+import MonthDaysSelect from './MonthDaysSelect';
+import NthMonthDaysSelect from './NthMonthDaysSelect';
 
 
 // eslint-disable-next-line complexity
@@ -30,7 +30,7 @@ const MonthDaysSection: FC<MonthDaysSectionProps> = ({
                 localeKey='prefixMonthDays'
                 locale={locale} 
             />
-            <NthMonthDays 
+            <NthMonthDaysSelect 
                 value={nthMonthDays}
                 setValue={setNthMonthDays}
                 locale={locale}
@@ -40,7 +40,7 @@ const MonthDaysSection: FC<MonthDaysSectionProps> = ({
                 period={period}
                 humanizeLabels={humanizeLabels}
             />
-            <MonthDays 
+            <MonthDaysSelect 
                 value={monthDays}
                 setValue={setMonthDays}
                 locale={locale}

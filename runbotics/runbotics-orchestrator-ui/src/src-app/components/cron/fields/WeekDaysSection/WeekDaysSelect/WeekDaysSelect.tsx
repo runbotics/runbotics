@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
-import { UNITS } from '../../../constants';
+import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
-import { NthMonthDaysProps } from './NthMonthDays.types';
+import { WeekDaysSelectProps } from './WeekDaysSelect.types';
 
 // eslint-disable-next-line complexity
-const NthMonthDays: FC<NthMonthDaysProps>= ({ 
+const WeekDaysSelect = ({ 
     value, 
     setValue, 
     locale, 
@@ -14,28 +14,27 @@ const NthMonthDays: FC<NthMonthDaysProps>= ({
     disabled, 
     readOnly, 
     period,
-}) => {
-    const optionsList = locale.nthMonthDays || DEFAULT_LOCALE_EN.nthMonthDays;
-    
+}: WeekDaysSelectProps) => {
+    const optionsList = locale.weekDays || DEFAULT_LOCALE_EN.weekDays;
+
     return (
-        <CustomSelect
+        <CustomSelect 
             period={period}
             optionsList={optionsList}
             grid={false}
             value={value}
             unit={{
-                ...UNITS[5],
-                alt: locale.altNthMonthDays || DEFAULT_LOCALE_EN.altNthMonthDays,
+                ...UNITS[UnitIndex.WEEK_DAYS],
+                alt: locale.altWeekDays || DEFAULT_LOCALE_EN.altWeekDays,
             }}
             setValue={setValue}
             locale={locale}
             humanizeLabels={humanizeLabels}
             disabled={disabled}
             readOnly={readOnly}
-            isMultiple={false}
         />
     );
 };
 
-export default NthMonthDays;
+export default WeekDaysSelect;
 

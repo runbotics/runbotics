@@ -72,4 +72,5 @@ export function usePrevious(value) {
     return ref.current;
 }
 
-export const checkIsShortcutsArray = (shortcuts: any): shortcuts is ShortcutsType => Array.isArray(shortcuts);
+export const checkIsArray = (shortcuts: any): shortcuts is ShortcutsType => Array.isArray(shortcuts);
+

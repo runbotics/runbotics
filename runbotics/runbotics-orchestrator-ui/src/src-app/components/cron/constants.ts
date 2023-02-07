@@ -83,11 +83,11 @@ export const UNITS: Unit[] = [
 ];
 
 export enum UnitIndex {
-    MINUTES = 0,
-    HOURS = 1,
-    MONTH_DAYS = 2,
-    MONTHS = 3,
-    WEEK_DAYS = 4,
-    NTH_WEEK_DAYS = 5,
-    NTH_MONTH_DAYS = 6,
+    MINUTES,
+    HOURS,
+    MONTH_DAYS,
+    MONTHS,
+    WEEK_DAYS,
+    NTH_WEEK_DAYS,
+    NTH_MONTH_DAYS,
 }

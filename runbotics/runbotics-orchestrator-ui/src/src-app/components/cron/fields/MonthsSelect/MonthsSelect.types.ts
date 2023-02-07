@@ -1,5 +1,5 @@
 import { FieldProps } from '../../types';
 
-export interface MonthsProps extends FieldProps {
+export interface MonthsSelectProps extends FieldProps {
     humanizeLabels: boolean;
 }

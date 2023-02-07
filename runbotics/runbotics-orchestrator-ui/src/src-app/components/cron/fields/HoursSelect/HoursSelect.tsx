@@ -5,9 +5,9 @@ import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import DEFAULT_LOCALE_EN from '../../locale';
 import { PeriodType } from '../../types';
-import { HoursProps } from './Hours.types';
+import { HoursSelectProps } from './HoursSelect.types';
 
-const Hours: FC<HoursProps> = ({
+const HoursSelect: FC<HoursSelectProps> = ({
     value, 
     setValue, 
     locale, 
@@ -25,7 +25,6 @@ const Hours: FC<HoursProps> = ({
             locale={locale}
         />
         <CustomSelect
-            placeholder={locale.emptyHours || DEFAULT_LOCALE_EN.emptyHours}
             value={value}
             unit={UNITS[UnitIndex.HOURS]}
             setValue={setValue}
@@ -40,4 +39,4 @@ const Hours: FC<HoursProps> = ({
     </>
 );
 
-export default Hours;
+export default HoursSelect;

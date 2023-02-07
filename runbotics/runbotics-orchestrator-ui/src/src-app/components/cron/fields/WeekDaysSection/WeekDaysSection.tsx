@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { PeriodType } from '../../types';
-import NthWeekDays from './NthWeekDays';
-import WeekDays from './WeekDays';
+import NthWeekDaysSelect from './NthWeekDaysSelect';
 import { WeekDaysSectionProps } from './WeekDaysSection.types';
+import WeekDaysSelect from './WeekDaysSelect';
 
 // eslint-disable-next-line complexity
 const WeekDaysSection: FC<WeekDaysSectionProps> = ({ 
@@ -31,7 +31,7 @@ const WeekDaysSection: FC<WeekDaysSectionProps> = ({
             localeKey='prefixWeekDaysForMonthAndYearPeriod'
             locale={locale} 
         />
-        <NthWeekDays
+        <NthWeekDaysSelect
             value={nthWeekDays}
             setValue={setNthWeekDays}
             locale={locale}
@@ -42,7 +42,7 @@ const WeekDaysSection: FC<WeekDaysSectionProps> = ({
             isAnyWeekDaySelected={weekDays?.length > 0}
             isMonthPeriodDisplayed={isMonthPeriodDisplayed}
         />
-        <WeekDays
+        <WeekDaysSelect
             value={weekDays}
             setValue={setWeekDays}
             locale={locale}

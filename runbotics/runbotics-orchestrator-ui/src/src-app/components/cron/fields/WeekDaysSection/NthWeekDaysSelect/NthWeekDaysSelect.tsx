@@ -4,10 +4,10 @@ import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
 import { PeriodType } from '../../../types';
-import { NthWeekDaysProps } from './NthWeekDays.types';
+import { NthWeekDaysSelectProps } from './NthWeekDaysSelect.types';
 
 // eslint-disable-next-line complexity
-const NthWeekDays: FC<NthWeekDaysProps>= ({ 
+const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({ 
     value, 
     setValue, 
     locale, 
@@ -41,5 +41,5 @@ const NthWeekDays: FC<NthWeekDaysProps>= ({
     ) : null;
 };
 
-export default NthWeekDays;
+export default NthWeekDaysSelect;
 

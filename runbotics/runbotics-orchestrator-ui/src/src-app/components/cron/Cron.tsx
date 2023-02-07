@@ -4,10 +4,10 @@ import React, { useState, useCallback, useEffect, useRef, useMemo, useReducer } 
 import If from '../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 import { ClearButton } from './Cron.styles';
-import Hours from './fields/Hours';
-import Minutes from './fields/Minutes';
+import HoursSelect from './fields/HoursSelect';
+import MinutesSelect from './fields/MinutesSelect';
 import MonthDaysSection from './fields/MonthDaysSection';
-import Months from './fields/Months';
+import MonthsSelect from './fields/MonthsSelect';
 import Period from './fields/Period';
 import WeekDaysSection from './fields/WeekDaysSection';
 import DEFAULT_LOCALE_EN from './locale';
@@ -250,7 +250,7 @@ export default function Cron({
             />
             <If condition={!isRebootPeriodSelected} else={clearButtonNode}>
                 <If condition={isYearPeriodDisplayed}>
-                    <Months
+                    <MonthsSelect
                         value={cronState.months}
                         setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MONTHS, payload: { newValue } })}
                         locale={locale}
@@ -292,7 +292,7 @@ export default function Cron({
                     />
                 </If>
                 <If condition={isDayPeriodDisplayed}>
-                    <Hours
+                    <HoursSelect
                         value={cronState.hours}
                         setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_HOURS, payload: { newValue } })}
                         locale={locale}
@@ -305,7 +305,7 @@ export default function Cron({
                     />
                 </If>
                 <If condition={isHourPeriodDisplayed}>
-                    <Minutes
+                    <MinutesSelect
                         value={cronState.minutes}
                         setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MINUTES, payload: { newValue } })}
                         locale={locale}

@@ -14,12 +14,12 @@ import {
     Locale,
     Shortcuts,
     SetValuePeriod,
-    cronObjProps,
+    CronObjProps,
     CRON_ACTIONS,
     CronStateProps,
 } from './types';
 import {
-    range, sort, dedup, setError, checkIsShortcutsArray,
+    range, sort, dedup, setError, checkIsArray,
 } from './utils';
 
 /**
@@ -57,7 +57,7 @@ export function setValuesFromCronString(
         // Shortcuts management
         if (
             shortcuts &&
-            (shortcuts === true || (checkIsShortcutsArray(shortcuts) && shortcuts.includes(newCronString)))
+            (shortcuts === true || (checkIsArray(shortcuts) && shortcuts.includes(newCronString)))
         ) {
             if (newCronString === '@reboot') {
                 setPeriod(PeriodType.REBOOT);
@@ -250,7 +250,7 @@ export function formatValue(
  * Parses a object of arrays of integers as a cron schedule
  */
 
-function parseCronArray(cronObj: cronObjProps, humanizeValue?: boolean) {
+function parseCronArray(cronObj: CronObjProps, humanizeValue?: boolean) {
     if (Object.keys(cronObj).length !== 7) throw new Error('Invalid cron array');
 
     const resultArr = [];

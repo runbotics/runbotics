@@ -342,7 +342,7 @@ export interface Clicks {
     value: number;
 }
 
-export interface cronObjProps {
+export interface CronObjProps {
     newMinutes: number[],
     newHours: number[],
     newMonthDays: number[],

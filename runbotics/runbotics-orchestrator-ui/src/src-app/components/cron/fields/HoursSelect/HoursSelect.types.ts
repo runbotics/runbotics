@@ -1,7 +1,6 @@
 import { ClockFormat, FieldProps, LeadingZero } from '../../types';
 
-
-export interface MinutesProps extends FieldProps {
+export interface HoursSelectProps extends FieldProps {
     leadingZero: LeadingZero;
     clockFormat?: ClockFormat;
 }

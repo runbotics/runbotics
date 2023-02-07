@@ -4,10 +4,10 @@ import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import DEFAULT_LOCALE_EN from '../../locale';
-import { MonthsProps } from './Months.types';
+import { MonthsSelectProps } from './MonthsSelect.types';
 
 // eslint-disable-next-line complexity
-const Months: FC<MonthsProps> = ({
+const MonthsSelect: FC<MonthsSelectProps> = ({
     value, 
     setValue, 
     locale, 
@@ -27,7 +27,6 @@ const Months: FC<MonthsProps> = ({
                 localeKey='prefixMonths'
             />
             <CustomSelect
-                placeholder={locale.emptyMonths || DEFAULT_LOCALE_EN.emptyMonths}
                 optionsList={optionsList}
                 grid={false}
                 value={value}
@@ -48,4 +47,4 @@ const Months: FC<MonthsProps> = ({
     );
 };
 
-export default Months;
+export default MonthsSelect;

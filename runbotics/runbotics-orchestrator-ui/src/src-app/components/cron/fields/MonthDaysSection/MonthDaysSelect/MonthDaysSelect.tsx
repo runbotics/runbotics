@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
-import { MonthDaysProps } from './MonthDays.types';
+import { MonthDaysSelectProps } from './MonthDaysSelect.types';
 
-const MonthDays: FC<MonthDaysProps> = ({ 
+const MonthDaysSelect: FC<MonthDaysSelectProps> = ({ 
     value, 
     setValue, 
     locale, 
@@ -13,7 +13,7 @@ const MonthDays: FC<MonthDaysProps> = ({
     readOnly, 
     leadingZero, 
     period 
-}: MonthDaysProps) => (
+}) => (
     <CustomSelect
         value={value}
         setValue={setValue}
@@ -27,4 +27,4 @@ const MonthDays: FC<MonthDaysProps> = ({
     />
 );
 
-export default MonthDays;
+export default MonthDaysSelect;
