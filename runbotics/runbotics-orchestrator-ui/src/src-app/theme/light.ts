@@ -1,4 +1,5 @@
 import blueGrey from '@mui/material/colors/blueGrey';
+import teal from '@mui/material/colors/teal';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { softShadows } from './shadows';
@@ -34,6 +35,11 @@ export const lightTheme: ThemeOptions = {
         },
         infoIcon: {
             default: blueGrey[600],
+        },
+        tag: {
+            main: teal[700],
+            dark: teal[900],
+            light: teal[400]
         },
         text: {
             primary: '#000000',
