@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 
 import DEFAULT_LOCALE_EN from './locale';
-import { Classes, OnError, Locale } from './types';
+import { Classes, OnError, Locale, ShortcutsType } from './types';
 /**
  * Creates an array of integers from start to end, inclusive
  */
@@ -71,3 +71,5 @@ export function usePrevious(value) {
 
     return ref.current;
 }
+
+export const checkIsShortcutsArray = (shortcuts: any): shortcuts is ShortcutsType => Array.isArray(shortcuts);

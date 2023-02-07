@@ -15,6 +15,6 @@ export const ClearButton = styled(Button)(({ theme }) => `
 );
 
 export const PeriodText = styled.span`
-    margin-left: 5px;
+    padding-left: 5px;
     font-weight: bold;
 `;

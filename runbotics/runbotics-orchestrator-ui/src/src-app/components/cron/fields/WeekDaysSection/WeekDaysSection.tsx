@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import PeriodDefinition from '../../components/PeriodDefinition/';
-import { PeriodTypes } from '../../types';
-import { AllWeekDaysProps } from './AllWeekDays.types';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import { PeriodType } from '../../types';
 import NthWeekDays from './NthWeekDays';
 import WeekDays from './WeekDays';
+import { WeekDaysSectionProps } from './WeekDaysSection.types';
 
 // eslint-disable-next-line complexity
-const AllWeekDays: FC<AllWeekDaysProps> = ({ 
+const WeekDaysSection: FC<WeekDaysSectionProps> = ({ 
     locale,
     humanizeLabels,
     disabled,
@@ -27,7 +27,7 @@ const AllWeekDays: FC<AllWeekDaysProps> = ({
             locale={locale} 
         />
         <PeriodDefinition 
-            isDisplayed={periodForRender !== PeriodTypes.WEEK && isMonthPeriodDisplayed} 
+            isDisplayed={periodForRender !== PeriodType.WEEK && isMonthPeriodDisplayed} 
             localeKey='prefixWeekDaysForMonthAndYearPeriod'
             locale={locale} 
         />
@@ -61,4 +61,4 @@ const AllWeekDays: FC<AllWeekDaysProps> = ({
 );
 
 
-export default AllWeekDays;
+export default WeekDaysSection;

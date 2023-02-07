@@ -1,9 +1,9 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 
 import CustomSelect from '../../components/CustomSelect';
-import { UNITS } from '../../constants';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import { UNITS, UnitIndex } from '../../constants';
 import DEFAULT_LOCALE_EN from '../../locale';
-import { classNames } from '../../utils';
 import { MonthsProps } from './Months.types';
 
 // eslint-disable-next-line complexity
@@ -19,29 +19,21 @@ const Months: FC<MonthsProps> = ({
 }) => {
     const optionsList = locale.months || DEFAULT_LOCALE_EN.months;
 
-    const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-months': true,
-            [`${className}-field`]: !!className,
-            [`${className}-months`]: !!className,
-        }),
-        [className],
-    );
-
     return (
-        <div className={internalClassName}>
-            {locale.prefixMonths !== '' && <span>{locale.prefixMonths || DEFAULT_LOCALE_EN.prefixMonths}</span>}
-
+        <>
+            <PeriodDefinition
+                isDisplayed={true}
+                locale={locale}
+                localeKey='prefixMonths'
+            />
             <CustomSelect
                 placeholder={locale.emptyMonths || DEFAULT_LOCALE_EN.emptyMonths}
                 optionsList={optionsList}
                 grid={false}
                 value={value}
                 unit={{
-                    ...UNITS[3],
+                    ...UNITS[UnitIndex.MONTHS],
                     // Allow translation of alternative labels when using "humanizeLabels"
-                    // Issue #3
                     alt: locale.altMonths || DEFAULT_LOCALE_EN.altMonths,
                 }}
                 setValue={setValue}
@@ -52,7 +44,7 @@ const Months: FC<MonthsProps> = ({
                 readOnly={readOnly}
                 period={period}
             />
-        </div>
+        </>
     );
 };
 

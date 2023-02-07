@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
-import { UNITS } from '../../../constants';
+import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
 import { WeekDaysProps } from '../../../types';
 
@@ -24,7 +24,7 @@ const WeekDays = ({
             grid={false}
             value={value}
             unit={{
-                ...UNITS[4],
+                ...UNITS[UnitIndex.WEEK_DAYS],
                 alt: locale.altWeekDays || DEFAULT_LOCALE_EN.altWeekDays,
             }}
             setValue={setValue}

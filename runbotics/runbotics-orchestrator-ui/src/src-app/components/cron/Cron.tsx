@@ -1,17 +1,17 @@
 /* eslint-disable complexity */
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useMemo, useReducer } from 'react';
 
 import If from '../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 import { ClearButton } from './Cron.styles';
-import AllMonthDays from './fields/AllMonthDays/';
-import AllWeekDays from './fields/AllWeekDays/';
-import Hours from './fields/Hours/';
-import Minutes from './fields/Minutes/';
-import Months from './fields/Months/';
+import Hours from './fields/Hours';
+import Minutes from './fields/Minutes';
+import MonthDaysSection from './fields/MonthDaysSection';
+import Months from './fields/Months';
 import Period from './fields/Period';
+import WeekDaysSection from './fields/WeekDaysSection';
 import DEFAULT_LOCALE_EN from './locale';
-import { CronProps, PeriodType, PeriodTypes } from './types';
+import { CronStateProps, CronProps, PeriodType, CRON_ACTIONS, CronActionProps } from './types';
 import { classNames, setError, usePrevious } from './utils';
 
 // eslint-disable-next-line max-lines-per-function
@@ -24,7 +24,7 @@ export default function Cron({
     displayError = true,
     onError,
     className,
-    defaultPeriod = PeriodTypes.DAY,
+    defaultPeriod = PeriodType.DAY,
     allowEmpty = 'for-default-value',
     humanizeLabels = true,
     humanizeValue = false,
@@ -34,23 +34,58 @@ export default function Cron({
     shortcuts = ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly'],
     clockFormat,
 }: CronProps) {
+    const cronReducer = (state: CronStateProps, action: CronActionProps): CronStateProps => {
+        const newValue = action.payload.newValue;
+        const newState = action.payload.newState;
+
+        switch (action.type) {
+            case CRON_ACTIONS.SET_ALL:
+                const newObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, newValue]));
+                return newObj;
+            case CRON_ACTIONS.SET_EACH:
+                return newState;
+            case CRON_ACTIONS.SET_MONTHS:
+                return { ...state, months: newValue };
+            case CRON_ACTIONS.SET_MONTH_DAYS:
+                return { ...state, monthDays: newValue };
+            case CRON_ACTIONS.SET_NTH_MONTH_DAYS:
+                return { ...state, nthMonthDays: newValue };
+            case CRON_ACTIONS.SET_WEEK_DAYS:
+                return { ...state, weekDays: newValue };
+            case CRON_ACTIONS.SET_NTH_WEEK_DAYS:
+                return { ...state, nthWeekDays: newValue };
+            case CRON_ACTIONS.SET_HOURS:
+                return { ...state, hours: newValue };
+            case CRON_ACTIONS.SET_MINUTES:
+                return { ...state, minutes: newValue };
+            default: 
+                throw new Error('Invalid action type');
+        }
+    };
+
+    const [cronState, cronDispatch] = useReducer(
+        cronReducer, 
+        {
+            months: undefined,
+            monthDays: undefined,
+            nthMonthDays: undefined,
+            weekDays: undefined,
+            nthWeekDays: undefined,
+            hours: undefined,
+            minutes: undefined,
+        }
+    );
+
     const internalValueRef = useRef<string>(value);
     const defaultPeriodRef = useRef<PeriodType>(defaultPeriod);
     const [period, setPeriod] = useState<PeriodType | undefined>();
-    const [monthDays, setMonthDays] = useState<number[] | undefined>();
-    const [nthMonthDays, setNthMonthDays] = useState<number[] | undefined>();
-    const [months, setMonths] = useState<number[] | undefined>();
-    const [weekDays, setWeekDays] = useState<number[] | undefined>();
-    const [nthWeekDays, setNthWeekDays] = useState<number[] | undefined>();
-    const [hours, setHours] = useState<number[] | undefined>();
-    const [minutes, setMinutes] = useState<number[] | undefined>();
     const [error, setInternalError] = useState<boolean>(false);
     const [valueCleared, setValueCleared] = useState<boolean>(false);
     const previousValueCleared = usePrevious(valueCleared);
     const localeJSON = JSON.stringify(locale);
-
+    
     useEffect(
-        () => {
+        () => {            
             setValuesFromCronString(
                 value,
                 setInternalError,
@@ -60,15 +95,10 @@ export default function Cron({
                 true,
                 locale,
                 shortcuts,
-                setMinutes,
-                setHours,
-                setMonthDays,
-                setNthMonthDays,
-                setMonths,
-                setWeekDays,
-                setNthWeekDays,
                 setPeriod,
+                cronDispatch,
             );
+
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
@@ -87,14 +117,8 @@ export default function Cron({
                     false,
                     locale,
                     shortcuts,
-                    setMinutes,
-                    setHours,
-                    setMonthDays,
-                    setNthMonthDays,
-                    setMonths,
-                    setWeekDays,
-                    setNthWeekDays,
                     setPeriod,
+                    cronDispatch,
                 ); 
             }
         },
@@ -107,19 +131,13 @@ export default function Cron({
             // Only change the value if a user touched a field
             // and if the user didn't use the clear button
             if (
-                (period || minutes || months || monthDays || weekDays || hours || minutes) &&
+                (period || cronState.months || cronState.monthDays || cronState.weekDays || cronState.hours || cronState.minutes) &&
                 !valueCleared &&
                 !previousValueCleared
             ) {
                 const cron = getCronStringFromValues(
                     period || defaultPeriodRef.current,
-                    months,
-                    monthDays,
-                    nthMonthDays,
-                    weekDays,
-                    nthWeekDays,
-                    hours,
-                    minutes,
+                    cronState,
                     humanizeValue,
                 );
 
@@ -133,29 +151,28 @@ export default function Cron({
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [period, monthDays, months, weekDays, nthWeekDays, hours, minutes, nthMonthDays, humanizeValue, valueCleared],
+        [period, cronState, humanizeValue, valueCleared],
     );
 
     const handleClear = useCallback(
         () => {
-            setMonthDays(undefined);
-            setMonths(undefined);
-            setWeekDays(undefined);
-            setNthWeekDays(undefined);
-            setHours(undefined);
-            setMinutes(undefined);
-            setNthMonthDays(undefined);
+            cronDispatch({
+                type: CRON_ACTIONS.SET_ALL,
+                payload: {
+                    newValue: undefined,
+                },
+            });
 
             // When clearButtonAction is 'empty'
             let newValue = '';
 
-            const newPeriod = period !== PeriodTypes.REBOOT && period ? period : defaultPeriodRef.current;
+            const newPeriod = period !== PeriodType.REBOOT && period ? period : defaultPeriodRef.current;
 
             if (newPeriod !== period) setPeriod(newPeriod);
 
             // When clearButtonAction is 'fill-with-every'
             if (clearButtonAction === 'fill-with-every') {
-                const cron = getCronStringFromValues(newPeriod, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+                const cron = getCronStringFromValues(newPeriod, undefined, undefined);
 
                 newValue = cron;
             }
@@ -213,12 +230,12 @@ export default function Cron({
 
     const periodForRender = period || defaultPeriodRef.current;
 
-    const isRebootPeriodSelected = periodForRender === PeriodTypes.REBOOT;
-    const isYearPeriodDisplayed = periodForRender === PeriodTypes.YEAR;
-    const isMonthPeriodDisplayed = isYearPeriodDisplayed || periodForRender === PeriodTypes.MONTH;
-    const isWeekPeriodDisplayed = isMonthPeriodDisplayed || periodForRender === PeriodTypes.WEEK;
-    const isDayPeriodDisplayed = isWeekPeriodDisplayed || periodForRender === PeriodTypes.DAY;
-    const isHourPeriodDisplayed = isDayPeriodDisplayed || periodForRender === PeriodTypes.HOUR;
+    const isRebootPeriodSelected = periodForRender === PeriodType.REBOOT;
+    const isYearPeriodDisplayed = periodForRender === PeriodType.YEAR;
+    const isMonthPeriodDisplayed = isYearPeriodDisplayed || periodForRender === PeriodType.MONTH;
+    const isWeekPeriodDisplayed = isMonthPeriodDisplayed || periodForRender === PeriodType.WEEK;
+    const isDayPeriodDisplayed = isWeekPeriodDisplayed || periodForRender === PeriodType.DAY;
+    const isHourPeriodDisplayed = isDayPeriodDisplayed || periodForRender === PeriodType.HOUR;
 
     return (
         <div className={internalClassName}>
@@ -234,8 +251,8 @@ export default function Cron({
             <If condition={!isRebootPeriodSelected} else={clearButtonNode}>
                 <If condition={isYearPeriodDisplayed}>
                     <Months
-                        value={months}
-                        setValue={setMonths}
+                        value={cronState.months}
+                        setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MONTHS, payload: { newValue } })}
                         locale={locale}
                         className={className}
                         humanizeLabels={humanizeLabels}
@@ -245,7 +262,7 @@ export default function Cron({
                     />
                 </If>
                 <If condition={isMonthPeriodDisplayed}>
-                    <AllMonthDays
+                    <MonthDaysSection
                         locale={locale}
                         className={className}
                         humanizeLabels={humanizeLabels}
@@ -253,14 +270,14 @@ export default function Cron({
                         readOnly={readOnly}
                         leadingZero={leadingZero}
                         period={periodForRender}
-                        monthDays={monthDays}
-                        setMonthDays={setMonthDays}
-                        nthMonthDays={nthMonthDays}
-                        setNthMonthDays={setNthMonthDays}
+                        monthDays={cronState.monthDays}
+                        setMonthDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MONTH_DAYS, payload: { newValue } })}
+                        nthMonthDays={cronState.nthMonthDays}
+                        setNthMonthDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_NTH_MONTH_DAYS, payload: { newValue } })}
                     />
                 </If>
                 <If condition={isWeekPeriodDisplayed}>
-                    <AllWeekDays 
+                    <WeekDaysSection 
                         locale={locale}
                         humanizeLabels={humanizeLabels}
                         disabled={disabled}
@@ -268,16 +285,16 @@ export default function Cron({
                         periodForRender={periodForRender}
                         isMonthPeriodDisplayed={isMonthPeriodDisplayed}
                         isWeekPeriodDisplayed={isWeekPeriodDisplayed}
-                        weekDays={weekDays}
-                        setWeekDays={setWeekDays}
-                        nthWeekDays={nthWeekDays}
-                        setNthWeekDays={setNthWeekDays}
+                        weekDays={cronState.weekDays}
+                        setWeekDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_WEEK_DAYS, payload: { newValue } })}
+                        nthWeekDays={cronState.nthWeekDays}
+                        setNthWeekDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_NTH_WEEK_DAYS, payload: { newValue } })}
                     />
                 </If>
                 <If condition={isDayPeriodDisplayed}>
                     <Hours
-                        value={hours}
-                        setValue={setHours}
+                        value={cronState.hours}
+                        setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_HOURS, payload: { newValue } })}
                         locale={locale}
                         className={className}
                         disabled={disabled}
@@ -289,8 +306,8 @@ export default function Cron({
                 </If>
                 <If condition={isHourPeriodDisplayed}>
                     <Minutes
-                        value={minutes}
-                        setValue={setMinutes}
+                        value={cronState.minutes}
+                        setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MINUTES, payload: { newValue } })}
                         locale={locale}
                         period={periodForRender}
                         className={className}

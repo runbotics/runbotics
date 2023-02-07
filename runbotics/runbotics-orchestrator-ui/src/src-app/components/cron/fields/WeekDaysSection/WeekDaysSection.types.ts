@@ -1,11 +1,11 @@
-import { PeriodTypes, Locale } from '../../types';
+import { PeriodType, Locale } from '../../types';
 
-export interface AllWeekDaysProps {
+export interface WeekDaysSectionProps {
     locale: Locale;
     humanizeLabels: boolean;
     disabled: boolean;
     readOnly: boolean;
-    periodForRender: PeriodTypes;
+    periodForRender: PeriodType;
     weekDays: number[];
     setWeekDays: (weekDays: number[]) => void;
     nthWeekDays: number[];

@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import PeriodDefinition from '../../components/PeriodDefinition/';
-import { AllMonthDaysProps } from './AllMonthDays.types';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import MonthDays from './MonthDays';
+import { MonthDaysSectionProps } from './MonthDaysSection.types';
+import NthMonthDays from './NthMonthDays';
 
-import MonthDays from './MonthDays/';
-import NthMonthDays from './NthMonthDays/';
 
 // eslint-disable-next-line complexity
-const AllMonthDays: FC<AllMonthDaysProps> = ({
+const MonthDaysSection: FC<MonthDaysSectionProps> = ({
     locale,
     className,
     disabled,
@@ -55,5 +55,5 @@ const AllMonthDays: FC<AllMonthDaysProps> = ({
     ) : null;
 };
 
-export default AllMonthDays;
+export default MonthDaysSection;
 

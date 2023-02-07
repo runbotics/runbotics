@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { ButtonProps, SelectProps } from '@mui/material';
 
-export enum PeriodTypes {
+export enum PeriodType {
     YEAR = 'year',
     MONTH = 'month',
     WEEK = 'week',
@@ -11,15 +11,6 @@ export enum PeriodTypes {
     MINUTE = 'minute',
     REBOOT = 'reboot',
 }
-
-export type PeriodType = PeriodTypes.YEAR 
-    | PeriodTypes.MONTH 
-    | PeriodTypes.WEEK 
-    | PeriodTypes.DAY 
-    | PeriodTypes.HOUR 
-    | PeriodTypes.HOUR 
-    | PeriodTypes.MINUTE 
-    | PeriodTypes.REBOOT;
 
 export interface CronProps {
     /**
@@ -215,9 +206,28 @@ export type Shortcuts = boolean | ShortcutsType[];
 
 // Internal props
 
+export interface CronStateProps {
+    months?: number[] | undefined;
+    monthDays?: number[] | undefined;
+    nthMonthDays?: number[] | undefined;
+    day?: number[] | undefined;
+    weekDays?: number[] | undefined;
+    nthWeekDays?: number[] | undefined;
+    hours?: number[] | undefined;
+    minutes?: number[] | undefined;
+}
+
+export interface CronActionProps {
+    type: CRON_ACTIONS,
+    payload: { 
+        newValue?: number[] | undefined,
+        newState?: CronStateProps,
+    }
+}
+
 export interface FieldProps {
     value?: number[];
-    setValue: SetValueNumbersOrUndefined;
+    setValue: (newValue: number[]) => void;
     locale: Locale;
     className?: string;
     disabled: boolean;
@@ -340,4 +350,16 @@ export interface cronObjProps {
     newMonths: number[],
     newWeekDays: number[],
     newNthWeekDays?: number[],
+}
+
+export enum CRON_ACTIONS {
+    SET_ALL = 'set-all',
+    SET_EACH = 'set-each',
+    SET_MONTHS = 'set-months',
+    SET_MONTH_DAYS = 'set-month-days',
+    SET_NTH_MONTH_DAYS = 'set-nth-month-days',
+    SET_WEEK_DAYS = 'set-week-days',
+    SET_NTH_WEEK_DAYS = 'set-nth-week-days',
+    SET_HOURS = 'set-hours',
+    SET_MINUTES = 'set-minutes',
 }

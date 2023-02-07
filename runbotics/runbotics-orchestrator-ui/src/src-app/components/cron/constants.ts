@@ -30,7 +30,9 @@ export const SUPPORTED_SHORTCUTS: ShortcutsValues[] = [
         value: '0 * * * *',
     },
 ];
-// DO NOT CHANGE ORDER
+// The order of elements below is crucial, do not shuffle it
+// In addition, "alt" values are used only internally for Cron syntax. Each change has direct impact on the displayed info.
+// You can find translations in ./locale.ts.
 export const UNITS: Unit[] = [
     {
         type: 'minutes',
@@ -55,9 +57,6 @@ export const UNITS: Unit[] = [
         min: 1,
         max: 12,
         total: 12,
-        // DO NO EDIT
-        // Only used internally for Cron syntax
-        // alt values used for labels are in ./locale.ts file
         alt: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
     },
     {
@@ -65,9 +64,6 @@ export const UNITS: Unit[] = [
         min: 0,
         max: 6,
         total: 7,
-        // DO NO EDIT
-        // Only used internally for Cron syntax
-        // alt values used for labels are in ./locale.ts file
         alt: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
     },
     {
@@ -75,9 +71,6 @@ export const UNITS: Unit[] = [
         min: 0,
         max: 4,
         total: 5,
-        // DO NO EDIT
-        // Only used internally for Cron syntax
-        // alt values used for labels are in ./locale.ts file
         alt: ['1st', '2nd', '3rd', '4th', 'last'],
     },
     {
@@ -85,7 +78,16 @@ export const UNITS: Unit[] = [
         min: 0,
         max: 1,
         total: 2,
-        // DO NO EDIT
         alt: ['last', 'last-weekday']
     },
 ];
+
+export enum UnitIndex {
+    MINUTES = 0,
+    HOURS = 1,
+    MONTH_DAYS = 2,
+    MONTHS = 3,
+    WEEK_DAYS = 4,
+    NTH_WEEK_DAYS = 5,
+    NTH_MONTH_DAYS = 6,
+}

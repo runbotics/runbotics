@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
-import { UNITS } from '../../../constants';
+import { UNITS, UnitIndex } from '../../../constants';
 import { MonthDaysProps } from './MonthDays.types';
 
 const MonthDays: FC<MonthDaysProps> = ({ 
@@ -17,7 +17,7 @@ const MonthDays: FC<MonthDaysProps> = ({
     <CustomSelect
         value={value}
         setValue={setValue}
-        unit={UNITS[2]}
+        unit={UNITS[UnitIndex.MONTH_DAYS]}
         locale={locale}
         className={className}
         disabled={disabled}

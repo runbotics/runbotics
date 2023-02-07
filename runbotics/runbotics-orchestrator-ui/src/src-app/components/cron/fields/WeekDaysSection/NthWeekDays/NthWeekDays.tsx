@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
-import { UNITS } from '../../../constants';
+import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
-import { PeriodTypes } from '../../../types';
+import { PeriodType } from '../../../types';
 import { NthWeekDaysProps } from './NthWeekDays.types';
 
 // eslint-disable-next-line complexity
@@ -19,7 +19,7 @@ const NthWeekDays: FC<NthWeekDaysProps>= ({
     isMonthPeriodDisplayed,
 }) => {
     const optionsList = locale.nthWeekDays || DEFAULT_LOCALE_EN.nthWeekDays;
-    const displayNthWeekDays = isMonthPeriodDisplayed && period !== PeriodTypes.WEEK;
+    const displayNthWeekDays = isMonthPeriodDisplayed && period !== PeriodType.WEEK;
 
     return displayNthWeekDays ? (
         <CustomSelect
@@ -28,7 +28,7 @@ const NthWeekDays: FC<NthWeekDaysProps>= ({
             grid={false}
             value={value}
             unit={{
-                ...UNITS[5],
+                ...UNITS[UnitIndex.NTH_WEEK_DAYS],
                 alt: locale.altNthWeekDays || DEFAULT_LOCALE_EN.altNthWeekDays,
             }}
             setValue={setValue}

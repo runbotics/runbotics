@@ -1,9 +1,10 @@
-import React, { useMemo, FC } from 'react';
+import React, { FC } from 'react';
 
 import CustomSelect from '../../components/CustomSelect';
-import { UNITS } from '../../constants';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import { UNITS, UnitIndex } from '../../constants';
 import DEFAULT_LOCALE_EN from '../../locale';
-import { classNames } from '../../utils';
+import { PeriodType } from '../../types';
 import { HoursProps } from './Hours.types';
 
 const Hours: FC<HoursProps> = ({
@@ -16,36 +17,27 @@ const Hours: FC<HoursProps> = ({
     leadingZero, 
     clockFormat, 
     period,
-}) => {
-    const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-field': true,
-            'react-js-cron-hours': true,
-            [`${className}-field`]: !!className,
-            [`${className}-hours`]: !!className,
-        }),
-        [className],
-    );
-
-    return (
-        <div className={internalClassName}>
-            {locale.prefixHours !== '' && <span>{locale.prefixHours || DEFAULT_LOCALE_EN.prefixHours}</span>}
-
-            <CustomSelect
-                placeholder={locale.emptyHours || DEFAULT_LOCALE_EN.emptyHours}
-                value={value}
-                unit={UNITS[1]}
-                setValue={setValue}
-                locale={locale}
-                className={className}
-                disabled={disabled}
-                readOnly={readOnly}
-                leadingZero={leadingZero}
-                clockFormat={clockFormat}
-                period={period}
-            />
-        </div>
-    );
-};
+}) => (
+    <>
+        <PeriodDefinition
+            isDisplayed={period !== PeriodType.HOUR}
+            localeKey='prefixHours'
+            locale={locale}
+        />
+        <CustomSelect
+            placeholder={locale.emptyHours || DEFAULT_LOCALE_EN.emptyHours}
+            value={value}
+            unit={UNITS[UnitIndex.HOURS]}
+            setValue={setValue}
+            locale={locale}
+            className={className}
+            disabled={disabled}
+            readOnly={readOnly}
+            leadingZero={leadingZero}
+            clockFormat={clockFormat}
+            period={period}
+        />
+    </>
+);
 
 export default Hours;
