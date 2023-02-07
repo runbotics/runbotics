@@ -10,8 +10,6 @@ const useProcessGlobalVariables = () => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
 
-    console.log(globalVariables);
-
     const assignVariablesElements =
                 context?.modeler
                     ?.get('elementRegistry')

@@ -22,6 +22,7 @@ enum VariableTag {
 
 const VariablesPanel = () => {
     const {globalVariables, actionVariables, attendedVariables} = useProcessVariables();
+    const [expanded, setExpanded] = useState<string | null>(null);
 
     const tagVariable = (name, tag, color) => ({
         name: `#{${name}}`,
@@ -29,7 +30,10 @@ const VariablesPanel = () => {
         color: color
     });
 
-    // console.log('action', actionVariables);
+    if ([...globalVariables, ...actionVariables, ...attendedVariables].length === 0) {
+        console.log('taaak');
+        return <Typography display="flex" justifyContent="center" paddingTop="2rem">No variables used in this process yet</Typography>;
+    }
 
     const taggedGlobalVariables = globalVariables.map(variable => tagVariable(variable.name, VariableTag.Global, lightTheme.palette.tag.dark));
 
@@ -39,11 +43,8 @@ const VariablesPanel = () => {
 
     const allProcessVariables = [...taggedGlobalVariables, ...taggedActionVariables, ...taggedAttendedVariables];
 
-    // console.log(allProcessVariables);
+    console.log(allProcessVariables);
 
-    const [expanded, setExpanded] = useState<string | null>(null);
-
-    console.log(expanded);
 
     const handleCopy = (valueToCopy: String) => {
         navigator.clipboard.writeText(valueToCopy.toString());
