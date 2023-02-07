@@ -5,68 +5,72 @@ import React, { useState } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    Typography,
-    Chip,
+    Box, Accordion, AccordionSummary, AccordionDetails, Typography, Chip
 } from '@mui/material';
-import {teal} from '@mui/material/colors';
 
-import useProcessVariables, { VariableTag } from '#src-app/hooks/useProcessVariables';
+import useProcessVariables from '#src-app/hooks/useProcessVariables';
+import { lightTheme } from '#src-app/theme/light';
 
 import PositionedSnackbar from '../PositionedSnackbar';
 
+enum VariableTag {
+    Global = 'GLOBAL',
+    InputOutput = 'INPUT/OUTPUT',
+    ActionAssigned = 'ACTION ASSIGNED',
+}
+
 
 const VariablesPanel = () => {
-    const {
-        taggedGlobalVariables,
-        taggedActionVariables,
-        taggedAttendedVariables,
-    } = useProcessVariables();
+    const {globalVariables, actionVariables, attendedVariables} = useProcessVariables();
+
+    const tagVariable = (name, tag, color) => ({
+        name: `#{${name}}`,
+        tag: tag,
+        color: color
+    });
+
+    // console.log('action', actionVariables);
+
+    const taggedGlobalVariables = globalVariables.map(variable => tagVariable(variable.name, VariableTag.Global, lightTheme.palette.tag.dark));
+
+    const taggedActionVariables = actionVariables.map(variable => tagVariable(variable.value, VariableTag.ActionAssigned, lightTheme.palette.tag.main));
+
+    const taggedAttendedVariables = attendedVariables.map(variable => tagVariable(variable.name, VariableTag.InputOutput, lightTheme.palette.tag.light));
+
+    const allProcessVariables = [...taggedGlobalVariables, ...taggedActionVariables, ...taggedAttendedVariables];
+
+    // console.log(allProcessVariables);
 
     const [expanded, setExpanded] = useState<string | null>(null);
 
-    const allProcessVariables = [
-        ...taggedActionVariables,
-        ...taggedGlobalVariables,
-        ...taggedAttendedVariables,
-    ];
+    console.log(expanded);
 
     const handleCopy = (valueToCopy: String) => {
         navigator.clipboard.writeText(valueToCopy.toString());
     };
 
-    const getTagColor = (tag: VariableTag) => {
-        switch (tag) {
-            case VariableTag.ActionAssigned:
-                return teal[400];
-            case VariableTag.InputOutput:
-                return teal[700];
-            default:
-                return teal[900];
-        }
+    const handleClick = (variableName) => {
+        variableName === expanded ? setExpanded(null) : setExpanded(variableName);
     };
 
-    const allProcessVariablesJSX = allProcessVariables?.map((variableValue) => (
-        <Accordion
-            key={variableValue.name}
-            expanded={expanded === variableValue.name}
-            onChange={() => setExpanded(variableValue.name)}
+    const allProcessVariablesJSX = allProcessVariables?.map((processVariable) => (
+        <Accordion TransitionProps={{unmountOnExit: true}}
+            key={processVariable.name}
+            expanded={expanded === processVariable.name}
+            onChange={() => handleClick(processVariable.name)}
         >
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls={variableValue.name}
-                id={variableValue.name}
+                aria-controls={processVariable.name}
+                id={processVariable.name}
               
             >
                 <Typography variant='h5'sx={{ width: '60%'}} >
-                    {variableValue.name}
+                    {processVariable.name}
                 </Typography>
                 <Typography ><Chip
-                    label={variableValue.tag}
-                    sx={{ bgcolor: getTagColor(variableValue.tag), color: 'white' }}
+                    label={processVariable.tag}
+                    sx={{ bgcolor: processVariable.color, color: 'white' }}
                     size="small"
                 ></Chip></Typography>
             </AccordionSummary>
@@ -81,7 +85,7 @@ const VariablesPanel = () => {
                         <PositionedSnackbar
                             buttonText="Copy"
                             message="Copied to clipboard"
-                            handleCopy={() => handleCopy(variableValue.name)}
+                            handleCopy={() => handleCopy(processVariable.name)}
                         />
                     </Box>
                 </Typography>
