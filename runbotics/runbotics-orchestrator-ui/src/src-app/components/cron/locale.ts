@@ -31,7 +31,7 @@ const DEFAULT_LOCALE_EN: DefaultLocale = {
     suffixMinutesForHourPeriod: translate('Component.Cron.Locale.SuffixMinutesForHourPeriod'),
     errorInvalidCron: translate('Component.Cron.Locale.ErrorInvalidCron'),
     clearButtonText: translate('Common.Clear'),
-    // In each of arrays below order is important, the index will be used as value
+    // In each of the arrays below order is important, the index will be used as value
     weekDays: [
         translate('Component.Cron.Locale.WeekDays.Sunday'), // Sunday must always be first, it's "0"
         translate('Component.Cron.Locale.WeekDays.Monday'),

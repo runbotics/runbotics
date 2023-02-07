@@ -34,8 +34,8 @@ export const useCurrentLocale = (): DefaultLocale => {
         suffixMinutesForHourPeriod: translate('Component.Cron.Locale.SuffixMinutesForHourPeriod'),
         errorInvalidCron: translate('Component.Cron.Locale.ErrorInvalidCron'),
         clearButtonText: translate('Common.Clear'),
+        // In each of the arrays below order is important, the index will be used as value
         months: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.Months.January'),
             translate('Component.Cron.Locale.Months.February'),
             translate('Component.Cron.Locale.Months.March'),
@@ -50,7 +50,6 @@ export const useCurrentLocale = (): DefaultLocale => {
             translate('Component.Cron.Locale.Months.December'),
         ],
         nthMonthDays: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.MonthDays.Last'),
             translate('Component.Cron.Locale.MonthDays.LastWeekday'),
         ],
@@ -59,7 +58,6 @@ export const useCurrentLocale = (): DefaultLocale => {
             translate('Component.Cron.Locale.AltMonthDays.LastWeekday'),
         ],
         weekDays: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.WeekDays.Sunday'), // Sunday must always be first, it's "0"
             translate('Component.Cron.Locale.WeekDays.Monday'),
             translate('Component.Cron.Locale.WeekDays.Tuesday'),
@@ -69,7 +67,6 @@ export const useCurrentLocale = (): DefaultLocale => {
             translate('Component.Cron.Locale.WeekDays.Saturday'),
         ],
         altWeekDays: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.AltWeekDays.Sunday'), // Sunday must always be first, it's "0"
             translate('Component.Cron.Locale.AltWeekDays.Monday'),
             translate('Component.Cron.Locale.AltWeekDays.Tuesday'),
@@ -79,7 +76,6 @@ export const useCurrentLocale = (): DefaultLocale => {
             translate('Component.Cron.Locale.AltWeekDays.Saturday'),
         ],
         nthWeekDays: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.NthWeekDays.First'),
             translate('Component.Cron.Locale.NthWeekDays.Second'),
             translate('Component.Cron.Locale.NthWeekDays.Third'),
@@ -87,14 +83,12 @@ export const useCurrentLocale = (): DefaultLocale => {
             translate('Component.Cron.Locale.NthWeekDays.Last'),
         ],
         altNthWeekDays: [
-            // Order is important, the index will be used as value
             translate('Component.Cron.Locale.AltNthWeekDays.First'),
             translate('Component.Cron.Locale.AltNthWeekDays.Second'),
             translate('Component.Cron.Locale.AltNthWeekDays.Third'),
             translate('Component.Cron.Locale.AltNthWeekDays.Fourth'),
             translate('Component.Cron.Locale.AltNthWeekDays.Last'),
         ],
-        // Order is important, the index will be used as value
         altMonths: [
             translate('Component.Cron.Locale.AltMonths.January'),
             translate('Component.Cron.Locale.AltMonths.February'),
