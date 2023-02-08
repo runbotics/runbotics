@@ -6,6 +6,8 @@ import { UNITS, UnitIndex } from '../../constants';
 import { PeriodType } from '../../types';
 import { MinutesSelectProps } from './MinutesSelect.types';
 
+import If from '#src-app/components/utils/If';
+
 // eslint-disable-next-line complexity
 const MinutesSelect: FC<MinutesSelectProps> = ({ 
     value, 
@@ -19,16 +21,18 @@ const MinutesSelect: FC<MinutesSelectProps> = ({
     period 
 }) => (
     <>
-        <PeriodDefinition 
-            isDisplayed={period === PeriodType.HOUR}
-            locale={locale}
-            localeKey='prefixMinutesForHourPeriod'
-        />
-        <PeriodDefinition 
-            isDisplayed={period !== PeriodType.HOUR}
-            locale={locale}
-            localeKey='prefixMinutes'
-        />
+        <If condition={period === PeriodType.HOUR}>
+            <PeriodDefinition 
+                locale={locale}
+                localeKey='prefixMinutesForHourPeriod'
+            />
+        </If>
+        <If condition={period !== PeriodType.HOUR}>
+            <PeriodDefinition 
+                locale={locale}
+                localeKey='prefixMinutes'
+            />
+        </If>
         <CustomSelect
             value={value}
             unit={UNITS[UnitIndex.MINUTES]}
@@ -41,11 +45,12 @@ const MinutesSelect: FC<MinutesSelectProps> = ({
             clockFormat={clockFormat}
             period={period}
         />
-        <PeriodDefinition 
-            isDisplayed={period === PeriodType.HOUR}
-            locale={locale}
-            localeKey='suffixMinutesForHourPeriod'
-        />
+        <If condition={period === PeriodType.HOUR}>
+            <PeriodDefinition 
+                locale={locale}
+                localeKey='suffixMinutesForHourPeriod'
+            />
+        </If>
     </>
 );
 

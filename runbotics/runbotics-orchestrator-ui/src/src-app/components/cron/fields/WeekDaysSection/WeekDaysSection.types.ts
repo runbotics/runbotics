@@ -11,5 +11,4 @@ export interface WeekDaysSectionProps {
     nthWeekDays: number[];
     setNthWeekDays: (nthWeekDays: number[]) => void;
     isMonthPeriodDisplayed: boolean;
-    isWeekPeriodDisplayed: boolean;
 }

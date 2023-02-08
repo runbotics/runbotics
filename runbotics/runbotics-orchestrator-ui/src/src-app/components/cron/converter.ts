@@ -3,6 +3,7 @@
 import { MutableRefObject } from 'react';
 
 import { UNITS, SUPPORTED_SHORTCUTS } from './constants';
+import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';
 import {
     Unit,
     PeriodType,
@@ -15,11 +16,9 @@ import {
     Shortcuts,
     SetValuePeriod,
     CronObjProps,
-    CRON_ACTIONS,
-    CronStateProps,
 } from './types';
 import {
-    range, sort, dedup, setError, checkIsArray,
+    range, sort, dedup, setError,
 } from './utils';
 
 /**
@@ -56,8 +55,8 @@ export function setValuesFromCronString(
     if (!error) {
         // Shortcuts management
         if (
-            shortcuts &&
-            (shortcuts === true || (checkIsArray(shortcuts) && shortcuts.includes(newCronString)))
+            // @ts-ignore
+            shortcuts && shortcuts.includes(newCronString)
         ) {
             if (newCronString === '@reboot') {
                 setPeriod(PeriodType.REBOOT);
@@ -81,19 +80,28 @@ export function setValuesFromCronString(
 
             setPeriod(period);
 
+            cronParts.forEach((cronPart, index) => {
+                console.log(cronParts[index]);
+            });
+
+            // cronDispatch({ 
+            //     type: CRON_ACTIONS.SET_EACH, 
+            //     payload: { 
+            //         newState: {
+            //             minutes: cronParts[0],
+            //             hours: cronParts[1],
+            //             monthDays: cronParts[2],
+            //             months: cronParts[3],
+            //             weekDays: cronParts[4],
+            //             nthWeekDays: [],
+            //             nthMonthDays: [],
+            //         } 
+            //     } 
+            // });
+
             cronDispatch({ 
-                type: CRON_ACTIONS.SET_EACH, 
-                payload: { 
-                    newState: {
-                        minutes: cronParts[0],
-                        hours: cronParts[1],
-                        monthDays: cronParts[2],
-                        months: cronParts[3],
-                        weekDays: cronParts[4],
-                        nthWeekDays: [],
-                        nthMonthDays: [],
-                    } 
-                } 
+                type: CRON_ACTIONS.SET_ALL, 
+                payload: {  } 
             });
 
         } catch (err) {

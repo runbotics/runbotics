@@ -5,6 +5,7 @@ import { MonthDaysSectionProps } from './MonthDaysSection.types';
 import MonthDaysSelect from './MonthDaysSelect';
 import NthMonthDaysSelect from './NthMonthDaysSelect';
 
+import If from '#src-app/components/utils/If';
 
 // eslint-disable-next-line complexity
 const MonthDaysSection: FC<MonthDaysSectionProps> = ({
@@ -23,13 +24,14 @@ const MonthDaysSection: FC<MonthDaysSectionProps> = ({
     const isAnyMonthDaySelected = monthDays?.length > 0;
     const isAnyNthMonthDaySelected = nthMonthDays?.length > 0;
     
-    return !readOnly ? (
-        <>
-            <PeriodDefinition 
-                isDisplayed={locale.prefixMonthDays !== ''} 
-                localeKey='prefixMonthDays'
-                locale={locale} 
-            />
+    return (
+        <If condition={!readOnly}>
+            <If condition={locale.prefixMonthDays !== ''}>
+                <PeriodDefinition 
+                    localeKey='prefixMonthDays'
+                    locale={locale} 
+                />
+            </If>
             <NthMonthDaysSelect 
                 value={nthMonthDays}
                 setValue={setNthMonthDays}
@@ -51,8 +53,8 @@ const MonthDaysSection: FC<MonthDaysSectionProps> = ({
                 period={period}
                 humanizeLabels={humanizeLabels}
             />
-        </>
-    ) : null;
+        </If>
+    );
 };
 
 export default MonthDaysSection;

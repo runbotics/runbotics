@@ -22,7 +22,6 @@ const MonthsSelect: FC<MonthsSelectProps> = ({
     return (
         <>
             <PeriodDefinition
-                isDisplayed={true}
                 locale={locale}
                 localeKey='prefixMonths'
             />

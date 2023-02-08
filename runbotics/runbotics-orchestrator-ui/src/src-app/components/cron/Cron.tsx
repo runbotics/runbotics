@@ -4,6 +4,8 @@ import React, { useState, useCallback, useEffect, useRef, useMemo, useReducer } 
 import If from '../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from './converter';
 import { ClearButton } from './Cron.styles';
+import { cronReducer } from './CronReducer/cronReducer';
+import { CRON_ACTIONS } from './CronReducer/cronReducer.types';
 import HoursSelect from './fields/HoursSelect';
 import MinutesSelect from './fields/MinutesSelect';
 import MonthDaysSection from './fields/MonthDaysSection';
@@ -11,8 +13,8 @@ import MonthsSelect from './fields/MonthsSelect';
 import Period from './fields/Period';
 import WeekDaysSection from './fields/WeekDaysSection';
 import DEFAULT_LOCALE_EN from './locale';
-import { CronStateProps, CronProps, PeriodType, CRON_ACTIONS, CronActionProps } from './types';
-import { classNames, setError, usePrevious } from './utils';
+import { CronProps, PeriodType } from './types';
+import { classNames, cronShortcuts, initialCronState, setError, usePrevious } from './utils';
 
 // eslint-disable-next-line max-lines-per-function
 export default function Cron({
@@ -31,54 +33,13 @@ export default function Cron({
     disabled = false,
     readOnly = false,
     leadingZero = false,
-    shortcuts = ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly'],
+    shortcuts = cronShortcuts,
     clockFormat,
 }: CronProps) {
-    const cronReducer = (state: CronStateProps, action: CronActionProps): CronStateProps => {
-        const newValue = action.payload.newValue;
-        const newState = action.payload.newState;
-
-        switch (action.type) {
-            case CRON_ACTIONS.SET_ALL:
-                const newObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, newValue]));
-                return newObj;
-            case CRON_ACTIONS.SET_EACH:
-                return newState;
-            case CRON_ACTIONS.SET_MONTHS:
-                return { ...state, months: newValue };
-            case CRON_ACTIONS.SET_MONTH_DAYS:
-                return { ...state, monthDays: newValue };
-            case CRON_ACTIONS.SET_NTH_MONTH_DAYS:
-                return { ...state, nthMonthDays: newValue };
-            case CRON_ACTIONS.SET_WEEK_DAYS:
-                return { ...state, weekDays: newValue };
-            case CRON_ACTIONS.SET_NTH_WEEK_DAYS:
-                return { ...state, nthWeekDays: newValue };
-            case CRON_ACTIONS.SET_HOURS:
-                return { ...state, hours: newValue };
-            case CRON_ACTIONS.SET_MINUTES:
-                return { ...state, minutes: newValue };
-            default: 
-                throw new Error('Invalid action type');
-        }
-    };
-
-    const [cronState, cronDispatch] = useReducer(
-        cronReducer, 
-        {
-            months: undefined,
-            monthDays: undefined,
-            nthMonthDays: undefined,
-            weekDays: undefined,
-            nthWeekDays: undefined,
-            hours: undefined,
-            minutes: undefined,
-        }
-    );
-
+    const [cronState, cronDispatch] = useReducer(cronReducer, initialCronState);
     const internalValueRef = useRef<string>(value);
     const defaultPeriodRef = useRef<PeriodType>(defaultPeriod);
-    const [period, setPeriod] = useState<PeriodType | undefined>();
+    const [period, setPeriod] = useState<PeriodType>();
     const [error, setInternalError] = useState<boolean>(false);
     const [valueCleared, setValueCleared] = useState<boolean>(false);
     const previousValueCleared = usePrevious(valueCleared);
@@ -284,7 +245,6 @@ export default function Cron({
                         readOnly={readOnly}
                         periodForRender={periodForRender}
                         isMonthPeriodDisplayed={isMonthPeriodDisplayed}
-                        isWeekPeriodDisplayed={isWeekPeriodDisplayed}
                         weekDays={cronState.weekDays}
                         setWeekDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_WEEK_DAYS, payload: { newValue } })}
                         nthWeekDays={cronState.nthWeekDays}

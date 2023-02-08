@@ -3,9 +3,10 @@ import React, { FC } from 'react';
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
-import DEFAULT_LOCALE_EN from '../../locale';
 import { PeriodType } from '../../types';
 import { HoursSelectProps } from './HoursSelect.types';
+
+import If from '#src-app/components/utils/If';
 
 const HoursSelect: FC<HoursSelectProps> = ({
     value, 
@@ -19,11 +20,12 @@ const HoursSelect: FC<HoursSelectProps> = ({
     period,
 }) => (
     <>
-        <PeriodDefinition
-            isDisplayed={period !== PeriodType.HOUR}
-            localeKey='prefixHours'
-            locale={locale}
-        />
+        <If condition={period !== PeriodType.HOUR}>
+            <PeriodDefinition
+                localeKey='prefixHours'
+                locale={locale}
+            />
+        </If>
         <CustomSelect
             value={value}
             unit={UNITS[UnitIndex.HOURS]}

@@ -193,7 +193,7 @@ export type CronType = 'period' | 'months' | 'month-days' | 'week-days' | 'hours
 export type LeadingZeroType = 'month-days' | 'hours' | 'minutes' | string;
 export type LeadingZero = boolean | LeadingZeroType[];
 export type ClockFormat = '24-hour-clock' | '12-hour-clock' | string;
-export type ShortcutsType =
+export type ShortcutType =
     | '@yearly'
     | '@annually'
     | '@monthly'
@@ -202,29 +202,9 @@ export type ShortcutsType =
     | '@midnight'
     | '@hourly'
     | '@reboot';
-export type Shortcuts = boolean | ShortcutsType[];
+export type Shortcuts = ShortcutType[];
 
 // Internal props
-
-export interface CronStateProps {
-    months?: number[] | undefined;
-    monthDays?: number[] | undefined;
-    nthMonthDays?: number[] | undefined;
-    day?: number[] | undefined;
-    weekDays?: number[] | undefined;
-    nthWeekDays?: number[] | undefined;
-    hours?: number[] | undefined;
-    minutes?: number[] | undefined;
-}
-
-export interface CronActionProps {
-    type: CRON_ACTIONS,
-    payload: { 
-        newValue?: number[] | undefined,
-        newState?: CronStateProps,
-    }
-}
-
 export interface FieldProps {
     value?: number[];
     setValue: (newValue: number[]) => void;
@@ -327,7 +307,7 @@ export interface Classes {
     [key: string]: boolean;
 }
 export interface ShortcutsValues {
-    name: ShortcutsType;
+    name: ShortcutType ;
     value: string;
 }
 export interface Unit {
@@ -350,16 +330,4 @@ export interface CronObjProps {
     newMonths: number[],
     newWeekDays: number[],
     newNthWeekDays?: number[],
-}
-
-export enum CRON_ACTIONS {
-    SET_ALL = 'set-all',
-    SET_EACH = 'set-each',
-    SET_MONTHS = 'set-months',
-    SET_MONTH_DAYS = 'set-month-days',
-    SET_NTH_MONTH_DAYS = 'set-nth-month-days',
-    SET_WEEK_DAYS = 'set-week-days',
-    SET_NTH_WEEK_DAYS = 'set-nth-week-days',
-    SET_HOURS = 'set-hours',
-    SET_MINUTES = 'set-minutes',
 }

@@ -6,6 +6,8 @@ import NthWeekDaysSelect from './NthWeekDaysSelect';
 import { WeekDaysSectionProps } from './WeekDaysSection.types';
 import WeekDaysSelect from './WeekDaysSelect';
 
+import If from '#src-app/components/utils/If';
+
 // eslint-disable-next-line complexity
 const WeekDaysSection: FC<WeekDaysSectionProps> = ({ 
     locale,
@@ -14,34 +16,35 @@ const WeekDaysSection: FC<WeekDaysSectionProps> = ({
     readOnly,
     periodForRender,
     isMonthPeriodDisplayed,
-    isWeekPeriodDisplayed,
     weekDays,
     setWeekDays,
     nthWeekDays,
     setNthWeekDays,
 }) => (
     <>
-        <PeriodDefinition 
-            isDisplayed={isWeekPeriodDisplayed && !isMonthPeriodDisplayed} 
-            localeKey='prefixWeekDays'
-            locale={locale} 
-        />
-        <PeriodDefinition 
-            isDisplayed={periodForRender !== PeriodType.WEEK && isMonthPeriodDisplayed} 
-            localeKey='prefixWeekDaysForMonthAndYearPeriod'
-            locale={locale} 
-        />
-        <NthWeekDaysSelect
-            value={nthWeekDays}
-            setValue={setNthWeekDays}
-            locale={locale}
-            humanizeLabels={humanizeLabels}
-            disabled={disabled}
-            readOnly={readOnly}
-            period={periodForRender}
-            isAnyWeekDaySelected={weekDays?.length > 0}
-            isMonthPeriodDisplayed={isMonthPeriodDisplayed}
-        />
+        <If condition={!isMonthPeriodDisplayed}>
+            <PeriodDefinition 
+                localeKey='prefixWeekDays'
+                locale={locale} 
+            />
+        </If>
+        <If condition={periodForRender !== PeriodType.WEEK && isMonthPeriodDisplayed}>
+            <PeriodDefinition 
+                localeKey='prefixWeekDaysForMonthAndYearPeriod'
+                locale={locale} 
+            />
+            <NthWeekDaysSelect
+                value={nthWeekDays}
+                setValue={setNthWeekDays}
+                locale={locale}
+                humanizeLabels={humanizeLabels}
+                disabled={disabled}
+                readOnly={readOnly}
+                period={periodForRender}
+                isAnyWeekDaySelected={weekDays?.length > 0}
+                isMonthPeriodDisplayed={isMonthPeriodDisplayed}
+            />
+        </If>
         <WeekDaysSelect
             value={weekDays}
             setValue={setWeekDays}
@@ -50,13 +53,13 @@ const WeekDaysSection: FC<WeekDaysSectionProps> = ({
             disabled={disabled}
             readOnly={readOnly}
             period={periodForRender}
-            isWeekPeriodDisplayed={isWeekPeriodDisplayed}
         />
-        <PeriodDefinition 
-            isDisplayed={nthWeekDays?.length > 0} 
-            localeKey='suffixWeekDays'
-            locale={locale} 
-        />
+        <If condition={nthWeekDays?.length > 0}>
+            <PeriodDefinition 
+                localeKey='suffixWeekDays'
+                locale={locale} 
+            />
+        </If>
     </>
 );
 

@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
-import { PeriodType } from '../../../types';
 import { NthWeekDaysSelectProps } from './NthWeekDaysSelect.types';
 
 // eslint-disable-next-line complexity
@@ -16,12 +15,10 @@ const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({
     readOnly, 
     period,
     isAnyWeekDaySelected,
-    isMonthPeriodDisplayed,
 }) => {
     const optionsList = locale.nthWeekDays || DEFAULT_LOCALE_EN.nthWeekDays;
-    const displayNthWeekDays = isMonthPeriodDisplayed && period !== PeriodType.WEEK;
 
-    return displayNthWeekDays ? (
+    return (
         <CustomSelect
             period={period}
             optionsList={optionsList}
@@ -38,7 +35,7 @@ const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({
             readOnly={readOnly}
             isMultiple={false}
         />
-    ) : null;
+    );
 };
 
 export default NthWeekDaysSelect;
