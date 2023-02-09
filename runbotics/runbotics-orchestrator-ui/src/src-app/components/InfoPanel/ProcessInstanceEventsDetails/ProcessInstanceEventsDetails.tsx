@@ -1,80 +1,111 @@
 import React, { useCallback, useEffect, VFC } from 'react';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, AccordionDetails, Slide, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider } from '@mui/material';
 
-import { IProcessInstanceEvent } from 'runbotics-common';
-
+import {
+    IProcessInstanceEvent,
+} from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
-import { processInstanceEventActions, processInstanceEventSelector } from '#src-app/store/slices/ProcessInstanceEvent';
-
 import {
-    ProcessInstanceEventsDetailsHeader,
-    ProcessInstanceEventsDetailsTable,
-    AccordionHeader,
-    RoundedAccordion,
-} from '.';
+    processInstanceEventActions,
+    processInstanceEventSelector,
+    ProcessInstanceLoopEvent,
+} from '#src-app/store/slices/ProcessInstanceEvent';
 
+import InfoSlide from '../InfoSlide';
 
 interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-const sortByFinished = (aEvent: IProcessInstanceEvent, bEvent: IProcessInstanceEvent) =>
-    new Date(aEvent.created).getTime() - new Date(bEvent.created).getTime();
+const sortByFinished = (
+    aEvent: IProcessInstanceEvent | ProcessInstanceLoopEvent,
+    bEvent: IProcessInstanceEvent | ProcessInstanceLoopEvent 
+) => new Date(aEvent.created).getTime() - new Date(bEvent.created).getTime();
 
 // eslint-disable-next-line complexity
-const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ processInstanceId }) => {
+const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
+    processInstanceId,
+}) => {
     const dispatch = useDispatch();
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { translate } = useTranslations();
 
-    const processInstanceEventState = useSelector(processInstanceEventSelector);
+    const {
+        all: { events, eventsBreadcrumbTrail, nestedEvents: { eventMap: loopEvents } },
+    } = useSelector(processInstanceEventSelector);
     const { active } = useSelector(processInstanceSelector);
 
-    const getActiveProcessInstanceEventsIfMatch = () =>
-        processInstanceId === active.processInstance?.id
-            ? Object.values(active.eventsMap)
-            : processInstanceEventState.all.events;
+    // eslint-disable-next-line complexity
+    const getProcessInstanceEvents = (): ProcessInstanceLoopEvent[] | IProcessInstanceEvent[] => {
+        if (processInstanceId === active.processInstance?.id) {
+            return Object.values(active.eventsMap);
+        }
+        if(eventsBreadcrumbTrail.length > 1 && eventsBreadcrumbTrail.at(-1).startsWith('Iteration')) {
+            return loopEvents[eventsBreadcrumbTrail.at(-2)]
+                .filter((element) => element.iterationNumber === +eventsBreadcrumbTrail.at(-1).split('Iteration')[1]);
+        }
+        if (eventsBreadcrumbTrail.length > 1) {
+            return loopEvents[eventsBreadcrumbTrail.at(-1)];
+        }
+        if (!processInstanceId) {
+            return Object.values(active.eventsMap);
+        }
+        return events;
+    };
 
-    const processInstanceEvents = processInstanceId
-        ? getActiveProcessInstanceEventsIfMatch()
-        : Object.values(active.eventsMap);
+    const processInstanceEvents = getProcessInstanceEvents();
 
     const [expanded, setExpanded] = React.useState<number>(null);
 
     useEffect(() => {
-        if (processInstanceId) dispatch(processInstanceEventActions.getProcessInstanceEvents({ processInstanceId }));
+        if (processInstanceId) {
+            dispatch(
+                processInstanceEventActions.getProcessInstanceEvents({
+                    processInstanceId,
+                })
+            );
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
-        if (node && !processInstanceId) node.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        if (node && !processInstanceId) {
+            node.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleChange = (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panelId : null);
-    };
+    const handleChange =
+        (panelId: number) =>
+            (event: React.SyntheticEvent, isExpanded: boolean) => {
+                setExpanded(isExpanded ? panelId : null);
+            };
 
-    if (!processInstanceId && !active.orchestratorProcessInstanceId)
-    { return (
-        <Typography variant="body1" sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}>
-            {translate('Component.InfoPanel.EventsDetails.NoData')}
-        </Typography>
-    ); }
+    if (!processInstanceId && !active.orchestratorProcessInstanceId) {
+        return (
+            <Typography
+                variant="body1"
+                sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}
+            >
+                {translate('Component.InfoPanel.EventsDetails.NoData')}
+            </Typography>
+        );
+    }
 
-    if (processInstanceEvents.length === 0) return null;
+    if (processInstanceEvents?.length === 0) return null;
 
     return (
         <>
             <Divider variant="middle">
-                <Typography variant="h6">{translate('Component.InfoPanel.EventsDetails.Activities')}</Typography>
+                <Typography variant="h6">
+                    {translate('Component.InfoPanel.EventsDetails.Activities')}
+                </Typography>
             </Divider>
             <Box
                 ref={containerRef}
@@ -86,28 +117,37 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ 
                 {processInstanceEvents
                     .slice()
                     .sort(sortByFinished)
-                    .map((processInstanceEvent, index) => (
-                        <Slide
-                            direction="left"
-                            in={!!processInstanceEvent}
-                            container={containerRef.current}
-                            key={processInstanceEvent.id}
-                            {...(index === processInstanceEvents.length - 1 ? { ref: onRefChange } : {})}
-                        >
-                            <RoundedAccordion
-                                expanded={expanded === processInstanceEvent.id}
-                                onChange={handleChange(processInstanceEvent.id)}
-                                disableGutters
-                            >
-                                <AccordionHeader expandIcon={<ExpandMoreIcon />}>
-                                    <ProcessInstanceEventsDetailsHeader processInstanceEvent={processInstanceEvent} />
-                                </AccordionHeader>
-                                <AccordionDetails>
-                                    <ProcessInstanceEventsDetailsTable processInstanceEvent={processInstanceEvent} />
-                                </AccordionDetails>
-                            </RoundedAccordion>
-                        </Slide>
-                    ))}
+                    .map((processInstanceEvent, index) =>
+                        processInstanceEvent.type ===
+                        'iterationGutter' ? (
+                                <Box
+                                    sx={{
+                                        backgroundColor: (theme) => theme.palette.grey[200],
+                                        borderRadius: '3px',
+                                        boxShadow: (theme) => theme.shadows[1],
+                                    }}
+                                    display="flex"
+                                    justifyContent="center"
+                                >
+                                    <Typography variant="button" sx={{padding: '5px'}}>
+                                        iteration {processInstanceEvent.iterationNumber}
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <InfoSlide
+                                    containerRef={containerRef}
+                                    key={processInstanceEvent.id}
+                                    processInstanceEvent={processInstanceEvent}
+                                    expanded={expanded}
+                                    handleChange={handleChange}
+                                    index={index}
+                                    onRefChange={onRefChange}
+                                    processInstanceEventsLength={
+                                        processInstanceEvents.length
+                                    }
+                                />
+                            )
+                    )}
             </Box>
         </>
     );

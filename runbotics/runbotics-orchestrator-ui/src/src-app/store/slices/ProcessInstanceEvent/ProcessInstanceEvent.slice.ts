@@ -9,6 +9,11 @@ import * as processInstanceEventThunks from './ProcessInstanceEvent.thunks';
 export const initialState: ProcessInstanceEventState = {
     all: {
         events: [],
+        nestedEvents: {
+            eventMap: {},
+            idNameMap: {},
+        },
+        eventsBreadcrumbTrail: [],
         loading: false,
     },
 };
