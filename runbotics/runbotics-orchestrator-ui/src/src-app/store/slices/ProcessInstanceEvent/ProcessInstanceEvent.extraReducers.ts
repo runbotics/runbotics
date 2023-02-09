@@ -42,10 +42,12 @@ const buildProcessInstanceEventExtraReducers = (
                     acc[acc.length - 1].iterationNumber !==
                         item.iterationNumber;
                 if (newIteration) {
+                    const eventCreated = new Date(item.created);
+                    const iterationCreated = eventCreated.setMilliseconds(eventCreated.getMilliseconds() - 3).toString(); 
                     acc.push({
                         iterationNumber: item.iterationNumber,
                         type: EventMapTypes.IterationGutter,
-                        created: item.created,
+                        created: iterationCreated,
                     });
                 }
                 acc.push({
@@ -77,11 +79,11 @@ const buildProcessInstanceEventExtraReducers = (
                     },
                     idNameMap: {
                         ...state.all.nestedEvents.idNameMap,
-                        [action.meta.arg.loopId]: 'Loop',
+                        [action.meta.arg.loopId]: action.meta.arg.loopLabel,
                     },
                 },
             };
-        })
+        })  
         .addCase(getProcessInstanceLoopEvents.rejected, (state) => {
             state.all.loading = false;
         });

@@ -68,8 +68,8 @@ public class ProcessInstanceLoopEvent implements Serializable {
     @Column(name = "loop_id")
     private String loopId;
 
-    @Column(name = "iteration_element")
-    private String iterationElement;
+    @Column(name = "iterator_element")
+    private String iteratorElement;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -123,8 +123,8 @@ public class ProcessInstanceLoopEvent implements Serializable {
         return this.loopId;
     }
 
-    public String getIterationElement() {
-        return this.iterationElement;
+    public String getIteratorElement() {
+        return this.iteratorElement;
     }
 
     public ProcessInstanceLoopEvent step(String step) {
@@ -153,7 +153,9 @@ public class ProcessInstanceLoopEvent implements Serializable {
         return this.executionId;
     }
 
-    public String getScript() { return this.script; }
+    public String getScript() {
+        return this.script;
+    }
 
     public ProcessInstanceLoopEvent executionId(String executionId) {
         this.executionId = executionId;
@@ -224,8 +226,8 @@ public class ProcessInstanceLoopEvent implements Serializable {
         this.loopId = loopId;
     }
 
-    public void setIterationElement(String iterationElement) {
-        this.iterationElement = iterationElement;
+    public void setIteratorElement(String iteratorElement) {
+        this.iteratorElement = iteratorElement;
     }
 
     public void setScript(String script) {
@@ -270,7 +272,7 @@ public class ProcessInstanceLoopEvent implements Serializable {
             ", script='" + getScript() + "'" +
             ", iterationNumber='" + getIterationNumber() + "'" +
             ", loopId='" + getLoopId() + "'" +
-            ", iterationElement='" + getIterationElement() + "'" +
+            ", iteratorElement='" + getIteratorElement() + "'" +
             ", executionId='" + getExecutionId() + "'" +
             ", input='" + getInput() + "'" +
             ", output='" + getOutput() + "'" +

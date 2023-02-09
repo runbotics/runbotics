@@ -21,7 +21,7 @@
             <column name="iteration_number" type="number">
                 <constraints nullable="false" />
             </column>
-            <column name="iteration_element" type="varchar(255)">
+            <column name="iterator_element" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="script" type="varchar(255)">

@@ -1,5 +1,6 @@
 export interface LoopProps {
     iterationNumber: number;
     loopId: string;
-    iterationElement: any;
+    iteratorElement: any;
+    iteratorName: string;
 }

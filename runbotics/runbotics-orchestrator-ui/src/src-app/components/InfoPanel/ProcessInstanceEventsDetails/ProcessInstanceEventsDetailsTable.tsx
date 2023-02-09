@@ -15,16 +15,18 @@ import {
     Button,
 } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { IProcessInstanceEvent } from 'runbotics-common';
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
-import useTranslations from '#src-app/hooks/useTranslations';
+import { IProcessInstanceLoopEvent } from 'runbotics-common';
+
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { formatDate } from '#src-app/utils/utils';
 
 interface Props {
-    processInstanceEvent: IProcessInstanceEvent;
+    processInstanceEvent: IProcessInstanceLoopEvent;
 }
 
 // eslint-disable-next-line complexity
@@ -33,6 +35,15 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({
 }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
+
+    const getLoopLabel = () => {
+        const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter(
+            { text: processInstanceEvent.step, delimiter: '.', join: '.' }
+        )}.Label`;
+        return checkIfKeyExists(translateKey)
+            ? translateKey
+            : processInstanceEvent.step;
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -108,9 +119,19 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({
                 <Button
                     fullWidth
                     sx={{ paddingBlock: '10px' }}
-                    onClick={() => dispatch(processInstanceEventActions.getProcessInstanceLoopEvents(
-                        { loopId: processInstanceEvent.executionId, nestedIteration: processInstanceEvent.iterationNumber ?? undefined }
-                    ))}
+                    onClick={() =>
+                        dispatch(
+                            processInstanceEventActions.getProcessInstanceLoopEvents(
+                                {
+                                    loopId: processInstanceEvent.executionId,
+                                    nestedIteration:
+                                        processInstanceEvent.iterationNumber ??
+                                        undefined,
+                                    loopLabel: getLoopLabel(),
+                                }
+                            )
+                        )
+                    }
                 >
                     Show Loop Details
                 </Button>

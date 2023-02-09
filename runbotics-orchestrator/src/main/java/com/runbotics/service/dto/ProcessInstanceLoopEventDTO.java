@@ -40,7 +40,7 @@ public class ProcessInstanceLoopEventDTO implements Serializable {
 
     private String iterationNumber;
 
-    private String iterationElement;
+    private String iteratorElement;
 
     private String loopId;
 
@@ -52,12 +52,12 @@ public class ProcessInstanceLoopEventDTO implements Serializable {
         this.iterationNumber = iterationNumber;
     }
 
-    public String getIterationElement() {
-        return iterationElement;
+    public String getIteratorElement() {
+        return iteratorElement;
     }
 
-    public void setIterationElement(String iterationElement) {
-        this.iterationElement = iterationElement;
+    public void setIteratorElement(String iteratorElement) {
+        this.iteratorElement = iteratorElement;
     }
 
     public String getLoopId() {
@@ -195,7 +195,7 @@ public class ProcessInstanceLoopEventDTO implements Serializable {
             ", step='" + getStep() + "'" +
             ", processInstance='" + getProcessInstance() + "'" +
             ", executionId='" + getExecutionId() + "'" +
-            ", iterationElement='" + getIterationElement() + "'" +
+            ", iteratorElement='" + getIteratorElement() + "'" +
             ", iterationNumber='" + getIterationNumber() + "'" +
             ", loopId='" + getLoopId() + "'" +
             ", script='" + getScript() + "'" +

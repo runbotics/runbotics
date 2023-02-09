@@ -50,11 +50,12 @@ export class LoopHandlerService {
         this.loopState.clear();
     }
 
-    private getLoopProps(loopId: string): LoopProps {
+    private getLoopProps(loopId: string, iteratorName: string): LoopProps {
         return {
             iterationNumber: 0,
             loopId,
-            iterationElement: null,
+            iteratorElement: null,
+            iteratorName
         };
     }
 
@@ -85,7 +86,8 @@ export class LoopHandlerService {
     }
 
     private createLoop(api: BpmnExecutionEventMessageApi) {
-        this.loopState.set(api.executionId, this.getLoopProps(api.executionId));
+        console.log((api as any).broker.owner.behaviour.loopCharacteristics.behaviour.elementVariable);
+        this.loopState.set(api.executionId, this.getLoopProps(api.executionId, (api as any).broker.owner.behaviour.loopCharacteristics.behaviour.elementVariable));
     }
 
     private deleteLoop(activityId: string) {

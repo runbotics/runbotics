@@ -5,12 +5,14 @@ import {
     BotWsMessage,
     IProcessInstance,
     IProcessInstanceEvent,
+    IProcessInstanceLoopEvent,
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
+import { LoopProps } from '#core/bpm/loop-handler/loop-handler.types';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
@@ -28,7 +30,7 @@ export class RuntimeSubscriptionsService {
             if (event.activity.content.type) {
                 const desktopTask: DesktopTask = event.activity
                     .content as DesktopTask;
-                let processInstanceEvent: IProcessInstanceEvent = {
+                let processInstanceEvent: IProcessInstanceEvent | IProcessInstanceLoopEvent = {
                     created: dayjs().toISOString(),
                     processInstance: event.processInstance,
                     executionId: event.activity.executionId,
@@ -41,13 +43,15 @@ export class RuntimeSubscriptionsService {
                 };
 
                 try {
+                    const eventBehaviour = (
+                        event.activity.owner as IActivityOwner
+                    ).behaviour;
                     switch (event.activity.content.type) {
                         case 'bpmn:ServiceTask':
-                            const eventBehaviour = (
-                                event.activity.owner as IActivityOwner
-                            ).behaviour;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
+                            // eslint-disable-next-line no-case-declarations
                             const label = eventBehaviour?.label;
+                            // eslint-disable-next-line no-case-declarations
                             const script = desktopTask.input?.script;
                             if (eventBehaviour?.label) {
                                 processInstanceEvent.step = label;
@@ -75,16 +79,25 @@ export class RuntimeSubscriptionsService {
                             } else {
                                 processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.eventType} `;
                             }
-                            processInstanceEvent.step = 'Loop';
+
+                            if (eventBehaviour?.label) {
+                                processInstanceEvent.step = eventBehaviour?.label;
+                            } else {
+                                processInstanceEvent.step = 'Loop';
+                            }
                             break;
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Activity';
                             break;
                     }
+                    const loopProps: LoopProps = {
+                        ...event.loopProps,
+                        iteratorElement: event.activity.content[event.loopProps?.iteratorName] ?? ''
+                    };
 
                     if (event.loopProps)
-                        processInstanceEvent = {...processInstanceEvent, ...(event.loopProps)};
+                        processInstanceEvent = {...processInstanceEvent, ...(loopProps) };
 
                     switch (event.eventType) {
                         case ProcessInstanceEventStatus.COMPLETED:

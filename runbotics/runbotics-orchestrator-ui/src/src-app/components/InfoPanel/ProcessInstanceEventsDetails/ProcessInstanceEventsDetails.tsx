@@ -80,7 +80,6 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     const handleChange =
         (panelId: number) =>
             (event: React.SyntheticEvent, isExpanded: boolean) => {

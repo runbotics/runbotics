@@ -10,6 +10,7 @@ import {
     Chip,
 } from '@mui/material';
 
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processInstanceEventActions, processInstanceEventSelector } from '#src-app/store/slices/ProcessInstanceEvent';
@@ -30,11 +31,19 @@ const InfoPanel: VFC<InfoPanelProps> = ({
     onClose,
     showCloseButton = false,
 }) => {
+    const { translate } = useTranslations();
     const { eventsBreadcrumbTrail } = useSelector(
         (state) => state.processInstanceEvent.all
     );
     const dispatch = useDispatch();
+    
     const {all: {nestedEvents: {idNameMap}}} = useSelector(processInstanceEventSelector);
+    const getBreadcrumbLabel = (breadcrumb: string) => {
+        if(!idNameMap[breadcrumb]) return breadcrumb;
+        if(checkIfKeyExists(idNameMap[breadcrumb])) return translate(idNameMap[breadcrumb]);
+        return idNameMap[breadcrumb];
+    };
+
     return (
         <Box display="flex" flexDirection="column" height="100%">
             <If condition={showCloseButton}>
@@ -55,7 +64,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                                         onClick={() => {
                                             dispatch(processInstanceEventActions.reduceCrumbs(breadcrumb));
                                         }}
-                                        label={idNameMap[breadcrumb] ?? breadcrumb}
+                                        label={getBreadcrumbLabel(breadcrumb)}
                                         size="small"
                                         sx={{marginY: (theme) => theme.spacing(0.5)}}
                                     />

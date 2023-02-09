@@ -18,7 +18,7 @@ export interface IProcessInstanceEvent {
 export interface IProcessInstanceLoopEvent extends IProcessInstanceEvent {
     iterationNumber: number;
     loopId: string;
-    iterationElement: string;
+    iteratorElement: string;
 }
 
 export enum ProcessInstanceEventStatus {
