@@ -631,5 +631,8 @@
     "Process.Modeler.ChangeLanguageTitle": "Are you sure you want to change the language?",
     "Process.Modeler.LoseModelerChangesContent": "All unsaved changes process wizard changes will be lost.",
     "Process.Modeler.DialogCancel": "Cancel",
-    "Process.Modeler.DialogConfirm": "Ok"
+    "Process.Modeler.DialogConfirm": "Ok",
+    "Process.Modeler.VariablesPanel.GlobalTag": "Global",
+    "Process.Modeler.VariablesPanel.InputOutputTag": "Input/Output",
+    "Process.Modeler.VariablesPanel.ActionAssignedTag": "Action Assigned"
 }

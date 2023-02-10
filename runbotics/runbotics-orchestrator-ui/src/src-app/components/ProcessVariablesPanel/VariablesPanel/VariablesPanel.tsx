@@ -1,6 +1,5 @@
-/* eslint-disable complexity */
-/* eslint-disable max-lines-per-function */
 import React, { useState } from 'react';
+
 
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -9,42 +8,46 @@ import {
 } from '@mui/material';
 
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
+import { translate } from '#src-app/hooks/useTranslations';
 import { lightTheme } from '#src-app/theme/light';
 
 import PositionedSnackbar from '../PositionedSnackbar';
 
 enum VariableTag {
-    Global = 'GLOBAL',
-    InputOutput = 'INPUT/OUTPUT',
-    ActionAssigned = 'ACTION ASSIGNED',
+    Global = 'GlobalTag',
+    InputOutput = 'InputOutputTag',
+    ActionAssigned = 'ActionAssignedTag',
 }
 
+interface Taggable {
+    name: string,
+    tag: VariableTag,
+    color: string
+}
 
 const VariablesPanel = () => {
     const {globalVariables, actionVariables, attendedVariables} = useProcessVariables();
     const [expanded, setExpanded] = useState<string | null>(null);
 
-    const tagVariable = (name, tag, color) => ({
+    const tagVariable = ({name, tag, color}: Taggable) => ({
         name: `#{${name}}`,
         tag: tag,
         color: color
     });
 
     if ([...globalVariables, ...actionVariables, ...attendedVariables].length === 0) {
-        console.log('taaak');
         return <Typography display="flex" justifyContent="center" paddingTop="2rem">No variables used in this process yet</Typography>;
     }
 
-    const taggedGlobalVariables = globalVariables.map(variable => tagVariable(variable.name, VariableTag.Global, lightTheme.palette.tag.dark));
+    const taggedGlobalVariables = globalVariables?.map(variable => tagVariable({name: variable.name, tag: VariableTag.Global, color: lightTheme.palette.tag.dark})).filter(variable => variable!== undefined);
 
-    const taggedActionVariables = actionVariables.map(variable => tagVariable(variable.value, VariableTag.ActionAssigned, lightTheme.palette.tag.main));
+    const taggedActionVariables = actionVariables?.map(variable => tagVariable({name: variable.value, tag: VariableTag.ActionAssigned, color: lightTheme.palette.tag.main})).filter(variable => variable!== undefined);
 
-    const taggedAttendedVariables = attendedVariables.map(variable => tagVariable(variable.name, VariableTag.InputOutput, lightTheme.palette.tag.light));
+    const taggedAttendedVariables = attendedVariables?.map(variable => tagVariable({name: variable.name, tag: VariableTag.InputOutput, color: lightTheme.palette.tag.light})).filter(variable => variable!== undefined);
 
     const allProcessVariables = [...taggedGlobalVariables, ...taggedActionVariables, ...taggedAttendedVariables];
 
-    console.log(allProcessVariables);
-
+    const getTranslatedTag = (tag: VariableTag): string => translate(`Process.Modeler.VariablesPanel.${tag}`);
 
     const handleCopy = (valueToCopy: String) => {
         navigator.clipboard.writeText(valueToCopy.toString());
@@ -54,7 +57,7 @@ const VariablesPanel = () => {
         variableName === expanded ? setExpanded(null) : setExpanded(variableName);
     };
 
-    const allProcessVariablesJSX = allProcessVariables?.map((processVariable) => (
+    const allProcessVariablesJSX = allProcessVariables?.map((processVariable: Taggable) => (
         <Accordion TransitionProps={{unmountOnExit: true}}
             key={processVariable.name}
             expanded={expanded === processVariable.name}
@@ -70,7 +73,7 @@ const VariablesPanel = () => {
                     {processVariable.name}
                 </Typography>
                 <Typography ><Chip
-                    label={processVariable.tag}
+                    label={getTranslatedTag(processVariable.tag)}
                     sx={{ bgcolor: processVariable.color, color: 'white' }}
                     size="small"
                 ></Chip></Typography>

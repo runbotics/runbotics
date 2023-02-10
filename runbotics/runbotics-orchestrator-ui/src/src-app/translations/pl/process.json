@@ -637,5 +637,8 @@
     "Process.Modeler.DialogCancel": "Anuluj",
     "Process.Modeler.DialogConfirm": "Ok",
     "Process.Details.Modeler.DetailsSidebar.Message.Label": "Wiadomość",
-    "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna"
+    "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna",
+    "Process.Modeler.VariablesPanel.GlobalTag": "Globalna",
+    "Process.Modeler.VariablesPanel.InputOutputTag": "Wejścia/Wyjścia",
+    "Process.Modeler.VariablesPanel.ActionAssignedTag": "Przypisana w akcji"
 }

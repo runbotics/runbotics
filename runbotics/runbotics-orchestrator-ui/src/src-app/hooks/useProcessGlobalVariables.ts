@@ -23,16 +23,19 @@ const useProcessGlobalVariables = () => {
     const extractGlobalVariables = (
         inputOutput: CamundaInputOutputElement
     ) => {
-        const globalVariableList = inputOutput.inputParameters.find(
+        const globalVariableList = inputOutput?.inputParameters.find(
             inputParameter => inputParameter.name === 'globalVariables'
         );
+
+        if (!globalVariableList) {
+            return [];
+        }
     
         if (globalVariableList) {
             return globalVariableList.definition.items.map(item => {
                 const globalVariableName = globalVariables.find(
                     variable => variable.id === Number(item.value)
                 )?.name;
-
     
                 if (!globalVariableName) {
                     return [];
@@ -52,7 +55,7 @@ const useProcessGlobalVariables = () => {
                             ?.values[0] as CamundaInputOutputElement;
 
             if (!inputOutput) {
-                return undefined;
+                return [];
             }
 
             return (
