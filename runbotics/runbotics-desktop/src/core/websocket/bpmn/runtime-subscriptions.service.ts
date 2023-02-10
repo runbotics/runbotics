@@ -180,16 +180,6 @@ export class RuntimeSubscriptionsService {
                     } catch (e) {
                         this.logger.error('Error from process.');
                     }
-                    try {
-                        processInstance.input = JSON.stringify({
-                            variables: event.processInstance.variables,
-                        });
-                    } catch (e) {
-                        this.logger.error('Error preparing input');
-                        processInstance.input = JSON.stringify({
-                            result: 'Error preparing input',
-                        });
-                    }
 
                     try {
                         processInstance.output = JSON.stringify({
