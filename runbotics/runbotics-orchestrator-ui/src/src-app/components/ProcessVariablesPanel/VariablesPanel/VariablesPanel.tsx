@@ -73,7 +73,7 @@ const VariablesPanel = () => {
                     {processVariable.name}
                 </Typography>
                 <Typography ><Chip
-                    label={getTranslatedTag(processVariable.tag)}
+                    label={getTranslatedTag(processVariable.tag).toUpperCase()}
                     sx={{ bgcolor: processVariable.color, color: 'white' }}
                     size="small"
                 ></Chip></Typography>
