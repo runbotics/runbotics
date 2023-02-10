@@ -59,7 +59,6 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
-    const processInstanceColumns = useProcessInstanceColumns();
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
     const replaceQueryParams = useReplaceQueryParams();
 
@@ -117,6 +116,12 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const handleCloseButton = () => {
         setPanelInfoState({ show: false });
     };
+
+    const handleRerunProcess = () => {
+        setPanelInfoState({ show: true });
+    };
+    
+    const processInstanceColumns = useProcessInstanceColumns(handleRerunProcess);
 
     return (
         <Wrapper>

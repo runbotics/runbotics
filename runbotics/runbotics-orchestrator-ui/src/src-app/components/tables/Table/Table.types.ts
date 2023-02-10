@@ -29,6 +29,10 @@ export interface DataTableProps<T extends object> {
     autoHeight?: boolean;
 }
 
+export interface TableRowExpanderProps {
+    row: Row;
+}
+
 export type Column<D extends object = {}> = ReactTableColumn<D> & {
     featureKeys?: FeatureKey[];
 };

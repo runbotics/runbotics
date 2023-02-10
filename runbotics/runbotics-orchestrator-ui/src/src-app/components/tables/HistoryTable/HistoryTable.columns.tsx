@@ -1,7 +1,5 @@
 import React from 'react';
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { IconButton } from '@mui/material';
 import moment from 'moment';
 import { FeatureKey } from 'runbotics-common';
 
@@ -19,11 +17,12 @@ import Label from '../../Label';
 
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 
-import { Column, RowCustomExpandedSpan } from '../Table';
+import { Column } from '../Table';
+import TableRowExpander from '../Table/Table.row.expander';
 
+import ProcessRerunButton from './ProcessRerunButton';
 
-
-const useProcessInstanceColumns = (): Column[] => {
+const useProcessInstanceColumns = (handleRerunProcess: () => void): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
@@ -34,13 +33,8 @@ const useProcessInstanceColumns = (): Column[] => {
             id: 'expander',
             Cell: ({ row }) =>
                 row.original.subProcesses && row.original.subProcesses.length > 0 ? (
-                    <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                        <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                            <ArrowForwardIosIcon fontSize="small" />
-                        </IconButton>
-                    </RowCustomExpandedSpan>
+                    <TableRowExpander row={row} />
                 ) : null,
-            width: '20px',
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
@@ -81,6 +75,17 @@ const useProcessInstanceColumns = (): Column[] => {
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
             accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
+        },
+        {
+            Header: ' ',
+            id: 'button',
+            Cell: ({ row }) => row.depth === 0 ? (
+                <ProcessRerunButton 
+                    processId={row.original.process.id} 
+                    input={row.original.input} 
+                    status={row.original.status} 
+                    onProcessRerun={handleRerunProcess} />) : null,
+            featureKeys: [FeatureKey.PROCESS_START],
         },
     ];
 

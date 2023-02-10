@@ -1,10 +1,13 @@
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { CircularProgress, IconButton } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
 import { IProcessInstance } from 'runbotics-common';
 
-import { Column, RowCustomExpandedSpan } from '#src-app/components/tables/Table';
+
+
+
+import { Column } from '#src-app/components/tables/Table';
+import TableRowExpander from '#src-app/components/tables/Table/Table.row.expander';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler/Scheduler.state';
@@ -113,13 +116,9 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) => row.original.cron ? (
-                <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                    <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                        <ArrowForwardIosIcon fontSize="small" />
-                    </IconButton>
-                </RowCustomExpandedSpan>
+                <TableRowExpander row={row} />
             ) : null,
-            width: '20px',
+            width: '100px',
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.ScheduleId'),
