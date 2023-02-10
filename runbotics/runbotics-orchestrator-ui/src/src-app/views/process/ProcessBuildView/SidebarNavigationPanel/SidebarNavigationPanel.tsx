@@ -26,7 +26,7 @@ const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, se
 
         return tabs;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasReadProcessInfoAccess]);
+    }, [hasReadProcessInfoAccess, translate]);
 
     return (
         <SidebarNavigationWrapper>
