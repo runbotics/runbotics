@@ -339,6 +339,7 @@
     "Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info": "Ta zmienna musi być tablicą elementów.",
     "Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info": "Akcja utworzy zmienną która w każdej iteracji będzie zawierała jedną z wartości przypisanych do <strong>Zbiór</strong>. Zmienna będzie dostępna wewnątrz pętli pod nazwą <strong>environment.variables.content.[nazwa przedmiotu]</strong>",
     "Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info": "Ta zmienna musi być liczbą lub zmienną zawierającą liczbę.",
+    "Process.Details.Modeler.Actions.Loop.Loop2.Iteration": "Iteracja",
     "Process.Details.Modeler.Actions.Typescript.Run.Label": "Uruchom TypeScript",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Javascript.RunTypescript.Code": "Kod",

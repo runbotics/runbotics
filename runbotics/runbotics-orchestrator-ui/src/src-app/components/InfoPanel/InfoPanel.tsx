@@ -13,7 +13,7 @@ import {
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
-import { BreadCrumb, processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
+import { BreadCrumb, EventMapTypes, processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
 import If from '../utils/If';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
@@ -38,8 +38,12 @@ const InfoPanel: VFC<InfoPanelProps> = ({
     const dispatch = useDispatch();
     
     const getBreadcrumbLabel = (breadcrumb: BreadCrumb) => {
-        if(checkIfKeyExists(breadcrumb.labelKey)) return translate(breadcrumb.labelKey);
-        return breadcrumb.labelKey;
+        if(!checkIfKeyExists(breadcrumb.labelKey)) return breadcrumb.labelKey;
+        if(breadcrumb.type === EventMapTypes.Iteration) {
+            console.log(breadcrumb.iterationNumber);
+            return `${translate(breadcrumb.labelKey)} ${breadcrumb.iterationNumber}`;
+        }
+        return translate(breadcrumb.labelKey);
     };
 
     return (

@@ -140,16 +140,16 @@ export class BotProcessEventService {
                     queryRunner,
                     processInstanceEvent.executionId
                 );
-
-            if (
-                updatedProcessInstanceEvent.processInstance
-                    .rootProcessInstanceId === null
-            ) {
-                this.uiGateway.server.emit(
-                    WsMessage.PROCESS_INSTANCE_EVENT,
-                    updatedProcessInstanceEvent
-                );
-            }
+            // Currently we dont want to send loop events to the UI
+            // if (
+            //     updatedProcessInstanceEvent.processInstance
+            //         .rootProcessInstanceId === null
+            // ) {
+            //     this.uiGateway.server.emit(
+            //         WsMessage.PROCESS_INSTANCE_EVENT,
+            //         updatedProcessInstanceEvent
+            //     );
+            // }
         } catch (err) {
             this.logger.error(
                 'Process instance event update error: rollback',
