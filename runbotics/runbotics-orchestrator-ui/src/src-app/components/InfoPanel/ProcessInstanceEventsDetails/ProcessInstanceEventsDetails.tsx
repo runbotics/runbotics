@@ -10,21 +10,18 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import {
+    EventMapTypes,
     processInstanceEventActions,
     processInstanceEventSelector,
     ProcessInstanceLoopEvent,
 } from '#src-app/store/slices/ProcessInstanceEvent';
 
 import InfoSlide from '../InfoSlide';
+import { sortByFinished } from './ProcessInstanceEventsDetails.utils';
 
 interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
-
-const sortByFinished = (
-    aEvent: IProcessInstanceEvent | ProcessInstanceLoopEvent,
-    bEvent: IProcessInstanceEvent | ProcessInstanceLoopEvent 
-) => new Date(aEvent.created).getTime() - new Date(bEvent.created).getTime();
 
 // eslint-disable-next-line complexity
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
@@ -35,7 +32,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     const { translate } = useTranslations();
 
     const {
-        all: { events, eventsBreadcrumbTrail, nestedEvents: { eventMap: loopEvents } },
+        all: { events, eventsBreadcrumbTrail, nestedEvents: loopEvents },
     } = useSelector(processInstanceEventSelector);
     const { active } = useSelector(processInstanceSelector);
 
@@ -44,12 +41,12 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         if (processInstanceId === active.processInstance?.id) {
             return Object.values(active.eventsMap);
         }
-        if(eventsBreadcrumbTrail.length > 1 && eventsBreadcrumbTrail.at(-1).startsWith('Iteration')) {
-            return loopEvents[eventsBreadcrumbTrail.at(-2)]
-                .filter((element) => element.iterationNumber === +eventsBreadcrumbTrail.at(-1).split('Iteration')[1]);
+        if(eventsBreadcrumbTrail.length > 1 && eventsBreadcrumbTrail.at(-1).type === EventMapTypes.Iteration) {
+            return loopEvents[eventsBreadcrumbTrail.at(-2).id]
+                .filter((element) => element.iterationNumber === eventsBreadcrumbTrail.at(-1).iterationNumber);
         }
         if (eventsBreadcrumbTrail.length > 1) {
-            return loopEvents[eventsBreadcrumbTrail.at(-1)];
+            return loopEvents[eventsBreadcrumbTrail.at(-1).id];
         }
         if (!processInstanceId) {
             return Object.values(active.eventsMap);
@@ -118,7 +115,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                     .sort(sortByFinished)
                     .map((processInstanceEvent, index) =>
                         processInstanceEvent.type ===
-                        'iterationGutter' ? (
+                        EventMapTypes.Iteration ? (
                                 <Box
                                     sx={{
                                         backgroundColor: (theme) => theme.palette.grey[200],

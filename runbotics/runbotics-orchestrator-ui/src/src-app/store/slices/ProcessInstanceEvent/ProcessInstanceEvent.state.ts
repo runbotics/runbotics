@@ -4,17 +4,25 @@ import {
 } from 'runbotics-common';
 
 type EventId = `Activity_${string}`;
-type EventName = string;
 export enum EventMapTypes {
-    IterationGutter = 'iterationGutter',
+    Iteration = 'iteration',
     ProcessInstanceLoopEvent = 'ProcessInstanceLoopEvent',
+    ProcessInstanceEvent = 'ProcessInstanceEvent',
 }
 
 export interface IterationGutter {
     iterationNumber: number;
-    type: EventMapTypes.IterationGutter;
+    type: EventMapTypes.Iteration;
     created: string;
 }
+
+export interface BreadCrumb {
+    id: string;
+    labelKey: string;
+    type: EventMapTypes;
+    iterationNumber?: number;
+}
+
 export type ProcessInstanceLoopEvent =
     | (IProcessInstanceLoopEvent & {
           type: EventMapTypes.ProcessInstanceLoopEvent;
@@ -24,11 +32,8 @@ export type ProcessInstanceLoopEvent =
 export interface ProcessInstanceEventState {
     all: {
         events: IProcessInstanceEvent[];
-        nestedEvents: {
-            eventMap: Record<EventId, ProcessInstanceLoopEvent[]>;
-            idNameMap: Record<EventId, EventName>;
-        };
-        eventsBreadcrumbTrail: string[];
+        nestedEvents: Record<EventId, ProcessInstanceLoopEvent[]>;
+        eventsBreadcrumbTrail: BreadCrumb[];
         loading: boolean;
     };
 }

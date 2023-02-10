@@ -1,5 +1,8 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
+import { sortByFinished } from '#src-app/components/InfoPanel/ProcessInstanceEventsDetails/ProcessInstanceEventsDetails.utils';
+
+
 import {
     EventMapTypes,
     ProcessInstanceEventState,
@@ -18,14 +21,12 @@ const buildProcessInstanceEventExtraReducers = (
             state.all.loading = true;
             state.all.events = [];
             state.all.nestedEvents = {
-                eventMap: {},
-                idNameMap: {},
             };
             state.all.eventsBreadcrumbTrail = [];
         })
         .addCase(getProcessInstanceEvents.fulfilled, (state, action) => {
             state.all.events = action.payload;
-            state.all.eventsBreadcrumbTrail = ['Main events'];
+            state.all.eventsBreadcrumbTrail = [{id: 'root', labelKey: 'Root', type: EventMapTypes.ProcessInstanceEvent}];
             state.all.loading = false;
         })
         .addCase(getProcessInstanceEvents.rejected, (state) => {
@@ -36,18 +37,18 @@ const buildProcessInstanceEventExtraReducers = (
         })
         .addCase(getProcessInstanceLoopEvents.fulfilled, (state, action) => {
             const breadcrumbTrail = [...state.all.eventsBreadcrumbTrail];
-            const eventMap = action.payload.reduce((acc, item) => {
+            const eventMap = action.payload.slice().sort(sortByFinished).reduce((acc, item) => {
                 const newIteration =
                     acc.length === 0 ||
                     acc[acc.length - 1].iterationNumber !==
                         item.iterationNumber;
                 if (newIteration) {
-                    const eventCreated = new Date(item.created);
-                    const iterationCreated = eventCreated.setMilliseconds(eventCreated.getMilliseconds() - 3).toString(); 
+                    const iterationStarted = new Date(item.created);
+                    iterationStarted.setMilliseconds(iterationStarted.getMilliseconds() - 1).toString(); 
                     acc.push({
                         iterationNumber: item.iterationNumber,
-                        type: EventMapTypes.IterationGutter,
-                        created: iterationCreated,
+                        type: EventMapTypes.Iteration,
+                        created: iterationStarted.toISOString(),
                     });
                 }
                 acc.push({
@@ -59,9 +60,12 @@ const buildProcessInstanceEventExtraReducers = (
             }, []);
 
             if (action.meta.arg.nestedIteration) {
-                breadcrumbTrail.push(
-                    'Iteration ' + action.meta.arg.nestedIteration.toString()
-                );
+                breadcrumbTrail.push({
+                    id: `${action.meta.arg.loopId}_${action.meta.arg.nestedIteration}`,
+                    labelKey: 'Iteration',
+                    type: EventMapTypes.Iteration,
+                    iterationNumber: action.meta.arg.nestedIteration,
+                });
             }
 
             state.all = {
@@ -69,18 +73,15 @@ const buildProcessInstanceEventExtraReducers = (
                 loading: false,
                 eventsBreadcrumbTrail: [
                     ...breadcrumbTrail,
-                    action.meta.arg.loopId,
+                    {
+                        id: action.meta.arg.loopId,
+                        labelKey: action.meta.arg.loopLabel,
+                        type: EventMapTypes.ProcessInstanceLoopEvent,
+                    }
                 ],
                 nestedEvents: {
                     ...state.all.nestedEvents,
-                    eventMap: {
-                        ...state.all.nestedEvents.eventMap,
-                        [action.meta.arg.loopId]: eventMap,
-                    },
-                    idNameMap: {
-                        ...state.all.nestedEvents.idNameMap,
-                        [action.meta.arg.loopId]: action.meta.arg.loopLabel,
-                    },
+                    [action.meta.arg.loopId]: eventMap,
                 },
             };
         })  

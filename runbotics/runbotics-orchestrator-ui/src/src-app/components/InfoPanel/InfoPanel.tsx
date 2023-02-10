@@ -13,7 +13,7 @@ import {
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
-import { processInstanceEventActions, processInstanceEventSelector } from '#src-app/store/slices/ProcessInstanceEvent';
+import { BreadCrumb, processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
 import If from '../utils/If';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
@@ -37,11 +37,9 @@ const InfoPanel: VFC<InfoPanelProps> = ({
     );
     const dispatch = useDispatch();
     
-    const {all: {nestedEvents: {idNameMap}}} = useSelector(processInstanceEventSelector);
-    const getBreadcrumbLabel = (breadcrumb: string) => {
-        if(!idNameMap[breadcrumb]) return breadcrumb;
-        if(checkIfKeyExists(idNameMap[breadcrumb])) return translate(idNameMap[breadcrumb]);
-        return idNameMap[breadcrumb];
+    const getBreadcrumbLabel = (breadcrumb: BreadCrumb) => {
+        if(checkIfKeyExists(breadcrumb.labelKey)) return translate(breadcrumb.labelKey);
+        return breadcrumb.labelKey;
     };
 
     return (
@@ -60,9 +58,9 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                             {eventsBreadcrumbTrail.length > 1 ? (
                                 eventsBreadcrumbTrail.map((breadcrumb) => (
                                     <Chip
-                                        key={breadcrumb}
+                                        key={breadcrumb.id}
                                         onClick={() => {
-                                            dispatch(processInstanceEventActions.reduceCrumbs(breadcrumb));
+                                            dispatch(processInstanceEventActions.reduceCrumbs(breadcrumb.id));
                                         }}
                                         label={getBreadcrumbLabel(breadcrumb)}
                                         size="small"
