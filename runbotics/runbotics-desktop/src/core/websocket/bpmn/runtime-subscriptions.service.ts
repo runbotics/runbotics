@@ -93,7 +93,7 @@ export class RuntimeSubscriptionsService {
                     }
                     const loopProps: LoopProps = {
                         ...event.loopProps,
-                        iteratorElement: event.activity.content[event.loopProps?.iteratorName] ?? ''
+                        iteratorElement: JSON.stringify(event.activity.environment.variables.content[event.loopProps?.iteratorName]) ?? ''
                     };
 
                     if (event.loopProps)

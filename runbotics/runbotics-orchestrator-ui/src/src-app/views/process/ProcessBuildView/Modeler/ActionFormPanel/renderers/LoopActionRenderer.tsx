@@ -104,7 +104,7 @@ const LoopActionRenderer: FC = () => {
         if (loopType === LoopType.COLLECTION && collection) {
             loopCardinality.body = formatLoopBody(collection);
         }
-
+        
         bpmnHelper.updateBusinessObject(selectedElement);
         dispatch(processActions.addAppliedAction(selectedElement.id));
     };
