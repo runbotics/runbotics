@@ -5,7 +5,7 @@ const useProcessActionVariables = () => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
     const rootElement = canvas.getRootElement();
-    const allActionsWithVariables = rootElement.businessObject.flowElements.filter(item => item.id.includes('Activity_'));
+    const allActionsWithVariables = rootElement.businessObject?.flowElements.filter(item => item.id.includes('Activity_'));
 
     if (!allActionsWithVariables) {
         return [];
