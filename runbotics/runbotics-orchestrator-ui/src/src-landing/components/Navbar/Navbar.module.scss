@@ -17,7 +17,7 @@
     text-decoration: none;
 
     &:hover {
-        border-bottom: 2px solid $palette-background-tertiary;
+        border-bottom: 3px solid $palette-background-tertiary;
     }
 }
 
@@ -39,7 +39,7 @@
         background-image: $palette-background-gradient;
         
         .link {
-            border-bottom: 2px solid $palette-accent-primary;
+            border-bottom: 3px solid $palette-accent-primary;
         }
     }
 

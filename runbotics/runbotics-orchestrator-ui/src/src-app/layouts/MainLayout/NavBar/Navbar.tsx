@@ -18,18 +18,18 @@ import NavbarList from './NavbarList';
 
 
 interface NavbarProps {
-    isShrinked: boolean;
+    isShrank: boolean;
     mobile: boolean;
     onMenuShowToggleChange: () => void;
     accessedSections: Section[];
 }
 
-const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, accessedSections }) => {
+const NavBar: FC<NavbarProps> = ({ isShrank, mobile, onMenuShowToggleChange, accessedSections }) => {
     const router = useRouter();
     const { translate } = useTranslations();
 
     return (
-        <Drawer sx={getDrawerStyles(mobile, isShrinked)} anchor="left" open variant="persistent">
+        <Drawer sx={getDrawerStyles(mobile, isShrank)} anchor="left" open variant="persistent">
             <Box
                 height="100%"
                 display="flex"
@@ -55,7 +55,7 @@ const NavBar: FC<NavbarProps> = ({ isShrinked, mobile, onMenuShowToggleChange, a
                     <Wrapper>
                         <IconButton color="inherit" onClick={onMenuShowToggleChange}>
                             <StyledIcon>
-                                <If condition={isShrinked} else={<ArrowForwardIcon />}>
+                                <If condition={isShrank} else={<ArrowForwardIcon />}>
                                     <ArrowBackIcon />
                                 </If>
                             </StyledIcon>

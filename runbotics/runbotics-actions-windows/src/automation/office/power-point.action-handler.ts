@@ -35,9 +35,6 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     async open(
         input: PowerPointOpenActionInput
     ): Promise<PowerPointOpenActionOutput> {
-        if (process.platform !== 'win32') {
-            throw new Error('PowerPoint actions can be run only on Windows bot');
-        }
         const winax = await import('winax');
 
         this.session = new winax.Object("PowerPoint.Application", {
@@ -79,6 +76,10 @@ export default class PowerPointActionHandler extends StatefulActionHandler {
     }
 
     run(request: PowerPointActionRequest) {
+        if (process.platform !== 'win32') {
+            throw new Error('PowerPoint actions can be run only on Windows bot');
+        }
+
         switch (request.script) {
             case "powerpoint.open":
                 return this.open(request.input);

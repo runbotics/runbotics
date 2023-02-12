@@ -6,6 +6,7 @@ import Link from 'next/link';
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
 import Navbar from '../Navbar';
 
@@ -26,6 +27,10 @@ const Header = () => {
         }
     };
 
+    const handleFocus = () => {
+        document.getElementById(MAIN_CONTENT_ID).focus();
+    };
+
     const iconMobileStyle = isNavExpanded ? styles.isActive : '';
 
     return (
@@ -36,6 +41,14 @@ const Header = () => {
                     className={styles.logo}
                     alt="RunBotics logo"
                 />
+                <Link className={styles.skipNavLink} href={`#${MAIN_CONTENT_ID}`} onClick={handleFocus}>
+                    <Typography
+                        variant="h6"
+                        color="secondary"
+                        className={styles.btnText}
+                        text={translate('Landing.Header.Button.SkipNav')}
+                    />
+                </Link>
                 <button
                     className={`${styles.menuIcon} ${iconMobileStyle}`}
                     onClick={toggleNav}
@@ -45,12 +58,12 @@ const Header = () => {
                     <span></span>
                 </button>
                 <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
-                <Link href="/login" className={styles.logInBtn}>
+                <Link className={styles.logInBtn} href="/login">
                     <Typography
                         variant="h6"
                         color="accent"
                         className={styles.btnText}
-                        text={translate('Landing.Header.Nav.Button.LogIn')}
+                        text={translate('Landing.Header.Button.LogIn')}
                     />
                 </Link>
             </div>
