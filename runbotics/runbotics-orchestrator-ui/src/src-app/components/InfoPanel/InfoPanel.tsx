@@ -40,7 +40,6 @@ const InfoPanel: VFC<InfoPanelProps> = ({
     const getBreadcrumbLabel = (breadcrumb: BreadCrumb) => {
         if(!checkIfKeyExists(breadcrumb.labelKey)) return breadcrumb.labelKey;
         if(breadcrumb.type === EventMapTypes.Iteration) {
-            console.log(breadcrumb.iterationNumber);
             return `${translate(breadcrumb.labelKey)} ${breadcrumb.iterationNumber}`;
         }
         return translate(breadcrumb.labelKey);

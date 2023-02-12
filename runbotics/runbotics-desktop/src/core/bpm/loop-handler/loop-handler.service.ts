@@ -86,7 +86,6 @@ export class LoopHandlerService {
     }
 
     private createLoop(api: BpmnExecutionEventMessageApi) {
-        console.log((api as any).broker.owner.behaviour.loopCharacteristics.behaviour.elementVariable);
         this.loopState.set(api.executionId, this.getLoopProps(api.executionId, (api as any).broker.owner.behaviour.loopCharacteristics.behaviour.elementVariable));
     }
 
