@@ -49,7 +49,7 @@ const buildProcessInstanceEventExtraReducers = (
                     id: `${action.meta.arg.loopId}_${action.meta.arg.nestedIteration}`,
                     labelKey: 'Process.Details.Modeler.Actions.Loop.Loop2.Iteration',
                     type: EventMapTypes.Iteration,
-                    iterationNumber: action.meta.arg.nestedIteration,
+                    iterationNumber: action.meta.arg.nestedIteration
                 });
             }
 

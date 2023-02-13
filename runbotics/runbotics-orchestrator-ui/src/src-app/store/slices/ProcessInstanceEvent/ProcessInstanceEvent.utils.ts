@@ -20,6 +20,7 @@ export const addIterationStartEvents = (events: IProcessInstanceLoopEvent[]) => 
             .toString();
         acc.push({
             iterationNumber: item.iterationNumber,
+            iteratorElement: item.iteratorElement,
             type: EventMapTypes.Iteration,
             created: iterationStarted.toISOString(),
         });

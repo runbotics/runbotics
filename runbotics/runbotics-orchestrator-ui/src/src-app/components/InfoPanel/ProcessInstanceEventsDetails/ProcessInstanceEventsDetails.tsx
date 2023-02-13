@@ -2,9 +2,7 @@ import React, { useCallback, useEffect, VFC } from 'react';
 
 import { Box, Typography, Divider } from '@mui/material';
 
-import {
-    IProcessInstanceEvent,
-} from 'runbotics-common';
+import { IProcessInstanceEvent } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -17,6 +15,7 @@ import {
 } from '#src-app/store/slices/ProcessInstanceEvent';
 
 import InfoSlide from '../InfoSlide';
+import IterationSlide from '../IterationSlide';
 import { sortByFinished } from './ProcessInstanceEventsDetails.utils';
 
 interface ProcessInstanceEventsDetailsProps {
@@ -37,13 +36,21 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     const { active } = useSelector(processInstanceSelector);
 
     // eslint-disable-next-line complexity
-    const getProcessInstanceEvents = (): ProcessInstanceLoopEvent[] | IProcessInstanceEvent[] => {
+    const getProcessInstanceEvents = ():
+        | ProcessInstanceLoopEvent[]
+        | IProcessInstanceEvent[] => {
         if (processInstanceId === active.processInstance?.id) {
             return Object.values(active.eventsMap);
         }
-        if(eventsBreadcrumbTrail.length > 1 && eventsBreadcrumbTrail.at(-1).type === EventMapTypes.Iteration) {
-            return loopEvents[eventsBreadcrumbTrail.at(-2).id]
-                .filter((element) => element.iterationNumber === eventsBreadcrumbTrail.at(-1).iterationNumber);
+        if (
+            eventsBreadcrumbTrail.length > 1 &&
+            eventsBreadcrumbTrail.at(-1).type === EventMapTypes.Iteration
+        ) {
+            return loopEvents[eventsBreadcrumbTrail.at(-2).id].filter(
+                (element) =>
+                    element.iterationNumber ===
+                    eventsBreadcrumbTrail.at(-1).iterationNumber
+            );
         }
         if (eventsBreadcrumbTrail.length > 1) {
             return loopEvents[eventsBreadcrumbTrail.at(-1).id];
@@ -116,19 +123,14 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                     .map((processInstanceEvent, index) =>
                         processInstanceEvent.type ===
                         EventMapTypes.Iteration ? (
-                                <Box
-                                    sx={{
-                                        backgroundColor: (theme) => theme.palette.grey[200],
-                                        borderRadius: '3px',
-                                        boxShadow: (theme) => theme.shadows[1],
-                                    }}
-                                    display="flex"
-                                    justifyContent="center"
-                                >
-                                    <Typography variant="button" sx={{padding: '5px'}}>
-                                        iteration {processInstanceEvent.iterationNumber}
-                                    </Typography>
-                                </Box>
+                                <IterationSlide
+                                    iterationGutter={processInstanceEvent}
+                                    handleChange={handleChange}
+                                    containerRef={containerRef}
+                                    expanded={expanded}
+                                    // eslint-disable-next-line react/no-array-index-key
+                                    key={index + 1}
+                                />
                             ) : (
                                 <InfoSlide
                                     containerRef={containerRef}

@@ -17,7 +17,7 @@ import {
 import dynamic from 'next/dynamic';
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
-import { IProcessInstanceLoopEvent } from 'runbotics-common';
+import { IProcessInstanceEvent, IProcessInstanceLoopEvent } from 'runbotics-common';
 
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -25,12 +25,12 @@ import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstan
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { formatDate } from '#src-app/utils/utils';
 
-interface Props {
-    processInstanceEvent: IProcessInstanceLoopEvent;
+interface ProcessInstanceEventsDetailsTableProps {
+    processInstanceEvent: IProcessInstanceEvent | IProcessInstanceLoopEvent;
 }
 
 // eslint-disable-next-line complexity
-const ProcessInstanceEventsDetailsTable: VFC<Props> = ({
+const ProcessInstanceEventsDetailsTable: VFC<ProcessInstanceEventsDetailsTableProps> = ({
     processInstanceEvent,
 }) => {
     const { translate } = useTranslations();
@@ -125,7 +125,7 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({
                                 {
                                     loopId: processInstanceEvent.executionId,
                                     nestedIteration:
-                                        processInstanceEvent.iterationNumber ??
+                                        (processInstanceEvent as IProcessInstanceLoopEvent).iterationNumber ??
                                         undefined,
                                     loopLabel: getLoopLabel(),
                                 }
@@ -133,7 +133,7 @@ const ProcessInstanceEventsDetailsTable: VFC<Props> = ({
                         )
                     }
                 >
-                    Show Loop Details
+                    {translate('Component.InfoPanel.Details.Loop.ShowMore')} 
                 </Button>
             )}
             {processInstanceEvent.error && (

@@ -21,7 +21,7 @@ export interface InfoSlideProps {
     processInstanceEvent: IProcessInstanceEvent;
     processInstanceEventsLength: number;
 }
-    
+
 const InfoSlide: FC<InfoSlideProps> = ({
     containerRef,
     expanded,

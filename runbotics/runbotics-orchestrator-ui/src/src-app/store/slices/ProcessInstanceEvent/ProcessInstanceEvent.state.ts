@@ -14,6 +14,7 @@ export interface IterationGutter {
     iterationNumber: number;
     type: EventMapTypes.Iteration;
     created: string;
+    iteratorElement: string;
 }
 
 export interface BreadCrumb {

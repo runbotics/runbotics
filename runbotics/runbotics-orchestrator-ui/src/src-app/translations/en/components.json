@@ -44,6 +44,8 @@
     "Component.InfoPanel.Details.Input": "Input",
     "Component.InfoPanel.Details.Output": "Output",
     "Component.InfoPanel.Details.Error": "Error",
+    "Component.InfoPanel.Details.Loop.ShowMore": "Show Loop details",
+    "Component.InfoPanel.Details.Loop.Iteration": "Iteration",
 
     "Component.HistoryTable.Header.ProcessName": "Process name",
     "Component.HistoryTable.Header.Status": "Status",
