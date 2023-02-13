@@ -70,11 +70,11 @@ const VariablesPanel = () => {
         return theme.palette.tag.attended;
     };
 
-    const getJSXForVariable = ((variable: string, tag: VariableTag) => (
+    const getJSXForVariable = (({name, tag}: Taggable) => (
         <Box>
-            <Grid container key={variable} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{padding: '.8rem', alignItems: 'center' }}>
+            <Grid container key={name} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{padding: '.8rem', alignItems: 'center' }}>
                 <Grid item xs={5} sx={{wordBreak: 'break-word'}}>
-                    {variable}
+                    {name}
                 </Grid>
                 <Grid item xs={5} sx={{display: 'flex', justifyContent: 'end'}}>
                     <Chip
@@ -83,7 +83,7 @@ const VariablesPanel = () => {
                         size="medium"/>
                 </Grid>
                 <Grid item xs={2}>
-                    <IconButton size="medium" onClick={() => handleCopy(variable)}>
+                    <IconButton size="medium" onClick={() => handleCopy(name)}>
                         <ContentCopyRoundedIcon/>
                     </IconButton>
                 </Grid>
@@ -92,15 +92,14 @@ const VariablesPanel = () => {
             <Divider />
         </Box>));
 
-    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Global));
+    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable({name: variable.name, tag: VariableTag.Global}));
 
-    const getActionVariablesJSX = actionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionAssigned));
+    const getActionVariablesJSX = actionVariables?.map(variable => getJSXForVariable({name: variable.value, tag: VariableTag.ActionAssigned}));
 
-    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.InputOutput));
+    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable({name: variable.name, tag: VariableTag.InputOutput}));
 
     return (
         <Box>
-            {/* {allProcessVariablesJSX} */}
             {getGlobalVariablesUsedInProcessJSX}
             {getActionVariablesJSX}
             {getAttendedVariablesJSX}
