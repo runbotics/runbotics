@@ -61,9 +61,11 @@ const useProcessGlobalVariables = () => {
             return (
                 extractGlobalVariables(inputOutput)
             );
-        });
-            
-    return [...(variables[0] ?? []), ...(variables[1] ?? [])];
+        })
+        .flatMap(variable => variable)
+        .flatMap(variable => variable);
+
+    return variables;
 };
 
 export default useProcessGlobalVariables;
