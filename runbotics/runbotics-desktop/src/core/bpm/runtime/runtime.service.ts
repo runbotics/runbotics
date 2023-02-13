@@ -172,23 +172,24 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 });
             }
         );
-
+    
         listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
-            if (this.loopHandlerService.isInLoop(api)) {
-                this.loopHandlerService.handleActivityStart(api);
-            }
             if (this.loopHandlerService.shouldSkipElement(api)) return;
-
+            
+            if((api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable){
+                this.loopHandlerService.setIteratorName(api.executionId, (api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable);
+            }
             this.logger.log(
                 `${getActivityLogPrefix(api)} activity.start`
-            ); 
+            );
+
             this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.IN_PROGRESS,
                 activity: api,
-                loopProps: this.loopHandlerService.getLoopData(api) ?? null 
+                iteratorName: this.loopHandlerService.getIteratorName(api.content.parent.executionId),
             });
         });
 
@@ -196,11 +197,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
-
-            if (this.loopHandlerService.isInLoop(api)) {
-                this.loopHandlerService.handleActivityEnd(api);
-            }
-
             if (this.loopHandlerService.shouldSkipElement(api)) return;
 
             if (!this.processInstances[processInstance.id]) {
@@ -219,7 +215,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 processInstance,
                 eventType: ProcessInstanceEventStatus.COMPLETED,
                 activity: api,
-                loopProps: this.loopHandlerService.getLoopData(api) ?? null 
+                iteratorName: this.loopHandlerService.getIteratorName(api.environment.variables.content
+                    .parent.executionId)
             });
         });
 
@@ -530,6 +527,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const globalVariables = {
             ...definition.environment.variables,
             ...vars,
+            var: 123,
         };
         // globalVariables[input.variable] = input.value;
         definition.environment.assignVariables(globalVariables);

@@ -6,7 +6,6 @@ import {
 
 import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
 import { StartProcessMessageBody } from '#core/websocket/listeners/process.listener.types';
-import { LoopProps } from 'runbotics-common/dist/model/api/loop-props';
 
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
@@ -22,7 +21,7 @@ export interface IActivityEventData {
     processInstance: IProcessInstance;
     eventType: ProcessInstanceEventStatus;
     activity: BpmnExecutionEventMessageExtendedApi;
-    loopProps?: LoopProps;
+    iteratorName?: string;
 }
 
 export interface DesktopTask extends BpmnExecutionEventMessageContent {

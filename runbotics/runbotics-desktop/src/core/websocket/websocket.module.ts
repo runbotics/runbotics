@@ -10,6 +10,7 @@ import { ProcessListener } from './listeners/process.listener';
 import { WebsocketLogsService } from './websocket-logs.service';
 import { WebsocketService } from './websocket.service';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
+import { LoopHandlerService } from '#core/bpm/loop-handler';
 
 @Module({
     imports: [
@@ -40,6 +41,7 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
         WebsocketLogsService,
         WebsocketService,
         RuntimeSubscriptionsService,
+        LoopHandlerService
     ],
 })
 export class WebsocketModule {}

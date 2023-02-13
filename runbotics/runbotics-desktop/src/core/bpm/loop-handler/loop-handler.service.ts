@@ -1,34 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { BpmnExecutionEventMessageApi } from 'bpmn-engine';
-import { LoopProps } from './loop-handler.types';
 
 @Injectable()
 export class LoopHandlerService {
-    private loopState = new Map<string, LoopProps>();
+    private iteratorMap = new Map<string, string>();
 
-    public handleActivityStart(api: BpmnExecutionEventMessageApi) {
-        if (this.isLoopElement(api)) {
-            this.createLoop(api);
-        }
-
-        if (this.isStartEvent(api)) {
-            this.incrementIterationNumber(
-                this.getLoopExecutionId(api.content?.parent?.id)
-            );
-        }
+    public setIteratorName(loopId: string, iteratorName: string) {
+        this.iteratorMap.set(loopId, iteratorName);
     }
 
-    public handleActivityEnd(api: BpmnExecutionEventMessageApi) {
-        if (this.isLoopElement(api)) {
-            this.deleteLoop(api.id);
+    public getIteratorName(loopId: string): string | undefined {
+        if (loopId?.split('_').length > 3) {
+            loopId = loopId?.split('_').slice(0, 3).join('_');
+            return this.iteratorMap.get(loopId);
         }
-    }
-
-    public isInLoop(api: BpmnExecutionEventMessageApi): boolean {
-        return (
-            this.isLoopElement(api) ||
-            this.loopState.has(this.getLoopExecutionId(api.content?.parent?.id))
-        );
+        return this.iteratorMap.get(loopId);
     }
 
     public shouldSkipElement(api: BpmnExecutionEventMessageApi): boolean {
@@ -38,61 +24,33 @@ export class LoopHandlerService {
         );
     }
 
-    public getLoopData(api: BpmnExecutionEventMessageApi): LoopProps | null {
+    public cleanUp(): void {
+        this.iteratorMap.clear();
+    }
+
+    public getLoopId(api: BpmnExecutionEventMessageApi): string {
+        return api.environment.variables.content.parent.executionId;
+    }
+
+    public getIterationNumber(api: BpmnExecutionEventMessageApi): number {
+        return api.environment.variables.content.index + 1;
+    }
+    
+    public getIteratorElement(api: BpmnExecutionEventMessageApi, iteratorName: string): any {
+        return JSON.stringify(
+            api.environment.variables
+                .content[iteratorName]
+        ) ?? '';
+    }
+
+    public isLoopEvent(api: BpmnExecutionEventMessageApi): boolean {
         return (
-            this.loopState.get(
-                this.getLoopExecutionId(api.content?.parent?.id)
-            ) ?? null
+            api.environment.variables.content.parent.type ===
+                'bpmn:SubProcess' &&
+            api.environment.variables.content.loopCardinality
         );
     }
-
-    public cleanUp() {
-        this.loopState.clear();
-    }
-
-    private getLoopProps(loopId: string, iteratorName: string): LoopProps {
-        return {
-            iterationNumber: 0,
-            loopId,
-            iteratorElement: null,
-            iteratorName
-        };
-    }
-
-    private incrementIterationNumber(loopId: string) {
-        const loop = this.loopState.get(loopId);
-        if (!loop) return;
-
-        this.loopState.set(loopId, {
-            ...loop,
-            iterationNumber: loop.iterationNumber + 1,
-        });
-    }
-
-    /***
-     * Returns the executionId of the loop element inside the state
-     * @param activityId - the id of the activity (e.g. 'Activity_112123')
-     * @returns the executionId of the loop element (e.g. 'Activity_112123_672123')
-     * @example getLoopExecutionId('Activity_112123') => 'Activity_112123_672123'
-     */
-    private getLoopExecutionId(activityId: string): string | undefined {
-        return Array.from(this.loopState.keys()).find((key) =>
-            key.includes(activityId)
-        );
-    }
-
-    private isLoopElement(api: any): boolean {
-        return api.content?.input?.script === 'loop.loop';
-    }
-
-    private createLoop(api: BpmnExecutionEventMessageApi) {
-        this.loopState.set(api.executionId, this.getLoopProps(api.executionId, (api as any).broker.owner.behaviour.loopCharacteristics.behaviour.elementVariable));
-    }
-
-    private deleteLoop(activityId: string) {
-        this.loopState.delete(this.getLoopExecutionId(activityId));
-    }
-
+    
     private isSubProcessEvent(api: BpmnExecutionEventMessageApi): boolean {
         return api.content?.parent?.type === 'bpmn:SubProcess';
     }

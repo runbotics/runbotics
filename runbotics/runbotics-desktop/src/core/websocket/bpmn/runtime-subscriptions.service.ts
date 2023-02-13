@@ -12,13 +12,14 @@ import {
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
-import { LoopProps } from '#core/bpm/loop-handler/loop-handler.types';
+import { LoopHandlerService } from '#core/bpm/loop-handler';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
         private readonly runtimeService: RuntimeService,
-        @InjectIoClientProvider() private readonly io: IoClient
+        @InjectIoClientProvider() private readonly io: IoClient,
+        private readonly loopHandlerService: LoopHandlerService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -30,17 +31,19 @@ export class RuntimeSubscriptionsService {
             if (event.activity.content.type) {
                 const desktopTask: DesktopTask = event.activity
                     .content as DesktopTask;
-                let processInstanceEvent: IProcessInstanceEvent | IProcessInstanceLoopEvent = {
-                    created: dayjs().toISOString(),
-                    processInstance: event.processInstance,
-                    executionId: event.activity.executionId,
-                    input: JSON.stringify({
-                        ...desktopTask?.input,
-                    }),
-                    status: event.eventType,
-                    error: event.activity.content.error?.description,
-                    script: desktopTask.input?.script,
-                };
+                let processInstanceEvent:
+                    | IProcessInstanceEvent
+                    | IProcessInstanceLoopEvent = {
+                        created: dayjs().toISOString(),
+                        processInstance: event.processInstance,
+                        executionId: event.activity.executionId,
+                        input: JSON.stringify({
+                            ...desktopTask?.input,
+                        }),
+                        status: event.eventType,
+                        error: event.activity.content.error?.description,
+                        script: desktopTask.input?.script,
+                    };
 
                 try {
                     const eventBehaviour = (
@@ -81,7 +84,8 @@ export class RuntimeSubscriptionsService {
                             }
 
                             if (eventBehaviour?.label) {
-                                processInstanceEvent.step = eventBehaviour?.label;
+                                processInstanceEvent.step =
+                                    eventBehaviour?.label;
                             } else {
                                 processInstanceEvent.step = 'Loop';
                             }
@@ -91,13 +95,16 @@ export class RuntimeSubscriptionsService {
                             processInstanceEvent.step = 'Activity';
                             break;
                     }
-                    const loopProps: LoopProps = {
-                        ...event.loopProps,
-                        iteratorElement: JSON.stringify(event.activity.environment.variables.content[event.loopProps?.iteratorName]) ?? ''
-                    };
 
-                    if (event.loopProps)
-                        processInstanceEvent = {...processInstanceEvent, ...(loopProps) };
+                    if (
+                        this.loopHandlerService.isLoopEvent(event.activity) 
+                    )
+                        processInstanceEvent = {
+                            ...processInstanceEvent,
+                            iterationNumber: this.loopHandlerService.getIterationNumber(event.activity),
+                            iteratorElement: this.loopHandlerService.getIteratorElement(event.activity, event.iteratorName),
+                            loopId: this.loopHandlerService.getLoopId(event.activity),
+                        };
 
                     switch (event.eventType) {
                         case ProcessInstanceEventStatus.COMPLETED:
@@ -111,10 +118,11 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    // DevConsole.log('Sending process change to server', event, 'WebsocketService');
-
                     this.io.emit(
-                        event.loopProps
+                        event.activity.environment.variables.content.parent
+                            .type === 'bpmn:SubProcess' &&
+                        event.activity.environment.variables.content
+                            .loopCardinality   
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT,
                         processInstanceEvent
