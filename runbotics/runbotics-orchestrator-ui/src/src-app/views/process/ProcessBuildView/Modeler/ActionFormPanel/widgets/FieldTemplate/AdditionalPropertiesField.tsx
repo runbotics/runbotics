@@ -51,9 +51,6 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     const isMainFieldErrorDisplayed = isRequired && !mainFieldValue;
     const isSubFieldErrorDisplayed = isRequired && !subFieldValue;
 
-    console.log(formProps);
-    console.log(subFieldValue);
-
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
     return (
