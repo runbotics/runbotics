@@ -1,5 +1,4 @@
 import blueGrey from '@mui/material/colors/blueGrey';
-import teal from '@mui/material/colors/teal';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { softShadows } from './shadows';
@@ -37,9 +36,9 @@ export const lightTheme: ThemeOptions = {
             default: blueGrey[600],
         },
         tag: {
-            main: teal[700],
-            dark: teal[900],
-            light: teal[400]
+            global: blueGrey[800],
+            action: blueGrey[900],
+            attended: blueGrey[700]
         },
         text: {
             primary: '#000000',

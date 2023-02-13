@@ -20,9 +20,9 @@ declare module '@mui/material/styles' {
       };
 
       tag: {
-        main: string,
-        light: string,
-        dark: string
+        global: string,
+        action: string,
+        attended: string
       }
     }
     
@@ -32,9 +32,9 @@ declare module '@mui/material/styles' {
           };
 
         tag: {
-            main: string,
-            light: string,
-            dark: string
+            global: string,
+            action: string,
+            attended: string
         }
     }
   }
