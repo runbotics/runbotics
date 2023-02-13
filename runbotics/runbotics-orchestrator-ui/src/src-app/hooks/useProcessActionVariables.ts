@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { useModelerContext } from './useModelerContext';
 
 
@@ -7,24 +9,28 @@ const useProcessActionVariables = () => {
     const rootElement = canvas.getRootElement();
     const allActionsWithVariables = rootElement.businessObject?.flowElements.filter(item => item.id.includes('Activity_'));
 
-    if (!allActionsWithVariables) {
-        return [];
-    }
-
-    const allActionVariables = allActionsWithVariables.map(element => {
-        if (element.actionId === 'variables.assign' ||  element.actionId === 'variables.assignList') {
-            const variableInfo = element.extensionElements.values[0].inputParameters;
-            return  variableInfo.filter(item => item.name === 'variable');
-        } 
-        const variableInfo = element.extensionElements.values[0].outputParameters;
+    const allActionVariables = useMemo(() => {
+        if (allActionsWithVariables) {
+            return allActionsWithVariables.map(element => {
+                if (element.actionId === 'variables.assign' ||  element.actionId === 'variables.assignList') {
+                    const variableInfo = element.extensionElements.values[0].inputParameters;
+                    return  variableInfo.filter(item => item.name === 'variable');
+                } 
+                const variableInfo = element.extensionElements.values[0].outputParameters;
     
-        if (!variableInfo) {
-            return [];
+                if (!variableInfo || variableInfo.length === 0) {
+                    return [];
+                }
+    
+                return variableInfo.filter(item => item.name === 'variableName');
+
+            }).filter(item => item.length > 0 )
+                .flatMap(item => item)
+                .filter(item => item.value);
         }
-    
-        return variableInfo.filter(item => item.name === 'variableName');
 
-    }).filter(item => item.length > 0 ).flatMap(item => item);
+        return [];
+    }, [allActionsWithVariables]);
       
     return allActionVariables;
 };
