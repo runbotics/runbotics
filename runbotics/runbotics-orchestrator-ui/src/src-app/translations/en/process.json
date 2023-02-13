@@ -634,5 +634,8 @@
     "Process.Modeler.DialogConfirm": "Ok",
     "Process.Modeler.VariablesPanel.GlobalTag": "Global",
     "Process.Modeler.VariablesPanel.InputOutputTag": "Input/Output",
-    "Process.Modeler.VariablesPanel.ActionAssignedTag": "Action Assigned"
+    "Process.Modeler.VariablesPanel.ActionAssignedTag": "Action Assigned",
+    "Process.Modeler.VariablesPanel.Copy.Message.Success": "The variable name has been successfully copied to clipboard",
+    "Process.Modeler.VariablesPanel.Copy.Message.Error": "An error occurred while copying the variable name to clipboard",
+    "Process.Modeler.VariablesPanel.Empty.Message": "No variables used in this process yet"
 }
