@@ -4,6 +4,7 @@ import {
 } from 'runbotics-common';
 
 type EventId = `Activity_${string}`;
+
 export enum EventMapTypes {
     Iteration = 'iteration',
     ProcessInstanceLoopEvent = 'ProcessInstanceLoopEvent',

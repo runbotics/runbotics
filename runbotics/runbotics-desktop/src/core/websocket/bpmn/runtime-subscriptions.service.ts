@@ -119,10 +119,7 @@ export class RuntimeSubscriptionsService {
                     }
 
                     this.io.emit(
-                        event.activity.environment.variables.content.parent
-                            .type === 'bpmn:SubProcess' &&
-                        event.activity.environment.variables.content
-                            .loopCardinality   
+                        this.loopHandlerService.isLoopEvent(event.activity)
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT,
                         processInstanceEvent
