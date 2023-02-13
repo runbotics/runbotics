@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-
-
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import {
-    Box, Accordion, AccordionSummary, AccordionDetails, Typography, Chip
+    Box, Typography, Chip, Grid, IconButton, Divider
 } from '@mui/material';
+
+import { useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
+
 
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
-import { lightTheme } from '#src-app/theme/light';
 
-import PositionedSnackbar from '../PositionedSnackbar';
 
 enum VariableTag {
     Global = 'GlobalTag',
@@ -22,84 +22,88 @@ enum VariableTag {
 interface Taggable {
     name: string,
     tag: VariableTag,
-    color: string
 }
 
+
 const VariablesPanel = () => {
-    const {globalVariables, actionVariables, attendedVariables} = useProcessVariables();
-    const [expanded, setExpanded] = useState<string | null>(null);
+    const theme = useTheme();
+    const { globalVariables, actionVariables, attendedVariables } = useProcessVariables();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const tagVariable = ({name, tag, color}: Taggable) => ({
-        name: `#{${name}}`,
-        tag: tag,
-        color: color
-    });
 
-    if ([...globalVariables, ...actionVariables, ...attendedVariables].length === 0) {
-        return <Typography display="flex" justifyContent="center" paddingTop="2rem">No variables used in this process yet</Typography>;
+    const allProcessVariables = [...globalVariables, ...actionVariables, ...attendedVariables];
+
+    if (allProcessVariables.length === 0) {
+        return (
+            <Typography sx={{display: 'flex', justifyContent: 'center', paddingTop: '2rem'}}>
+                {translate('Process.Modeler.VariablesPanel.Empty.Message')}
+            </Typography>);
     }
 
-    const taggedGlobalVariables = globalVariables?.map(variable => tagVariable({name: variable.name, tag: VariableTag.Global, color: lightTheme.palette.tag.dark})).filter(variable => variable!== undefined);
 
-    const taggedActionVariables = actionVariables?.map(variable => tagVariable({name: variable.value, tag: VariableTag.ActionAssigned, color: lightTheme.palette.tag.main})).filter(variable => variable!== undefined);
+    const handleCopy = (variableName: string) => {
+        try {
+            navigator.clipboard.writeText(variableName);
 
-    const taggedAttendedVariables = attendedVariables?.map(variable => tagVariable({name: variable.name, tag: VariableTag.InputOutput, color: lightTheme.palette.tag.light})).filter(variable => variable!== undefined);
-
-    const allProcessVariables = [...taggedGlobalVariables, ...taggedActionVariables, ...taggedAttendedVariables];
-
-    const getTranslatedTag = (tag: VariableTag): string => translate(`Process.Modeler.VariablesPanel.${tag}`);
-
-    const handleCopy = (valueToCopy: String) => {
-        navigator.clipboard.writeText(valueToCopy.toString());
+            enqueueSnackbar(
+                translate(
+                    'Process.Modeler.VariablesPanel.Copy.Message.Success',
+                ),
+                { variant: 'success' },
+            );
+        } catch {
+            enqueueSnackbar(
+                translate(
+                    'Process.Modeler.VariablesPanel.Copy.Message.Error'
+                ),
+                { variant: 'error' },
+            );
+        }
     };
 
-    const handleClick = (variableName) => {
-        variableName === expanded ? setExpanded(null) : setExpanded(variableName);
+    const getTagBgColor = (tag: VariableTag) => {
+        if (tag === VariableTag.Global) {
+            return theme.palette.tag.global;
+        } else if (tag === VariableTag.ActionAssigned) {
+            return theme.palette.tag.action;
+        } 
+        return theme.palette.tag.attended;
     };
 
-    const allProcessVariablesJSX = allProcessVariables?.map((processVariable: Taggable) => (
-        <Accordion TransitionProps={{unmountOnExit: true}}
-            key={processVariable.name}
-            expanded={expanded === processVariable.name}
-            onChange={() => handleClick(processVariable.name)}
-        >
-            <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={processVariable.name}
-                id={processVariable.name}
-              
-            >
-                <Typography variant='h5'sx={{ width: '60%'}} >
-                    {processVariable.name}
-                </Typography>
-                <Typography ><Chip
-                    label={getTranslatedTag(processVariable.tag).toUpperCase()}
-                    sx={{ bgcolor: processVariable.color, color: 'white' }}
-                    size="small"
-                ></Chip></Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <Typography>
-                    
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
-                    
-                    <Box display="flex" justifyContent={'right'}>
-                        <PositionedSnackbar
-                            buttonText="Copy"
-                            message="Copied to clipboard"
-                            handleCopy={() => handleCopy(processVariable.name)}
-                        />
-                    </Box>
-                </Typography>
-            </AccordionDetails>
-        </Accordion>
-    ));
+    const getJSXForVariable = ((variable: string, tag: VariableTag) => (
+        <Box>
+            <Grid container key={variable} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{padding: '.8rem', alignItems: 'center' }}>
+                <Grid item xs={5} sx={{wordBreak: 'break-word'}}>
+                    {variable}
+                </Grid>
+                <Grid item xs={5} sx={{display: 'flex', justifyContent: 'end'}}>
+                    <Chip
+                        label={translate(`Process.Modeler.VariablesPanel.${tag}`).toUpperCase()}
+                        sx={{ bgcolor: getTagBgColor(tag), color: 'white' }}
+                        size="medium"/>
+                </Grid>
+                <Grid item xs={2}>
+                    <IconButton size="medium" onClick={() => handleCopy(variable)}>
+                        <ContentCopyRoundedIcon/>
+                    </IconButton>
+                </Grid>
+            
+            </Grid>
+            <Divider />
+        </Box>));
+
+    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Global));
+
+    const getActionVariablesJSX = actionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionAssigned));
+
+    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.InputOutput));
 
     return (
         <Box>
-            {allProcessVariablesJSX}
+            {/* {allProcessVariablesJSX} */}
+            {getGlobalVariablesUsedInProcessJSX}
+            {getActionVariablesJSX}
+            {getAttendedVariablesJSX}
         </Box>
     );
 };
