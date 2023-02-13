@@ -26,5 +26,3 @@ yarn-error.log*
 
 # next
 .next
-
-.prettierrc
