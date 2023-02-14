@@ -1,8 +1,9 @@
 module.exports = {
-    "extends": 'next/core-web-vitals',
-    "plugins": ['unused-imports', '@typescript-eslint', 'simple-import-sort'],
+    "extends": ['prettier', 'next/core-web-vitals'],
+    "plugins": ['prettier', 'unused-imports', '@typescript-eslint', 'simple-import-sort'],
     "ignorePatterns": ['**/*.js'],
     "rules": {
+        // 'prettier/prettier': 'warn',
         "indent": ['error', 4, { "SwitchCase": 1 }],
         'comma-dangle': ['warn', 'only-multiline'],
         'react-hooks/rules-of-hooks': 'error',
@@ -69,10 +70,10 @@ module.exports = {
         'eol-last': 'error',
         'linebreak-style': 'error',
         "quotes": ['error', 'single'],
-          "max-lines-per-function": [
+        "max-lines-per-function": [
             "warn",
             150
-        ], 
+        ],
         'import/order': [
             'error',
             {

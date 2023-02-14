@@ -131,7 +131,12 @@ export class MailService implements OnModuleInit {
                     const process = await this.validateTitle(msg.envelope);
                     const variables = await this.extractMailBody(msg.source);
                     
-                    const input = { variables };
+                    const input = {
+                        variables: {
+                            ...variables,
+                            initiator: sender.toLocaleLowerCase(),
+                        },
+                    };
 
                     await this.queueService.createInstantJob({
                         process,

@@ -42,7 +42,7 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
             sx={[
                 {
                     width,
-                    transition: ({ transitions: { easing, duration } }) => `margin ${duration.enteringScreen}ms ${easing.easeOut} 0ms`,
+                    transition: ({ transitions: { easing, duration } }) => `margin ${duration.standard}ms ${easing.easeOut} 0ms`,
                     overflowX: 'hidden',
                 },
                 !open && {

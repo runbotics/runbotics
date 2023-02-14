@@ -31,7 +31,6 @@ import ActionList from './ActionList/ActionList';
 import {
     classes,
     Root,
-    drawerWidth,
     ActionPanelToggler
 } from './ActionListPanel.styles';
 import {
@@ -216,11 +215,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     );
 
     return (
-        <Root>
+        <Root open={openDrawer}>
             <ActionPanelToggler
                 onClick={handleDrawerAction}
                 open={openDrawer}
-                drawerWidth={drawerWidth}>
+            >
                 <IconButton>
                     <ChevronRightIcon
                         fontSize="medium"
@@ -229,19 +228,14 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                 </IconButton>
             </ActionPanelToggler>
             <Drawer
-                variant="permanent"
+                variant="persistent"
                 anchor="left"
                 open={openDrawer}
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: openDrawer,
-                    [classes.drawerClose]: !openDrawer
-                })}
+                className={classes.drawer}
                 classes={{
-                    paper: clsx(classes.drawerPaper, {
-                        [classes.drawerOpen]: openDrawer,
-                        [classes.drawerClose]: !openDrawer
-                    })
-                }}>
+                    paper: clsx(classes.drawerPaper)
+                }}
+            >
                 <Box
                     height={`calc(100vh - ${props.offsetTop}px)`}
                     display="flex"
