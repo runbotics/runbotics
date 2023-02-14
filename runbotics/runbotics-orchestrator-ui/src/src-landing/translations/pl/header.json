@@ -1,4 +1,5 @@
 {
+    "Landing.Header.Button.SkipNav": "Skip navigation",
     "Landing.Header.Nav.Option.RunBotics": "RunBotics",
     "Landing.Header.Nav.Option.RPA": "RPA",
     "Landing.Header.Nav.Option.ForWho": "For who?",
@@ -6,5 +7,5 @@
     "Landing.Header.Nav.Option.Integration": "Integration",
     "Landing.Header.Nav.Option.Partners": "Partners",
     "Landing.Header.Nav.Option.ContactUs": "Contact us",
-    "Landing.Header.Nav.Button.LogIn": "Log in"
+    "Landing.Header.Button.LogIn": "Log in"
 }

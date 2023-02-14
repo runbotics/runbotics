@@ -7,20 +7,20 @@ import { NAVBAR_MOBILE_WIDTH, NAVBAR_WIDTH, HEADER_HEIGHT } from '#src-app/utils
 
 interface NavbarDrawerProps {
     mobile?: boolean;
-    isShrinked: boolean;
+    isShrank: boolean;
 }
 
-type NavbarDrawerStylesReturnType = (mobile: boolean, isShrinked: boolean) => { [key: string]: SxProps<Theme> };
+type NavbarDrawerStylesReturnType = (mobile: boolean, isShrank: boolean) => { [key: string]: SxProps<Theme> };
 
-const getNavbarWidth = ({ mobile, isShrinked }: NavbarDrawerProps) => {
-    if (mobile) return isShrinked ? NAVBAR_WIDTH : 0;
+const getNavbarWidth = ({ mobile, isShrank }: NavbarDrawerProps) => {
+    if (mobile) return isShrank ? NAVBAR_WIDTH : 0;
 
-    return isShrinked ? NAVBAR_WIDTH : NAVBAR_MOBILE_WIDTH;
+    return isShrank ? NAVBAR_WIDTH : NAVBAR_MOBILE_WIDTH;
 };
 
-export const getDrawerStyles: NavbarDrawerStylesReturnType = (mobile: boolean, isShrinked: boolean) => ({
+export const getDrawerStyles: NavbarDrawerStylesReturnType = (mobile: boolean, isShrank: boolean) => ({
     '& .MuiPaper-root': {
-        width: `${getNavbarWidth({ mobile, isShrinked })}px`,
+        width: `${getNavbarWidth({ mobile, isShrank: isShrank })}px`,
         overflowX: 'hidden',
         top: '64px',
         height: `calc(100% - ${HEADER_HEIGHT}px)`,
