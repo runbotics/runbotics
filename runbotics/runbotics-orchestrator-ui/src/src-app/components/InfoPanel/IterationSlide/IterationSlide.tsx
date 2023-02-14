@@ -1,8 +1,15 @@
 import { FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Paper, Slide, TableContainer, Typography } from '@mui/material';
-
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Paper,
+    Slide,
+    TableContainer,
+    Typography,
+} from '@mui/material';
 
 import dynamic from 'next/dynamic';
 
@@ -17,10 +24,12 @@ import {
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 export interface InfoSlideProps {
-  containerRef: React.RefObject<HTMLDivElement>;
-  expanded: number;
-  handleChange: (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
-  iterationGutter: IterationGutter;
+    containerRef: React.RefObject<HTMLDivElement>;
+    expanded: number;
+    handleChange: (
+        panelId: number
+    ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
+    iterationGutter: IterationGutter;
 }
 
 const IterationSlide: FC<InfoSlideProps> = ({
@@ -31,10 +40,10 @@ const IterationSlide: FC<InfoSlideProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    return(
+    return (
         <Slide
             direction="left"
-            in={!!iterationGutter}
+            in={Boolean(iterationGutter)}
             container={containerRef.current}
             key={iterationGutter.iterationNumber}
         >
@@ -42,27 +51,41 @@ const IterationSlide: FC<InfoSlideProps> = ({
                 expanded={expanded === iterationGutter.iterationNumber}
                 onChange={handleChange(iterationGutter.iterationNumber)}
                 TransitionProps={{ unmountOnExit: true }}
-                sx={{backgroundColor: theme => theme.palette.grey[200]}}
+                sx={{ backgroundColor: (theme) => theme.palette.grey[200] }}
                 disableGutters
             >
                 <AccordionHeader expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant="button" sx={{padding: '5px'}}>
-                        {translate('Component.InfoPanel.Details.Loop.Iteration')} {iterationGutter.iterationNumber}
+                    <Typography variant="button" sx={{ padding: '5px' }}>
+                        {translate(
+                            'Component.InfoPanel.Details.Loop.Iteration'
+                        )}{' '}
+                        {iterationGutter.iterationNumber}
                     </Typography>
                 </AccordionHeader>
                 <AccordionDetails>
                     <TableContainer component={Paper}>
-                        <Accordion disableGutters disabled={!iterationGutter.iteratorElement}>
+                        <Accordion
+                            disableGutters
+                            disabled={!iterationGutter.iteratorElement}
+                        >
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography variant="h6">
-                                    {translate('Component.InfoPanel.EventsDetails.Output')}
+                                    {translate(
+                                        'Component.InfoPanel.Details.Loop.Iterator'
+                                    )}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <TableContainer>
-                                    {iterationGutter.iteratorElement && (
+                                    {Boolean(
+                                        iterationGutter.iteratorElement
+                                    ) && (
                                         <ReactJson
-                                            src={{iterator: JSON.parse(iterationGutter.iteratorElement)}}
+                                            src={{
+                                                iterator: JSON.parse(
+                                                    iterationGutter.iteratorElement
+                                                ),
+                                            }}
                                         />
                                     )}
                                 </TableContainer>
@@ -72,6 +95,6 @@ const IterationSlide: FC<InfoSlideProps> = ({
                 </AccordionDetails>
             </RoundedAccordion>
         </Slide>
-    ); };
+    );
+};
 export default IterationSlide;
-

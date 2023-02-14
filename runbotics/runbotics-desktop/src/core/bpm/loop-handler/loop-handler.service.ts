@@ -9,7 +9,7 @@ export class LoopHandlerService {
         this.iteratorMap.set(loopId, iteratorName);
     }
 
-    public getIteratorName(loopId: string): string | undefined {
+    public getIteratorNameById(loopId: string): string | undefined {
         if (loopId?.split('_').length > 3) {
             loopId = loopId?.split('_').slice(0, 3).join('_');
             return this.iteratorMap.get(loopId);
@@ -41,6 +41,10 @@ export class LoopHandlerService {
             api.environment.variables
                 .content[iteratorName]
         ) ?? '';
+    }
+
+    public getIteratorFromElement(api: BpmnExecutionEventMessageApi): string {
+        return (api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable;
     }
 
     public isLoopEvent(api: BpmnExecutionEventMessageApi): boolean {

@@ -172,24 +172,29 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 });
             }
         );
-    
+
         listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
             if ((api.environment as IEnvironment).runbotic?.disabled) return;
 
             if (this.loopHandlerService.shouldSkipElement(api)) return;
-            
-            if((api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable){
-                this.loopHandlerService.setIteratorName(api.executionId, (api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable);
+
+            if (this.loopHandlerService.getIteratorFromElement(api)) {
+                this.loopHandlerService.setIteratorName(
+                    api.executionId,
+                    this.loopHandlerService.getIteratorFromElement(api)
+                );
             }
-            this.logger.log(
-                `${getActivityLogPrefix(api)} activity.start`
-            );
+
+            
+            this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
 
             this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.IN_PROGRESS,
                 activity: api,
-                iteratorName: this.loopHandlerService.getIteratorName(api.content.parent.executionId),
+                iteratorName: this.loopHandlerService.getIteratorNameById(
+                    api.content.parent.executionId
+                ),
             });
         });
 
@@ -215,8 +220,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 processInstance,
                 eventType: ProcessInstanceEventStatus.COMPLETED,
                 activity: api,
-                iteratorName: this.loopHandlerService.getIteratorName(api.environment.variables.content
-                    .parent.executionId)
+                iteratorName: this.loopHandlerService.getIteratorNameById(
+                    api.environment.variables.content.parent.executionId
+                ),
             });
         });
 

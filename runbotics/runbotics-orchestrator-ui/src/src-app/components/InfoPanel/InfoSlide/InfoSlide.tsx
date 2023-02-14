@@ -15,7 +15,9 @@ import {
 export interface InfoSlideProps {
     containerRef: React.RefObject<HTMLDivElement>;
     expanded: number;
-    handleChange: (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
+    handleChange: (
+        panelId: number
+    ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
     index: number;
     onRefChange: (node: HTMLDivElement) => void;
     processInstanceEvent: IProcessInstanceEvent;
@@ -33,7 +35,7 @@ const InfoSlide: FC<InfoSlideProps> = ({
 }) => (
     <Slide
         direction="left"
-        in={!!processInstanceEvent}
+        in={Boolean(processInstanceEvent)}
         container={containerRef.current}
         key={processInstanceEvent.id}
         {...(index === processInstanceEventsLength - 1

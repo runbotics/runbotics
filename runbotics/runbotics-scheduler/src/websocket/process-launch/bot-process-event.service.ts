@@ -135,11 +135,11 @@ export class BotProcessEventService {
             await this.updateProcessInstance(queryRunner, processInstanceEvent);
             await queryRunner.commitTransaction();
 
-            const updatedProcessInstanceEvent =
-                await this.processInstanceLoopEventService.findByExecutionId(
-                    queryRunner,
-                    processInstanceEvent.executionId
-                );
+            // const updatedProcessInstanceEvent =
+            //     await this.processInstanceLoopEventService.findByExecutionId(
+            //         queryRunner,
+            //         processInstanceEvent.executionId
+            //     );
             // Currently we dont want to send loop events to the UI
             // if (
             //     updatedProcessInstanceEvent.processInstance

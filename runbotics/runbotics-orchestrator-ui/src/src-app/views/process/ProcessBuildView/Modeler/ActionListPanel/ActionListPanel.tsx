@@ -197,11 +197,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
 
                     const filteredItems = actionName
                         ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                          (items as IBpmnAction[]).filter(({ label }) =>
-                              label
-                                  .toLowerCase()
-                                  .includes(actionName.toLowerCase())
-                          )
+                        (items as IBpmnAction[]).filter(({ label }) =>
+                            label
+                                .toLowerCase()
+                                .includes(actionName.toLowerCase())
+                        )
                         : (items as TemplatesSchema[]);
 
                     // eslint-disable-next-line array-callback-return

@@ -46,6 +46,7 @@
     "Component.InfoPanel.Details.Error": "Błąd",
     "Component.InfoPanel.Details.Loop.ShowMore": "Pokaż szczegóły pętli",
     "Component.InfoPanel.Details.Loop.Iteration": "Iteracja",
+    "Component.InfoPanel.Details.Loop.Iterator": "Iterator",
 
     "Component.HistoryTable.Header.ProcessName": "Nazwa procesu",
     "Component.HistoryTable.Header.Status": "Status",

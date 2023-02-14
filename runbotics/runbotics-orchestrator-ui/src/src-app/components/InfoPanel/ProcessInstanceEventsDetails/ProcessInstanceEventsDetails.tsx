@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import {
     EventMapTypes,
+    IterationGutter,
     processInstanceEventActions,
     processInstanceEventSelector,
     ProcessInstanceLoopEvent,
@@ -16,13 +17,15 @@ import {
 
 import InfoSlide from '../InfoSlide';
 import IterationSlide from '../IterationSlide';
-import { sortByFinished } from './ProcessInstanceEventsDetails.utils';
+import {
+    iterationEventGuard,
+    sortByFinished,
+} from './ProcessInstanceEventsDetails.utils';
 
 interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-// eslint-disable-next-line complexity
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     processInstanceId,
 }) => {
@@ -42,22 +45,28 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         if (processInstanceId === active.processInstance?.id) {
             return Object.values(active.eventsMap);
         }
+
+        const lastEvent = eventsBreadcrumbTrail.at(-1);
+        const secondLastEvent = eventsBreadcrumbTrail.at(-2);
+
         if (
             eventsBreadcrumbTrail.length > 1 &&
-            eventsBreadcrumbTrail.at(-1).type === EventMapTypes.Iteration
+            lastEvent.type === EventMapTypes.Iteration
         ) {
-            return loopEvents[eventsBreadcrumbTrail.at(-2).id].filter(
+            return loopEvents[secondLastEvent.id].filter(
                 (element) =>
-                    element.iterationNumber ===
-                    eventsBreadcrumbTrail.at(-1).iterationNumber
+                    element.iterationNumber === lastEvent.iterationNumber
             );
         }
+
         if (eventsBreadcrumbTrail.length > 1) {
-            return loopEvents[eventsBreadcrumbTrail.at(-1).id];
+            return loopEvents[lastEvent.id];
         }
+
         if (!processInstanceId) {
             return Object.values(active.eventsMap);
         }
+
         return events;
     };
 
@@ -120,22 +129,24 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                 {processInstanceEvents
                     .slice()
                     .sort(sortByFinished)
-                    .map((processInstanceEvent, index) =>
-                        processInstanceEvent.type ===
-                        EventMapTypes.Iteration ? (
+                    .map(
+                        (
+                            event: IProcessInstanceEvent | IterationGutter,
+                            index
+                        ) =>
+                            iterationEventGuard(event) ? (
                                 <IterationSlide
-                                    iterationGutter={processInstanceEvent}
+                                    iterationGutter={event}
                                     handleChange={handleChange}
                                     containerRef={containerRef}
                                     expanded={expanded}
-                                    // eslint-disable-next-line react/no-array-index-key
-                                    key={index + 1}
+                                    key={event.iterationNumber}
                                 />
                             ) : (
                                 <InfoSlide
                                     containerRef={containerRef}
-                                    key={processInstanceEvent.id}
-                                    processInstanceEvent={processInstanceEvent}
+                                    key={event.id}
+                                    processInstanceEvent={event}
                                     expanded={expanded}
                                     handleChange={handleChange}
                                     index={index}

@@ -16,7 +16,11 @@ export const getProcessInstanceEvents = createAsyncThunk<
 
 export const getProcessInstanceLoopEvents = createAsyncThunk<
     IProcessInstanceLoopEvent[],
-    { loopId: string; nestedIteration?: number; loopLabel?: string}
+    {
+        loopId: string;
+        nestedIteration?: number;
+        loopLabel?: string;
+    }
 >('processInstanceEvent/getBotProcessInstanceLoopEvents', ({ loopId }) =>
     Axios.get<IProcessInstanceLoopEvent[]>(
         `/api/process-instance-loop-events/${loopId}`
