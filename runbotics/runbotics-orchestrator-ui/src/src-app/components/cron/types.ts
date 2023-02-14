@@ -331,3 +331,16 @@ export interface CronObjProps {
     newWeekDays: number[],
     newNthWeekDays?: number[],
 }
+
+export interface SetValuesFromCronStringProps {
+    cronString: string;
+    setInternalError: SetInternalError;
+    onError: OnError;
+    allowEmpty: AllowEmpty;
+    // internalValueRef: MutableRefObject<string>;
+    firstRender: boolean;
+    locale: Locale;
+    shortcuts: Shortcuts;
+    setPeriod: SetValuePeriod;
+    cronDispatch: React.Dispatch<any>;
+}

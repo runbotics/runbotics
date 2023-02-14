@@ -26,7 +26,7 @@ export default function Cron({
     displayError = true,
     onError,
     className,
-    defaultPeriod = PeriodType.DAY,
+    defaultPeriod = PeriodType.MINUTE,
     allowEmpty = 'for-default-value',
     humanizeLabels = true,
     humanizeValue = false,
@@ -44,47 +44,47 @@ export default function Cron({
     const [valueCleared, setValueCleared] = useState<boolean>(false);
     const previousValueCleared = usePrevious(valueCleared);
     const localeJSON = JSON.stringify(locale);
-    
+
     useEffect(
         () => {            
-            setValuesFromCronString(
-                value,
+            setValuesFromCronString({
+                cronString: value,
                 setInternalError,
                 onError,
                 allowEmpty,
                 internalValueRef,
-                true,
+                firstRender: true,
                 locale,
                 shortcuts,
                 setPeriod,
-                cronDispatch,
-            );
+                cronDispatch
+            });
 
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
-
+    
     useEffect(
         () => {
             if (value !== internalValueRef.current)
             { 
-                setValuesFromCronString(
-                    value,
+                setValuesFromCronString({
+                    cronString: value,
                     setInternalError,
                     onError,
                     allowEmpty,
                     internalValueRef,
-                    false,
+                    firstRender: false,
                     locale,
                     shortcuts,
                     setPeriod,
-                    cronDispatch,
-                ); 
+                    cronDispatch
+                });
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [value, internalValueRef, localeJSON, allowEmpty, shortcuts],
+        [value, localeJSON, allowEmpty, shortcuts],
     );
 
     useEffect(
@@ -120,7 +120,7 @@ export default function Cron({
             cronDispatch({
                 type: CRON_ACTIONS.SET_ALL,
                 payload: {
-                    newValue: undefined,
+                    newValue: [],
                 },
             });
 
@@ -133,7 +133,7 @@ export default function Cron({
 
             // When clearButtonAction is 'fill-with-every'
             if (clearButtonAction === 'fill-with-every') {
-                const cron = getCronStringFromValues(newPeriod, undefined, undefined);
+                const cron = getCronStringFromValues(newPeriod, cronState, undefined);
 
                 newValue = cron;
             }
@@ -163,13 +163,9 @@ export default function Cron({
                     'react-js-cron-error': error && displayError,
                     'react-js-cron-disabled': disabled,
                     'react-js-cron-read-only': readOnly,
-                    [`${className}`]: !!className,
-                    [`${className}-error`]: error && displayError && !!className,
-                    [`${className}-disabled`]: disabled && !!className,
-                    [`${className}-read-only`]: readOnly && !!className,
                 }
             ),
-        [className, error, displayError, disabled, readOnly],
+        [error, displayError, disabled, readOnly],
     );
 
     const clearButtonNode = useMemo(

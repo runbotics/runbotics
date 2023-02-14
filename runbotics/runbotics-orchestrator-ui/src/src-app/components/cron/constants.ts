@@ -53,6 +53,13 @@ export const UNITS: Unit[] = [
         total: 31,
     },
     {
+        type: 'nth-month-days',
+        min: 0,
+        max: 1,
+        total: 2,
+        alt: ['last', 'last-weekday']
+    },
+    {
         type: 'months',
         min: 1,
         max: 12,
@@ -73,21 +80,22 @@ export const UNITS: Unit[] = [
         total: 5,
         alt: ['1st', '2nd', '3rd', '4th', 'last'],
     },
-    {
-        type: 'nth-month-days',
-        min: 0,
-        max: 1,
-        total: 2,
-        alt: ['last', 'last-weekday']
-    },
 ];
 
 export enum UnitIndex {
     MINUTES,
     HOURS,
     MONTH_DAYS,
+    NTH_MONTH_DAYS,
     MONTHS,
     WEEK_DAYS,
     NTH_WEEK_DAYS,
-    NTH_MONTH_DAYS,
+}
+
+export enum CronOrder {
+    MINUTES,
+    HOURS,
+    MONTH_DAYS,
+    MONTHS,
+    WEEK_DAYS,
 }

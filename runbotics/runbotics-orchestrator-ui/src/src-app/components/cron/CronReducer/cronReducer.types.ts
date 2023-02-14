@@ -1,18 +1,17 @@
 export interface CronStateProps {
-    months?: number[] | undefined;
-    monthDays?: number[] | undefined;
-    nthMonthDays?: number[] | undefined;
-    day?: number[] | undefined;
-    weekDays?: number[] | undefined;
-    nthWeekDays?: number[] | undefined;
-    hours?: number[] | undefined;
-    minutes?: number[] | undefined;
+    minutes: number[];
+    hours: number[];
+    monthDays: number[];
+    nthMonthDays: number[];
+    months: number[];
+    weekDays: number[];
+    nthWeekDays: number[];
 }
 
 export interface CronActionProps {
     type: CRON_ACTIONS,
     payload: { 
-        newValue?: number[] | undefined,
+        newValue?: number[],
         newState?: CronStateProps,
     }
 }

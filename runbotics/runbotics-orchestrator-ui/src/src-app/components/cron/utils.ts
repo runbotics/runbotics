@@ -29,7 +29,7 @@ export function sort(array: number[]) {
  */
 export function dedup(array: number[]) {
     const result: number[] = [];
-
+    console.log(array)
     array.forEach((i) => {
         if (result.indexOf(i) < 0) 
         { result.push(i); }
@@ -77,11 +77,11 @@ export const checkIsArray = (shortcuts: unknown): shortcuts is ShortcutType[] =>
 export const cronShortcuts: ShortcutType[] = ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly'];
 
 export const initialCronState = {
-    months: undefined,
-    monthDays: undefined,
-    nthMonthDays: undefined,
-    weekDays: undefined,
-    nthWeekDays: undefined,
-    hours: undefined,
-    minutes: undefined,
+    minutes: [],
+    hours: [],
+    monthDays: [],
+    nthMonthDays: [],
+    months: [],
+    weekDays: [],
+    nthWeekDays: [],
 };

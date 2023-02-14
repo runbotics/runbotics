@@ -8,7 +8,7 @@ export const cronReducer = (state: CronStateProps, action: CronActionProps): Cro
     switch (action.type) {
         case CRON_ACTIONS.SET_ALL:
             const newObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, newValue]));
-            return newObj;
+            return { ...state, ...newObj };
         case CRON_ACTIONS.SET_EACH:
             return newState;
         case CRON_ACTIONS.SET_MONTHS:

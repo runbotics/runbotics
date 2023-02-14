@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 import { MutableRefObject } from 'react';
 
-import { UNITS, SUPPORTED_SHORTCUTS } from './constants';
+import { UNITS, SUPPORTED_SHORTCUTS, CronOrder as CronOrder } from './constants';
 import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';
 import {
     Unit,
@@ -16,6 +16,7 @@ import {
     Shortcuts,
     SetValuePeriod,
     CronObjProps,
+    SetValuesFromCronStringProps,
 } from './types';
 import {
     range, sort, dedup, setError,
@@ -25,18 +26,18 @@ import {
  * Set values from cron string
 */
 
-export function setValuesFromCronString(
-    cronString: string,
-    setInternalError: SetInternalError,
-    onError: OnError,
-    allowEmpty: AllowEmpty,
-    internalValueRef: MutableRefObject<string>,
-    firstRender: boolean,
-    locale: Locale,
-    shortcuts: Shortcuts,
-    setPeriod: SetValuePeriod,
-    cronDispatch: React.Dispatch<any>,
-) {
+export const setValuesFromCronString = ({
+    cronString,
+    setInternalError,
+    onError,
+    allowEmpty,
+    internalValueRef,
+    firstRender,
+    locale,
+    shortcuts,
+    setPeriod,
+    cronDispatch
+}): SetValuesFromCronStringProps => {
     onError && onError(undefined);
     setInternalError(false);
 
@@ -80,28 +81,9 @@ export function setValuesFromCronString(
 
             setPeriod(period);
 
-            cronParts.forEach((cronPart, index) => {
-                console.log(cronParts[index]);
-            });
-
-            // cronDispatch({ 
-            //     type: CRON_ACTIONS.SET_EACH, 
-            //     payload: { 
-            //         newState: {
-            //             minutes: cronParts[0],
-            //             hours: cronParts[1],
-            //             monthDays: cronParts[2],
-            //             months: cronParts[3],
-            //             weekDays: cronParts[4],
-            //             nthWeekDays: [],
-            //             nthMonthDays: [],
-            //         } 
-            //     } 
-            // });
-
             cronDispatch({ 
                 type: CRON_ACTIONS.SET_ALL, 
-                payload: {  } 
+                payload: { newValue: [] } 
             });
 
         } catch (err) {
@@ -116,7 +98,7 @@ export function setValuesFromCronString(
         setInternalError(true);
         setError(onError, locale);
     }
-}
+};
 
 /**
  * Get cron string from values
@@ -129,23 +111,35 @@ export function getCronStringFromValues(
     if (period === 'reboot')
     { return '@reboot'; }
 
-    const newMonths = period === PeriodType.YEAR && cronState?.months ? cronState.months : [];
-    const newMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.monthDays ? cronState.monthDays : [];
-    const newNthMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthMonthDays ? cronState.nthMonthDays : [];
-    const newWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH || period === PeriodType.WEEK) && cronState?.weekDays ? cronState.weekDays : [];
-    const newNthWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthWeekDays ? cronState.nthWeekDays : [];
-    const newHours = period !== PeriodType.MINUTE && period !== PeriodType.HOUR && cronState?.hours ? cronState.hours : [];
-    const newMinutes = period !== PeriodType.MINUTE && cronState?.minutes ? cronState.minutes : [];
+    // const newMonths = period === PeriodType.YEAR && cronState?.months ? cronState.months : [];
+    // const newMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.monthDays ? cronState.monthDays : [];
+    // const newNthMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthMonthDays ? cronState.nthMonthDays : [];
+    // const newWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH || period === PeriodType.WEEK) && cronState?.weekDays ? cronState.weekDays : [];
+    // const newNthWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthWeekDays ? cronState.nthWeekDays : [];
+    // const newHours = period !== PeriodType.MINUTE && period !== PeriodType.HOUR && cronState?.hours ? cronState.hours : [];
+    // const newMinutes = period !== PeriodType.MINUTE && cronState?.minutes ? cronState.minutes : [];
 
-    const parsedArray = parseCronArray({ 
-        newMinutes, 
-        newHours, 
-        newMonthDays,
-        newMonths, 
-        newWeekDays, 
-        newNthWeekDays,
-        newNthMonthDays,
-    }, humanizeValue);
+    const parsedArray = parseCronArray(
+        // { 
+        //     newMinutes, 
+        //     newHours, 
+        //     newMonthDays,
+        //     newMonths, 
+        //     newWeekDays, 
+        //     newNthWeekDays,
+        //     newNthMonthDays,
+        // }, 
+        { 
+            newMinutes: cronState.minutes,
+            newHours: cronState.hours,
+            newMonthDays: cronState.monthDays,
+            newNthMonthDays: cronState.nthMonthDays,
+            newMonths: cronState.months,
+            newWeekDays: cronState.weekDays,
+            newNthWeekDays: cronState.nthWeekDays,
+        }, 
+        humanizeValue
+    );
 
     return cronToString(parsedArray);
 }
@@ -283,8 +277,8 @@ function parseCronArray(cronObj: CronObjProps, humanizeValue?: boolean) {
                     newPart = 'LW';
                 }
 
-                if(resultArr[2] === '*') {
-                    resultArr[2] = newPart;
+                if(resultArr[CronOrder.MONTH_DAYS] === '*') {
+                    resultArr[CronOrder.MONTH_DAYS] = newPart;
                 }
 
                 break;
