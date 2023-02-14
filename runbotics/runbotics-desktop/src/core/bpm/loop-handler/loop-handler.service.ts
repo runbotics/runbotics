@@ -44,7 +44,7 @@ export class LoopHandlerService {
     }
 
     public getIteratorFromElement(api: BpmnExecutionEventMessageApi): string {
-        return (api as any).broker.owner.behaviour?.loopCharacteristics?.behaviour.elementVariable;
+        return (api as any).owner.behaviour?.loopCharacteristics?.behaviour.elementVariable;
     }
 
     public isLoopEvent(api: BpmnExecutionEventMessageApi): boolean {

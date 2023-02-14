@@ -185,7 +185,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 );
             }
 
-            
             this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
 
             this.activityEventBus.publish({
@@ -533,7 +532,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const globalVariables = {
             ...definition.environment.variables,
             ...vars,
-            var: 123,
         };
         // globalVariables[input.variable] = input.value;
         definition.environment.assignVariables(globalVariables);
