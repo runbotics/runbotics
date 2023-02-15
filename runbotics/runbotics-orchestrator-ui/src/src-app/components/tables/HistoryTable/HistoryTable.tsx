@@ -84,6 +84,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                 },
             },
         }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, page]);
 
     useImperativeHandle(ref, () => ({

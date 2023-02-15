@@ -18,7 +18,7 @@ export interface IterationGutter {
     iteratorElement: string;
 }
 
-export interface BreadCrumb {
+export interface Breadcrumb {
     id: string;
     labelKey: string;
     type: EventMapTypes;
@@ -35,7 +35,7 @@ export interface ProcessInstanceEventState {
     all: {
         events: IProcessInstanceEvent[];
         nestedEvents: Record<EventId, ProcessInstanceLoopEvent[]>;
-        eventsBreadcrumbTrail: BreadCrumb[];
+        eventsBreadcrumbTrail: Breadcrumb[];
         loading: boolean;
     };
 }

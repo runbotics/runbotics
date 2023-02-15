@@ -8,7 +8,7 @@ import useTranslations, {
 import { useDispatch, useSelector } from '#src-app/store';
 
 import {
-    BreadCrumb,
+    Breadcrumb,
     EventMapTypes,
     processInstanceEventActions,
 } from '#src-app/store/slices/ProcessInstanceEvent';
@@ -20,7 +20,7 @@ const ProcessEventBreadcrumbs = () => {
         (state) => state.processInstanceEvent.all
     );
 
-    const getBreadcrumbLabel = (breadcrumb: BreadCrumb) => {
+    const getBreadcrumbLabel = (breadcrumb: Breadcrumb) => {
         if (!checkIfKeyExists(breadcrumb.labelKey)) return breadcrumb.labelKey;
         if (breadcrumb.type === EventMapTypes.Iteration) {
             return `${translate(breadcrumb.labelKey)} ${
