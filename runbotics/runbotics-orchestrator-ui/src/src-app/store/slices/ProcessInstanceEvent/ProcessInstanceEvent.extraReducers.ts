@@ -26,7 +26,7 @@ const buildProcessInstanceEventExtraReducers = (
             state.all.eventsBreadcrumbTrail = [
                 {
                     id: 'root',
-                    labelKey: 'Root',
+                    labelKey: 'Component.InfoPanel.Root.Breadcrumb',
                     type: EventMapTypes.ProcessInstanceEvent,
                 },
             ];

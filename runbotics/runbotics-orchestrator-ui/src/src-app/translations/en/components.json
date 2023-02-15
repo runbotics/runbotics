@@ -47,6 +47,7 @@
     "Component.InfoPanel.Details.Loop.ShowMore": "Show Loop details",
     "Component.InfoPanel.Details.Loop.Iteration": "Iteration",
     "Component.InfoPanel.Details.Loop.Iterator": "Iterator",
+    "Component.InfoPanel.Root.Breadcrumb": "Root events",
 
     "Component.HistoryTable.Header.ProcessName": "Process name",
     "Component.HistoryTable.Header.Status": "Status",
