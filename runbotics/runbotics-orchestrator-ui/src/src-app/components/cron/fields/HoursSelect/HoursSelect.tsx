@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 
+import If from '#src-app/components/utils/If';
+
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import { PeriodType } from '../../types';
 import { HoursSelectProps } from './HoursSelect.types';
 
-import If from '#src-app/components/utils/If';
 
 const HoursSelect: FC<HoursSelectProps> = ({
     value, 
