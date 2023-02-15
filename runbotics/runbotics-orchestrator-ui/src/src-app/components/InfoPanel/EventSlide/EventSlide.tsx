@@ -1,11 +1,10 @@
-import { forwardRef } from 'react';
+
+import { FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccordionDetails, Slide } from '@mui/material';
 
 import { IProcessInstanceEvent } from 'runbotics-common';
-
-import useForwardRef from '#src-app/hooks/useForwardRef';
 
 import {
     AccordionHeader,
@@ -16,50 +15,47 @@ import {
 
 export interface EventSlideProps {
     expandedEventId: number;
-    onChange: (
-        panelId: number
-    ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
+    onChange:  (panelId: number, isExpanded: boolean) => void;
     processInstanceEvent: IProcessInstanceEvent;
     onRefChange: (ref: HTMLDivElement) => void;
     shouldReScroll: boolean;
+    container: HTMLDivElement;
 }
 
-// eslint-disable-next-line react/display-name
-const EventSlide = forwardRef<HTMLDivElement, EventSlideProps>(({
+const EventSlide: FC<EventSlideProps> = ({
     expandedEventId,
     onChange,
     processInstanceEvent,
     onRefChange,
     shouldReScroll,
-}, ref) => {
-    const containerRef = useForwardRef(ref);
-    return(
-        <Slide
-            direction="left"
-            in={Boolean(processInstanceEvent)}
-            container={containerRef.current}
-            key={processInstanceEvent.id}
-            {...(shouldReScroll
-                ? { ref: onRefChange }
-                : {})}
+    container
+}) => (
+    <Slide
+        direction="left"
+        in={Boolean(processInstanceEvent)}
+        container={container}
+        key={processInstanceEvent.id}
+        {...(shouldReScroll
+            ? { ref: onRefChange }
+            : {})}
+    >
+        <RoundedAccordion
+            expanded={expandedEventId === processInstanceEvent.id}
+            onChange={(_, expanded) => onChange(processInstanceEvent.id, expanded)}
+            TransitionProps={{ unmountOnExit: true }}
+            disableGutters
         >
-            <RoundedAccordion
-                expanded={expandedEventId === processInstanceEvent.id}
-                onChange={onChange(processInstanceEvent.id)}
-                TransitionProps={{ unmountOnExit: true }}
-                disableGutters
-            >
-                <AccordionHeader expandIcon={<ExpandMoreIcon />}>
-                    <ProcessInstanceEventsDetailsHeader
-                        processInstanceEvent={processInstanceEvent}
-                    />
-                </AccordionHeader>
-                <AccordionDetails>
-                    <ProcessInstanceEventsDetailsTable
-                        processInstanceEvent={processInstanceEvent}
-                    />
-                </AccordionDetails>
-            </RoundedAccordion>
-        </Slide>
-    ); });
+            <AccordionHeader expandIcon={<ExpandMoreIcon />}>
+                <ProcessInstanceEventsDetailsHeader
+                    processInstanceEvent={processInstanceEvent}
+                />
+            </AccordionHeader>
+            <AccordionDetails>
+                <ProcessInstanceEventsDetailsTable
+                    processInstanceEvent={processInstanceEvent}
+                />
+            </AccordionDetails>
+        </RoundedAccordion>
+    </Slide>
+);
 export default EventSlide;

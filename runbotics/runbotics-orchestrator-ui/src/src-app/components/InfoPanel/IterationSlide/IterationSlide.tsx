@@ -1,4 +1,5 @@
-import { forwardRef } from 'react';
+
+import { FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
@@ -13,8 +14,6 @@ import {
 
 import dynamic from 'next/dynamic';
 
-import If from '#src-app/components/utils/If';
-import useForwardRef from '#src-app/hooks/useForwardRef';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { IterationGutter } from '#src-app/store/slices/ProcessInstanceEvent';
@@ -28,28 +27,27 @@ const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
 export interface IterationSlideProps {
     expandedEventId: number;
-    onChange: (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
+    onChange:  (panelId: number, isExpanded: boolean) => void;
     iterationGutter: IterationGutter;
     onRefChange: (ref: HTMLDivElement) => void;
     shouldReScroll: boolean;
+    container: HTMLDivElement;
 }
 
-// eslint-disable-next-line react/display-name
-const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
+const IterationSlide: FC<IterationSlideProps> =({
     expandedEventId,
     onChange,
     iterationGutter,
     onRefChange,
     shouldReScroll,
-}, ref) => {
+    container
+}) => {
     const { translate } = useTranslations();
-    const containerRef = useForwardRef(ref);
-
     return (
         <Slide
             direction="left"
             in={Boolean(iterationGutter)}
-            container={containerRef.current}
+            container={container}
             key={iterationGutter.iterationNumber}
             {...(shouldReScroll
                 ? { ref: onRefChange }
@@ -57,7 +55,7 @@ const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
         >
             <RoundedAccordion
                 expanded={expandedEventId === iterationGutter.iterationNumber}
-                onChange={onChange(iterationGutter.iterationNumber)}
+                onChange={(_, expanded) => onChange(iterationGutter.iterationNumber, expanded)}
                 TransitionProps={{ unmountOnExit: true }}
                 sx={{ backgroundColor: (theme) => theme.palette.grey[200] }}
                 disableGutters
@@ -75,6 +73,7 @@ const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
                         <Accordion
                             disableGutters
                             disabled={!iterationGutter.iteratorElement}
+                            defaultExpanded={Boolean(iterationGutter.iteratorElement)}
                         >
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography variant="h6">
@@ -85,15 +84,15 @@ const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
                             </AccordionSummary>
                             <AccordionDetails>
                                 <TableContainer>
-                                    <If condition={Boolean(iterationGutter.iteratorElement)}>
+                                    {iterationGutter.iteratorElement && (
                                         <ReactJson
                                             src={{
                                                 iterator: JSON.parse(
-                                                    iterationGutter.iteratorElement
+                                                    iterationGutter.iteratorElement ?? '{}'
                                                 ),
                                             }}
                                         />
-                                    </If>
+                                    )}
                                 </TableContainer>
                             </AccordionDetails>
                         </Accordion>
@@ -102,6 +101,6 @@ const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
             </RoundedAccordion>
         </Slide>
     );
-});
+};
 
 export default IterationSlide;

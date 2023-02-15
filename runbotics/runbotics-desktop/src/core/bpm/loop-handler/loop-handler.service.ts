@@ -39,7 +39,7 @@ export class LoopHandlerService {
         return api.environment.variables.content.index + 1;
     }
     
-    public getIteratorElement(api: BpmnExecutionEventMessageApi, iteratorName: string): any | null {
+    public getIteratorElement(api: BpmnExecutionEventMessageApi, iteratorName: string): string {
         return JSON.stringify(
             api.environment.variables
                 .content[iteratorName]

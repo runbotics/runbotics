@@ -90,11 +90,9 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const handleChange =
-        (panelId: number) =>
-            (_event: React.SyntheticEvent, isExpanded: boolean) => {
-                setExpandedEventId(isExpanded ? panelId : null);
-            };
+    const handleChange = (panelId: number, isExpanded: boolean) => {
+        setExpandedEventId(isExpanded ? panelId : null);
+    };
 
     if (!processInstanceId && !active.orchestratorProcessInstanceId) {
         return (
@@ -111,13 +109,13 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
 
     return (
         <>
-            <Divider variant="middle">
+            <Divider variant="middle"
+            >
                 <Typography variant="h6">
                     {translate('Component.InfoPanel.EventsDetails.Activities')}
                 </Typography>
             </Divider>
             <Box
-                ref={containerRef}
                 sx={{ margin: (theme) => theme.spacing(1) }}
                 display="flex"
                 flexDirection="column"
@@ -134,9 +132,9 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                                     onChange={handleChange}
                                     expandedEventId={expandedEventId}
                                     key={event.iterationNumber}
-                                    ref={containerRef}
                                     onRefChange={onRefChange}
                                     shouldReScroll={index === processInstanceEvents.length - 1}
+                                    container={containerRef.current}
                                 />
                             ) : (
                                 <EventSlide
@@ -146,6 +144,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                                     onChange={handleChange}
                                     onRefChange={onRefChange}
                                     shouldReScroll={index === processInstanceEvents.length - 1}
+                                    container={containerRef.current}
                                 />
                             )
                     )}
