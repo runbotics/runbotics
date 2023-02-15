@@ -20,7 +20,7 @@ import {
 
 export const setValuesFromCronString = ({
     cronString,
-    setInternalError,
+    setIsError,
     onError,
     internalValueRef,
     firstRender,
@@ -29,7 +29,7 @@ export const setValuesFromCronString = ({
     cronDispatch
 }): SetValuesFromCronStringProps => {
     onError && onError(undefined);
-    setInternalError(false);
+    setIsError(false);
     let isErrorOccurred = false;
 
     if(!cronString) {
@@ -58,7 +58,7 @@ export const setValuesFromCronString = ({
     if (isErrorOccurred) {
         const newInternalValueRef = internalValueRef;
         newInternalValueRef.current = cronString;
-        setInternalError(true);
+        setIsError(true);
         setError(onError, locale);
     }
 };

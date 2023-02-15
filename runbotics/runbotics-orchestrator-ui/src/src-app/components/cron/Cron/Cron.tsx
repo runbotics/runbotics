@@ -18,7 +18,6 @@ import { ClearButton, CronContainer } from './Cron.styles';
 
 // eslint-disable-next-line max-lines-per-function
 const Cron: FC<CronProps> = ({
-    clearButtonAction = 'fill-with-every',
     locale = DEFAULT_LOCALE_EN,
     value = '',
     setValue,
@@ -37,14 +36,14 @@ const Cron: FC<CronProps> = ({
     const internalValueRef = useRef<string>(value);
     const defaultPeriodRef = useRef<PeriodType>(defaultPeriod);
     const [period, setPeriod] = useState<PeriodType>();
-    const [error, setInternalError] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
     const localeJSON = JSON.stringify(locale);
     
     useEffect(
         () => {            
             setValuesFromCronString({
                 cronString: value,
-                setInternalError,
+                setIsError,
                 onError,
                 internalValueRef,
                 firstRender: true,
@@ -64,7 +63,7 @@ const Cron: FC<CronProps> = ({
             { 
                 setValuesFromCronString({
                     cronString: value,
-                    setInternalError,
+                    setIsError,
                     onError,
                     internalValueRef,
                     firstRender: false,
@@ -92,7 +91,7 @@ const Cron: FC<CronProps> = ({
                 internalValueRef.current = cron;
 
                 onError && onError(undefined);
-                setInternalError(false);
+                setIsError(false);
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,10 +110,10 @@ const Cron: FC<CronProps> = ({
             period ? setPeriod(period) : setPeriod(defaultPeriodRef.current);
 
             onError && onError(undefined);
-            setInternalError(false);
+            setIsError(false);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [period, setValue, onError, clearButtonAction],
+        [period, setValue, onError],
     );
 
     const periodForRender = period || defaultPeriodRef.current;
@@ -125,7 +124,7 @@ const Cron: FC<CronProps> = ({
     const isHourPeriodDisplayed = isDayPeriodDisplayed || periodForRender === PeriodType.HOUR;
 
     return (
-        <CronContainer>
+        <CronContainer isError={isError}>
             <Period
                 value={periodForRender}
                 setValue={setPeriod}

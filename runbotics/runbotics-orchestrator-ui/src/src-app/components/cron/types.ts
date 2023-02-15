@@ -221,7 +221,7 @@ export interface WeekDaysProps extends FieldProps {
 
 export type SetValueNumbersOrUndefined = Dispatch<SetStateAction<number[] | undefined>>;
 export type SetValuePeriod = Dispatch<SetStateAction<PeriodType>>;
-export type SetInternalError = Dispatch<SetStateAction<boolean>>;
+export type setIsError = Dispatch<SetStateAction<boolean>>;
 
 export interface DefaultLocale {
     everyText: string;
@@ -293,7 +293,7 @@ export interface newCronObjProps {
 
 export interface SetValuesFromCronStringProps {
     cronString: string;
-    setInternalError: SetInternalError;
+    setIsError: setIsError;
     onError: OnError;
     allowEmpty: AllowEmpty;
     firstRender: boolean;
