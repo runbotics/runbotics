@@ -1,6 +1,6 @@
-import useTranslations from '#src-app/hooks/useTranslations';
-
 import { DefaultLocale } from './types';
+
+import useTranslations from '#src-app/hooks/useTranslations';
 
 export const useCurrentLocale = (): DefaultLocale => {
     const { translate } = useTranslations();

@@ -1,16 +1,17 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 
-import { Select, MenuItem, SvgIcon } from '@mui/material';
+import { MenuItem, SvgIcon } from '@mui/material';
 import { Calendar as CalendarIcon } from 'react-feather';
 
-import DEFAULT_LOCALE_EN from '../locale';
-import { PeriodProps, PeriodType } from '../types';
-import { classNames } from '../utils';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import DEFAULT_LOCALE_EN from '../../locale';
+import { PeriodType } from '../../types';
+import { PeriodContainer, PeriodSelect } from './Period.styles';
+import { PeriodProps } from './Period.types';
 
 // eslint-disable-next-line complexity
-export default function Period(props: PeriodProps) {
-    const { value, setValue, locale, className, disabled, readOnly, shortcuts } = props;
-    let options = [
+const Period: FC<PeriodProps> = ({ value, setValue, locale, disabled, readOnly }) => {
+    const options = [
         {
             value: PeriodType.YEAR,
             label: locale.yearOption || DEFAULT_LOCALE_EN.yearOption,
@@ -37,15 +38,6 @@ export default function Period(props: PeriodProps) {
         },
     ];
 
-    if (shortcuts && (shortcuts === true || shortcuts.includes('@reboot')))
-    { options = [
-        ...options,
-        {
-            value: PeriodType.REBOOT,
-            label: locale.rebootOption || DEFAULT_LOCALE_EN.rebootOption,
-        },
-    ]; }
-
     const handleChange = useCallback(
         (event) => {
             if (!readOnly) setValue(event.target.value);
@@ -53,40 +45,20 @@ export default function Period(props: PeriodProps) {
         [setValue, readOnly],
     );
 
-    const internalClassName = useMemo(
-        () =>
-            classNames({
-                'react-js-cron-field': true,
-                'react-js-cron-period': true,
-                [`${className}-field`]: !!className,
-                [`${className}-period`]: !!className,
-            }),
-        [className],
-    );
-
-    const selectClassName = useMemo(
-        () =>
-            classNames({
-                'react-js-cron-select': true,
-                'react-js-cron-select-no-prefix': locale.prefixPeriod === '',
-                [`${className}-select`]: !!className,
-            }),
-        [className, locale.prefixPeriod],
-    );
-
     return (
-        <div className={internalClassName}>
+        <PeriodContainer>
             <SvgIcon fontSize="small">
                 <CalendarIcon />
             </SvgIcon>
-            {locale.prefixPeriod !== '' && <span>{locale.prefixPeriod || DEFAULT_LOCALE_EN.prefixPeriod}</span>}
-
-            <Select
+            <PeriodDefinition
+                locale={locale}
+                localeKey="prefixPeriod"
+            />
+            <PeriodSelect
                 key={JSON.stringify(locale)}
                 defaultValue={value}
                 value={value}
                 onChange={handleChange}
-                className={selectClassName}
                 disabled={disabled}
                 open={readOnly ? false : undefined}
             >
@@ -95,7 +67,9 @@ export default function Period(props: PeriodProps) {
                         {obj.label}
                     </MenuItem>
                 ))}
-            </Select>
-        </div>
+            </PeriodSelect>
+        </PeriodContainer>
     );
-}
+};
+
+export default Period;

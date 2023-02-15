@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { ButtonProps, SelectProps } from '@mui/material';
+import { ButtonProps } from '@mui/material';
 
 export enum PeriodType {
     YEAR = 'year',
@@ -9,7 +9,6 @@ export enum PeriodType {
     DAY = 'day',
     HOUR = 'hour',
     MINUTE = 'minute',
-    REBOOT = 'reboot',
 }
 
 export interface CronProps {
@@ -215,49 +214,9 @@ export interface FieldProps {
     period: PeriodType;
 }
 
-export interface PeriodProps extends Omit<FieldProps, 'value' | 'setValue' | 'period'> {
-    value: PeriodType;
-    setValue: SetValuePeriod;
-    shortcuts: Shortcuts;
-}
-
 export interface WeekDaysProps extends FieldProps {
     humanizeLabels: boolean;
     isWeekPeriodDisplayed: boolean;
-}
-
-export interface CustomSelectProps
-    extends Omit<
-    SelectProps,
-    | 'mode'
-    | 'tokenSeparators'
-    | 'allowClear'
-    | 'virtual'
-    | 'onClick'
-    | 'onBlur'
-    | 'tagRender'
-    | 'dropdownRender'
-    | 'showSearch'
-    | 'showArrow'
-    | 'onChange'
-    | 'dropdownMatchSelectWidth'
-    | 'options'
-    | 'onSelect'
-    | 'onDeselect'
-    > {
-    grid?: boolean;
-    setValue: SetValueNumbersOrUndefined;
-    optionsList?: string[];
-    locale: Locale;
-    value?: number[];
-    humanizeLabels?: boolean;
-    disabled: boolean;
-    readOnly: boolean;
-    leadingZero?: LeadingZero;
-    clockFormat?: ClockFormat;
-    period: PeriodType;
-    unit: Unit;
-    isMultiple?: boolean;
 }
 
 export type SetValueNumbersOrUndefined = Dispatch<SetStateAction<number[] | undefined>>;
@@ -322,7 +281,7 @@ export interface Clicks {
     value: number;
 }
 
-export interface CronObjProps {
+export interface newCronObjProps {
     newMinutes: number[],
     newHours: number[],
     newMonthDays: number[],
@@ -337,7 +296,6 @@ export interface SetValuesFromCronStringProps {
     setInternalError: SetInternalError;
     onError: OnError;
     allowEmpty: AllowEmpty;
-    // internalValueRef: MutableRefObject<string>;
     firstRender: boolean;
     locale: Locale;
     shortcuts: Shortcuts;

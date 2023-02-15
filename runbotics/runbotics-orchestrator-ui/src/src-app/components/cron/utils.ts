@@ -29,7 +29,6 @@ export function sort(array: number[]) {
  */
 export function dedup(array: number[]) {
     const result: number[] = [];
-    console.log(array)
     array.forEach((i) => {
         if (result.indexOf(i) < 0) 
         { result.push(i); }

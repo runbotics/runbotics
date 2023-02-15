@@ -1,22 +1,14 @@
 /* eslint-disable complexity */
 /* eslint-disable max-params */
-import { MutableRefObject } from 'react';
-
-import { UNITS, SUPPORTED_SHORTCUTS, CronOrder as CronOrder } from './constants';
+import { UNITS, CronOrder as CronOrder } from './constants';
 import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';
 import {
     Unit,
     PeriodType,
     LeadingZero,
     ClockFormat,
-    SetInternalError,
-    OnError,
-    AllowEmpty,
-    Locale,
-    Shortcuts,
-    SetValuePeriod,
-    CronObjProps,
     SetValuesFromCronStringProps,
+    newCronObjProps,
 } from './types';
 import {
     range, sort, dedup, setError,
@@ -30,71 +22,42 @@ export const setValuesFromCronString = ({
     cronString,
     setInternalError,
     onError,
-    allowEmpty,
     internalValueRef,
     firstRender,
     locale,
-    shortcuts,
     setPeriod,
     cronDispatch
 }): SetValuesFromCronStringProps => {
     onError && onError(undefined);
     setInternalError(false);
+    let isErrorOccurred = false;
 
-    let error = false;
-    let newCronString = cronString;
-
-    // Handle empty cron string
-    if (!newCronString) {
-        if (allowEmpty === 'always' || (firstRender && allowEmpty === 'for-default-value'))
-        { return; }
-
-
-        error = true;
+    if(!cronString) {
+        if(firstRender) return;
+        isErrorOccurred = true;
     }
-
-    if (!error) {
-        // Shortcuts management
-        if (
-            // @ts-ignore
-            shortcuts && shortcuts.includes(newCronString)
-        ) {
-            if (newCronString === '@reboot') {
-                setPeriod(PeriodType.REBOOT);
-
-                return;
-            }
-
-            // Convert a shortcut to a valid cron string
-            const shortcutObject = SUPPORTED_SHORTCUTS.find(
-                (supportedShortcut) => supportedShortcut.name === newCronString
-            );
-
-            if (shortcutObject) {
-                newCronString = shortcutObject.value;
-            }
-        }
-
+    
+    if(!isErrorOccurred) {
         try {
-            const cronParts = parseCronString(newCronString);
+            const cronParts = parseCronString(cronString);
             const period = getPeriodFromCronparts(cronParts);
 
             setPeriod(period);
-
+            
             cronDispatch({ 
                 type: CRON_ACTIONS.SET_ALL, 
                 payload: { newValue: [] } 
             });
-
+            
         } catch (err) {
-            // Specific errors are not handle (yet)
-            error = true;
+            // Specific errors are not handled
+            isErrorOccurred = true;
         }
     }
 
-    if (error) {
+    if (isErrorOccurred) {
         const newInternalValueRef = internalValueRef;
-        newInternalValueRef.current = newCronString;
+        newInternalValueRef.current = cronString;
         setInternalError(true);
         setError(onError, locale);
     }
@@ -108,27 +71,7 @@ export function getCronStringFromValues(
     cronState: CronStateProps,
     humanizeValue?: boolean,
 ) {
-    if (period === 'reboot')
-    { return '@reboot'; }
-
-    // const newMonths = period === PeriodType.YEAR && cronState?.months ? cronState.months : [];
-    // const newMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.monthDays ? cronState.monthDays : [];
-    // const newNthMonthDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthMonthDays ? cronState.nthMonthDays : [];
-    // const newWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH || period === PeriodType.WEEK) && cronState?.weekDays ? cronState.weekDays : [];
-    // const newNthWeekDays = (period === PeriodType.YEAR || period === PeriodType.MONTH) && cronState?.nthWeekDays ? cronState.nthWeekDays : [];
-    // const newHours = period !== PeriodType.MINUTE && period !== PeriodType.HOUR && cronState?.hours ? cronState.hours : [];
-    // const newMinutes = period !== PeriodType.MINUTE && cronState?.minutes ? cronState.minutes : [];
-
     const parsedArray = parseCronArray(
-        // { 
-        //     newMinutes, 
-        //     newHours, 
-        //     newMonthDays,
-        //     newMonths, 
-        //     newWeekDays, 
-        //     newNthWeekDays,
-        //     newNthMonthDays,
-        // }, 
         { 
             newMinutes: cronState.minutes,
             newHours: cronState.hours,
@@ -228,7 +171,7 @@ export function formatValue(
     const needLeadingZero = leadingZero && (leadingZero === true || leadingZero.includes(type as any));
     const need24HourClock = clockFormat === '24-hour-clock' && (type === 'hours' || type === 'minutes');
 
-    if (humanize && (type === 'week-days' || type === 'months' || type === 'nth-week-days'))
+    if (humanize && (type === 'nth-month-days' || type === 'months' || type === 'week-days' || type === 'nth-week-days'))
     { cronPartString = alt[value - min]; }
     else if (value < 10 && (needLeadingZero || need24HourClock))
     { cronPartString = cronPartString.padStart(2, '0'); }
@@ -252,7 +195,7 @@ export function formatValue(
  * Parses a object of arrays of integers as a cron schedule
  */
 
-function parseCronArray(cronObj: CronObjProps, humanizeValue?: boolean) {
+function parseCronArray(cronObj: newCronObjProps, humanizeValue?: boolean) {
     if (Object.keys(cronObj).length !== 7) throw new Error('Invalid cron array');
 
     const resultArr = [];
@@ -264,9 +207,9 @@ function parseCronArray(cronObj: CronObjProps, humanizeValue?: boolean) {
 
         switch (unit.type) {
             case 'nth-week-days':
-                if(resultArr[4] !== '*' && newPart !== '*') {
+                if(resultArr[CronOrder.WEEK_DAYS] !== '*' && newPart !== '*') {
                     newPart = Number(newPart) === 4 ? 'L' : `#${Number(newPart)+1}`;
-                    resultArr[4] += newPart;
+                    resultArr[CronOrder.WEEK_DAYS] += newPart;
                 };
 
                 break;
@@ -301,19 +244,19 @@ function cronToString(parts: string[]) {
  * Find the period from cron parts
  */
 function getPeriodFromCronparts(cronParts: number[][]): PeriodType {
-    if (cronParts[3].length > 0) {
+    if (cronParts[CronOrder.MONTHS].length > 0) {
         return PeriodType.YEAR;
     }
-    if (cronParts[2].length > 0) {
+    if (cronParts[CronOrder.MONTH_DAYS].length > 0) {
         return PeriodType.MONTH;
     }
-    if (cronParts[4].length > 0) {
+    if (cronParts[CronOrder.WEEK_DAYS].length > 0) {
         return PeriodType.WEEK;
     }
-    if (cronParts[1].length > 0) {
+    if (cronParts[CronOrder.HOURS].length > 0) {
         return PeriodType.DAY;
     }
-    if (cronParts[0].length > 0) {
+    if (cronParts[CronOrder.MINUTES].length > 0) {
         return PeriodType.HOUR;
     }
 
@@ -327,12 +270,10 @@ function parseCronString(str: string) {
     if (typeof str !== 'string')
     { throw new Error('Invalid cron string'); }
 
-
     const parts = str.replace(/\s+/g, ' ').trim().split(' ');
 
     if (parts.length === 5)
     { return parts.map((partStr, idx) => parsePartString(partStr, UNITS[idx])); }
-
 
     throw new Error('Invalid cron string format');
 }
@@ -344,12 +285,10 @@ function parsePartString(str: string, unit: Unit) {
     if (str === '*' || str === '*/1')
     { return []; }
 
-
     const stringParts = str.split('/');
 
     if (stringParts.length > 2)
     { throw new Error(`Invalid value '${unit.type}'`); }
-
 
     const rangeString = replaceAlternatives(stringParts[0], unit.min, unit.alt);
     let parsedValues: number[];
@@ -383,7 +322,6 @@ function parsePartString(str: string, unit: Unit) {
     { return []; }
     if (intervalValues.length === 0)
     { throw new Error(`Empty interval value '${str}' for ${unit.type}`); }
-
 
     return intervalValues;
 }

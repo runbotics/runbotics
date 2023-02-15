@@ -1,17 +1,17 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, FC } from 'react';
 
-import { Select, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
-import { parsePartArray, partToString, formatValue } from '../converter';
-import DEFAULT_LOCALE_EN from '../locale';
-import { CustomSelectProps } from '../types';
-import { classNames, sort } from '../utils';
+import { parsePartArray, partToString, formatValue } from '../../converter';
+import DEFAULT_LOCALE_EN from '../../locale';
+import { sort } from '../../utils';
+import { StyledSelect } from './CustomSelect.styles';
+import { CustomSelectProps } from './CustomSelect.types';
 
-export default function CustomSelect({
+const CustomSelect: FC<CustomSelectProps> = ({
     value,
     setValue,
     locale,
-    className,
     humanizeLabels,
     disabled,
     readOnly,
@@ -20,7 +20,7 @@ export default function CustomSelect({
     optionsList,
     unit,
     isMultiple = true,
-}: CustomSelectProps) {
+}) => {
     const stringValue = useMemo(
         () => 
             (value && Array.isArray(value)) 
@@ -61,7 +61,7 @@ export default function CustomSelect({
             ), 
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
-        
+
     const renderTag = useCallback(
         // eslint-disable-next-line complexity
         (tagProps) => {
@@ -104,23 +104,13 @@ export default function CustomSelect({
         [setValue, unit.total],
     );
 
-    const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-select': true,
-            'react-js-cron-custom-select': true,
-            [`${className}-select`]: !!className,
-        }),
-        [className],
-    );
-
     return (
-        <Select
+        <StyledSelect
             multiple={isMultiple}
             open={readOnly ? false : undefined}
             value={stringValue}
             onChange={simpleClick}
             renderValue={renderTag}
-            className={internalClassName}
             autoWidth={false}
             disabled={disabled}
         >
@@ -129,6 +119,8 @@ export default function CustomSelect({
                     {obj.label}
                 </MenuItem>
             ))}
-        </Select>
+        </StyledSelect>
     );
-}
+};
+
+export default CustomSelect;

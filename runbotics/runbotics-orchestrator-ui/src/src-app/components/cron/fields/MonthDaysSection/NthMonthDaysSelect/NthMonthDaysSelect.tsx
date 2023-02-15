@@ -16,7 +16,7 @@ const NthMonthDaysSelect: FC<NthMonthDaysSelectProps>= ({
     period,
 }) => {
     const optionsList = locale.nthMonthDays || DEFAULT_LOCALE_EN.nthMonthDays;
-    
+
     return (
         <CustomSelect
             period={period}
