@@ -5,7 +5,7 @@ import { ProcessInstanceEventService } from './process-instance-event.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessInstanceEventEntity])],
-    exports: [TypeOrmModule, ProcessInstanceEventService],
+    exports: [ProcessInstanceEventService],
     providers: [ProcessInstanceEventService],
 })
 export class ProcessInstanceEventModule {}

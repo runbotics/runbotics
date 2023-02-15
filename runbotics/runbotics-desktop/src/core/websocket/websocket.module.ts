@@ -9,8 +9,6 @@ import { RunboticsLogger } from '#logger';
 import { ProcessListener } from './listeners/process.listener';
 import { WebsocketLogsService } from './websocket-logs.service';
 import { WebsocketService } from './websocket.service';
-import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
-import { LoopHandlerService } from '#core/bpm/loop-handler';
 
 @Module({
     imports: [
@@ -40,8 +38,6 @@ import { LoopHandlerService } from '#core/bpm/loop-handler';
         ProcessListener,
         WebsocketLogsService,
         WebsocketService,
-        RuntimeSubscriptionsService,
-        LoopHandlerService
     ],
 })
 export class WebsocketModule {}

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
@@ -13,6 +13,8 @@ import {
 
 import dynamic from 'next/dynamic';
 
+import If from '#src-app/components/utils/If';
+import useForwardRef from '#src-app/hooks/useForwardRef';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { IterationGutter } from '#src-app/store/slices/ProcessInstanceEvent';
@@ -23,22 +25,25 @@ import {
 } from '../ProcessInstanceEventsDetails';
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
-export interface InfoSlideProps {
-    containerRef: React.RefObject<HTMLDivElement>;
-    expanded: number;
-    handleChange: (
-        panelId: number
-    ) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
+
+export interface IterationSlideProps {
+    expandedEventId: number;
+    onChange: (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => void;
     iterationGutter: IterationGutter;
+    onRefChange: (ref: HTMLDivElement) => void;
+    shouldReScroll: boolean;
 }
 
-const IterationSlide: FC<InfoSlideProps> = ({
-    containerRef,
-    expanded,
-    handleChange,
+// eslint-disable-next-line react/display-name
+const IterationSlide = forwardRef<HTMLDivElement, IterationSlideProps>(({
+    expandedEventId,
+    onChange,
     iterationGutter,
-}) => {
+    onRefChange,
+    shouldReScroll,
+}, ref) => {
     const { translate } = useTranslations();
+    const containerRef = useForwardRef(ref);
 
     return (
         <Slide
@@ -46,10 +51,13 @@ const IterationSlide: FC<InfoSlideProps> = ({
             in={Boolean(iterationGutter)}
             container={containerRef.current}
             key={iterationGutter.iterationNumber}
+            {...(shouldReScroll
+                ? { ref: onRefChange }
+                : {})}
         >
             <RoundedAccordion
-                expanded={expanded === iterationGutter.iterationNumber}
-                onChange={handleChange(iterationGutter.iterationNumber)}
+                expanded={expandedEventId === iterationGutter.iterationNumber}
+                onChange={onChange(iterationGutter.iterationNumber)}
                 TransitionProps={{ unmountOnExit: true }}
                 sx={{ backgroundColor: (theme) => theme.palette.grey[200] }}
                 disableGutters
@@ -58,7 +66,7 @@ const IterationSlide: FC<InfoSlideProps> = ({
                     <Typography variant="button" sx={{ padding: '5px' }}>
                         {translate(
                             'Component.InfoPanel.Details.Loop.Iteration'
-                        )}{' '}
+                        )}&nbsp;
                         {iterationGutter.iterationNumber}
                     </Typography>
                 </AccordionHeader>
@@ -77,9 +85,7 @@ const IterationSlide: FC<InfoSlideProps> = ({
                             </AccordionSummary>
                             <AccordionDetails>
                                 <TableContainer>
-                                    {Boolean(
-                                        iterationGutter.iteratorElement
-                                    ) && (
+                                    <If condition={Boolean(iterationGutter.iteratorElement)}>
                                         <ReactJson
                                             src={{
                                                 iterator: JSON.parse(
@@ -87,7 +93,7 @@ const IterationSlide: FC<InfoSlideProps> = ({
                                                 ),
                                             }}
                                         />
-                                    )}
+                                    </If>
                                 </TableContainer>
                             </AccordionDetails>
                         </Accordion>
@@ -96,5 +102,6 @@ const IterationSlide: FC<InfoSlideProps> = ({
             </RoundedAccordion>
         </Slide>
     );
-};
+});
+
 export default IterationSlide;

@@ -17,9 +17,14 @@ import {
 import dynamic from 'next/dynamic';
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
-import { IProcessInstanceEvent, IProcessInstanceLoopEvent } from 'runbotics-common';
+import {
+    IProcessInstanceEvent,
+    IProcessInstanceLoopEvent,
+} from 'runbotics-common';
 
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import useTranslations, {
+    checkIfKeyExists,
+} from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
@@ -29,10 +34,10 @@ interface ProcessInstanceEventsDetailsTableProps {
     processInstanceEvent: IProcessInstanceEvent | IProcessInstanceLoopEvent;
 }
 
+const ProcessInstanceEventsDetailsTable: VFC<
+    ProcessInstanceEventsDetailsTableProps
 // eslint-disable-next-line complexity
-const ProcessInstanceEventsDetailsTable: VFC<ProcessInstanceEventsDetailsTableProps> = ({
-    processInstanceEvent,
-}) => {
+> = ({ processInstanceEvent }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
 
@@ -43,6 +48,18 @@ const ProcessInstanceEventsDetailsTable: VFC<ProcessInstanceEventsDetailsTablePr
         return checkIfKeyExists(translateKey)
             ? translateKey
             : processInstanceEvent.step;
+    };
+
+    const fetchLoopEvents = () => {
+        dispatch(
+            processInstanceEventActions.getProcessInstanceLoopEvents({
+                loopId: processInstanceEvent.executionId,
+                nestedIteration:
+                    (processInstanceEvent as IProcessInstanceLoopEvent)
+                        .iterationNumber ?? undefined,
+                loopLabel: getLoopLabel(),
+            })
+        );
     };
 
     return (
@@ -119,21 +136,9 @@ const ProcessInstanceEventsDetailsTable: VFC<ProcessInstanceEventsDetailsTablePr
                 <Button
                     fullWidth
                     sx={{ paddingBlock: '10px' }}
-                    onClick={() =>
-                        dispatch(
-                            processInstanceEventActions.getProcessInstanceLoopEvents(
-                                {
-                                    loopId: processInstanceEvent.executionId,
-                                    nestedIteration:
-                                        (processInstanceEvent as IProcessInstanceLoopEvent).iterationNumber ??
-                                        undefined,
-                                    loopLabel: getLoopLabel(),
-                                }
-                            )
-                        )
-                    }
+                    onClick={fetchLoopEvents}
                 >
-                    {translate('Component.InfoPanel.Details.Loop.ShowMore')} 
+                    {translate('Component.InfoPanel.Details.Loop.ShowMore')}
                 </Button>
             )}
             {processInstanceEvent.error && (

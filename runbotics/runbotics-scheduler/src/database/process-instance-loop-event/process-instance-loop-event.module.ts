@@ -5,7 +5,7 @@ import { ProcessInstanceLoopEventService } from './process-instance-loop-event.s
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessInstanceLoopEventEntity])],
-    exports: [TypeOrmModule, ProcessInstanceLoopEventService],
+    exports: [ProcessInstanceLoopEventService],
     providers: [ProcessInstanceLoopEventService],
 })
 export class ProcessInstanceLoopEventModule {}

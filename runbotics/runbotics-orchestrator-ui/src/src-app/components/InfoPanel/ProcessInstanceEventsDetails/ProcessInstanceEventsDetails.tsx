@@ -15,7 +15,7 @@ import {
     ProcessInstanceLoopEvent,
 } from '#src-app/store/slices/ProcessInstanceEvent';
 
-import InfoSlide from '../InfoSlide';
+import EventSlide from '../EventSlide';
 import IterationSlide from '../IterationSlide';
 import {
     iterationEventGuard,
@@ -32,7 +32,8 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     const dispatch = useDispatch();
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { translate } = useTranslations();
-
+    const [expandedEventId, setExpandedEventId] = React.useState<number>(null);
+    
     const {
         all: { events, eventsBreadcrumbTrail, nestedEvents: loopEvents },
     } = useSelector(processInstanceEventSelector);
@@ -49,10 +50,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         const lastEvent = eventsBreadcrumbTrail.at(-1);
         const secondLastEvent = eventsBreadcrumbTrail.at(-2);
 
-        if (
-            eventsBreadcrumbTrail.length > 1 &&
-            lastEvent.type === EventMapTypes.Iteration
-        ) {
+        if (eventsBreadcrumbTrail.length > 1 && lastEvent.type === EventMapTypes.Iteration) {
             return loopEvents[secondLastEvent.id].filter(
                 (element) =>
                     element.iterationNumber === lastEvent.iterationNumber
@@ -71,8 +69,6 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     };
 
     const processInstanceEvents = getProcessInstanceEvents();
-
-    const [expanded, setExpanded] = React.useState<number>(null);
 
     useEffect(() => {
         if (processInstanceId) {
@@ -93,10 +89,11 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     const handleChange =
         (panelId: number) =>
-            (event: React.SyntheticEvent, isExpanded: boolean) => {
-                setExpanded(isExpanded ? panelId : null);
+            (_event: React.SyntheticEvent, isExpanded: boolean) => {
+                setExpandedEventId(isExpanded ? panelId : null);
             };
 
     if (!processInstanceId && !active.orchestratorProcessInstanceId) {
@@ -130,30 +127,25 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                     .slice()
                     .sort(sortByFinished)
                     .map(
-                        (
-                            event: IProcessInstanceEvent | IterationGutter,
-                            index
-                        ) =>
+                        (event: IProcessInstanceEvent | IterationGutter, index: number) =>
                             iterationEventGuard(event) ? (
                                 <IterationSlide
                                     iterationGutter={event}
-                                    handleChange={handleChange}
-                                    containerRef={containerRef}
-                                    expanded={expanded}
+                                    onChange={handleChange}
+                                    expandedEventId={expandedEventId}
                                     key={event.iterationNumber}
+                                    ref={containerRef}
+                                    onRefChange={onRefChange}
+                                    shouldReScroll={index === processInstanceEvents.length - 1}
                                 />
                             ) : (
-                                <InfoSlide
-                                    containerRef={containerRef}
+                                <EventSlide
                                     key={event.id}
                                     processInstanceEvent={event}
-                                    expanded={expanded}
-                                    handleChange={handleChange}
-                                    index={index}
+                                    expandedEventId={expandedEventId}
+                                    onChange={handleChange}
                                     onRefChange={onRefChange}
-                                    processInstanceEventsLength={
-                                        processInstanceEvents.length
-                                    }
+                                    shouldReScroll={index === processInstanceEvents.length - 1}
                                 />
                             )
                     )}

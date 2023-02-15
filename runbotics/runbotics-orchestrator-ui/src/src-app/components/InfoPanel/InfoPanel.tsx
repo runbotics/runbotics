@@ -1,21 +1,10 @@
 import React, { VFC } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
-import {
-    Box,
-    Breadcrumbs,
-    IconButton,
-    SxProps,
-    Theme,
-    Chip,
-} from '@mui/material';
-
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-import { useDispatch, useSelector } from '#src-app/store';
-
-import { BreadCrumb, EventMapTypes, processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
+import { Box, IconButton, SxProps, Theme } from '@mui/material';
 
 import If from '../utils/If';
+import ProcessEventBreadcrumbs from './ProcessEventBreadcrumbs';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
 
@@ -30,75 +19,40 @@ const InfoPanel: VFC<InfoPanelProps> = ({
     processInstanceId,
     onClose,
     showCloseButton = false,
-}) => {
-    const { translate } = useTranslations();
-    const { eventsBreadcrumbTrail } = useSelector(
-        (state) => state.processInstanceEvent.all
-    );
-    const dispatch = useDispatch();
-    
-    const getBreadcrumbLabel = (breadcrumb: BreadCrumb) => {
-        if(!checkIfKeyExists(breadcrumb.labelKey)) return breadcrumb.labelKey;
-        if(breadcrumb.type === EventMapTypes.Iteration) {
-            return `${translate(breadcrumb.labelKey)} ${breadcrumb.iterationNumber}`;
-        }
-        return translate(breadcrumb.labelKey);
-    };
-
-    return (
-        <Box display="flex" flexDirection="column" height="100%">
-            <If condition={showCloseButton}>
-                <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    paddingX="0.625rem"
-                >
-                    <Box display="flex" alignItems="center">
-                        <Breadcrumbs 
-                            aria-label="breadcrumb"
-                            maxItems={3}
-                        >
-                            {eventsBreadcrumbTrail.length > 1 ? (
-                                eventsBreadcrumbTrail.map((breadcrumb) => (
-                                    <Chip
-                                        key={breadcrumb.id}
-                                        onClick={() => {
-                                            dispatch(processInstanceEventActions.reduceCrumbs(breadcrumb.id));
-                                        }}
-                                        label={getBreadcrumbLabel(breadcrumb)}
-                                        size="small"
-                                        sx={{marginY: (theme) => theme.spacing(0.5)}}
-                                    />
-                                ))
-                            ) : (
-                                null
-                            )}
-                        </Breadcrumbs>
-                    </Box>
-                    <IconButton
-                        aria-label="close"
-                        size="small"
-                        onClick={onClose}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-            </If>
+}) => (
+    <Box display="flex" flexDirection="column" height="100%">
+        <If condition={showCloseButton}>
             <Box
-                sx={{
-                    height: '100%',
-                    width: '100%',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                }}
+                display="flex"
+                justifyContent="space-between"
+                paddingX="0.625rem"
             >
-                <ProcessInstanceDetails processInstanceId={processInstanceId} />
-                <ProcessInstanceEventsDetails
-                    processInstanceId={processInstanceId}
-                />
+                <Box display="flex" alignItems="center">
+                    <ProcessEventBreadcrumbs />
+                </Box>
+                <IconButton
+                    aria-label="close"
+                    size="small"
+                    onClick={onClose}
+                >
+                    <CloseIcon />
+                </IconButton>
             </Box>
+        </If>
+        <Box
+            sx={{
+                height: '100%',
+                width: '100%',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+            }}
+        >
+            <ProcessInstanceDetails processInstanceId={processInstanceId} />
+            <ProcessInstanceEventsDetails
+                processInstanceId={processInstanceId}
+            />
         </Box>
-    );
-};
+    </Box>
+);
 
 export default InfoPanel;
