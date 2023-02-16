@@ -36,9 +36,8 @@ export const lightTheme: ThemeOptions = {
             default: blueGrey[600],
         },
         tag: {
-            global: blueGrey[800],
-            action: blueGrey[900],
-            attended: blueGrey[700]
+            variable: blueGrey[100],
+            action: blueGrey[50]
         },
         text: {
             primary: '#000000',

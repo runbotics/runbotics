@@ -9,27 +9,25 @@ import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 
 
+import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
+
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
 
+
 enum VariableTag {
-    Global = 'GlobalTag',
-    InputOutput = 'InputOutputTag',
-    ActionAssigned = 'ActionAssignedTag',
+    Variable = 'VariableTag',
+    ActionOutput = 'ActionOutputTag',
 }
-
-interface Taggable {
-    name: string,
-    tag: VariableTag,
-}
-
 
 const VariablesPanel = () => {
     const theme = useTheme();
     const { globalVariables, actionVariables, attendedVariables } = useProcessVariables();
     const { enqueueSnackbar } = useSnackbar();
 
+    const actionOutputs = actionVariables.filter(variable => variable.name === 'variableName');
+    const actionInputs = actionVariables.filter(variable => variable.name === 'variable');
 
     const allProcessVariables = [...globalVariables, ...actionVariables, ...attendedVariables];
 
@@ -62,47 +60,49 @@ const VariablesPanel = () => {
     };
 
     const getTagBgColor = (tag: VariableTag) => {
-        if (tag === VariableTag.Global) {
-            return theme.palette.tag.global;
-        } else if (tag === VariableTag.ActionAssigned) {
-            return theme.palette.tag.action;
+        if (tag === VariableTag.Variable) {
+            return theme.palette.tag.variable;
         } 
-        return theme.palette.tag.attended;
+        return theme.palette.tag.action;
+         
     };
 
-    const getJSXForVariable = (({name, tag}: Taggable) => (
+    const getJSXForVariable = (name: string, tag: VariableTag) => (
         <Box>
-            <Grid container key={name} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{padding: '.8rem', alignItems: 'center' }}>
-                <Grid item xs={5} sx={{wordBreak: 'break-word'}}>
+            <GridContainer container key={name} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <GridVariable item xs={5}>
                     {name}
-                </Grid>
-                <Grid item xs={5} sx={{display: 'flex', justifyContent: 'end'}}>
+                </GridVariable>
+                <GridTag item xs={5}>
                     <Chip
                         label={translate(`Process.Modeler.VariablesPanel.${tag}`).toUpperCase()}
-                        sx={{ bgcolor: getTagBgColor(tag), color: 'white' }}
+                        sx={{ bgcolor: getTagBgColor(tag), color: 'black', letterSpacing: 1.1}}
                         size="medium"/>
-                </Grid>
+                </GridTag>
                 <Grid item xs={2}>
                     <IconButton size="medium" onClick={() => handleCopy(name)}>
                         <ContentCopyRoundedIcon/>
                     </IconButton>
                 </Grid>
-            
-            </Grid>
+            </GridContainer>
             <Divider />
-        </Box>));
+        </Box>);
 
-    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable({name: variable.name, tag: VariableTag.Global}));
+    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Variable));
 
-    const getActionVariablesJSX = actionVariables?.map(variable => getJSXForVariable({name: variable.value, tag: VariableTag.ActionAssigned}));
+    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Variable));
 
-    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable({name: variable.name, tag: VariableTag.InputOutput}));
+    const getActionVariablesJSX = actionInputs?.map(variable => getJSXForVariable(variable.value, VariableTag.Variable));
+
+    const getActionOutputVariablesJSX = actionOutputs?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionOutput));
+
 
     return (
         <Box>
             {getGlobalVariablesUsedInProcessJSX}
             {getActionVariablesJSX}
             {getAttendedVariablesJSX}
+            {getActionOutputVariablesJSX}
         </Box>
     );
 };

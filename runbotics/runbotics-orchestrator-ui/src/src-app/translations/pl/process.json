@@ -638,9 +638,8 @@
     "Process.Modeler.DialogConfirm": "Ok",
     "Process.Details.Modeler.DetailsSidebar.Message.Label": "Wiadomość",
     "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna",
-    "Process.Modeler.VariablesPanel.GlobalTag": "Globalna",
-    "Process.Modeler.VariablesPanel.InputOutputTag": "Wejścia/Wyjścia",
-    "Process.Modeler.VariablesPanel.ActionAssignedTag": "Przypisana w akcji",
+    "Process.Modeler.VariablesPanel.VariableTag": "Zmienna",
+    "Process.Modeler.VariablesPanel.ActionOutputTag": "Wynik akcji",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Nazwa zmiennej została skopiowana do schowka",
     "Process.Modeler.VariablesPanel.Copy.Message.Error": "Wystąpił błąd podczas kopiowania nazwy zmiennej",
     "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"

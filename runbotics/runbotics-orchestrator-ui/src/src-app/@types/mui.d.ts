@@ -20,9 +20,8 @@ declare module '@mui/material/styles' {
       };
 
       tag: {
-        global: string,
+        variable: string,
         action: string,
-        attended: string
       }
     }
     
@@ -32,9 +31,8 @@ declare module '@mui/material/styles' {
           };
 
         tag: {
-            global: string,
+            variable: string,
             action: string,
-            attended: string
         }
     }
   }
