@@ -42,10 +42,11 @@ interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
     processId?: ProcessInstanceRequestCriteria['processId'];
     title?: ReactNode;
     sx?: SxProps<Theme>;
+    hasRerunFunctionality?: boolean;
 }
 
 // eslint-disable-next-line complexity
-const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title }, ref) => {
+const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, hasRerunFunctionality = false }, ref) => {
     const dispatch = useDispatch();
     const tableRef = useRef<HTMLDivElement>(null);
     const processInstances = useSelector(processInstanceSelector);
@@ -121,7 +122,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setPanelInfoState({ show: true });
     };
     
-    const processInstanceColumns = useProcessInstanceColumns(handleRerunProcess);
+    const processInstanceColumns = useProcessInstanceColumns(hasRerunFunctionality, handleRerunProcess);
 
     return (
         <Wrapper>

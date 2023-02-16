@@ -23,6 +23,7 @@ import { Column } from '../Table';
 import TableRowExpander from '../Table/Table.row.expander';
 
 const useProcessInstanceColumns = (
+    hasRerunFunctionality: boolean,
     handleRerunProcess: () => void
 ): Column[] => {
     const { translate } = useTranslations();
@@ -105,6 +106,10 @@ const useProcessInstanceColumns = (
             featureKeys: [FeatureKey.PROCESS_START],
         },
     ];
+
+    if (!hasRerunFunctionality) {
+        columns.pop();
+    }
 
     const accessedColumns = columns.filter((column) =>
         column.featureKeys ? hasFeatureKeyAccess(authUser, column.featureKeys) : true,

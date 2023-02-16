@@ -237,7 +237,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const rerunButton = (
         <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={() => handleRerun()}>
-            <SvgIcon fontSize="small" color="secondary">
+            <SvgIcon fontSize="small" color={isRerunButtonDisabled ? 'disabled' : 'secondary'}>
                 <RerunIcon />
             </SvgIcon>
         </IconButton>
