@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
+import If from '#src-app/components/utils/If';
+
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import { PeriodType } from '../../types';
 import { MinutesSelectProps } from './MinutesSelect.types';
-
-import If from '#src-app/components/utils/If';
 
 // eslint-disable-next-line complexity
 const MinutesSelect: FC<MinutesSelectProps> = ({ 

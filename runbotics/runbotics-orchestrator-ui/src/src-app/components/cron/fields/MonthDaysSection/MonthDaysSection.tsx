@@ -1,11 +1,11 @@
 import { FC } from 'react';
 
+import If from '#src-app/components/utils/If';
+
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { MonthDaysSectionProps } from './MonthDaysSection.types';
 import MonthDaysSelect from './MonthDaysSelect';
 import NthMonthDaysSelect from './NthMonthDaysSelect';
-
-import If from '#src-app/components/utils/If';
 
 // eslint-disable-next-line complexity
 const MonthDaysSection: FC<MonthDaysSectionProps> = ({

@@ -10,13 +10,14 @@ export interface CronStateProps {
 
 export interface CronActionProps {
     type: CRON_ACTIONS,
-    payload: { 
+    payload?: { 
         newValue?: number[],
         newState?: CronStateProps,
     }
 }
 
 export enum CRON_ACTIONS {
+    CLEAR_ALL = 'clear-all',
     SET_ALL = 'set-all',
     SET_EACH = 'set-each',
     SET_MONTHS = 'set-months',

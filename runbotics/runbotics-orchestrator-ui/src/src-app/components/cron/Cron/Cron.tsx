@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState, useCallback, useEffect, useRef, useReducer, FC } from 'react';
 
 import If from '../../utils/If';
@@ -16,7 +15,7 @@ import { CronProps, PeriodType } from '../types';
 import { cronShortcuts, initialCronState } from '../utils';
 import { ClearButton, CronContainer } from './Cron.styles';
 
-// eslint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function, complexity
 const Cron: FC<CronProps> = ({
     locale = DEFAULT_LOCALE_EN,
     value = '',
@@ -100,11 +99,8 @@ const Cron: FC<CronProps> = ({
 
     const handleClear = useCallback(
         () => {
-            cronDispatch({
-                type: CRON_ACTIONS.SET_ALL,
-                payload: {
-                    newValue: [],
-                },
+            cronDispatch({ 
+                type: CRON_ACTIONS.CLEAR_ALL,
             });
 
             period ? setPeriod(period) : setPeriod(defaultPeriodRef.current);

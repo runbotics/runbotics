@@ -2,13 +2,16 @@ import { CRON_ACTIONS, CronActionProps, CronStateProps } from './cronReducer.typ
 
 /* eslint-disable complexity */
 export const cronReducer = (state: CronStateProps, action: CronActionProps): CronStateProps => {
-    const newValue = action.payload.newValue;
-    const newState = action.payload.newState;
+    const newValue = action?.payload?.newValue;
+    const newState = action?.payload?.newState;
 
     switch (action.type) {
+        case CRON_ACTIONS.CLEAR_ALL:
+            const emptyObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, []]));
+            return { ...state, ...emptyObj };
         case CRON_ACTIONS.SET_ALL:
-            const newObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, newValue]));
-            return { ...state, ...newObj };
+            const updatedObj = Object.fromEntries(Object.entries(state).map(([key]) => [key, newValue]));
+            return { ...state, ...updatedObj };
         case CRON_ACTIONS.SET_EACH:
             return newState;
         case CRON_ACTIONS.SET_MONTHS:

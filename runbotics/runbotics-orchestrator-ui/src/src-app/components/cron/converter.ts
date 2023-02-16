@@ -45,8 +45,7 @@ export const setValuesFromCronString = ({
             setPeriod(period);
             
             cronDispatch({ 
-                type: CRON_ACTIONS.SET_ALL, 
-                payload: { newValue: [] } 
+                type: CRON_ACTIONS.CLEAR_ALL, 
             });
             
         } catch (err) {

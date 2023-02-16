@@ -10,7 +10,10 @@ export const PeriodContainer = styled.div`
 export const PeriodSelect = styled(Select)(({theme}) => `
     && { 
         margin-left: ${theme.spacing(1)};
-        padding-inline: ${theme.spacing(2)} 0;
+        height: ${theme.spacing(5)};
+        div {
+            inline-padding: ${theme.spacing(1)} 0;
+        }
     }
 `);
 
