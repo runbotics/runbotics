@@ -1,4 +1,4 @@
-export enum BpmnTask {
+export enum BpmnElement {
   SUBPROCESS = 'bpmn:SubProcess',
   START_EVENT = 'bpmn:StartEvent',
   END_EVENT = 'bpmn:EndEvent',
