@@ -1,7 +1,9 @@
 import React from 'react';
 
 import moment from 'moment';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
+
+import BotProcessRunner from '#src-app/components/BotProcessRunner';
 
 import useAuth from '#src-app/hooks/useAuth';
 
@@ -20,9 +22,9 @@ import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column } from '../Table';
 import TableRowExpander from '../Table/Table.row.expander';
 
-import ProcessRerunButton from './ProcessRerunButton';
-
-const useProcessInstanceColumns = (handleRerunProcess: () => void): Column[] => {
+const useProcessInstanceColumns = (
+    handleRerunProcess: () => void
+): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
@@ -32,9 +34,10 @@ const useProcessInstanceColumns = (handleRerunProcess: () => void): Column[] => 
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.subProcesses && row.original.subProcesses.length > 0 ? (
-                    <TableRowExpander row={row} />
-                ) : null,
+                row.original.subProcesses &&
+                row.original.subProcesses.length > 0 ? (
+                        <TableRowExpander row={row} />
+                    ) : null,
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
@@ -46,7 +49,11 @@ const useProcessInstanceColumns = (handleRerunProcess: () => void): Column[] => 
             accessor: 'status',
             width: '200px',
             Cell: ({ value }) => {
-                const formattedStatus = capitalizeFirstLetter({ text: value, lowerCaseRest: true, delimiter: /_| / });
+                const formattedStatus = capitalizeFirstLetter({
+                    text: value,
+                    lowerCaseRest: true,
+                    delimiter: /_| /,
+                });
                 return (
                     <Label color={getProcessInstanceStatusColor(value)}>
                         {/* @ts-ignore */}
@@ -79,12 +86,22 @@ const useProcessInstanceColumns = (handleRerunProcess: () => void): Column[] => 
         {
             Header: ' ',
             id: 'button',
-            Cell: ({ row }) => row.depth === 0 ? (
-                <ProcessRerunButton 
-                    processId={row.original.process.id} 
-                    input={row.original.input} 
-                    status={row.original.status} 
-                    onProcessRerun={handleRerunProcess} />) : null,
+            width: '70px',
+            Cell: ({ row }) =>
+                row.depth === 0 && row.original.input ? (
+                    <BotProcessRunner
+                        hasExecutionInfo
+                        processInstance={row.original}
+                        process={row.original.process}
+                        isProcessActive={
+                            row.original.status ===
+                                ProcessInstanceStatus.INITIALIZING ||
+                            row.original.status ===
+                                ProcessInstanceStatus.IN_PROGRESS
+                        }
+                        onRunClick={handleRerunProcess}
+                    />
+                ) : null,
             featureKeys: [FeatureKey.PROCESS_START],
         },
     ];
