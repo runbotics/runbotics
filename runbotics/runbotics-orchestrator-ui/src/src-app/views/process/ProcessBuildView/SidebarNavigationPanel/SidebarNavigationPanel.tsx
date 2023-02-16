@@ -3,11 +3,13 @@ import React, { useMemo, FC } from 'react';
 import { FeatureKey } from 'runbotics-common';
 
 
+import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
+
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
+import i18n from '#src-app/translations/i18n';
 import { ProcessBuildTab, SidebarProps } from '#src-app/types/sidebar';
 
-import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
 
 
 interface TabInfo {
@@ -18,6 +20,7 @@ interface TabInfo {
 const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedTab }) => {
     const hasReadProcessInfoAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_READ]);
     const { translate } = useTranslations();
+    const currentLanguage = i18n.language;
 
     const sidebarTabs = useMemo(() => {
         const tabs: TabInfo[] = [];
@@ -26,7 +29,7 @@ const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, se
 
         return tabs;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasReadProcessInfoAccess, translate]);
+    }, [hasReadProcessInfoAccess, currentLanguage]);
 
     return (
         <SidebarNavigationWrapper>
