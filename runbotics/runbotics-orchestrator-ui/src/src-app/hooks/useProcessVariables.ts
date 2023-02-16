@@ -5,12 +5,15 @@ import useProcessGlobalVariables from './useProcessGlobalVariables';
 
 const useProcessVariables = () => {
     const globalVariables = useProcessGlobalVariables();
-    const actionVariables = useProcessActionVariables();
+    const {inputActionVariables, outputActionVariables} = useProcessActionVariables();
     const attendedVariables = useProcessAttendedVariables();
+
+    console.log(inputActionVariables, outputActionVariables);
 
     return {
         globalVariables,
-        actionVariables,
+        inputActionVariables,
+        outputActionVariables,
         attendedVariables
     };
 };

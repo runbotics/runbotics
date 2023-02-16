@@ -1,10 +1,11 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
+import { useModelerContext } from './useModelerContext';
+
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { BPMNElement, CamundaInputOutputElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import { useModelerContext } from './useModelerContext';
 
 const useProcessGlobalVariables = () => {
     const { globalVariables } = useSelector(globalVariableSelector);
@@ -52,7 +53,7 @@ const useProcessGlobalVariables = () => {
         .map(assignVariablesElement => {
             const inputOutput: CamundaInputOutputElement =
                         assignVariablesElement.businessObject?.extensionElements
-                            ?.values[0] as CamundaInputOutputElement;
+                            ?.values[0];
 
             if (!inputOutput) {
                 return [];

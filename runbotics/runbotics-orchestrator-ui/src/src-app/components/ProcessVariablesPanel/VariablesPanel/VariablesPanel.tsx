@@ -23,13 +23,12 @@ enum VariableTag {
 
 const VariablesPanel = () => {
     const theme = useTheme();
-    const { globalVariables, actionVariables, attendedVariables } = useProcessVariables();
+    const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
     const { enqueueSnackbar } = useSnackbar();
 
-    const actionOutputs = actionVariables.filter(variable => variable.name === 'variableName');
-    const actionInputs = actionVariables.filter(variable => variable.name === 'variable');
+    // const inputActionVariables = actionVariables.inputActionVariables;
 
-    const allProcessVariables = [...globalVariables, ...actionVariables, ...attendedVariables];
+    const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
 
     if (allProcessVariables.length === 0) {
         return (
@@ -92,9 +91,9 @@ const VariablesPanel = () => {
 
     const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Variable));
 
-    const getActionVariablesJSX = actionInputs?.map(variable => getJSXForVariable(variable.value, VariableTag.Variable));
+    const getActionVariablesJSX = inputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.Variable));
 
-    const getActionOutputVariablesJSX = actionOutputs?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionOutput));
+    const getActionOutputVariablesJSX = outputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionOutput));
 
 
     return (
