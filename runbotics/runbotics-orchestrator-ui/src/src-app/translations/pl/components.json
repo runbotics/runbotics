@@ -44,7 +44,7 @@
     "Component.InfoPanel.Details.Input": "Dane wejściowe",
     "Component.InfoPanel.Details.Output": "Dane wyjściowe",
     "Component.InfoPanel.Details.Error": "Błąd",
-    "Component.InfoPanel.Details.Loop.ShowMore": "Pokaż szczegóły pętli",
+    "Component.InfoPanel.Details.Loop.ShowMore": "Szczegóły pętli",
     "Component.InfoPanel.Details.Loop.Iteration": "Iteracja",
     "Component.InfoPanel.Details.Loop.Iterator": "Iterator",
     "Component.InfoPanel.Root.Breadcrumb": "Główne zdarzenia procesu",

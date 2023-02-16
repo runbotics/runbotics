@@ -44,7 +44,9 @@ const buildProcessInstanceEventExtraReducers = (
 
         .addCase(getProcessInstanceLoopEvents.fulfilled, (state, action) => {
             const eventsBreadcrumbTrail = [...state.all.eventsBreadcrumbTrail];
-            const eventMap = action.payload.reduce(divideEventsByIteration, {});
+            const eventMap = action.payload
+                .reduce(divideEventsByIteration, {});
+
             if (
                 shouldAddIterationBreadcrumb(
                     state,

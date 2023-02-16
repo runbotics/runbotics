@@ -6,6 +6,8 @@ import {
     LoopIterationEvents,
 } from '#src-app/store/slices/ProcessInstanceEvent';
 
+import { sortByIteration } from '#src-app/store/slices/ProcessInstanceEvent/ProcessInstanceEvent.utils';
+
 import EventRenderer from './EventRenderer';
 
 interface LoopEventsRendererProps {
@@ -18,17 +20,19 @@ const LoopEventsRenderer: VFC<LoopEventsRendererProps> = ({
 }) => {
     return (
         <>
-            {Object.values(processInstanceLoopEvents).map((events, i) => (
-                <EventRenderer
-                    processInstanceEvents={events}
-                    key={events[0].id}
-                    iterationGutter={{
-                        iterationNumber: events[0].iterationNumber,
-                        iteratorElement: events[0]?.iteratorElement ?? null,
-                        type: EventMapTypes.Iteration,
-                    }}
-                />
-            ))}
+            {Object.values(processInstanceLoopEvents)
+                .sort(sortByIteration)
+                .map((events) => (
+                    <EventRenderer
+                        processInstanceEvents={events}
+                        key={events[0].id}
+                        iterationGutter={{
+                            iterationNumber: events[0].iterationNumber,
+                            iteratorElement: events[0]?.iteratorElement ?? null,
+                            type: EventMapTypes.Iteration,
+                        }}
+                    />
+                ))}
         </>
     );
 };

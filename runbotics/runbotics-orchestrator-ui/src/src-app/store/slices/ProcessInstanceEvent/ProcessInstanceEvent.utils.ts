@@ -6,6 +6,7 @@ import { EventMapTypes, ProcessInstanceEventState, ProcessInstanceLoopEvent } fr
 
 export const sortEventsByFinished = (events: IProcessInstanceLoopEvent[]) => events.slice().sort(sortByFinished);
 
+export const sortByIteration = (a: ProcessInstanceLoopEvent[], b: ProcessInstanceLoopEvent[]) => a[0].iterationNumber - b[0].iterationNumber;
 
 export const shouldAddIterationBreadcrumb = (state: ProcessInstanceEventState, nestedIteration: boolean) => (
     state.all.eventsBreadcrumbTrail.at(-1)?.type !== EventMapTypes.Iteration &&
