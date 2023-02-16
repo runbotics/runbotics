@@ -30,7 +30,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
         dispatch(processInstanceEventActions.resetAll());
     });
 
-    return(
+    return (
         <Box display="flex" flexDirection="column" height="100%">
             <Box
                 display="flex"
@@ -64,5 +64,6 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                 />
             </Box>
         </Box>
-    ); };
+    );
+};
 export default InfoPanel;

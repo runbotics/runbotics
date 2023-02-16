@@ -8,7 +8,10 @@ import {
     getProcessInstanceEvents,
     getProcessInstanceLoopEvents,
 } from './ProcessInstanceEvent.thunks';
-import { addIterationStartEvents, shouldAddIterationBreadcrumb, sortEventsByFinished } from './ProcessInstanceEvent.utils';
+import {
+    divideEventsByIteration,
+    shouldAddIterationBreadcrumb,
+} from './ProcessInstanceEvent.utils';
 
 const buildProcessInstanceEventExtraReducers = (
     builder: ActionReducerMapBuilder<ProcessInstanceEventState>
@@ -41,15 +44,19 @@ const buildProcessInstanceEventExtraReducers = (
 
         .addCase(getProcessInstanceLoopEvents.fulfilled, (state, action) => {
             const eventsBreadcrumbTrail = [...state.all.eventsBreadcrumbTrail];
-            const eventMap = sortEventsByFinished(action.payload);
-            const updatedEventMap = addIterationStartEvents(eventMap);
-    
-            if (shouldAddIterationBreadcrumb(state, Boolean(action.meta.arg.nestedIteration))) {
+            const eventMap = action.payload.reduce(divideEventsByIteration, {});
+            if (
+                shouldAddIterationBreadcrumb(
+                    state,
+                    Boolean(action.meta.arg.nestedIteration)
+                )
+            ) {
                 eventsBreadcrumbTrail.push({
                     id: `${action.meta.arg.loopId}_${action.meta.arg.nestedIteration}`,
-                    labelKey: 'Process.Details.Modeler.Actions.Loop.Loop2.Iteration',
+                    labelKey:
+                        'Process.Details.Modeler.Actions.Loop.Loop2.Iteration',
                     type: EventMapTypes.Iteration,
-                    iterationNumber: action.meta.arg.nestedIteration
+                    iterationNumber: action.meta.arg.nestedIteration,
                 });
             }
 
@@ -66,7 +73,7 @@ const buildProcessInstanceEventExtraReducers = (
                 ],
                 nestedEvents: {
                     ...state.all.nestedEvents,
-                    [action.meta.arg.loopId]: updatedEventMap,
+                    [action.meta.arg.loopId]: eventMap,
                 },
             };
         })
@@ -76,4 +83,3 @@ const buildProcessInstanceEventExtraReducers = (
 };
 
 export default buildProcessInstanceEventExtraReducers;
-

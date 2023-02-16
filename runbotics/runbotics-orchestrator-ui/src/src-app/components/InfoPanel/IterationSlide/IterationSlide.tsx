@@ -1,4 +1,3 @@
-
 import { FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -27,19 +26,15 @@ const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
 export interface IterationSlideProps {
     expandedEventId: number;
-    onChange:  (panelId: number, isExpanded: boolean) => void;
+    onChange: (panelId: number, isExpanded: boolean) => void;
     iterationGutter: IterationGutter;
-    onRefChange: (ref: HTMLDivElement) => void;
-    shouldReScroll: boolean;
     container: HTMLDivElement;
 }
 
-const IterationSlide: FC<IterationSlideProps> =({
+const IterationSlide: FC<IterationSlideProps> = ({
     expandedEventId,
     onChange,
     iterationGutter,
-    onRefChange,
-    shouldReScroll,
     container
 }) => {
     const { translate } = useTranslations();
@@ -49,13 +44,12 @@ const IterationSlide: FC<IterationSlideProps> =({
             in={Boolean(iterationGutter)}
             container={container}
             key={iterationGutter.iterationNumber}
-            {...(shouldReScroll
-                ? { ref: onRefChange }
-                : {})}
         >
             <RoundedAccordion
                 expanded={expandedEventId === iterationGutter.iterationNumber}
-                onChange={(_, expanded) => onChange(iterationGutter.iterationNumber, expanded)}
+                onChange={(_, expanded) =>
+                    onChange(iterationGutter.iterationNumber, expanded)
+                }
                 TransitionProps={{ unmountOnExit: true }}
                 sx={{ backgroundColor: (theme) => theme.palette.grey[200] }}
                 disableGutters
@@ -64,7 +58,8 @@ const IterationSlide: FC<IterationSlideProps> =({
                     <Typography variant="button" sx={{ padding: '5px' }}>
                         {translate(
                             'Component.InfoPanel.Details.Loop.Iteration'
-                        )}&nbsp;
+                        )}
+                        &nbsp;
                         {iterationGutter.iterationNumber}
                     </Typography>
                 </AccordionHeader>
@@ -73,7 +68,9 @@ const IterationSlide: FC<IterationSlideProps> =({
                         <Accordion
                             disableGutters
                             disabled={!iterationGutter.iteratorElement}
-                            defaultExpanded={Boolean(iterationGutter.iteratorElement)}
+                            defaultExpanded={Boolean(
+                                iterationGutter.iteratorElement
+                            )}
                         >
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography variant="h6">
@@ -88,7 +85,8 @@ const IterationSlide: FC<IterationSlideProps> =({
                                         <ReactJson
                                             src={{
                                                 iterator: JSON.parse(
-                                                    iterationGutter.iteratorElement ?? '{}'
+                                                    iterationGutter.iteratorElement ??
+                                                        '{}'
                                                 ),
                                             }}
                                         />

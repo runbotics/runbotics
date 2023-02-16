@@ -14,7 +14,6 @@ export enum EventMapTypes {
 export interface IterationGutter {
     iterationNumber: number;
     type: EventMapTypes.Iteration;
-    created: string;
     iteratorElement: string;
 }
 
@@ -26,15 +25,18 @@ export interface Breadcrumb {
 }
 
 export type ProcessInstanceLoopEvent =
-    | (IProcessInstanceLoopEvent & {
+    | IProcessInstanceLoopEvent & {
           type: EventMapTypes.ProcessInstanceLoopEvent;
-      })
-    | IterationGutter;
+      };
+
+export type LoopIterationEvents = {
+    [iterationNumber: number]: ProcessInstanceLoopEvent[];
+};
 
 export interface ProcessInstanceEventState {
     all: {
         events: IProcessInstanceEvent[];
-        nestedEvents: Record<EventId, ProcessInstanceLoopEvent[]>;
+        nestedEvents: Record<EventId, LoopIterationEvents>;
         eventsBreadcrumbTrail: Breadcrumb[];
         loading: boolean;
     };
