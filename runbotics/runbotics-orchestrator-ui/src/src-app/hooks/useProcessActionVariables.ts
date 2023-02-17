@@ -31,8 +31,10 @@ const useProcessActionVariables = () => {
             }
 
             return [];
-        }).filter(item => item.length > 0)
-            .flatMap(item => item);
+        }).flatMap(item => item)
+            .filter(item => item.value);
+            
+            
 
         const outputActionVariables = allActionsWithVariables.map(element => {
             const variableInfo = element.extensionElements.values[0].outputParameters;
@@ -44,6 +46,7 @@ const useProcessActionVariables = () => {
             return variableInfo.filter(item => item.name === 'variableName');
         }).filter(item => item.length > 0)
             .flatMap(item => item);
+            
 
         return {inputActionVariables, outputActionVariables};
     }, [allActionsWithVariables]);
