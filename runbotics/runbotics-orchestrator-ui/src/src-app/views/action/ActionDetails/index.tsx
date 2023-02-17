@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import Editor from '@monaco-editor/react';
 import {
@@ -24,6 +24,7 @@ import {
     saveAction,
     setShowEditModal
 } from '#src-app/store/slices/Action/Action.thunks';
+import { IAction } from '#src-app/types/model/action.model';
 import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
@@ -38,8 +39,7 @@ function isValidJson(str) {
 
 export const Index = () => {
     const dispatch = useDispatch();
-    const submitFormRef = React.useRef<any>();
-    const [draft, setDraft] = useState<any>({});
+    const [draft, setDraft] = useState<IAction>({});
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
     const showEditModal = useSelector(state => state.action.showEditModal);
@@ -59,20 +59,19 @@ export const Index = () => {
                 definition: JSON.parse(draft.form) 
             });
             setLoading(false);
-        }, 1500);
+        }, 1000);
         return () => {
             clearTimeout(handler);
         };
     }, [draft.form]);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        console.log(e);
-        if (!e.formData.script.startsWith('external.')) {
+    const handleSubmit = () => {
+        if (!draft.script.startsWith('external.')) {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
                 variant: 'error'
             });
         } else {
-            dispatch(saveAction(e.formData));
+            dispatch(saveAction(draft));
             dispatch(setShowEditModal({ show: false }));
         }
     };
@@ -173,9 +172,7 @@ export const Index = () => {
                         variant="contained"
                         color="primary"
                         autoFocus
-                        onClick={() => {
-                            submitFormRef.current.click();
-                        }}>
+                        onClick={handleSubmit}>
                         {translate('Common.Save')}
                     </Button>
                 </DialogActions>
