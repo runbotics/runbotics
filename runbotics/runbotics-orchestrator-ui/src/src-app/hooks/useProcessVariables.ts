@@ -8,8 +8,6 @@ const useProcessVariables = () => {
     const {inputActionVariables, outputActionVariables} = useProcessActionVariables();
     const attendedVariables = useProcessAttendedVariables();
 
-    console.log(inputActionVariables, outputActionVariables);
-
     return {
         globalVariables,
         inputActionVariables,
