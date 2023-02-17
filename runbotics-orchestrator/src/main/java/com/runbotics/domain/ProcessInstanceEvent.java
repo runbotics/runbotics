@@ -59,6 +59,9 @@ public class ProcessInstanceEvent implements Serializable {
     @Column(name = "error")
     private String error;
 
+    @Column(name = "script")
+    private String script;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -103,6 +106,8 @@ public class ProcessInstanceEvent implements Serializable {
         return this.step;
     }
 
+    public String getScript() { return this.script; }
+
     public ProcessInstanceEvent step(String step) {
         this.step = step;
         return this;
@@ -110,6 +115,10 @@ public class ProcessInstanceEvent implements Serializable {
 
     public void setStep(String step) {
         this.step = step;
+    }
+
+    public void setScript(String script) {
+        this.step = script;
     }
 
     public ProcessInstance getProcessInstance() {
@@ -225,6 +234,7 @@ public class ProcessInstanceEvent implements Serializable {
             ", created='" + getCreated() + "'" +
             ", log='" + getLog() + "'" +
             ", step='" + getStep() + "'" +
+            ", script='" + getScript() + "'" +
             ", executionId='" + getExecutionId() + "'" +
             ", input='" + getInput() + "'" +
             ", output='" + getOutput() + "'" +

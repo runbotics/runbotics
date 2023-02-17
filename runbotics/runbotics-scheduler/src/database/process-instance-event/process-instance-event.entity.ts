@@ -17,6 +17,9 @@ export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
 
     @Column()
         step: string;
+        
+    @Column()
+        script: string;
 
     @ManyToOne(() => ProcessInstanceEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_instance_id', referencedColumnName: 'id' })

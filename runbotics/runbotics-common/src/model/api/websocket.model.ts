@@ -3,6 +3,7 @@ export enum BotWsMessage {
     CONFIGURATION = 'configuration',
     START_PROCESS = 'start-process',
     PROCESS_INSTANCE_EVENT = 'process-instance-event',
+    PROCESS_INSTANCE_LOOP_EVENT = "process-instance-loop-event",
     PROCESS_INSTANCE = 'process-instance',
     LOG = "log",
 }

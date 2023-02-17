@@ -224,7 +224,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 }
             });
             setModeler(bpmnModeler);
-            // modeler = bpmnModeler;
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
@@ -387,7 +386,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                     }
                                 />
                             </ModelerArea>
-                            <ResizableDrawer open={currentTab !== null}>
+                            <ResizableDrawer open={currentTab !== null} >
                                 <If
                                     condition={
                                         currentTab ===

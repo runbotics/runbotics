@@ -12,6 +12,13 @@ export interface IProcessInstanceEvent {
     finished?: string | null;
     status?: ProcessInstanceEventStatus | null;
     error?: string | null;
+    script?: string;
+}
+
+export interface IProcessInstanceLoopEvent extends IProcessInstanceEvent {
+    iterationNumber: number;
+    loopId: string;
+    iteratorElement: string;
 }
 
 export enum ProcessInstanceEventStatus {

@@ -9,6 +9,7 @@ export const classes = {
     title: `${PREFIX}-title`,
     hide: `${PREFIX}-hide`,
     drawer: `${PREFIX}-drawer`,
+    drawerIcon: `${PREFIX}-icon`,
     drawerPaper: `${PREFIX}-drawerPaper`,
     drawerButton: `${PREFIX}-drawerButton`,
     drawerButtonLeft: `${PREFIX}-drawerButtonLeft`,
@@ -45,6 +46,10 @@ export const Root = styled.div<{ open: boolean }>(({ theme, open }) => ({
     [`& .${classes.drawer}`]: {
         width: drawerWidth,
         flexShrink: 0,
+    },
+
+    [`& .${classes.drawerIcon}`]: {
+        maxWidth: 'unset',
     },
 
     [`& .${classes.drawerPaper}`]: {

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
 import { IFormData } from '#src-app/Actions/types';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
 import { BPMNHelper, BpmnSubProcess } from '../../helpers/elementParameters';
+import ActionLabelForm from '../ActionLabelForm';
 import customWidgets from '../widgets';
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
@@ -103,18 +104,23 @@ const LoopActionRenderer: FC = () => {
         if (loopType === LoopType.COLLECTION && collection) {
             loopCardinality.body = formatLoopBody(collection);
         }
-
+        
         bpmnHelper.updateBusinessObject(selectedElement);
         dispatch(processActions.addAppliedAction(selectedElement.id));
+    };
+
+    const updateLabel = (label: string) => {
+        const bpmnHelper = BPMNHelper.from(modeler);
+        const newElement = selectedElement;
+        newElement.businessObject.label = label;
+        bpmnHelper.updateBusinessObject(newElement);
     };
 
     return (
         <>
             <Grid item xs={12}>
                 <Box px={2} pt={1}>
-                    <Typography variant="h4" gutterBottom>
-                        {selectedAction.label}
-                    </Typography>
+                    <ActionLabelForm onSubmit={updateLabel} />
                 </Box>
             </Grid>
             <JSONSchemaFormRenderer

@@ -8,7 +8,7 @@ export { IGlobalVariable, GlobalVariableType } from './api/global-variable.model
 export { IItem } from "./api/item.model";
 export { IProcess, defaultProcessValue } from "./api/process.model";
 export { IProcessInstance, ProcessInstanceStatus } from "./api/process-instance.model";
-export { IProcessInstanceEvent, ProcessInstanceEventStatus } from "./api/process-instance-event.model";
+export { IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus } from "./api/process-instance-event.model";
 export { IScheduleProcess } from "./api/schedule-process.model";
 export { IUser } from "./api/user.model";
 export { IAuthority, Role } from './api/authority.model';

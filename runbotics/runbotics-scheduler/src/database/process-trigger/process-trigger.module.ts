@@ -5,7 +5,7 @@ import { ProcessTriggerService } from './process-trigger.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessTriggerEntity])],
-    exports: [TypeOrmModule, ProcessTriggerService],
+    exports: [ProcessTriggerService],
     providers: [ProcessTriggerService],
 })
 export class ProcessTriggerModule {}

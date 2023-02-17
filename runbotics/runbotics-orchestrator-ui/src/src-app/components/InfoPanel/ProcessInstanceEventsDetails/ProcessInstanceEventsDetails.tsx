@@ -1,113 +1,157 @@
-import React, { useCallback, useEffect, VFC } from 'react';
+import React, { useEffect, useRef, useState, VFC } from 'react';
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, AccordionDetails, Slide, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider } from '@mui/material';
 
 import { IProcessInstanceEvent } from 'runbotics-common';
 
-
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
-import { processInstanceEventActions, processInstanceEventSelector } from '#src-app/store/slices/ProcessInstanceEvent';
-
 import {
-    ProcessInstanceEventsDetailsHeader,
-    ProcessInstanceEventsDetailsTable,
-    AccordionHeader,
-    RoundedAccordion,
-} from '.';
+    EventMapTypes,
+    LoopIterationEvents,
+    processInstanceEventActions,
+    processInstanceEventSelector,
+} from '#src-app/store/slices/ProcessInstanceEvent';
 
+import EventRenderer from './EventRenderer';
+import LoopEventsRenderer from './LoopEventsRenderer';
+import { RendererType } from './ProcessInstanceEventsDetails.types';
+import { initialState } from './ProcessInstanceEventsDetails.utils';
 
 interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-const sortByFinished = (aEvent: IProcessInstanceEvent, bEvent: IProcessInstanceEvent) =>
-    new Date(aEvent.created).getTime() - new Date(bEvent.created).getTime();
 
-// eslint-disable-next-line complexity
-const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({ processInstanceId }) => {
+const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
+    processInstanceId,
+}) => {
     const dispatch = useDispatch();
-    const containerRef = React.useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const { translate } = useTranslations();
+    const [processInstanceEvents, setProcessInstanceEvents] = useState<{
+        events: LoopIterationEvents | IProcessInstanceEvent[];
+        renderer: RendererType;
+    }>(initialState);
 
-    const processInstanceEventState = useSelector(processInstanceEventSelector);
+    const {
+        all: { events, eventsBreadcrumbTrail, nestedEvents: loopEvents },
+    } = useSelector(processInstanceEventSelector);
     const { active } = useSelector(processInstanceSelector);
+    // eslint-disable-next-line complexity
+    useEffect(() => {
+        if (processInstanceId === active.processInstance?.id) {
+            setProcessInstanceEvents({
+                events: Object.values(active.eventsMap),
+                renderer: RendererType.Events,
+            });
+            return;
+        }
 
-    const getActiveProcessInstanceEventsIfMatch = () =>
-        processInstanceId === active.processInstance?.id
-            ? Object.values(active.eventsMap)
-            : processInstanceEventState.all.events;
+        const lastEvent = eventsBreadcrumbTrail.at(-1);
+        const secondLastEvent = eventsBreadcrumbTrail.at(-2);
 
-    const processInstanceEvents = processInstanceId
-        ? getActiveProcessInstanceEventsIfMatch()
-        : Object.values(active.eventsMap);
+        if (
+            eventsBreadcrumbTrail.length > 1 &&
+            lastEvent.type === EventMapTypes.Iteration
+        ) {
+            setProcessInstanceEvents({
+                events: loopEvents[secondLastEvent.id][
+                    lastEvent.iterationNumber
+                ],
+                renderer: RendererType.Events,
+            });
+            return;
+        }
 
-    const [expanded, setExpanded] = React.useState<number>(null);
+        if (eventsBreadcrumbTrail.length > 1) {
+            setProcessInstanceEvents({
+                events: loopEvents[lastEvent.id],
+                renderer: RendererType.Loop,
+            });
+            return;
+        }
+
+        if (!processInstanceId) {
+            setProcessInstanceEvents({
+                events: Object.values(active.eventsMap),
+                renderer: RendererType.Events,
+            });
+            return;
+        }
+
+        setProcessInstanceEvents({
+            events: events,
+            renderer: RendererType.Events,
+        });
+    }, [
+        processInstanceId,
+        active.processInstance?.id,
+        loopEvents,
+        events,
+        active.eventsMap,
+        eventsBreadcrumbTrail,
+    ]);
 
     useEffect(() => {
-        if (processInstanceId) dispatch(processInstanceEventActions.getProcessInstanceEvents({ processInstanceId }));
+        if (processInstanceId) {
+            dispatch(
+                processInstanceEventActions.getProcessInstanceEvents({
+                    processInstanceId,
+                })
+            );
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
 
-    const onRefChange = useCallback((node: HTMLDivElement) => {
-        if (node && !processInstanceId) node.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleChange = (panelId: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? panelId : null);
-    };
-
-    if (!processInstanceId && !active.orchestratorProcessInstanceId)
-    { return (
-        <Typography variant="body1" sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}>
-            {translate('Component.InfoPanel.EventsDetails.NoData')}
-        </Typography>
-    ); }
-
-    if (processInstanceEvents.length === 0) return null;
+    if (!processInstanceId && !active.orchestratorProcessInstanceId) {
+        return (
+            <Typography
+                variant="body1"
+                sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}
+            >
+                {translate('Component.InfoPanel.EventsDetails.NoData')}
+            </Typography>
+        );
+    }
 
     return (
         <>
             <Divider variant="middle">
-                <Typography variant="h6">{translate('Component.InfoPanel.EventsDetails.Activities')}</Typography>
+                <Typography variant="h6">
+                    {translate('Component.InfoPanel.EventsDetails.Activities')}
+                </Typography>
             </Divider>
             <Box
-                ref={containerRef}
                 sx={{ margin: (theme) => theme.spacing(1) }}
                 display="flex"
                 flexDirection="column"
                 gap="0.625rem"
             >
-                {processInstanceEvents
-                    .slice()
-                    .sort(sortByFinished)
-                    .map((processInstanceEvent, index) => (
-                        <Slide
-                            direction="left"
-                            in={!!processInstanceEvent}
+                <If
+                    condition={
+                        processInstanceEvents.renderer === RendererType.Events
+                    }
+                    else={
+                        <LoopEventsRenderer
+                            processInstanceLoopEvents={
+                                processInstanceEvents?.events as LoopIterationEvents
+                            }
                             container={containerRef.current}
-                            key={processInstanceEvent.id}
-                            {...(index === processInstanceEvents.length - 1 ? { ref: onRefChange } : {})}
-                        >
-                            <RoundedAccordion
-                                expanded={expanded === processInstanceEvent.id}
-                                onChange={handleChange(processInstanceEvent.id)}
-                                disableGutters
-                            >
-                                <AccordionHeader expandIcon={<ExpandMoreIcon />}>
-                                    <ProcessInstanceEventsDetailsHeader processInstanceEvent={processInstanceEvent} />
-                                </AccordionHeader>
-                                <AccordionDetails>
-                                    <ProcessInstanceEventsDetailsTable processInstanceEvent={processInstanceEvent} />
-                                </AccordionDetails>
-                            </RoundedAccordion>
-                        </Slide>
-                    ))}
+                        />
+                    }
+                >
+                    <EventRenderer
+                        processInstanceEvents={
+                            processInstanceEvents?.events as IProcessInstanceEvent[]
+                        }
+                        container={containerRef.current}
+                        processInstanceId={processInstanceId}
+                    />
+                </If>
             </Box>
         </>
     );
