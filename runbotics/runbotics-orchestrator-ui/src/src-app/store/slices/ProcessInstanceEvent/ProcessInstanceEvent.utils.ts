@@ -2,18 +2,31 @@ import { IProcessInstanceLoopEvent } from 'runbotics-common';
 
 import { sortByFinished } from '#src-app/components/InfoPanel/ProcessInstanceEventsDetails/ProcessInstanceEventsDetails.utils';
 
-import { EventMapTypes, ProcessInstanceEventState, ProcessInstanceLoopEvent } from './ProcessInstanceEvent.state';
+import {
+    EventMapTypes,
+    ProcessInstanceEventState,
+    ProcessInstanceLoopEvent,
+} from './ProcessInstanceEvent.state';
 
-export const sortEventsByFinished = (events: IProcessInstanceLoopEvent[]) => events.slice().sort(sortByFinished);
+export const sortEventsByFinished = (events: IProcessInstanceLoopEvent[]) =>
+    events.slice().sort(sortByFinished);
 
-export const sortByIteration = (a: ProcessInstanceLoopEvent[], b: ProcessInstanceLoopEvent[]) => a[0].iterationNumber - b[0].iterationNumber;
+export const sortByIteration = (
+    a: ProcessInstanceLoopEvent[],
+    b: ProcessInstanceLoopEvent[]
+) => a[0].iterationNumber - b[0].iterationNumber;
 
-export const shouldAddIterationBreadcrumb = (state: ProcessInstanceEventState, nestedIteration: boolean) => (
+export const shouldAddIterationBreadcrumb = (
+    state: ProcessInstanceEventState,
+    nestedIteration: boolean
+) =>
     state.all.eventsBreadcrumbTrail.at(-1)?.type !== EventMapTypes.Iteration &&
-        nestedIteration
-);
+    nestedIteration;
 
-export const divideEventsByIteration = ((acc: {}, obj: ProcessInstanceLoopEvent) => {
+export const divideEventsByIteration = (
+    acc: Record<string, ProcessInstanceLoopEvent[]>,
+    obj: ProcessInstanceLoopEvent
+) => {
     const iterationNumber = obj.iterationNumber;
     if (!acc[iterationNumber]) {
         acc[iterationNumber] = [obj];
@@ -21,4 +34,4 @@ export const divideEventsByIteration = ((acc: {}, obj: ProcessInstanceLoopEvent)
         acc[iterationNumber].push(obj);
     }
     return acc;
-});
+};

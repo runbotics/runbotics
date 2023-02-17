@@ -57,7 +57,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     constructor(
         @Inject(forwardRef(() => DesktopRunnerService))
         private desktopRunnerService: DesktopRunnerService,
-        private loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService
     ) {}
 
     onApplicationBootstrap() {
