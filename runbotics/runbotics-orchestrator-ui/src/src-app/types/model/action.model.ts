@@ -3,7 +3,6 @@ export interface IAction {
     label?: string | null;
     script?: string | null;
     form?: string | null;
-    shallowId?: string;
 }
 
 const defaultForm = {

@@ -1,9 +1,9 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
-import _, { uniqueId } from 'lodash';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import LoadingType from '#src-app/types/loading';
+import { defaultValue } from '#src-app/types/model/action.model';
 import objFromArray from '#src-app/utils/objFromArray';
 
 import { ActionState } from './Action.state';
@@ -64,9 +64,9 @@ const buildActionExtraReducers = (
         })
         .addCase(setShowEditModal.fulfilled, (state, { payload }) => {
             state.draft.loading = LoadingType.IDLE;
-            if(payload.show){
-                state.draft.action = _.cloneDeep({...payload.action, shallowId: uniqueId()});
-            }
+            state.draft.action = payload.action
+                ? payload.action
+                : { ...defaultValue };
             state.showEditModal = payload.show;
         })
         .addCase(saveAction.rejected, (state, action) => {
