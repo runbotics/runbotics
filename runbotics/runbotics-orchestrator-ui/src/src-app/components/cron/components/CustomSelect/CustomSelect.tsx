@@ -1,55 +1,67 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, FC } from 'react';
 
-import { Select, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
 
-import { parsePartArray, partToString, formatValue } from '../converter';
-import DEFAULT_LOCALE_EN from '../locale';
-import { CustomSelectProps } from '../types';
-import { classNames, sort } from '../utils';
+import { parsePartArray, partToString, formatValue } from '../../converter';
+import DEFAULT_LOCALE_EN from '../../locale';
+import { sort } from '../../utils';
+import { StyledSelect } from './CustomSelect.styles';
+import { CustomSelectProps } from './CustomSelect.types';
 
-export default function CustomSelect(props: CustomSelectProps) {
-    const {
-        value,
-        setValue,
-        locale,
-        className,
-        humanizeLabels,
-        disabled,
-        readOnly,
-        leadingZero,
-        clockFormat,
-        optionsList,
-        unit,
-    } = props;
-
-    const stringValue = useMemo(() => {
-        if (value && Array.isArray(value)) 
-        { return value.map((item: number) => item.toString()); }
-        
-        return [];
-    }, [value]);
+const CustomSelect: FC<CustomSelectProps> = ({
+    value,
+    setValue,
+    locale,
+    humanizeLabels,
+    disabled,
+    readOnly,
+    leadingZero,
+    clockFormat,
+    optionsList,
+    unit,
+    isMultiple = true,
+}) => {
+    const stringValue = useMemo(
+        () => 
+            (value && Array.isArray(value)) 
+                ? value.map((item: number) => item.toString())
+                : [],
+        [value]
+    );
 
     const options = useMemo(
-        () => {
-            if (optionsList) 
-            { return optionsList.map((option, index) => {
-                const number = unit.min === 0 ? index : index + 1;
-                return {
-                    value: number.toString(),
-                    label: option,
-                };
-            }); }
-            
-            return [...Array(unit.total)].map((e, index) => {
-                const number = unit.min === 0 ? index : index + 1;
-                return {
-                    value: number.toString(),
-                    label: formatValue(number, unit, humanizeLabels, leadingZero, clockFormat),
-                };
-            });
-        },
+        () => optionsList 
+            ? (
+                optionsList.map(
+                    (option, index) => {
+                        const number = unit.min === 0 ? index : index + 1;
+
+                        return {
+                            value: number.toString(),
+                            label: option,
+                        };
+                    }
+                )
+            ) 
+            : (
+                [...Array(unit.total)].map((e, index) => {
+                    const number = unit.min === 0 ? index : index + 1;
+
+                    return {
+                        value: number.toString(),
+                        label: formatValue(
+                            number,
+                            unit,
+                            humanizeLabels,
+                            leadingZero,
+                            clockFormat
+                        ),
+                    };
+                })
+            ), 
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
+
     const renderTag = useCallback(
         // eslint-disable-next-line complexity
         (tagProps) => {
@@ -92,23 +104,13 @@ export default function CustomSelect(props: CustomSelectProps) {
         [setValue, unit.total],
     );
 
-    const internalClassName = useMemo(
-        () => classNames({
-            'react-js-cron-select': true,
-            'react-js-cron-custom-select': true,
-            [`${className}-select`]: !!className,
-        }),
-        [className],
-    );
-
     return (
-        <Select
-            multiple
+        <StyledSelect
+            multiple={isMultiple}
             open={readOnly ? false : undefined}
             value={stringValue}
             onChange={simpleClick}
             renderValue={renderTag}
-            className={internalClassName}
             autoWidth={false}
             disabled={disabled}
         >
@@ -117,6 +119,8 @@ export default function CustomSelect(props: CustomSelectProps) {
                     {obj.label}
                 </MenuItem>
             ))}
-        </Select>
+        </StyledSelect>
     );
-}
+};
+
+export default CustomSelect;

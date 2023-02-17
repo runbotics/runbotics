@@ -7,11 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import * as yup from 'yup';
 
-
-
-
 import Cron from '#src-app/components/cron';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
@@ -75,7 +71,6 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
             <Cron
                 value={cron5Digit}
                 setValue={(cron) => props.onChange(`${splitted[0]} ${cron}`)}
-                clearButton={false}
                 locale={currentLocale}
             />
         );

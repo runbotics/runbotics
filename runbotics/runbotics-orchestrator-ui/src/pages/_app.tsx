@@ -27,7 +27,6 @@ import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
 const { publicRuntimeConfig } = getConfig();
 
-import '#src-app/theme/cronStyles.css';
 import '#src-landing/scss/main.scss';
 import '#src-landing/scss/global.scss';
 
