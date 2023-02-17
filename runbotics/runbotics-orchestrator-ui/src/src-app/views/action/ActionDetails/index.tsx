@@ -19,6 +19,7 @@ import {
     withTheme
 } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
+import _ from 'lodash';
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -62,6 +63,8 @@ export const Index = () => {
 
     useEffect(() => {
         setDraft(draftState.action);
+        //force re-render
+        setLive({});
     }, [draftState.action]);
 
     useEffect(() => {
@@ -112,10 +115,10 @@ export const Index = () => {
                             <Form
                                 liveValidate
                                 ref={ref}
-                                schema={schema}
+                                schema={_.cloneDeep(schema)}
                                 widgets={customWidgets}
-                                uiSchema={uiSchema}
-                                formData={draft}
+                                uiSchema={_.cloneDeep(uiSchema)}
+                                formData={_.cloneDeep(draft)}
                                 onChange={handleChange}
                                 onSubmit={handleSubmit}>
                                 <Button
