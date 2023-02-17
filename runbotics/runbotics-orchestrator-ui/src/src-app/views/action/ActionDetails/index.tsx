@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
+import Editor from '@monaco-editor/react';
 import {
     Box,
     Button,
@@ -9,16 +10,10 @@ import {
     DialogTitle,
     Grid,
     LinearProgress,
+    TextField,
     Typography
 } from '@mui/material';
-import {
-    FormProps,
-    IChangeEvent,
-    ISubmitEvent,
-    UiSchema,
-    withTheme
-} from '@rjsf/core';
-import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
+
 import { useSnackbar } from 'notistack';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -33,30 +28,22 @@ import { IAction } from '#src-app/types/model/action.model';
 import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
-import useActionDetailsSchema from './useActionDetailsSchema';
-
-const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any> & { ref: any }>;
-
-const uiSchema: UiSchema = {
-    form: {
-        'ui:widget': 'EditorWidget',
-        'ui:options': {
-            language: 'json'
-        }
+function isValidJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
     }
-};
+    return true;
+}
 
 export const Index = () => {
     const dispatch = useDispatch();
-    const ref = React.useRef<any>();
-    const submitFormRef = React.useRef<any>();
-    const [draft, setDraft] = useState<any>({});
+    const [draft, setDraft] = useState<IAction>({});
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
     const showEditModal = useSelector(state => state.action.showEditModal);
     const { enqueueSnackbar } = useSnackbar();
-    const schema = useActionDetailsSchema();
-
     const draftState = useSelector(state => state.action.draft);
     const { translate } = useTranslations();
 
@@ -69,29 +56,43 @@ export const Index = () => {
         const handler = setTimeout(() => {
             setLive({
                 id: uuidv4(),
-                definition: JSON.parse(draft.form)
+                definition: JSON.parse(draft.form) 
             });
-
             setLoading(false);
-        }, 1500);
+        }, 1000);
         return () => {
             clearTimeout(handler);
         };
     }, [draft.form]);
 
-    const handleSubmit = (e: ISubmitEvent<IAction>) => {
-        if (!e.formData.script.startsWith('external.')) {
+    const handleSubmit = () => {
+        if (!draft.script.startsWith('external.')) {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
                 variant: 'error'
             });
         } else {
-            dispatch(saveAction(e.formData));
+            dispatch(saveAction(draft));
             dispatch(setShowEditModal({ show: false }));
         }
     };
 
-    const handleChange = (e: IChangeEvent<IAction>) => {
-        setDraft(e.formData);
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setDraft(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    const handleEditorChange = (value: string) => {
+        if(!isValidJson(value)) {
+            setLoading(true);
+            return;
+        };
+        setDraft((prev) => ({
+            ...prev,
+            form: value
+        }));
+        setLoading(false);
     };
 
     return (
@@ -109,21 +110,29 @@ export const Index = () => {
                 <DialogContent>
                     <Grid container>
                         <Grid item xs={8}>
-                            <Form
-                                liveValidate
-                                ref={ref}
-                                schema={schema}
-                                widgets={customWidgets}
-                                uiSchema={uiSchema}
-                                formData={draft}
-                                onChange={handleChange}
-                                onSubmit={handleSubmit}>
-                                <Button
-                                    ref={submitFormRef}
-                                    type="submit"
-                                    style={{ display: 'none' }}
+                            <form onSubmit={handleSubmit}>
+                                <TextField fullWidth label={translate('Action.Details.Script')} 
+                                    name="script"
+                                    sx={{margin: (theme) => `${theme.spacing(1)} 0`}} 
+                                    value={draft.script}
+                                    onChange={handleChange}
                                 />
-                            </Form>
+                                <TextField fullWidth label={translate('Action.Details.Label')} 
+                                    name="label"
+                                    sx={{margin: (theme) => `${theme.spacing(1)} 0 ${theme.spacing(2)} 0`}} 
+                                    value={draft.label}
+                                    onChange={handleChange}
+
+                                />
+                                <ErrorBoundary>
+                                    <Editor
+                                        height="60vh"
+                                        defaultLanguage="json"
+                                        value={draft.form}
+                                        onChange={handleEditorChange}
+                                    />
+                                </ErrorBoundary>
+                            </form>
                         </Grid>
                         <Grid item xs={4}>
                             <Box px={2} pt={1}>
@@ -163,9 +172,7 @@ export const Index = () => {
                         variant="contained"
                         color="primary"
                         autoFocus
-                        onClick={() => {
-                            submitFormRef.current.click();
-                        }}>
+                        onClick={handleSubmit}>
                         {translate('Common.Save')}
                     </Button>
                 </DialogActions>
