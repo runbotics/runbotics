@@ -17,14 +17,14 @@ import { ProcessSchedulerService } from './process/process.scheduler.service';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
-import { FileUploadService } from './upload/file-upload.service';
 import { QueueService } from './queue.service';
+import { MicrosoftModule } from 'src/microsoft/microsoft.module';
 
 @Module({
     imports: [
-        ConfigModule,
         DatabaseModule,
         AuthModule,
+        MicrosoftModule,
         BullModule.registerQueueAsync({
             name: 'scheduler',
             imports: [ConfigModule],
@@ -50,8 +50,8 @@ import { QueueService } from './queue.service';
         SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController
     ],
     providers: [
-        SchedulerService, ServerConfigService, SchedulerProcessor, ProcessSchedulerService,
-        ProcessInstanceSchedulerService, BotSchedulerService, FileUploadService, QueueService,
+        SchedulerService, SchedulerProcessor, ProcessSchedulerService,
+        ProcessInstanceSchedulerService, BotSchedulerService, QueueService,
     ],
     exports: [QueueService]
 })

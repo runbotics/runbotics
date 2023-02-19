@@ -12,7 +12,6 @@ import { BotSystemModule } from '../database/bot-system/bot-system.module';
 import { BotCollectionModule } from '../database/bot-collection/bot-collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';
-import { MicrosoftSessionService } from './microsoft.session';
 
 const GlobalRoleGuard = {
     provide: APP_GUARD,
@@ -26,7 +25,6 @@ const GlobalFeatureKeyGuard = {
 
 @Module({
     imports: [
-        ConfigModule,
         UserModule,
         BotModule,
         BotCollectionModule,
@@ -43,7 +41,9 @@ const GlobalFeatureKeyGuard = {
             })
         }),
     ],
-    providers: [AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard, MicrosoftSessionService],
-    exports: [AuthService, PassportModule, MicrosoftSessionService],
+    providers: [
+        AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard,
+    ],
+    exports: [AuthService, PassportModule],
 })
 export class AuthModule { }

@@ -1,20 +1,19 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
 import { InstantProcess, ProcessInput, BotWsMessage, IBot, IProcess } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { WebsocketService } from 'src/websocket/websocket.service';
-import { FileUploadService } from '../upload/file-upload.service';
-import { MicrosoftSessionService } from 'src/auth/microsoft.session';
+import { FileUploadService } from '../../microsoft/file-upload.service';
 import _ from 'lodash';
 
 @Injectable()
 export class ProcessSchedulerService {
     private readonly logger = new Logger(ProcessSchedulerService.name);
 
-    constructor(private readonly websocketService: WebsocketService,
+    constructor(
+        private readonly websocketService: WebsocketService,
         private readonly fileUploadService: FileUploadService,
-        private readonly microsoftSessionService: MicrosoftSessionService) {
-    }
+    ) {}
 
     private async handleUploadedFiles(process: IProcess, input: ProcessInput, orchestratorProcessInstanceId: string) {
         const uiSchema = JSON.parse(process.executionInfo).uiSchema;
@@ -22,16 +21,10 @@ export class ProcessSchedulerService {
 
         if (fileKeys.length <= 0) return;
 
-        const token = await this.microsoftSessionService.getToken()
-            .catch(err => {
-                this.logger.error('Failed to get microsoft bearer token', err);
-                throw new BadRequestException('Failed authenticating with sharepoint');
-            });
-
         for (const key of fileKeys) {
             const file = _.get(input.variables, key);
             if (!file) continue;
-            const downloadLink = await this.fileUploadService.uploadFile(token.token, file, orchestratorProcessInstanceId)
+            const downloadLink = await this.fileUploadService.uploadFile(file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload file', err);
                     throw new InternalServerErrorException('Failed uploading file to sharepoint' + err?.message ?? '');

@@ -34,6 +34,10 @@ export interface EmailConfig {
 export class ServerConfigService {
     constructor(private configService: ConfigService) { }
 
+    get entrypointUrl(): string {
+        return this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
+    }
+
     get redisSettings(): RedisSettings {
         return {
             host: this.configService.get('RUNBOTICS_SCHEDULER_REDIS_HOST'),

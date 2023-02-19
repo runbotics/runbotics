@@ -237,7 +237,7 @@ export class MailService implements OnModuleInit {
 
     private parseMailBody(text: string) {
         return text
-            .split(/\r?\n/)
+            ?.split(/\r?\n/)
             .reduce((input, line, index) => {
                 if (!line) return input;
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars

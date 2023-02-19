@@ -1,6 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
-import { ConfigModule } from '../config/config.module';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from '../mail/mail.module';
 
@@ -10,18 +9,18 @@ import { BotLogService } from './bot-log/bot-log.service';
 import { BotWebSocketGateway } from './gateway/bot.gateway';
 import { WebsocketService } from './websocket.service';
 import { UiGateway } from './gateway/ui.gateway';
-import { FileUploadService } from 'src/queue/upload/file-upload.service';
+import { MicrosoftModule } from 'src/microsoft/microsoft.module';
 
 @Global()
 @Module({
     imports: [
         DatabaseModule,
         AuthModule,
-        ConfigModule,
         MailModule,
+        MicrosoftModule,
     ],
     providers: [
-        BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService, FileUploadService
+        BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService,
     ],
     exports: [
         BotWebSocketGateway, UiGateway, BotLogService, BotProcessService, BotProcessEventService, WebsocketService,

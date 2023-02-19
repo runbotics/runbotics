@@ -9,6 +9,7 @@ import { Connection } from 'typeorm';
 import { UiGateway } from '../gateway/ui.gateway';
 import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process.service.utils';
 import { MailService } from 'src/mail/mail.service';
+import { FileUploadService } from 'src/microsoft/file-upload.service';
 
 @Injectable()
 export class BotProcessService {
@@ -21,6 +22,7 @@ export class BotProcessService {
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
         private readonly mailService: MailService,
+        private readonly fileUploadService: FileUploadService,
     ) {}
 
     async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
@@ -45,12 +47,20 @@ export class BotProcessService {
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
 
-            if (updatedProcessInstance.rootProcessInstanceId === null) {
+            if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
 
             if (!processInstance.rootProcessInstanceId && isProcessInstanceFinished(processInstance.status)) {
                 await this.mailService.sendProcessResultMail(processInstance);
+            }
+
+            if (isProcessInstanceFinished(processInstance.status)) {
+                this.logger.log('Clearing sharepoint temporary files');
+                await this.fileUploadService.deleteTempFolder(processInstance.orchestratorProcessInstanceId)
+                    .catch(() => {
+                        this.logger.error('Temp folder not found');
+                    });
             }
         } catch (err) {
             this.logger.error('Process instance update error: rollback', err);
