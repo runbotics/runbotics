@@ -49,7 +49,7 @@ export class BotProcessService {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
 
-            if (isProcessInstanceFinished(processInstance.status)) {
+            if (!processInstance.rootProcessInstanceId && isProcessInstanceFinished(processInstance.status)) {
                 await this.mailService.sendProcessResultMail(processInstance);
             }
         } catch (err) {
