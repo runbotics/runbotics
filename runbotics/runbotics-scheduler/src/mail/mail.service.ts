@@ -22,7 +22,7 @@ const FETCH_MAILS_CONFIG: FetchQueryObject = {
 const DEFAULT_MAILBOX = 'INBOX';
 const EVERY_MINUTE_CRON = '0 * * * * *';
 const SEEN_FLAG = '\\Seen';
-const AUTHORISED_DOMAIN = 'all-for-one.com';
+const AUTHORIZED_DOMAIN = 'all-for-one.com';
 const EMAIL_TRIGGER_CRON_JOB_NAME = 'email_trigger';
 
 @Injectable()
@@ -65,15 +65,15 @@ export class MailService implements OnModuleInit {
 
     private checkMailConfig() {
         if (!this.serverConfigService.readEmailConfig.auth.user || !this.serverConfigService.readEmailConfig.auth.pass) {
-            throw new Error('Missing mail auth config: Email trigger won\'t be available');
+            throw new Error('Missing mail auth config. Email trigger won\'t be available');
         }
 
         if (!this.serverConfigService.readEmailConfig.host || !this.serverConfigService.readEmailConfig.port) {
-            throw new Error('Missing imap mail config: Email trigger won\'t be available');
+            throw new Error('Missing imap mail config. Email trigger won\'t be available');
         }
 
         if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
-            throw new Error('Missing smtp mail config: Email trigger won\'t be available');
+            throw new Error('Missing smtp mail config. Email trigger won\'t be available');
         }
     }
 
@@ -152,7 +152,7 @@ export class MailService implements OnModuleInit {
             }
 
             if (processedMails.length) {
-                this.logger.log('Mails processsed: ', processedMails);
+                this.logger.log('Mails processed: ', processedMails);
             } else {
                 this.logger.log('No mails processed ');
             }
@@ -179,7 +179,7 @@ export class MailService implements OnModuleInit {
 
     private getProcessResultMailText(processInstance: IProcessInstance) {
         if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-            return `An error occured during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
+            return `An error occurred during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
         }
         
         if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
@@ -249,8 +249,8 @@ export class MailService implements OnModuleInit {
             }, {});
     }
 
-    private hasTriggerAccess(emailAdress: string) {
-        return emailAdress.includes(`@${AUTHORISED_DOMAIN}`);
+    private hasTriggerAccess(emailAddress: string) {
+        return emailAddress.includes(`@${AUTHORIZED_DOMAIN}`);
     }
 
 } 
