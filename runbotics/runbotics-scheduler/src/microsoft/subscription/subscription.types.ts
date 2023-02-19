@@ -2,7 +2,12 @@ export interface Subscription {
     '@odata.type': '#microsoft.graph.subscription';
     id: string;
     resource: string; // https://learn.microsoft.com/en-us/graph/api/subscription-post-subscriptions?view=graph-rest-1.0&tabs=javascript#resources-examples
-    changeType: 'created' | 'updated' | 'deleted';
+    /**
+     * @type string
+     * @description Type of change event related to provided resource . Consists values 'created', 'updated or 'deleted' divided by comma
+     * @example 'created,updated,deleted'
+     */
+    changeType: string;
     clientState: string;
     notificationUrl: string;
     expirationDateTime: string; // timestamp

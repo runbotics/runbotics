@@ -3,48 +3,6 @@ import { AccountInfo, ConfidentialClientApplication, Configuration, UsernamePass
 import { AuthenticationProvider } from '@microsoft/microsoft-graph-client';
 import { Logger } from 'src/utils/logger';
 
-const dev = {
-    tenantId: '',
-    clientId: '',
-    user: '',
-    pass: '',
-    secret: '',
-};
-
-const prod = {
-    tenantId: '',
-    clientId: '',
-    user: '',
-    pass: '',
-};
-
-const configProd: Configuration = {
-    auth: {
-        clientId: prod.clientId,
-        authority: `https://login.microsoftonline.com/${prod.tenantId}`,
-    },
-};
-
-const configDev: Configuration = {
-    auth: {
-        clientId: dev.clientId,
-        authority: `https://login.microsoftonline.com/${dev.tenantId}`,
-        clientSecret: dev.secret,
-    },
-};
-
-const prodConfig: UsernamePasswordRequest = {
-    password: prod.pass,
-    username: prod.user,
-    scopes: ['user.read'],
-};
-
-const devConfig: UsernamePasswordRequest = {
-    password: dev.pass,
-    username: dev.user,
-    scopes: ['user.read'],
-};
-
 @Injectable()
 export class MicrosoftAuthService implements AuthenticationProvider {
     private readonly logger = new Logger(MicrosoftAuthService.name);
@@ -65,7 +23,7 @@ export class MicrosoftAuthService implements AuthenticationProvider {
                 this.logger.log('MS token cache hit');
                 return response;
             })
-            .catch((e) => {
+            .catch(() => {
                 this.logger.warn('No MS token in cache');
                 return this.getNewToken();
             });

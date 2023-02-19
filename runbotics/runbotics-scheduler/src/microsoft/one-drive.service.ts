@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
-import { MicrosoftAuthService } from './microsoft-auth.service';
-import { MicrosoftGraphClient } from './microsoft-graph-client';
+import { MicrosoftGraphService } from './microsoft-graph.service';
 
 @Injectable()
-export class OneDriveService extends MicrosoftGraphClient {
+export class OneDriveService {
     private readonly logger = new Logger(OneDriveService.name);
 
     constructor(
-        readonly microsoftAuthService: MicrosoftAuthService,
-    ) {
-        super(microsoftAuthService);
-    }
+        private readonly microsoftGraphService: MicrosoftGraphService,
+    ) {}
 
     getItem(itemId: string) {
-        return this.client.api(`/me/drive/items/${itemId}`)
+        return this.microsoftGraphService.api(`/me/drive/items/${itemId}`)
             .get();
     }
 
     deleteItemByPath(itemPath: string) {
         // chyba mozna prosciej https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=http
         // chyba nie https://learn.microsoft.com/en-us/graph/api/resources/onedrive?view=graph-rest-1.0
-        return this.client.api(`me/drive/root:/${itemPath}`)
+        return this.microsoftGraphService.api(`me/drive/root:/${itemPath}`)
             .delete();
     }
 
@@ -33,7 +30,7 @@ export class OneDriveService extends MicrosoftGraphClient {
     }
 
     uploadFile(fullFilePath: string, content: string, contentType: string) {
-        return this.client.api(`/me/drive/root:/${fullFilePath}:/content`)
+        return this.microsoftGraphService.api(`/me/drive/root:/${fullFilePath}:/content`)
             .header('Content-Type', contentType)
             .put(this.bufferFromBase64(content));
     }

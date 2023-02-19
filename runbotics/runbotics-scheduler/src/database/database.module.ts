@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerConfigService } from '../config/serverConfig.service';
 import { ConfigModule } from '../config/config.module';
 import { AuthorityModule } from './authority/authority.module';
@@ -30,7 +30,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
                     database: serverConfigService.dbSettings.database,
                     entities: ['dist/**/*.entity{.ts,.js}'],
                     synchronize: false,
-                } as TypeOrmModuleOptions;
+                };
             },
             inject: [ServerConfigService]
         }),
@@ -49,7 +49,6 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessTriggerModule,
     ],
     exports: [
-        TypeOrmModule,
         AuthorityModule,
         FeatureKeyModule,
         UserModule,
@@ -63,6 +62,6 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
         ProcessTriggerModule,
-    ]
+    ],
 })
 export class DatabaseModule { }

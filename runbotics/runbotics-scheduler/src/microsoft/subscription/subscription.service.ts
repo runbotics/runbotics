@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
-import { MicrosoftAuthService } from '../microsoft-auth.service';
 import {
     CreateSubscriptionRequest, CreateSubscriptionResponse, GetAllSubscriptionsResponse, GetSubscriptionResponse, Subscription,
 } from './subscription.types';
@@ -9,38 +8,20 @@ import { EMAIL_NOTIFICATION_CLIENT_STATE, EMAIL_NOTIFICATION_URL_PATH } from './
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ServerConfigService } from 'src/config/serverConfig.service';
-import { MicrosoftGraphClient } from '../microsoft-graph-client';
+import { MicrosoftGraphService } from '../microsoft-graph.service';
 dayjs.extend(utc);
 
 @Injectable()
-export class SubscriptionService extends MicrosoftGraphClient implements OnModuleInit {
+export class SubscriptionService implements OnModuleInit {
     private readonly logger = new Logger(SubscriptionService.name);
 
     constructor(
-        readonly microsoftAuthService: MicrosoftAuthService,
         private readonly serverConfigService: ServerConfigService,
-    ) {
-        super(microsoftAuthService);
-    }
+        private readonly microsoftGraphService: MicrosoftGraphService,
+    ) {}
 
     onModuleInit() {
-        // this.createEmailSubscription()
-        //     .then(() => {
-        //         this.getAllSubscriptions()
-        //             .then((response) => {
-        //                 this.logger.log('ALL SUBS: ', response);
-        //                 // response.value.forEach(sub => {
-        //                 //     this.deleteSubscription(sub.id);
-        //                 // });
-        //             })
-        //             .catch(e => {
-        //                 this.logger.error('ALL SUBS DUPŁ, LECIMY DALEJ: ', e.message, e);
-        //             });
-        //     })
-        //     .catch((e) => {
-        //         this.logger.error('SUB DUPŁ, LECIMY DALEJ: ', e.message, e);
-        //     });
-
+        // this.createEmailSubscription();
 
         this.getAllSubscriptions()
             .then((response) => {
@@ -48,9 +29,6 @@ export class SubscriptionService extends MicrosoftGraphClient implements OnModul
                 // response.value.forEach(sub => {
                 //     this.deleteSubscription(sub.id);
                 // });
-            })
-            .catch(e => {
-                this.logger.error('ALL SUBS DUPŁ, LECIMY DALEJ: ', e.message, e);
             });
     }
 
@@ -81,32 +59,32 @@ export class SubscriptionService extends MicrosoftGraphClient implements OnModul
 
     // https://learn.microsoft.com/en-us/graph/webhooks-lifecycle#actions-to-take-2
     reauthorizeSubscription(subscriptionId: string) {
-        return this.client.api(`/subscriptions/${subscriptionId}/reauthorize`)
+        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}/reauthorize`)
             .post(null);
     }
 
     // schedule new cron each time a subscription is created - max length under 3 days (4230mins) for emails (once a day?) 
     // https://learn.microsoft.com/en-us/graph/api/subscription-post-subscriptions?view=graph-rest-1.0&tabs=javascript
     createSubscription(subscription: CreateSubscriptionRequest): Promise<CreateSubscriptionResponse> {
-        return this.client.api('/subscriptions')
+        return this.microsoftGraphService.api('/subscriptions')
             .post(subscription);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-delete?view=graph-rest-1.0&tabs=javascript
     deleteSubscription(subscriptionId: string): Promise<void> {
-        return this.client.api(`/subscriptions/${subscriptionId}`)
+        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
             .delete();
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-list?view=graph-rest-1.0&tabs=javascript
     getAllSubscriptions(): Promise<GetAllSubscriptionsResponse> {
-        return this.client.api('/subscriptions')
+        return this.microsoftGraphService.api('/subscriptions')
             .get();
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-get?view=graph-rest-1.0&tabs=javascript
     getSubscription(subscriptionId: string): Promise<GetSubscriptionResponse> {
-        return this.client.api(`/subscriptions/${subscriptionId}`)
+        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
             .get();
     }
 
@@ -114,7 +92,7 @@ export class SubscriptionService extends MicrosoftGraphClient implements OnModul
     updateSubscription(
         subscriptionId: string, subscription: Pick<Subscription, 'expirationDateTime'>
     ): Promise<GetSubscriptionResponse> {
-        return this.client.api(`/subscriptions/${subscriptionId}`)
+        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
             .update(subscription);
     }
 }
