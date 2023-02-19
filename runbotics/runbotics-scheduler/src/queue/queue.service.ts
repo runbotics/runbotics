@@ -64,7 +64,7 @@ export class QueueService implements OnModuleInit {
         const { process, input } = params;
         this.logger.log(`Adding new instant job for process: ${process.name}`);
 
-        await this.handleAttededProcess(process, input)
+        await this.handleAttendedProcess(process, input)
             .catch(err => {
                 this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
                 throw new BadRequestException(err);
@@ -169,7 +169,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Cleared staled job(s)');
     }
     
-    private async handleAttededProcess(process: IProcess, input?: ProcessInput) {
+    private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
         
         if (!input?.variables) {

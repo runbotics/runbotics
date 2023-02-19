@@ -75,6 +75,6 @@ export interface SendEmailRequest {
 }
 
 export interface ReplyEmailRequest {
-    message: Pick<Email, 'toRecipients'> & Partial<Pick<Email, 'ccRecipients'>>;
+    message: Pick<Email, 'toRecipients'> & Partial<Pick<Email, 'ccRecipients' | 'bccRecipients'>>;
     comment: string;
 }

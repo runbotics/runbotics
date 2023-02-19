@@ -10,6 +10,7 @@ import { UiGateway } from '../gateway/ui.gateway';
 import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process.service.utils';
 import { MailService } from 'src/mail/mail.service';
 import { FileUploadService } from 'src/microsoft/file-upload.service';
+import { OutlookService } from 'src/microsoft/outlook';
 
 @Injectable()
 export class BotProcessService {
@@ -23,6 +24,7 @@ export class BotProcessService {
         private readonly uiGateway: UiGateway,
         private readonly mailService: MailService,
         private readonly fileUploadService: FileUploadService,
+        private readonly outlookService: OutlookService,
     ) {}
 
     async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
@@ -53,6 +55,7 @@ export class BotProcessService {
 
             if (!processInstance.rootProcessInstanceId && isProcessInstanceFinished(processInstance.status)) {
                 await this.mailService.sendProcessResultMail(processInstance);
+                // await this.outlookService.
             }
 
             if (isProcessInstanceFinished(processInstance.status)) {

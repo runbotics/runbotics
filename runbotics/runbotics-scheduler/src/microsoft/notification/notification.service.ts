@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { IProcessInstance, ProcessTrigger } from 'runbotics-common';
 import { ProcessService } from 'src/database/process/process.service';
 import { QueueService } from 'src/queue/queue.service';
 import { Logger } from 'src/utils/logger';
@@ -18,6 +19,16 @@ export class NotificationService {
          * 7. startuj proces
     */
 
+    /** CHANGELOG
+     * 1. dodac kolumne trigger_info (jsonb?) 
+        * 1) emailID - string/null
+        * 2) sender email - string
+        * 3) cc emails - string
+        * 4) bcc emails -string
+     * 2. nadać sender email z triggered_by
+     * 3. wywlić kolumne triggered_by z process_instance 
+     */
+
     constructor(
         private readonly outlookService: OutlookService,
         private readonly processService: ProcessService,
@@ -33,20 +44,32 @@ export class NotificationService {
             const email = await this.outlookService.getEmail(emailId);
 
             try {
-                await this.validateTitle(email.subject);
-                const input = this.parseMailBody(email.bodyPreview);
+                const process = await this.validateTitle(email.subject);
+                const variables = this.parseMailBody(email.bodyPreview);
     
                 if (email.hasAttachments) {
                     const attachments = (await this.outlookService.getAttachments(email.id)).value;
                     attachments.forEach((attachment) => {
-                        input[attachment.name] = attachment.contentBytes;
+                        variables[attachment.name] = Buffer.from(attachment.contentBytes).toString();
                     });
                 }
+
+                const input = { variables };
+
+                await this.queueService.createInstantJob({
+                    process,
+                    input,
+                    user: null,
+                    trigger: ProcessTrigger.EMAIL,
+                    triggeredBy: email.sender.emailAddress.address.toLowerCase(),
+                });
+
             } catch (e) {
                 const replyEmail: ReplyEmailRequest = {
                     message: { 
                         toRecipients: [email.sender],
                         ccRecipients: email.ccRecipients,
+                        bccRecipients: email.bccRecipients,
                     },
                     comment: e.message + '\r\n',
                 };
@@ -56,9 +79,32 @@ export class NotificationService {
                     .catch(error => {
                         this.logger.error(`Error while sending reply to ${email.sender.emailAddress.address} (${email.id})`, error);
                     });
-                continue;
             }
         }
+    }
+
+    async sendProcessResultMail(processInstance: IProcessInstance) {
+        if (processInstance.trigger.name !== ProcessTrigger.EMAIL
+            || !processInstance.triggeredBy) {
+            return;
+        }
+
+        const replyEmail: ReplyEmailRequest = {
+            message: { 
+                toRecipients: [{
+                    emailAddress: {
+                        address: processInstance.triggeredBy,
+                    },
+                }],
+                ccRecipients: email.ccRecipients,
+            },
+            comment: '',
+        };
+        
+        await this.outlookService.replyEmail(email.id, replyEmail)
+            .catch(error => {
+                this.logger.error(`Error while sending reply to ${email.sender.emailAddress.address} (${email.id})`, error);
+            });
     }
 
     private async validateTitle(title: string) {
