@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 
-import { Popper, PopperProps, TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete } from '@mui/material';
 
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
@@ -58,14 +58,6 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
-                />
-            )}
-            PopperComponent={(popperProps: PopperProps) => (
-                <Popper
-                    {...popperProps}
-                    placement="top"
-                    modifiers={[{ enabled: false }]}
-                    // container={PortalShadowRoot}
                 />
             )}
         />
