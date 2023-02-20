@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
-    Box, Typography, Chip, Grid, IconButton, Divider
+    Box, Typography, Chip, Grid, Divider, IconButton
 } from '@mui/material';
 
 import { useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 
+import MenuCopy from '../MenuCopy';
+import { GridContainer, GridTag, GridVariable
+} from './VariablesPanel.styles';
 
-import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
-
+import If from '#src-app/components/utils/If';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
 
-
-enum VariableTag {
+export enum VariableTag {
     Variable = 'VariableTag',
     ActionOutput = 'ActionOutputTag',
 }
@@ -24,9 +24,10 @@ enum VariableTag {
 const VariablesPanel = () => {
     const theme = useTheme();
     const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
-    const { enqueueSnackbar } = useSnackbar();
-
-    // const inputActionVariables = actionVariables.inputActionVariables;
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [showMenu, setShowMenu] = useState(null);    
+    
+    const [menuId, setMenuId] = useState(false);
 
     const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
 
@@ -37,33 +38,24 @@ const VariablesPanel = () => {
             </Typography>);
     }
 
-
-    const handleCopy = (variableName: string) => {
-        try {
-            navigator.clipboard.writeText(variableName);
-
-            enqueueSnackbar(
-                translate(
-                    'Process.Modeler.VariablesPanel.Copy.Message.Success',
-                ),
-                { variant: 'success' },
-            );
-        } catch {
-            enqueueSnackbar(
-                translate(
-                    'Process.Modeler.VariablesPanel.Copy.Message.Error'
-                ),
-                { variant: 'error' },
-            );
-        }
-    };
-
     const getTagBgColor = (tag: VariableTag) => {
         if (tag === VariableTag.Variable) {
             return theme.palette.tag.variable;
         } 
         return theme.palette.tag.action;
          
+    };
+    
+    const handleMenuClick = (event, name) => {
+        event.preventDefault();
+        setAnchorEl(event.currentTarget);
+        setShowMenu(true);
+        setMenuId(name);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setMenuId(null);
     };
 
     const getJSXForVariable = (name: string, tag: VariableTag) => (
@@ -79,9 +71,17 @@ const VariablesPanel = () => {
                         size="medium"/>
                 </GridTag>
                 <Grid item xs={2}>
-                    <IconButton size="medium" onClick={() => handleCopy(name)}>
-                        <ContentCopyRoundedIcon/>
+                    <IconButton size="medium" onClick={(e) => handleMenuClick(e, name)}>
+                        <MoreVertIcon/>
                     </IconButton>
+                    <If condition={showMenu}>
+                        <MenuCopy 
+                            name={name} 
+                            anchorEl={anchorEl} 
+                            handleMenuClose={handleMenuClose} 
+                            menuId={menuId} 
+                            tag={tag}/>
+                    </If>
                 </Grid>
             </GridContainer>
             <Divider />
