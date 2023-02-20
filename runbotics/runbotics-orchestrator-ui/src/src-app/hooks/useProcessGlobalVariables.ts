@@ -42,7 +42,7 @@ const useProcessGlobalVariables = () => {
                     return [];
                 }
 
-                return {...item, name: globalVariableName};
+                return {value: item.value, name: globalVariableName};
             });
         }
 
@@ -63,8 +63,7 @@ const useProcessGlobalVariables = () => {
                 extractGlobalVariables(inputOutput)
             );
         })
-        .flatMap(variable => variable)
-        .flatMap(variable => variable);
+        .reduce((acc, innerArr) => acc.concat(innerArr), []);
 
     return variables;
 };
