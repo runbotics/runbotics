@@ -5,15 +5,12 @@ import { WidgetProps } from '@rjsf/core';
 
 import styled from 'styled-components';
 
-
-
-
-
 import AutocompleteWidget from './AutocompleteWidget';
 
 import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 import If from '#src-app/components/utils/If';
+import { ActionVariableObject } from '#src-app/hooks/useProcessActionVariables';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import useTranslations, {
     translate as t
@@ -121,20 +118,18 @@ props => {
     );
     const { translate } = useTranslations();
     const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
+    
 
-    const attendedProcessVariables =
-            attendedVariables
-                ? attendedVariables.map(variable => ({
-                    label: variable.name,
-                    value: variable.name,
-                    group: translate(
-                        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-                    )
-                }))
-                : [];
+    const attendedProcessVariables = attendedVariables.map(variable => ({
+        label: variable.name,
+        value: variable.name,
+        group: translate(
+            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+        )
+    }));
 
-    const extractOutputs = () => {
-        const outputs = outputActionVariables.map(
+    const extractOutputs = (outputVariables: ActionVariableObject[]) => {
+        const outputs = outputVariables.map(
             outputVariable => ({
                 label: outputVariable.value,
                 value: outputVariable.value,
@@ -158,6 +153,8 @@ props => {
         return [...dollarOutputs, ...hashOutputs];
     };
 
+    const outputVariables = extractOutputs(outputActionVariables);
+
     const groupedLocalVariable = inputActionVariables.map(variable => ({
         label: variable.value,
         value: variable.value,
@@ -175,34 +172,33 @@ props => {
         )
     }));
 
-
     const options: Record<
-            string,
-            { label: string; value: any; group: any }
-        > = React.useMemo(() => {
-            let result = [];
+    string,
+    { label: string; value: any; group: any }
+    > = React.useMemo(() => {
+        let result = [];
+        
+        const defaultOptions = [...services, ...utils];
+        result = [...defaultOptions, ...result];
+        
+        const variables = [...groupedLocalVariable, ...groupedGlobalVariables, ...attendedProcessVariables];
 
-            const defaultOptions = [...services, ...utils];
-            result = [...defaultOptions, ...result];
+        const dollarVariables = variables.map(option => ({
+            ...option,
+            label: `\${environment.variables.${option.value}}`,
+            value: `\${environment.variables.${option.value}}`
+        }));
+        const hashVariables = variables.map(option => ({
+            ...option,
+            label: `#{${option.value}}`,
+            value: `#{${option.value}}`
+        }));
 
-            const variables = [...groupedLocalVariable, ...groupedGlobalVariables, ...attendedProcessVariables];
+        result = [...dollarVariables, ...hashVariables, ...outputVariables, ...result];
 
-            const dollarVariables = variables.map(option => ({
-                ...option,
-                label: `\${environment.variables.${option.value}}`,
-                value: `\${environment.variables.${option.value}}`
-            }));
-            const hashVariables = variables.map(option => ({
-                ...option,
-                label: `#{${option.value}}`,
-                value: `#{${option.value}}`
-            }));
-
-            result = [...dollarVariables, ...hashVariables, ...extractOutputs(), ...result];
-
-            return reduceList(result);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectedElement]);
+        return reduceList(result);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedElement]);
 
     const optionValues = React.useMemo(
         () => ({

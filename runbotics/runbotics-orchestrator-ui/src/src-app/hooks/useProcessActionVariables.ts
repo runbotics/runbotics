@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { useModelerContext } from './useModelerContext';
 
-interface ActionVariableObject {
+export interface ActionVariableObject {
     name: string,
     value?: string
 }
