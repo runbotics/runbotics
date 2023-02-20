@@ -2,11 +2,15 @@ import { useMemo } from 'react';
 
 import { useModelerContext } from './useModelerContext';
 
-interface ActionVariables {
-    inputActionVariables: Array<any>,
-    outputActionVariables: Array<any>
+interface ActionVariableObject {
+    name: string,
+    value?: string
 }
 
+interface ActionVariables {
+    inputActionVariables: ActionVariableObject[],
+    outputActionVariables: ActionVariableObject[]
+}
 
 const useProcessActionVariables = () => {
     const context = useModelerContext();
@@ -26,9 +30,10 @@ const useProcessActionVariables = () => {
                     return [];
                 }
 
-                const inputVariables = variableInfo.filter(item => item.name === 'variable');
+                const inputVariables = variableInfo.filter((item: ActionVariableObject) => item.name === 'variable').map(item => ({name: item.name, value: item.value}));
                 return inputVariables;
             }
+
 
             return [];
         }).flatMap(item => item)
@@ -41,7 +46,7 @@ const useProcessActionVariables = () => {
                 return [];
             }
 
-            return variableInfo.filter(item => item.name === 'variableName');
+            return variableInfo.filter((item: ActionVariableObject) => item.name === 'variableName').map(item => ({name: item.name, value: item.value}));
         }).filter(item => item.length > 0)
             .flatMap(item => item);
             
