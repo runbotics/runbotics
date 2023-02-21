@@ -3,7 +3,7 @@ module.exports = {
     "plugins": ['prettier', 'unused-imports', '@typescript-eslint', 'simple-import-sort'],
     "ignorePatterns": ['**/*.js'],
     "rules": {
-        // 'prettier/prettier': 'warn',
+        'prettier/prettier': 'warn',
         "indent": ['error', 4, { "SwitchCase": 1 }],
         'comma-dangle': ['warn', 'only-multiline'],
         'react-hooks/rules-of-hooks': 'error',

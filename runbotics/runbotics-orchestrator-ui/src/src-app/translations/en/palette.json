@@ -1,8 +1,8 @@
 {
-    "Palette.HandTool": "Activate the hand tool",
-    "Palette.LassoTool": "Activate the lasso tool",
-    "Palette.SpaceTool": "Activate the create/remove space tool",
-    "Palette.GlobalConnectTool": "Activate the global connect tool",
+    "Palette.HandTool": "Activate the hand tool (h)",
+    "Palette.LassoTool": "Activate the lasso tool (l)",
+    "Palette.SpaceTool": "Activate the create/remove space tool (s)",
+    "Palette.GlobalConnectTool": "Activate the global connect tool (c)",
     "Palette.Create.StartEvent": "Create StartEvent",
     "Palette.Create.IntermediateEvent": "Create IntermediateEvent",
     "Palette.Create.EndEvent": "Create EndEvent",

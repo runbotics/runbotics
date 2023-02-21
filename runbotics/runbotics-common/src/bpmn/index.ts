@@ -1,3 +1,3 @@
-import { BpmnElement } from './tasks';
+import { BpmnElementType } from './tasks';
 
-export { BpmnElement };
+export { BpmnElementType };

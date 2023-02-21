@@ -47,7 +47,7 @@ export type CamundaOutputParameter = CamundaParameter & {
 };
 
 enum ExtensionElementType {
-    'camunda:InputOutput' = 'camunda:InputOutput'
+    'camunda:InputOutput' = 'camunda:InputOutput',
 }
 
 export type ExtensionElement = {
@@ -83,6 +83,7 @@ export type BPMNElement = {
     type: string;
     businessObject: BusinessObject;
     incoming?: IBpmnConnection[];
+    outgoing?: IBpmnConnection[];
 };
 
 export type BpmnFormalExpression = {
@@ -125,7 +126,7 @@ export const getParameterValue = (parameter: CamundaParameter) => {
 
     switch (parameter.definition.$type) {
         case 'camunda:List':
-            return parameter.definition.items.map(item => item.value);
+            return parameter.definition.items.map((item) => item.value);
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
             if (!map.entries) {
@@ -221,7 +222,7 @@ export class BpmnConnectionFactory {
         const FormalExpression = this.bpmnFactory.create(
             'bpmn:FormalExpression',
             {
-                body: expression
+                body: expression,
             }
         );
         FormalExpression.$parent = connection.businessObject;
@@ -229,7 +230,7 @@ export class BpmnConnectionFactory {
         this.commandStack.execute('properties-panel.update-businessobject', {
             element: connection,
             businessObject: connection.businessObject,
-            properties: { conditionExpression: FormalExpression }
+            properties: { conditionExpression: FormalExpression },
         });
     }
 }
@@ -258,7 +259,7 @@ export class BPMNHelper {
     updateBusinessObject(element: BPMNElement) {
         this.commandStack.execute('properties-panel.update-businessobject', {
             element,
-            businessObject: element.businessObject
+            businessObject: element.businessObject,
         });
     }
 }

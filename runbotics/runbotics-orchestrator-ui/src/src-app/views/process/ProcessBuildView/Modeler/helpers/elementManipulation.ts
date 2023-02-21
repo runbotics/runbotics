@@ -10,7 +10,7 @@ import {
     BPMNHelper,
     findPreviousElements,
     getInputParameters,
-    getOutputParameters
+    getOutputParameters,
 } from './elementParameters';
 
 interface ApplyModelerElementProps {
@@ -37,7 +37,7 @@ const disablePreviousElements = (
             is(element, 'bpmn:ServiceTask')
         );
         const bpmnHelper = BPMNHelper.from(modeler);
-        serviceTasks.forEach(serviceTask => {
+        serviceTasks.forEach((serviceTask) => {
             const newServiceTask = serviceTask;
             newServiceTask.businessObject.disabled = true;
             bpmnHelper.updateBusinessObject(newServiceTask);
@@ -48,7 +48,7 @@ const disablePreviousElements = (
             is(element, 'bpmn:ServiceTask')
         );
         const bpmnHelper = BPMNHelper.from(modeler);
-        serviceTasks.forEach(serviceTask => {
+        serviceTasks.forEach((serviceTask) => {
             const newServiceTask = serviceTask;
             newServiceTask.businessObject.disabled = false;
             bpmnHelper.updateBusinessObject(newServiceTask);
@@ -61,7 +61,7 @@ export const applyModelerElement = ({
     modeler,
     element,
     action,
-    additionalParameters
+    additionalParameters,
 }: ApplyModelerElementProps) => {
     const actionToBPMNElement: ActionToBPMNElement =
         ActionToBPMNElement.from(modeler);
@@ -83,11 +83,11 @@ export const applyModelerElement = ({
     const data = {
         input: {
             ...getInputParameters(element),
-            ...(additionalParameters?.input ?? [])
+            ...(additionalParameters?.input ?? []),
         },
         output: {
-            ...(additionalParameters?.output ?? getOutputParameters(element))
-        }
+            ...(additionalParameters?.output ?? getOutputParameters(element)),
+        },
     };
 
     const inputParams = actionToBPMNElement.formDataToParameters(
@@ -104,7 +104,7 @@ export const applyModelerElement = ({
         action.output &&
         action.output.assignVariables
     ) {
-        Object.entries(action.output.outputMethods).forEach(currentValue => {
+        Object.entries(action.output.outputMethods).forEach((currentValue) => {
             const key = currentValue[0];
             const value = currentValue[1];
             const output = data.output[key];

@@ -40,13 +40,15 @@ export default class CustomRenderer extends BaseRenderer {
     drawTextNode(
         label,
         parentNode,
+        businessObject,
         color = "#000",
         transformX = 0,
         transformY = 0,
         width = 240,
-        height = 20
-    ) {
-        const rect = drawRect(
+        height = 20,
+        ) {
+            console.log(businessObject?.name)
+            const rect = drawRect(
             parentNode,
             width,
             height,
@@ -91,6 +93,16 @@ export default class CustomRenderer extends BaseRenderer {
 
             svgAppend(parentNode, text);
         }
+        if(businessObject?.name){
+            // a way to utalize name
+            // const name = svgCreate("text");
+            // svgAppend(name, document.createTextNode(businessObject.name))
+            // svgAttr(name, {
+            //     x: width / 2 - 75,
+            //     y: height
+            // })
+            // svgAppend(parentNode, name);
+        }
     }
     pickColor(businessObject) {
         const { disabled, validationError } = businessObject;
@@ -120,6 +132,7 @@ export default class CustomRenderer extends BaseRenderer {
                 this.drawTextNode(
                     label,
                     parentNode,
+                    businessObject,
                     disabled ? "#b3b3b3" : "#000",
                     0,
                     -30
@@ -128,6 +141,7 @@ export default class CustomRenderer extends BaseRenderer {
                 this.drawTextNode(
                     label,
                     parentNode,
+                    businessObject,
                     disabled ? "#b3b3b3" : "#000",
                     0,
                     90
@@ -136,6 +150,7 @@ export default class CustomRenderer extends BaseRenderer {
                     this.drawTextNode(
                         label.description,
                         parentNode,
+                        businessObject,
                         disabled ? "#b3b3b3" : "#8d8d8d",
                         0,
                         105

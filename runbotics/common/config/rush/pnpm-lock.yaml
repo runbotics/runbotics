@@ -126,7 +126,7 @@ importers:
       bpmn-elements: 5.2.0
       bpmn-engine: 12.0.5
       bpmn-moddle: 7.1.3
-      camunda-bpmn-moddle: 5.1.2_vpn3bffzscsutmrzcpihbnpwmi
+      camunda-bpmn-moddle: 5.1.2_jrgg3mnrionnqrpxfxx7shgznm
       csv-parser: 3.0.0
       csv-writer: 1.6.0
       csvtojson: 2.0.10
@@ -323,9 +323,9 @@ importers:
       '@rjsf/material-ui': 4.2.0_mqqsbykrzfzsc62sor3a6ncdku
       ajv: 6.12.6
       axios: 0.21.1
-      bpmn-js: 8.7.1
-      bpmn-js-properties-panel: 0.42.0_myd3etpauzr4w6mxmgl7igzek4
-      camunda-bpmn-moddle: 5.1.2_vpn3bffzscsutmrzcpihbnpwmi
+      bpmn-js: 8.10.0
+      bpmn-js-properties-panel: 0.42.0_xbahnsk52axn6vfpgo7mgqec4a
+      camunda-bpmn-moddle: 5.1.2_dbr7lgvgi3mpjrvnfrgmpj6dr4
       classnames: 2.3.1
       clsx: 1.1.1
       console-feed: 3.4.0_uvuyjw6kjjdycnwxdflrjb6tm4
@@ -3295,7 +3295,7 @@ packages:
     peerDependencies:
       camunda-bpmn-moddle: ^4.x || ^5.x
     dependencies:
-      camunda-bpmn-moddle: 5.1.2_vpn3bffzscsutmrzcpihbnpwmi
+      camunda-bpmn-moddle: 5.1.2_dbr7lgvgi3mpjrvnfrgmpj6dr4
       min-dash: 3.7.0
     dev: false
 
@@ -7518,14 +7518,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /bpmn-js-properties-panel/0.42.0_myd3etpauzr4w6mxmgl7igzek4:
+  /bpmn-js-properties-panel/0.42.0_xbahnsk52axn6vfpgo7mgqec4a:
     resolution: {integrity: sha512-RkKIRIrFZa2J0nzh9mCiDxICHwYveB0gdcwrI2fNvQlO5jf3+y0SJhqwU1fnei8J1EbZcw9ENhMH5UyJjL6tSQ==}
     peerDependencies:
       bpmn-js: ^3.x || ^4.x || ^5.x || ^6.x || ^7.x || ^8.x
     dependencies:
       '@bpmn-io/element-templates-validator': 0.1.0
       '@bpmn-io/extract-process-variables': 0.4.3_camunda-bpmn-moddle@5.1.2
-      bpmn-js: 8.7.1
+      bpmn-js: 8.10.0
       ids: 1.0.0
       inherits: 2.0.4
       lodash: 4.17.21
@@ -7537,13 +7537,13 @@ packages:
       - camunda-bpmn-moddle
     dev: false
 
-  /bpmn-js/8.7.1:
-    resolution: {integrity: sha512-XpILybGAof9R1A7dbbCFl+d5iPHg7pXz4lNbyYMsqfOeCX8hSBgaKcWRMtF/FJpNnBFdAtbwc2Atb7dhXM2WAg==}
+  /bpmn-js/8.10.0:
+    resolution: {integrity: sha512-NozeOi01qL0ZdVq8+5hWZcikyEvgrP1yzCBqlhSufJdHFsnEMBCwn2bJJ0B/6JgX+IBwy1sk/Uw+Ds8rQ8vfrw==}
     dependencies:
       bpmn-moddle: 7.1.3
       css.escape: 1.5.1
-      diagram-js: 7.3.0
-      diagram-js-direct-editing: 1.6.3_diagram-js@7.3.0
+      diagram-js: 7.9.0
+      diagram-js-direct-editing: 1.6.3_diagram-js@7.9.0
       ids: 1.0.0
       inherits: 2.0.4
       min-dash: 3.7.0
@@ -7820,14 +7820,25 @@ packages:
     resolution: {integrity: sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=}
     dev: false
 
-  /camunda-bpmn-moddle/5.1.2_vpn3bffzscsutmrzcpihbnpwmi:
+  /camunda-bpmn-moddle/5.1.2_dbr7lgvgi3mpjrvnfrgmpj6dr4:
     resolution: {integrity: sha512-gjpY0xBWkM08l0Z5cEtZwQF/RYDyA8sgi1kp/pRA5mLOSQLXoMv2SH14G2t59LtanjLzTh6uwX0Tptlhvq/xiw==}
     peerDependencies:
       bpmn-js: ^6.x || ^7.x || ^8.x
       diagram-js: ^5.x || ^6.x || ^7.x
     dependencies:
-      bpmn-js: 8.7.1
+      bpmn-js: 8.10.0
       diagram-js: 7.3.0
+      min-dash: 3.7.0
+    dev: false
+
+  /camunda-bpmn-moddle/5.1.2_jrgg3mnrionnqrpxfxx7shgznm:
+    resolution: {integrity: sha512-gjpY0xBWkM08l0Z5cEtZwQF/RYDyA8sgi1kp/pRA5mLOSQLXoMv2SH14G2t59LtanjLzTh6uwX0Tptlhvq/xiw==}
+    peerDependencies:
+      bpmn-js: ^6.x || ^7.x || ^8.x
+      diagram-js: ^5.x || ^6.x || ^7.x
+    dependencies:
+      bpmn-js: 8.10.0
+      diagram-js: 7.9.0
       min-dash: 3.7.0
     dev: false
 
@@ -8907,18 +8918,32 @@ packages:
       wrappy: 1.0.2
     dev: false
 
-  /diagram-js-direct-editing/1.6.3_diagram-js@7.3.0:
+  /diagram-js-direct-editing/1.6.3_diagram-js@7.9.0:
     resolution: {integrity: sha512-OwDpK4cNJ4QYuV855HvtZcB9/krfZRQ80uaE6bwaKbyb4584sD7nCtR5yWOyhJx4dIh1gMoqhF7d7G57M4tQVQ==}
     peerDependencies:
       diagram-js: ^0.x || ^1.x || ^2.x || ^3.x || ^4.x || ^5.x || ^6.x || ^7.x
     dependencies:
-      diagram-js: 7.3.0
+      diagram-js: 7.9.0
       min-dash: 3.7.0
       min-dom: 3.1.3
     dev: false
 
   /diagram-js/7.3.0:
     resolution: {integrity: sha512-giDlLWNCOtYTmcdU5UfVmvOhsGy/HFxsWwNhb3rrPpDw8ammONK0KkC4H9M808hszWSWOKcZnUJOkows+WcifA==}
+    dependencies:
+      css.escape: 1.5.1
+      didi: 5.2.1
+      hammerjs: 2.0.8
+      inherits: 2.0.4
+      min-dash: 3.7.0
+      min-dom: 3.1.3
+      object-refs: 0.3.0
+      path-intersection: 2.2.1
+      tiny-svg: 2.2.2
+    dev: false
+
+  /diagram-js/7.9.0:
+    resolution: {integrity: sha512-o1yUtX5TXV1pmpevP55gxU/AEG6nCidOXGs/HLuxNXG0zMZ3jQta7kMqRxTK93rNw/XuHmP1eMOwdvdJ2RP5qA==}
     dependencies:
       css.escape: 1.5.1
       didi: 5.2.1
