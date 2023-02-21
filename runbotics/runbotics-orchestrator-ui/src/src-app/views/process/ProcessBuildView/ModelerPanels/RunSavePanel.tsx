@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import { Button, Grid, SvgIcon, Tooltip, Badge } from '@mui/material';
+import { sanitize } from 'dompurify';
 import { Send as SendIcon } from 'react-feather';
 import { Role, IProcess } from 'runbotics-common';
 
@@ -8,6 +9,8 @@ import Secured from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
+
+import { ModelerErrorType } from '#src-app/store/slices/Process';
 
 import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
@@ -21,18 +24,34 @@ interface RunSavePanelProps {
 const RunSavePanel: FC<RunSavePanelProps> = ({
     onRunClick,
     onSave,
-    process
+    process,
 }) => {
     const { translate } = useTranslations();
     const { isSaveDisabled, errors } = useSelector(
-        state => state.process.modeler
+        (state) => state.process.modeler
     );
     const getTooltip = () => {
-        const elementsWithErrors = errors.map(error => error.elementName);
-        if (elementsWithErrors.length > 0) {
-            return translate('Process.MainView.Tooltip.Save.Errors', {
-                errors: elementsWithErrors.join(', ')
-            });
+        const elementsWithFromErrors = errors
+            .map((error) =>
+                error.type === ModelerErrorType.FORM_ERROR
+                    ? error.elementName
+                    : null
+            )
+            .filter((element) => element !== null);
+
+        const elementsWithConnectionErrors = errors
+            .map((error) =>
+                error.type === ModelerErrorType.CONNECTION_ERROR
+                    ? error.elementName
+                    : null
+            )
+            .filter((element) => element !== null);
+
+        if (
+            elementsWithConnectionErrors.length ||
+            elementsWithFromErrors.length
+        ) {
+            //todo
         }
         if (isSaveDisabled) {
             return translate('Process.MainView.Tooltip.Save.Disabled');
@@ -50,7 +69,15 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                 />
                 <Secured authorities={[Role.ROLE_ADMIN]}>
                     <Badge badgeContent={errors.length} color="error" max={5}>
-                        <Tooltip title={getTooltip()}>
+                        <Tooltip
+                            title={
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: sanitize(getTooltip()),
+                                    }}
+                                />
+                            }
+                        >
                             <span>
                                 <Button
                                     onClick={onSave}
@@ -61,7 +88,8 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                                         <SvgIcon fontSize="small">
                                             <SendIcon />
                                         </SvgIcon>
-                                    }>
+                                    }
+                                >
                                     {translate('Common.Save')}
                                 </Button>
                             </span>

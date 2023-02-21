@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import { BpmnElementType } from 'runbotics-common';
 
+import { ModelerErrorType } from '#src-app/store/slices/Process';
 import {
     getFormData,
     getFormSchema,
@@ -116,14 +117,22 @@ export const isValidElement = ({
     const { isValid: isFormValid, formData } = validateForm(element);
 
     if (!isFormValid && !formData.disabled) {
-        handleInvalidElement({ element, modeler });
+        handleInvalidElement({
+            element,
+            modeler,
+            errorType: ModelerErrorType.FORM_ERROR,
+        });
         return;
     }
 
     const { isValid: isConnectionValid } = validateConnections(element);
 
     if (!isConnectionValid && !formData.disabled) {
-        handleInvalidElement({ element, modeler });
+        handleInvalidElement({
+            element,
+            modeler,
+            errorType: ModelerErrorType.CONNECTION_ERROR,
+        });
         return;
     }
 
