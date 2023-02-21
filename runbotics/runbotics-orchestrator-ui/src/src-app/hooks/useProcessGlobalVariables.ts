@@ -10,12 +10,11 @@ const useProcessGlobalVariables = () => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
 
-    const assignVariablesElements =
-                context?.modeler
-                    ?.get('elementRegistry')
-                    .filter((element: BPMNElement) => is(element, 'bpmn:Task') 
-                        && element.businessObject.actionId === 'variables.assignGlobalVariable')
-                    ?? [];
+    const assignVariablesElements = context?.modeler
+        ?.get('elementRegistry')
+        .filter((element: BPMNElement) => is(element, 'bpmn:Task') 
+                && element.businessObject.actionId === 'variables.assignGlobalVariable')
+                ?? [];
 
     const extractGlobalVariables = (
         inputOutput: CamundaInputOutputElement
