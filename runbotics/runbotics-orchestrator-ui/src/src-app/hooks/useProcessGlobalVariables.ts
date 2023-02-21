@@ -63,7 +63,7 @@ const useProcessGlobalVariables = () => {
                 extractGlobalVariables(inputOutput)
             );
         })
-        .reduce((acc, innerArr) => acc.concat(innerArr), []);
+        .reduce((acc: [], innerArr: []) => acc.concat(innerArr), []);
 
     return variables;
 };
