@@ -2,15 +2,12 @@ import React, { useMemo, FC } from 'react';
 
 import { FeatureKey } from 'runbotics-common';
 
-
 import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import i18n from '#src-app/translations/i18n';
 import { ProcessBuildTab, SidebarProps } from '#src-app/types/sidebar';
-
-
 
 interface TabInfo {
     value: ProcessBuildTab;

@@ -15,7 +15,6 @@ import If from '#src-app/components/utils/If';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
-
 export enum VariableTag {
     Variable = 'VariableTag',
     ActionOutput = 'ActionOutputTag',
@@ -94,7 +93,6 @@ const VariablesPanel = () => {
     const getActionVariablesJSX = inputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.Variable));
 
     const getActionOutputVariablesJSX = outputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionOutput));
-
 
     return (
         <Box>

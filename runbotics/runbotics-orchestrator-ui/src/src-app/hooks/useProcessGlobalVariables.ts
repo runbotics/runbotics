@@ -6,7 +6,6 @@ import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { BPMNElement, CamundaInputOutputElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-
 const useProcessGlobalVariables = () => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
@@ -14,12 +13,9 @@ const useProcessGlobalVariables = () => {
     const assignVariablesElements =
                 context?.modeler
                     ?.get('elementRegistry')
-                    .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
-                    .filter(
-                        (element: BPMNElement) =>
-                            element.businessObject.actionId ===
-                                'variables.assignGlobalVariable'
-                    ) ?? [];
+                    .filter((element: BPMNElement) => is(element, 'bpmn:Task') 
+                        && element.businessObject.actionId === 'variables.assignGlobalVariable')
+                    ?? [];
 
     const extractGlobalVariables = (
         inputOutput: CamundaInputOutputElement
@@ -31,22 +27,18 @@ const useProcessGlobalVariables = () => {
         if (!globalVariableList) {
             return [];
         }
+        
+        return globalVariableList.definition.items.map(item => {
+            const globalVariableName = globalVariables.find(
+                variable => variable.id === Number(item.value)
+            )?.name;
     
-        if (globalVariableList) {
-            return globalVariableList.definition.items.map(item => {
-                const globalVariableName = globalVariables.find(
-                    variable => variable.id === Number(item.value)
-                )?.name;
-    
-                if (!globalVariableName) {
-                    return [];
-                }
+            if (!globalVariableName) {
+                return [];
+            }
 
-                return {value: item.value, name: globalVariableName};
-            });
-        }
-
-        return [];
+            return {value: item.value, name: globalVariableName};
+        });
     };
 
     const variables = assignVariablesElements

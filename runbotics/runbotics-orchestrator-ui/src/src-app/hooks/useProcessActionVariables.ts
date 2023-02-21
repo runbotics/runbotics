@@ -33,8 +33,7 @@ const useProcessActionVariables = () => {
                 const inputVariables = variableInfo.filter((item: ActionVariableObject) => item.name === 'variable').map(item => ({name: item.name, value: item.value}));
                 return inputVariables;
             }
-
-
+            
             return [];
         }).flatMap(item => item)
             .filter(item => item.value);
