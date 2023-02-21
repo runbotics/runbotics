@@ -5,9 +5,7 @@ import { WidgetProps } from '@rjsf/core';
 
 import styled from 'styled-components';
 
-import AutocompleteWidget from './AutocompleteWidget';
 
-import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 import If from '#src-app/components/utils/If';
 import { ActionVariableObject } from '#src-app/hooks/useProcessActionVariables';
@@ -17,6 +15,9 @@ import useTranslations, {
 } from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
+
+import AutocompleteWidget from './AutocompleteWidget';
+import InfoButtonTooltip from './components/InfoButtonTooltip';
 
 
 const services = [

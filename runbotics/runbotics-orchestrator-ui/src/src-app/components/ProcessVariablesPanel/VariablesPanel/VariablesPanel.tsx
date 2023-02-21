@@ -7,13 +7,14 @@ import {
 
 import { useTheme } from '@mui/material/styles';
 
-import MenuCopy from '../MenuCopy';
-import { GridContainer, GridTag, GridVariable
-} from './VariablesPanel.styles';
 
 import If from '#src-app/components/utils/If';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
+
+import MenuCopy from '../MenuCopy';
+import { GridContainer, GridTag, GridVariable
+} from './VariablesPanel.styles';
 
 export enum VariableTag {
     Variable = 'VariableTag',

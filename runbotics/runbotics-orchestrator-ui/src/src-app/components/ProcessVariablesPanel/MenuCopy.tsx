@@ -5,9 +5,10 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
+import { translate } from '#src-app/hooks/useTranslations';
+
 import { VariableTag } from './VariablesPanel/VariablesPanel';
 
-import { translate } from '#src-app/hooks/useTranslations';
 
 
 const MenuCopy = ({name, anchorEl, handleMenuClose, menuId, tag}) => {
