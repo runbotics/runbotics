@@ -16,7 +16,10 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementManipulation';
 
 import { CommandStackEvent, EventBusEvent } from './useModelerListeners.types';
-import { isValidElement } from './useModelerListeners.validation';
+import {
+    getModelerActivities,
+    isValidElement,
+} from './useModelerListeners.validation';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     'bpmn:ServiceTask',
@@ -55,7 +58,7 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
     };
 
     const modelerListeners = (modeler: BpmnModeler) => ({
-        'commandStack.changed': () => {
+        'commandStack.changed': (e) => {
             const { _stackIdx, _stack } = modeler.get('commandStack');
             dispatch(
                 processActions.setCommandStack({
@@ -63,6 +66,14 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                     commandStackSize: _stack.length,
                 })
             );
+            if (e.trigger === 'redo' || e.trigger === 'undo') {
+                const { _elements } = modeler.get('elementRegistry');
+                dispatch(
+                    processActions.setAppliedActions(
+                        getModelerActivities(_elements)
+                    )
+                );
+            }
         },
         'commandStack.shape.delete.preExecute': () => {
             dispatch(processActions.resetSelection());
@@ -79,13 +90,13 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 element: source,
                 handleInvalidElement,
                 handleValidElement,
-                modeler: modeler,
+                modeler,
             });
             isValidElement({
                 element: target,
                 handleInvalidElement,
                 handleValidElement,
-                modeler: modeler,
+                modeler,
             });
         },
         'commandStack.connection.create.postExecuted': (
@@ -96,13 +107,13 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 element: source,
                 handleInvalidElement,
                 handleValidElement,
-                modeler: modeler,
+                modeler,
             });
             isValidElement({
                 element: target,
                 handleInvalidElement,
                 handleValidElement,
-                modeler: modeler,
+                modeler,
             });
         },
         'commandStack.elements.create.postExecuted': (
@@ -149,7 +160,7 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 element: event.element,
                 handleInvalidElement,
                 handleValidElement,
-                modeler: modeler,
+                modeler,
             });
         },
     });

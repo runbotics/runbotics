@@ -23,7 +23,8 @@ const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 5,
     COLOR_RED = "#ff5e5e",
     COLOR_GREY = "#e0e0e0",
-    COLOR_DEFAULT = "#bbbbbb";
+    COLOR_DEFAULT = "#bbbbbb",
+    COLOR_BLACK = "#000000"
 
 export default class CustomRenderer extends BaseRenderer {
     constructor(eventBus, bpmnRenderer) {
@@ -47,7 +48,6 @@ export default class CustomRenderer extends BaseRenderer {
         width = 240,
         height = 20,
         ) {
-            console.log(businessObject?.name)
             const rect = drawRect(
             parentNode,
             width,
@@ -110,6 +110,12 @@ export default class CustomRenderer extends BaseRenderer {
         if (validationError) return COLOR_RED;
         return COLOR_DEFAULT;
     }
+    pickStrokeColor(businessObject) {
+        const { validationError } = businessObject;
+        if (validationError) return COLOR_RED;
+        return COLOR_BLACK;
+    }
+
     drawShape(parentNode, element) {
         const shape = this.bpmnRenderer.drawShape(parentNode, element);
         const label = this.getLabel(element);
@@ -125,6 +131,10 @@ export default class CustomRenderer extends BaseRenderer {
                 this.pickColor(businessObject)
             );
             svgRemove(shape);
+        }
+
+        if(is(element, "bpmn:SubProcess")){
+            svgAttr(shape, { stroke: this.pickStrokeColor(businessObject) })
         }
 
         if (label && (label.title || label.actionId)) {

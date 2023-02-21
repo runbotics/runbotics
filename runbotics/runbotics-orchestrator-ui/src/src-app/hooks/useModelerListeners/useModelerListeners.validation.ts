@@ -11,7 +11,10 @@ import {
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { ValidationFuncProps } from './useModelerListeners.types';
-
+export const getModelerActivities = (elements: BPMNElement[]) =>
+    _.sortBy(
+        Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
+    );
 export const isModelerInSync = ({
     modeler,
     appliedActivities,
@@ -21,10 +24,7 @@ export const isModelerInSync = ({
 }) => {
     if (!modeler) return false;
     const { _elements } = modeler.get('elementRegistry');
-    const modelerActivities = Object.keys(_elements)?.filter((elm) =>
-        elm.startsWith('Activity')
-    );
-
+    const modelerActivities = getModelerActivities(_elements);
     const areActivitiesMatched = _.isEqual(
         _.sortBy(modelerActivities),
         _.sortBy(appliedActivities)
@@ -38,7 +38,11 @@ export const isModelerInSync = ({
     );
 };
 
-const ajv = new Ajv();
+const ajv = new Ajv({
+    formats: {
+        variableName: 'string',
+    },
+});
 
 const validateForm = (element: BPMNElement) => {
     const formData = getFormData(element);
@@ -82,6 +86,14 @@ const validateConnections = (element: BPMNElement) => {
     ) {
         return { isValid: false };
     }
+
+    if (
+        element.type === BpmnElementType.SUBPROCESS &&
+        (!hasIncomingConnection || !hasOutgoingConnection)
+    ) {
+        return { isValid: false };
+    }
+
     return { isValid: true };
 };
 
@@ -97,10 +109,7 @@ export const isValidElement = ({
     handleInvalidElement: (props: ValidationFuncProps) => void;
     modeler: BpmnModeler;
 }) => {
-    if (
-        element.id.includes('Activity') === false ||
-        element.type === BpmnElementType.SUBPROCESS
-    ) {
+    if (element.id.includes('Activity') === false) {
         return;
     }
 
