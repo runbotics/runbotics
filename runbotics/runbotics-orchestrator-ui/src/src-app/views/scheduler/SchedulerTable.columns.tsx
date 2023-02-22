@@ -37,7 +37,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Bot'),
             width: '10%',
             accessor: ({ bot }) => bot !== null
-                    ? bot.installationId
+                ? bot.installationId
                 : translate('Scheduler.ActiveProcess.Table.Rows.Bot.Deleted'),
         },
         {
