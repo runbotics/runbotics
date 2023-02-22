@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 
 import { Button, Grid, SvgIcon, Tooltip, Badge } from '@mui/material';
-import { sanitize } from 'dompurify';
 import { Send as SendIcon } from 'react-feather';
 import { Role, IProcess } from 'runbotics-common';
 
@@ -14,6 +13,7 @@ import { ModelerErrorType } from '#src-app/store/slices/Process';
 
 import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
+import TooltipError from './TooltipError';
 
 interface RunSavePanelProps {
     process: IProcess;
@@ -51,7 +51,12 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
             elementsWithConnectionErrors.length ||
             elementsWithFromErrors.length
         ) {
-            //todo
+            return (
+                <TooltipError
+                    elementsWithConnectionErrors={elementsWithConnectionErrors}
+                    elementsWithFromErrors={elementsWithFromErrors}
+                />
+            );
         }
         if (isSaveDisabled) {
             return translate('Process.MainView.Tooltip.Save.Disabled');
@@ -69,15 +74,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                 />
                 <Secured authorities={[Role.ROLE_ADMIN]}>
                     <Badge badgeContent={errors.length} color="error" max={5}>
-                        <Tooltip
-                            title={
-                                <span
-                                    dangerouslySetInnerHTML={{
-                                        __html: sanitize(getTooltip()),
-                                    }}
-                                />
-                            }
-                        >
+                        <Tooltip title={getTooltip()}>
                             <span>
                                 <Button
                                     onClick={onSave}
