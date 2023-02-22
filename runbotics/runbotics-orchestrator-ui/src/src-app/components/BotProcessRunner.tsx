@@ -147,7 +147,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         dispatch(
             processActions.startProcess({
                 processId: process.id,
-                executionInfo: ((isProcessAttended || externalProcessInstance) && { executionInfo }),
+                executionInfo: ((isProcessAttended || externalProcessInstance) && { ...executionInfo }),
             })
         )
             .then(unwrapResult)
