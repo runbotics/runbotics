@@ -11,8 +11,8 @@ import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
-import { isModelerSync } from '#src-app/hooks/useModelerListeners';
-import useModelerListeners from '#src-app/hooks/useModelerListeners/useModelerListeners';
+
+import useModelerListener, { isModelerSync } from '#src-app/hooks/useModelerListener';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
@@ -62,7 +62,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
-        const { modelerListener } = useModelerListeners({ setCurrentTab });
+        const { modelerListener } = useModelerListener({ setCurrentTab });
 
         const {
             isSaveDisabled,

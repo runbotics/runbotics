@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-import { CommandStackInfo, ModelerErrorType } from '#src-app/store/slices/Process';
+import { CommandStackInfo, ModelerError, ModelerErrorType } from '#src-app/store/slices/Process';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 import { Position } from '#src-app/views/process/ProcessBuildView/Modeler/templates/Template.types';
@@ -25,27 +25,27 @@ export interface CommandStackEvent {
     id: number;
 }
 
-export interface ValidationFuncProps {
+export interface ModelerElementValidationParams {
     modeler: BpmnModeler;
     element: BPMNElement;
     errorType?: ModelerErrorType;
 }
 
-export interface ModelerListenersProps {
+export interface ModelerListenerHookProps {
     setCurrentTab: Dispatch<SetStateAction<ProcessBuildTab>>;
 }
 
 export interface ValidateElementProps {
     element: BPMNElement;
-    handleValidElement: (props: ValidationFuncProps) => void;
-    handleInvalidElement: (props: ValidationFuncProps) => void;
+    handleValidElement: (props: ModelerElementValidationParams) => void;
+    handleInvalidElement: (props: ModelerElementValidationParams) => void;
     modeler: BpmnModeler;
 }
 
-export interface IsModelerSyncProps {
+export interface ModelerSyncParams {
     modeler: BpmnModeler;
     appliedActivities: string[];
     imported: boolean;
     commandStack: CommandStackInfo,
-    errors: ModelerErrorType,
+    errors: ModelerError[],
 }

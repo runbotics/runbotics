@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-const StyledDiv = styled.div`
+const TooltipBox = styled.div`
     display: flex;
     gap: 2px;
     flex-direction: column;
@@ -22,7 +22,7 @@ const TooltipError: FC<TooltipError> = ({
     const { translate } = useTranslations();
 
     return (
-        <StyledDiv>
+        <TooltipBox>
             <div>{translate('Process.MainView.Tooltip.Save.Errors.Title')}</div>
             <If condition={Boolean(connectionErrorElementsNames.length)}>
                 <div>
@@ -41,7 +41,7 @@ const TooltipError: FC<TooltipError> = ({
                     })}
                 </div>
             </If>
-        </StyledDiv>
+        </TooltipBox>
     );
 };
 

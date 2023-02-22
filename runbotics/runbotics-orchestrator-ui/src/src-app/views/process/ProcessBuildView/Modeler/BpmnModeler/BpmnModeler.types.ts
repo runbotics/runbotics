@@ -38,7 +38,7 @@ export interface ModelerHTMLCanvasElement extends HTMLCanvasElement {
     viewbox: (opts?: ModelerViewboxOpts) => ModelerViewboxResult;
 }
 
-export enum ModelerEvents {
+export enum ModelerEvent {
     DIAGRAM_DESTROY = 'diagram.destroy',
     RENDER_SHAPE = 'render.shape',
     RENDER_CONNECTION = 'render.connection',
