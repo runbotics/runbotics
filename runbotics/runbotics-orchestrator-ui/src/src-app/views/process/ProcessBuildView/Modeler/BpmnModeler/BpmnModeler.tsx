@@ -11,7 +11,7 @@ import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
-import { isModelerInSync } from '#src-app/hooks/useModelerListeners';
+import { isModelerSync } from '#src-app/hooks/useModelerListeners';
 import useModelerListeners from '#src-app/hooks/useModelerListeners/useModelerListeners';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -107,7 +107,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         useEffect(() => {
             dispatch(
                 processActions.setSaveDisabled(
-                    !isModelerInSync({
+                    !isModelerSync({
                         appliedActivities,
                         modeler,
                         commandStack,

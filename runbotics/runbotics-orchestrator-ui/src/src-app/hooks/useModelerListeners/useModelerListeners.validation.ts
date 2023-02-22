@@ -10,20 +10,20 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementForm';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import { ValidateElementProps } from './useModelerListeners.types';
+import { IsModelerSyncProps, ValidateElementProps } from './useModelerListeners.types';
 
 export const getModelerActivities = (elements: BPMNElement[]) =>
     _.sortBy(
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
 
-export const isModelerInSync = ({
+export const isModelerSync = ({
     modeler,
     appliedActivities,
     imported,
     commandStack,
     errors,
-}) => {
+}: IsModelerSyncProps) => {
     if (!modeler) return false;
     const { _elements } = modeler.get('elementRegistry');
     const modelerActivities = getModelerActivities(_elements);
