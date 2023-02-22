@@ -84,6 +84,7 @@ export type BPMNElement = {
     businessObject: BusinessObject;
     incoming?: IBpmnConnection[];
     outgoing?: IBpmnConnection[];
+    parent?: BPMNElement;
 };
 
 export type BpmnFormalExpression = {

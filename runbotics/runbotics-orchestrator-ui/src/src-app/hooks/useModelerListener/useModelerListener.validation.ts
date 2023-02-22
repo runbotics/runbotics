@@ -10,7 +10,11 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementForm';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import { ModelerSyncParams, ValidateElementProps } from './useModelerListener.types';
+import {
+    ModelerSyncParams,
+    ValidateElementProps,
+    ValidateStartEventProps,
+} from './useModelerListener.types';
 
 export const getModelerActivities = (elements: BPMNElement[]) =>
     _.sortBy(
@@ -128,4 +132,37 @@ export const validateElement = ({
     }
 
     handleValidElement({ element, modeler });
+};
+
+export const validateStartEvent = ({
+    context,
+    modeler,
+    handleInvalidElement,
+}: ValidateStartEventProps) => {
+    if (context.shape.type !== BpmnElementType.START_EVENT) return;
+
+    const { _elements } = modeler.get('elementRegistry');
+
+    const hasStartEvent = Object.values(_elements).reduce((acc, prev: any) => {
+        const isStartEvent =  prev.element.type === BpmnElementType.START_EVENT;
+        const hasSameParent = context.parent?.id === prev.element.parent?.id;
+        const isEventElement =  context.shape?.id === prev.element?.id; 
+        if (
+            isStartEvent &&
+            hasSameParent &&
+            !isEventElement
+        ) {
+            return true;
+        }
+        return acc;
+    }, false);
+
+    if (hasStartEvent) {
+        handleInvalidElement({
+            errorType: ModelerErrorType.CANVAS_ERROR,
+            nameKey: 'Process.Details.Modeler.Actions.Event.Start.Label',
+            element: context.shape,
+            modeler,
+        });
+    }
 };

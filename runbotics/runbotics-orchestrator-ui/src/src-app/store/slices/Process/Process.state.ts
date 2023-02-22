@@ -12,6 +12,7 @@ export interface CommandStackInfo {
 export enum ModelerErrorType {
     FORM_ERROR = 'FORM_ERROR',
     CONNECTION_ERROR = 'CONNECTION_ERROR',
+    CANVAS_ERROR = 'CANVAS_ERROR'
 }
 
 export interface ModelerError {

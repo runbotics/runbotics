@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
@@ -15,6 +16,7 @@ import {
     toggleValidationError,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementManipulation';
 
+import useTranslations from '../useTranslations';
 import {
     CommandStackEvent,
     EventBusEvent,
@@ -23,6 +25,7 @@ import {
 import {
     getModelerActivities,
     validateElement,
+    validateStartEvent,
 } from './useModelerListener.validation';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
@@ -31,12 +34,36 @@ const ELEMENTS_PROPERTIES_WHITELIST = [
     BpmnElementType.SUBPROCESS,
 ];
 
+// eslint-disable-next-line max-lines-per-function
 const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     const dispatch = useDispatch();
+    const { translate } = useTranslations();
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
     );
-    const handleInvalidElement = ({ element, modeler, errorType }) => {
+
+    const handleInvalidStartEvent = ({
+        element,
+        modeler,
+        errorType,
+        nameKey,
+    }) => {
+        dispatch(
+            processActions.setError({
+                elementId: element.parent.id,
+                elementName: nameKey
+                    ? translate(nameKey)
+                    : getElementLabel(element),
+                type: errorType,
+            })
+        );
+
+        if (!element.businessObject.validationError) {
+            toggleValidationError(modeler, element, true);
+        }
+    };
+
+    const handleInvalidElement = ({ element, modeler, errorType}) => {
         dispatch(
             processActions.setError({
                 elementId: element.id,
@@ -59,7 +86,18 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     };
 
     const modelerListener = (modeler: BpmnModeler) => ({
-        [ModelerEvent.COMMANDSTACK_CHANGED]: (e: CommandStackEvent) => {
+        [ModelerEvent.COMMANDSTACK_SHAPE_CREATE_POSTEXECUTED]: (
+            event: CommandStackEvent
+        ) => {
+            if (event?.context.shape.type === BpmnElementType.START_EVENT) {
+                validateStartEvent({
+                    modeler,
+                    context: event.context,
+                    handleInvalidElement: handleInvalidStartEvent,
+                });
+            }
+        },
+        [ModelerEvent.COMMANDSTACK_CHANGED]: (event: CommandStackEvent) => {
             const { _stackIdx, _stack } = modeler.get('commandStack');
             dispatch(
                 processActions.setCommandStack({
@@ -67,8 +105,15 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                     commandStackSize: _stack.length,
                 })
             );
-            if (e.trigger === 'redo' || e.trigger === 'undo') {
+            if (event.trigger === 'redo' || event.trigger === 'undo') {
                 const { _elements } = modeler.get('elementRegistry');
+                console.log(Object.values(_elements).reduce((acc: any, prev: any) => {
+                    if(prev.element.type === BpmnElementType.START_EVENT){
+                        return [...acc, prev.element];
+                    }
+                    return acc;
+                }, []));
+                //to do on undo and redo
                 dispatch(
                     processActions.setAppliedActions(
                         getModelerActivities(_elements)
@@ -76,7 +121,14 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                 );
             }
         },
-        [ModelerEvent.COMMANDSTACK_SHAPE_DELETE_PREEXECUTE]: () => {
+        [ModelerEvent.COMMANDSTACK_SHAPE_DELETE_PREEXECUTE]: (
+            event: CommandStackEvent
+        ) => {
+            if (event?.context.shape.type === BpmnElementType.START_EVENT) {
+                dispatch(
+                    processActions.removeError(event.context.shape.parent.id)
+                );
+            }
             dispatch(processActions.resetSelection());
         },
         [ModelerEvent.COMMANDSTACK_CONNECTION_DELETE_PREEXECUTE]: () => {

@@ -2,7 +2,11 @@ import { Dispatch, SetStateAction } from 'react';
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-import { CommandStackInfo, ModelerError, ModelerErrorType } from '#src-app/store/slices/Process';
+import {
+    CommandStackInfo,
+    ModelerError,
+    ModelerErrorType,
+} from '#src-app/store/slices/Process';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 import { Position } from '#src-app/views/process/ProcessBuildView/Modeler/templates/Template.types';
@@ -17,11 +21,13 @@ export interface EventContext extends EventBusEvent {
     parent?: BPMNElement;
     position?: Position;
     elements?: BPMNElement[];
+    shape?: BPMNElement;
 }
 export interface CommandStackEvent {
     command: string;
     trigger: string;
     context: EventContext;
+    shape?: BPMNElement;
     id: number;
 }
 
@@ -42,10 +48,15 @@ export interface ValidateElementProps {
     modeler: BpmnModeler;
 }
 
+export interface ValidateStartEventProps {
+    context: CommandStackEvent['context'];
+    modeler: BpmnModeler;
+    handleInvalidElement: (props: ModelerElementValidationParams & {nameKey: string;}) => void;
+}
 export interface ModelerSyncParams {
     modeler: BpmnModeler;
     appliedActivities: string[];
     imported: boolean;
-    commandStack: CommandStackInfo,
-    errors: ModelerError[],
+    commandStack: CommandStackInfo;
+    errors: ModelerError[];
 }
