@@ -8,6 +8,7 @@
     "Component.BotProcessRunner.Error": "All bots are busy",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
+    "Component.BotProcessRunner.Tooltip.Title.RerunProcess": "Rerun process",
     "Component.BotProcessRunner.Run": "RUN",
     "Component.BotProcessRunner.Terminate": "ABORT",
 

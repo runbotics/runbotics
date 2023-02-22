@@ -129,7 +129,7 @@ const ProcessRunView: FC = () => {
                                     {translate('Process.Run.History.Title')}
                                 </Typography>
                             }
-                            hasRerunFunctionality
+                            rerunEnabled
                         />
                     </Grid>
                 </Card>

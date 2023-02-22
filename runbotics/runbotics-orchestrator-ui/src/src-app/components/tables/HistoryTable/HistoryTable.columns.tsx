@@ -20,11 +20,11 @@ import Label from '../../Label';
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 
 import { Column } from '../Table';
-import TableRowExpander from '../Table/Table.row.expander';
+import TableRowExpander from '../Table/TableRowExpander';
 
 const useProcessInstanceColumns = (
-    hasRerunFunctionality: boolean,
-    handleRerunProcess: () => void
+    rerunEnabled: boolean,
+    onRerunProcess: () => void
 ): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
@@ -35,10 +35,9 @@ const useProcessInstanceColumns = (
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.subProcesses &&
-                row.original.subProcesses.length > 0 ? (
-                        <TableRowExpander row={row} />
-                    ) : null,
+                row.original.subProcesses?.length > 0 ? (
+                    <TableRowExpander row={row} />
+                ) : null,
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
@@ -91,28 +90,29 @@ const useProcessInstanceColumns = (
             Cell: ({ row }) =>
                 row.depth === 0 && row.original.input ? (
                     <BotProcessRunner
-                        hasExecutionInfo
-                        processInstance={row.original}
                         process={row.original.process}
-                        isProcessActive={
+                        externalProcessInstance={row.original}
+                        isProcessInstanceActive={
                             row.original.status ===
                                 ProcessInstanceStatus.INITIALIZING ||
                             row.original.status ===
                                 ProcessInstanceStatus.IN_PROGRESS
                         }
-                        onRunClick={handleRerunProcess}
+                        onRunClick={onRerunProcess}
                     />
                 ) : null,
             featureKeys: [FeatureKey.PROCESS_START],
         },
     ];
 
-    if (!hasRerunFunctionality) {
+    if (!rerunEnabled) {
         columns.pop();
     }
 
     const accessedColumns = columns.filter((column) =>
-        column.featureKeys ? hasFeatureKeyAccess(authUser, column.featureKeys) : true,
+        column.featureKeys
+            ? hasFeatureKeyAccess(authUser, column.featureKeys)
+            : true
     );
 
     return accessedColumns;

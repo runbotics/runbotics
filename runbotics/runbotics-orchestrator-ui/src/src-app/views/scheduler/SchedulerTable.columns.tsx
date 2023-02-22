@@ -7,7 +7,7 @@ import { IProcessInstance } from 'runbotics-common';
 
 
 import { Column } from '#src-app/components/tables/Table';
-import TableRowExpander from '#src-app/components/tables/Table/Table.row.expander';
+import TableRowExpander from '#src-app/components/tables/Table/TableRowExpander';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler/Scheduler.state';
@@ -37,7 +37,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Bot'),
             width: '10%',
             accessor: ({ bot }) => bot !== null
-                ? bot.installationId
+                    ? bot.installationId
                 : translate('Scheduler.ActiveProcess.Table.Rows.Bot.Deleted'),
         },
         {

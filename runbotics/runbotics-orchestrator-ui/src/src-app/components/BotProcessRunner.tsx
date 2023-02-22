@@ -8,8 +8,7 @@ import { useSnackbar } from 'notistack';
 import {
     Play as PlayIcon,
     X as XIcon,
-    RefreshCw as RerunIcon,
-    XCircle as CancelIcon
+    RefreshCw as RerunIcon
 } from 'react-feather';
 import {
     FeatureKey,
@@ -19,22 +18,33 @@ import {
 } from 'runbotics-common';
 import styled from 'styled-components';
 
-
-
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
-import { processActions, StartProcessResponse } from '#src-app/store/slices/Process';
-import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
+import {
+    processActions,
+    StartProcessResponse,
+} from '#src-app/store/slices/Process';
+import {
+    processInstanceActions,
+    processInstanceSelector,
+} from '#src-app/store/slices/ProcessInstance';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
-import { schedulerActions, schedulerSelector } from '#src-app/store/slices/Scheduler';
+import { schedulerActions } from '#src-app/store/slices/Scheduler';
 
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
+
+const isProcessInstanceFinished = (processInstance: IProcessInstance) => 
+    processInstance?.status === ProcessInstanceStatus.COMPLETED ||
+    processInstance?.status === ProcessInstanceStatus.ERRORED ||
+    processInstance?.status === ProcessInstanceStatus.TERMINATED;
+
+const isProcessActive = (processId: number, processInstance: IProcessInstance) => processId === processInstance?.process.id && !isProcessInstanceFinished(processInstance);
 
 const StyledActionButton = styled(LoadingButton)(
     ({ theme }) => `
@@ -47,10 +57,9 @@ const StyledActionButton = styled(LoadingButton)(
 
 interface BotProcessRunnerProps {
     className?: string;
-    hasExecutionInfo?: boolean;
-    processInstance?: IProcessInstance;
     process?: IProcess;
-    isProcessActive?: boolean;
+    externalProcessInstance?: IProcessInstance;
+    isProcessInstanceActive?: boolean;
     onRunClick?: () => void;
     color?: 'inherit' | 'error' | 'secondary' | 'success' | 'warning' | 'info' | 'primary';
     variant?: 'text' | 'outlined' | 'contained';
@@ -59,17 +68,16 @@ interface BotProcessRunnerProps {
 // eslint-disable-next-line complexity, max-lines-per-function
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
-    hasExecutionInfo,
-    processInstance,
     process,
-    isProcessActive = false,
+    externalProcessInstance,
+    isProcessInstanceActive,
     onRunClick,
     color = 'secondary',
     variant = 'text',
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [started, setStarted] = useState(isProcessActive);
+    const [started, setStarted] = useState(isProcessInstanceActive);
     const [isSubmitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -77,38 +85,27 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
 
     const processInstances = useSelector(processInstanceSelector);
-    const { activeJobs } = useSelector(schedulerSelector);
-    const activeProcessInstance =
-        processInstance ?? processInstances.active.processInstance;
-    const { orchestratorProcessInstanceId } = processInstances.active;
+    const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
+    const currentProcessInstance = externalProcessInstance ?? processInstance;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
     const processName = process?.name;
     const processId = process?.id;
     const isRunButtonDisabled =
         started || isSubmitting || !process.system || !process.botCollection;
-    const isRerunButtonDisabled = started || isSubmitting || ((processId === activeJobs[0]?.process.id) && !isProcessActive);
+    const isRerunButtonDisabled = isProcessActive(processId, processInstance) || started || isSubmitting;
 
     useEffect(() => {
-        dispatch(schedulerActions.getActiveJobs());
-    }, [dispatch, processId]);
-
-    useEffect(() => {
-        if (hasExecutionInfo) return;
-        if (processId === activeJobs[0]?.process.id) {
+        if (started) return;
+        if (isProcessActive(processId, currentProcessInstance)) {
             setStarted(true);
         }
-    }, [activeJobs, processId, hasExecutionInfo]);
+    }, [started, processId, currentProcessInstance]);
 
     useEffect(() => {
-        const isProcessInstanceFinished =
-            activeProcessInstance?.status === ProcessInstanceStatus.COMPLETED ||
-            activeProcessInstance?.status === ProcessInstanceStatus.ERRORED ||
-            activeProcessInstance?.status === ProcessInstanceStatus.TERMINATED;
-
-        if (isProcessInstanceFinished) {
+        if (isProcessInstanceFinished(currentProcessInstance)) {
             setStarted(false);
         }
-    }, [activeProcessInstance]);
+    }, [currentProcessInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
 
@@ -117,7 +114,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleTerminate = async () => {
         await dispatch(
-            schedulerActions.terminateActiveJob({ jobId: activeProcessInstance?.id })
+            schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
         )
             .then(() => {
                 setStarted(false);
@@ -147,12 +144,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
-        
         dispatch(
             processActions.startProcess({
                 processId: process.id,
-                executionInfo:
-                    isProcessAttended || hasExecutionInfo ? executionInfo : {},
+                executionInfo: ((isProcessAttended || externalProcessInstance) && { executionInfo }),
             })
         )
             .then(unwrapResult)
@@ -181,7 +176,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleRerun = () => {
-        const input = JSON.parse(activeProcessInstance?.input);
+        const input = JSON.parse(currentProcessInstance?.input);
         const { variables } = input;
         handleRun(variables);
     };
@@ -236,24 +231,18 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     );
 
     const rerunButton = (
-        <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={() => handleRerun()}>
-            <SvgIcon fontSize="small" color={isRerunButtonDisabled ? 'disabled' : 'secondary'}>
-                <RerunIcon />
-            </SvgIcon>
-        </IconButton>
+        <Tooltip title={translate('Component.BotProcessRunner.Tooltip.Title.RerunProcess')} placement="top">
+            <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={() => handleRerun()}>
+                <SvgIcon fontSize="small" color={isRerunButtonDisabled ? 'disabled' : 'secondary'}>
+                    <RerunIcon />
+                </SvgIcon>
+            </IconButton>
+        </Tooltip>
     );
-
-    const cancelRerunButton = (
-        <IconButton sx={{ width: '40px' }} onClick={() => handleTerminate()}>
-            <SvgIcon fontSize="medium" color="secondary">
-                <CancelIcon />
-            </SvgIcon>    
-        </IconButton>
-    );
-
-    if (hasExecutionInfo) {
+    
+    if (externalProcessInstance) {
         return (
-            <If condition={!started} else={cancelRerunButton}>
+            <If condition={!started} else={null}>
                 {rerunButton}
             </If>
         );
