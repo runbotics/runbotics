@@ -1,5 +1,4 @@
 import Ajv from 'ajv';
-import BpmnModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
 import { BpmnElementType } from 'runbotics-common';
@@ -11,11 +10,13 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementForm';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import { ValidationFuncProps } from './useModelerListeners.types';
+import { ValidateElementProps } from './useModelerListeners.types';
+
 export const getModelerActivities = (elements: BPMNElement[]) =>
     _.sortBy(
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
+
 export const isModelerInSync = ({
     modeler,
     appliedActivities,
@@ -50,11 +51,8 @@ const validateForm = (element: BPMNElement) => {
     const validate = ajv.compile(getFormSchema(element));
     return { isValid: validate(formData), formData };
 };
-
 // eslint-disable-next-line complexity
 const validateConnections = (element: BPMNElement) => {
-    // We need to filter out everything that is not sequence flow connection
-    // eg "bpmn:Association"
     const incomingConnections = element.incoming.filter(
         (flow) => flow.type === BpmnElementType.SEQUENCE_FLOW
     );
@@ -62,54 +60,47 @@ const validateConnections = (element: BPMNElement) => {
         (flow) => flow.type === BpmnElementType.SEQUENCE_FLOW
     );
     const hasOutgoingConnection = outgoingConnections.length >= 1;
+
     const hasIncomingConnection = incomingConnections.length >= 1;
 
-    if (
-        element.type === BpmnElementType.START_EVENT &&
-        !hasOutgoingConnection
-    ) {
-        return { isValid: false };
-    }
-    if (element.type === BpmnElementType.END_EVENT && !hasIncomingConnection) {
-        return { isValid: false };
-    }
+    const isStartEventWithoutOutgoingConnection =
+        element.type === BpmnElementType.START_EVENT && !hasOutgoingConnection;
 
-    if (
+    const isEndEventWithoutIncomingConnection =
+        element.type === BpmnElementType.END_EVENT && !hasIncomingConnection;
+
+    const isExclusiveGatewayWithoutConnections =
         element.type === BpmnElementType.EXCLUSIVE_GATEWAY &&
-        (!hasIncomingConnection || !hasOutgoingConnection)
-    ) {
-        return { isValid: false };
-    }
+        (!hasIncomingConnection || !hasOutgoingConnection);
 
-    if (
+    const isServiceTaskWithoutConnections =
         element.type === BpmnElementType.SERVICE_TASK &&
-        (!hasIncomingConnection || !hasOutgoingConnection)
-    ) {
-        return { isValid: false };
-    }
+        (!hasIncomingConnection || !hasOutgoingConnection);
+
+    const isSubprocessWithoutConnections =
+        element.type === BpmnElementType.SUBPROCESS &&
+        (!hasIncomingConnection || !hasOutgoingConnection);
 
     if (
-        element.type === BpmnElementType.SUBPROCESS &&
-        (!hasIncomingConnection || !hasOutgoingConnection)
+        isStartEventWithoutOutgoingConnection ||
+        isEndEventWithoutIncomingConnection ||
+        isExclusiveGatewayWithoutConnections ||
+        isServiceTaskWithoutConnections ||
+        isSubprocessWithoutConnections
     ) {
-        return { isValid: false };
+        return false;
     }
 
-    return { isValid: true };
+    return true;
 };
 
 // eslint-disable-next-line complexity
-export const isValidElement = ({
+export const validateElement = ({
     element,
     handleInvalidElement,
     handleValidElement,
     modeler,
-}: {
-    element: BPMNElement;
-    handleValidElement: (props: ValidationFuncProps) => void;
-    handleInvalidElement: (props: ValidationFuncProps) => void;
-    modeler: BpmnModeler;
-}) => {
+}: ValidateElementProps) => {
     if (element.id.includes('Activity') === false) {
         return;
     }
@@ -125,7 +116,7 @@ export const isValidElement = ({
         return;
     }
 
-    const { isValid: isConnectionValid } = validateConnections(element);
+    const isConnectionValid = validateConnections(element);
 
     if (!isConnectionValid && !formData.disabled) {
         handleInvalidElement({

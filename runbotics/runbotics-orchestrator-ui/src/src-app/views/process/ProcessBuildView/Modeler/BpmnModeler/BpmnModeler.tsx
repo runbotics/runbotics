@@ -62,7 +62,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
-        const { modelerListeners } = useModelerListeners({ setCurrentTab });
+        const { modelerListener } = useModelerListeners({ setCurrentTab });
 
         const {
             isSaveDisabled,
@@ -94,7 +94,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             const eventBus = bpmnModeler.get('eventBus');
 
-            const listeners = modelerListeners(bpmnModeler);
+            const listeners = modelerListener(bpmnModeler);
 
             for (const listenerKey in listeners) {
                 eventBus.on(listenerKey, listeners[listenerKey]);
@@ -170,6 +170,13 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
 
+        const handleSave = () => {
+            if (isSaveDisabled) return;
+            onSave();
+            dispatch(processActions.setCommandStack(initialCommandStackInfo));
+            setImported(false);
+        };
+
         const onCenter = () => {
             centerCanvas(modeler);
         };
@@ -191,17 +198,14 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             modeler.get('commandStack')?.redo();
         };
 
+        const saveKeys = 'Command+s,Control+s';
+
         return (
             <Hotkeys
-                keyName="Command+s,Control+s"
+                keyName={saveKeys}
                 onKeyDown={(_, e) => {
                     e.preventDefault();
-                    if (isSaveDisabled) return;
-                    onSave();
-                    dispatch(
-                        processActions.setCommandStack(initialCommandStackInfo)
-                    );
-                    setImported(false);
+                    handleSave();
                 }}
             >
                 <ModelerProvider modeler={modeler}>
@@ -211,15 +215,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             <ModelerContainer id="bpmn-modeler" />
                             <RunSavePanel
                                 process={process}
-                                onSave={() => {
-                                    onSave();
-                                    dispatch(
-                                        processActions.setCommandStack(
-                                            initialCommandStackInfo
-                                        )
-                                    );
-                                    setImported(false);
-                                }}
+                                onSave={handleSave}
                                 onRunClick={() =>
                                     setCurrentTab(ProcessBuildTab.RUN_INFO)
                                 }

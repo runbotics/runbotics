@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7Definition } from 'json-schema';
-import { Expressions } from 'runbotics-common';
+import { BpmnElementType, Expressions } from 'runbotics-common';
 
 interface CamundaEntry {
     $type: 'camunda:Entry';
@@ -80,7 +80,7 @@ export type BusinessObject = {
 
 export type BPMNElement = {
     id: string;
-    type: string;
+    type: BpmnElementType;
     businessObject: BusinessObject;
     incoming?: IBpmnConnection[];
     outgoing?: IBpmnConnection[];

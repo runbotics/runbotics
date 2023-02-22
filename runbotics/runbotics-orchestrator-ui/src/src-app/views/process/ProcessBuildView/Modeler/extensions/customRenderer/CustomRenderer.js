@@ -93,16 +93,7 @@ export default class CustomRenderer extends BaseRenderer {
 
             svgAppend(parentNode, text);
         }
-        if(businessObject?.name){
-            // a way to utalize name
-            // const name = svgCreate("text");
-            // svgAppend(name, document.createTextNode(businessObject.name))
-            // svgAttr(name, {
-            //     x: width / 2 - 75,
-            //     y: height
-            // })
-            // svgAppend(parentNode, name);
-        }
+
     }
     pickColor(businessObject) {
         const { disabled, validationError } = businessObject;

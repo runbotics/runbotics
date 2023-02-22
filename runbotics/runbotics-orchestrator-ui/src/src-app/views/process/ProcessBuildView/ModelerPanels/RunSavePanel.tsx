@@ -31,30 +31,28 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
         (state) => state.process.modeler
     );
     const getTooltip = () => {
-        const elementsWithFromErrors = errors
-            .map((error) =>
-                error.type === ModelerErrorType.FORM_ERROR
-                    ? error.elementName
-                    : null
-            )
-            .filter((element) => element !== null);
-
-        const elementsWithConnectionErrors = errors
-            .map((error) =>
-                error.type === ModelerErrorType.CONNECTION_ERROR
-                    ? error.elementName
-                    : null
-            )
-            .filter((element) => element !== null);
+        const { formErrorElementsNames, connectionErrorElementsNames } =
+            errors.reduce(
+                (acc, prev) => {
+                    if (prev.type === ModelerErrorType.FORM_ERROR) {
+                        acc.formErrorElementsNames.push(prev.elementName);
+                    }
+                    if (prev.type === ModelerErrorType.CONNECTION_ERROR) {
+                        acc.connectionErrorElementsNames.push(prev.elementName);
+                    }
+                    return acc;
+                },
+                { formErrorElementsNames: [], connectionErrorElementsNames: [] }
+            );
 
         if (
-            elementsWithConnectionErrors.length ||
-            elementsWithFromErrors.length
+            connectionErrorElementsNames.length ||
+            formErrorElementsNames.length
         ) {
             return (
                 <TooltipError
-                    elementsWithConnectionErrors={elementsWithConnectionErrors}
-                    elementsWithFromErrors={elementsWithFromErrors}
+                    connectionErrorElementsNames={connectionErrorElementsNames}
+                    formErrorElementsNames={formErrorElementsNames}
                 />
             );
         }

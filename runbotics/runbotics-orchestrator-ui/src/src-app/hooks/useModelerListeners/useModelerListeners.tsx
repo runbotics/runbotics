@@ -1,36 +1,37 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 
+import { BpmnElementType } from 'runbotics-common';
+
 import internalBpmnActions from '#src-app/Actions';
 import { useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
-import { ProcessBuildTab } from '#src-app/types/sidebar';
 import getElementLabel from '#src-app/utils/getElementLabel';
 
+import { ModelerEvents } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler/BpmnModeler.types';
 import {
     applyModelerElement,
     toggleValidationError,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementManipulation';
 
-import { CommandStackEvent, EventBusEvent } from './useModelerListeners.types';
+import {
+    CommandStackEvent,
+    EventBusEvent,
+    ModelerListenersProps,
+} from './useModelerListeners.types';
 import {
     getModelerActivities,
-    isValidElement,
+    validateElement,
 } from './useModelerListeners.validation';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
-    'bpmn:ServiceTask',
-    'bpmn:SequenceFlow',
-    'bpmn:SubProcess',
+    BpmnElementType.SERVICE_TASK,
+    BpmnElementType.SEQUENCE_FLOW,
+    BpmnElementType.SUBPROCESS,
 ];
-interface useModelerListenersProps {
-    setCurrentTab: Dispatch<SetStateAction<ProcessBuildTab>>;
-}
 
-const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
+const useModelerListeners = ({ setCurrentTab }: ModelerListenersProps) => {
     const dispatch = useDispatch();
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
@@ -57,8 +58,8 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
         }
     };
 
-    const modelerListeners = (modeler: BpmnModeler) => ({
-        'commandStack.changed': (e) => {
+    const modelerListener = (modeler: BpmnModeler) => ({
+        [ModelerEvents.COMMANDSTACK_CHANGED]: (e: CommandStackEvent) => {
             const { _stackIdx, _stack } = modeler.get('commandStack');
             dispatch(
                 processActions.setCommandStack({
@@ -75,48 +76,48 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 );
             }
         },
-        'commandStack.shape.delete.preExecute': () => {
+        [ModelerEvents.COMMANDSTACK_SHAPE_DELETE_PREEXECUTE]: () => {
             dispatch(processActions.resetSelection());
         },
-        'commandStack.connection.delete.preExecute': () => {
+        [ModelerEvents.COMMANDSTACK_CONNECTION_DELETE_PREEXECUTE]: () => {
             dispatch(processActions.resetSelection());
         },
-        'commandStack.connection.delete.postExecuted': (
+        [ModelerEvents.COMMANDSTACK_CONNECTION_DELETE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
             const { source, target } = event.context;
 
-            isValidElement({
+            validateElement({
                 element: source,
                 handleInvalidElement,
                 handleValidElement,
                 modeler,
             });
-            isValidElement({
+            validateElement({
                 element: target,
                 handleInvalidElement,
                 handleValidElement,
                 modeler,
             });
         },
-        'commandStack.connection.create.postExecuted': (
+        [ModelerEvents.COMMANDSTACK_CONNECTION_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
             const { source, target } = event.context;
-            isValidElement({
+            validateElement({
                 element: source,
                 handleInvalidElement,
                 handleValidElement,
                 modeler,
             });
-            isValidElement({
+            validateElement({
                 element: target,
                 handleInvalidElement,
                 handleValidElement,
                 modeler,
             });
         },
-        'commandStack.elements.create.postExecuted': (
+        [ModelerEvents.COMMANDSTACK_ELEMENTS_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
             const { elements } = event.context;
@@ -139,10 +140,10 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 }
             });
         },
-        'connection.removed': () => {
+        [ModelerEvents.CONNECTION_REMOVED]: () => {
             setCurrentTab(null);
         },
-        'element.click': (event: EventBusEvent) => {
+        [ModelerEvents.ELEMENT_CLICK]: (event: EventBusEvent) => {
             if (ELEMENTS_PROPERTIES_WHITELIST.includes(event.element.type)) {
                 dispatch(processActions.setSelectedElement(event.element));
             } else {
@@ -150,13 +151,13 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
                 dispatch(processActions.resetSelection());
             }
         },
-        'shape.removed': (event: EventBusEvent) => {
+        [ModelerEvents.SHAPE_REMOVED]: (event: EventBusEvent) => {
             setCurrentTab(null);
             dispatch(processActions.removeAppliedAction(event.element.id));
             dispatch(processActions.removeError(event.element.id));
         },
-        'shape.changed': (event: EventBusEvent) => {
-            isValidElement({
+        [ModelerEvents.SHAPE_CHANGED]: (event: EventBusEvent) => {
+            validateElement({
                 element: event.element,
                 handleInvalidElement,
                 handleValidElement,
@@ -166,7 +167,7 @@ const useModelerListeners = ({ setCurrentTab }: useModelerListenersProps) => {
     });
 
     return {
-        modelerListeners,
+        modelerListener,
     };
 };
 

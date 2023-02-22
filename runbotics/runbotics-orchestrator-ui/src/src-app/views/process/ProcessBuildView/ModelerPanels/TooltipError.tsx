@@ -6,42 +6,42 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 const StyledDiv = styled.div`
-    margin-bottom: 2px;
+    display: flex;
+    gap: 2px;
+    flex-direction: column;
 `;
 
 interface TooltipError {
-    elementsWithConnectionErrors: string[];
-    elementsWithFromErrors: string[];
+    connectionErrorElementsNames: string[];
+    formErrorElementsNames: string[];
 }
 const TooltipError: FC<TooltipError> = ({
-    elementsWithConnectionErrors,
-    elementsWithFromErrors,
+    connectionErrorElementsNames,
+    formErrorElementsNames,
 }) => {
     const { translate } = useTranslations();
 
     return (
-        <>
-            <StyledDiv>
-                {translate('Process.MainView.Tooltip.Save.Errors')}
-            </StyledDiv>
-            <If condition={Boolean(elementsWithConnectionErrors.length)}>
-                <StyledDiv>
+        <StyledDiv>
+            <div>{translate('Process.MainView.Tooltip.Save.Errors.Title')}</div>
+            <If condition={Boolean(connectionErrorElementsNames.length)}>
+                <div>
                     {translate(
                         'Process.MainView.Tooltip.Save.Errors.Connections',
                         {
-                            errors: elementsWithConnectionErrors.join(', '),
+                            errors: connectionErrorElementsNames.join(', '),
                         }
                     )}
-                </StyledDiv>
+                </div>
             </If>
-            <If condition={Boolean(elementsWithFromErrors.length)}>
-                <StyledDiv>
+            <If condition={Boolean(formErrorElementsNames.length)}>
+                <div>
                     {translate('Process.MainView.Tooltip.Save.Errors.Form', {
-                        errors: elementsWithFromErrors.join(', '),
+                        errors: formErrorElementsNames.join(', '),
                     })}
-                </StyledDiv>
+                </div>
             </If>
-        </>
+        </StyledDiv>
     );
 };
 
