@@ -69,7 +69,7 @@ export class ServerConfigService {
     }
 
     get timezone(): string {
-        return 'Europe/Warsaw';
+        return this.configService.get('TIMEZONE') || 'Europe/Warsaw';
     }
 
     get emailTriggerConfig(): EmailTriggerConfig {

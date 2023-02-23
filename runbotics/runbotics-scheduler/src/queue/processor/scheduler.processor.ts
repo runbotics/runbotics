@@ -104,7 +104,7 @@ export class SchedulerProcessor {
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
 
-        const result = await this.processSchedulerService.startProcess(job.data, bot);
+        const processInstanceIdentifier = await this.processSchedulerService.startProcess(job.data, bot);
 
         const busyBot = await this.botService.setBusy(bot);
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, busyBot);
@@ -114,7 +114,7 @@ export class SchedulerProcessor {
             job.id
         );
 
-        return result;
+        return processInstanceIdentifier;
     }
 
     @OnQueueActive()

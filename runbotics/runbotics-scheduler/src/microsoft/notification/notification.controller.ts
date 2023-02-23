@@ -21,17 +21,16 @@ export class NotificationController {
     async emailNotification(
         @Body() notificationBody: NotificationBody,
         @Query('validationToken') validationToken: string,
-        @Res() response: Response,
+        @Res({ passthrough: true }) response: Response,
     ) {
         if (validationToken) {
             const validationWords = validationToken.split(' ');
             const requestId = validationWords[validationWords.length - 1];
             this.logger.log(`<= Received test request for email notification (Request-Id: ${requestId})`);
+
             response
-                .contentType('text')
-                .status(HttpStatus.OK)
-                .send(validationToken);
-            return;
+                .contentType('text');
+            return validationToken;
         }
 
         this.logger.log(`=> Received ${notificationBody.value.length} email notification(s)`);
@@ -42,9 +41,6 @@ export class NotificationController {
     
         if (filteredNotifications.length === 0) {
             this.logger.warn('<= No email notifications were handled');
-            response
-                .status(HttpStatus.OK)
-                .send();
             return;
         }
 
@@ -52,9 +48,6 @@ export class NotificationController {
 
         this.logger.log('<= Success: email notifications handled');
         
-        response
-            .status(HttpStatus.OK)
-            .send();
         return;
     }
 
@@ -64,17 +57,16 @@ export class NotificationController {
     async emailLifecycleNotification(
         @Body() notificationBody: LifecycleNotificationBody,
         @Query('validationToken') validationToken: string,
-        @Res() response: Response,
+        @Res({ passthrough: true }) response: Response,
     ) {
         if (validationToken) {
             const validationWords = validationToken.split(' ');
             const requestId = validationWords[validationWords.length - 1];
             this.logger.log(`<= Received test request for email lifecycle notification (Request-Id: ${requestId})`);
+
             response
-                .contentType('text')
-                .status(HttpStatus.OK)
-                .send(validationToken);
-            return;
+                .contentType('text');
+            return validationToken;
         }
 
         this.logger.log(`=> Received ${notificationBody.value.length} email lifecycle notification(s)`);
@@ -85,18 +77,12 @@ export class NotificationController {
     
         if (filteredNotifications.length === 0) {
             this.logger.warn('<= No email lifecycle notifications were handled');
-            response
-                .status(HttpStatus.OK)
-                .send();
             return;
         }
 
         await this.notificationService.handleLifecycleEmailNotifications(filteredNotifications);
         
         this.logger.log('<= Success: email lifecycle notifications handled');
-
-        response
-            .status(HttpStatus.OK)
-            .send();
+        return;
     }
 }

@@ -66,11 +66,15 @@ export interface GetAllEmailsResponse {
     value: Email[];
 }
 
+interface SendEmailMessage extends
+    Pick<Email, 'subject' | 'body' | 'toRecipients'>,
+    Partial<Pick<Email, 'ccRecipients'>>
+    {
+        attachments?: Pick<Attachment, '@odata.type' | 'contentBytes' | 'contentType' | 'name'>[];
+    }
+
 export interface SendEmailRequest {
-    message: Pick<Email, 'subject' | 'body' | 'toRecipients'> &
-        Partial<Pick<Email, 'ccRecipients'>> & {
-            attachments?: Pick<Attachment, '@odata.type' | 'contentBytes' | 'contentType' | 'name'>[];
-        };
+    message: SendEmailMessage;
     saveToSentItems?: boolean;
 }
 

@@ -138,7 +138,7 @@ export class NotificationService {
 
     async handleExpiredEmailNotifications(notifications: ExpiredLifecycleNotificationEvent[]) {
         const newSubscriptionExpirationDate = {
-            expirationDateTime: dayjs.utc().add(2, 'day').format(),
+            expirationDateTime: dayjs.utc().add(2, 'days').format(),
         };
         await Promise.allSettled(notifications
             .map(notification => this.subscriptionService

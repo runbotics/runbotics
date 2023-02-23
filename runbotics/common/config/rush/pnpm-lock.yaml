@@ -34,14 +34,14 @@ importers:
       jexl: ^2.3.0
       microbundle-crl: ^0.13.11
       rollup-plugin-typescript2: ^0.34.1
-      typescript: ^4.9.4
+      typescript: ^4.9.5
     dependencies:
       jexl: 2.3.0
     devDependencies:
       '@types/jexl': 2.2.0
       microbundle-crl: 0.13.11
-      rollup-plugin-typescript2: 0.34.1_auhlkpjee7qxi75i2rydhg3pr4
-      typescript: 4.9.4
+      rollup-plugin-typescript2: 0.34.1_4rd7oh6vs2bcef4l6bgeeiflby
+      typescript: 4.9.5
 
   ../../runbotics-desktop:
     specifiers:
@@ -16587,7 +16587,7 @@ packages:
       typescript: 4.6.2
     dev: true
 
-  /rollup-plugin-typescript2/0.34.1_auhlkpjee7qxi75i2rydhg3pr4:
+  /rollup-plugin-typescript2/0.34.1_4rd7oh6vs2bcef4l6bgeeiflby:
     resolution: {integrity: sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw==}
     peerDependencies:
       rollup: '>=1.26.3'
@@ -16599,7 +16599,7 @@ packages:
       rollup: 2.53.1
       semver: 7.3.8
       tslib: 2.4.1
-      typescript: 4.9.4
+      typescript: 4.9.5
     dev: true
 
   /rollup-pluginutils/2.8.1:
@@ -18331,6 +18331,12 @@ packages:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+
+  /typescript/4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
 
   /ua-parser-js/0.7.28:
     resolution: {integrity: sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==}

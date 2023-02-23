@@ -26,7 +26,7 @@ export class SubscriptionService implements OnModuleInit {
 
     async createEmailTriggerSubscription() {
         this.logger.log('Creating new email subscription');
-        const twoDaysFromNowUTC = dayjs.utc().add(5, 'minute').format();
+        const twoDaysFromNowUTC = dayjs.utc().add(2, 'days').format();
 
         const notificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL;
         const lifecycleNotificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL_LIFECYCLE;
