@@ -135,6 +135,9 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     processName: {
                         'ui:widget': 'ProcessNameSuggestionWidget',
+                        'ui:options': {
+                            formContext: { someOtherValue: 'bar' },
+                        },
                     },
                 },
             },
@@ -144,6 +147,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                     variableName: undefined,
                 },
             },
+            // formContext: { iksde: 'blabla' },
         },
     },
 });

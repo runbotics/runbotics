@@ -112,12 +112,23 @@ export class QueueService implements OnModuleInit {
         }));
     }
 
-    async getProcessByInfo(processInfo: string | number) {
-        const process = await this.processService.findByInfo(processInfo);
+    // async getProcessByInfo(processInfo: string | number) {
+    //     const process = await this.processService.findByInfo(processInfo);
+
+    //     if (!process) {
+    //         this.logger.error(`Process ${processInfo} does not exist`);
+    //         throw new NotFoundException(`Process (${processInfo}) does not exist`);
+    //     }
+
+    //     return process;
+    // }
+
+    async getProcessById(processId: number) {
+        const process = this.processService.findById(processId);
 
         if (!process) {
-            this.logger.error(`Process ${processInfo} does not exist`);
-            throw new NotFoundException(`Process (${processInfo}) does not exist`);
+            this.logger.error(`Process ${processId} does not exist`);
+            throw new NotFoundException(`Process (${processId}) does not exist`);
         }
 
         return process;
@@ -222,3 +233,4 @@ export class QueueService implements OnModuleInit {
     }
 
 }
+
