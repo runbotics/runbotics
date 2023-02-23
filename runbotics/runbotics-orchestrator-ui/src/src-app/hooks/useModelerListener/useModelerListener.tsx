@@ -167,7 +167,6 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         [ModelerEvent.COMMANDSTACK_ELEMENTS_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
-            console.log(event);
             const { elements } = event.context;
             elements.forEach((element) => {
                 dispatch(processActions.setSelectedElement(element));
