@@ -157,7 +157,8 @@ export const validateStartEvents = ({
     modeler,
 }: ValidateStartEventsProps) => {
     const { _elements } = modeler.get('elementRegistry');
-    // this checks if inside root components (eg: subprocess, main canvas) is only one start event
+    // this returns an object with root components ID's as keys (eg: subprocess, main canvas)
+    // and an array of all start events inside those roots as values
     const rootEventMap = Object.values(_elements).reduce(
         (acc: RootEventMap, prev: { element: BPMNElement }) => {
             if (prev.element.type === BpmnElementType.START_EVENT) {
