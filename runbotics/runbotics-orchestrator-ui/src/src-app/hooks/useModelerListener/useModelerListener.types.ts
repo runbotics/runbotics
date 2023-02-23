@@ -51,8 +51,21 @@ export interface ValidateElementProps {
 export interface ValidateStartEventProps {
     context: CommandStackEvent['context'];
     modeler: BpmnModeler;
-    handleInvalidElement: (props: ModelerElementValidationParams & {nameKey: string;}) => void;
+    handleInvalidElement: (
+        props: ModelerElementValidationParams & { nameKey: string }
+    ) => void;
 }
+
+export interface ValidateStartEventsProps {
+    handleInvalidElement: (props: {
+        elementId: string;
+        nameKey: string;
+        errorType: ModelerErrorType;
+    }) => void;
+    handleValidElement: (props: { elementId: string }) => void;
+    modeler: BpmnModeler;
+}
+
 export interface ModelerSyncParams {
     modeler: BpmnModeler;
     appliedActivities: string[];

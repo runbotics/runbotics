@@ -25,7 +25,7 @@ import {
 import {
     getModelerActivities,
     validateElement,
-    validateStartEvent,
+    validateStartEvents,
 } from './useModelerListener.validation';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
@@ -42,28 +42,21 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         (state) => state.action.bpmnActions.byId
     );
 
-    const handleInvalidStartEvent = ({
-        element,
-        modeler,
-        errorType,
-        nameKey,
-    }) => {
+    const handleInvalidStartEvent = ({ errorType, nameKey, elementId }) => {
         dispatch(
             processActions.setError({
-                elementId: element.parent.id,
-                elementName: nameKey
-                    ? translate(nameKey)
-                    : getElementLabel(element),
+                elementId,
+                elementName: translate(nameKey),
                 type: errorType,
             })
         );
-
-        if (!element.businessObject.validationError) {
-            toggleValidationError(modeler, element, true);
-        }
     };
 
-    const handleInvalidElement = ({ element, modeler, errorType}) => {
+    const handleValidStartEvent = ({ elementId }) => {
+        dispatch(processActions.removeError(elementId));
+    };
+
+    const handleInvalidShape = ({ element, modeler, errorType }) => {
         dispatch(
             processActions.setError({
                 elementId: element.id,
@@ -77,7 +70,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         }
     };
 
-    const handleValidElement = ({ element, modeler }) => {
+    const handleValidShape = ({ element, modeler }) => {
         dispatch(processActions.removeError(element.id));
 
         if (element.businessObject.validationError) {
@@ -90,10 +83,10 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             event: CommandStackEvent
         ) => {
             if (event?.context.shape.type === BpmnElementType.START_EVENT) {
-                validateStartEvent({
-                    modeler,
-                    context: event.context,
+                validateStartEvents({
                     handleInvalidElement: handleInvalidStartEvent,
+                    handleValidElement: handleValidStartEvent,
+                    modeler,
                 });
             }
         },
@@ -107,13 +100,13 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             );
             if (event.trigger === 'redo' || event.trigger === 'undo') {
                 const { _elements } = modeler.get('elementRegistry');
-                console.log(Object.values(_elements).reduce((acc: any, prev: any) => {
-                    if(prev.element.type === BpmnElementType.START_EVENT){
-                        return [...acc, prev.element];
-                    }
-                    return acc;
-                }, []));
-                //to do on undo and redo
+
+                validateStartEvents({
+                    handleValidElement: handleValidStartEvent,
+                    handleInvalidElement: handleInvalidStartEvent,
+                    modeler,
+                });
+
                 dispatch(
                     processActions.setAppliedActions(
                         getModelerActivities(_elements)
@@ -141,14 +134,14 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
 
             validateElement({
                 element: source,
-                handleInvalidElement,
-                handleValidElement,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
                 modeler,
             });
             validateElement({
                 element: target,
-                handleInvalidElement,
-                handleValidElement,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
                 modeler,
             });
         },
@@ -158,14 +151,14 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             const { source, target } = event.context;
             validateElement({
                 element: source,
-                handleInvalidElement,
-                handleValidElement,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
                 modeler,
             });
             validateElement({
                 element: target,
-                handleInvalidElement,
-                handleValidElement,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
                 modeler,
             });
         },
@@ -211,8 +204,8 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         [ModelerEvent.SHAPE_CHANGED]: (event: EventBusEvent) => {
             validateElement({
                 element: event.element,
-                handleInvalidElement,
-                handleValidElement,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
                 modeler,
             });
         },

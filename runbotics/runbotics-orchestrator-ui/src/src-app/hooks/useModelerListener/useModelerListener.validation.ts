@@ -13,7 +13,7 @@ import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/hel
 import {
     ModelerSyncParams,
     ValidateElementProps,
-    ValidateStartEventProps,
+    ValidateStartEventsProps,
 } from './useModelerListener.types';
 
 export const getModelerActivities = (elements: BPMNElement[]) =>
@@ -134,35 +134,34 @@ export const validateElement = ({
     handleValidElement({ element, modeler });
 };
 
-export const validateStartEvent = ({
-    context,
-    modeler,
+export const validateStartEvents = ({
     handleInvalidElement,
-}: ValidateStartEventProps) => {
-    if (context.shape.type !== BpmnElementType.START_EVENT) return;
-
+    handleValidElement,
+    modeler,
+}: ValidateStartEventsProps) => {
     const { _elements } = modeler.get('elementRegistry');
+    const rootStartEvent: any = Object.values(_elements).reduce(
+        (acc: any, prev: any) => {
+            if (prev.element.type === BpmnElementType.START_EVENT) {
+                const id = prev.element.parent?.id;
+                return { ...acc, [id]: [...(acc[id] ?? []), prev.element] };
+            }
+            return acc;
+        },
+        {}
+    );
 
-    const hasStartEvent = Object.values(_elements).reduce((acc, prev: any) => {
-        const isStartEvent =  prev.element.type === BpmnElementType.START_EVENT;
-        const hasSameParent = context.parent?.id === prev.element.parent?.id;
-        const isEventElement =  context.shape?.id === prev.element?.id; 
-        if (
-            isStartEvent &&
-            hasSameParent &&
-            !isEventElement
-        ) {
-            return true;
+    for (const rootElementId in rootStartEvent) {
+        if (rootStartEvent[rootElementId].length < 2) {
+            handleValidElement({
+                elementId: rootElementId,
+            });
+        } else {
+            handleInvalidElement({
+                errorType: ModelerErrorType.CANVAS_ERROR,
+                nameKey: 'Process.Details.Modeler.Actions.Event.Start.Label',
+                elementId: rootElementId,
+            });
         }
-        return acc;
-    }, false);
-
-    if (hasStartEvent) {
-        handleInvalidElement({
-            errorType: ModelerErrorType.CANVAS_ERROR,
-            nameKey: 'Process.Details.Modeler.Actions.Event.Start.Label',
-            element: context.shape,
-            modeler,
-        });
     }
 };
