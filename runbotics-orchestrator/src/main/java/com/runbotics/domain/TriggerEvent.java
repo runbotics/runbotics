@@ -5,26 +5,26 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "process_trigger")
-public class ProcessTrigger {
+@Table(name = "trigger_event")
+public class TriggerEvent {
 
     @NotNull
     @Id
     @Column(length = 50)
     @Enumerated(EnumType.STRING)
-    public ProcessTriggerName name;
+    public TriggerEventName name;
 
-    public ProcessTrigger() {}
+    public TriggerEvent() {}
 
-    public ProcessTrigger(ProcessTriggerName name) {
+    public TriggerEvent(TriggerEventName name) {
         this.name = name;
     }
 
-    public ProcessTriggerName getName() {
+    public TriggerEventName getName() {
         return name;
     }
 
-    public void setName(ProcessTriggerName name) {
+    public void setName(TriggerEventName name) {
         this.name = name;
     }
 
@@ -32,8 +32,8 @@ public class ProcessTrigger {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProcessTrigger processTrigger = (ProcessTrigger) o;
-        return Objects.equals(name, processTrigger.name);
+        TriggerEvent triggerEvent = (TriggerEvent) o;
+        return Objects.equals(name, triggerEvent.name);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ProcessTrigger {
 
     @Override
     public String toString() {
-        return "ProcessTrigger{" + "name='" + name + '\'' + '}';
+        return "TriggerEvent{" + "name='" + name + '\'' + '}';
     }
 
 }

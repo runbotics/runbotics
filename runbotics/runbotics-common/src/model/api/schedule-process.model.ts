@@ -7,5 +7,3 @@ export interface IScheduleProcess {
     process?: IProcess | null;
     user?: IUser;
 }
-
-export const defaultValue: Readonly<IScheduleProcess> = {};

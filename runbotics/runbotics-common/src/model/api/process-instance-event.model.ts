@@ -28,5 +28,3 @@ export enum ProcessInstanceEventStatus {
     STOPPED = 'STOPPED',
     TERMINATED = "TERMINATED",
 }
-
-export const defaultValue: Readonly<IProcessInstanceEvent> = {};

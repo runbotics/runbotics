@@ -2,10 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 't
 import { UserEntity } from '../user/user.entity';
 import { BotEntity } from '../bot/bot.entity';
 import { ProcessEntity } from '../process/process.entity';
-import { IProcess, IProcessInstance, IUser, ProcessInstanceStatus, IBot } from 'runbotics-common';
+import { IProcess, IProcessInstance, IUser, ProcessInstanceStatus, IBot, ITriggerEvent, EmailTriggerData } from 'runbotics-common';
 import { dateTransformer } from '../database.utils';
-import { IProcessTrigger } from 'runbotics-common/dist/model/api/process-trigger.model';
-import { ProcessTriggerEntity } from '../process-trigger/process-trigger.entity';
+import { TriggerEventEntity } from '../trigger-event/trigger-event.entity';
 
 @Entity({ name: 'process_instance' })
 export class ProcessInstanceEntity implements IProcessInstance {
@@ -36,15 +35,15 @@ export class ProcessInstanceEntity implements IProcessInstance {
     @Column()
         error: string;
 
-    @Column({ name: 'triggered_by' })
-        triggeredBy: string;
+    @Column('jsonb', { nullable: true, name: 'trigger_data' })
+        triggerData?: EmailTriggerData | unknown;
         
     @Column({ name: 'root_process_instance_id', type: 'uuid' })
         rootProcessInstanceId: string;
         
-    @ManyToOne(() => ProcessTriggerEntity)
+    @ManyToOne(() => TriggerEventEntity)
     @JoinColumn({ name: 'trigger', referencedColumnName: 'name' })
-        trigger: IProcessTrigger;
+        trigger: ITriggerEvent;
     
     @ManyToOne(() => BotEntity)
     @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })

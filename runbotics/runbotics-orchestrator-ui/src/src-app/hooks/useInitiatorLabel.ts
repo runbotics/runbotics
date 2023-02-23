@@ -1,30 +1,22 @@
-import { IProcessTrigger, IUser, ProcessTrigger } from 'runbotics-common';
+import { EmailTriggerData, IProcessInstance, TriggerEvent } from 'runbotics-common';
 
 import useTranslations from './useTranslations';
 
-const isProcessTrigger = (
-    trigger: IProcessTrigger | ProcessTrigger
-): trigger is ProcessTrigger => typeof trigger === 'string' && trigger in ProcessTrigger;
-
-interface InitiatorLabelParams {
-    user: IUser;
-    trigger: IProcessTrigger | ProcessTrigger;
-    triggeredBy: string | undefined;
-}
+type InitiatorLabelParams = Pick<IProcessInstance, 'user'| 'trigger' | 'triggerData'>;
 
 const useInitiatorLabel = () => {
     const { translate } = useTranslations();
 
-    const mapInitiatorLabel = ({ user, trigger, triggeredBy }: InitiatorLabelParams) => {
-        const triggerName = isProcessTrigger(trigger) ? trigger : trigger.name;
-
-        switch (triggerName) {
-            case ProcessTrigger.SCHEDULER:
+    const mapInitiatorLabel = ({ user, trigger, triggerData }: InitiatorLabelParams) => {
+        switch (trigger.name) {
+            case TriggerEvent.SCHEDULER:
                 return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.login });
-            case ProcessTrigger.API:
+            case TriggerEvent.API:
                 return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.login });
-            case ProcessTrigger.EMAIL:
-                return translate('Component.HistoryTable.Rows.Initiator.Email', { email: triggeredBy });
+            case TriggerEvent.EMAIL:
+                return translate('Component.HistoryTable.Rows.Initiator.Email', {
+                    email: (triggerData as EmailTriggerData).sender,
+                });
             default:
                 return user?.login;
         }

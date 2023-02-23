@@ -1,0 +1,41 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="szymczakm" id="20230219130113-1">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process_trigger" />
+                <not>
+                    <tableExists tableName="trigger_event" />
+                </not>
+            </and>
+        </preConditions>
+
+        <renameTable oldTableName="process_trigger"
+                     newTableName="trigger_event"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230219130113-2">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="process_instance" columnName="triggered_by" />
+        </preConditions>
+
+        <dropColumn columnName="triggered_by" tableName="process_instance"/>
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230219130113-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance" columnName="trigger_data" />
+            </not>
+        </preConditions>
+
+        <addColumn tableName="process_instance">
+            <column name="trigger_data" type="jsonb">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+</databaseChangeLog>
