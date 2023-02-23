@@ -6,7 +6,7 @@ import { SubscriptionService } from './subscription';
 import { NotificationController, NotificationService } from './notification';
 import { DatabaseModule } from 'src/database/database.module';
 import { QueueModule } from 'src/queue/queue.module';
-import { MicrosoftGraphService } from './microsoft-graph.service';
+import { MicrosoftGraphService } from './microsoft-graph/microsoft-graph.service';
 
 const services = [
     MicrosoftAuthService, OutlookService, OneDriveService, MicrosoftGraphService,

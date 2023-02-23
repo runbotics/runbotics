@@ -5,25 +5,30 @@ import { Logger } from 'src/utils/logger';
 import { ServerConfigService } from 'src/config/server-config/server-config.service';
 
 const scopes = [
-    // COMMON
+    // Common
     'User.Read',
-    // ONE DRIVE
+    // OneDrive
     'Files.Read', 'Files.Read.All', 'Files.ReadWrite', 'Files.ReadWrite.All',
-    // SHAREPOINT
+    // Sharepoint
     'Sites.ReadWrite.All', 'Sites.Read.All',
-    // OUTLOOK
+    // Outlook
     'IMAP.AccessAsUser.All', 'Mail.ReadWrite', 'Mail.Send',
 ];
 
 @Injectable()
 export class MicrosoftAuthService implements AuthenticationProvider {
     private readonly logger = new Logger(MicrosoftAuthService.name);
-    private readonly microsoftAuth: ConfidentialClientApplication; 
-    private account: AccountInfo;
+    private readonly microsoftAuth: ConfidentialClientApplication = null; 
+    private account: AccountInfo = null;
 
     constructor(
         private readonly serverConfigService: ServerConfigService,
     ) {
+        if (!this.hasCredentials()) {
+            this.logger.error('Microsoft credentials are not provided - Microsoft related features won\'t be available');
+            return;
+        }
+
         const config: Configuration = {
             auth: {
                 clientId: this.serverConfigService.microsoftAuth.clientId,
@@ -60,6 +65,14 @@ export class MicrosoftAuthService implements AuthenticationProvider {
         this.account = authResponse.account;
         this.logger.log('Success: Microsoft access token acquired');
         return authResponse;
+    }
+
+    hasCredentials() {
+        return this.serverConfigService.microsoftAuth.clientId
+            && this.serverConfigService.microsoftAuth.tenantId
+            && this.serverConfigService.microsoftAuth.clientSecret
+            && this.serverConfigService.microsoftAuth.username
+            && this.serverConfigService.microsoftAuth.password;
     }
 
 }

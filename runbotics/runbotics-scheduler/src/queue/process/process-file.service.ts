@@ -35,7 +35,7 @@ export class ProcessFileService {
                 this.logger.log('Temporary process files deleted');
             })
             .catch((e) => {
-                this.logger.error('Failed to delete process temporary files', e.message);
+                this.logger.error('Failed to delete process temporary OneDrive files -', e);
             });
     }
 

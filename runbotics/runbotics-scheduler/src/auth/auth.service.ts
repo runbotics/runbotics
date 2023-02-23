@@ -108,7 +108,7 @@ export class AuthService {
                 || (areMajorVersionsEqual && areMinorVersionsEqual && isMinimumPatchVersionFulfilled)
                 || (areMajorVersionsEqual && areMinorVersionsEqual && arePatchVersionsEqual)
             );
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error('bot version error', err);
             throw new WsException(err);
         }
