@@ -8,7 +8,7 @@ import { EMAIL_NOTIFICATION_CLIENT_STATE, EMAIL_NOTIFICATION_URL_PATH, initialSu
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ServerConfigService } from 'src/config/server-config/server-config.service';
-import { MicrosoftGraphService } from '../microsoft-graph.service';
+import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 dayjs.extend(utc);
 
 @Injectable()
@@ -47,48 +47,48 @@ export class SubscriptionService implements OnModuleInit {
             this.logger.log(`Success: Email subscription created (${createSubscriptionResponse.id})`);
 
             return createSubscriptionResponse;
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error('Failed to create email subscription:', error.message);
         }
     }
 
     // https://learn.microsoft.com/en-us/graph/webhooks-lifecycle#actions-to-take-2
     reauthorizeSubscription(subscriptionId: string) {
-        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}/reauthorize`)
-            .post(null);
+        return this.microsoftGraphService
+            .post(`/subscriptions/${subscriptionId}/reauthorize`, null);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-post-subscriptions?view=graph-rest-1.0&tabs=javascript
-    createSubscription(subscription: CreateSubscriptionRequest): Promise<CreateSubscriptionResponse> {
-        return this.microsoftGraphService.api('/subscriptions')
-            .post(subscription);
+    createSubscription(subscription: CreateSubscriptionRequest) {
+        return this.microsoftGraphService
+            .post<CreateSubscriptionResponse>('/subscriptions', subscription);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-delete?view=graph-rest-1.0&tabs=javascript
     deleteSubscription(subscriptionId: string): Promise<void> {
-        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
-            .delete();
+        return this.microsoftGraphService
+            .delete(`/subscriptions/${subscriptionId}`);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-list?view=graph-rest-1.0&tabs=javascript
-    getAllSubscriptions(): Promise<GetAllSubscriptionsResponse> {
-        return this.microsoftGraphService.api('/subscriptions')
-            .get();
+    getAllSubscriptions() {
+        return this.microsoftGraphService
+            .get<GetAllSubscriptionsResponse>('/subscriptions');
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-get?view=graph-rest-1.0&tabs=javascript
-    getSubscription(subscriptionId: string): Promise<GetSubscriptionResponse> {
-        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
-            .get();
+    getSubscription(subscriptionId: string) {
+        return this.microsoftGraphService
+            .get<GetSubscriptionResponse>(`/subscriptions/${subscriptionId}`);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/subscription-update?view=graph-rest-1.0&tabs=javascript
     updateSubscription(
         subscriptionId: string,
         subscription: Pick<Subscription, 'expirationDateTime'>,
-    ): Promise<GetSubscriptionResponse> {
-        return this.microsoftGraphService.api(`/subscriptions/${subscriptionId}`)
-            .update(subscription);
+    ) {
+        return this.microsoftGraphService
+            .patch<GetSubscriptionResponse>(`/subscriptions/${subscriptionId}`, subscription);
     }
 
     private initializeEmailTriggerSubscription() {
@@ -104,6 +104,9 @@ export class SubscriptionService implements OnModuleInit {
                     this.createEmailTriggerSubscription();
                 } else
                     this.logger.log('Email trigger subscription already exists - no action has been taken');
+            })
+            .catch(e => {
+                this.logger.error(`Failed to sync email subscriptions: ${e.message}`);
             });
     }
 

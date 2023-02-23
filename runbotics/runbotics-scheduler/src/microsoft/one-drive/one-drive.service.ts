@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Logger } from 'src/utils/logger';
-import { MicrosoftGraphService } from '../microsoft-graph.service';
+import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
 import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';
 
@@ -18,14 +18,14 @@ export class OneDriveService implements OnModuleInit {
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0&tabs=javascript
     getItem(itemId: string) {
-        return this.microsoftGraphService.api(`/me/drive/items/${itemId}`)
-            .get();
+        return this.microsoftGraphService
+            .get(`/me/drive/items/${itemId}`);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript
-    deleteItemByPath(itemPath: string): Promise<void> {
-        return this.microsoftGraphService.api(`me/drive/root:/${itemPath}`)
-            .delete();
+    deleteItemByPath(itemPath: string) {
+        return this.microsoftGraphService
+            .delete(`me/drive/root:/${itemPath}`);
     }
 
     deleteItemFromWorkingDirectory(filePath: string) {
@@ -38,10 +38,17 @@ export class OneDriveService implements OnModuleInit {
         fullFilePath: string,
         content: string,
         contentType: string,
-    ): Promise<UploadFileResponse> {
-        return this.microsoftGraphService.api(`/me/drive/root:/${fullFilePath}:/content`)
-            .header('Content-Type', contentType)
-            .put(this.bufferFromBase64(content));
+    ) {
+        return this.microsoftGraphService
+            .put<UploadFileResponse>(
+                `/me/drive/root:/${fullFilePath}:/content`,
+                this.bufferFromBase64(content),
+                {
+                    headers: {
+                        'Content-Type': contentType,
+                    },
+                }
+            );
     }
 
     uploadToWorkingDirectory(
@@ -55,11 +62,11 @@ export class OneDriveService implements OnModuleInit {
     // https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0&tabs=javascript
     createFolder(
         folderName: string,
-        absolutePath?: string
-    ): Promise<CreateItemResponse> {
+        absolutePath?: string,
+    ) {
         const urlPath = absolutePath ? `:/${absolutePath}:`: '';
-        return this.microsoftGraphService.api(`/me/drive/root${urlPath}/children`)
-            .post({
+        return this.microsoftGraphService
+            .post<CreateItemResponse>(`/me/drive/root${urlPath}/children`, {
                 name: folderName,
                 folder: {},
                 '@microsoft.graph.conflictBehavior': 'fail', // fail, replace, rename
@@ -72,7 +79,7 @@ export class OneDriveService implements OnModuleInit {
                 this.logger.log('Working directory created');
             })
             .catch((e) => {
-                this.logger.warn('Failed to create One Drive working directory:', e.message);
+                this.logger.error('Failed to create One Drive working directory:', e.message);
             });
     }
 

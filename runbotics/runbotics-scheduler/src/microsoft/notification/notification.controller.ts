@@ -37,18 +37,22 @@ export class NotificationController {
 
         const filteredNotifications = notificationBody.value
             .filter(notification => notification.clientState === EMAIL_NOTIFICATION_CLIENT_STATE
-                && this.serverConfigService.microsoftAuth.tenantId === notification.tenantId);
+                && (!this.serverConfigService.microsoftAuth.tenantId
+                    || this.serverConfigService.microsoftAuth.tenantId === notification.tenantId));
     
         if (filteredNotifications.length === 0) {
             this.logger.warn('<= No email notifications were handled');
             return;
         }
 
-        await this.notificationService.handleEmailNotifications(filteredNotifications);
-
-        this.logger.log('<= Success: email notifications handled');
-        
-        return;
+        await this.notificationService.handleEmailNotifications(filteredNotifications)
+            .then(() => {
+                this.logger.log('<= Success: email notifications handled');
+            })
+            .catch(e => {
+                this.logger.error('<= Failed to handle email notifications -', e);
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
     }
 
     // https://learn.microsoft.com/en-us/graph/webhooks-lifecycle#:%7E:text=Renew%20the%20subscription.%20This%20reauthorizes%20and%20extends%20the%20expiration%20date.
@@ -73,16 +77,21 @@ export class NotificationController {
 
         const filteredNotifications = notificationBody.value
             .filter(notification => notification.clientState === EMAIL_NOTIFICATION_CLIENT_STATE
-                && notification.organizationId === this.serverConfigService.microsoftAuth.tenantId);
+                && (!this.serverConfigService.microsoftAuth.tenantId
+                    || this.serverConfigService.microsoftAuth.tenantId === notification.organizationId));
     
         if (filteredNotifications.length === 0) {
             this.logger.warn('<= No email lifecycle notifications were handled');
             return;
         }
 
-        await this.notificationService.handleLifecycleEmailNotifications(filteredNotifications);
-        
-        this.logger.log('<= Success: email lifecycle notifications handled');
-        return;
+        await this.notificationService.handleLifecycleEmailNotifications(filteredNotifications)
+            .then(() => {
+                this.logger.log('<= Success: email lifecycle notifications handled');
+            })
+            .catch(e => {
+                this.logger.error('<= Failed to handle email lifecycle notifications -', e);
+                response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            });
     }
 }

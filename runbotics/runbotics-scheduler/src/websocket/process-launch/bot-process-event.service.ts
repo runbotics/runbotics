@@ -88,7 +88,7 @@ export class BotProcessEventService {
                     updatedProcessInstanceEvent
                 );
             }
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error(
                 'Process instance event update error: rollback',
                 err
@@ -150,7 +150,7 @@ export class BotProcessEventService {
             //         updatedProcessInstanceEvent
             //     );
             // }
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error(
                 'Process instance event update error: rollback',
                 err

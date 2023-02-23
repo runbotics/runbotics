@@ -39,8 +39,8 @@ export class MailService implements OnModuleInit {
     public onModuleInit() {
         try {
             this.checkMailConfig();
-        } catch (e) {
-            this.logger.error(e);
+        } catch (e: any) {
+            this.logger.warn(e.message);
             return;
         }
 
@@ -92,7 +92,7 @@ export class MailService implements OnModuleInit {
 
         try {
             this.initializeServices();
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(error.message);
             return;
         }
@@ -145,7 +145,7 @@ export class MailService implements OnModuleInit {
                             sender: sender.toLowerCase(),
                         },
                     });
-                } catch (error) {
+                } catch (error: any) {
                     this.logger.error(error.message, error);
                     await this.sendReplyErrorMail(msg.envelope, error.message);
                 }
@@ -221,7 +221,7 @@ export class MailService implements OnModuleInit {
                 ...input,
                 ...this.extractAttachments(parsed.attachments)
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(`Wrong body format: ${error.message}`);
             throw new Error(`Wrong body format: ${error.message}`);
         }

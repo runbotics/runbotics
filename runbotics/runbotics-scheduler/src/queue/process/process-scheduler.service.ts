@@ -51,8 +51,8 @@ export class ProcessSchedulerService {
             if (!file) continue;
             const downloadLink = await this.processFileService.uploadFile(file, orchestratorProcessInstanceId)
                 .catch(err => {
-                    this.logger.error('Failed to upload process file', err);
-                    throw new InternalServerErrorException('Failed to upload file to One Drive', err.message);
+                    this.logger.error('Failed to upload process file -', err);
+                    throw new InternalServerErrorException('Failed to upload file to OneDrive', err.message);
                 });
             this.logger.log(`Uploaded file "${key}" to ${downloadLink}`);
             fileVariables[key] = downloadLink;

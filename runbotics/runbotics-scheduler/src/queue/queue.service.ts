@@ -66,7 +66,6 @@ export class QueueService implements OnModuleInit {
 
         await this.handleAttendedProcess(process, input)
             .catch(err => {
-                this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
                 throw new BadRequestException(err);
             });
 
@@ -80,7 +79,7 @@ export class QueueService implements OnModuleInit {
             })
             .catch((err) => {
                 this.logger.error(
-                    `Failed to add new instant job for process: ${process.name}`,
+                    `Failed to add new instant job for process "${process.name}"`,
                     err
                 );
                 return Promise.reject(err);
@@ -174,7 +173,7 @@ export class QueueService implements OnModuleInit {
         
         if (!input?.variables) {
             const err = 'You haven\'t provided variables for attended process';
-            this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
+            this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
             throw new BadRequestException(err);
         }
 
@@ -183,7 +182,7 @@ export class QueueService implements OnModuleInit {
         const missingVariables = difference(requiredVariables, Object.keys(passedVariables));
         if (missingVariables.length > 0) {
             const err = `You haven't provided variables for attended process: ${missingVariables.join(', ')}`;
-            this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
+            this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
             throw new BadRequestException(err);
         }
 
@@ -195,7 +194,7 @@ export class QueueService implements OnModuleInit {
 
         if (emptyVariables.length > 0) {
             const err = `You haven't provided variables for attended process: ${emptyVariables.join(', ')}`;
-            this.logger.error(`Failed to add new instant job for process: ${process.name}. ${err}`);
+            this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
             throw new BadRequestException(err);
         }
     }
