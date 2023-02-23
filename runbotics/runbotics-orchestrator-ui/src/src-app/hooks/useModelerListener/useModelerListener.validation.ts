@@ -74,6 +74,9 @@ const validateConnections = (element: BPMNElement) => {
     const isEndEventWithoutIncomingConnection =
         element.type === BpmnElementType.END_EVENT && !hasIncomingConnection;
 
+    const isIntermediateEventWithoutIncomingConnection =
+        element.type === BpmnElementType.ITERMEDIATE_THROW_EVENT && !hasIncomingConnection;
+
     const isExclusiveGatewayWithoutConnections =
         element.type === BpmnElementType.EXCLUSIVE_GATEWAY &&
         (!hasIncomingConnection || !hasOutgoingConnection);
@@ -91,7 +94,8 @@ const validateConnections = (element: BPMNElement) => {
         isEndEventWithoutIncomingConnection ||
         isExclusiveGatewayWithoutConnections ||
         isServiceTaskWithoutConnections ||
-        isSubprocessWithoutConnections
+        isSubprocessWithoutConnections ||
+        isIntermediateEventWithoutIncomingConnection
     ) {
         return false;
     }

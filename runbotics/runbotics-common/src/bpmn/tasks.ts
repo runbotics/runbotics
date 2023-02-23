@@ -8,5 +8,6 @@ export enum BpmnElementType {
   INCLUSIVE_GATEWAY = 'bpmn:InclusiveGateway',
   COMPLEX_GATEWAY = 'bpmn:ComplexGateway',
   ASSOCIATION = 'bpmn:Association',
-  SEQUENCE_FLOW = 'bpmn:SequenceFlow'
+  SEQUENCE_FLOW = 'bpmn:SequenceFlow',
+  ITERMEDIATE_THROW_EVENT = "bpmn:IntermediateThrowEvent",
 }
