@@ -14,10 +14,12 @@ const TooltipBox = styled.div`
 interface TooltipError {
     connectionErrorElementsNames: string[];
     formErrorElementsNames: string[];
+    canvasErrorElementNames: string[];
 }
 const TooltipError: FC<TooltipError> = ({
     connectionErrorElementsNames,
     formErrorElementsNames,
+    canvasErrorElementNames,
 }) => {
     const { translate } = useTranslations();
 
@@ -38,6 +40,13 @@ const TooltipError: FC<TooltipError> = ({
                 <div>
                     {translate('Process.MainView.Tooltip.Save.Errors.Form', {
                         errors: formErrorElementsNames.join(', '),
+                    })}
+                </div>
+            </If>
+            <If condition={Boolean(canvasErrorElementNames.length)}>
+                <div>
+                    {translate('Process.MainView.Tooltip.Save.Errors.Canvas', {
+                        errors: canvasErrorElementNames.join(', '),
                     })}
                 </div>
             </If>

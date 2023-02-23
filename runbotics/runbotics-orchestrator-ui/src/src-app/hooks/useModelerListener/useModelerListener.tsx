@@ -56,11 +56,13 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         dispatch(processActions.removeError(elementId));
     };
 
-    const handleInvalidShape = ({ element, modeler, errorType }) => {
+    const handleInvalidShape = ({ element, modeler, errorType, nameKey }) => {
         dispatch(
             processActions.setError({
                 elementId: element.id,
-                elementName: getElementLabel(element),
+                elementName: nameKey
+                    ? translate(nameKey)
+                    : getElementLabel(element),
                 type: errorType,
             })
         );

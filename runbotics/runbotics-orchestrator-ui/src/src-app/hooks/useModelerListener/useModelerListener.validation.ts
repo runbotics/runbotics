@@ -105,7 +105,25 @@ export const validateElement = ({
     handleValidElement,
     modeler,
 }: ValidateElementProps) => {
+    const isConnectionValid = validateConnections(element);
     if (element.id.includes('Activity') === false) {
+        if (!isConnectionValid) {
+            const formattedType =
+                element.type[0].toUpperCase() +
+                element.type.replace(':', '-').slice(1);
+
+            handleInvalidElement({
+                element,
+                modeler,
+                errorType: ModelerErrorType.CONNECTION_ERROR,
+                nameKey: `Process.Details.Modeler.Actions.${formattedType}.Label`,
+            });
+        } else {
+            handleValidElement({
+                element,
+                modeler,
+            });
+        }
         return;
     }
 
@@ -119,8 +137,6 @@ export const validateElement = ({
         });
         return;
     }
-
-    const isConnectionValid = validateConnections(element);
 
     if (!isConnectionValid && !formData.disabled) {
         handleInvalidElement({

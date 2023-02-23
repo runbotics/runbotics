@@ -31,28 +31,40 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
         (state) => state.process.modeler
     );
     const getTooltip = () => {
-        const { formErrorElementsNames, connectionErrorElementsNames } =
-            errors.reduce(
-                (acc, prev) => {
-                    if (prev.type === ModelerErrorType.FORM_ERROR) {
-                        acc.formErrorElementsNames.push(prev.elementName);
-                    }
-                    if (prev.type === ModelerErrorType.CONNECTION_ERROR) {
-                        acc.connectionErrorElementsNames.push(prev.elementName);
-                    }
-                    return acc;
-                },
-                { formErrorElementsNames: [], connectionErrorElementsNames: [] }
-            );
+        const {
+            formErrorElementsNames,
+            connectionErrorElementsNames,
+            canvasErrorElementsNames,
+        } = errors.reduce(
+            (acc, prev) => {
+                if (prev.type === ModelerErrorType.FORM_ERROR) {
+                    acc.formErrorElementsNames.push(prev.elementName);
+                }
+                if (prev.type === ModelerErrorType.CONNECTION_ERROR) {
+                    acc.connectionErrorElementsNames.push(prev.elementName);
+                }
+                if (prev.type === ModelerErrorType.CANVAS_ERROR) {
+                    acc.canvasErrorElementsNames.push(prev.elementName);
+                }
+                return acc;
+            },
+            {
+                formErrorElementsNames: [],
+                connectionErrorElementsNames: [],
+                canvasErrorElementsNames: [],
+            }
+        );
 
         if (
             connectionErrorElementsNames.length ||
-            formErrorElementsNames.length
+            formErrorElementsNames.length ||
+            canvasErrorElementsNames.length
         ) {
             return (
                 <TooltipError
                     connectionErrorElementsNames={connectionErrorElementsNames}
                     formErrorElementsNames={formErrorElementsNames}
+                    canvasErrorElementNames={canvasErrorElementsNames}
                 />
             );
         }

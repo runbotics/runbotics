@@ -47,8 +47,8 @@ export default class CustomRenderer extends BaseRenderer {
         transformY = 0,
         width = 240,
         height = 20,
-        ) {
-            const rect = drawRect(
+    ) {
+        const rect = drawRect(
             parentNode,
             width,
             height,
@@ -123,9 +123,13 @@ export default class CustomRenderer extends BaseRenderer {
             );
             svgRemove(shape);
         }
-
-        if(is(element, "bpmn:SubProcess")){
-            svgAttr(shape, { stroke: this.pickStrokeColor(businessObject) })
+        if (
+            is(element, "bpmn:SubProcess") ||
+            is(element, "bpmn:StartEvent") ||
+            is(element, "bpmn:EndEvent") ||
+            is(element, "bpmn:ExclusiveGateway")
+        ) {
+            svgAttr(shape, { stroke: this.pickStrokeColor(businessObject) });
         }
 
         if (label && (label.title || label.actionId)) {
