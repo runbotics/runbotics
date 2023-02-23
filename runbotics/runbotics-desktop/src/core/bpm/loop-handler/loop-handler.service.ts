@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BpmnEngineActivity, BpmnExecutionEventMessageApi } from 'bpmn-engine';
-import { BpmnElement } from 'runbotics-common';
+import { BpmnElementType } from 'runbotics-common';
 
 @Injectable()
 export class LoopHandlerService {
@@ -53,20 +53,20 @@ export class LoopHandlerService {
     public isLoopEvent(api: BpmnExecutionEventMessageApi): boolean {
         return (
             api.environment.variables.content.parent.type ===
-                BpmnElement.SUBPROCESS &&
+                BpmnElementType.SUBPROCESS &&
             api.environment.variables.content.loopCardinality
         );
     }
     
     private isSubProcessEvent(api: BpmnExecutionEventMessageApi): boolean {
-        return api.content?.parent?.type === BpmnElement.SUBPROCESS;
+        return api.content?.parent?.type === BpmnElementType.SUBPROCESS;
     }
 
     private isStartEvent(api: BpmnExecutionEventMessageApi): boolean {
-        return api.content?.type === BpmnElement.START_EVENT;
+        return api.content?.type === BpmnElementType.START_EVENT;
     }
 
     private isEndEvent(api: BpmnExecutionEventMessageApi): boolean {
-        return api.content?.type === BpmnElement.END_EVENT;
+        return api.content?.type === BpmnElementType.END_EVENT;
     }
 }

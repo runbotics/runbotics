@@ -1,4 +1,4 @@
-export enum BpmnElement {
+export enum BpmnElementType {
   SUBPROCESS = 'bpmn:SubProcess',
   START_EVENT = 'bpmn:StartEvent',
   END_EVENT = 'bpmn:EndEvent',
@@ -6,5 +6,8 @@ export enum BpmnElement {
   SERVICE_TASK = 'bpmn:ServiceTask',
   EXCLUSIVE_GATEWAY = 'bpmn:ExclusiveGateway',
   INCLUSIVE_GATEWAY = 'bpmn:InclusiveGateway',
-  COMPLEX_GATEWAY = 'bpmn:ComplexGateway'
+  COMPLEX_GATEWAY = 'bpmn:ComplexGateway',
+  ASSOCIATION = 'bpmn:Association',
+  SEQUENCE_FLOW = 'bpmn:SequenceFlow',
+  ITERMEDIATE_THROW_EVENT = "bpmn:IntermediateThrowEvent",
 }

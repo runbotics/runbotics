@@ -9,10 +9,16 @@ export interface CommandStackInfo {
     commandStackSize: number;
     commandStackIdx: number;
 }
+export enum ModelerErrorType {
+    FORM_ERROR = 'FORM_ERROR',
+    CONNECTION_ERROR = 'CONNECTION_ERROR',
+    CANVAS_ERROR = 'CANVAS_ERROR'
+}
 
 export interface ModelerError {
     elementName: string;
     elementId: string;
+    type: ModelerErrorType;
 }
 
 export interface ModelerState {
