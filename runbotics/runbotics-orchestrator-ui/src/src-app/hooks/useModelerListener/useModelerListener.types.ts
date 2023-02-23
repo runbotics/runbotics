@@ -74,3 +74,7 @@ export interface ModelerSyncParams {
     commandStack: CommandStackInfo;
     errors: ModelerError[];
 }
+
+export interface RootEventMap {
+    [rootId: string]: BPMNElement[];
+}

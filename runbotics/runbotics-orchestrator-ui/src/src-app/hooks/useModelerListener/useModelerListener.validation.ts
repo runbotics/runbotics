@@ -12,6 +12,7 @@ import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/hel
 
 import {
     ModelerSyncParams,
+    RootEventMap,
     ValidateElementProps,
     ValidateStartEventsProps,
 } from './useModelerListener.types';
@@ -156,8 +157,9 @@ export const validateStartEvents = ({
     modeler,
 }: ValidateStartEventsProps) => {
     const { _elements } = modeler.get('elementRegistry');
-    const rootStartEvent: any = Object.values(_elements).reduce(
-        (acc: any, prev: any) => {
+    // this checks if inside root components (eg: subprocess, main canvas) is only one start event
+    const rootEventMap = Object.values(_elements).reduce(
+        (acc: RootEventMap, prev: { element: BPMNElement }) => {
             if (prev.element.type === BpmnElementType.START_EVENT) {
                 const id = prev.element.parent?.id;
                 return { ...acc, [id]: [...(acc[id] ?? []), prev.element] };
@@ -165,10 +167,10 @@ export const validateStartEvents = ({
             return acc;
         },
         {}
-    );
+    ) as RootEventMap;
 
-    for (const rootElementId in rootStartEvent) {
-        if (rootStartEvent[rootElementId].length < 2) {
+    for (const rootElementId in rootEventMap) {
+        if (rootEventMap[rootElementId].length < 2) {
             handleValidElement({
                 elementId: rootElementId,
             });
