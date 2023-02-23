@@ -21,7 +21,7 @@ import {
     IBotSystem,
     WsMessage,
 } from 'runbotics-common';
-import { ProcessSchedulerService } from '../process/process.scheduler.service';
+import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from 'src/database/process/process.service';
 import { UiGateway } from '../../websocket/gateway/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
@@ -60,8 +60,6 @@ export class SchedulerProcessor {
             );
 
             if (availableBot) {
-                const busyBot = await this.botService.setBusy(availableBot);
-                this.uiGateway.server.emit(WsMessage.BOT_STATUS, busyBot);
                 this.logger.log(`[Q Process] Bot ${availableBot.id} is available`);
                 return Promise.resolve(availableBot);
             }
@@ -106,12 +104,17 @@ export class SchedulerProcessor {
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
 
+        const result = await this.processSchedulerService.startProcess(job.data, bot);
+
+        const busyBot = await this.botService.setBusy(bot);
+        this.uiGateway.server.emit(WsMessage.BOT_STATUS, busyBot);
+
         this.logger.log(
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
             job.id
         );
 
-        return this.processSchedulerService.startProcess(job.data, bot);
+        return result;
     }
 
     @OnQueueActive()

@@ -1,8 +1,8 @@
-export interface IProcessTrigger {
-    name: ProcessTrigger;
+export interface ITriggerEvent {
+    name: TriggerEvent;
 }
 
-export enum ProcessTrigger {
+export enum TriggerEvent {
     MANUAL = 'MANUAL',
     SCHEDULER = 'SCHEDULER',
     API = 'API',

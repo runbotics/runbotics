@@ -20,19 +20,32 @@ export interface NotificationBody {
 export interface LifecycleNotification {
     lifecycleEvent: 'reauthorizationRequired' | 'missed' | 'subscriptionRemoved';
     subscriptionId: string;
+    subscriptionExpirationDateTime: string; // timestamp UTC
     resource: string;
-    clientState: string;
-    sequence: null;
     resourceData: {
         '@odata.id': string;
         '@odata.type': string;
         id: string;
     };
+    clientState: string;
+    sequence: null;
     encryptedContent: null;
     organizationId: string;
-    subscriptionExpirationDateTime: string; // timestamp UTC
+}
+
+export interface MissedLifecycleNotificationEvent extends Omit<LifecycleNotification, 'lifecycleEvent'> {
+    lifecycleEvent: 'missed';
+}
+
+export interface ExpiredLifecycleNotificationEvent extends Omit<LifecycleNotification, 'lifecycleEvent'> {
+    lifecycleEvent: 'reauthorizationRequired';
 }
 
 export interface LifecycleNotificationBody {
     value: LifecycleNotification[];
+}
+
+export interface LifecycleEventDivision {
+    missed: MissedLifecycleNotificationEvent[];
+    expired: ExpiredLifecycleNotificationEvent[];
 }

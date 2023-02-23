@@ -80,7 +80,7 @@ const useProcessInstanceColumns = (): Column[] => {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
     ];
 

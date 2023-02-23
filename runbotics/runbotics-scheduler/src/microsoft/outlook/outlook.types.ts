@@ -1,4 +1,4 @@
-interface Recipient {
+export interface Recipient {
     emailAddress: {
         name?: string;
         address: string;
@@ -44,7 +44,7 @@ export interface Email {
     };
 }
 
-interface Attachment {
+export interface Attachment {
     '@odata.type': string;
     id: string;
     contentType: string;

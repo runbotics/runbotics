@@ -5,8 +5,8 @@ interface CommonDesktopRunRequest {
     rootProcessInstanceId: string;
     userId: number;
     executionContext: BpmnExecutionEventMessageApi;
-    trigger: string;
-    triggeredBy?: string;
+    trigger: { name: string };
+    triggerData?: unknown;
 }
 
 export interface DesktopRunRequest<S extends string = string, I = any> extends CommonDesktopRunRequest {

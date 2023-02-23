@@ -1,7 +1,8 @@
-import { Logger } from 'src/utils/logger';
-import { ConfigModule as NestConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
-import { ServerConfigService } from './serverConfig.service';
+
+import { Logger } from 'src/utils/logger';
+import { ServerConfigService } from './server-config';
 
 const NODE_ENV = process.env.NODE_ENV ? '.' + process.env.NODE_ENV : '';
 const envFile = '.env' + NODE_ENV;
@@ -13,10 +14,10 @@ Logger.print('info', ['Env file is: ' + envFile], 'Config');
         NestConfigModule.forRoot({ envFilePath: envFile }),
     ],
     providers: [
-        ConfigService, ServerConfigService
+        ServerConfigService
     ],
     exports: [
-        ConfigService, ServerConfigService
+        ServerConfigService
     ]
 })
 export class ConfigModule { }

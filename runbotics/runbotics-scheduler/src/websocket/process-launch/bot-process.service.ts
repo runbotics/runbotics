@@ -1,16 +1,18 @@
-import { ProcessInstanceEntity } from '../../database/process-instance/process-instance.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Logger } from '../../utils/logger';
-import { ProcessInstanceService } from '../../database/process-instance/process-instance.service';
-import { BotService } from '../../database/bot/bot.service';
-import { ProcessService } from '../../database/process/process.service';
-import { BotStatus, IBot, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { Connection } from 'typeorm';
+
+import { Logger } from 'src/utils/logger';
+import { ProcessInstanceEntity } from 'src/database/process-instance/process-instance.entity';
+import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
+import { BotService } from 'src/database/bot/bot.service';
+import { ProcessService } from 'src/database/process/process.service';
+import { MailService } from 'src/mail/mail.service';
+import { ProcessFileService } from 'src/queue/process/process-file.service';
+import { NotificationService } from 'src/microsoft/notification';
+
 import { UiGateway } from '../gateway/ui.gateway';
 import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process.service.utils';
-import { MailService } from 'src/mail/mail.service';
-import { FileUploadService } from 'src/microsoft/file-upload.service';
-import { OutlookService } from 'src/microsoft/outlook';
 
 @Injectable()
 export class BotProcessService {
@@ -23,8 +25,8 @@ export class BotProcessService {
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
         private readonly mailService: MailService,
-        private readonly fileUploadService: FileUploadService,
-        private readonly outlookService: OutlookService,
+        private readonly processFileService: ProcessFileService,
+        private readonly notificationService: NotificationService,
     ) {}
 
     async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
@@ -54,16 +56,14 @@ export class BotProcessService {
             }
 
             if (!processInstance.rootProcessInstanceId && isProcessInstanceFinished(processInstance.status)) {
-                await this.mailService.sendProcessResultMail(processInstance);
-                // await this.outlookService.
+                if (isEmailTriggerData(processInstance.triggerData) && processInstance.triggerData.emailId)
+                    await this.notificationService.sendProcessResultMail(processInstance);
+                else
+                    await this.mailService.sendProcessResultMail(processInstance);
             }
 
             if (isProcessInstanceFinished(processInstance.status)) {
-                this.logger.log('Clearing sharepoint temporary files');
-                await this.fileUploadService.deleteTempFolder(processInstance.orchestratorProcessInstanceId)
-                    .catch(() => {
-                        this.logger.error('Temp folder not found');
-                    });
+                await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
             }
         } catch (err) {
             this.logger.error('Process instance update error: rollback', err);
@@ -88,7 +88,7 @@ export class BotProcessService {
         instanceToSave.orchestratorProcessInstanceId = processInstance.orchestratorProcessInstanceId;
         instanceToSave.user = processInstance.user;
         instanceToSave.trigger = processInstance.trigger;
-        instanceToSave.triggeredBy = processInstance.triggeredBy;
+        instanceToSave.triggerData = processInstance.triggerData;
         return instanceToSave;
     }
 

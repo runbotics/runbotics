@@ -1,7 +1,8 @@
 package com.runbotics.service.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.runbotics.domain.ProcessInstance;
-import com.runbotics.domain.ProcessTrigger;
+import com.runbotics.domain.TriggerEvent;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -45,9 +46,9 @@ public class ProcessInstanceDTO implements Serializable {
 
     private String error;
 
-    private ProcessTrigger trigger;
+    private TriggerEvent trigger;
 
-    private String triggeredBy;
+    private JsonNode triggerData;
 
     public UUID getId() {
         return id;
@@ -161,20 +162,20 @@ public class ProcessInstanceDTO implements Serializable {
         this.error = error;
     }
 
-    public ProcessTrigger getTrigger() {
+    public TriggerEvent getTrigger() {
         return trigger;
     }
 
-    public void setTrigger(ProcessTrigger trigger) {
+    public void setTrigger(TriggerEvent trigger) {
         this.trigger = trigger;
     }
 
-    public String getTriggeredBy() {
-        return triggeredBy;
+    public JsonNode getTriggerData() {
+        return triggerData;
     }
 
-    public void setTriggeredBy(String triggeredBy) {
-        this.triggeredBy = triggeredBy;
+    public void setTriggerData(JsonNode triggerData) {
+        this.triggerData = triggerData;
     }
 
     @Override
@@ -215,7 +216,7 @@ public class ProcessInstanceDTO implements Serializable {
             ", bot=" + getBot() +
             ", error=" + getError() +
             ", trigger=" + getTrigger() +
-            ", triggeredBy=" + getTriggeredBy() +
+            ", triggerData=" + getTriggerData() +
             "}";
     }
 }

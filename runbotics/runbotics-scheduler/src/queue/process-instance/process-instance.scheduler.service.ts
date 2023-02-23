@@ -27,8 +27,8 @@ export class ProcessInstanceSchedulerService {
             user: job.data.user,
             process: job.data.process,
             error: errorMessage,
-            trigger: { name: job.data.trigger },
-            ...(job.data?.triggeredBy && { triggeredBy: job.data.triggeredBy }),
+            trigger: job.data.trigger,
+            ...(job.data?.triggerData && { triggerData: job.data.triggerData }),
         };
         await this.processInstanceService.save(processInstance);
         this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);

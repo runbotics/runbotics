@@ -1,15 +1,13 @@
-import { ProcessTrigger } from './process-trigger.model';
+import { TriggerEvent } from './trigger-event.model';
 import { IProcess } from './process.model';
 import { IUser } from './user.model';
+import { IProcessInstance } from './process-instance.model';
 
 export interface ProcessInput {
     variables: Record<string, any>;
 }
 
-export interface Trigger {
-    trigger: ProcessTrigger;
-    triggeredBy?: string;
-}
+export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
 
 export interface InstantProcess extends Trigger {
     process: IProcess;

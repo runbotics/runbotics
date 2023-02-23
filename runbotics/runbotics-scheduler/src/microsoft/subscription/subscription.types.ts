@@ -39,3 +39,9 @@ export interface GetAllSubscriptionsResponse {
     '@odata.context': string;
     value: GetSubscriptionResponse[];
 }
+
+
+export interface SubscriptionValidation {
+    validEmailSubscriptions: GetSubscriptionResponse[];
+    invalidSubscriptions: GetSubscriptionResponse[];
+}

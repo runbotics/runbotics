@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServerConfigService } from '../config/serverConfig.service';
+import { ServerConfigService } from '../config/server-config/server-config.service';
 import { ConfigModule } from '../config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
@@ -13,7 +13,7 @@ import { ScheduleProcessModule } from './schedule-process/schedule-process.modul
 import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
 import { FeatureKeyModule } from './feature-key/feature-key.module';
-import { ProcessTriggerModule } from './process-trigger/process-trigger.module';
+import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 
 @Module({
@@ -46,7 +46,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
-        ProcessTriggerModule,
+        TriggerEventModule,
     ],
     exports: [
         AuthorityModule,
@@ -61,7 +61,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
-        ProcessTriggerModule,
+        TriggerEventModule,
     ],
 })
 export class DatabaseModule { }

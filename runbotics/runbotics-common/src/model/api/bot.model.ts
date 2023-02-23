@@ -14,5 +14,3 @@ export interface IBot {
     collection?: IBotCollection;
     version?: string | null;
 }
-
-export const defaultValue: Readonly<IBot> = {};

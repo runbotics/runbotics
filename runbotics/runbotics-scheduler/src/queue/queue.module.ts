@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import IORedis from 'ioredis';
+
+import { ConfigModule } from 'src/config/config.module';
+import { ServerConfigService } from 'src/config/server-config/server-config.service';
+import { Logger } from 'src/utils/logger';
+import { MicrosoftModule } from 'src/microsoft';
+
 import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
@@ -9,16 +15,13 @@ import { SchedulerService } from './scheduler/scheduler.service';
 import { SchedulerController } from './scheduler/scheduler.controller';
 import { ProcessController } from './process/process.controller';
 import { ProcessInstanceController } from './process-instance/process-instance.controller';
-import { ConfigModule } from 'src/config/config.module';
-import { ServerConfigService } from 'src/config/serverConfig.service';
-import { Logger } from 'src/utils/logger';
 import { ProcessInstanceSchedulerService } from './process-instance/process-instance.scheduler.service';
-import { ProcessSchedulerService } from './process/process.scheduler.service';
+import { ProcessSchedulerService } from './process/process-scheduler.service';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
 import { QueueService } from './queue.service';
-import { MicrosoftModule } from 'src/microsoft/microsoft.module';
+import { ProcessFileService } from './process/process-file.service';
 
 @Module({
     imports: [
@@ -50,9 +53,9 @@ import { MicrosoftModule } from 'src/microsoft/microsoft.module';
         SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController
     ],
     providers: [
-        SchedulerService, SchedulerProcessor, ProcessSchedulerService,
+        SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService,
         ProcessInstanceSchedulerService, BotSchedulerService, QueueService,
     ],
-    exports: [QueueService]
+    exports: [QueueService, ProcessFileService]
 })
 export class QueueModule { }
