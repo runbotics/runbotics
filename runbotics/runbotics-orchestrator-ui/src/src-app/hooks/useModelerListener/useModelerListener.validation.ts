@@ -39,9 +39,11 @@ export const isModelerSync = ({
 
     return (
         imported ||
-        (areActivitiesMatched &&
+        (
+            areActivitiesMatched &&
             commandStack.commandStackIdx >= 0 &&
-            errors.length === 0)
+            errors.length === 0
+        )
     );
 };
 
