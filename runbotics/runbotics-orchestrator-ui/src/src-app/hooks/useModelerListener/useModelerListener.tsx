@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 import { useDispatch } from 'react-redux';
