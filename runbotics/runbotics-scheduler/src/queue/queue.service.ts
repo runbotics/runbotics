@@ -15,12 +15,12 @@ import { Logger } from 'src/utils/logger';
 import { StartProcessRequest, StartProcessResponse } from 'src/types';
 import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
 import {
-    IProcess, ProcessTrigger, WsMessage, ScheduledProcess, InstantProcess, ProcessInput,
+    IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent,
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/gateway/ui.gateway';
 import getVariablesFromSchema, { isObject } from 'src/utils/variablesFromSchema';
 import difference from 'lodash/difference';
-import { ServerConfigService } from 'src/config/serverConfig.service';
+import { ServerConfigService } from 'src/config/server-config/server-config.service';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
@@ -64,7 +64,7 @@ export class QueueService implements OnModuleInit {
         const { process, input } = params;
         this.logger.log(`Adding new instant job for process: ${process.name}`);
 
-        await this.handleAttededProcess(process, input)
+        await this.handleAttendedProcess(process, input)
             .catch(err => {
                 this.logger.error(`Failed to add new instant job for process: ${process.name}`, err);
                 throw new BadRequestException(err);
@@ -131,13 +131,13 @@ export class QueueService implements OnModuleInit {
         const isAdmin = user?.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;
 
         if (!hasAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to process "${process?.name}" (${process?.id})`);
-            throw new ForbiddenException(`You do not have access to process "${process?.name}" (${process?.id})`);
+            this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to the process "${process?.id}"`);
+            throw new ForbiddenException(`You do not have access to the process "${process?.id}"`);
         }
 
         if (triggered && !isTriggerable) {
-            this.logger.error(`Process "${process?.name}" (${process?.id}) is not triggerable`);
-            throw new ForbiddenException(`Process "${process?.name}" (${process?.id}) is not triggerable`);
+            this.logger.error(`Process "${process?.id}" is not triggerable`);
+            throw new ForbiddenException(`Process "${process?.id}" is not triggerable`);
         }
     }
 
@@ -148,9 +148,9 @@ export class QueueService implements OnModuleInit {
         const scheduledProcesses = await this.scheduleProcessService.findAll();
         await Promise.all(
             scheduledProcesses
-                .map(process => this.createScheduledJob({ ...process, trigger: ProcessTrigger.SCHEDULER }))
+                .map(process => this.createScheduledJob({ ...process, trigger: { name: TriggerEvent.SCHEDULER } }))
         );
-        this.logger.log(`Created ${scheduledProcesses.length} schedules`);
+        this.logger.log(`Created ${scheduledProcesses.length} schedule(s)`);
         this.logger.log('Queue successfully initialized');
     }
 
@@ -169,7 +169,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Cleared staled job(s)');
     }
     
-    private async handleAttededProcess(process: IProcess, input?: ProcessInput) {
+    private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
         
         if (!input?.variables) {

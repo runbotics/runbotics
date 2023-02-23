@@ -129,7 +129,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             id: processInstanceId,
             status: ProcessInstanceStatus.INITIALIZING,
             ...(request.userId && { user: { id: request.userId } }),
-            ...(request.trigger && { trigger: { name: request.trigger } }),
         };
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
@@ -481,10 +480,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                                 ?.id,
                             executionContext,
                             trigger: this.processInstances[processInstanceId]
-                                .trigger.name as string,
-                            triggeredBy:
-                            this.processInstances[processInstanceId]
-                                .triggeredBy,
+                                .trigger,
+                            triggerData: this.processInstances[processInstanceId]
+                                .triggerData,
                         });
                         this.logger.log(
                             `[${processInstanceId}] [${executionId}] [${script}] Desktop action executed successfully`,
