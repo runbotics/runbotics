@@ -115,7 +115,7 @@ export const validateElement = ({
         if (!isConnectionValid) {
             const formattedType =
                 element.type[0].toUpperCase() +
-                element.type.replace(':', '-').slice(1);
+                element.type.replace(':', '.').slice(1);
 
             handleInvalidElement({
                 element,
