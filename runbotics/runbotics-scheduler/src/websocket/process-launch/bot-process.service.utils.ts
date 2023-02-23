@@ -1,6 +1,9 @@
 import { ProcessInstanceStatus } from 'runbotics-common';
 
-const COMMON_PROCESS_INSTANCE_FIELDS = ['input', 'error', 'root_process_instance_id', 'orchestrator_process_instance_id', 'trigger', 'triggered_by', 'step','user_id', 'process_id', 'bot_id'];
+const COMMON_PROCESS_INSTANCE_FIELDS = [
+    'input', 'error', 'root_process_instance_id', 'orchestrator_process_instance_id',
+    'trigger', 'trigger_data', 'step','user_id', 'process_id', 'bot_id',
+];
 
 const COMPLETED_PROCESS_INSTANCE_FIELDS = ['status', 'updated', 'output', ...COMMON_PROCESS_INSTANCE_FIELDS];
 const STARTING_PROCESS_INSTANCE_FIELDS = ['created', ...COMMON_PROCESS_INSTANCE_FIELDS];

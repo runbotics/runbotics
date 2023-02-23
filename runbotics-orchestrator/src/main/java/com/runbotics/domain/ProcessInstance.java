@@ -1,6 +1,7 @@
 package com.runbotics.domain;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import com.runbotics.service.impl.ProcessInstanceEntityListener;
 import java.io.Serializable;
@@ -8,9 +9,11 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 /**
  * A ProcessInstance.
@@ -19,6 +22,7 @@ import org.hibernate.annotations.Type;
 @Table(name = "process_instance")
 @EntityListeners(ProcessInstanceEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class ProcessInstance implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,10 +81,11 @@ public class ProcessInstance implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "trigger", referencedColumnName = "name")
-    private ProcessTrigger trigger;
+    private TriggerEvent trigger;
 
-    @Column(name = "triggered_by")
-    private String triggeredBy;
+    @Type(type = "json")
+    @Column(name = "trigger_data", columnDefinition = "json")
+    private JsonNode triggerData;
 
     public UUID getId() {
         return id;
@@ -244,20 +249,20 @@ public class ProcessInstance implements Serializable {
         this.error = error;
     }
 
-    public ProcessTrigger getTrigger() {
+    public TriggerEvent getTrigger() {
         return trigger;
     }
 
-    public void setTrigger(ProcessTrigger trigger) {
+    public void setTrigger(TriggerEvent trigger) {
         this.trigger = trigger;
     }
 
-    public String getTriggeredBy() {
-        return triggeredBy;
+    public JsonNode getTriggerData() {
+        return triggerData;
     }
 
-    public void setTriggeredBy(String triggeredBy) {
-        this.triggeredBy = triggeredBy;
+    public void setTriggerData(JsonNode triggerData) {
+        this.triggerData = triggerData;
     }
 
     @Override
@@ -293,7 +298,7 @@ public class ProcessInstance implements Serializable {
             ", user='" + getUser().getEmail() + "'" +
             ", error='" + getError() + "'" +
             ", trigger='" + getTrigger() + "'" +
-            ", triggeredBy='" + getTriggeredBy() + "'" +
+            ", triggerData='" + getTriggerData() + "'" +
             "}";
     }
 }

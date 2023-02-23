@@ -1,6 +1,6 @@
 package com.runbotics.domain;
 
-public enum ProcessTriggerName {
+public enum TriggerEventName {
     MANUAL("MANUAL"),
     SCHEDULER("SCHEDULER"),
     API("API"),
@@ -8,7 +8,7 @@ public enum ProcessTriggerName {
 
     private final String name;
 
-    ProcessTriggerName(String name) {
+    TriggerEventName(String name) {
         this.name = name;
     }
 
