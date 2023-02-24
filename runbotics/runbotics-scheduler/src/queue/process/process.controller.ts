@@ -35,7 +35,7 @@ export class ProcessController {
             this.logger.log(`<= Process ${processInfo} successfully started`);
 
             return response;
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error(`<= Process ${processInfo} failed to start`);
             throw new HttpException({
                 message: err?.message ?? 'Internal server error',

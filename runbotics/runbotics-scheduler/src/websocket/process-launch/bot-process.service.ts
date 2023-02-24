@@ -65,7 +65,7 @@ export class BotProcessService {
             if (isProcessInstanceFinished(processInstance.status)) {
                 await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
             }
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error('Process instance update error: rollback', err);
             await queryRunner.rollbackTransaction();
         } finally {

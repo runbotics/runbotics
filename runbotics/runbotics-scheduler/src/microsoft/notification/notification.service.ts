@@ -71,7 +71,7 @@ export class NotificationService {
                     } as EmailTriggerData,
                 });
 
-            } catch (e) {
+            } catch (e: any) {
                 const replyEmail: ReplyEmailRequest = {
                     message: { 
                         toRecipients: [email.sender],
