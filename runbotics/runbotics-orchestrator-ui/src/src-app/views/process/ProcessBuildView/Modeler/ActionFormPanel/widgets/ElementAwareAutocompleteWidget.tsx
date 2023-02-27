@@ -107,9 +107,9 @@ interface ElementAwareAutocompleteProps extends WidgetProps {
 }
 
 const AutocompleteWrapper = styled.div`
-display: flex;
-width: 100%;
-align-items: center;
+    display: flex;
+    width: 100%;
+    align-items: center;
 `;
 
 const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
