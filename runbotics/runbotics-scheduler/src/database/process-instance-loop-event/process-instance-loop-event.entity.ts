@@ -44,8 +44,8 @@ export class ProcessInstanceLoopEventEntity implements IProcessInstanceLoopEvent
     @Column({name: 'iteration_number'})
         iterationNumber: number;
 
-    @Column({name: 'iterator_element'})
-        iteratorElement: string;
+    @Column({name: 'iterator_element', type: 'jsonb'})
+        iteratorElement: JSON;
         
     @Column({name: 'loop_id'})
         loopId: string;

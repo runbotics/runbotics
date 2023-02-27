@@ -15,7 +15,6 @@ import { UiGateway } from '../gateway/ui.gateway';
 import { ProcessInstanceEventEntity } from 'src/database/process-instance-event/process-instance-event.entity';
 import { ProcessInstanceEntity } from 'src/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from 'src/database/process-instance-loop-event/process-instance-loop-event.entity';
-import { ProcessInstanceLoopEventService } from 'src/database/process-instance-loop-event/process-instance-loop-event.service';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -32,7 +31,6 @@ export class BotProcessEventService {
 
     constructor(
         private readonly processInstanceEventService: ProcessInstanceEventService,
-        private readonly processInstanceLoopEventService: ProcessInstanceLoopEventService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway
     ) {}
@@ -56,7 +54,6 @@ export class BotProcessEventService {
                 } as IProcessInstance)
                 .orIgnore()
                 .execute();
-
             await queryRunner.manager
                 .createQueryBuilder()
                 .insert()
@@ -72,17 +69,20 @@ export class BotProcessEventService {
                 .execute();
             await this.updateProcessInstance(queryRunner, processInstanceEvent);
             await queryRunner.commitTransaction();
-
             const updatedProcessInstanceEvent =
                 await this.processInstanceEventService.findByExecutionId(
                     queryRunner,
                     processInstanceEvent.executionId
                 );
-
             if (
                 updatedProcessInstanceEvent.processInstance
-                    .rootProcessInstanceId === null
+                    .rootProcessInstanceId === null && 
+                    !(processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS &&
+                        updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED
+                    ) 
             ) {
+                this.logger.log(processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS &&
+                        updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED);
                 this.uiGateway.server.emit(
                     WsMessage.PROCESS_INSTANCE_EVENT,
                     updatedProcessInstanceEvent
@@ -91,7 +91,7 @@ export class BotProcessEventService {
         } catch (err: any) {
             this.logger.error(
                 'Process instance event update error: rollback',
-                err
+                err 
             );
             await queryRunner.rollbackTransaction();
         } finally {
