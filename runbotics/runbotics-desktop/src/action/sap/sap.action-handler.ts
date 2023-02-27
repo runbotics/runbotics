@@ -66,8 +66,8 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @description Inserts text into the input field.
      *  @param target - ID of SAP user interface element
      *  @param value - text to be inserted
-     *  @example target: wnd[0]/example/target/path
-     *  @example value: example text
+     *  @example target: 'wnd[0]/example/target/path'
+     *  @example value: 'example text'
      */
     async type(input: SapTypes.SAPTypeActionInput): Promise<SapTypes.SAPTypeActionOutput> {
         this.isApplicationOpen();
@@ -79,7 +79,7 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @name SAP: Click
      *  @description Clicks on the indicated element.
      *  @param target - ID of SAP user interface element
-     *  @example target: wnd[0]/tbar[0]/btn[0]
+     *  @example target: 'wnd[0]/tbar[0]/btn[0]'
      */
     async click(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
@@ -91,7 +91,7 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @name SAP: Double click
      *  @description Clicks twice on the indicated element.
      *  @param target - ID of SAP user interface element
-     *  @example target: wnd[0]/tbar[0]/btn[0]
+     *  @example target: 'wnd[0]/tbar[0]/btn[0]'
      */
     async doubleClick(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
@@ -101,7 +101,8 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     /**
-     * @description This action should be used to handle the SAP table. It currently needs to be reworked.
+     * @description Reads SAP table.
+     * @deprecated It currently needs to be reworked.
      */
     async index(input: SapTypes.SAPIndexActionInput): Promise<SapTypes.SAPIndexActionOutput> {
         this.isApplicationOpen();
@@ -130,7 +131,7 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @name SAP: Focus
      *  @description Selects an element and "highlights" it.
      *  @param target - ID of SAP user interface element
-     *  @example target: wnd[0]/example/target/path
+     *  @example target: 'wnd[0]/example/target/path'
      */
     async focus(input: SapTypes.SAPFocusActionInput): Promise<SapTypes.SAPFocusActionOutput> {
         this.isApplicationOpen();
@@ -140,7 +141,7 @@ export default class SapActionHandler extends StatefulActionHandler {
 
     /**
      *  @name SAP: Disconnect
-     *  @description Closes current session and disconnects from the instance on which the bot is currently logged in.
+     *  @description Closes current session and disconnects from the instance.
      */
     async disconnect() {
         await this.session?.Parent.CloseConnection();
@@ -149,8 +150,9 @@ export default class SapActionHandler extends StatefulActionHandler {
 
     /**
      *  @name SAP: Send Virtual Key
-     *  @description Emulates keyboard shortcut to be clicked by bot.
-     *  @param virtualKey - any keyboard shortcut that is available in @see SendVKeyMapper
+     *  @description Emulates keyboard shortcut.
+     *  @param virtualKey - any keyboard shortcut that is supported 
+     *  @see SendVKeyMapper - keymap file containing supported shortcuts
      *  @example virtualKey: Enter
      */
     async sendVKey(input: SapTypes.SAPSendVKeyActionInput): Promise<SapTypes.SAPSendVKeyActionOutput> {
@@ -163,7 +165,7 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @name SAP: Read text
      *  @description Reads text from indicated element.
      *  @param target - ID of SAP user interface element
-     *  @example target: wnd[0]/example/target/path
+     *  @example target: 'wnd[0]/example/target/path'
      *  @returns text value from chosen element
      */
     async readText(input: SapTypes.SAPReadTextActionInput): Promise<SapTypes.SAPReadTextActionOutput> {
@@ -176,7 +178,7 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @name SAP: Select
      *  @description Selects a particular option from the menu bar or navigates to another tab.
      *  @param target - ID of SAP user interface element
-     *  @example target: wnd[0]/mbar/menu[0]/menu[1]
+     *  @example target: 'wnd[0]/mbar/menu[0]/menu[1]'
      */
     async select(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
@@ -186,12 +188,11 @@ export default class SapActionHandler extends StatefulActionHandler {
 
     /**
      *  @name SAP: Open Context Menu
-     *  @description Opens the context menu by clicking the arrow mark that is located on the icon.
-     *  Icons of this type can be found in such a place as e.g. transaction SE16N, table view LFB1.
+     *  @description Depending on the server implementation, the context menu may be located in the window header or near elements such as a table.
      *  @param target - ID of SAP user interface element
      *  @param menuId - ID of the icon located in SAP user interface
-     *  @example target: wnd[0]/titl/shellcont/shell
-     *  @example menuId: %GOS_TOOLBOX
+     *  @example target: 'wnd[0]/titl/shellcont/shell'
+     *  @example menuId: '%GOS_TOOLBOX'
      */
     async openContextMenu(
         input: SapTypes.SAPOpenContextMenuActionInput,
@@ -206,8 +207,8 @@ export default class SapActionHandler extends StatefulActionHandler {
      *  @description Once the context menu is opened, it selects any option, including nested ones.
      *  @param target - ID of SAP user interface element
      *  @param optionId - ID of a specific option from context menu
-     *  @example target: wnd[0]/titl/shellcont/shell
-     *  @example optionId: %GOS_PCATTA_CREA
+     *  @example target: 'wnd[0]/titl/shellcont/shell'
+     *  @example optionId: '%GOS_PCATTA_CREA'
      */
     async selectFromContextMenu(
         input: SapTypes.SAPSelectFromContextMenuActionInput,
@@ -220,11 +221,11 @@ export default class SapActionHandler extends StatefulActionHandler {
     /**
      *  @name SAP: Click Toolbar Button
      *  @description Referring to example of table view from the openContextMenu action,
-     *  there are also usual icons in toolbar that can be launched with this action.
+     *  there are also usual toolbar elements that can be launched with this action.
      *  @param target - ID of SAP user interface element
      *  @param toolId - ID of the button located in SAP user interface
-     *  @example target: wnd[0]/usr/cntlRESULT_LIST/shellcont/shell
-     *  @example toolId: &FIND
+     *  @example target: 'wnd[0]/usr/cntlRESULT_LIST/shellcont/shell'
+     *  @example toolId: '&FIND'
      */
     async clickToolbarButton(
         input: SapTypes.SAPClickToolbarButtonActionInput,
