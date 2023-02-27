@@ -5,7 +5,6 @@ import { FeatureKey } from 'runbotics-common';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
-import i18n from '#src-app/translations/i18n';
 import { ProcessBuildTab, SidebarProps } from '#src-app/types/sidebar';
 
 import { SidebarNavigationButton, SidebarNavigationWrapper } from './Siderbar.styled';
@@ -17,8 +16,7 @@ interface TabInfo {
 
 const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedTab }) => {
     const hasReadProcessInfoAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_READ]);
-    const { translate } = useTranslations();
-    const currentLanguage = i18n.language;
+    const { translate, currentLanguage } = useTranslations();
 
     const sidebarTabs = useMemo(() => {
         const tabs: TabInfo[] = [];
