@@ -5,7 +5,6 @@ export const GridVariable = styled(Grid)`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  z-index: 10;
   &:hover {
     overflow: visible;
     white-space: normal;
@@ -13,11 +12,11 @@ export const GridVariable = styled(Grid)`
   }
 `;
 
-export const GridContainer = styled(Grid)`
-  padding: 0.8rem;
+export const GridContainer = styled(Grid)(({ theme }) => `
+  padding: ${theme.spacing(2)};
   align-items: center;
   display: flex-start;
-`;
+`);
 
 export const GridTag = styled(Grid)`
   display: flex;

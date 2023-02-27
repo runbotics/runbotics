@@ -7,7 +7,12 @@ import { BPMNElement, CamundaInputOutputElement } from '#src-app/views/process/P
 
 import { useModelerContext } from './useModelerContext';
 
-const useProcessGlobalVariables = () => {
+interface GlobalVariable {
+    value: string,
+    name: string
+}
+
+const useProcessGlobalVariables = (): GlobalVariable[] => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
 
@@ -15,7 +20,7 @@ const useProcessGlobalVariables = () => {
         ?.get('elementRegistry')
         .filter((element: BPMNElement) => is(element, 'bpmn:Task') 
                 && element.businessObject.actionId === 'variables.assignGlobalVariable')
-                ?? [];
+            ?? [];
 
     const extractGlobalVariables = (
         inputOutput: CamundaInputOutputElement
@@ -37,7 +42,7 @@ const useProcessGlobalVariables = () => {
                 return [];
             }
 
-            return {value: item.value, name: globalVariableName};
+            return { value: item.value, name: globalVariableName };
         });
     };
 
@@ -55,7 +60,7 @@ const useProcessGlobalVariables = () => {
                 extractGlobalVariables(inputOutput)
             );
         })
-        .reduce((acc: [], innerArr: []) => acc.concat(innerArr), []);
+        .reduce((acc: GlobalVariable[], innerArr: []) => acc.concat(innerArr.flatMap(item => item)), []);
 
     return variables;
 };

@@ -8,59 +8,48 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 
-import If from '#src-app/components/utils/If';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
-import MenuCopy from '../MenuCopy';
+import VariableCopyMenu from '../VariableCopyMenu';
 import { GridContainer, GridTag, GridVariable
 } from './VariablesPanel.styles';
 
 export enum VariableTag {
-    Variable = 'VariableTag',
-    ActionOutput = 'ActionOutputTag',
+    VARIABLE = 'VariableTag',
+    ACTION_OUTPUT = 'ActionOutputTag',
+}
+
+interface MenuProps {
+    menuId: string,
+    anchorElement: null | HTMLElement
 }
 
 const VariablesPanel = () => {
     const theme = useTheme();
     const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [showMenu, setShowMenu] = useState(null);    
-    
-    const [menuId, setMenuId] = useState(false);
 
-    const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
-
-    if (allProcessVariables.length === 0) {
-        return (
-            <Typography sx={{display: 'flex', justifyContent: 'center', paddingTop: '2rem'}}>
-                {translate('Process.Modeler.VariablesPanel.Empty.Message')}
-            </Typography>);
-    }
+    const [openMenuId, setOpenMenuId] = useState<MenuProps | null>(null);
 
     const getTagBgColor = (tag: VariableTag) => {
-        if (tag === VariableTag.Variable) {
+        if (tag === VariableTag.VARIABLE) {
             return theme.palette.tag.variable;
         } 
         return theme.palette.tag.action;
          
     };
     
-    const handleMenuClick = (event, name) => {
-        event.preventDefault();
-        setAnchorEl(event.currentTarget);
-        setShowMenu(true);
-        setMenuId(name);
+    const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, name: string) => {
+        setOpenMenuId({menuId: name, anchorElement: event.currentTarget});
     };
 
     const handleMenuClose = () => {
-        setAnchorEl(null);
-        setMenuId(null);
+        setOpenMenuId(null);
     };
 
-    const getJSXForVariable = (name: string, tag: VariableTag) => (
-        <Box>
-            <GridContainer container key={name} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    const VariableRow = (name: string, tag: VariableTag) => (
+        <Box key={name}>
+            <GridContainer container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <GridVariable item xs={5}>
                     {name}
                 </GridVariable>
@@ -74,33 +63,43 @@ const VariablesPanel = () => {
                     <IconButton size="medium" onClick={(e) => handleMenuClick(e, name)}>
                         <MoreVertIcon/>
                     </IconButton>
-                    <If condition={showMenu}>
-                        <MenuCopy 
-                            name={name} 
-                            anchorEl={anchorEl} 
+                    {openMenuId?.menuId === name ?
+                        <VariableCopyMenu 
+                            key={openMenuId?.menuId}
+                            anchorElement={openMenuId?.anchorElement} 
                             handleMenuClose={handleMenuClose} 
-                            menuId={menuId} 
+                            menuId={openMenuId?.menuId} 
                             tag={tag}/>
-                    </If>
+                        : null}
                 </Grid>
             </GridContainer>
             <Divider />
         </Box>);
+        
 
-    const getGlobalVariablesUsedInProcessJSX = globalVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Variable));
+    const globalVariablesElements = globalVariables.map(variable => VariableRow(variable.name, VariableTag.VARIABLE));
 
-    const getAttendedVariablesJSX = attendedVariables?.map(variable => getJSXForVariable(variable.name, VariableTag.Variable));
+    const attendedVariablesElements = attendedVariables.map(variable => VariableRow(variable.name, VariableTag.VARIABLE));
 
-    const getActionVariablesJSX = inputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.Variable));
+    const actionInputVariablesElements = inputActionVariables.map(variable => VariableRow(variable.value, VariableTag.VARIABLE));
 
-    const getActionOutputVariablesJSX = outputActionVariables?.map(variable => getJSXForVariable(variable.value, VariableTag.ActionOutput));
+    const actionOutputVariablesElements = outputActionVariables.map(variable => VariableRow(variable.value, VariableTag.ACTION_OUTPUT));
+
+    const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
+
+    if (allProcessVariables.length === 0) {
+        return (
+            <Typography sx={{display: 'flex', justifyContent: 'center', paddingTop: '2rem'}}>
+                {translate('Process.Modeler.VariablesPanel.Empty.Message')}
+            </Typography>);
+    }
 
     return (
         <Box>
-            {getGlobalVariablesUsedInProcessJSX}
-            {getActionVariablesJSX}
-            {getAttendedVariablesJSX}
-            {getActionOutputVariablesJSX}
+            {globalVariablesElements}
+            {actionInputVariablesElements}
+            {attendedVariablesElements}
+            {actionOutputVariablesElements}
         </Box>
     );
 };

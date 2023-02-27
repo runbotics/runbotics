@@ -15,12 +15,14 @@ interface ActionVariables {
 const useProcessActionVariables = () => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
-    const rootElement = canvas.getRootElement();
-    const allActionsWithVariables = rootElement.businessObject?.flowElements.filter(item => item.id.includes('Activity_'));
-
-    const allActionVariables = useMemo((): ActionVariables => {
-        if (!allActionsWithVariables) {
-            return {inputActionVariables: [], outputActionVariables: []};
+    const rootElement = canvas?.getRootElement();
+    const allActionsWithVariables = rootElement.businessObject
+        ?.flowElements
+        .filter(item => item.id.includes('Activity_'));
+    
+    const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
+        if (!allActionsWithVariables || !canvas) {
+            return { inputActionVariables: [], outputActionVariables: [] };
         }
 
         const inputActionVariables = allActionsWithVariables.map(element => {
@@ -49,8 +51,8 @@ const useProcessActionVariables = () => {
         }).filter(item => item.length > 0)
             .flatMap(item => item);
             
-        return {inputActionVariables, outputActionVariables};
-    }, [allActionsWithVariables]);
+        return { inputActionVariables, outputActionVariables };
+    }, [allActionsWithVariables, canvas]);
       
     return allActionVariables;
 };
