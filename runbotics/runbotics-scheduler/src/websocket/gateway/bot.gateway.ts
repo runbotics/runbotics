@@ -13,13 +13,12 @@ import { Logger } from 'src/utils/logger';
 import { AuthService } from 'src/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
-import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
 import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
 import { UiGateway } from './ui.gateway';
 import { BotService } from 'src/database/bot/bot.service';
-import { delayWhen, fromEvent, Observable, of, timer } from 'rxjs';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -42,16 +41,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
         client.join(bot.installationId);
-        const processInstanceEventObservable$ = fromEvent(client, BotWsMessage.PROCESS_INSTANCE_EVENT).pipe(
-            delayWhen((event: IProcessInstanceEvent) => {
-                if (event.status === ProcessInstanceEventStatus.IN_PROGRESS) {
-                    return timer(500);
-                }
-                return of(null);
-            }),
-        );
-
-        this.listenForProcessInstanceEvent(bot, processInstanceEventObservable$);
     }
 
     async handleDisconnect(client: Socket) {
@@ -79,16 +68,25 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
     }
 
+    @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE_EVENT)
     async listenForProcessInstanceEvent(
-        bot: IBot,
-        processInstanceEventObservable$: Observable<IProcessInstanceEvent>
+        @ConnectedSocket() socket: BotAuthSocket,
+        @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        processInstanceEventObservable$.subscribe(async processInstanceEvent => {
-            const installationId = bot.installationId;
+        const updateProcessInstanceEvent = async () => {
+            const installationId = socket.bot.installationId;
             this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-            await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
+            await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, socket.bot);
             this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        });
+        };
+
+        if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
+            updateProcessInstanceEvent();
+            return;
+        }
+        
+        setTimeout(updateProcessInstanceEvent, 500);
     }
     
     @UseGuards(WsBotJwtGuard)
