@@ -6,7 +6,7 @@ const useProcessAttendedVariables = () => {
     const { passedInVariables } = useSelector((state) => state.process.modeler);
 
     const attendedVariables = isAttended
-        ? [{ name: passedInVariables[0] }, { name: passedInVariables[1] }]
+        ? passedInVariables.map((inputOutput) => ({ name: inputOutput }))
         : [];
 
     return attendedVariables;
