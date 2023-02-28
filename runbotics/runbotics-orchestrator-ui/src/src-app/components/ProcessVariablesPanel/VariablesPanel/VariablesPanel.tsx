@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
@@ -22,14 +22,14 @@ export enum VariableTag {
 
 interface MenuProps {
     menuId: string,
-    anchorElement: null | HTMLElement
+    anchorElement?: HTMLElement
 }
 
 const VariablesPanel = () => {
     const theme = useTheme();
     const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
 
-    const [openMenuId, setOpenMenuId] = useState<MenuProps | null>(null);
+    const [openMenuId, setOpenMenuId] = useState<MenuProps>(null);
 
     const getTagBgColor = (tag: VariableTag) => {
         if (tag === VariableTag.VARIABLE) {
@@ -47,7 +47,7 @@ const VariablesPanel = () => {
         setOpenMenuId(null);
     };
 
-    const VariableRow = (name: string, tag: VariableTag) => (
+    const VariableRow: FC<{name: string, tag: VariableTag}> = ({ name, tag }) => (
         <Box key={name}>
             <GridContainer container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <GridVariable item xs={5}>
@@ -76,14 +76,15 @@ const VariablesPanel = () => {
             <Divider />
         </Box>);
         
+    const variables = [...globalVariables, ...attendedVariables, ...inputActionVariables];
 
-    const globalVariablesElements = globalVariables.map(variable => VariableRow(variable.name, VariableTag.VARIABLE));
+    variables.map(variable => (
+        <VariableRow key={variable.name} name={variable.name} tag={VariableTag.VARIABLE}/>
+    ));
 
-    const attendedVariablesElements = attendedVariables.map(variable => VariableRow(variable.name, VariableTag.VARIABLE));
-
-    const actionInputVariablesElements = inputActionVariables.map(variable => VariableRow(variable.value, VariableTag.VARIABLE));
-
-    const actionOutputVariablesElements = outputActionVariables.map(variable => VariableRow(variable.value, VariableTag.ACTION_OUTPUT));
+    outputActionVariables.map(variable => (
+        <VariableRow key={variable.name} name={variable.name} tag={VariableTag.ACTION_OUTPUT}/>
+    ));
 
     const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
 
@@ -96,10 +97,13 @@ const VariablesPanel = () => {
 
     return (
         <Box>
-            {globalVariablesElements}
-            {actionInputVariablesElements}
-            {attendedVariablesElements}
-            {actionOutputVariablesElements}
+            {variables.map(variable => (
+                <VariableRow key={variable.name} name={variable.name} tag={VariableTag.VARIABLE}/>
+            ))}
+
+            {outputActionVariables.map(variable => (
+                <VariableRow key={variable.name} name={variable.name} tag={VariableTag.ACTION_OUTPUT}/>
+            ))}
         </Box>
     );
 };
