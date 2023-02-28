@@ -33,7 +33,7 @@ export class BotProcessEventService {
         private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway
-    ) {}
+    ) { }
 
     async updateProcessInstanceEvent(
         processInstanceEvent: IProcessInstanceEvent,
@@ -74,12 +74,16 @@ export class BotProcessEventService {
                     queryRunner,
                     processInstanceEvent.executionId
                 );
+            const isStatusInProgress = processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS;
+            const hasUpdatedStatus =
+                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED ||
+                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.ERRORED;
+            const hasProcessInstanceEventChanged = !(isStatusInProgress && hasUpdatedStatus);
+
             if (
                 updatedProcessInstanceEvent.processInstance
-                    .rootProcessInstanceId === null && 
-                    !(processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS &&
-                        updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED
-                    ) 
+                    .rootProcessInstanceId === null &&
+                hasProcessInstanceEventChanged
             ) {
                 this.uiGateway.server.emit(
                     WsMessage.PROCESS_INSTANCE_EVENT,
