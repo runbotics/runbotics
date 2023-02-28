@@ -13,7 +13,7 @@ import { Logger } from 'src/utils/logger';
 import { AuthService } from 'src/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
-import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
 import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
@@ -74,19 +74,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        const updateProcessInstanceEvent = async () => {
-            const installationId = socket.bot.installationId;
-            this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-            await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, socket.bot);
-            this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        };
-
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
-            updateProcessInstanceEvent();
+            this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
         }
         
-        setTimeout(updateProcessInstanceEvent, 500);
+        setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
     }
     
     @UseGuards(WsBotJwtGuard)
@@ -112,4 +105,11 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.botLogService.writeLogsToFile(client.bot.id, logs);
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
     }
+
+    private updateProcessInstanceEvent = async (bot: IBot, processInstanceEvent: IProcessInstanceEvent) => {
+        const installationId = bot.installationId;
+        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
+        this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+    };
 }
