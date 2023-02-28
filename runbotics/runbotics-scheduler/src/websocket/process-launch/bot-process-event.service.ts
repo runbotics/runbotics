@@ -81,8 +81,6 @@ export class BotProcessEventService {
                         updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED
                     ) 
             ) {
-                this.logger.log(processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS &&
-                        updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED);
                 this.uiGateway.server.emit(
                     WsMessage.PROCESS_INSTANCE_EVENT,
                     updatedProcessInstanceEvent
@@ -91,7 +89,7 @@ export class BotProcessEventService {
         } catch (err: any) {
             this.logger.error(
                 'Process instance event update error: rollback',
-                err 
+                err
             );
             await queryRunner.rollbackTransaction();
         } finally {

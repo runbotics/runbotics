@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="marciniakf" id="20230228075203-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sqlCheck expectedResult="JSONB">
+                    SELECT DATA_TYPE
+                    FROM INFORMATION_SCHEMA.COLUMNS
+                    WHERE TABLE_NAME = 'process_instance_loop_event'
+                    AND COLUMN_NAME = 'iterator_element'
+            </sqlCheck>
+        </not>
+    </preConditions>
+        <dropColumn tableName="process_instance_loop_event" columnName="iterator_element"/>
+        <addColumn tableName="process_instance_loop_event"><column name="iterator_element" type="jsonb">
+            <constraints nullable="true" /></column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

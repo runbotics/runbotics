@@ -14,7 +14,7 @@ export enum EventMapTypes {
 export interface IterationGutter {
     iterationNumber: number;
     type: EventMapTypes.Iteration;
-    iteratorElement: JSON;
+    iteratorElement: unknown;
 }
 
 export interface Breadcrumb {

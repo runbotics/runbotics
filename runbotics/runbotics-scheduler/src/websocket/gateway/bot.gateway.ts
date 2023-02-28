@@ -19,7 +19,7 @@ import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
 import { UiGateway } from './ui.gateway';
 import { BotService } from 'src/database/bot/bot.service';
-import { delayWhen, filter, fromEvent, Observable, of, timer } from 'rxjs';
+import { delayWhen, fromEvent, Observable, of, timer } from 'rxjs';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -43,14 +43,11 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
         client.join(bot.installationId);
         const processInstanceEventObservable$ = fromEvent(client, BotWsMessage.PROCESS_INSTANCE_EVENT).pipe(
-            filter((processInstanceEvent: IProcessInstanceEvent) => 
-                processInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED || processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
-            ),
-            delayWhen((event) => {
-                if (event.status === ProcessInstanceEventStatus.COMPLETED) {
-                    return of(null);
+            delayWhen((event: IProcessInstanceEvent) => {
+                if (event.status === ProcessInstanceEventStatus.IN_PROGRESS) {
+                    return timer(500);
                 }
-                return timer(500);
+                return of(null);
             }),
         );
 
@@ -82,7 +79,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
     }
 
-    @UseGuards(WsBotJwtGuard)
     async listenForProcessInstanceEvent(
         bot: IBot,
         processInstanceEventObservable$: Observable<IProcessInstanceEvent>
