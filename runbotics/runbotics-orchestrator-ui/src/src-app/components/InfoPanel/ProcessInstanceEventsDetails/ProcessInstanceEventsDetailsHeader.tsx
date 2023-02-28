@@ -30,6 +30,7 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
     const timeDiff = formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished);
     const formattedTimeDiff = timeDiff ? timeDiff : `< 500${translate('Common.Time.Miliseconds.Short')}`;
+    
     return (
         <GridContainer>
             <GridItem width="100%">
