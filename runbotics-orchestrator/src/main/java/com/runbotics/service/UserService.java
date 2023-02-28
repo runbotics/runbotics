@@ -39,10 +39,18 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+    private final ProcessService processService;
+
+    public UserService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        AuthorityRepository authorityRepository,
+        ProcessService processService
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.processService = processService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -223,6 +231,8 @@ public class UserService {
                     log.debug("Deleted User: {}", user);
                 }
             );
+
+        processService.deleteUnassignedPrivateProcesses();
     }
 
     /**
