@@ -106,10 +106,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
     }
 
-    private updateProcessInstanceEvent = async (bot: IBot, processInstanceEvent: IProcessInstanceEvent) => {
+    private async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
         const installationId = bot.installationId;
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-    };
+    }
 }
