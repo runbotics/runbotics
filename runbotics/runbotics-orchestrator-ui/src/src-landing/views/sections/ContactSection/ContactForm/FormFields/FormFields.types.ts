@@ -7,6 +7,8 @@ export interface FormInputProps<T> extends HTMLAttributes<T> {
     type: string;
     name: keyof FormState;
     value: string;
+    placeholder?: string;
+    disabled?: boolean;
 }
 
 export interface CheckboxProps

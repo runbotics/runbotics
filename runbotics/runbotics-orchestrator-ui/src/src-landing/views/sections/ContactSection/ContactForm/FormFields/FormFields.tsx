@@ -6,14 +6,14 @@ import { CheckboxProps, FormInputProps, SubmitProps } from './FormFields.types';
 
 export const FormInput: FC<FormInputProps<HTMLInputElement>> = (props) => (
     <>
-        {/* empty placeholder to take advantage of :placeholder-shown */}
         <input
             className={styles.input}
-            placeholder=" "
+            placeholder={props.placeholder ?? ' '}
             {...props}
             name={props.name}
             id={props.name}
             required={REQUIRED_FIELDS.includes(props.name)}
+            disabled={props.disabled}
             value={props.value}
         />
         <label className={styles.label} htmlFor={props.name}>
@@ -28,11 +28,12 @@ export const FormTextarea: FC<FormInputProps<HTMLTextAreaElement>> = (
     <>
         <textarea
             className={styles.textarea}
-            placeholder=" "
+            placeholder={props.placeholder ?? ' '}
             {...props}
             name={props.name}
             id={props.name}
             required={REQUIRED_FIELDS.includes(props.name)}
+            disabled={props.disabled}
             value={props.value}
         />
         <label className={styles.label} htmlFor={props.name}>
@@ -45,7 +46,8 @@ export const FormCheckbox: FC<CheckboxProps> = (props) => (
     <div className={styles.checkboxWrapper}>
         <input
             className={styles.checkbox}
-            placeholder=" "
+            placeholder={props.placeholder ?? ' '}
+            disabled={props.disabled}
             {...props}
             name={props.name}
             id={props.name}
@@ -61,7 +63,7 @@ export const FormCheckbox: FC<CheckboxProps> = (props) => (
 export const FormButton: FC<SubmitProps> = (props) => (
     <input
         className={styles.submit}
-        placeholder=" "
+        placeholder={props.placeholder ?? ' '}
         {...props}
         name="submit"
         id="submit"

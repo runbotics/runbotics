@@ -1,0 +1,8 @@
+@import '#src-landing/scss/main.scss';
+
+.reset {
+    composes: submit from '../FormFields/FormFields.module.scss';
+    padding: $padding-2;
+    justify-self: end;
+    display: flex;
+}
