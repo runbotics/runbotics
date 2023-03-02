@@ -213,12 +213,10 @@ export class MicrosoftService {
         });
         const fileName = data.name;
         const fileId = data.id;
-        if (!this.fileName.includes(fileName) || this.cloudPath !== cloudPath) {
-            this.fileId = fileId;
-            this.fileName = fileName;
-            this.cloudPath = cloudPath;
-        }
-        return this.fileId;
+        this.fileId = fileId;
+        this.fileName = fileName;
+        this.cloudPath = cloudPath;
+        return fileId;
     }
 
     async getWorksheetId(token: string, cloudPath: string, worksheetName: string) {
