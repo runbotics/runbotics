@@ -20,9 +20,12 @@ export class ProcessSchedulerService {
 
         const fileVariables = await this.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
 
-        const instantProcessCopy = { ...instantProcess };
-        _.set(instantProcessCopy, 'input.variables', { ...instantProcess.input.variables, ...fileVariables });
+        const input = instantProcess.input
+            ? _.merge(instantProcess.input?.variables, { variables: fileVariables })
+            : { variables: fileVariables };
 
+        const instantProcessCopy = { ...instantProcess, input };
+        
         const body = this.createStartProcessResponse(instantProcessCopy, orchestratorProcessInstanceId);
 
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
@@ -35,7 +38,7 @@ export class ProcessSchedulerService {
         input: ProcessInput,
         orchestratorProcessInstanceId: string,
     ) {
-        if (!process.isAttended)
+        if (!process.isAttended || process.schedules.length > 0)
             return Promise.resolve({});
 
         const uiSchema = JSON.parse(process.executionInfo).uiSchema;
