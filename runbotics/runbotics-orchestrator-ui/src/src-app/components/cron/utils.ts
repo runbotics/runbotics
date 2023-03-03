@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 
 import DEFAULT_LOCALE_EN from './locale';
-import { Classes, OnError, Locale } from './types';
+import { Classes, OnError, Locale, ShortcutType} from './types';
 /**
  * Creates an array of integers from start to end, inclusive
  */
@@ -29,7 +29,6 @@ export function sort(array: number[]) {
  */
 export function dedup(array: number[]) {
     const result: number[] = [];
-
     array.forEach((i) => {
         if (result.indexOf(i) < 0) 
         { result.push(i); }
@@ -71,3 +70,17 @@ export function usePrevious(value) {
 
     return ref.current;
 }
+
+export const checkIsArray = (shortcuts: unknown): shortcuts is ShortcutType[] => Array.isArray(shortcuts);
+
+export const cronShortcuts: ShortcutType[] = ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly'];
+
+export const initialCronState = {
+    minutes: [],
+    hours: [],
+    monthDays: [],
+    nthMonthDays: [],
+    months: [],
+    weekDays: [],
+    nthWeekDays: [],
+};

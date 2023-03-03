@@ -16,13 +16,10 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async connect(input: SapTypes.SAPConnectActionInput): Promise<SapTypes.SAPConnectActionOutput> {
-        if (process.platform !== 'win32') {
-            throw new Error('SAP actions can be run only on Windows bot');
-        }
-        const winax = await import('winax');
+        await import('winax');
 
         try {
-            const app = new winax.ActiveXObject('SapROTWr.SapROTWrapper');
+            const app = new ActiveXObject('SapROTWr.SapROTWrapper');
             const sapGuiAuto = app.GetROTEntry('SAPGUI');
             if (!sapGuiAuto) {
                 throw new Error('SAP application is not running');
@@ -40,6 +37,13 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    /**
+     *  @name SAP: Start Transaction
+     *  @description Opens the transaction view. 
+     *  Available transactions may vary depending on the instance that is being used.
+     *  @param transaction - transaction name
+     *  @example transaction: 'SE16N'
+     */
     async startTransaction(
         input: SapTypes.SAPStartTransactionActionInput,
     ): Promise<SapTypes.SAPStartTransactionActionOutput> {
@@ -48,22 +52,47 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    /**
+     *  @name SAP: End Transaction
+     *  @description Closes current transaction associated with session.
+     */
     async endTransaction() {
         await this.session?.EndTransaction();
     }
 
+
+    /**
+     *  @name SAP: Type text
+     *  @description Inserts text into the input field.
+     *  @param target - ID of SAP user interface element
+     *  @param value - text to be inserted
+     *  @example target: 'wnd[0]/example/target/path'
+     *  @example value: 'example text'
+     */
     async type(input: SapTypes.SAPTypeActionInput): Promise<SapTypes.SAPTypeActionOutput> {
         this.isApplicationOpen();
         const result = (this.session.FindById(input.target).text = input.value);
         return {};
     }
 
+    /**
+     *  @name SAP: Click
+     *  @description Clicks on the indicated element.
+     *  @param target - ID of SAP user interface element
+     *  @example target: 'wnd[0]/tbar[0]/btn[0]'
+     */
     async click(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
         this.session.FindById(input.target).press();
         return {};
     }
 
+    /**
+     *  @name SAP: Double click
+     *  @description Clicks twice on the indicated element.
+     *  @param target - ID of SAP user interface element
+     *  @example target: 'wnd[0]/tbar[0]/btn[0]'
+     */
     async doubleClick(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
         await this.focus(input);
@@ -71,6 +100,10 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    /**
+     * @description Reads SAP table.
+     * @deprecated It currently needs to be reworked.
+     */
     async index(input: SapTypes.SAPIndexActionInput): Promise<SapTypes.SAPIndexActionOutput> {
         this.isApplicationOpen();
         const table = this.session.FindById(input.target);
@@ -94,35 +127,73 @@ export default class SapActionHandler extends StatefulActionHandler {
         return array;
     }
 
+    /**
+     *  @name SAP: Focus
+     *  @description Selects an element and "highlights" it.
+     *  @param target - ID of SAP user interface element
+     *  @example target: 'wnd[0]/example/target/path'
+     */
     async focus(input: SapTypes.SAPFocusActionInput): Promise<SapTypes.SAPFocusActionOutput> {
         this.isApplicationOpen();
         this.session.FindById(input.target).setFocus();
         return {};
     }
 
+    /**
+     *  @name SAP: Disconnect
+     *  @description Closes current session and disconnects from the instance.
+     */
     async disconnect() {
         await this.session?.Parent.CloseConnection();
         this.session = null;
     }
 
+    /**
+     *  @name SAP: Send Virtual Key
+     *  @description Emulates keyboard shortcut.
+     *  @param virtualKey - any keyboard shortcut that is supported 
+     *  @see SendVKeyMapper - keymap file containing supported shortcuts
+     *  @example virtualKey: Enter
+     */
     async sendVKey(input: SapTypes.SAPSendVKeyActionInput): Promise<SapTypes.SAPSendVKeyActionOutput> {
         this.isApplicationOpen();
         this.session.FindById('wnd[0]').SendVKey(SendVKeyMapper[input.virtualKey]);
         return {};
     }
 
+    /**
+     *  @name SAP: Read text
+     *  @description Reads text from indicated element.
+     *  @param target - ID of SAP user interface element
+     *  @example target: 'wnd[0]/example/target/path'
+     *  @returns text value from chosen element
+     */
     async readText(input: SapTypes.SAPReadTextActionInput): Promise<SapTypes.SAPReadTextActionOutput> {
         this.isApplicationOpen();
         const result = this.session.FindById(input.target).text;
         return result ? result.__value : null;
     }
 
+    /**
+     *  @name SAP: Select
+     *  @description Selects a particular option from the menu bar or navigates to another tab.
+     *  @param target - ID of SAP user interface element
+     *  @example target: 'wnd[0]/mbar/menu[0]/menu[1]'
+     */
     async select(input: SapTypes.SAPClickActionInput): Promise<SapTypes.SAPClickActionOutput> {
         this.isApplicationOpen();
         this.session.FindById(input.target).select();
         return {};
     }
 
+    /**
+     *  @name SAP: Open Context Menu
+     *  @description Depending on the server implementation, the context menu may be located in the window header or near elements such as a table.
+     *  @param target - ID of SAP user interface element
+     *  @param menuId - ID of the icon located in SAP user interface
+     *  @example target: 'wnd[0]/titl/shellcont/shell'
+     *  @example menuId: '%GOS_TOOLBOX'
+     */
     async openContextMenu(
         input: SapTypes.SAPOpenContextMenuActionInput,
     ): Promise<SapTypes.SAPOpenContextMenuActionOutput> {
@@ -131,6 +202,14 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    /**
+     *  @name SAP: Select From Context Menu
+     *  @description Once the context menu is opened, it selects any option, including nested ones.
+     *  @param target - ID of SAP user interface element
+     *  @param optionId - ID of a specific option from context menu
+     *  @example target: 'wnd[0]/titl/shellcont/shell'
+     *  @example optionId: '%GOS_PCATTA_CREA'
+     */
     async selectFromContextMenu(
         input: SapTypes.SAPSelectFromContextMenuActionInput,
     ): Promise<SapTypes.SAPSelectFromContextMenuActionOutput> {
@@ -139,6 +218,15 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    /**
+     *  @name SAP: Click Toolbar Button
+     *  @description Referring to example of table view from the openContextMenu action,
+     *  there are also usual toolbar elements that can be launched with this action.
+     *  @param target - ID of SAP user interface element
+     *  @param toolId - ID of the button located in SAP user interface
+     *  @example target: 'wnd[0]/usr/cntlRESULT_LIST/shellcont/shell'
+     *  @example toolId: '&FIND'
+     */
     async clickToolbarButton(
         input: SapTypes.SAPClickToolbarButtonActionInput,
     ): Promise<SapTypes.SAPClickToolbarButtonActionOutput> {
@@ -154,6 +242,10 @@ export default class SapActionHandler extends StatefulActionHandler {
     }
 
     async run(request: SapTypes.SAPActionRequest) {
+        if (process.platform !== 'win32') {
+            throw new Error('SAP actions can be run only on Windows bot');
+        }
+
         switch (request.script) {
             case 'sap.connect':
                 return this.connect(request.input);

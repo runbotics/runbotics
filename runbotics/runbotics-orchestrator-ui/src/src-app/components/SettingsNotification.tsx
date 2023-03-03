@@ -59,7 +59,7 @@ const SettingsNotification: FC = () => {
                     {translate('Component.SettingsNotification.Title')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    {translate('Component.SettingsNofigication.Message')}
+                    {translate('Component.SettingsNotification.Message')}
                 </Typography>
                 <Box mt={2} display="flex" justifyContent="space-between">
                     <Button onClick={handleClose}>{translate('Common.Close')}</Button>

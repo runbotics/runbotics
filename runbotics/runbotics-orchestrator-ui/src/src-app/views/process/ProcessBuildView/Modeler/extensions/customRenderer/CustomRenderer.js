@@ -23,7 +23,8 @@ const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 5,
     COLOR_RED = "#ff5e5e",
     COLOR_GREY = "#e0e0e0",
-    COLOR_DEFAULT = "#bbbbbb";
+    COLOR_DEFAULT = "#bbbbbb",
+    COLOR_BLACK = "#000000"
 
 export default class CustomRenderer extends BaseRenderer {
     constructor(eventBus, bpmnRenderer) {
@@ -40,11 +41,12 @@ export default class CustomRenderer extends BaseRenderer {
     drawTextNode(
         label,
         parentNode,
+        businessObject,
         color = "#000",
         transformX = 0,
         transformY = 0,
         width = 240,
-        height = 20
+        height = 20,
     ) {
         const rect = drawRect(
             parentNode,
@@ -91,6 +93,7 @@ export default class CustomRenderer extends BaseRenderer {
 
             svgAppend(parentNode, text);
         }
+
     }
     pickColor(businessObject) {
         const { disabled, validationError } = businessObject;
@@ -98,6 +101,12 @@ export default class CustomRenderer extends BaseRenderer {
         if (validationError) return COLOR_RED;
         return COLOR_DEFAULT;
     }
+    pickStrokeColor(businessObject) {
+        const { validationError } = businessObject;
+        if (validationError) return COLOR_RED;
+        return COLOR_BLACK;
+    }
+
     drawShape(parentNode, element) {
         const shape = this.bpmnRenderer.drawShape(parentNode, element);
         const label = this.getLabel(element);
@@ -114,12 +123,21 @@ export default class CustomRenderer extends BaseRenderer {
             );
             svgRemove(shape);
         }
+        if (
+            is(element, "bpmn:SubProcess") ||
+            is(element, "bpmn:StartEvent") ||
+            is(element, "bpmn:EndEvent") ||
+            is(element, "bpmn:ExclusiveGateway")
+        ) {
+            svgAttr(shape, { stroke: this.pickStrokeColor(businessObject) });
+        }
 
         if (label && (label.title || label.actionId)) {
             if (is(element, "bpmn:SubProcess")) {
                 this.drawTextNode(
                     label,
                     parentNode,
+                    businessObject,
                     disabled ? "#b3b3b3" : "#000",
                     0,
                     -30
@@ -128,6 +146,7 @@ export default class CustomRenderer extends BaseRenderer {
                 this.drawTextNode(
                     label,
                     parentNode,
+                    businessObject,
                     disabled ? "#b3b3b3" : "#000",
                     0,
                     90
@@ -136,6 +155,7 @@ export default class CustomRenderer extends BaseRenderer {
                     this.drawTextNode(
                         label.description,
                         parentNode,
+                        businessObject,
                         disabled ? "#b3b3b3" : "#8d8d8d",
                         0,
                         105

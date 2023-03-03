@@ -4,11 +4,11 @@ import { HEADER_HEIGHT, NAVBAR_MOBILE_WIDTH, NAVBAR_WIDTH } from '#src-app/utils
 
 interface MainProps {
     mobile?: boolean;
-    isShrinked: boolean;
+    isShrank: boolean;
     isNavbarVisible?: boolean;
 }
 
-const getNavbarWidth = ({ mobile, isShrinked }: MainProps) => {
+const getNavbarWidth = ({ mobile, isShrank: isShrinked }: MainProps) => {
     if (mobile) return isShrinked ? NAVBAR_WIDTH : 0;
 
     return isShrinked ? NAVBAR_WIDTH : NAVBAR_MOBILE_WIDTH;

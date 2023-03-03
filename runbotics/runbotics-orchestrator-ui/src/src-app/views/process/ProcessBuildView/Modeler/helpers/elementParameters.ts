@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7Definition } from 'json-schema';
-import { Expressions } from 'runbotics-common';
+import { BpmnElementType, Expressions } from 'runbotics-common';
 
 interface CamundaEntry {
     $type: 'camunda:Entry';
@@ -47,7 +47,7 @@ export type CamundaOutputParameter = CamundaParameter & {
 };
 
 enum ExtensionElementType {
-    'camunda:InputOutput' = 'camunda:InputOutput'
+    'camunda:InputOutput' = 'camunda:InputOutput',
 }
 
 export type ExtensionElement = {
@@ -89,9 +89,11 @@ export type ModdleElement = {
 
 export type BPMNElement = {
     id: string;
-    type: string;
+    type: BpmnElementType;
     businessObject: BusinessObject;
     incoming?: IBpmnConnection[];
+    outgoing?: IBpmnConnection[];
+    parent?: BPMNElement;
 };
 
 export type BpmnFormalExpression = {
@@ -134,7 +136,7 @@ export const getParameterValue = (parameter: CamundaParameter) => {
 
     switch (parameter.definition.$type) {
         case 'camunda:List':
-            return parameter.definition.items.map(item => item.value);
+            return parameter.definition.items.map((item) => item.value);
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
             if (!map.entries) {
@@ -230,7 +232,7 @@ export class BpmnConnectionFactory {
         const FormalExpression = this.bpmnFactory.create(
             'bpmn:FormalExpression',
             {
-                body: expression
+                body: expression,
             }
         );
         FormalExpression.$parent = connection.businessObject;
@@ -238,7 +240,7 @@ export class BpmnConnectionFactory {
         this.commandStack.execute('properties-panel.update-businessobject', {
             element: connection,
             businessObject: connection.businessObject,
-            properties: { conditionExpression: FormalExpression }
+            properties: { conditionExpression: FormalExpression },
         });
     }
 }
@@ -267,7 +269,7 @@ export class BPMNHelper {
     updateBusinessObject(element: BPMNElement) {
         this.commandStack.execute('properties-panel.update-businessobject', {
             element,
-            businessObject: element.businessObject
+            businessObject: element.businessObject,
         });
     }
 }

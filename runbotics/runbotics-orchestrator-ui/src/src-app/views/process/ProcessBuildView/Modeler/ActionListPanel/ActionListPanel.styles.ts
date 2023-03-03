@@ -9,11 +9,10 @@ export const classes = {
     title: `${PREFIX}-title`,
     hide: `${PREFIX}-hide`,
     drawer: `${PREFIX}-drawer`,
+    drawerIcon: `${PREFIX}-icon`,
     drawerPaper: `${PREFIX}-drawerPaper`,
     drawerButton: `${PREFIX}-drawerButton`,
     drawerButtonLeft: `${PREFIX}-drawerButtonLeft`,
-    drawerOpen: `${PREFIX}-drawerOpen`,
-    drawerClose: `${PREFIX}-drawerClose`,
     drawerHeader: `${PREFIX}-drawerHeader`,
     tabs: `${PREFIX}-tabs`,
     content: `${PREFIX}-content`,
@@ -28,25 +27,12 @@ export const classes = {
 
 export const drawerWidth = 240;
 
-export const Root = styled.div(({ theme }) => ({
-    [`& .${classes.root}`]: {
-        display: 'flex',
-    },
-
-    [`& .${classes.appBar}`]: {
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
+export const Root = styled.div<{ open: boolean }>(({ theme, open }) => ({
+    transition: `margin ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeOut} 0ms`,
+    marginRight: open ? '0' : `-${drawerWidth}px`,
 
     [`& .${classes.appBarShift}`]: {
         width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginRight: drawerWidth,
     },
 
     [`& .${classes.title}`]: {
@@ -62,6 +48,10 @@ export const Root = styled.div(({ theme }) => ({
         flexShrink: 0,
     },
 
+    [`& .${classes.drawerIcon}`]: {
+        maxWidth: 'unset',
+    },
+
     [`& .${classes.drawerPaper}`]: {
         top: 'auto',
         width: drawerWidth,
@@ -70,7 +60,7 @@ export const Root = styled.div(({ theme }) => ({
 
     [`& .${classes.drawerButton}`]: {
         position: 'absolute',
-        top: '43%',
+        top: '50%',
         minWidth: 'auto',
         padding: 0,
         zIndex: theme.zIndex.drawer + 1,
@@ -82,23 +72,6 @@ export const Root = styled.div(({ theme }) => ({
 
     [`& .${classes.drawerButtonLeft}`]: {
         marginLeft: drawerWidth - 20,
-    },
-
-    [`& .${classes.drawerOpen}`]: {
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-
-    [`& .${classes.drawerClose}`]: {
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        overflowX: 'hidden',
-        width: 0,
     },
 
     [`& .${classes.drawerHeader}`]: {
@@ -113,19 +86,6 @@ export const Root = styled.div(({ theme }) => ({
     [`& .${classes.content}`]: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginRight: -drawerWidth,
-    },
-
-    [`& .${classes.contentShift}`]: {
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginRight: 0,
     },
 
     [`& .${classes.nested}`]: {
@@ -156,11 +116,8 @@ export const Root = styled.div(({ theme }) => ({
     },
 }));
 
-export const ActionPanelToggler = styled('div')<{ drawerWidth: number, open: boolean }>(({
-    theme,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    drawerWidth,
-    open,
+export const ActionPanelToggler = styled.div<{ open: boolean }>(({
+    theme, open,
 }) => `
     position: absolute;
     top: 0;

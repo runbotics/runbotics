@@ -1,0 +1,108 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+<changeSet id="20230131092640-1" author="marciniakf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_instance_loop_event"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_instance_loop_event">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"  />
+            </column>
+            <column name="created" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="log" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="step" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="iteration_number" type="number">
+                <constraints nullable="false" />
+            </column>
+            <column name="iterator_element" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="script" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="execution_id" type="varchar(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="input" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="output" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="process_instance_id" type="UUID" />
+            <column name="finished" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="error" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="loop_id" type="varChar(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_process_instance_loop_event_process_instance_id"
+            baseColumnNames="process_instance_id"
+            baseTableName="process_instance_loop_event"
+            referencedColumnNames="id"
+            referencedTableName="process_instance"
+            deferrable="false"
+            initiallyDeferred="false"
+            validate="true"
+            onDelete="CASCADE"
+        />
+        <!-- TODO -->
+        <!-- <addForeignKeyConstraint
+            constraintName="fk_process_instance_loop_event_execution_id_loop_id"
+            baseColumnNames="loop_id"
+            baseTableName="process_instance_loop_event"
+            referencedColumnNames="execution_id"
+            referencedTableName="process_instance_event"
+            validate="false"
+            onDelete="CASCADE"
+            deferrable="true"
+            initiallyDeferred="true"
+        /> -->
+    </changeSet>
+    <changeSet id="20230131092640-2" author="marciniakf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_instance_event_execution_id_loop_id" />
+            </not>
+        </preConditions>
+        <!-- TODO -->
+        <!-- <addForeignKeyConstraint
+            constraintName="fk_process_instance_event_execution_id_loop_id"
+            baseColumnNames="loop_id"
+            baseTableName="process_instance_loop_event"
+            referencedColumnNames="execution_id"
+            referencedTableName="process_instance_event"
+            validate="false"
+            onDelete="CASCADE"
+            deferrable="true"
+            initiallyDeferred="true"
+        /> -->
+    </changeSet>
+    <changeSet id="20230131092640-3" author="marciniakf">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process_instance_event" columnName="script"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="process_instance_event">
+            <column name="script" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

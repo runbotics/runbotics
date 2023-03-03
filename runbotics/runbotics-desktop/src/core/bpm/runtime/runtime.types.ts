@@ -21,6 +21,7 @@ export interface IActivityEventData {
     processInstance: IProcessInstance;
     eventType: ProcessInstanceEventStatus;
     activity: BpmnExecutionEventMessageExtendedApi;
+    iteratorName?: string;
 }
 
 export interface DesktopTask extends BpmnExecutionEventMessageContent {

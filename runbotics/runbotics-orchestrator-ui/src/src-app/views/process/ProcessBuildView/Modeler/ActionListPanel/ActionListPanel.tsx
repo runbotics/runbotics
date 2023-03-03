@@ -31,7 +31,6 @@ import ActionList from './ActionList/ActionList';
 import {
     classes,
     Root,
-    drawerWidth,
     ActionPanelToggler
 } from './ActionListPanel.styles';
 import {
@@ -183,59 +182,60 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         [actionGroups, filters]
     );
 
-    const filteredGroups: GroupProperties[] = useMemo(() => currentTabGroups
-        .map(group => {
-            const { label, items } = group;
-            const { groupNames, actionName } = filters;
+    const filteredGroups: GroupProperties[] = useMemo(
+        () =>
+            currentTabGroups
+                .map(group => {
+                    const { label, items } = group;
+                    const { groupNames, actionName } = filters;
 
-            // filter group by name
-            // eslint-disable-next-line array-callback-return
-            if (groupNames.length && !groupNames.includes(label)) {
-                return null;
-            }
+                    // filter group by name
+                    // eslint-disable-next-line array-callback-return
+                    if (groupNames.length && !groupNames.includes(label)) {
+                        return null;
+                    }
 
-            const filteredItems = actionName
-                ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
-                (items as IBpmnAction[]).filter(({ label }) =>
-                    label
-                        .toLowerCase()
-                        .includes(actionName.toLowerCase())
-                )
-                : (items as TemplatesSchema[]);
+                    const filteredItems = actionName
+                        ? // TODO: Merge IBpmnAction and TemplatesSchema into single interface
+                        (items as IBpmnAction[]).filter(({ label }) =>
+                            label
+                                .toLowerCase()
+                                .includes(actionName.toLowerCase())
+                        )
+                        : (items as TemplatesSchema[]);
 
-            // eslint-disable-next-line array-callback-return
-            if (!filteredItems.length) return;
+                    // eslint-disable-next-line array-callback-return
+                    if (!filteredItems.length) return;
 
-            return { ...group, items: filteredItems };
-        })
-        .filter(el => el),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [actionGroups, filters]);
+                    return { ...group, items: filteredItems };
+                })
+                .filter(el => el),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [actionGroups, filters]
+    );
 
     return (
-        <Root>
+        <Root open={openDrawer}>
             <ActionPanelToggler
                 onClick={handleDrawerAction}
                 open={openDrawer}
-                drawerWidth={drawerWidth}>
+            >
                 <IconButton>
-                    <ChevronRightIcon fontSize="medium" />
+                    <ChevronRightIcon
+                        fontSize="medium"
+                        className={clsx(classes.drawerIcon)}
+                    />
                 </IconButton>
             </ActionPanelToggler>
             <Drawer
-                variant="permanent"
+                variant="persistent"
                 anchor="left"
                 open={openDrawer}
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: openDrawer,
-                    [classes.drawerClose]: !openDrawer
-                })}
+                className={classes.drawer}
                 classes={{
-                    paper: clsx(classes.drawerPaper, {
-                        [classes.drawerOpen]: openDrawer,
-                        [classes.drawerClose]: !openDrawer
-                    })
-                }}>
+                    paper: clsx(classes.drawerPaper)
+                }}
+            >
                 <Box
                     height={`calc(100vh - ${props.offsetTop}px)`}
                     display="flex"

@@ -9,8 +9,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
+import { ModelerErrorType } from '#src-app/store/slices/Process';
+
 import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
+import TooltipError from './TooltipError';
 
 interface RunSavePanelProps {
     process: IProcess;
@@ -21,18 +24,49 @@ interface RunSavePanelProps {
 const RunSavePanel: FC<RunSavePanelProps> = ({
     onRunClick,
     onSave,
-    process
+    process,
 }) => {
     const { translate } = useTranslations();
     const { isSaveDisabled, errors } = useSelector(
-        state => state.process.modeler
+        (state) => state.process.modeler
     );
     const getTooltip = () => {
-        const elementsWithErrors = errors.map(error => error.elementName);
-        if (elementsWithErrors.length > 0) {
-            return translate('Process.MainView.Tooltip.Save.Errors', {
-                errors: elementsWithErrors.join(', ')
-            });
+        const {
+            formErrorElementsNames,
+            connectionErrorElementsNames,
+            canvasErrorElementsNames,
+        } = errors.reduce(
+            (acc, prev) => {
+                if (prev.type === ModelerErrorType.FORM_ERROR) {
+                    acc.formErrorElementsNames.push(prev.elementName);
+                }
+                if (prev.type === ModelerErrorType.CONNECTION_ERROR) {
+                    acc.connectionErrorElementsNames.push(prev.elementName);
+                }
+                if (prev.type === ModelerErrorType.CANVAS_ERROR) {
+                    acc.canvasErrorElementsNames.push(prev.elementName);
+                }
+                return acc;
+            },
+            {
+                formErrorElementsNames: [],
+                connectionErrorElementsNames: [],
+                canvasErrorElementsNames: [],
+            }
+        );
+
+        if (
+            connectionErrorElementsNames.length ||
+            formErrorElementsNames.length ||
+            canvasErrorElementsNames.length
+        ) {
+            return (
+                <TooltipError
+                    connectionErrorElementsNames={connectionErrorElementsNames}
+                    formErrorElementsNames={formErrorElementsNames}
+                    canvasErrorElementNames={canvasErrorElementsNames}
+                />
+            );
         }
         if (isSaveDisabled) {
             return translate('Process.MainView.Tooltip.Save.Disabled');
@@ -61,7 +95,8 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                                         <SvgIcon fontSize="small">
                                             <SendIcon />
                                         </SvgIcon>
-                                    }>
+                                    }
+                                >
                                     {translate('Common.Save')}
                                 </Button>
                             </span>

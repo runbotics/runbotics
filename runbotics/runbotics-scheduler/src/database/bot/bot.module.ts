@@ -5,7 +5,7 @@ import { BotService } from './bot.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([BotEntity])],
-    exports: [TypeOrmModule, BotService],
+    exports: [BotService],
     providers: [BotService],
 })
 export class BotModule {}

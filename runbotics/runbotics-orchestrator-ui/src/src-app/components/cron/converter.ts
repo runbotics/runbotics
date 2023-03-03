@@ -1,20 +1,14 @@
 /* eslint-disable complexity */
 /* eslint-disable max-params */
-import { MutableRefObject } from 'react';
-
-import { UNITS, SUPPORTED_SHORTCUTS } from './constants';
+import { UNITS, CronOrder as CronOrder } from './constants';
+import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';
 import {
     Unit,
     PeriodType,
     LeadingZero,
     ClockFormat,
-    SetInternalError,
-    OnError,
-    AllowEmpty,
-    Locale,
-    Shortcuts,
-    SetValueNumbersOrUndefined,
-    SetValuePeriod,
+    SetValuesFromCronStringProps,
+    newCronObjProps,
 } from './types';
 import {
     range, sort, dedup, setError,
@@ -22,103 +16,72 @@ import {
 
 /**
  * Set values from cron string
- */
-export function setValuesFromCronString(
-    cronString: string,
-    setInternalError: SetInternalError,
-    onError: OnError,
-    allowEmpty: AllowEmpty,
-    internalValueRef: MutableRefObject<string>,
-    firstRender: boolean,
-    locale: Locale,
-    shortcuts: Shortcuts,
-    setMinutes: SetValueNumbersOrUndefined,
-    setHours: SetValueNumbersOrUndefined,
-    setMonthDays: SetValueNumbersOrUndefined,
-    setMonths: SetValueNumbersOrUndefined,
-    setWeekDays: SetValueNumbersOrUndefined,
-    setPeriod: SetValuePeriod,
-) {
+*/
+
+export const setValuesFromCronString = ({
+    cronString,
+    setIsError,
+    onError,
+    internalValueRef,
+    firstRender,
+    locale,
+    setPeriod,
+    cronDispatch
+}): SetValuesFromCronStringProps => {
     onError && onError(undefined);
-    setInternalError(false);
+    setIsError(false);
+    let isErrorOccurred = false;
 
-    let error = false;
-    let newCronString = cronString;
-
-    // Handle empty cron string
-    if (!newCronString) {
-        if (allowEmpty === 'always' || (firstRender && allowEmpty === 'for-default-value'))
-        { return; }
-
-
-        error = true;
+    if(!cronString) {
+        if(firstRender) return;
+        isErrorOccurred = true;
     }
-
-    if (!error) {
-        // Shortcuts management
-        if (shortcuts && (shortcuts === true || shortcuts.includes(newCronString as any))) {
-            if (newCronString === '@reboot') {
-                setPeriod('reboot');
-
-                return;
-            }
-
-            // Convert a shortcut to a valid cron string
-            const shortcutObject = SUPPORTED_SHORTCUTS.find(
-                (supportedShortcut) => supportedShortcut.name === newCronString,
-            );
-
-            if (shortcutObject)
-            { newCronString = shortcutObject.value; }
-
-        }
-
+    
+    if(!isErrorOccurred) {
         try {
-            const cronParts = parseCronString(newCronString);
+            const cronParts = parseCronString(cronString);
             const period = getPeriodFromCronparts(cronParts);
 
             setPeriod(period);
-            setMinutes(cronParts[0]);
-            setHours(cronParts[1]);
-            setMonthDays(cronParts[2]);
-            setMonths(cronParts[3]);
-            setWeekDays(cronParts[4]);
+            
+            cronDispatch({ 
+                type: CRON_ACTIONS.CLEAR_ALL, 
+            });
+            
         } catch (err) {
-            // Specific errors are not handle (yet)
-            error = true;
+            // Specific errors are not handled
+            isErrorOccurred = true;
         }
     }
-    if (error) {
+
+    if (isErrorOccurred) {
         const newInternalValueRef = internalValueRef;
-        newInternalValueRef.current = newCronString;
-        setInternalError(true);
+        newInternalValueRef.current = cronString;
+        setIsError(true);
         setError(onError, locale);
     }
-}
+};
 
 /**
  * Get cron string from values
  */
 export function getCronStringFromValues(
     period: PeriodType,
-    months: number[] | undefined,
-    monthDays: number[] | undefined,
-    weekDays: number[] | undefined,
-    hours: number[] | undefined,
-    minutes: number[] | undefined,
+    cronState: CronStateProps,
     humanizeValue?: boolean,
 ) {
-    if (period === 'reboot')
-    { return '@reboot'; }
-
-
-    const newMonths = period === 'year' && months ? months : [];
-    const newMonthDays = (period === 'year' || period === 'month') && monthDays ? monthDays : [];
-    const newWeekDays = (period === 'year' || period === 'month' || period === 'week') && weekDays ? weekDays : [];
-    const newHours = period !== 'minute' && period !== 'hour' && hours ? hours : [];
-    const newMinutes = period !== 'minute' && minutes ? minutes : [];
-
-    const parsedArray = parseCronArray([newMinutes, newHours, newMonthDays, newMonths, newWeekDays], humanizeValue);
+    const parsedArray = parseCronArray(
+        { 
+            newMinutes: cronState.minutes,
+            newHours: cronState.hours,
+            newMonthDays: cronState.monthDays,
+            newNthMonthDays: cronState.nthMonthDays,
+            newMonths: cronState.months,
+            newWeekDays: cronState.weekDays,
+            newNthWeekDays: cronState.nthWeekDays,
+        }, 
+        humanizeValue
+    );
 
     return cronToString(parsedArray);
 }
@@ -140,36 +103,55 @@ export function partToString(
     } else {
         const step = getStep(cronPart);
 
-        if (step && isInterval(cronPart, step))
-        { if (isFullInterval(cronPart, unit, step))
-        { retval = `*/${step}`; }
-        else
-        { retval = `${formatValue(getMin(cronPart), unit, humanize, leadingZero, clockFormat)}-${formatValue(
-            getMax(cronPart),
-            unit,
-            humanize,
-            leadingZero,
-            clockFormat,
-        )}/${step}`; } }
-
-        else
-        { retval = toRanges(cronPart)
-            .map((rangeValue: number | number[]) => {
-                if (Array.isArray(rangeValue))
-                { return `${formatValue(rangeValue[0], unit, humanize, leadingZero, clockFormat)}-${formatValue(
-                    rangeValue[1],
+        if (step && isInterval(cronPart, step)) {
+            if (isFullInterval(cronPart, unit, step)) {
+                retval = `*/${step}`;
+            } else {
+                retval = `${formatValue(
+                    getMin(cronPart),
                     unit,
                     humanize,
                     leadingZero,
-                    clockFormat,
-                )}`; }
+                    clockFormat
+                )}-${formatValue(
+                    getMax(cronPart),
+                    unit,
+                    humanize,
+                    leadingZero,
+                    clockFormat
+                )}/${step}`;
+            }
+        } else {
+            retval = toRanges(cronPart)
+                .map((rangeValue: number | number[]) => {
+                    if (Array.isArray(rangeValue)) {
+                        return `${formatValue(
+                            rangeValue[0],
+                            unit,
+                            humanize,
+                            leadingZero,
+                            clockFormat
+                        )}-${formatValue(
+                            rangeValue[1],
+                            unit,
+                            humanize,
+                            leadingZero,
+                            clockFormat
+                        )}`;
+                    }
 
-
-                return formatValue(rangeValue, unit, humanize, leadingZero, clockFormat);
-            })
-            .join(','); }
-
+                    return formatValue(
+                        rangeValue,
+                        unit,
+                        humanize,
+                        leadingZero,
+                        clockFormat
+                    );
+                })
+                .join(',');
+        }
     }
+
     return retval;
 }
 
@@ -188,7 +170,7 @@ export function formatValue(
     const needLeadingZero = leadingZero && (leadingZero === true || leadingZero.includes(type as any));
     const need24HourClock = clockFormat === '24-hour-clock' && (type === 'hours' || type === 'minutes');
 
-    if ((humanize && type === 'week-days') || (humanize && type === 'months'))
+    if (humanize && (type === 'nth-month-days' || type === 'months' || type === 'week-days' || type === 'nth-week-days'))
     { cronPartString = alt[value - min]; }
     else if (value < 10 && (needLeadingZero || need24HourClock))
     { cronPartString = cronPartString.padStart(2, '0'); }
@@ -198,9 +180,9 @@ export function formatValue(
         const suffix = value >= 12 ? 'PM' : 'AM';
         let hour: number | string = value % 12 || 12;
 
-        if (hour < 10 && needLeadingZero)
-        { hour = hour.toString().padStart(2, '0'); }
-
+        if (hour < 10 && needLeadingZero) {
+            hour = hour.toString().padStart(2, '0');
+        }
 
         cronPartString = `${hour}${suffix}`;
     }
@@ -209,19 +191,45 @@ export function formatValue(
 }
 
 /**
- * Parses a 2-dimentional array of integers as a cron schedule
+ * Parses a object of arrays of integers as a cron schedule
  */
-function parseCronArray(cronArr: number[][], humanizeValue?: boolean) {
-    if (cronArr.length === 5)
-    { return cronArr.map((partArr, idx) => {
+
+function parseCronArray(cronObj: newCronObjProps, humanizeValue?: boolean) {
+    if (Object.keys(cronObj).length !== 7) throw new Error('Invalid cron array');
+
+    const resultArr = [];
+
+    Object.entries(cronObj).forEach(([, partArr], idx) => {
         const unit = UNITS[idx];
         const parsedArray = parsePartArray(partArr, unit);
+        let newPart = partToString(parsedArray, unit, humanizeValue);
 
-        return partToString(parsedArray, unit, humanizeValue);
-    }); }
+        switch (unit.type) {
+            case 'nth-week-days':
+                if(resultArr[CronOrder.WEEK_DAYS] !== '*' && newPart !== '*') {
+                    newPart = Number(newPart) === 4 ? 'L' : `#${Number(newPart)+1}`;
+                    resultArr[CronOrder.WEEK_DAYS] += newPart;
+                };
 
+                break;
+            case 'nth-month-days':
+                if (Number(newPart) === 0) {
+                    newPart = 'L';
+                } else if (Number(newPart) === 1) {
+                    newPart = 'LW';
+                }
 
-    throw new Error('Invalid cron array');
+                if(resultArr[CronOrder.MONTH_DAYS] === '*') {
+                    resultArr[CronOrder.MONTH_DAYS] = newPart;
+                }
+
+                break;
+            default:
+                resultArr.push(newPart);
+        }
+    });
+
+    return resultArr;
 }
 
 /**
@@ -235,18 +243,23 @@ function cronToString(parts: string[]) {
  * Find the period from cron parts
  */
 function getPeriodFromCronparts(cronParts: number[][]): PeriodType {
-    if (cronParts[3].length > 0)
-    { return 'year'; }
-    if (cronParts[2].length > 0)
-    { return 'month'; }
-    if (cronParts[4].length > 0)
-    { return 'week'; }
-    if (cronParts[1].length > 0)
-    { return 'day'; }
-    if (cronParts[0].length > 0)
-    { return 'hour'; }
+    if (cronParts[CronOrder.MONTHS].length > 0) {
+        return PeriodType.YEAR;
+    }
+    if (cronParts[CronOrder.MONTH_DAYS].length > 0) {
+        return PeriodType.MONTH;
+    }
+    if (cronParts[CronOrder.WEEK_DAYS].length > 0) {
+        return PeriodType.WEEK;
+    }
+    if (cronParts[CronOrder.HOURS].length > 0) {
+        return PeriodType.DAY;
+    }
+    if (cronParts[CronOrder.MINUTES].length > 0) {
+        return PeriodType.HOUR;
+    }
 
-    return 'minute';
+    return PeriodType.MINUTE;
 }
 
 /**
@@ -256,12 +269,10 @@ function parseCronString(str: string) {
     if (typeof str !== 'string')
     { throw new Error('Invalid cron string'); }
 
-
     const parts = str.replace(/\s+/g, ' ').trim().split(' ');
 
     if (parts.length === 5)
     { return parts.map((partStr, idx) => parsePartString(partStr, UNITS[idx])); }
-
 
     throw new Error('Invalid cron string format');
 }
@@ -273,12 +284,10 @@ function parsePartString(str: string, unit: Unit) {
     if (str === '*' || str === '*/1')
     { return []; }
 
-
     const stringParts = str.split('/');
 
     if (stringParts.length > 2)
-    { throw new Error(`Invalid value "${unit.type}"`); }
-
+    { throw new Error(`Invalid value '${unit.type}'`); }
 
     const rangeString = replaceAlternatives(stringParts[0], unit.min, unit.alt);
     let parsedValues: number[];
@@ -301,7 +310,7 @@ function parsePartString(str: string, unit: Unit) {
         const value = outOfRange(parsedValues, unit);
 
         if (typeof value !== 'undefined')
-        { throw new Error(`Value "${value}" out of range for ${unit.type}`); }
+        { throw new Error(`Value '${value}' out of range for ${unit.type}`); }
 
     }
 
@@ -311,8 +320,7 @@ function parsePartString(str: string, unit: Unit) {
     if (intervalValues.length === unit.total)
     { return []; }
     if (intervalValues.length === 0)
-    { throw new Error(`Empty interval value "${str}" for ${unit.type}`); }
-
+    { throw new Error(`Empty interval value '${str}' for ${unit.type}`); }
 
     return intervalValues;
 }
@@ -359,22 +367,25 @@ function parseRange(rangeStr: string, context: string, unit: Unit) {
     if (subparts.length === 1) {
         const value = parseInt(subparts[0], 10);
 
-        if (Number.isNaN(value))
-        { throw new Error(`Invalid value "${context}" for ${unit.type}`); }
-
+        if (Number.isNaN(value)) {
+            throw new Error(`Invalid value '${context}' for ${unit.type}`);
+        }
 
         return [value];
-    } if (subparts.length === 2) {
+    }
+    if (subparts.length === 2) {
         const minValue = parseInt(subparts[0], 10);
         const maxValue = parseInt(subparts[1], 10);
 
-        if (maxValue <= minValue)
-        { throw new Error(`Max range is less than min range in "${rangeStr}" for ${unit.type}`); }
-
+        if (maxValue <= minValue) {
+            throw new Error(
+                `Max range is less than min range in '${rangeStr}' for ${unit.type}`
+            );
+        }
 
         return range(minValue, maxValue);
     }
-    throw new Error(`Invalid value "${rangeStr}" for ${unit.type}`);
+    throw new Error(`Invalid value '${rangeStr}' for ${unit.type}`);
 }
 
 /**
@@ -384,10 +395,12 @@ function outOfRange(values: number[], unit: Unit) {
     const first = values[0];
     const last = values[values.length - 1];
 
-    if (first < unit.min)
-    { return first; }
-    if (last > unit.max)
-    { return last; }
+    if (first < unit.min) {
+        return first;
+    }
+    if (last > unit.max) {
+        return last;
+    }
 
     return undefined;
 }
@@ -400,7 +413,7 @@ function parseStep(step: string, unit: Unit) {
         const parsedStep = parseInt(step, 10);
 
         if (Number.isNaN(parsedStep) || parsedStep < 1)
-        { throw new Error(`Invalid interval step value "${step}" for ${unit.type}`); }
+        { throw new Error(`Invalid interval step value '${step}' for ${unit.type}`); }
 
 
         return parsedStep;
@@ -429,13 +442,17 @@ export function parsePartArray(arr: number[], unit: Unit) {
     const values = sort(dedup(fixSunday(arr, unit)));
 
     if (values.length === 0)
-    { return values; }
+    { 
+        return values; 
+    }
 
 
     const value = outOfRange(values, unit);
 
     if (typeof value !== 'undefined')
-    { throw new Error(`Value "${value}" out of range for ${unit.type}`); }
+    { 
+        throw new Error(`Value '${value}' out of range for ${unit.type}`); 
+    }
 
 
     return values;
@@ -456,9 +473,11 @@ function getStep(values: number[]) {
         const step = values[1] - values[0];
 
         if (step > 1)
-        { return step; }
-
+        { 
+            return step; 
+        }
     }
+
     return 0;
 }
 
@@ -471,8 +490,9 @@ function isInterval(values: number[], step: number) {
         const value = values[i];
 
         if (value - prev !== step)
-        { return false; }
-
+        { 
+            return false; 
+        }
     }
 
     return true;
@@ -516,16 +536,16 @@ function toRanges(values: number[]) {
     let startPart: number | null = null;
 
     values.forEach((value, index, self) => {
-        if (value !== self[index + 1] - 1)
-        { if (startPart !== null) {
-            retval.push([startPart, value]);
-            startPart = null;
-        } else {
-            retval.push(value);
-        } }
-        else if (startPart === null)
-        { startPart = value; }
-
+        if (value !== self[index + 1] - 1) {
+            if (startPart !== null) {
+                retval.push([startPart, value]);
+                startPart = null;
+            } else {
+                retval.push(value);
+            }
+        } else if (startPart === null) {
+            startPart = value;
+        }
     });
 
     return retval;

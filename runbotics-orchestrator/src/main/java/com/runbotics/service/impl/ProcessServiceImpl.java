@@ -177,9 +177,14 @@ public class ProcessServiceImpl implements ProcessService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Process : {}", id);
-        Set<ProcessInstance> processInstanceList = processInstanceRepository.findAllByProcessId(id);
-        processInstanceRepository.deleteAll(processInstanceList);
         processRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUnassignedPrivateProcesses() {
+        log.debug("Request to delete unassigned private Processes");
+        processRepository.deleteUnassignedPrivateProcesses();
     }
 
     private void updateBotCollectionRelationsInDto(ProcessDTO processDTO, Process existingProcess) {

@@ -4,9 +4,6 @@ import moment from 'moment';
 
 import { IProcessInstance } from 'runbotics-common';
 
-
-
-
 import { Column, RowCustomExpandedSpan } from '#src-app/components/tables/Table';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -55,7 +52,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',
@@ -95,7 +92,7 @@ export const useWaitingProcessColumns = (): Column<QueueJob>[] => {
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ data: { user, trigger, triggeredBy } }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ data: { user, trigger, triggerData } }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',

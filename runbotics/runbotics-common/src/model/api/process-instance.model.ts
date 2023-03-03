@@ -1,7 +1,7 @@
 import { IProcess } from "./process.model";
 import { IBot } from "./bot.model";
 import { IUser } from "./user.model";
-import { IProcessTrigger } from './process-trigger.model';
+import { ITriggerEvent } from './trigger-event.model';
 
 export interface IProcessInstance {
     id?: string;
@@ -17,9 +17,16 @@ export interface IProcessInstance {
     process?: IProcess;
     bot?: IBot;
     error?: string | null;
-    trigger?: IProcessTrigger;
-    triggeredBy?: string;
+    trigger?: ITriggerEvent;
+    triggerData?: EmailTriggerData | unknown;
     subProcesses?: IProcess[];
+}
+
+export interface EmailTriggerData {
+    emailId: string;
+    sender: string;
+    ccRecipients?: string[];
+    bccRecipients?: string[];
 }
 
 export enum ProcessInstanceStatus {
@@ -31,4 +38,7 @@ export enum ProcessInstanceStatus {
     TERMINATED = "TERMINATED",
 }
 
-export const defaultValue: Readonly<IProcessInstance> = {};
+export const isEmailTriggerData = (data: unknown): data is EmailTriggerData => data
+    && typeof data === 'object'
+    && 'sender' in data
+    && 'emailId' in data;

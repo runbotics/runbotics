@@ -39,4 +39,9 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
         "select process from Process process where process.botCollection.name like %?1% and (process.createdBy.login = ?2 or process.isPublic = true)"
     )
     Page<Process> findByBotCollection(String collectionName, String userLogin, Pageable pageable);
+
+    @Query(
+        "DELETE FROM Process process WHERE process.createdBy IS NULL AND process.isPublic = false"
+    )
+    void deleteUnassignedPrivateProcesses();
 }

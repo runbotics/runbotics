@@ -41,9 +41,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async open(input: ExcelOpenActionInput): Promise<ExcelOpenActionOutput> {
-        if (process.platform !== 'win32') {
-            throw new Error('Excel actions can be run only on Windows bot');
-        }
         const winax = await import('winax');
         this.session = new winax.Object("Excel.Application", { activate: true });
 
@@ -94,6 +91,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     run(request: ExcelActionRequest) {
+        if (process.platform !== 'win32') {
+            throw new Error('Excel actions can be run only on Windows bot');
+        }
+
         switch (request.script) {
             case "excel.open":
                 return this.open(request.input);

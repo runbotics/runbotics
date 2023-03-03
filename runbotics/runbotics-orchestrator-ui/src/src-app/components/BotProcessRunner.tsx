@@ -9,8 +9,6 @@ import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import { FeatureKey, IProcess, ProcessInstanceStatus } from 'runbotics-common';
 import styled from 'styled-components';
 
-
-
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -18,6 +16,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, StartProcessResponse } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
+import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { schedulerActions, schedulerSelector } from '#src-app/store/slices/Scheduler';
 
 import { AttendedProcessModal } from './AttendedProcessModal';
@@ -111,6 +110,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const handleRun = (executionInfo?: Record<string, any>) => {
         if (started) return;
         dispatch(processInstanceActions.resetActiveProcessInstaceAndEvents());
+        dispatch(processInstanceEventActions.resetAll());
 
         enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
             variant: 'warning',

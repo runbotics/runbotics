@@ -27,7 +27,7 @@ export const addAppliedAction = (
     if (!state.modeler.appliedActivities.includes(action.payload)) {
         state.modeler.appliedActivities = [
             ...state.modeler.appliedActivities,
-            action.payload
+            action.payload,
         ];
     }
 };
@@ -39,7 +39,7 @@ export const removeAppliedAction = (
     if (state.modeler.appliedActivities.includes(action.payload)) {
         state.modeler.appliedActivities =
             state.modeler.appliedActivities.filter(
-                activity => activity !== action.payload
+                (activity) => activity !== action.payload
             );
     }
 };
@@ -89,7 +89,7 @@ export const setError = (
     action: PayloadAction<ModelerError>
 ) => {
     const errorIndex = state.modeler.errors.findIndex(
-        error => error.elementId === action.payload.elementId
+        (error) => error.elementId === action.payload.elementId
     );
     if (errorIndex === -1) {
         state.modeler.errors = [...state.modeler.errors, action.payload];
@@ -101,7 +101,7 @@ export const removeError = (
     action: PayloadAction<string>
 ) => {
     state.modeler.errors = state.modeler.errors.filter(
-        error => error.elementId !== action.payload
+        (error) => error.elementId !== action.payload
     );
 };
 
