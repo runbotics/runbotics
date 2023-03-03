@@ -79,7 +79,7 @@ export type BusinessObject = {
 };
 
 export type ModdleElement = {
-    $type: 'bpmn:ServiceTask',
+    $type: string,
     actionId: string,
     extensionElements?: ExtensionElement[],
     id: string,
