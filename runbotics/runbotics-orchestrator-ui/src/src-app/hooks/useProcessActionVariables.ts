@@ -26,19 +26,20 @@ const useProcessActionVariables = () => {
             item.id.includes('Activity_')
         );
 
+        
     const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
         if (!allActionsWithVariables || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
-
-        // for inputActionVariables variable info object is in .inputParameters
-        // for outputActionVariables variable info object is in .outputParameters
-
-        // variableInfo returns array of 3 MooddleElements which holds:
-        // [0] - info about variable name ({name: 'variable})
-        // [1] - info about variable value ({name: 'value})
-        // [3] - info about script and action itself ({name: 'script})
-
+            
+        /**
+        * @name inputActionVariables
+        * @description Variables used by actions:
+        * Variables -> Assign value to variable
+        * Variables -> Assign list variable
+        * @returns [ActionVariableObject[]]
+        * after flatMap ActionVariableObject[]
+        */
         const inputActionVariables = allActionsWithVariables
             .filter(
                 (element: ModdleElement) =>
@@ -46,12 +47,25 @@ const useProcessActionVariables = () => {
                     element.actionId === 'variables.assignList'
             )
             .map((variable: ModdleElement) => {
+                /**
+                 * @name variableInfo
+                 * @description Array of variable information get from inputParameters
+                 * @returns ModdleElement[]
+                 * ModdleElement[0] hold info abour variable name
+                 * ModdleElement[1] hold info abour variable value
+                 * ModdleElement[0] hold info abour variable script
+                 */
                 const variableInfo =
                     variable.extensionElements.values[0].inputParameters;
 
                 if (!variableInfo) {
                     return [];
                 }
+
+                /**
+                 * @name inputVariables
+                 * @returs ActionVariableObject[]
+                 */
 
                 const inputVariables = variableInfo
                     .filter(
@@ -63,16 +77,27 @@ const useProcessActionVariables = () => {
                     }));
 
                 return inputVariables;
-
-                // inputVariables returns array of arrays with one element
-                // hence flatMap which also filters variables which does not have a name yet
             })
             .flatMap((variable: ActionVariableObject) =>
                 variable[0].name ? variable : []
             );
 
+        /**
+        * @name outputActionVariables
+        * @description Variables used by actions which have an output value
+        * @returns [ActionVariableObject[]]
+        * after flatMap ActionVariableObject[]
+        */
         const outputActionVariables = allActionsWithVariables
             .map((element: ModdleElement) => {
+                /**
+                 * @name variableInfo
+                 * @description Array of variable information get from outputParameters
+                 * @returns ModdleElement[]
+                 * ModdleElement[0] hold info abour variable name
+                 * ModdleElement[1] hold info abour variable value
+                 * ModdleElement[0] hold info abour variable script
+                 */
                 const variableInfo =
                     element.extensionElements.values[0].outputParameters;
 
@@ -80,7 +105,11 @@ const useProcessActionVariables = () => {
                     return [];
                 }
 
-                return variableInfo
+                /**
+                * @name outputVariables
+                * @returs ActionVariableObject[]
+                */
+                const outputVariables = variableInfo
                     .filter(
                         (item: ActionVariableObject) =>
                             item.name === 'variableName'
@@ -89,6 +118,8 @@ const useProcessActionVariables = () => {
                         name: item.value,
                         value: item.name,
                     }));
+                    
+                return outputVariables;
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flatMap((item: ActionVariableObject) => item);
