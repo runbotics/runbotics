@@ -1,17 +1,12 @@
-import React, { useState, FC } from 'react';
+import React, { useState } from 'react';
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
-    Box, Typography, Chip, Grid, Divider, IconButton
+    Box, Typography
 } from '@mui/material';
 
 import { useTheme } from '@mui/material/styles';
 
-
-import VariableCopyMenu from '../VariableCopyMenu';
-
-import { GridContainer, GridTag, GridVariable
-} from './VariablesPanel.styles';
+import VariableRow from './VariableRow';
 
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
@@ -22,7 +17,7 @@ export enum VariableTag {
     ACTION_OUTPUT = 'ActionOutputTag',
 }
 
-interface MenuProps {
+export interface MenuProps {
     menuId: string,
     anchorElement?: HTMLElement
 }
@@ -33,51 +28,20 @@ const VariablesPanel = () => {
 
     const [openMenuId, setOpenMenuId] = useState<MenuProps>(null);
 
-    const getTagBgColor = (tag: VariableTag) => {
+    const getTagBgColor = (tag: VariableTag): string => {
         if (tag === VariableTag.VARIABLE) {
             return theme.palette.tag.variable;
         } 
         return theme.palette.tag.action;
-         
     };
     
     const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, name: string) => {
-        setOpenMenuId({menuId: name, anchorElement: event.currentTarget});
+        setOpenMenuId({ menuId: name, anchorElement: event.currentTarget });
     };
 
     const handleMenuClose = () => {
         setOpenMenuId(null);
     };
-
-    const VariableRow: FC<{name: string, tag: VariableTag}> = ({ name, tag }) => (
-        <Box key={name}>
-            <GridContainer container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <GridVariable item xs={5}>
-                    {name}
-                </GridVariable>
-                <GridTag item xs={5}>
-                    <Chip
-                        label={translate(`Process.Modeler.VariablesPanel.${tag}`).toUpperCase()}
-                        sx={{ bgcolor: getTagBgColor(tag), color: 'black', letterSpacing: 1.1}}
-                        size="medium"/>
-                </GridTag>
-                <Grid item xs={2}>
-                    <IconButton size="medium" onClick={(e) => handleMenuClick(e, name)}>
-                        <MoreVertIcon/>
-                    </IconButton>
-                    {openMenuId?.menuId === name ?
-                        <VariableCopyMenu 
-                            key={openMenuId.menuId}
-                            anchorElement={openMenuId.anchorElement} 
-                            handleMenuClose={handleMenuClose} 
-                            menuId={openMenuId.menuId} 
-                            tag={tag}
-                        />
-                        : null}
-                </Grid>
-            </GridContainer>
-            <Divider />
-        </Box>);
         
     const variables = [...globalVariables, ...attendedVariables, ...inputActionVariables];
 
@@ -85,23 +49,42 @@ const VariablesPanel = () => {
 
     if (allProcessVariables.length === 0) {
         return (
-            <Typography sx={{display: 'flex', justifyContent: 'center', paddingTop: '2rem'}}>
+            <Typography
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    paddingTop: '2rem',
+                }}
+            >
                 {translate('Process.Modeler.VariablesPanel.Empty.Message')}
-            </Typography>);
+            </Typography>
+        );
     }
-
-    const variableElements =  variables.map(variable => 
-        VariableRow({name: variable.name, tag: VariableTag.VARIABLE}
-        )); 
-
-    const outputVariableElements = outputActionVariables.map(variable => 
-        VariableRow({name: variable.name, tag: VariableTag.ACTION_OUTPUT}
-        ));
 
     return (
         <Box>
-            {variableElements}
-            {outputVariableElements}
+            {variables.map((variable) => (
+                <VariableRow
+                    key={variable.name}
+                    name={variable.name}
+                    tag={VariableTag.VARIABLE}
+                    getTagBgColor={getTagBgColor}
+                    handleMenuClick={handleMenuClick}
+                    handleMenuClose={handleMenuClose}
+                    openMenuId={openMenuId}
+                />
+            ))}
+            {outputActionVariables.map((variable) => (
+                <VariableRow
+                    key={variable.name}
+                    name={variable.name}
+                    tag={VariableTag.ACTION_OUTPUT}
+                    getTagBgColor={getTagBgColor}
+                    handleMenuClick={handleMenuClick}
+                    handleMenuClose={handleMenuClose}
+                    openMenuId={openMenuId}
+                />
+            ))}
         </Box>
     );
 };
