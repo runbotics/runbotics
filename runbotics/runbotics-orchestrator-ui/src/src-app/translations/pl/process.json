@@ -648,7 +648,6 @@
     "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna",
     "Process.Modeler.VariablesPanel.VariableTag": "Zmienna",
     "Process.Modeler.VariablesPanel.ActionOutputTag": "Wynik akcji",
-    "Process.Modeler.VariablesPanel.Copy.Message.Success": "Nazwa zmiennej została skopiowana do schowka",
-    "Process.Modeler.VariablesPanel.Copy.Message.Error": "Wystąpił błąd podczas kopiowania nazwy zmiennej",
+    "Process.Modeler.VariablesPanel.Copy.Message.Success": "Skopiowano zmienną",
     "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"
 }

@@ -2,16 +2,13 @@ import React from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import {
-    Box, Grid, Chip, Divider, IconButton 
-} from '@mui/material';
+import { Box, Grid, Chip, Divider, IconButton } from '@mui/material';
+
+import { translate } from '#src-app/hooks/useTranslations';
 
 import VariableCopyMenu from '../VariableCopyMenu';
 import { VariableTag, MenuProps } from './VariablesPanel';
 import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
-
-import { translate } from '#src-app/hooks/useTranslations';
-
 
 interface VariableRowProps {
     name: string;

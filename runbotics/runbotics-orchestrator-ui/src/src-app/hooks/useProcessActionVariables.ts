@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-import { useModelerContext } from './useModelerContext';
-
 import {
     BPMNElement,
     ModdleElement,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+
+import { useModelerContext } from './useModelerContext';
 
 export interface ActionVariableObject {
     name?: string;
@@ -26,20 +26,19 @@ const useProcessActionVariables = () => {
             item.id.includes('Activity_')
         );
 
-        
     const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
         if (!allActionsWithVariables || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
-            
+
         /**
-        * @name inputActionVariables
-        * @description Variables used by actions:
-        * Variables -> Assign value to variable
-        * Variables -> Assign list variable
-        * @returns [ActionVariableObject[]]
-        * after flatMap ActionVariableObject[]
-        */
+         * @name inputActionVariables
+         * @description Variables used by actions:
+         * Variables -> Assign value to variable
+         * Variables -> Assign list variable
+         * @returns [ActionVariableObject[]]
+         * after flatMap ActionVariableObject[]
+         */
         const inputActionVariables = allActionsWithVariables
             .filter(
                 (element: ModdleElement) =>
@@ -83,11 +82,11 @@ const useProcessActionVariables = () => {
             );
 
         /**
-        * @name outputActionVariables
-        * @description Variables used by actions which have an output value
-        * @returns [ActionVariableObject[]]
-        * after flatMap ActionVariableObject[]
-        */
+         * @name outputActionVariables
+         * @description Variables used by actions which have an output value
+         * @returns [ActionVariableObject[]]
+         * after flatMap ActionVariableObject[]
+         */
         const outputActionVariables = allActionsWithVariables
             .map((element: ModdleElement) => {
                 /**
@@ -106,9 +105,9 @@ const useProcessActionVariables = () => {
                 }
 
                 /**
-                * @name outputVariables
-                * @returs ActionVariableObject[]
-                */
+                 * @name outputVariables
+                 * @returs ActionVariableObject[]
+                 */
                 const outputVariables = variableInfo
                     .filter(
                         (item: ActionVariableObject) =>
@@ -118,7 +117,7 @@ const useProcessActionVariables = () => {
                         name: item.value,
                         value: item.name,
                     }));
-                    
+
                 return outputVariables;
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)

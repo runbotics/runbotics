@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 
-import {
-    Box, Typography
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { useTheme } from '@mui/material/styles';
-
-import VariableRow from './VariableRow';
 
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import VariableRow from './VariableRow';
 
 export enum VariableTag {
     VARIABLE = 'VariableTag',
@@ -18,34 +15,51 @@ export enum VariableTag {
 }
 
 export interface MenuProps {
-    menuId: string,
-    anchorElement?: HTMLElement
+    menuId: string;
+    anchorElement?: HTMLElement;
 }
 
 const VariablesPanel = () => {
     const theme = useTheme();
-    const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
+    const {
+        globalVariables,
+        inputActionVariables,
+        outputActionVariables,
+        attendedVariables,
+    } = useProcessVariables();
 
     const [openMenuId, setOpenMenuId] = useState<MenuProps>(null);
 
     const getTagBgColor = (tag: VariableTag): string => {
         if (tag === VariableTag.VARIABLE) {
             return theme.palette.tag.variable;
-        } 
+        }
         return theme.palette.tag.action;
     };
-    
-    const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, name: string) => {
+
+    const handleMenuClick = (
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+        name: string
+    ) => {
         setOpenMenuId({ menuId: name, anchorElement: event.currentTarget });
     };
 
     const handleMenuClose = () => {
         setOpenMenuId(null);
     };
-        
-    const variables = [...globalVariables, ...attendedVariables, ...inputActionVariables];
 
-    const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
+    const variables = [
+        ...globalVariables,
+        ...attendedVariables,
+        ...inputActionVariables,
+    ];
+
+    const allProcessVariables = [
+        ...globalVariables,
+        ...inputActionVariables,
+        ...outputActionVariables,
+        ...attendedVariables,
+    ];
 
     if (allProcessVariables.length === 0) {
         return (

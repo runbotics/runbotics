@@ -1,13 +1,13 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
-import { useModelerContext } from './useModelerContext';
-
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import {
     BPMNElement,
     CamundaInputOutputElement,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+
+import { useModelerContext } from './useModelerContext';
 
 interface GlobalVariable {
     value: string;
