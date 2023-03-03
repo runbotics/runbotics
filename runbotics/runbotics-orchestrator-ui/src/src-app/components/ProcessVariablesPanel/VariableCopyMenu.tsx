@@ -5,9 +5,10 @@ import {
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
+import { VariableTag } from './VariablesPanel/VariablesPanel';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableTag } from './VariablesPanel/VariablesPanel';
 
 
 
@@ -34,12 +35,17 @@ const VariableCopyMenu = ({ anchorElement, handleMenuClose, menuId, tag }) => {
         handleMenuClose();
     };
 
+
+    if (!anchorElement) {
+        return null;
+    }
+    
     const menuItems = itemsToCopy.map(item => (
         <MenuItem key={item} onClick={() => handleCopy(item)}>
-            <ListItemText>{item}</ListItemText>
-            <ListItemIcon sx={{marginLeft: '1rem'}}>
+            <ListItemIcon sx={{marginRight: '1rem'}}>
                 <ContentCopyIcon/>
             </ListItemIcon>
+            <ListItemText>{item}</ListItemText>
         </MenuItem>)
     );
 

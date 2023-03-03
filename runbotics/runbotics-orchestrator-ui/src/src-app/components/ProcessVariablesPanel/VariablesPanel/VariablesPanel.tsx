@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState, FC } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
@@ -8,12 +8,14 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 
+import VariableCopyMenu from '../VariableCopyMenu';
+
+import { GridContainer, GridTag, GridVariable
+} from './VariablesPanel.styles';
+
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
-import VariableCopyMenu from '../VariableCopyMenu';
-import { GridContainer, GridTag, GridVariable
-} from './VariablesPanel.styles';
 
 export enum VariableTag {
     VARIABLE = 'VariableTag',
@@ -65,26 +67,49 @@ const VariablesPanel = () => {
                     </IconButton>
                     {openMenuId?.menuId === name ?
                         <VariableCopyMenu 
-                            key={openMenuId?.menuId}
-                            anchorElement={openMenuId?.anchorElement} 
+                            key={openMenuId.menuId}
+                            anchorElement={openMenuId.anchorElement} 
                             handleMenuClose={handleMenuClose} 
-                            menuId={openMenuId?.menuId} 
-                            tag={tag}/>
+                            menuId={openMenuId.menuId} 
+                            tag={tag}
+                        />
                         : null}
                 </Grid>
             </GridContainer>
             <Divider />
         </Box>);
+
+    // const VariableRow = ({ name, tag }: { name: string, tag: VariableTag } ) => (
+    //     <Box key={name}>
+    //         <GridContainer container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+    //             <GridVariable item xs={5}>
+    //                 {name}
+    //             </GridVariable>
+    //             <GridTag item xs={5}>
+    //                 <Chip
+    //                     label={translate(`Process.Modeler.VariablesPanel.${tag}`).toUpperCase()}
+    //                     sx={{ bgcolor: getTagBgColor(tag), color: 'black', letterSpacing: 1.1}}
+    //                     size="medium"/>
+    //             </GridTag>
+    //             <Grid item xs={2}>
+    //                 <IconButton size="medium" onClick={(e) => handleMenuClick(e, name)}>
+    //                     <MoreVertIcon/>
+    //                 </IconButton>
+    //                 {openMenuId?.menuId === name ?
+    //                     <VariableCopyMenu 
+    //                         key={openMenuId.menuId}
+    //                         anchorElement={openMenuId.anchorElement} 
+    //                         handleMenuClose={handleMenuClose} 
+    //                         menuId={openMenuId.menuId} 
+    //                         tag={tag}
+    //                     />
+    //                     : null}
+    //             </Grid>
+    //         </GridContainer>
+    //         <Divider />
+    //     </Box>);
         
     const variables = [...globalVariables, ...attendedVariables, ...inputActionVariables];
-
-    variables.map(variable => (
-        <VariableRow key={variable.name} name={variable.name} tag={VariableTag.VARIABLE}/>
-    ));
-
-    outputActionVariables.map(variable => (
-        <VariableRow key={variable.name} name={variable.name} tag={VariableTag.ACTION_OUTPUT}/>
-    ));
 
     const allProcessVariables = [...globalVariables, ...inputActionVariables, ...outputActionVariables, ...attendedVariables];
 
@@ -95,15 +120,26 @@ const VariablesPanel = () => {
             </Typography>);
     }
 
+    // const variableElements =  variables.map(variable => (
+    //     <VariableRow key={variable.name} name={variable.name} tag={VariableTag.VARIABLE}/>
+    // )); 
+
+    // const outputVariableElements =  outputActionVariables.map(variable => (
+    //     <VariableRow key={variable.name} name={variable.name} tag={VariableTag.ACTION_OUTPUT}/>
+    // )); 
+
+    const variableElements =  variables.map(variable => 
+        VariableRow({name: variable.name, tag: VariableTag.VARIABLE}
+        )); 
+
+    const outputVariableElements = outputActionVariables.map(variable => 
+        VariableRow({name: variable.name, tag: VariableTag.ACTION_OUTPUT}
+        ));
+
     return (
         <Box>
-            {variables.map(variable => (
-                <VariableRow key={variable.name} name={variable.name} tag={VariableTag.VARIABLE}/>
-            ))}
-
-            {outputActionVariables.map(variable => (
-                <VariableRow key={variable.name} name={variable.name} tag={VariableTag.ACTION_OUTPUT}/>
-            ))}
+            {variableElements}
+            {outputVariableElements}
         </Box>
     );
 };
