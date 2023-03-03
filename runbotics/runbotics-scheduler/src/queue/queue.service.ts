@@ -113,7 +113,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async getProcessByInfo(processInfo: string | number) {
-        const process = this.processService.findByInfo(processInfo);
+        const process = await this.processService.findByInfo(processInfo);
 
         if (!process) {
             this.logger.error(`Process ${processInfo} does not exist`);
@@ -124,7 +124,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async validateProcessAccess({ process, user, triggered = false }: ValidateProcessAccessProps) {
-        const hasAccess = (process.createdBy.id === user?.id);
+        const hasAccess = process.createdBy?.id === user?.id;
         const isPublic = process.isPublic;
         const isTriggerable = process?.isTriggerable;
         const isAdmin = user?.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;

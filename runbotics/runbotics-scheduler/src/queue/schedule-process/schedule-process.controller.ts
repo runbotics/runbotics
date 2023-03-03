@@ -46,7 +46,7 @@ export class ScheduleProcessController {
             throw new BadRequestException('Wrong process id');
         }
 
-        const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process};
+        const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process };
         const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
         await this.queueService.createScheduledJob({ ...newScheduleProcess, trigger: { name: TriggerEvent.SCHEDULER } });
 

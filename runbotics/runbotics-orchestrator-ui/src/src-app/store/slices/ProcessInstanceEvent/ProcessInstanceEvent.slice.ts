@@ -3,14 +3,20 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../index';
 import buildProcessInstanceEventExtraReducers from './ProcessInstanceEvent.extraReducers';
 import * as reducers from './ProcessInstanceEvent.reducers';
-import { ProcessInstanceEventState } from './ProcessInstanceEvent.state';
+import { EventMapTypes, ProcessInstanceEventState } from './ProcessInstanceEvent.state';
 import * as processInstanceEventThunks from './ProcessInstanceEvent.thunks';
 
 export const initialState: ProcessInstanceEventState = {
     all: {
         events: [],
         nestedEvents: {},
-        eventsBreadcrumbTrail: [],
+        eventsBreadcrumbTrail: [                
+            {
+                id: 'root',
+                labelKey: 'Component.InfoPanel.Root.Breadcrumb',
+                type: EventMapTypes.ProcessInstanceEvent,
+            },
+        ],
         loading: false,
     },
 };

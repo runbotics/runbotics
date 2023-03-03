@@ -84,10 +84,8 @@ const IterationSlide: FC<IterationSlideProps> = ({
                                     {iterationGutter.iteratorElement && (
                                         <ReactJson
                                             src={{
-                                                iterator: JSON.parse(
-                                                    iterationGutter.iteratorElement ??
-                                                        '{}'
-                                                ),
+                                                iterator: 
+                                                    JSON.parse(iterationGutter.iteratorElement as string)
                                             }}
                                         />
                                     )}

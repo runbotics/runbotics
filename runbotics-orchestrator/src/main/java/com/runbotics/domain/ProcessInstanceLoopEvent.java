@@ -6,11 +6,15 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import javax.persistence.*;
 import org.hibernate.annotations.Type;
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import org.hibernate.annotations.TypeDef;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * A ProcessInstanceLoopEvent.
  */
 @Entity
+@TypeDef(name = "json", typeClass = JsonType.class)
 @Table(name = "process_instance_loop_event")
 public class ProcessInstanceLoopEvent implements Serializable {
 
@@ -68,8 +72,9 @@ public class ProcessInstanceLoopEvent implements Serializable {
     @Column(name = "loop_id")
     private String loopId;
 
+    @Type(type = "json")
     @Column(name = "iterator_element")
-    private String iteratorElement;
+    private JsonNode iteratorElement;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -123,7 +128,7 @@ public class ProcessInstanceLoopEvent implements Serializable {
         return this.loopId;
     }
 
-    public String getIteratorElement() {
+    public JsonNode getIteratorElement() {
         return this.iteratorElement;
     }
 
@@ -226,7 +231,7 @@ public class ProcessInstanceLoopEvent implements Serializable {
         this.loopId = loopId;
     }
 
-    public void setIteratorElement(String iteratorElement) {
+    public void setIteratorElement(JsonNode iteratorElement) {
         this.iteratorElement = iteratorElement;
     }
 

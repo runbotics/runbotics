@@ -28,6 +28,8 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const { translate } = useTranslations();
     const formattedStatus = capitalizeFirstLetter({ text: processInstanceEvent.status, lowerCaseRest: true, delimiter: /_| / });
     const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
+    const timeDiff = formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished);
+    const formattedTimeDiff = timeDiff ? timeDiff : `< 500${translate('Common.Time.Miliseconds.Short')}`;
     
     return (
         <GridContainer>
@@ -46,7 +48,7 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
                 <GridItem>
                     <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: '0.3125rem' }}>
                         <AccessTimeIcon />
-                        {formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished)}
+                        {formattedTimeDiff}
                     </Typography>
                 </GridItem>
             </If>

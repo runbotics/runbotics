@@ -1,0 +1,322 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="szymczakm" id="20230227082814-1">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="jhi_user_authority"
+                                        foreignKeyName="fk_user_id"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="jhi_user_authority"
+                                  constraintName="fk_user_id"
+        />
+        <addForeignKeyConstraint constraintName="fk_user_authority_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="jhi_user_authority"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-2">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                        foreignKeyName="FKrtw1gbnb035raau8lvtt6u3jf"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="schedule_process"
+                                  constraintName="FKrtw1gbnb035raau8lvtt6u3jf"
+        />
+        <addForeignKeyConstraint constraintName="fk_schedule_process_process_id"
+                                 baseColumnNames="process_id"
+                                 baseTableName="schedule_process"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-3">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                        foreignKeyName="fk_user_id"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="schedule_process"
+                                  constraintName="fk_user_id"
+        />
+        <addForeignKeyConstraint constraintName="fk_schedule_process_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="schedule_process"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-4">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                        foreignKeyName="fk_user"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="bot_collection_user"
+                                  constraintName="fk_user"
+        />
+        <addForeignKeyConstraint constraintName="fk_bot_collection_user_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="bot_collection_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-5">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                        foreignKeyName="fk_bot_collection_id"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="bot_collection_user"
+                                  constraintName="fk_bot_collection_id"
+        />
+        <addForeignKeyConstraint constraintName="fk_bot_collection_user_bot_collection_id"
+                                 baseColumnNames="bot_collection_id"
+                                 baseTableName="bot_collection_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot_collection"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-6">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="bot_collection"
+                                        foreignKeyName="fk_user_bot_collection"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="bot_collection"
+                                  constraintName="fk_user_bot_collection"
+        />
+        <addForeignKeyConstraint constraintName="fk_bot_collection_created_by"
+                                 baseColumnNames="created_by"
+                                 baseTableName="bot_collection"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-7">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="bot"
+                                        foreignKeyName="FKmv28qy0ulmu4y1f25c9h5pgu6"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="bot"
+                                  constraintName="FKmv28qy0ulmu4y1f25c9h5pgu6"
+        />
+        <addForeignKeyConstraint constraintName="fk_bot_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="bot"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-8">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <and>
+                    <foreignKeyConstraintExists foreignKeyTableName="authority_feature_key"
+                                                foreignKeyName="fk_authority"
+                    />
+                    <foreignKeyConstraintExists foreignKeyTableName="authority_feature_key"
+                                                foreignKeyName="fk_feature_key"
+                    />
+                </and>
+            </not>
+        </preConditions>
+
+        <addForeignKeyConstraint constraintName="fk_authority_feature_key_authority"
+                                 baseColumnNames="authority"
+                                 baseTableName="authority_feature_key"
+                                 referencedColumnNames="name"
+                                 referencedTableName="jhi_authority"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+        <addForeignKeyConstraint constraintName="fk_authority_feature_key_feature_key"
+                                 baseColumnNames="feature_key"
+                                 baseTableName="authority_feature_key"
+                                 referencedColumnNames="name"
+                                 referencedTableName="feature_key"
+                                 validate="true"
+        />
+        <addPrimaryKey tableName="authority_feature_key"
+                       columnNames="authority, feature_key"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-9">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="global_variable"
+                                        foreignKeyName="FKbgeem12f1de73tsvbf4m1ldjr"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="global_variable"
+                                  constraintName="FKbgeem12f1de73tsvbf4m1ldjr"
+        />
+        <addForeignKeyConstraint constraintName="fk_global_variable_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="global_variable"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-10">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                        foreignKeyName="FK2gdkasch5mc74enn7r95jlndn"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="process_instance"
+                                  constraintName="FK2gdkasch5mc74enn7r95jlndn"
+        />
+        <addForeignKeyConstraint constraintName="fk_process_instance_process_id"
+                                 baseColumnNames="process_id"
+                                 baseTableName="process_instance"
+                                 referencedColumnNames="id"
+                                 referencedTableName="process"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-11">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                        foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="process_instance"
+                                  constraintName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
+        />
+        <addForeignKeyConstraint constraintName="fk_process_instance_bot_id"
+                                 baseColumnNames="bot_id"
+                                 baseTableName="process_instance"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bot"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-12">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                        foreignKeyName="fk_process_instance_user_id"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="process_instance"
+                                  constraintName="fk_process_instance_user_id"
+        />
+        <addForeignKeyConstraint constraintName="fk_process_instance_user_id"
+                                 baseColumnNames="user_id"
+                                 baseTableName="process_instance"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-13">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                        foreignKeyName="fk_process_trigger"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="process_instance"
+                                  constraintName="fk_process_trigger"
+        />
+        <addForeignKeyConstraint constraintName="fk_process_instance_trigger_event"
+                                 baseTableName="process_instance"
+                                 baseColumnNames="trigger"
+                                 referencedTableName="trigger_event"
+                                 referencedColumnNames="name"
+                                 validate="true"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-14">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="process"
+                                        foreignKeyName="fk_process_created_by_id"
+            />
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="process"
+                                  constraintName="fk_process_created_by_id"
+        />
+        <addForeignKeyConstraint constraintName="fk_process_created_by_id"
+                                 baseColumnNames="created_by_id"
+                                 baseTableName="process"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="SET NULL"
+        />
+    </changeSet>
+
+</databaseChangeLog>
