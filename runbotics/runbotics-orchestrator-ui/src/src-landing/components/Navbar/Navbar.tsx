@@ -54,7 +54,7 @@ const Navbar: FC<NavbarProps> = ({
                         {translate('Landing.Header.Nav.Option.RPA')}
                     </Link>
                 </li>
-                <li className={styles.listItem}>
+                {/* <li className={styles.listItem}>
                     <Link
                         href={`#${INDUSTRY_SECTORS_SECTION_ID}`}
                         className={styles.link}
@@ -63,8 +63,8 @@ const Navbar: FC<NavbarProps> = ({
                     >
                         {translate('Landing.Header.Nav.Option.ForWho')}
                     </Link>
-                </li>
-                <li className={styles.listItem}>
+                </li> */}
+                {/* <li className={styles.listItem}>
                     <Link
                         href={`#${TEMPLATE_SECTION_ID}`}
                         className={styles.link}
@@ -75,7 +75,7 @@ const Navbar: FC<NavbarProps> = ({
                             'Landing.Header.Nav.Option.Resources'
                         )}
                     </Link>
-                </li>
+                </li> */}
                 <li className={styles.listItem}>
                     <Link
                         href={`#${INTEGRATION_SECTION_ID}`}
