@@ -14,7 +14,6 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 
 $LABEL-TRANSFORM-Y: -25px;
 
-
 .label {
     @include font-face-roboto;
     position: absolute;
@@ -40,15 +39,19 @@ $LABEL-TRANSFORM-Y: -25px;
     background: #fff;
     color: $text-color-dark;
     caret-color: $palette-accent-primary;
-    
+
     &:focus {
         border-color: $palette-accent-primary;
         outline: none;
         background: $palette-background-primary;
-        
-        ~ .label {
+
+        ~.label {
             color: $palette-accent-primary;
         }
+    }
+
+    &:disabled {
+        color: $text-color-disabled;
     }
 }
 
@@ -118,5 +121,10 @@ $LABEL-TRANSFORM-Y: -25px;
 
     &:hover {
         background-color: $palette-background-accent-dark;
+    }
+
+    &:disabled {
+        background-color: $palette-background-disabled;
+        color: $text-color-dark;
     }
 }

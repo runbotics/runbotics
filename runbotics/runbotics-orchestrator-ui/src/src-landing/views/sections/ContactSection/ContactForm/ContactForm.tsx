@@ -4,7 +4,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import axios from '#src-app/utils/axios';
 
 import styles from './ContactForm.module.scss';
-import { FormState, InputProps, Status } from './ContactForm.types';
+import {
+    FormState,
+    FormStatusType,
+    InputProps,
+    Status,
+} from './ContactForm.types';
 import { initialFormState, validate } from './ContactForm.utils';
 import FormButtonGroup from './FormButtonGroup';
 import { FormCheckbox, FormInput, FormTextarea } from './FormFields';
@@ -56,27 +61,30 @@ const ContactForm: FC = () => {
         if (!validate(formState, REQUIRED_FIELDS)) {
             setStatus({
                 text: 'Landing.Contact.Form.Fill.Fields',
-                type: 'error',
+                type: FormStatusType.ERROR,
             });
             return;
         }
         setStatus((prev) => ({
             ...prev,
-            type: 'loading',
+            type: FormStatusType.LOADING,
         }));
         await axios
             .post('/api/contact', formState)
             .then(() => {
                 setStatus({
                     text: 'Landing.Contact.Form.Success',
-                    type: 'success',
+                    type: FormStatusType.SUCCESS,
                 });
-                setFormState((prev) => ({ ...prev, status: 'sent' }));
+                setFormState((prev) => ({
+                    ...prev,
+                    status: FormStatusType.SUCCESS,
+                }));
             })
             .catch(() => {
                 setStatus({
                     text: 'Landing.Contact.Form.Error',
-                    type: 'error',
+                    type: FormStatusType.ERROR,
                 });
             });
     };
@@ -95,7 +103,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleInputChanged}
                         value={formState.name}
-                        disabled={status?.type === 'success'}
+                        disabled={status?.type === FormStatusType.SUCCESS}
                         placeholder={translate(
                             'Landing.Contact.Form.Name.Placeholder'
                         )}
@@ -108,7 +116,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleInputChanged}
                         value={formState.company}
-                        disabled={status?.type === 'success'}
+                        disabled={status?.type === FormStatusType.SUCCESS}
                         placeholder={translate(
                             'Landing.Contact.Form.Company.Placeholder'
                         )}
@@ -121,7 +129,7 @@ const ContactForm: FC = () => {
                         type="email"
                         onChange={handleInputChanged}
                         value={formState.email}
-                        disabled={status?.type === 'success'}
+                        disabled={status?.type === FormStatusType.SUCCESS}
                         placeholder={translate(
                             'Landing.Contact.Form.Email.Placeholder'
                         )}
@@ -134,7 +142,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleTextareaChanged}
                         value={formState.message}
-                        disabled={status?.type === 'success'}
+                        disabled={status?.type === FormStatusType.SUCCESS}
                         placeholder={translate(
                             'Landing.Contact.Form.Message.Placeholder'
                         )}
@@ -147,7 +155,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Checkbox')}
                         type="checkbox"
                         onChange={handleCheckboxChanged}
-                        disabled={status?.type === 'success'}
+                        disabled={status?.type === FormStatusType.SUCCESS}
                         checked={formState.checkbox}
                     />
                     <FormButtonGroup status={status} />

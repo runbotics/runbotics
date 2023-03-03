@@ -19,8 +19,13 @@ export interface FormState {
     checkbox: boolean;
     message: string;
 }
-
+export enum FormStatusType {
+    ERROR = 'error',
+    SUCCESS = 'success',
+    DISABLED = 'disabled',
+    LOADING = 'loading',
+}
 export interface Status {
-    type: 'error' | 'success' | 'disabled' | 'loading';
+    type: FormStatusType;
     text: keyof typeof ContactTranslation;
 }
