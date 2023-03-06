@@ -3,6 +3,6 @@ import { FieldProps, SetValueNumbersOrUndefined } from '#src-app/components/cron
 export interface NthWeekDaysSelectProps extends Omit<FieldProps, 'setValue'> {
     humanizeLabels: boolean;
     setValue: SetValueNumbersOrUndefined;
-    isAnyWeekDaySelected: boolean;
+    isOneWeekDaySelected: boolean;
     isMonthPeriodDisplayed: boolean;
 }

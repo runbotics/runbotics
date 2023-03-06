@@ -64,11 +64,11 @@ const DEFAULT_LOCALE_EN: DefaultLocale = {
     ],
     nthMonthDays: [
         translate('Component.Cron.Locale.MonthDays.Last'),
-        translate('Component.Cron.Locale.MonthDays.LastWeekday'),
+        // translate('Component.Cron.Locale.MonthDays.LastWeekday'), // bull depends on cron-parser which doesn't support this yet
     ],
     altNthMonthDays: [
         translate('Component.Cron.Locale.AltMonthDays.Last'),
-        translate('Component.Cron.Locale.AltMonthDays.LastWeekday'),
+        // translate('Component.Cron.Locale.AltMonthDays.LastWeekday'), // bull depends on cron-parser which doesn't support this yet
     ],
     altWeekDays: [
         translate('Component.Cron.Locale.AltWeekDays.Sunday'), // Sunday must always be first, it's "0"
