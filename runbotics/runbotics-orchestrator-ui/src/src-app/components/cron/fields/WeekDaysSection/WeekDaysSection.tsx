@@ -41,7 +41,7 @@ const WeekDaysSection: FC<WeekDaysSectionProps> = ({
                 disabled={disabled}
                 readOnly={readOnly}
                 period={periodForRender}
-                isAnyWeekDaySelected={weekDays?.length > 0}
+                isOneWeekDaySelected={weekDays?.length === 1}
                 isMonthPeriodDisplayed={isMonthPeriodDisplayed}
             />
         </If>

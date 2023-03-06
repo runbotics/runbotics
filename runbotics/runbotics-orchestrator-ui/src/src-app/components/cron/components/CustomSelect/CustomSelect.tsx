@@ -89,19 +89,16 @@ const CustomSelect: FC<CustomSelectProps> = ({
 
     const simpleClick = useCallback(
         (event) => {
-            let newValueOption: number[] = event.target.value;
-            if (newValueOption.length === 0) 
-            { newValueOption.push(0); }
-            
-            newValueOption = Array.isArray(newValueOption) ? sort(newValueOption) : [newValueOption];
-            const newValue: number[] = newValueOption;
-            if (newValue.length === unit.total) 
-            { setValue([]); }
-            else 
-            { setValue(newValue); }
-            
+            const newValue = event.target.value;
+
+            if(Array.isArray(newValue)) {
+                const newArray = sort(newValue);
+                newValue.length === unit.total ? setValue([]) : setValue(newArray);
+            } else {
+                newValue === value[0] ? setValue([]) : setValue([newValue]);
+            }
         },
-        [setValue, unit.total],
+        [setValue, unit.total, value],
     );
 
     return (
