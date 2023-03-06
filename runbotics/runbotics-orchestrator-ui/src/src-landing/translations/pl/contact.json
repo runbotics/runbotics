@@ -7,6 +7,7 @@
     "Landing.Contact.Info.Email.IconAlt": "email",
     "Landing.Contact.Info.Github.Text": "https://github.com/runbotics/runbotics",
     "Landing.Contact.Info.Github.IconAlt": "github",
+    "Landing.Contact.Form.Name": "Name",
     "Landing.Contact.Form.Name.Placeholder": "Write your First and Last Name",
     "Landing.Contact.Form.Email": "Email",
     "Landing.Contact.Form.Email.Placeholder": "Your email",
@@ -23,3 +24,4 @@
     "Landing.Contact.Form.Error": "Error sending email",
     "Landing.Contact.Form.Fill.Fields": "Please fill all required fields"
 }
+
