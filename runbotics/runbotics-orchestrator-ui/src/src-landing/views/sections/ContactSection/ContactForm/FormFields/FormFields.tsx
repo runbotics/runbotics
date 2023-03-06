@@ -8,7 +8,7 @@ export const FormInput: FC<FormInputProps<HTMLInputElement>> = (props) => (
     <>
         <input
             className={styles.input}
-            placeholder={props.placeholder ?? ' '}
+            placeholder={props.placeholder}
             {...props}
             name={props.name}
             id={props.name}
@@ -28,7 +28,7 @@ export const FormTextarea: FC<FormInputProps<HTMLTextAreaElement>> = (
     <>
         <textarea
             className={styles.textarea}
-            placeholder={props.placeholder ?? ' '}
+            placeholder={props.placeholder}
             {...props}
             name={props.name}
             id={props.name}
@@ -46,7 +46,7 @@ export const FormCheckbox: FC<CheckboxProps> = (props) => (
     <div className={styles.checkboxWrapper}>
         <input
             className={styles.checkbox}
-            placeholder={props.placeholder ?? ' '}
+            placeholder={props.placeholder}
             disabled={props.disabled}
             {...props}
             name={props.name}
@@ -63,7 +63,6 @@ export const FormCheckbox: FC<CheckboxProps> = (props) => (
 export const FormButton: FC<SubmitProps> = (props) => (
     <input
         className={styles.submit}
-        placeholder={props.placeholder ?? ' '}
         {...props}
         name="submit"
         id="submit"

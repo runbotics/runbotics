@@ -2,7 +2,7 @@
 
 .reset {
     composes: submit from '../FormFields/FormFields.module.scss';
-    padding: $padding-2;
-    justify-self: end;
     display: flex;
+    justify-self: end;
+    padding: $padding-2;
 }

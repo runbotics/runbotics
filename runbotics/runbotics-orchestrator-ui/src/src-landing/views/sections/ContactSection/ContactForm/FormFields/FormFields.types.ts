@@ -8,7 +8,7 @@ export interface FormInputProps<T> extends HTMLAttributes<T> {
     name: keyof FormState;
     value: string;
     placeholder?: string;
-    disabled?: boolean;
+    disabled: boolean;
 }
 
 export interface CheckboxProps
@@ -17,4 +17,4 @@ export interface CheckboxProps
 }
 
 export interface SubmitProps
-    extends Omit<FormInputProps<HTMLInputElement>, 'name' | 'value'> {}
+    extends Omit<FormInputProps<HTMLInputElement>, 'name' | 'value' | 'placeholder'> {}

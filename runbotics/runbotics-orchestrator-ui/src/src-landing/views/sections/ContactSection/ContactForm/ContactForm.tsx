@@ -89,6 +89,8 @@ const ContactForm: FC = () => {
             });
     };
 
+    const isFormSubmitted = status?.type === FormStatusType.SUCCESS;
+    
     return (
         <div className={styles.root}>
             <form
@@ -103,7 +105,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleInputChanged}
                         value={formState.name}
-                        disabled={status?.type === FormStatusType.SUCCESS}
+                        disabled={isFormSubmitted}
                         placeholder={translate(
                             'Landing.Contact.Form.Name.Placeholder'
                         )}
@@ -116,7 +118,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleInputChanged}
                         value={formState.company}
-                        disabled={status?.type === FormStatusType.SUCCESS}
+                        disabled={isFormSubmitted}
                         placeholder={translate(
                             'Landing.Contact.Form.Company.Placeholder'
                         )}
@@ -129,7 +131,7 @@ const ContactForm: FC = () => {
                         type="email"
                         onChange={handleInputChanged}
                         value={formState.email}
-                        disabled={status?.type === FormStatusType.SUCCESS}
+                        disabled={isFormSubmitted}
                         placeholder={translate(
                             'Landing.Contact.Form.Email.Placeholder'
                         )}
@@ -142,7 +144,7 @@ const ContactForm: FC = () => {
                         type="text"
                         onChange={handleTextareaChanged}
                         value={formState.message}
-                        disabled={status?.type === FormStatusType.SUCCESS}
+                        disabled={isFormSubmitted}
                         placeholder={translate(
                             'Landing.Contact.Form.Message.Placeholder'
                         )}
@@ -155,7 +157,7 @@ const ContactForm: FC = () => {
                         labelValue={translate('Landing.Contact.Form.Checkbox')}
                         type="checkbox"
                         onChange={handleCheckboxChanged}
-                        disabled={status?.type === FormStatusType.SUCCESS}
+                        disabled={isFormSubmitted}
                         checked={formState.checkbox}
                     />
                     <FormButtonGroup status={status} />
