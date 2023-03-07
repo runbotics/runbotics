@@ -21,7 +21,7 @@ const ManageProcessForm: VFC = () => {
     const closeModal = () => setModalOpen(false);
 
     const handleSubmit = async (executionInfoSchema: string) => {
-        await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: executionInfoSchema }))
+        await dispatch(processActions.partialUpdateProcess({ id: process.id, executionInfo: executionInfoSchema }))
             .unwrap()
             .then(() => {
                 enqueueSnackbar(

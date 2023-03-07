@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 
-import { Box, Button, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+
 import RouterLink from 'next/link';
 import styled from 'styled-components';
 
@@ -12,7 +14,6 @@ const PREFIX = 'NotFoundView';
 
 const classes = {
     root: `${PREFIX}-root`,
-    image: `${PREFIX}-image`,
 };
 
 const StyledPage = styled(Page)(({ theme }) => ({
@@ -25,13 +26,6 @@ const StyledPage = styled(Page)(({ theme }) => ({
         paddingTop: 80,
         paddingBottom: 80,
     },
-
-    [`& .${classes.image}`]: {
-        maxWidth: '100%',
-        width: 560,
-        maxHeight: 300,
-        height: 'auto',
-    },
 }));
 
 const NotFoundView: FC = () => {
@@ -43,7 +37,7 @@ const NotFoundView: FC = () => {
         <StyledPage className={classes.root} title={translate('Error404.Meta.Title')}>
             <Container maxWidth="lg">
                 <Box mt={0} display="flex" justifyContent="center">
-                    <Logo className={classes.image} simple />
+                    <Logo height={150} simple />
                 </Box>
                 <Typography align="center" variant={mobileDevice ? 'h4' : 'h1'} color="textPrimary">
                     {translate('Error404.View.Title')}
