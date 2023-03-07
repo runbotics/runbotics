@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
@@ -14,9 +14,15 @@ const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({
     disabled, 
     readOnly, 
     period,
-    isAnyWeekDaySelected,
+    isOneWeekDaySelected,
 }) => {
     const optionsList = locale.nthWeekDays || DEFAULT_LOCALE_EN.nthWeekDays;
+
+    useEffect(() => {
+        if(!isOneWeekDaySelected) {
+            setValue([]); 
+        }
+    }, [isOneWeekDaySelected, setValue]);
 
     return (
         <CustomSelect
@@ -31,7 +37,7 @@ const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({
             setValue={setValue}
             locale={locale}
             humanizeLabels={humanizeLabels}
-            disabled={disabled || !isAnyWeekDaySelected}
+            disabled={disabled || !isOneWeekDaySelected}
             readOnly={readOnly}
             isMultiple={false}
         />
