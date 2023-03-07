@@ -48,6 +48,7 @@ const Account: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
+
     const handleOpen = (): void => {
         setOpen(true);
     };
@@ -59,8 +60,7 @@ const Account: FC = () => {
     const handleLogout = async () => {
         try {
             handleClose();
-            dispatch(logout());
-            await router.replace('/');
+            await dispatch(logout());
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
                 variant: 'error',
@@ -70,7 +70,7 @@ const Account: FC = () => {
 
     if (!auth.isAuthenticated) {
         return (
-            <RouterLink href="/login" passHref legacyBehavior>
+            <RouterLink href="/" passHref legacyBehavior>
                 <Link className={classes.link} underline="none" variant="body2">
                     {translate('Account.SignIn')}
                 </Link>

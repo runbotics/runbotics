@@ -13,7 +13,7 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[]) => (pro
     const isBrowser = typeof window !== 'undefined';
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
     if (!isAuthenticated){
-        router.replace('/login');
+        router.replace('/');
     };
     if (isAuthenticated) {
         if (!featureKeys || hasFeatureKeyAccess(user, featureKeys)){

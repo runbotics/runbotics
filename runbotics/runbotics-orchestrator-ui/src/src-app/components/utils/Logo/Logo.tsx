@@ -1,13 +1,15 @@
 import type { FC } from 'react';
+
 import Image from 'next/image';
 
 interface LogoProps {
+    height?: number;
     white?: boolean;
     simple?: boolean;
-    className?: string;
 }
-const LOGO_WIDTH = 177;
+
 const LOGO_HEIGHT = 48;
+const LOGO_WIDTH_RATIO = 3.5;
 const ALT_TEXT = 'Runbotics logo';
 
 const Logo: FC<LogoProps> = (props) => {
@@ -18,16 +20,18 @@ const Logo: FC<LogoProps> = (props) => {
     const logoSource = props.simple
         ? '/images/runBoticsLogo/logo-rectangle-white.svg'
         : customLogoSource;
+    
+    const height = props.height ?? LOGO_HEIGHT;
 
     return (
-        <Image className={props.className}
-               priority
-               src={logoSource}
-               height={LOGO_HEIGHT}
-               width={LOGO_WIDTH}
-               alt={ALT_TEXT}
+        <Image
+            priority
+            src={logoSource}
+            width={height * LOGO_WIDTH_RATIO}
+            height={height}
+            alt={ALT_TEXT}
         />
     );
-}
+};
 
 export default Logo;
