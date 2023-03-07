@@ -1,3 +1,4 @@
+import { isValidJson } from '#src-app/views/action/ActionDetails';
 import { AdditionalInfo } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
 
 interface ExtractImportInfoProps extends AdditionalInfo {
@@ -17,7 +18,7 @@ const useProcessImport = () => {
             return { definition: xmlString };
         }
 
-        const importInfo: { definition: string } & AdditionalInfo = {
+        const importInfo: ExtractImportInfoProps = {
             definition: '',
         };
 
@@ -31,7 +32,7 @@ const useProcessImport = () => {
 
         const system = parsed.getElementsByTagName('runbotics:system')[0];
 
-        if (system) {
+        if (isValidJson(system?.innerHTML)) {
             importInfo.system = JSON.parse(system.innerHTML);
         }
 
