@@ -12,6 +12,7 @@ import {
     PARTNER_SECTION_ID,
     TEMPLATE_SECTION_ID,
     CONTACT_US_SECTION_ID,
+    PROS_SECTION_ID,
 } from '#src-landing/utils/utils';
 
 import styles from './Navbar.module.scss';
@@ -55,6 +56,18 @@ const Navbar: FC<NavbarProps> = ({
                     </Link>
                 </li>
                 {/* <li className={styles.listItem}>
+                    <Link
+                        href={`#${PROS_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate(
+                            'Landing.Header.Nav.Option.Pros'
+                        )}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
                     <Link
                         href={`#${INDUSTRY_SECTORS_SECTION_ID}`}
                         className={styles.link}
