@@ -69,13 +69,13 @@ const LoginPage: FC = () => {
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink href="/" legacyBehavior>
-                        <Logo simple className={classes.logo} />
+                    <RouterLink href="/">
+                        <Logo simple className={classes.logo}/>
                     </RouterLink>
                 </Box>
                 <Card>
                     <CardContent className={classes.content}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
+                        <Box alignItems="center" display="flex" justifyContent="center" mb={1}>
                             <Typography color="textPrimary" gutterBottom variant="h2">
                                 {translate('Login.SignIn')}
                             </Typography>
@@ -166,7 +166,7 @@ const LoginPage: FC = () => {
                             <Divider />
                         </Box>
                         <RouterLink href="/register" passHref legacyBehavior>
-                            <Link variant="body2" color="textSecondary">
+                            <Link sx={{ textAlign: 'center' }} variant="body2" color="textSecondary">
                                 {translate('Login.SwitchToRegisterMessage')}
                             </Link>
                         </RouterLink>

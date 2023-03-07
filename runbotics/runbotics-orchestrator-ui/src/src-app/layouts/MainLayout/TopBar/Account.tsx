@@ -56,11 +56,11 @@ const Account: FC = () => {
         setOpen(false);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
             handleClose();
             dispatch(logout());
-            router.push('/login');
+            await router.replace('/');
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
                 variant: 'error',
@@ -68,14 +68,15 @@ const Account: FC = () => {
         }
     };
 
-    if (!auth.isAuthenticated)
-    { return (
-        <RouterLink href="/login" passHref legacyBehavior>
-            <Link className={classes.link} underline="none" variant="body2">
-                {translate('Account.SignIn')}
-            </Link>
-        </RouterLink>
-    ); }
+    if (!auth.isAuthenticated) {
+        return (
+            <RouterLink href="/login" passHref legacyBehavior>
+                <Link className={classes.link} underline="none" variant="body2">
+                    {translate('Account.SignIn')}
+                </Link>
+            </RouterLink>
+        );
+    }
 
     return (
         <Root>
