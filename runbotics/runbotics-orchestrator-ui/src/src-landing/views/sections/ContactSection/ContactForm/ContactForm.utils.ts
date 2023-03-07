@@ -3,9 +3,7 @@ import { FormState } from '#src-landing/views/sections/ContactSection/ContactFor
 export const validate = (
     form: FormState,
     requiredFields: (keyof FormState)[]
-) =>
-    requiredFields.every((field) => form[field]);
-
+) => requiredFields.every((field) => form[field]);
 
 export const initialFormState: FormState = {
     name: '',
