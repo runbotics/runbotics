@@ -185,13 +185,6 @@
                                  referencedTableName="feature_key"
                                  validate="true"
         />
-        <dropIndex tableName="authority_feature_key"
-                   indexName="feature_key_authority_index"
-        />
-        <addPrimaryKey tableName="authority_feature_key"
-                       columnNames="authority, feature_key"
-                       constraintName="authority_feature_key_primary_key"
-        />
     </changeSet>
 
     <changeSet author="szymczakm" id="20230227082814-9">
