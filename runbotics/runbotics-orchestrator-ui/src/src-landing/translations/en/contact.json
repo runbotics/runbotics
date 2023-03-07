@@ -15,11 +15,12 @@
     "Landing.Contact.Form.Message.Placeholder": "Write here the message and questions you have for us.",
     "Landing.Contact.Form.Company": "Company (optional)",
     "Landing.Contact.Form.Company.Placeholder": "Tell us where are you working",
-    "Landing.Contact.Form.Checkbox": "Contrary to popular belief, Lorem Ipsum is not simplyrandom text. It has roots in a piece of classicaln contrary to popular belief, Lorem Ipsum",
     "Landing.Contact.Form.Submit.Default": "Send message",
     "Landing.Contact.Form.Submit.Sent": "Message sent",
     "Landing.Contact.Form.Submit.Error": "Error sending message",
     "Landing.Contact.Form.Submit.Loading": "Sending...",
+    "Landing.Contact.Form.Checkbox": "Clicking \"Submit\" signifies that you permit the processing of your personal data.",
+    "Landing.Contact.Form.Submit": "Submit",
     "Landing.Contact.Form.Success": "Email sent successfully",
     "Landing.Contact.Form.Error": "Error sending email",
     "Landing.Contact.Form.Fill.Fields": "Please fill all required fields"
