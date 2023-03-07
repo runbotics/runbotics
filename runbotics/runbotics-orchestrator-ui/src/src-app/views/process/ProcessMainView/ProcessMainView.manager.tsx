@@ -3,7 +3,6 @@ import React, { VFC, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-
 import If from '#src-app/components/utils/If';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
@@ -11,8 +10,9 @@ import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessConfigureView from '../ProcessConfigureView';
 
-
-const ProcessBuildView = dynamic(() => import('../ProcessBuildView'), { ssr: false });
+const ProcessBuildView = dynamic(() => import('../ProcessBuildView'), {
+    ssr: false,
+});
 const ProcessRunView = dynamic(() => import('../ProcessRunView'));
 
 const ProcessMainViewManager: VFC = () => {
@@ -26,7 +26,7 @@ const ProcessMainViewManager: VFC = () => {
 
         dispatch(processActions.fetchProcessById(processId));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [processId]);
+    }, [processId, tab]);
 
     return (
         <>

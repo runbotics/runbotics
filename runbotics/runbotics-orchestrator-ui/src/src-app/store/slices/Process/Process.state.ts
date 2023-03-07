@@ -29,6 +29,7 @@ export interface ModelerState {
     selectedAction?: IBpmnAction;
     passedInVariables?: string[];
     commandStack: CommandStackInfo;
+    imported: boolean;
 }
 
 export interface ProcessState {

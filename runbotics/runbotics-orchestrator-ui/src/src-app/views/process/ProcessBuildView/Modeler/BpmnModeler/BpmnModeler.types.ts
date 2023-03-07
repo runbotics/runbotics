@@ -10,7 +10,7 @@ export interface ModelerProps {
     offsetTop: number | null;
     process: IProcess;
     onSave: () => void;
-    onImport: (definition: string) => void;
+    onImport: (definition: string, additionalInfo: AdditionalInfo) => void;
     onExport: () => void;
 }
 
@@ -36,6 +36,12 @@ export interface ModelerRegistryElement {
 export interface ModelerHTMLCanvasElement extends HTMLCanvasElement {
     zoom: (precition: string, scale: string) => void;
     viewbox: (opts?: ModelerViewboxOpts) => ModelerViewboxResult;
+}
+export interface AdditionalInfo {
+    executionInfo?: IProcess['executionInfo'];
+    isAttended?: IProcess['isAttended'];
+    isTriggerable?: IProcess['isTriggerable'];
+    system?: IProcess['system'];
 }
 
 export enum ModelerEvent {
@@ -284,6 +290,5 @@ export enum ModelerEvent {
     PROPERTIESPANEL_PROVIDERSCHANGED = 'propertiesPanel.providersChanged',
     CANVAS_RESIZED = 'canvas.resized',
     IMPORT_PARSE_COMPLETE = 'import.parse.complete',
-    COMMANDSTACK_CONNECTION_DELETE_POSTEXECUTED = 'commandStack.connection.delete.postExecuted'
-
+    COMMANDSTACK_CONNECTION_DELETE_POSTEXECUTED = 'commandStack.connection.delete.postExecuted',
 }

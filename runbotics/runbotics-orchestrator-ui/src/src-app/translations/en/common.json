@@ -17,6 +17,7 @@
     "Common.Yes": "Yes",
     "Common.No": "No",
     "Common.Import": "Import",
+    "Common.Import.Invalid.Extension": "Incorrect file extension (use: {{ extensions }})",
     "Common.Export": "Export",
     "Common.True": "True",
     "Common.False": "False",

@@ -21,6 +21,7 @@ export const initialModelerState: ModelerState = {
         commandStackIdx: -1,
     },
     passedInVariables: [],
+    imported: false,
 };
 
 export const initialState: ProcessState = {
@@ -39,7 +40,6 @@ export const initialState: ProcessState = {
     },
 };
 
-
 export const slice = createSlice({
     name: 'process',
     initialState,
@@ -50,7 +50,8 @@ export const slice = createSlice({
 export const processReducer = slice.reducer;
 
 export const processSelector = (state: RootState) => state.process;
-export const currentProcessSelector = (state: RootState) => state.process.draft.process;
+export const currentProcessSelector = (state: RootState) =>
+    state.process.draft.process;
 
 export const processActions = {
     ...slice.actions,

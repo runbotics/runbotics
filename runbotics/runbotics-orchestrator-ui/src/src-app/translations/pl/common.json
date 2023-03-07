@@ -17,6 +17,7 @@
     "Common.Yes": "Tak",
     "Common.No": "Nie",
     "Common.Import": "Importuj",
+    "Common.Import.Invalid.Extension": "Nie poprawne rozszerzenie (użyj: {{ extensions }})",
     "Common.Export": "Exportuj",
     "Common.True": "Prawda",
     "Common.False": "Fałsz",
