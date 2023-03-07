@@ -185,12 +185,32 @@
                                  referencedTableName="feature_key"
                                  validate="true"
         />
+        <dropIndex tableName="authority_feature_key"
+                   indexName="feature_key_authority_index"
+        />
         <addPrimaryKey tableName="authority_feature_key"
                        columnNames="authority, feature_key"
+                       constraintName="authority_feature_key_primary_key"
         />
     </changeSet>
 
     <changeSet author="szymczakm" id="20230227082814-9">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="authority_feature_key"
+                         indexName="feature_key_authority_index"
+            />
+        </preConditions>
+
+        <dropIndex tableName="authority_feature_key"
+                   indexName="feature_key_authority_index"
+        />
+        <addPrimaryKey tableName="authority_feature_key"
+                       columnNames="authority, feature_key"
+                       constraintName="authority_feature_key_primary_key"
+        />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230227082814-10">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="global_variable"
                                         foreignKeyName="FKbgeem12f1de73tsvbf4m1ldjr"
@@ -212,7 +232,7 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230227082814-10">
+    <changeSet author="szymczakm" id="20230227082814-11">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="process_instance"
                                         foreignKeyName="FK2gdkasch5mc74enn7r95jlndn"
@@ -234,7 +254,7 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230227082814-11">
+    <changeSet author="szymczakm" id="20230227082814-12">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="process_instance"
                                         foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
@@ -256,7 +276,7 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230227082814-12">
+    <changeSet author="szymczakm" id="20230227082814-13">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="process_instance"
                                         foreignKeyName="fk_process_instance_user_id"
@@ -278,7 +298,7 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230227082814-13">
+    <changeSet author="szymczakm" id="20230227082814-14">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="process_instance"
                                         foreignKeyName="fk_process_trigger"
@@ -297,7 +317,7 @@
         />
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230227082814-14">
+    <changeSet author="szymczakm" id="20230227082814-15">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyTableName="process"
                                         foreignKeyName="fk_process_created_by_id"
