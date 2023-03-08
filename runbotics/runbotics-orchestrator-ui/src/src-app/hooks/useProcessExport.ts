@@ -17,7 +17,7 @@ const useProcessExport = () => {
                 ${process.executionInfo}
             </runbotics:executionInfo>
           </runbotics:attendedForm>
-      </runbotics:additionalInfo>`;
+      </runbotics:additionalInfo>\n`;
 
     const createRbexFile = (definition: string, process: IProcess) => {
         const endOfDefinition = definition.indexOf('</bpmn2:definitions>');

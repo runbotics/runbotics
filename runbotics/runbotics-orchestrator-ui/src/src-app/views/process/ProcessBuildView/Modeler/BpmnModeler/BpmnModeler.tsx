@@ -63,7 +63,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
-        const { modelerListener } = useModelerListener({ setCurrentTab });
+        const { modelerListener, validateUnknownElement } = useModelerListener({
+            setCurrentTab,
+        });
 
         const {
             isSaveDisabled,
@@ -232,7 +234,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 onExport={onExport}
                                 onImport={(e, additionalInfo) => {
                                     onImport(e, additionalInfo);
-                                    dispatch(processActions.setImported(true));
+                                    setTimeout(() => {
+                                        const { _elements } =
+                                        modeler.get('elementRegistry');
+                                        validateUnknownElement(
+                                            _elements,
+                                            modeler
+                                        );
+                                        dispatch(processActions.setImported(true));
+                                    }, 200);
                                 }}
                             />
                             <ModelerToolboxPanel

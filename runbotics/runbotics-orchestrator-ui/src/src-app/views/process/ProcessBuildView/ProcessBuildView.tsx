@@ -75,6 +75,7 @@ const ProcessBuildView: FC = () => {
         definition: string,
         additionalInfo: AdditionalInfo
     ) => {
+        dispatch(processActions.clearErrors());
         dispatch(
             processActions.setDraft({
                 process: {
@@ -84,7 +85,6 @@ const ProcessBuildView: FC = () => {
                 },
             })
         );
-        dispatch(processActions.clearErrors());
     };
 
     const handleExport = async () => {
