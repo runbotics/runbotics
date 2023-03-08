@@ -38,7 +38,7 @@ export class ProcessSchedulerService {
         input: ProcessInput,
         orchestratorProcessInstanceId: string,
     ) {
-        if (!process.isAttended || process.schedules.length > 0)
+        if (!process.isAttended || process.schedules?.length > 0)
             return Promise.resolve({});
 
         const uiSchema = JSON.parse(process.executionInfo).uiSchema;

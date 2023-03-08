@@ -73,7 +73,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendedance({ ...process, isAttended })
+            processActions.updateAttendedance({ id: process.id, isAttended })
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -81,7 +81,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(
-            processActions.updateTriggerable({ ...process, isTriggerable })
+            processActions.updateTriggerable({ id: process.id, isTriggerable })
         );
         setTriggerable(isTriggerable);
         await fetchProcess();

@@ -56,7 +56,7 @@ function App(props: AppProps) {
     return (
         <div style={{ height: '100%' }}>
             <Head>
-                <title>Runbotics</title>
+                <title>RunBotics</title>
             </Head>
             <CacheProvider value={emotionCache}>
                 <Provider store={store}>

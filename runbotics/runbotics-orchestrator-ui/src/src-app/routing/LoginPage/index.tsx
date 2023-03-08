@@ -53,11 +53,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(3),
-        minHeight: 450,
-    },
-
-    [`& .${classes.logo}`]: {
-        width: '18rem',
+        minHeight: 400,
     },
 }));
 
@@ -65,22 +61,26 @@ const LoginPage: FC = () => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
+
     return (
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="sm">
-                <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink href="/" legacyBehavior>
-                        <Logo simple className={classes.logo} />
+                <Box mb={6} display="flex" justifyContent="center">
+                    <RouterLink href="/">
+                        <Logo
+                            simple
+                            height={100}
+                        />
                     </RouterLink>
                 </Box>
                 <Card>
                     <CardContent className={classes.content}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={1}>
+                        <Box alignItems="center" display="flex" justifyContent="center" mb={0}>
                             <Typography color="textPrimary" gutterBottom variant="h2">
                                 {translate('Login.SignIn')}
                             </Typography>
                         </Box>
-                        <Box flexGrow={1} mt={1}>
+                        <Box flexGrow={1} mt={3}>
                             <Formik
                                 initialValues={{
                                     email: '',
@@ -166,7 +166,7 @@ const LoginPage: FC = () => {
                             <Divider />
                         </Box>
                         <RouterLink href="/register" passHref legacyBehavior>
-                            <Link variant="body2" color="textSecondary">
+                            <Link sx={{ textAlign: 'center' }} variant="body2" color="textSecondary">
                                 {translate('Login.SwitchToRegisterMessage')}
                             </Link>
                         </RouterLink>
