@@ -4,6 +4,7 @@ import { StatefulActionHandler } from 'runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
+import * as chrome from 'selenium-webdriver/chrome';
 import path from 'path';
 
 import { RunboticsLogger } from '#logger';
@@ -21,6 +22,53 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     constructor() {
         super();
     }
+    
+    private async getFirefoxSession(isHeadless: boolean | undefined, isWin?: boolean) {
+        const driversPath = process.cwd();
+        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
+        this.logger.log('geckoDriver', geckoDriver);
+
+        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
+        this.logger.log('Path', process.env['PATH']);
+        let optionsFF = new firefox.Options()
+            .setPreference('xpinstall.signatures.required', false)
+            .setPreference('devtools.console.stdout.content', true)
+            .setBinary(process.env['CFG_FIREFOX_BIN']);
+
+        if (isHeadless) {
+            optionsFF = optionsFF.headless();
+        }
+
+        return new Builder()
+            .forBrowser('firefox')
+            .setFirefoxOptions(optionsFF)
+            .setFirefoxService(
+                new firefox.ServiceBuilder()
+                    //.enableVerboseLogging()
+                    .setStdio('inherit'), 
+            )
+            .build();
+    }
+    
+    private async getChromeSession(isHeadless: boolean | undefined) {
+        const chromeOptions = new chrome.Options();
+        chromeOptions.addArguments(
+            '--ignore-ssl-errors=yes',
+            '--ignore-certificate-errors',
+            '--disable-notifications',
+            '--disable-infobars',
+        );
+
+        if (isHeadless) {
+            chromeOptions.headless(); 
+        }
+
+        return new Builder()
+            .forBrowser('chrome')
+            .usingServer(process.env.CHROME_ADDRESS)
+            .setChromeOptions(chromeOptions)
+            .build();
+    }
 
     async launchBrowser(input: BrowserTypes.BrowserLaunchActionInput): Promise<any> {
         const current = await this.session?.getSession();
@@ -33,32 +81,14 @@ export default class BrowserActionHandler extends StatefulActionHandler {
                 this.session = null;
             }
         }
-        const driversPath = process.cwd();
-        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
+
         const isWin = process.platform === 'win32';
-        this.logger.log('geckoDriver', geckoDriver);
         this.logger.log('isWin', isWin);
 
-        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
-        this.logger.log('Path', process.env['PATH']);
-        let optionsFF = new firefox.Options()
-            .setPreference('xpinstall.signatures.required', false)
-            .setPreference('devtools.console.stdout.content', true)
-            .setBinary(process.env['CFG_FIREFOX_BIN']);
+        this.session = await (process.env.CHROME_ADDRESS
+            ? this.getChromeSession(input.headless)
+            : this.getFirefoxSession(input.headless, isWin));
 
-        if (input.headless) {
-            optionsFF = optionsFF.headless();
-        }
-
-        this.session = await new Builder()
-            .forBrowser('firefox')
-            .setFirefoxOptions(optionsFF)
-            .setFirefoxService(
-                new firefox.ServiceBuilder()
-                    //.enableVerboseLogging()
-                    .setStdio('inherit'),
-            )
-            .build();
         if (input.target) {
             await this.openSite({
                 target: input.target,
@@ -84,7 +114,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         input: BrowserTypes.BrowserElementAttributeChangeInput,
     ): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        this.session.executeScript(
+        await this.session.executeScript(
             'arguments[0].setAttribute(arguments[1], arguments[2])',
             element,
             input.attribute,
@@ -98,24 +128,21 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         input: BrowserTypes.BrowserReadElementAttribute,
     ): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        const attributeValue = await element.getAttribute(input.attribute);
-        return attributeValue;
+        return element.getAttribute(input.attribute);
     }
 
     private async readElementText(
         input: BrowserTypes.BrowserReadElementText,
     ): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        const textValue = await element.getText();
-        return textValue;
+        return element.getText();
     }
 
     private async readElementInput(
         input: BrowserTypes.BrowserReadElementInput,
     ): Promise<BrowserTypes.BrowserClickActionOutput> {
         const element = await this.findElement(input.target);
-        const inputValue = await element.getAttribute('value');
-        return inputValue;
+        return element.getAttribute('value');
     }
 
     private async countElements(
@@ -158,8 +185,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const [key, ...rest] = target.split('=');
 
         locator[key] = rest.join('=');
-        const element = await this.session.wait(until.elementLocated(locator), 10000);
-        return element;
+        return this.session.wait(until.elementLocated(locator), 10000);
     }
 
     private async doSelect(input: BrowserTypes.BrowserActionInput): Promise<BrowserTypes.BrowserClickActionOutput> {
@@ -178,7 +204,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
                 const text = await option.getText();
                 if (text === optionValue) {
                     await option.click();
-                    
                 }
             }
         }
