@@ -4,13 +4,13 @@ import ContactTranslation from '#src-landing/translations/en/contact.json';
 
 export type InputProps =
     | {
-        type?: 'input';
-        event: ChangeEvent<HTMLInputElement>;
-    }
+          type?: 'input';
+          event: ChangeEvent<HTMLInputElement>;
+      }
     | {
-        type: 'textarea';
-        event: ChangeEvent<HTMLTextAreaElement>;
-    };
+          type: 'textarea';
+          event: ChangeEvent<HTMLTextAreaElement>;
+      };
 
 export interface FormState {
     name: string;
@@ -19,8 +19,13 @@ export interface FormState {
     checkbox: boolean;
     message: string;
 }
-
+export enum FormStatusType {
+    ERROR = 'error',
+    SUCCESS = 'success',
+    DISABLED = 'disabled',
+    LOADING = 'loading',
+}
 export interface Status {
-    type: 'error' | 'success',
-    text: keyof typeof ContactTranslation
+    type: FormStatusType;
+    text: keyof typeof ContactTranslation;
 }

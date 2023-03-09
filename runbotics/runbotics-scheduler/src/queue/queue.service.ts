@@ -171,7 +171,7 @@ export class QueueService implements OnModuleInit {
     private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
         
-        if (!input?.variables) {
+        if (!input?.variables || Object.keys(input.variables).length === 0) {
             const err = 'You haven\'t provided variables for attended process';
             this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
             throw new BadRequestException(err);

@@ -1,6 +1,7 @@
 @import '#src-landing/scss/main.scss';
 
 $FORM-MAX-WIDTH: 800px;
+
 .root {
     width: 100%;
     height: fit-content;
@@ -28,7 +29,7 @@ $FORM-MAX-WIDTH: 800px;
 .submitRow {
     composes: formRow;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 4fr 1fr 1fr;
 
     img {
         margin-left: auto;

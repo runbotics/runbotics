@@ -12,6 +12,8 @@ import {
     PARTNER_SECTION_ID,
     TEMPLATE_SECTION_ID,
     CONTACT_US_SECTION_ID,
+    PROS_SECTION_ID,
+    OPEN_SOURCE_SECTION_ID,
 } from '#src-landing/utils/utils';
 
 import styles from './Navbar.module.scss';
@@ -56,6 +58,31 @@ const Navbar: FC<NavbarProps> = ({
                 </li>
                 <li className={styles.listItem}>
                     <Link
+                        href={`#${PROS_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate(
+                            'Landing.Header.Nav.Option.Pros'
+                        )}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`#${OPEN_SOURCE_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate(
+                            'Landing.Header.Nav.Option.OpenSource'
+                        )}
+                    </Link>
+                </li>
+                {/* 
+                <li className={styles.listItem}>
+                    <Link
                         href={`#${INDUSTRY_SECTORS_SECTION_ID}`}
                         className={styles.link}
                         onClick={hideNav}
@@ -63,8 +90,8 @@ const Navbar: FC<NavbarProps> = ({
                     >
                         {translate('Landing.Header.Nav.Option.ForWho')}
                     </Link>
-                </li>
-                <li className={styles.listItem}>
+                </li> */}
+                {/* <li className={styles.listItem}>
                     <Link
                         href={`#${TEMPLATE_SECTION_ID}`}
                         className={styles.link}
@@ -76,6 +103,7 @@ const Navbar: FC<NavbarProps> = ({
                         )}
                     </Link>
                 </li>
+                */}
                 <li className={styles.listItem}>
                     <Link
                         href={`#${INTEGRATION_SECTION_ID}`}
