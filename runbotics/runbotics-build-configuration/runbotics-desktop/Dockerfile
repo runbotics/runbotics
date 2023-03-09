@@ -30,20 +30,9 @@ RUN apt-get update && \
   # clean up
   && rm -rf /var/lib/apt/lists/*
 
-
-
-
 COPY --chown=node:node . .
 
-RUN tar xvjf runbotics-desktop/driver/linux/firefox-88.0b8.tar.bz2 -C runbotics-desktop/driver/linux && rm runbotics-desktop/driver/linux/firefox-88.0b8.tar.bz2
-RUN tar xvf runbotics-desktop/driver/linux/geckodriver-v0.29.0-linux64.tar.gz -C runbotics-desktop/driver/linux && rm runbotics-desktop/driver/linux/geckodriver-v0.29.0-linux64.tar.gz
-
-ENV CFG_FIREFOX_BIN='./driver/linux/firefox/firefox-bin'
-ENV CFG_GECKO_DRIVER='./driver/linux'
-
-
 USER node
-
 
 # Set necessary environment variables.
 ENV NODE_ENV=production \
@@ -60,9 +49,6 @@ ENV NODE_ENV=production \
 
 # Set the default working directory for the app
 # It is a best practice to use the /usr/src/app directory
-
-
-
 
 # Display directory structure
 RUN ls -l
