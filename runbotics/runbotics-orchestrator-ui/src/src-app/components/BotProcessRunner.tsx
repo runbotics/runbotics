@@ -15,6 +15,7 @@ import {
     IProcess,
     IProcessInstance,
     ProcessInstanceStatus,
+    isProcessInstanceFinished
 } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -39,12 +40,9 @@ import If from './utils/If';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
-const isProcessInstanceFinished = (processInstance: IProcessInstance) => 
-    processInstance?.status === ProcessInstanceStatus.COMPLETED ||
-    processInstance?.status === ProcessInstanceStatus.ERRORED ||
-    processInstance?.status === ProcessInstanceStatus.TERMINATED;
+const isProcessActive = (processId: number, processInstance: IProcessInstance) => processId === processInstance?.process.id && !isProcessInstanceFinished(processInstance?.status);
 
-const isProcessActive = (processId: number, processInstance: IProcessInstance) => processId === processInstance?.process.id && !isProcessInstanceFinished(processInstance);
+const setInitialState = (processInstance: IProcessInstance) => processInstance ? !isProcessInstanceFinished(processInstance.status) : false;
 
 const StyledActionButton = styled(LoadingButton)(
     ({ theme }) => `
@@ -58,8 +56,7 @@ const StyledActionButton = styled(LoadingButton)(
 interface BotProcessRunnerProps {
     className?: string;
     process?: IProcess;
-    externalProcessInstance?: IProcessInstance;
-    isProcessInstanceActive?: boolean;
+    rerunProcessInstance?: IProcessInstance;
     onRunClick?: () => void;
     color?: 'inherit' | 'error' | 'secondary' | 'success' | 'warning' | 'info' | 'primary';
     variant?: 'text' | 'outlined' | 'contained';
@@ -69,15 +66,14 @@ interface BotProcessRunnerProps {
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
     process,
-    externalProcessInstance,
-    isProcessInstanceActive,
+    rerunProcessInstance,
     onRunClick,
     color = 'secondary',
     variant = 'text',
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [started, setStarted] = useState(isProcessInstanceActive);
+    const [started, setStarted] = useState(() => setInitialState(rerunProcessInstance)); //if
     const [isSubmitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -86,7 +82,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const processInstances = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId, processInstance } = processInstances.active;
-    const currentProcessInstance = externalProcessInstance ?? processInstance;
+    const currentProcessInstance = rerunProcessInstance ?? processInstance;
     const isProcessAttended = process?.isAttended && process?.executionInfo;
     const processName = process?.name;
     const processId = process?.id;
@@ -95,17 +91,15 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const isRerunButtonDisabled = isProcessActive(processId, processInstance) || started || isSubmitting;
 
     useEffect(() => {
+        if (isProcessInstanceFinished(currentProcessInstance?.status)) {
+            setStarted(false);
+        }
+
         if (started) return;
         if (isProcessActive(processId, currentProcessInstance)) {
             setStarted(true);
         }
     }, [started, processId, currentProcessInstance]);
-
-    useEffect(() => {
-        if (isProcessInstanceFinished(currentProcessInstance)) {
-            setStarted(false);
-        }
-    }, [currentProcessInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
 
@@ -147,7 +141,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         dispatch(
             processActions.startProcess({
                 processId: process.id,
-                executionInfo: ((isProcessAttended || externalProcessInstance) && { ...executionInfo }),
+                ...((isProcessAttended || rerunProcessInstance) && { executionInfo })
             })
         )
             .then(unwrapResult)
@@ -232,7 +226,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const rerunButton = (
         <Tooltip title={translate('Component.BotProcessRunner.Tooltip.Title.RerunProcess')} placement="top">
-            <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={() => handleRerun()}>
+            <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={handleRerun}>
                 <SvgIcon fontSize="small" color={isRerunButtonDisabled ? 'disabled' : 'secondary'}>
                     <RerunIcon />
                 </SvgIcon>
@@ -240,12 +234,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </Tooltip>
     );
     
-    if (externalProcessInstance) {
-        return (
-            <If condition={!started} else={null}>
-                {rerunButton}
-            </If>
-        );
+    if (rerunProcessInstance) {
+        return !started && rerunButton;
     }
 
     return (

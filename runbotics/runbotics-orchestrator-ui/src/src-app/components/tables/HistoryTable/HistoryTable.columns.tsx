@@ -30,7 +30,7 @@ const useProcessInstanceColumns = (
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
 
-    const columns = [
+    let columns = [
         {
             Header: ' ',
             id: 'expander',
@@ -91,13 +91,7 @@ const useProcessInstanceColumns = (
                 row.depth === 0 && row.original.input ? (
                     <BotProcessRunner
                         process={row.original.process}
-                        externalProcessInstance={row.original}
-                        isProcessInstanceActive={
-                            row.original.status ===
-                                ProcessInstanceStatus.INITIALIZING ||
-                            row.original.status ===
-                                ProcessInstanceStatus.IN_PROGRESS
-                        }
+                        rerunProcessInstance={row.original}
                         onRunClick={onRerunProcess}
                     />
                 ) : null,
@@ -106,7 +100,7 @@ const useProcessInstanceColumns = (
     ];
 
     if (!rerunEnabled) {
-        columns.pop();
+        columns = columns.filter(column => column.id !== 'button');
     }
 
     const accessedColumns = columns.filter((column) =>
