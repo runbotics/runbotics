@@ -7,15 +7,7 @@ import {
 
 import { useModelerContext } from './useModelerContext';
 
-export interface ActionVariableObject {
-    name?: string;
-    value?: string;
-}
-
-interface ActionVariables {
-    inputActionVariables: ActionVariableObject[];
-    outputActionVariables: ActionVariableObject[];
-}
+import { ActionVariableObject, ActionVariables } from './useProcessVariables.types';
 
 const useProcessActionVariables = () => {
     const context = useModelerContext();
@@ -118,10 +110,11 @@ const useProcessActionVariables = () => {
                         value: item.name,
                     }));
 
+
                 return outputVariables;
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)
-            .flatMap((item: ActionVariableObject) => item);
+            .flat();
 
         return { inputActionVariables, outputActionVariables };
     }, [allActionsWithVariables, canvas]);

@@ -1,12 +1,14 @@
+import { FC } from 'react';
+
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Menu, MenuItem, ListItemText, ListItemIcon } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableTag } from './VariablesPanel/VariablesPanel';
+import { VariableCopyMenuProps, VariableTag } from './VariablesPanel/VariableRow.types';
 
-const VariableCopyMenu = ({ anchorElement, handleMenuClose, menuId, tag }) => {
+const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ anchorElement, handleMenuClose, menuId, tag }) => {
     const { enqueueSnackbar } = useSnackbar();
     const hashName = `#{${menuId}}`;
 

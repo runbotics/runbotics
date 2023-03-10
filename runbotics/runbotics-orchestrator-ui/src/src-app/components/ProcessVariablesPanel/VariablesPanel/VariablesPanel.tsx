@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
@@ -8,18 +8,9 @@ import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import VariableRow from './VariableRow';
+import { VariableTag, MenuProps } from './VariableRow.types';
 
-export enum VariableTag {
-    VARIABLE = 'VariableTag',
-    ACTION_OUTPUT = 'ActionOutputTag',
-}
-
-export interface MenuProps {
-    menuId: string;
-    anchorElement?: HTMLElement;
-}
-
-const VariablesPanel = () => {
+const VariablesPanel:FC = () => {
     const theme = useTheme();
     const {
         globalVariables,

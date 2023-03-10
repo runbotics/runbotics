@@ -1,5 +1,7 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
+
+
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import {
@@ -8,16 +10,12 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { useModelerContext } from './useModelerContext';
-
-interface GlobalVariable {
-    value: string;
-    name: string;
-}
+import { GlobalVariable } from './useProcessVariables.types';
 
 const useProcessGlobalVariables = (): GlobalVariable[] => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
-
+    
     const assignVariablesElements =
         context?.modeler
             ?.get('elementRegistry')
@@ -36,6 +34,7 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
         if (!globalVariableList) {
             return [];
         }
+        
 
         return globalVariableList.definition.items.map((item) => {
             const globalVariableName = globalVariables.find(
@@ -49,6 +48,7 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
             return { value: item.value, name: globalVariableName };
         });
     };
+
 
     const variables = assignVariablesElements
         .map((assignVariablesElement) => {

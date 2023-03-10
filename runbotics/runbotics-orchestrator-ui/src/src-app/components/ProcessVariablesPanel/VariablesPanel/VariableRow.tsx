@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -7,22 +7,10 @@ import { Box, Grid, Chip, Divider, IconButton } from '@mui/material';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import VariableCopyMenu from '../VariableCopyMenu';
-import { VariableTag, MenuProps } from './VariablesPanel';
+import { VariableRowProps } from './VariableRow.types';
 import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
 
-interface VariableRowProps {
-    name: string;
-    tag: VariableTag;
-    getTagBgColor: (tag: VariableTag) => string;
-    handleMenuClick: (
-        event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-        name: string
-    ) => void;
-    handleMenuClose: () => void;
-    openMenuId: MenuProps;
-}
-
-const VariableRow = ({
+const VariableRow: FC<VariableRowProps> = ({
     name,
     tag,
     getTagBgColor,
