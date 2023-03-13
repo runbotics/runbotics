@@ -24,6 +24,7 @@ export class ProcessInstanceSchedulerService {
             status,
             created: dayjs().toISOString(),
             updated: dayjs().toISOString(),
+            input: JSON.stringify({ variables: job.data.input?.variables }),
             user: job.data.user,
             process: job.data.process,
             error: errorMessage,
