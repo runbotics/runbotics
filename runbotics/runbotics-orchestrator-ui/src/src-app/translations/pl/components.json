@@ -8,9 +8,9 @@
     "Component.BotProcessRunner.Error": "Wszystkie boty są zajęte",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Proces jest uruchomiony",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Wyszukiwanie bota",
-    "Component.BotProcessRunner.Tooltip.Title.RerunProcess": "Uruchom ponownie process",
     "Component.BotProcessRunner.Run": "URUCHOM",
     "Component.BotProcessRunner.Terminate": "PRZERWIJ",
+    "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Update.Failed": "Nie udało się zaktualizować procesu {{ name }}",

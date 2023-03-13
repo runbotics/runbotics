@@ -1,14 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
-import { IconButton, SvgIcon, Tooltip } from '@mui/material';
+import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 import { useSnackbar } from 'notistack';
 import {
     Play as PlayIcon,
-    X as XIcon,
-    RefreshCw as RerunIcon
+    X as XIcon
 } from 'react-feather';
 import {
     FeatureKey,
@@ -73,10 +73,11 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [started, setStarted] = useState(() => setInitialState(rerunProcessInstance)); //if
+    const [started, setStarted] = useState(setInitialState(rerunProcessInstance));
     const [isSubmitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
 
@@ -88,23 +89,24 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const processId = process?.id;
     const isRunButtonDisabled =
         started || isSubmitting || !process.system || !process.botCollection;
-    const isRerunButtonDisabled = isProcessActive(processId, processInstance) || started || isSubmitting;
+    const isRerunButtonDisabled = 
+        started || isSubmitting || isProcessActive(processId, processInstance);
 
     useEffect(() => {
-        if (isProcessInstanceFinished(currentProcessInstance?.status)) {
-            setStarted(false);
-        }
-
-        if (started) return;
-        if (isProcessActive(processId, currentProcessInstance)) {
-            setStarted(true);
-        }
-    }, [started, processId, currentProcessInstance]);
+        setStarted(isProcessActive(processId, currentProcessInstance));
+    }, [processId, currentProcessInstance]);
 
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
+
+    const toggleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const closeMenu = () => {
+        setAnchorEl(null);
+    };
 
     const handleTerminate = async () => {
         await dispatch(
@@ -170,6 +172,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleRerun = () => {
+        closeMenu();
         const input = JSON.parse(currentProcessInstance?.input);
         const { variables } = input;
         handleRun(variables);
@@ -224,18 +227,21 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </StyledActionButton>
     );
 
-    const rerunButton = (
-        <Tooltip title={translate('Component.BotProcessRunner.Tooltip.Title.RerunProcess')} placement="top">
-            <IconButton sx={{ width: '40px' }} disabled={isRerunButtonDisabled} onClick={handleRerun}>
-                <SvgIcon fontSize="small" color={isRerunButtonDisabled ? 'disabled' : 'secondary'}>
-                    <RerunIcon />
-                </SvgIcon>
+    const rerunMenu = (
+        <>
+            <IconButton sx={{ width: '40px' }} onClick={toggleMenu}>
+                <MoreVertIcon />
             </IconButton>
-        </Tooltip>
+            <Menu anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={closeMenu}>
+                <MenuItem onClick={() => handleRerun()} disabled={isRerunButtonDisabled}>
+                    {translate('Component.BotProcessRunner.Menu.RerunProcess')}
+                </MenuItem>
+            </Menu>
+        </>
     );
     
     if (rerunProcessInstance) {
-        return !started && rerunButton;
+        return rerunMenu;
     }
 
     return (

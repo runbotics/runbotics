@@ -1,7 +1,7 @@
 import React from 'react';
 
 import moment from 'moment';
-import { FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
 
@@ -85,7 +85,7 @@ const useProcessInstanceColumns = (
         },
         {
             Header: ' ',
-            id: 'button',
+            id: 'rerun-menu',
             width: '70px',
             Cell: ({ row }) =>
                 row.depth === 0 && row.original.input ? (
@@ -100,7 +100,7 @@ const useProcessInstanceColumns = (
     ];
 
     if (!rerunEnabled) {
-        columns = columns.filter(column => column.id !== 'button');
+        columns = columns.filter(column => column.id !== 'rerun-menu');
     }
 
     const accessedColumns = columns.filter((column) =>

@@ -8,9 +8,9 @@
     "Component.BotProcessRunner.Error": "All bots are busy",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
-    "Component.BotProcessRunner.Tooltip.Title.RerunProcess": "Rerun process",
     "Component.BotProcessRunner.Run": "RUN",
     "Component.BotProcessRunner.Terminate": "ABORT",
+    "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",
