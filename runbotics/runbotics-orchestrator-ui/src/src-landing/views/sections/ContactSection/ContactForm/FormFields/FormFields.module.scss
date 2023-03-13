@@ -65,6 +65,7 @@ $LABEL-TRANSFORM-Y: -25px;
 
 .checkboxWrapper {
     display: flex;
+    align-items: center;
     max-width: $CHECKBOX-WRAPPER-MAX-WIDTH;
     gap: $margin-3;
 }
