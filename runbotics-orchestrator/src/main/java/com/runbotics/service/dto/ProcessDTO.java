@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -17,6 +18,7 @@ public class ProcessDTO implements Serializable {
     private Long id;
 
     @NotNull
+    @NotBlank
     private String name;
 
     @Lob
