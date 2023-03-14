@@ -17,21 +17,19 @@
     "Common.Yes": "Yes",
     "Common.No": "No",
     "Common.Import": "Import",
+    "Common.Import.InvalidExtension": "Incorrect file extension (use: {{ extensions }})",
     "Common.Export": "Export",
     "Common.True": "True",
     "Common.False": "False",
     "Common.String": "String",
     "Common.Boolean": "Boolean",
     "Common.List": "List",
-    
     "Common.Time.Hours.Short": "h",
     "Common.Time.Minutes.Short": "m",
     "Common.Time.Seconds.Short": "s",
     "Common.Time.Miliseconds.Short": "ms",
-
     "Common.Errors.Request.GeneralError": "Something went wrong",
     "Common.Errors.UnexpectedError": "An unexpected error has occurred.",
-
     "Common.Languages.pl": "polish",
     "Common.Languages.en": "english"
 }

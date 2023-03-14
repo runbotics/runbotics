@@ -15,6 +15,8 @@ import {
     toggleValidationError,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementManipulation';
 
+import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+
 import useTranslations from '../useTranslations';
 import {
     CommandStackEvent,
@@ -77,6 +79,25 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         if (element.businessObject.validationError) {
             toggleValidationError(modeler, element, false);
         }
+    };
+
+    const validateUnknownElement = (
+        elements: Record<string, { element: BPMNElement }>,
+        modeler: BpmnModeler
+    ) => {
+        validateStartEvents({
+            handleValidElement: handleValidStartEvent,
+            handleInvalidElement: handleInvalidStartEvent,
+            modeler,
+        });
+        Object.values(elements).forEach(({ element }) => {
+            validateElement({
+                element: element,
+                handleInvalidElement: handleInvalidShape,
+                handleValidElement: handleValidShape,
+                modeler,
+            });
+        });
     };
 
     const modelerListener = (modeler: BpmnModeler) => ({
@@ -214,6 +235,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
 
     return {
         modelerListener,
+        validateUnknownElement,
     };
 };
 

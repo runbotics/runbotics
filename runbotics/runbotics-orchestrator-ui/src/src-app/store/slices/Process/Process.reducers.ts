@@ -4,6 +4,7 @@ import { IProcess } from 'runbotics-common';
 import { IBpmnAction } from '#src-app/Actions/types';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
+import { initialModelerState } from './Process.slice';
 import { ModelerError, ProcessState } from './Process.state';
 
 export const updateProcess = (
@@ -96,6 +97,13 @@ export const setError = (
     }
 };
 
+export const setImported = (
+    state: ProcessState,
+    action: PayloadAction<boolean>
+) => {
+    state.modeler.imported = action.payload;
+};
+
 export const removeError = (
     state: ProcessState,
     action: PayloadAction<string>
@@ -107,4 +115,8 @@ export const removeError = (
 
 export const clearErrors = (state: ProcessState) => {
     state.modeler.errors = [];
+};
+
+export const clearModelerState = (state: ProcessState) => {
+    state.modeler = initialModelerState;
 };

@@ -28,7 +28,7 @@ import { IAction } from '#src-app/types/model/action.model';
 import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
-function isValidJson(str) {
+export function isValidJson(str) {
     try {
         JSON.parse(str);
     } catch (e) {
