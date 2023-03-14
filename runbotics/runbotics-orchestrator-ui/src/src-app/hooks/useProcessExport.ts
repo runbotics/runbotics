@@ -20,11 +20,11 @@ const useProcessExport = () => {
       </runbotics:additionalInfo>\n`;
 
     const createRbexFile = (definition: string, process: IProcess) => {
-        const endOfDefinition = definition.indexOf('</bpmn2:definitions>');
+        const definitionEnd = definition.indexOf('</bpmn2:definitions>');
         return (
-            definition.substring(0, endOfDefinition) +
+            definition.substring(0, definitionEnd) +
             formatAdditionalInfo(process) +
-            definition.substring(endOfDefinition)
+            definition.substring(definitionEnd)
         );
     };
     return { createRbexFile };

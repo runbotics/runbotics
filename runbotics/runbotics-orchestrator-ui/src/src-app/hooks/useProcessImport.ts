@@ -1,12 +1,12 @@
 import { isValidJson } from '#src-app/views/action/ActionDetails';
 import { AdditionalInfo } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
 
-interface ExtractImportInfoProps extends AdditionalInfo {
+interface ImportInfo extends AdditionalInfo {
     definition: string;
 }
 const useProcessImport = () => {
     // eslint-disable-next-line complexity
-    const extractImportInfo = (xmlString: string): ExtractImportInfoProps => {
+    const extractImportInfo = (xmlString: string): ImportInfo => {
         const parser = new DOMParser();
         const serializer = new XMLSerializer();
         const parsed = parser.parseFromString(xmlString, 'text/xml');
@@ -18,7 +18,7 @@ const useProcessImport = () => {
             return { definition: xmlString };
         }
 
-        const importInfo: ExtractImportInfoProps = {
+        const importInfo: ImportInfo = {
             definition: '',
         };
 

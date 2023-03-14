@@ -28,7 +28,7 @@ public class Authority implements Serializable {
         name = "authority_feature_key",
         joinColumns = { @JoinColumn(name = "authority", referencedColumnName = "name") },
         inverseJoinColumns = { @JoinColumn(name = "feature_key", referencedColumnName = "name") }
-    )
+        featureKeys )
     public Set<FeatureKey> featureKeys = new HashSet<>();
 
     public String getName() {

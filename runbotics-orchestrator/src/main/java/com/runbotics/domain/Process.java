@@ -20,6 +20,13 @@ public class Process implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
+    @ManyToMany
+    @JoinTable(
+        name = "process_global_variable",
+        joinColumns = { @JoinColumn(name = "process", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "global_variable", referencedColumnName = "id") }
+    )
+    public Set<GlobalVariable> globalVariables = new HashSet<>();
 
     @NotNull
     @Column(name = "name", nullable = false, unique = true)
