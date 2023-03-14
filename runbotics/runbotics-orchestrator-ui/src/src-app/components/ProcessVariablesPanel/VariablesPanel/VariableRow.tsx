@@ -47,11 +47,11 @@ const VariableRow: FC<VariableRowProps> = ({
                 >
                     <MoreVertIcon />
                 </IconButton>
-                {menu?.menuId === name ? (
+                {menu?.variableName === name ? (
                     <VariableCopyMenu
                         anchorElement={menu.anchorElement}
                         handleMenuClose={handleMenuClose}
-                        menuId={menu.menuId}
+                        menuId={menu.variableName}
                         tag={tag}
                     />
                 ) : null}

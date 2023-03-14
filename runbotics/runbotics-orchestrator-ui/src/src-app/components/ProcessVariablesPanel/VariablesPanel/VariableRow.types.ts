@@ -4,7 +4,7 @@ export enum VariableTag {
 }
 
 export interface VariablePanelContextMenuState {
-    menuId: string;
+    variableName: string;
     anchorElement?: HTMLElement;
 }
 
