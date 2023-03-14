@@ -40,7 +40,7 @@ const ImportExportPanel: FC<ImportExportPanelProps> = ({
         );
         if (!isValidExtension) {
             enqueueSnackbar(
-                translate('Common.Import.Invalid.Extension', {
+                translate('Common.Import.InvalidExtension', {
                     extensions: ACCEPTED_FILE_EXTENSIONS.join(', '),
                 }),
                 {
