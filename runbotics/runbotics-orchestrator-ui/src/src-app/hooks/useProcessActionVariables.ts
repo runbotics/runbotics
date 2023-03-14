@@ -8,7 +8,10 @@ import {
 
 import { useModelerContext } from './useModelerContext';
 
-import { ActionVariableObject, ActionVariables } from './useProcessVariables.types';
+import {
+    ActionVariableObject,
+    ActionVariables,
+} from './useProcessVariables.types';
 
 const useProcessActionVariables = () => {
     const context = useModelerContext();

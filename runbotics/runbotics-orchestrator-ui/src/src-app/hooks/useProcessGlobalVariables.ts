@@ -15,7 +15,7 @@ import { GlobalVariable } from './useProcessVariables.types';
 const useProcessGlobalVariables = (): GlobalVariable[] => {
     const { globalVariables } = useSelector(globalVariableSelector);
     const context = useModelerContext();
-    
+
     const assignVariablesElements =
         context?.modeler
             ?.get('elementRegistry')
@@ -34,7 +34,6 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
         if (!globalVariableList) {
             return [];
         }
-        
 
         return globalVariableList.definition.items.map((item) => {
             const globalVariableName = globalVariables.find(
@@ -49,7 +48,6 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
         });
     };
 
-
     const variables = assignVariablesElements
         .map((assignVariablesElement) => {
             const inputOutput: CamundaInputOutputElement =
@@ -62,11 +60,10 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
 
             return extractGlobalVariables(inputOutput);
         })
-        .reduce(
-            (acc: GlobalVariable[], innerArr: []) =>
-                acc.concat(innerArr.flatMap((item) => item)),
-            []
-        );
+        .reduce((acc: GlobalVariable[], innerArr: []) => [
+            ...acc,
+            innerArr.flat(),
+        ]);
 
     return variables;
 };
