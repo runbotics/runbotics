@@ -1,6 +1,6 @@
 export enum VariableTag {
-    VARIABLE = 'VariableTag',
-    ACTION_OUTPUT = 'ActionOutputTag',
+    VARIABLE = 'Variable',
+    ACTION_OUTPUT = 'ActionOutput',
 }
 
 export interface MenuProps {

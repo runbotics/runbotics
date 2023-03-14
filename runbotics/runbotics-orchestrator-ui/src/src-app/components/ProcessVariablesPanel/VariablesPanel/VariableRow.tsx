@@ -30,7 +30,7 @@ const VariableRow: FC<VariableRowProps> = ({
             <GridTag item xs={5}>
                 <Chip
                     label={translate(
-                        `Process.Modeler.VariablesPanel.${tag}`
+                        `Process.Modeler.VariablesPanel.Tag.${tag}`
                     ).toUpperCase()}
                     sx={{
                         bgcolor: getTagBgColor(tag),

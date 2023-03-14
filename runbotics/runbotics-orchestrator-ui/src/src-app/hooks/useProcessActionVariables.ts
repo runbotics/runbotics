@@ -62,7 +62,7 @@ const useProcessActionVariables = () => {
 
         const outputActionVariables = allActionsWithVariables
             .map((element: ModdleElement) => {
-                const variableInfo =
+                const variableInfo: ExtensionElement[] =
                     element.extensionElements.values[0].outputParameters;
 
                 if (!variableInfo) {
@@ -78,7 +78,6 @@ const useProcessActionVariables = () => {
                         name: item.value,
                         value: item.name,
                     }));
-
 
                 return outputVariables;
             })

@@ -1,6 +1,6 @@
 export interface ActionVariableObject {
-    name?: string;
-    value?: string;
+    name: string;
+    value: string;
 }
 
 export interface ActionVariables {
