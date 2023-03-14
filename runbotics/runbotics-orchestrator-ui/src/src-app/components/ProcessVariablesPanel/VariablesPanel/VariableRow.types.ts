@@ -3,7 +3,7 @@ export enum VariableTag {
     ACTION_OUTPUT = 'ActionOutput',
 }
 
-export interface MenuProps {
+export interface VariablePanelContextMenuState {
     menuId: string;
     anchorElement?: HTMLElement;
 }
@@ -17,7 +17,7 @@ export interface VariableRowProps {
         name: string
     ) => void;
     handleMenuClose: () => void;
-    menu: MenuProps;
+    menu: VariablePanelContextMenuState;
 }
 
 export interface VariableCopyMenuProps {

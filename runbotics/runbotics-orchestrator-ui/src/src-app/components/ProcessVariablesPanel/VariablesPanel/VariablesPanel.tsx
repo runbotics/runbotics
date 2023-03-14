@@ -8,7 +8,7 @@ import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import VariableRow from './VariableRow';
-import { VariableTag, MenuProps } from './VariableRow.types';
+import { VariableTag, VariablePanelContextMenuState } from './VariableRow.types';
 
 const VariablesPanel:FC = () => {
     const theme = useTheme();
@@ -19,7 +19,7 @@ const VariablesPanel:FC = () => {
         attendedVariables,
     } = useProcessVariables();
 
-    const [menu, setMenu] = useState<MenuProps>(null);
+    const [menu, setMenu] = useState<VariablePanelContextMenuState>(null);
 
     const getTagBgColor = (tag: VariableTag): string => {
         if (tag === VariableTag.VARIABLE) {
