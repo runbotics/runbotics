@@ -25,7 +25,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
     ): Promise<SharepointFileTypes.SharepointDownloadActionOutput> {
         const token = await this.microsoftSession.getToken();
         const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, CloudPath.ROOT, input.filePath);
-        const sharepointDownloadLink = await this.microsoftService.getDownloadFileLink(token.token);
+        const sharepointDownloadLink = await this.microsoftService.getDownloadFileLink(token.token, sharepointFileId);
 
         // const downloadFile = (uri, filename) => {
         //     return new Promise((resolve, reject) => {
