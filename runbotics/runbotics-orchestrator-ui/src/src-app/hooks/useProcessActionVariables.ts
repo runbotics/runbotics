@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import {
     BPMNElement,
+    ExtensionElement,
     ModdleElement,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
@@ -25,11 +26,10 @@ const useProcessActionVariables = () => {
 
         /**
          * @name inputActionVariables
+         * @name outputActionVariables
          * @description Variables used by actions:
          * Variables -> Assign value to variable
          * Variables -> Assign list variable
-         * @returns [ActionVariableObject[]]
-         * after flatMap ActionVariableObject[]
          */
         const inputActionVariables = allActionsWithVariables
             .filter(
@@ -38,25 +38,12 @@ const useProcessActionVariables = () => {
                     element.actionId === 'variables.assignList'
             )
             .map((variable: ModdleElement) => {
-                /**
-                 * @name variableInfo
-                 * @description Array of variable information get from inputParameters
-                 * @returns ModdleElement[]
-                 * ModdleElement[0] hold info abour variable name
-                 * ModdleElement[1] hold info abour variable value
-                 * ModdleElement[0] hold info abour variable script
-                 */
-                const variableInfo =
+                const variableInfo: ExtensionElement[] =
                     variable.extensionElements.values[0].inputParameters;
 
                 if (!variableInfo) {
                     return [];
                 }
-
-                /**
-                 * @name inputVariables
-                 * @returs ActionVariableObject[]
-                 */
 
                 const inputVariables = variableInfo
                     .filter(
@@ -69,26 +56,12 @@ const useProcessActionVariables = () => {
 
                 return inputVariables;
             })
-            .flatMap((variable: ActionVariableObject) =>
+            .flatMap((variable: ActionVariableObject[]) =>
                 variable[0].name ? variable : []
             );
 
-        /**
-         * @name outputActionVariables
-         * @description Variables used by actions which have an output value
-         * @returns [ActionVariableObject[]]
-         * after flatMap ActionVariableObject[]
-         */
         const outputActionVariables = allActionsWithVariables
             .map((element: ModdleElement) => {
-                /**
-                 * @name variableInfo
-                 * @description Array of variable information get from outputParameters
-                 * @returns ModdleElement[]
-                 * ModdleElement[0] hold info abour variable name
-                 * ModdleElement[1] hold info abour variable value
-                 * ModdleElement[0] hold info abour variable script
-                 */
                 const variableInfo =
                     element.extensionElements.values[0].outputParameters;
 
@@ -96,10 +69,6 @@ const useProcessActionVariables = () => {
                     return [];
                 }
 
-                /**
-                 * @name outputVariables
-                 * @returs ActionVariableObject[]
-                 */
                 const outputVariables = variableInfo
                     .filter(
                         (item: ActionVariableObject) =>

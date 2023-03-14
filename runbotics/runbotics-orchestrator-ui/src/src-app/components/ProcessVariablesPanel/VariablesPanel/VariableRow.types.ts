@@ -17,7 +17,7 @@ export interface VariableRowProps {
         name: string
     ) => void;
     handleMenuClose: () => void;
-    openMenuId: MenuProps;
+    menu: MenuProps;
 }
 
 export interface VariableCopyMenuProps {

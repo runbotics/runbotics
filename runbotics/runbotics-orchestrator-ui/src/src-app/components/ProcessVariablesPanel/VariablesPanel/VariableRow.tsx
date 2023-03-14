@@ -16,9 +16,9 @@ const VariableRow: FC<VariableRowProps> = ({
     getTagBgColor,
     handleMenuClick,
     handleMenuClose,
-    openMenuId,
+    menu,
 }: VariableRowProps) => (
-    <Box key={name}>
+    <Box>
         <GridContainer
             container
             rowSpacing={1}
@@ -47,12 +47,11 @@ const VariableRow: FC<VariableRowProps> = ({
                 >
                     <MoreVertIcon />
                 </IconButton>
-                {openMenuId?.menuId === name ? (
+                {menu?.menuId === name ? (
                     <VariableCopyMenu
-                        key={openMenuId.menuId}
-                        anchorElement={openMenuId.anchorElement}
+                        anchorElement={menu.anchorElement}
                         handleMenuClose={handleMenuClose}
-                        menuId={openMenuId.menuId}
+                        menuId={menu.menuId}
                         tag={tag}
                     />
                 ) : null}

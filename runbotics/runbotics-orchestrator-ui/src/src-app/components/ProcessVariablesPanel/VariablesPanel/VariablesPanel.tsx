@@ -19,7 +19,7 @@ const VariablesPanel:FC = () => {
         attendedVariables,
     } = useProcessVariables();
 
-    const [openMenuId, setOpenMenuId] = useState<MenuProps>(null);
+    const [menu, setMenu] = useState<MenuProps>(null);
 
     const getTagBgColor = (tag: VariableTag): string => {
         if (tag === VariableTag.VARIABLE) {
@@ -32,11 +32,11 @@ const VariablesPanel:FC = () => {
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
         name: string
     ) => {
-        setOpenMenuId({ menuId: name, anchorElement: event.currentTarget });
+        setMenu({ menuId: name, anchorElement: event.currentTarget });
     };
 
     const handleMenuClose = () => {
-        setOpenMenuId(null);
+        setMenu(null);
     };
 
     const variables = [
@@ -76,7 +76,7 @@ const VariablesPanel:FC = () => {
                     getTagBgColor={getTagBgColor}
                     handleMenuClick={handleMenuClick}
                     handleMenuClose={handleMenuClose}
-                    openMenuId={openMenuId}
+                    menu={menu}
                 />
             ))}
             {outputActionVariables.map((variable) => (
@@ -87,7 +87,7 @@ const VariablesPanel:FC = () => {
                     getTagBgColor={getTagBgColor}
                     handleMenuClick={handleMenuClick}
                     handleMenuClose={handleMenuClose}
-                    openMenuId={openMenuId}
+                    menu={menu}
                 />
             ))}
         </Box>

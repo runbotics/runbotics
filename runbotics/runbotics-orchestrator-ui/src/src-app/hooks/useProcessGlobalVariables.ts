@@ -1,6 +1,6 @@
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
-
+import { BpmnElementType } from 'runbotics-common';
 
 import { useSelector } from '#src-app/store';
 import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
@@ -21,7 +21,7 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
             ?.get('elementRegistry')
             .filter(
                 (element: BPMNElement) =>
-                    is(element, 'bpmn:Task') &&
+                    is(element, BpmnElementType.TASK) &&
                     element.businessObject.actionId ===
                         'variables.assignGlobalVariable'
             ) ?? [];
