@@ -25,6 +25,7 @@ export class ProcessFileService {
         const fileInfo = this.getFileInfo(content);
         const filePath = `${orchestratorProcessInstanceId}/${fileInfo.fileName}.${fileInfo.extension}`;
 
+        await this.oneDriveService.createFolderInWorkingDirectory(orchestratorProcessInstanceId);
         const data = await this.oneDriveService.uploadToWorkingDirectory(filePath, content, fileInfo.contentType);
         return data['@microsoft.graph.downloadUrl'];
     }
