@@ -258,12 +258,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             >
                                 <InfoPanel />
                             </If>
-                                <If
-                                    condition={
-                                        currentTab === ProcessBuildTab.PROCESS_VARIABLES
-                                    }>
-                                    <VariablesPanel />
-                                </If>
+                            <If
+                                condition={
+                                    currentTab === ProcessBuildTab.PROCESS_VARIABLES
+                                }>
+                                <VariablesPanel />
+                            </If>
                         </ResizableDrawer>
                     </Wrapper>
                 </ModelerProvider>
