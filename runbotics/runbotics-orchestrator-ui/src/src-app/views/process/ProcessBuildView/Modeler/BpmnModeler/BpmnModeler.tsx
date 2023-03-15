@@ -9,6 +9,8 @@ import Hotkeys from 'react-hot-keys';
 import 'react-resizable/css/styles.css';
 
 import InfoPanel from '#src-app/components/InfoPanel';
+
+import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 
@@ -46,6 +48,8 @@ import ActionListPanel from '../ActionListPanel';
 import emptyBpmn from '../extensions/config/empty.bpmn';
 
 import { getBpmnModelerConfig } from './BpmnModeler.config';
+
+
 
 const initialCommandStackInfo: CommandStackInfo = {
     commandStackIdx: -1,
@@ -276,6 +280,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                                 }
                             >
                                 <InfoPanel />
+                            </If>
+                            <If
+                                condition={
+                                    currentTab === ProcessBuildTab.PROCESS_VARIABLES
+                                }>
+                                <VariablesPanel />
                             </If>
                         </ResizableDrawer>
                     </Wrapper>

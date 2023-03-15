@@ -47,6 +47,7 @@
     "Process.MainView.Tabs.Configure.Title": "Configure",
     "Process.MainView.Meta.Title": "Process Details",
     "Process.MainView.Sidebar.RunInfo": "Run info",
+    "Process.MainView.Sidebar.ProcessVariables": "Variables",
     "Process.MainView.Toast.Save.Success": "Process saved successfully",
     "Process.MainView.Toast.Save.Failed": "Process save failed",
     "Process.MainView.Tooltip.Save.Enabled": "Save process to database",
@@ -638,5 +639,9 @@
     "Process.Modeler.ChangeLanguageTitle": "Are you sure you want to change the language?",
     "Process.Modeler.LoseModelerChangesContent": "All unsaved changes process wizard changes will be lost.",
     "Process.Modeler.DialogCancel": "Cancel",
-    "Process.Modeler.DialogConfirm": "Ok"
+    "Process.Modeler.DialogConfirm": "Ok",
+    "Process.Modeler.VariablesPanel.Tag.Variable": "Variable",
+    "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Action output",
+    "Process.Modeler.VariablesPanel.Copy.Message.Success": "Variable copied",
+    "Process.Modeler.VariablesPanel.Empty.Message": "No variables used in this process yet"
 }

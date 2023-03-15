@@ -78,6 +78,15 @@ export type BusinessObject = {
     validationError?: boolean;
 };
 
+export type ModdleElement = {
+    $type: string,
+    actionId: string,
+    extensionElements?: ExtensionElement[],
+    id: string,
+    implementation: string,
+    label: string
+}
+
 export type BPMNElement = {
     id: string;
     type: BpmnElementType;
