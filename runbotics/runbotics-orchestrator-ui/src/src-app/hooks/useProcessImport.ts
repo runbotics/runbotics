@@ -26,7 +26,7 @@ const useProcessImport = () => {
             'runbotics:executionInfo'
         )[0];
 
-        if (executionInfo) {
+        if (executionInfo && executionInfo.innerHTML.trim() !== 'null') {
             importInfo.executionInfo = executionInfo?.innerHTML.trim() ?? '';
         }
 
