@@ -22,6 +22,7 @@ export const getModelerActivities = (elements: BPMNElement[]) =>
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
 
+// eslint-disable-next-line complexity
 export const isModelerSync = ({
     modeler,
     appliedActivities,
@@ -36,14 +37,13 @@ export const isModelerSync = ({
         _.sortBy(modelerActivities),
         _.sortBy(appliedActivities)
     );
-
+    if (imported && errors.length === 0) {
+        return true;
+    }
     return (
-        imported ||
-        (
-            areActivitiesMatched &&
-            commandStack.commandStackIdx >= 0 &&
-            errors.length === 0
-        )
+        areActivitiesMatched &&
+        commandStack.commandStackIdx >= 0 &&
+        errors.length === 0
     );
 };
 
@@ -77,7 +77,8 @@ const validateConnections = (element: BPMNElement) => {
         element.type === BpmnElementType.END_EVENT && !hasIncomingConnection;
 
     const isIntermediateEventWithoutIncomingConnection =
-        element.type === BpmnElementType.ITERMEDIATE_THROW_EVENT && !hasIncomingConnection;
+        element.type === BpmnElementType.ITERMEDIATE_THROW_EVENT &&
+        !hasIncomingConnection;
 
     const isExclusiveGatewayWithoutConnections =
         element.type === BpmnElementType.EXCLUSIVE_GATEWAY &&

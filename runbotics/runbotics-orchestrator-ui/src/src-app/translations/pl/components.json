@@ -10,6 +10,7 @@
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Wyszukiwanie bota",
     "Component.BotProcessRunner.Run": "URUCHOM",
     "Component.BotProcessRunner.Terminate": "PRZERWIJ",
+    "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Update.Failed": "Nie udało się zaktualizować procesu {{ name }}",

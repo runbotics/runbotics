@@ -18,9 +18,9 @@ const MainView = () => (
         <BenefitsSection />
         <RPASection />
         <ProsSection />
-        <IndustriesSection />
+        {/* <IndustriesSection /> */}
         <OpenSourceSection />
-        <TemplatesSection />
+        {/* <TemplatesSection /> */}
         <IntegrationSection />
         <PartnerSection />
         <ContactSection />

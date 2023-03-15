@@ -56,7 +56,14 @@ export class OneDriveService implements OnModuleInit {
         content: string,
         contentType: string,
     ) {
-        return this.uploadFile(`${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${filePath}`, content, contentType);
+        const extendedFilePath = `${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${filePath}`;
+        this.logger.log(`Uploading file to "${extendedFilePath}"`);
+        return this.uploadFile(extendedFilePath, content, contentType);
+    }
+    
+    createFolderInWorkingDirectory(folderName: string) {
+        this.logger.log(`Creating folder "${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${folderName}"`);
+        return this.createFolder(folderName, RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0&tabs=javascript

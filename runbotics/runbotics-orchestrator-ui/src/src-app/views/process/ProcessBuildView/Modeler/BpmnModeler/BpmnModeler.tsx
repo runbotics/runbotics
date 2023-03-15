@@ -14,7 +14,9 @@ import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesP
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 
-import useModelerListener, { isModelerSync } from '#src-app/hooks/useModelerListener';
+import useModelerListener, {
+    isModelerSync,
+} from '#src-app/hooks/useModelerListener';
 import useNavigationLock from '#src-app/hooks/useNavigationLock';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
@@ -61,12 +63,13 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const { translate } = useTranslations();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
         const modelerRef = React.useRef<BpmnIoModeler>(null);
-        const [imported, setImported] = useState(false);
         const [currentTab, setCurrentTab] = useState<ProcessBuildTab | null>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
-        const { modelerListener } = useModelerListener({ setCurrentTab });
+        const { modelerListener, validateUnknownElement } = useModelerListener({
+            setCurrentTab,
+        });
 
         const {
             isSaveDisabled,
@@ -74,6 +77,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             commandStack,
             appliedActivities,
             errors,
+            imported,
         } = useSelector((state) => state.process.modeler);
 
         // eslint-disable-next-line complexity
@@ -108,6 +112,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
+        useEffect(
+            () => () => dispatch(processActions.clearModelerState()),
+
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            []
+        );
         useEffect(() => {
             dispatch(
                 processActions.setSaveDisabled(
@@ -178,7 +188,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             if (isSaveDisabled) return;
             onSave();
             dispatch(processActions.setCommandStack(initialCommandStackInfo));
-            setImported(false);
+            dispatch(processActions.setImported(false));
         };
 
         const onCenter = () => {
@@ -226,9 +236,17 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             />
                             <ImportExportPanel
                                 onExport={onExport}
-                                onImport={(e) => {
-                                    onImport(e);
-                                    setImported(true);
+                                onImport={(e, additionalInfo) => {
+                                    onImport(e, additionalInfo);
+                                    setTimeout(() => {
+                                        const { _elements } =
+                                        modeler.get('elementRegistry');
+                                        validateUnknownElement(
+                                            _elements,
+                                            modeler
+                                        );
+                                        dispatch(processActions.setImported(true));
+                                    }, 200);
                                 }}
                             />
                             <ModelerToolboxPanel
@@ -249,12 +267,17 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         </ModelerArea>
                         <ResizableDrawer open={currentTab !== null}>
                             <If
-                                condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}
+                                condition={
+                                    currentTab ===
+                                    ProcessBuildTab.CONFIGURE_ACTION
+                                }
                             >
                                 <ActionFormPanel />
                             </If>
                             <If
-                                condition={currentTab === ProcessBuildTab.RUN_INFO}
+                                condition={
+                                    currentTab === ProcessBuildTab.RUN_INFO
+                                }
                             >
                                 <InfoPanel />
                             </If>

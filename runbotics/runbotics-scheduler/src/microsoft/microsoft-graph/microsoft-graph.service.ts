@@ -53,7 +53,7 @@ export class MicrosoftGraphService {
             return Promise.reject(new Error(errorMessage));
 
         return this.api(path, options)
-            .patch(body);
+            .put(body);
     }
 
     delete(path: string, options?: RequestOptions): Promise<void> {

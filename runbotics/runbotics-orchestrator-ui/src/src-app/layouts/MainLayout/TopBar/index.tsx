@@ -47,10 +47,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
         maxHeight: HEADER_HEIGHT,
         minHeight: HEADER_HEIGHT,
     },
-
-    [`& .${classes.logo}`]: {
-        height: '3rem',
-    },
 }));
 
 interface TopBarProps {
@@ -67,9 +63,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
                     <RouterLink href="/app/processes">
-
-                        <Logo className={classes.logo} white />
-
+                        <Logo white />
                     </RouterLink>
                 </Hidden>
                 <If condition={hasAdminAccess}>

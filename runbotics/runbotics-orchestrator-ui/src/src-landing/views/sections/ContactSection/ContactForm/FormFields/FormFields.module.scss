@@ -12,19 +12,19 @@ $CHECKBOX-SIZE: 26px;
 $CHECKBOX-BORDER-RADIUS: 6px;
 $CHECKBOX-TRANSFORM-Y: -1.2px;
 
-$LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
+$LABEL-TRANSFORM-Y: -25px;
 
 .label {
-    $LABEL-TOP: calc($font-size-body3 + 5px);
     @include font-face-roboto;
-    font-weight: $font-weight-medium;
     position: absolute;
-    top: $LABEL-TOP;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-caption;
+    color: $text-color-dark;
+    top: $LABEL-TRANSFORM-Y;
     left: $padding-3 + $INPUT-BORDER-THICKNESS;
     transition: 0.2s ease all;
     pointer-events: none;
     background-color: $palette-background-primary;
-    color: $text-color-dark;
 }
 
 .input {
@@ -45,19 +45,14 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
         outline: none;
         background: $palette-background-primary;
 
-        ~ .label {
-            font-size: $font-size-caption;
-            top: calc($LABEL-TRANSFORM-Y - 12px);
-            background-color: transparent;
+        ~.label {
             color: $palette-accent-primary;
         }
     }
-}
 
-.input:not(:placeholder-shown) ~ .label {
-    font-size: $font-size-caption;
-    top: calc($LABEL-TRANSFORM-Y - 12px);
-    background-color: transparent;
+    &:disabled {
+        color: $text-color-disabled;
+    }
 }
 
 .textarea {
@@ -70,6 +65,7 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
 
 .checkboxWrapper {
     display: flex;
+    align-items: center;
     max-width: $CHECKBOX-WRAPPER-MAX-WIDTH;
     gap: $margin-3;
 }
@@ -126,5 +122,10 @@ $LABEL-TRANSFORM-Y: calc($font-size-body3 / -2);
 
     &:hover {
         background-color: $palette-background-accent-dark;
+    }
+
+    &:disabled {
+        background-color: $palette-background-disabled;
+        color: $text-color-dark;
     }
 }

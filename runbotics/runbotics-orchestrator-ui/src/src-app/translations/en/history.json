@@ -1,4 +1,5 @@
 {
     "History.Meta.Title": "History",
-    "History.Header.Title": "History"
+    "History.Header.Title": "History",
+    "History.Table.Error": "Process history cannot be retrieved"
 }
