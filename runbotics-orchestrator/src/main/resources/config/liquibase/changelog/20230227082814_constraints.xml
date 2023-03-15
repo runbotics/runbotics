@@ -24,9 +24,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-2">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
-                                        foreignKeyName="FKrtw1gbnb035raau8lvtt6u3jf"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                            foreignKeyName="FKrtw1gbnb035raau8lvtt6u3jf"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                                foreignKeyName="fk_schedule_process_process_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="schedule_process"
@@ -46,9 +53,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-3">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
-                                        foreignKeyName="fk_user_id"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                            foreignKeyName="fk_user_id"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="schedule_process"
+                                                foreignKeyName="fk_schedule_process_user_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="schedule_process"
@@ -68,9 +82,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-4">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
-                                        foreignKeyName="fk_user"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                            foreignKeyName="fk_user"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                                foreignKeyName="fk_bot_collection_user_user_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="bot_collection_user"
@@ -90,9 +111,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-5">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
-                                        foreignKeyName="fk_bot_collection_id"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                            foreignKeyName="fk_bot_collection_id"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="bot_collection_user"
+                                                foreignKeyName="fk_bot_collection_user_bot_collection_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="bot_collection_user"
@@ -112,9 +140,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-6">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="bot_collection"
-                                        foreignKeyName="fk_user_bot_collection"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="bot_collection"
+                                            foreignKeyName="fk_user_bot_collection"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="bot_collection"
+                                                foreignKeyName="fk_bot_collection_created_by"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="bot_collection"
@@ -134,9 +169,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-7">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="bot"
-                                        foreignKeyName="FKmv28qy0ulmu4y1f25c9h5pgu6"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="bot"
+                                            foreignKeyName="FKmv28qy0ulmu4y1f25c9h5pgu6"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="bot"
+                                                foreignKeyName="fk_bot_user_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="bot"
@@ -159,10 +201,10 @@
             <not>
                 <and>
                     <foreignKeyConstraintExists foreignKeyTableName="authority_feature_key"
-                                                foreignKeyName="fk_authority"
+                                                foreignKeyName="fk_authority_feature_key_authority"
                     />
                     <foreignKeyConstraintExists foreignKeyTableName="authority_feature_key"
-                                                foreignKeyName="fk_feature_key"
+                                                foreignKeyName="fk_authority_feature_key_feature_key"
                     />
                 </and>
             </not>
@@ -189,9 +231,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-9">
         <preConditions onFail="MARK_RAN">
-            <indexExists tableName="authority_feature_key"
-                         indexName="feature_key_authority_index"
-            />
+            <and>
+                <indexExists tableName="authority_feature_key"
+                             indexName="feature_key_authority_index"
+                />
+                <not>
+                    <primaryKeyExists tableName="authority_feature_key"
+                                      primaryKeyName="authority_feature_key_primary_key"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropIndex tableName="authority_feature_key"
@@ -205,9 +254,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-10">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="global_variable"
-                                        foreignKeyName="FKbgeem12f1de73tsvbf4m1ldjr"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="global_variable"
+                                            foreignKeyName="FKbgeem12f1de73tsvbf4m1ldjr"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="global_variable"
+                                                foreignKeyName="fk_global_variable_user_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="global_variable"
@@ -227,9 +283,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-11">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
-                                        foreignKeyName="FK2gdkasch5mc74enn7r95jlndn"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                            foreignKeyName="FK2gdkasch5mc74enn7r95jlndn"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                                foreignKeyName="fk_process_instance_process_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="process_instance"
@@ -249,9 +312,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-12">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
-                                        foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                            foreignKeyName="FKbo6xcfy1pnm3kydjoqbtyg9d5"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                                foreignKeyName="fk_process_instance_bot_id"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="process_instance"
@@ -293,9 +363,16 @@
 
     <changeSet author="szymczakm" id="20230227082814-14">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyTableName="process_instance"
-                                        foreignKeyName="fk_process_trigger"
-            />
+            <and>
+                <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                            foreignKeyName="fk_process_trigger"
+                />
+                <not>
+                    <foreignKeyConstraintExists foreignKeyTableName="process_instance"
+                                                foreignKeyName="fk_process_instance_trigger_event"
+                    />
+                </not>
+            </and>
         </preConditions>
 
         <dropForeignKeyConstraint baseTableName="process_instance"

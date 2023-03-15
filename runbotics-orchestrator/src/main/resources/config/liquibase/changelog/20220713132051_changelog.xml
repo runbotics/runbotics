@@ -137,7 +137,8 @@
             ('ROLE_USER','PROCESS_ADD'),
             ('ROLE_USER','BASIC_USER_READ'),
             ('ROLE_ADMIN','PROCESS_ADD'),
-            ('ROLE_ADMIN','BASIC_USER_READ');
+            ('ROLE_ADMIN','BASIC_USER_READ')
+            ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>
 </databaseChangeLog>

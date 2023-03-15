@@ -13,6 +13,13 @@
         <renameTable oldTableName="process_trigger"
                      newTableName="trigger_event"
         />
+        <dropPrimaryKey tableName="trigger_event"
+                        constraintName="process_trigger_pkey"
+        />
+        <addPrimaryKey tableName="trigger_event"
+                       columnNames="name"
+                       constraintName="trigger_event_pkey"
+        />
     </changeSet>
 
     <changeSet author="szymczakm" id="20230219130113-2">
