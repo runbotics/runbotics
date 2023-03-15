@@ -8,8 +8,8 @@ import styled from 'styled-components';
 
 
 import If from '#src-app/components/utils/If';
-import { ActionVariableObject } from '#src-app/hooks/useProcessActionVariables';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
+import { ActionVariableObject } from '#src-app/hooks/useProcessVariables.types';
 import useTranslations, {
     translate as t
 } from '#src-app/hooks/useTranslations';
