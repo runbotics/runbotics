@@ -29,7 +29,7 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
     const submitFormRef = React.useRef<any>();
 
     const processForm = useMemo(() => {
-        if (!isJsonValid(process?.executionInfo)) return null;
+        if (!open || !isJsonValid(process?.executionInfo)) return null;
 
         const parsedProcessForm = JSON.parse(process.executionInfo);
 
@@ -43,19 +43,19 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
                 return acc;
             }, []);
 
-        const filteredRerunInput = Object.entries(rerunInput)
-            .reduce((acc, [key, value]) => {
-                if (fileVariables.includes(key)) {
-                    return acc;
+        const filteredVariables = Object.entries(rerunInput.variables)
+            .reduce((cos, [key, value]) => {
+                if (!fileVariables.includes(key)) {
+                    cos[key] = value;
                 }
-                return acc[key] = value;
+                return cos;
             }, {});
 
-        parsedProcessForm.formData = filteredRerunInput;
+        parsedProcessForm.formData = filteredVariables;
 
         return parsedProcessForm;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [process.id]);
+    }, [process.id, open]);
 
     const handleSubmit = (e: ISubmitEvent<any>) => {
         onSubmit(e.formData);

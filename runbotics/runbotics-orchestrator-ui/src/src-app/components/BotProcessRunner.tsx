@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useMemo } from 'react';
+import { FC, useEffect, useState, useMemo, MouseEvent } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
@@ -102,7 +102,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const { orchestratorProcessInstanceId, processInstance } =
         processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
-    const isProcessAttended = process?.isAttended && process?.executionInfo;
+    const isProcessAttended = process?.isAttended && Boolean(process?.executionInfo);
     const processName = process?.name;
     const processId = process?.id;
     const isRunButtonDisabled =
@@ -119,7 +119,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const toggleMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const toggleMenu = (event: MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
     const closeMenu = () => {
@@ -203,15 +203,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const rerunInput = useMemo(() => {
-        if (!isJsonValid(currentProcessInstance?.input)) return null;
+        if (!isJsonValid(rerunProcessInstance?.input)) return null;
 
-        return JSON.parse(currentProcessInstance?.input);
-    }, [currentProcessInstance?.id]);
-
-    const handleRerun = () => {
-        closeMenu();
-        handleRun(rerunInput.variables);
-    };
+        return JSON.parse(rerunProcessInstance?.input);
+    }, [rerunProcessInstance?.id]);
 
     const getTooltipTitle = () => {
         if (!isRunButtonDisabled)
@@ -279,7 +274,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 onClose={closeMenu}
             >
                 <MenuItem
-                    onClick={isProcessAttended ? openModal : handleRerun}
+                    onClick={openModal}
                     disabled={isRerunButtonDisabled}
                 >
                     {translate('Component.BotProcessRunner.Menu.RerunProcess')}
@@ -288,13 +283,15 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </>
     );
 
-    if (rerunProcessInstance) {
-        return rerunMenu;
+    if (rerunProcessInstance && (!isProcessAttended || Object.keys(rerunInput?.variables).length === 0)) {
+        return null;
     }
 
     return (
         <If condition={hasRunProcessAccess && !started} else={terminateButton}>
-            {runButton}
+            <If condition={Boolean(rerunProcessInstance)} else={runButton}>
+                {rerunMenu}
+            </If>
             <AttendedProcessModal
                 open={modalOpen}
                 process={process}
