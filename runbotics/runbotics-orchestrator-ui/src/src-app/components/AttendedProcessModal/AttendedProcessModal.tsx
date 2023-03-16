@@ -13,8 +13,7 @@ import ErrorBoundary from '../utils/ErrorBoundary';
 
 import FormRenderer from './FormRenderer';
 
-
-
+import { isJsonValid } from '#src-app/utils/utils';
 
 
 interface UserModalProps {
@@ -24,19 +23,14 @@ interface UserModalProps {
     onSubmit: (executionInfo: Record<string, any>) => void;
 }
 
-function isJsonValid(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
+
 
 const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit }) => {
     const submitFormRef = React.useRef<any>();
     const processForm = useMemo(() => {
-        if (isJsonValid(process?.executionInfo)) return JSON.parse(process.executionInfo);
+        if (!isJsonValid(process?.executionInfo)) return null;
+
+        const parsedProcessForm = JSON.parse(process.executionInfo);
 
         return null;
         // eslint-disable-next-line react-hooks/exhaustive-deps
