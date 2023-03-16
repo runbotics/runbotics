@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import Image from 'next/image';
 
+import heroTitleSrc from '#public/images/runBoticsLogo/hero-RunBotics.png';
 import heroHand from '#public/images/shapes/hero_hand.png';
 import heroRobotHand from '#public/images/shapes/hero_robotic_hand.png';
-import heroTitleSrc from '#public/images/runBoticsLogo/hero-RunBotics.png';
 
 import { HERO_SECTION_ID } from '#src-landing/utils/utils';
 
