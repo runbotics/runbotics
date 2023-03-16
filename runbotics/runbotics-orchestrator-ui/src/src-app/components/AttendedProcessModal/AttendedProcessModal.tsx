@@ -7,13 +7,12 @@ import { IProcess } from 'runbotics-common';
 import { translate } from '#src-app/hooks/useTranslations';
 
 
+import { isJsonValid } from '#src-app/utils/utils';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
 import ErrorBoundary from '../utils/ErrorBoundary';
 
 import FormRenderer from './FormRenderer';
-
-import { isJsonValid } from '#src-app/utils/utils';
 
 
 interface UserModalProps {
@@ -21,18 +20,40 @@ interface UserModalProps {
     process: IProcess;
     setOpen: (open: boolean) => void;
     onSubmit: (executionInfo: Record<string, any>) => void;
+    rerunInput: unknown | null;
 }
 
 
 
-const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit }) => {
+const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit, rerunInput }) => {
     const submitFormRef = React.useRef<any>();
+
     const processForm = useMemo(() => {
         if (!isJsonValid(process?.executionInfo)) return null;
 
         const parsedProcessForm = JSON.parse(process.executionInfo);
 
-        return null;
+        if (!rerunInput || !parsedProcessForm?.uiSchema) return parsedProcessForm;
+
+        const fileVariables = Object.entries(parsedProcessForm.uiSchema)
+            .reduce<string[]>((acc, [key, value]) => {
+                if (value['ui:widget'] && value['ui:widget'] === 'FileDropzoneWidget') {
+                    acc.push(key);
+                }
+                return acc;
+            }, []);
+
+        const filteredRerunInput = Object.entries(rerunInput)
+            .reduce((acc, [key, value]) => {
+                if (fileVariables.includes(key)) {
+                    return acc;
+                }
+                return acc[key] = value;
+            }, {});
+
+        parsedProcessForm.formData = filteredRerunInput;
+
+        return parsedProcessForm;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [process.id]);
 

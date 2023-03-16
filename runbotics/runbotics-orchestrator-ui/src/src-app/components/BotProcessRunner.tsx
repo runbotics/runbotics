@@ -32,10 +32,11 @@ import {
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 
+import { isJsonValid } from '#src-app/utils/utils';
+
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
-import { isJsonValid } from '#src-app/utils/utils';
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
@@ -209,11 +210,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleRerun = () => {
         closeMenu();
-        console.log(rerunInput);
-        const { variables } = rerunInput;
-        handleRun(variables);
+        handleRun(rerunInput.variables);
     };
-
 
     const getTooltipTitle = () => {
         if (!isRunButtonDisabled)
@@ -281,7 +279,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 onClose={closeMenu}
             >
                 <MenuItem
-                    onClick={() => handleRerun()}
+                    onClick={isProcessAttended ? openModal : handleRerun}
                     disabled={isRerunButtonDisabled}
                 >
                     {translate('Component.BotProcessRunner.Menu.RerunProcess')}
@@ -302,6 +300,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 process={process}
                 setOpen={setModalOpen}
                 onSubmit={handleRun}
+                rerunInput={rerunInput}
             />
         </If>
     );
