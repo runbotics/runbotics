@@ -2,24 +2,15 @@
 
     <changeSet author="szymczakm" id="20230219130113-1">
         <preConditions onFail="MARK_RAN">
-            <and>
-                <tableExists tableName="process_trigger" />
-                <not>
-                    <tableExists tableName="trigger_event" />
-                </not>
-            </and>
+            <tableExists tableName="process_trigger" />
         </preConditions>
 
         <renameTable oldTableName="process_trigger"
                      newTableName="trigger_event"
         />
-        <dropPrimaryKey tableName="trigger_event"
-                        constraintName="process_trigger_pkey"
-        />
-        <addPrimaryKey tableName="trigger_event"
-                       columnNames="name"
-                       constraintName="trigger_event_pkey"
-        />
+        <sql>
+            ALTER TABLE trigger_event RENAME CONSTRAINT process_trigger_pkey TO trigger_event_pkey;
+        </sql>
     </changeSet>
 
     <changeSet author="szymczakm" id="20230219130113-2">
