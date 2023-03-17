@@ -17,18 +17,8 @@ export class ProcessService {
         return this.processRepository.findOne({ where: { id }, relations });
     }
 
-    // findByName(processName: string): Promise<IProcess> {
-    //     return this.processRepository.findOne({ where: { name: processName }, relations });
-    // }
-
     async save(process: IProcess) {
         await this.processRepository.save(process);
         return process;
     }
-    
-    // findByInfo(processInfo: string | number) {
-    //     return isNaN(Number(processInfo))
-    //         ? this.findByName(processInfo as string)
-    //         : this.findById(Number(processInfo));
-    // }
 }
