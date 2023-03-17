@@ -1,5 +1,5 @@
 /* eslint-disable no-duplicate-imports */
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import type { Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
 import type { ThunkAction } from 'redux-thunk';
@@ -8,11 +8,14 @@ import { ENABLE_REDUX_DEV_TOOLS } from '#src-app/utils/constants';
 
 import rootReducer from './rootReducer';
 
-
+const customizedMiddleware = getDefaultMiddleware({
+    serializableCheck: false
+});
 
 const store = configureStore({
     reducer: rootReducer,
     devTools: ENABLE_REDUX_DEV_TOOLS,
+    middleware: customizedMiddleware,
 });
 
 store.subscribe(() => {

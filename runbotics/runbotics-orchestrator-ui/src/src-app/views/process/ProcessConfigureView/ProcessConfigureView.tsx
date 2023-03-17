@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
 
-
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { botCollectionActions } from '#src-app/store/slices/BotCollections';
@@ -17,9 +16,12 @@ import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
-import { Container, AttendancePaper, StyledPaper } from './ProcessConfigureView.styles';
+import {
+    Container,
+    AttendancePaper,
+    StyledPaper,
+} from './ProcessConfigureView.styles';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
-
 
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
@@ -27,8 +29,11 @@ const ProcessConfigureView: VFC = () => {
     const { id } = useRouter().query;
     const processId = Number(id);
 
-    const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(process?.system);
-    const [selectedBotCollection, setSelectedBotCollection] = useState<IBotCollection>(process?.botCollection);
+    const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
+        process?.system
+    );
+    const [selectedBotCollection, setSelectedBotCollection] =
+		useState<IBotCollection>(process?.botCollection);
     const [attended, setAttended] = useState(process?.isAttended);
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
@@ -48,26 +53,38 @@ const ProcessConfigureView: VFC = () => {
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
     }, [process]);
 
+    const fetchProcess = async () => {
+        await dispatch(processActions.fetchProcessById(process.id));
+    };
+
     const handleSelectBotSystem = async (system: IBotSystem) => {
         await dispatch(processActions.updateBotSystem({ id: process.id, system }));
         setSelectedBotSystem(system);
+        await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
-        await dispatch(processActions.updateBotCollection({ id: process.id, botCollection }));
+        await dispatch(
+            processActions.updateBotCollection({ id: process.id, botCollection })
+        );
         setSelectedBotCollection(botCollection);
+        await fetchProcess();
     };
 
     const handleAttendanceChange = async (isAttended: boolean) => {
-        await dispatch(processActions.updateAttendedance({ ...process, isAttended }));
+        await dispatch(
+            processActions.updateAttendedance({ id: process.id, isAttended })
+        );
         setAttended(isAttended);
-        await dispatch(processActions.fetchProcessById(process.id));
+        await fetchProcess();
     };
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
-        await dispatch(processActions.updateTriggerable({ ...process, isTriggerable }));
+        await dispatch(
+            processActions.updateTriggerable({ id: process.id, isTriggerable })
+        );
         setTriggerable(isTriggerable);
-        await dispatch(processActions.fetchProcessById(process.id));
+        await fetchProcess();
     };
 
     return (
@@ -90,7 +107,10 @@ const ProcessConfigureView: VFC = () => {
             </Box>
             <Box width="fit-content">
                 <AttendancePaper>
-                    <ProcessAttendedComponent isProcessAttended={attended} onAttendedChange={handleAttendanceChange} />
+                    <ProcessAttendedComponent
+                        isProcessAttended={attended}
+                        onAttendedChange={handleAttendanceChange}
+                    />
                     <ManageProcessForm />
                 </AttendancePaper>
             </Box>

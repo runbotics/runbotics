@@ -18,12 +18,22 @@ declare module '@mui/material/styles' {
       infoIcon: {
         default: string
       };
+
+      tag: {
+        variable: string,
+        action: string,
+      }
     }
     
     interface PaletteOptions {
         infoIcon: {
             default: string
           };
+
+        tag: {
+            variable: string,
+            action: string,
+        }
     }
   }
 

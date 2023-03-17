@@ -4,67 +4,87 @@ import { REQUIRED_FIELDS } from '../ContactForm';
 import styles from './FormFields.module.scss';
 import { CheckboxProps, FormInputProps, SubmitProps } from './FormFields.types';
 
-export const FormInput: FC<FormInputProps<HTMLInputElement>> = (props) => (
+export const FormInput: FC<FormInputProps<HTMLInputElement>> = ({
+    placeholder,
+    name,
+    disabled,
+    value,
+    labelValue,
+    ...props
+}) => (
     <>
-        {/* empty placeholder to take advantage of :placeholder-shown */}
         <input
             className={styles.input}
-            placeholder=" "
+            placeholder={placeholder}
             {...props}
-            name={props.name}
-            id={props.name}
-            required={REQUIRED_FIELDS.includes(props.name)}
-            value={props.value}
+            name={name}
+            id={name}
+            required={REQUIRED_FIELDS.includes(name)}
+            disabled={disabled}
+            value={value}
         />
-        <label className={styles.label} htmlFor={props.name}>
-            {props.labelValue}
+        <label className={styles.label} htmlFor={name}>
+            {labelValue}
         </label>
     </>
 );
 
-export const FormTextarea: FC<FormInputProps<HTMLTextAreaElement>> = (
-    props
-) => (
+export const FormTextarea: FC<FormInputProps<HTMLTextAreaElement>> = ({
+    placeholder,
+    name,
+    disabled,
+    value,
+    labelValue,
+    ...props
+}) => (
     <>
         <textarea
             className={styles.textarea}
-            placeholder=" "
+            placeholder={placeholder}
             {...props}
-            name={props.name}
-            id={props.name}
-            required={REQUIRED_FIELDS.includes(props.name)}
-            value={props.value}
+            name={name}
+            id={name}
+            required={REQUIRED_FIELDS.includes(name)}
+            disabled={disabled}
+            value={value}
         />
-        <label className={styles.label} htmlFor={props.name}>
-            {props.labelValue}
+        <label className={styles.label} htmlFor={name}>
+            {labelValue}
         </label>
     </>
 );
 
-export const FormCheckbox: FC<CheckboxProps> = (props) => (
+export const FormCheckbox: FC<CheckboxProps> = ({
+    placeholder,
+    name,
+    disabled,
+    checked,
+    labelValue,
+    ...props
+}) => (
     <div className={styles.checkboxWrapper}>
         <input
             className={styles.checkbox}
-            placeholder=" "
+            placeholder={placeholder}
+            disabled={disabled}
             {...props}
-            name={props.name}
-            id={props.name}
-            required={REQUIRED_FIELDS.includes(props.name)}
-            checked={props.checked}
+            name={name}
+            id={name}
+            required={REQUIRED_FIELDS.includes(name)}
+            checked={checked}
         />
-        <label className={styles.checkboxLabel} htmlFor={props.name}>
-            {props.labelValue}
+        <label className={styles.checkboxLabel} htmlFor={name}>
+            {labelValue}
         </label>
     </div>
 );
 
-export const FormButton: FC<SubmitProps> = (props) => (
+export const FormButton: FC<SubmitProps> = ({ labelValue, ...props }) => (
     <input
         className={styles.submit}
-        placeholder=" "
         {...props}
         name="submit"
         id="submit"
-        value={props.labelValue}
+        value={labelValue}
     />
 );

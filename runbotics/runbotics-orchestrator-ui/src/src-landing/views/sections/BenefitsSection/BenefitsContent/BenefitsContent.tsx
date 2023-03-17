@@ -6,11 +6,12 @@ import benefitsArrows from '#public/images/shapes/benefits-arrows.svg';
 import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import { BENEFITS_TITLE_ID } from '../BenefitsSection.utils';
 import styles from './BenefitsContent.module.scss';
 
 const BenefitsContent: FC = () => (
     <article className={styles.root}>
-        <Typography variant="h2" className={styles.title}>
+        <Typography id={BENEFITS_TITLE_ID} variant="h2" className={styles.title}>
             {translate('Landing.Benefits.Title')}
         </Typography>
         <div className={styles.content}>

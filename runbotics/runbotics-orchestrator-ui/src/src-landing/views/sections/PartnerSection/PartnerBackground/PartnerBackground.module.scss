@@ -1,0 +1,33 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROWS_MIN_HEIGHT: 400px;
+
+.root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    isolation: isolate;
+}
+
+.contentBackground {
+    background-color: $palette-background-tertiary;
+}
+
+.arrowBackground {
+    background-image: url('/images/banners/partner-background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.arrows {
+    z-index: 1;
+    opacity: 0.56;
+    width: 100%;
+    min-height: $ARROWS_MIN_HEIGHT;
+    background-image: url('/images/shapes/partner-arrows.png');
+    background-position: 25%;
+    background-size: cover;
+    mix-blend-mode: multiply;
+}

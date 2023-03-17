@@ -3,10 +3,7 @@ import { DesktopRunResponse } from "./DesktopRunResponse";
 
 export abstract class StatelessActionHandler {
     abstract run(
-        request: DesktopRunRequest<any>
-    ): Promise<DesktopRunResponse<any>>;
+        request: DesktopRunRequest
+    ): Promise<DesktopRunResponse>;
 
-    getType() {
-        return "StatelessActionHandler";
-    }
 }

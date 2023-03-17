@@ -4,6 +4,7 @@ import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
+import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
@@ -39,10 +40,18 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+    private final ProcessRepository processRepository;
+
+    public UserService(
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        AuthorityRepository authorityRepository,
+        ProcessRepository processRepository
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.processRepository = processRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -223,6 +232,8 @@ public class UserService {
                     log.debug("Deleted User: {}", user);
                 }
             );
+
+        processRepository.deleteUnassignedPrivateProcesses();
     }
 
     /**

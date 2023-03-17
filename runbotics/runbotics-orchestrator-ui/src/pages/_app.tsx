@@ -27,8 +27,8 @@ import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
 const { publicRuntimeConfig } = getConfig();
 
-import '#src-app/theme/cronStyles.css';
 import '#src-landing/scss/main.scss';
+import '#src-landing/scss/global.scss';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;
@@ -56,7 +56,7 @@ function App(props: AppProps) {
     return (
         <div style={{ height: '100%' }}>
             <Head>
-                <title>Runbotics</title>
+                <title>RunBotics</title>
             </Head>
             <CacheProvider value={emotionCache}>
                 <Provider store={store}>

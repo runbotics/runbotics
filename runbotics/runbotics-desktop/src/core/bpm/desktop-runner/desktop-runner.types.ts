@@ -1,0 +1,34 @@
+import { StatefulActionHandler, StatelessActionHandler } from 'runbotics-sdk';
+import { Worker } from 'worker_threads';
+
+// helper abstract class implementation type
+export type ActionHandler =  { new(): StatelessActionHandler | StatefulActionHandler };
+
+export type ExternalHandlersMap = Map<string, any>;
+
+export type InternalHandlerKey =
+| 'api'
+| 'application'
+| 'asana'
+| 'beeOffice'
+| 'browser'
+| 'csv'
+| 'file'
+| 'general'
+| 'google'
+| 'import'
+| 'jira'
+| 'loop'
+| 'mail'
+| 'javascript'
+| 'typescript'
+| 'sap'
+| 'sharepointExcel'
+| 'sharepointFile'
+| 'variables';
+
+export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
+
+export type HandlersInstancesMap<T = string> = Map<T, StatefulActionHandler | StatelessActionHandler>;
+
+export type ExternalActionWorkerMap = Map<string, Worker>;

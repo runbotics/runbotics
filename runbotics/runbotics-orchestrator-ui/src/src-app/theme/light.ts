@@ -35,6 +35,10 @@ export const lightTheme: ThemeOptions = {
         infoIcon: {
             default: blueGrey[600],
         },
+        tag: {
+            variable: blueGrey[100],
+            action: blueGrey[50]
+        },
         text: {
             primary: '#000000',
             secondary: '#000000',

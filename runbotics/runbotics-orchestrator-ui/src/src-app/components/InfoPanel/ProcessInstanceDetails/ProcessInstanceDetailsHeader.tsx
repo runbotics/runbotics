@@ -33,6 +33,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
             <Grid item xs={12}>
                 <Typography variant="h4">{processInstance.process.name}</Typography>
             </Grid>
+
             <Grid item>
                 <Typography>
                     <Label color={getProcessInstanceStatusColor(processInstance.status)}>

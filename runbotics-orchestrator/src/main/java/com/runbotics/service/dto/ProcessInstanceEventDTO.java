@@ -24,6 +24,8 @@ public class ProcessInstanceEventDTO implements Serializable {
 
     private String executionId;
 
+    private String script;
+
     @Lob
     private String input;
 
@@ -80,8 +82,16 @@ public class ProcessInstanceEventDTO implements Serializable {
         return executionId;
     }
 
+    public String getScript() {
+        return script;
+    }
+
     public void setExecutionId(String executionId) {
         this.executionId = executionId;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
     }
 
     public String getInput() {
@@ -155,6 +165,7 @@ public class ProcessInstanceEventDTO implements Serializable {
             ", step='" + getStep() + "'" +
             ", processInstance='" + getProcessInstance() + "'" +
             ", executionId='" + getExecutionId() + "'" +
+            ", script='" + getScript() + "'" +
             ", input='" + getInput() + "'" +
             ", output='" + getOutput() + "'" +
             ", finished='" + getFinished() + "'" +

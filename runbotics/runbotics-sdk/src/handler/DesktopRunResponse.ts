@@ -1,4 +1,1 @@
-export interface DesktopRunResponse<O> {
-    status: string;
-    output: O;
-}
+export type DesktopRunResponse<O = any> = O | void;

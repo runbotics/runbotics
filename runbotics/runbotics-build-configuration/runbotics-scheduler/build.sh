@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ -z "$1" ]
 then
-    PACKAGE_VERSION=$(cat package.json \
+    PACKAGE_VERSION=$(cat ./runbotics-scheduler/package.json \
         | grep version \
         | head -1 \
         | awk -F: '{ print $2 }' \

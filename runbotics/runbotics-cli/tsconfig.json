@@ -3,13 +3,14 @@
         "outDir": "dist",
         "strict": true,
         "target": "ESNext",
-        "module": "CommonJS",
+        "module": "ESNext",
         "sourceMap": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
+        "baseUrl": "."
     },
     "include": [
-        "src",
+        "src/**/*",
     ],
     "exclude": [
         "node_modules"

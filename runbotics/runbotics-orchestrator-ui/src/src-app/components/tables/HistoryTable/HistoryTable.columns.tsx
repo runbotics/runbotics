@@ -1,9 +1,9 @@
 import React from 'react';
 
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { IconButton } from '@mui/material';
 import moment from 'moment';
 import { FeatureKey } from 'runbotics-common';
+
+import BotProcessRunner from '#src-app/components/BotProcessRunner';
 
 import useAuth from '#src-app/hooks/useAuth';
 
@@ -19,28 +19,25 @@ import Label from '../../Label';
 
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 
-import { Column, RowCustomExpandedSpan } from '../Table';
+import { Column } from '../Table';
+import TableRowExpander from '../Table/TableRowExpander';
 
-
-
-const useProcessInstanceColumns = (): Column[] => {
+const useProcessInstanceColumns = (
+    rerunEnabled: boolean,
+    onRerunProcess: () => void
+): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
 
-    const columns = [
+    let columns = [
         {
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.subProcesses && row.original.subProcesses.length > 0 ? (
-                    <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                        <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                            <ArrowForwardIosIcon fontSize="small" />
-                        </IconButton>
-                    </RowCustomExpandedSpan>
+                row.original.subProcesses?.length > 0 ? (
+                    <TableRowExpander row={row} />
                 ) : null,
-            width: '20px',
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
@@ -52,7 +49,11 @@ const useProcessInstanceColumns = (): Column[] => {
             accessor: 'status',
             width: '200px',
             Cell: ({ value }) => {
-                const formattedStatus = capitalizeFirstLetter({ text: value, lowerCaseRest: true, delimiter: /_| / });
+                const formattedStatus = capitalizeFirstLetter({
+                    text: value,
+                    lowerCaseRest: true,
+                    delimiter: /_| /,
+                });
                 return (
                     <Label color={getProcessInstanceStatusColor(value)}>
                         {/* @ts-ignore */}
@@ -80,12 +81,32 @@ const useProcessInstanceColumns = (): Column[] => {
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
+        // {
+        //     Header: ' ',
+        //     id: 'rerun-menu',
+        //     width: '70px',
+        //     Cell: ({ row }) =>
+        //         row.depth === 0 && row.original.input ? (
+        //             <BotProcessRunner
+        //                 process={row.original.process}
+        //                 rerunProcessInstance={row.original}
+        //                 onRunClick={onRerunProcess}
+        //             />
+        //         ) : null,
+        //     featureKeys: [FeatureKey.PROCESS_START],
+        // },
     ];
 
+    if (!rerunEnabled) {
+        columns = columns.filter(column => column.id !== 'rerun-menu');
+    }
+
     const accessedColumns = columns.filter((column) =>
-        column.featureKeys ? hasFeatureKeyAccess(authUser, column.featureKeys) : true,
+        column.featureKeys
+            ? hasFeatureKeyAccess(authUser, column.featureKeys)
+            : true
     );
 
     return accessedColumns;

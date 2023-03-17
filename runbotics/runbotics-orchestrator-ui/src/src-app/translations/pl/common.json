@@ -17,21 +17,19 @@
     "Common.Yes": "Tak",
     "Common.No": "Nie",
     "Common.Import": "Importuj",
+    "Common.Import.InvalidExtension": "Nie poprawne rozszerzenie (użyj: {{ extensions }})",
     "Common.Export": "Exportuj",
     "Common.True": "Prawda",
     "Common.False": "Fałsz",
     "Common.String": "Tekst",
     "Common.Boolean": "Wartość logiczna",
     "Common.List": "Lista",
-    
     "Common.Time.Hours.Short": "h",
     "Common.Time.Minutes.Short": "m",
     "Common.Time.Seconds.Short": "s",
     "Common.Time.Miliseconds.Short": "ms",
-
     "Common.Errors.Request.GeneralError": "Coś poszło nie tak",
     "Common.Errors.UnexpectedError": "Wystąpił nieoczekiwany błąd.",
-
     "Common.Languages.pl": "polski",
     "Common.Languages.en": "angielski"
 }

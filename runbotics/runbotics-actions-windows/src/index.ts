@@ -1,7 +1,7 @@
-// export * from './automation/office/ExcelAutomation';
-// export * from './automation/office/PowerPointAutomation';
+import ExcelActionHandler from './automation/office/excel.action-handler';
+import PowerPointActionHandler from './automation/office/power-point.action-handler';
 
 export default {
-    excel: "ExcelAutomation",
-    "desktop.powerpoint": "PowerPointAutomation",
+    excel: ExcelActionHandler,
+    powerpoint: PowerPointActionHandler,
 };

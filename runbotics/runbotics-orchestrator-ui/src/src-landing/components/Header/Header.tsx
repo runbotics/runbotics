@@ -4,22 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
-import { translate } from '#src-app/hooks/useTranslations';
+import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
-import {
-    BENEFITS_SECTION_ID,
-    INTEGRATION_SECTION_ID,
-    INDUSTRY_SECTORS_SECTION_ID,
-    RPA_SECTION_ID,
-    PARTNER_SECTION_ID,
-    TEMPLATE_SECTION_ID,
-    CONTACT_US_SECTION_ID,
-} from '#src-landing/utils/utils';
+import Navbar from '../Navbar';
 
 import styles from './Header.module.scss';
 
 const Header = () => {
+    const { translate } = useTranslations();
+
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
     const toggleNav = () => {
@@ -32,9 +27,9 @@ const Header = () => {
         }
     };
 
-    const navMobileStyle = isNavExpanded
-        ? styles.navLinksExpanded
-        : styles.hideNavLinksExpanded;
+    const handleFocus = () => {
+        document.getElementById(MAIN_CONTENT_ID).focus();
+    };
 
     const iconMobileStyle = isNavExpanded ? styles.isActive : '';
 
@@ -46,6 +41,14 @@ const Header = () => {
                     className={styles.logo}
                     alt="RunBotics logo"
                 />
+                <Link className={styles.skipNavLink} href={`#${MAIN_CONTENT_ID}`} onClick={handleFocus}>
+                    <Typography
+                        variant="h6"
+                        color="secondary"
+                        className={styles.btnText}
+                        text={translate('Landing.Header.Button.SkipNav')}
+                    />
+                </Link>
                 <button
                     className={`${styles.menuIcon} ${iconMobileStyle}`}
                     onClick={toggleNav}
@@ -54,97 +57,13 @@ const Header = () => {
                     <span></span>
                     <span></span>
                 </button>
-                <nav>
-                    <ul
-                        className={`${styles.navLinkWrapper} ${navMobileStyle}`}
-                    >
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${BENEFITS_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate(
-                                    'Landing.Header.Nav.Option.RunBotics'
-                                )}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${RPA_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate('Landing.Header.Nav.Option.RPA')}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${INDUSTRY_SECTORS_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate('Landing.Header.Nav.Option.ForWho')}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${TEMPLATE_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate(
-                                    'Landing.Header.Nav.Option.Resources'
-                                )}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${INTEGRATION_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate(
-                                    'Landing.Header.Nav.Option.Integration'
-                                )}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${PARTNER_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate(
-                                    'Landing.Header.Nav.Option.Partners'
-                                )}
-                            </Link>
-                        </li>
-                        <li className={styles.listItem}>
-                            <Link
-                                href={`#${CONTACT_US_SECTION_ID}`}
-                                className={styles.link}
-                                onClick={hideNav}
-                                scroll={false}
-                            >
-                                {translate(
-                                    'Landing.Header.Nav.Option.ContactUs'
-                                )}
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-                <Link href="/login" className={styles.logInBtn}>
+                <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
+                <Link className={styles.logInBtn} href="/login">
                     <Typography
-                        variant="nav"
+                        variant="h6"
                         color="accent"
-                        text={translate('Landing.Header.Nav.Button.LogIn')}
+                        className={styles.btnText}
+                        text={translate('Landing.Header.Button.LogIn')}
                     />
                 </Link>
             </div>

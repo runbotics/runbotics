@@ -24,11 +24,12 @@ export class ProcessInstanceSchedulerService {
             status,
             created: dayjs().toISOString(),
             updated: dayjs().toISOString(),
+            input: JSON.stringify({ variables: job.data.input?.variables }),
             user: job.data.user,
             process: job.data.process,
             error: errorMessage,
-            trigger: { name: job.data.trigger },
-            ...(job.data?.triggeredBy && { triggeredBy: job.data.triggeredBy }),
+            trigger: job.data.trigger,
+            ...(job.data?.triggerData && { triggerData: job.data.triggerData }),
         };
         await this.processInstanceService.save(processInstance);
         this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);

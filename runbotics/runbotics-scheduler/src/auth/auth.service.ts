@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ServerConfigService } from '../config/serverConfig.service';
+import { ServerConfigService } from '../config/server-config/server-config.service';
 import { BotEntity } from '../database/bot/bot.entity';
 import { BotService } from '../database/bot/bot.service';
 import { UserService } from '../database/user/user.service';
@@ -21,14 +21,15 @@ interface ValidatorBotWsProps {
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         private readonly userService: UserService,
         private readonly botService: BotService,
         private readonly botSystemService: BotSystemService,
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
-    ) { }
-    private logger: Logger = new Logger(AuthService.name);
+    ) {}
 
     validatePayload(payload: JWTPayload) {
         return this.userService.findByLogin(payload.sub);
@@ -107,7 +108,7 @@ export class AuthService {
                 || (areMajorVersionsEqual && areMinorVersionsEqual && isMinimumPatchVersionFulfilled)
                 || (areMajorVersionsEqual && areMinorVersionsEqual && arePatchVersionsEqual)
             );
-        } catch (err) {
+        } catch (err: any) {
             this.logger.error('bot version error', err);
             throw new WsException(err);
         }

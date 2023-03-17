@@ -5,7 +5,7 @@ import { ProcessService } from './process.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessEntity])],
-    exports: [TypeOrmModule, ProcessService],
+    exports: [ProcessService],
     providers: [ProcessService],
 })
 export class ProcessModule {}

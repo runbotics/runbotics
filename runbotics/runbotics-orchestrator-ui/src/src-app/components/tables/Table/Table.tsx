@@ -21,7 +21,7 @@ import If from '../../utils/If';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper } from './Table.styles';
 import { DataTableProps } from './Table.types';
-import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT } from './Table.utils';
+import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
 
 
 // eslint-disable-next-line complexity
@@ -99,7 +99,7 @@ const Table = <T extends object>({
             <TableCell
                 {...cell.getCellProps()}
                 onClick={
-                    cell.column.id !== 'expander' && cell.column.id !== 'button' ? () => handleRowClick(row) : undefined
+                    !INTERACTIVE_COLUMNS.includes(cell.column.id) ? () => handleRowClick(row) : undefined
                 }
                 sx={cell.column.id === 'expander' ? { padding: '11px 16px' } : undefined}
             >

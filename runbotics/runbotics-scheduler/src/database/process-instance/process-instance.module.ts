@@ -5,7 +5,7 @@ import { ProcessInstanceService } from './process-instance.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessInstanceEntity])],
-    exports: [TypeOrmModule, ProcessInstanceService],
+    exports: [ProcessInstanceService],
     providers: [ProcessInstanceService],
 })
 export class ProcessInstanceModule {}

@@ -4,10 +4,10 @@ import { Logger } from 'src/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
 import { ProcessService } from 'src/database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
-import { ServerConfigService } from 'src/config/serverConfig.service';
+import { ServerConfigService } from 'src/config/server-config/server-config.service';
 import { QueueService } from 'src/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
-import { IProcessInstance, ProcessInstanceStatus, ProcessTrigger } from 'runbotics-common';
+import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -19,10 +19,8 @@ const FETCH_MAILS_CONFIG: FetchQueryObject = {
     flags: true,
 };
 
-const DEFAULT_MAILBOX = 'INBOX';
 const EVERY_MINUTE_CRON = '0 * * * * *';
 const SEEN_FLAG = '\\Seen';
-const AUTHORISED_DOMAIN = 'all-for-one.com';
 const EMAIL_TRIGGER_CRON_JOB_NAME = 'email_trigger';
 
 @Injectable()
@@ -41,20 +39,20 @@ export class MailService implements OnModuleInit {
     public onModuleInit() {
         try {
             this.checkMailConfig();
-        } catch (e) {
-            this.logger.error(e);
+        } catch (e: any) {
+            this.logger.warn(e.message);
             return;
         }
 
         this.server = createTransport({
-            ...this.serverConfigService.sendEmailConfig,
+            ...this.serverConfigService.writeEmailTriggerConfig,
             secure: true
         });
     }
 
     private initializeServices() {
         this.client = new ImapFlow({
-            ...this.serverConfigService.readEmailConfig,
+            ...this.serverConfigService.readEmailTriggerConfig,
             secure: true,
             tls: {
                 rejectUnauthorized: false
@@ -64,23 +62,23 @@ export class MailService implements OnModuleInit {
     }
 
     private checkMailConfig() {
-        if (!this.serverConfigService.readEmailConfig.auth.user || !this.serverConfigService.readEmailConfig.auth.pass) {
-            throw new Error('Missing mail auth config: Email trigger won\'t be available');
+        if (!this.serverConfigService.readEmailTriggerConfig.auth.user || !this.serverConfigService.readEmailTriggerConfig.auth.pass) {
+            throw new Error('Missing mail auth config. Basic email trigger won\'t be available');
         }
 
-        if (!this.serverConfigService.readEmailConfig.host || !this.serverConfigService.readEmailConfig.port) {
-            throw new Error('Missing imap mail config: Email trigger won\'t be available');
+        if (!this.serverConfigService.readEmailTriggerConfig.host || !this.serverConfigService.readEmailTriggerConfig.port) {
+            throw new Error('Missing imap mail config. Basic email trigger won\'t be available');
         }
 
-        if (!this.serverConfigService.sendEmailConfig.host || !this.serverConfigService.sendEmailConfig.port) {
-            throw new Error('Missing smtp mail config: Email trigger won\'t be available');
+        if (!this.serverConfigService.writeEmailTriggerConfig.host || !this.serverConfigService.writeEmailTriggerConfig.port) {
+            throw new Error('Missing smtp mail config. Basic email trigger won\'t be available');
         }
     }
 
     private isMailConfigProvided() {
-        return this.serverConfigService.sendEmailConfig.host && this.serverConfigService.sendEmailConfig.port
-            && this.serverConfigService.readEmailConfig.host && this.serverConfigService.readEmailConfig.port
-            && this.serverConfigService.readEmailConfig.auth.user && this.serverConfigService.readEmailConfig.auth.pass;
+        return this.serverConfigService.writeEmailTriggerConfig.host && this.serverConfigService.writeEmailTriggerConfig.port
+            && this.serverConfigService.readEmailTriggerConfig.host && this.serverConfigService.readEmailTriggerConfig.port
+            && this.serverConfigService.readEmailTriggerConfig.auth.user && this.serverConfigService.readEmailTriggerConfig.auth.pass;
     }
 
     @Cron(EVERY_MINUTE_CRON, { name: EMAIL_TRIGGER_CRON_JOB_NAME })
@@ -94,7 +92,7 @@ export class MailService implements OnModuleInit {
 
         try {
             this.initializeServices();
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(error.message);
             return;
         }
@@ -108,9 +106,9 @@ export class MailService implements OnModuleInit {
                 throw new Error(error.message);
             });
 
-        
-        const lock = await this.client.getMailboxLock(DEFAULT_MAILBOX);
-        await this.client.mailboxOpen(DEFAULT_MAILBOX);
+        const mailbox = this.serverConfigService.emailTriggerConfig.mailbox || 'INBOX';
+        const lock = await this.client.getMailboxLock(mailbox);
+        await this.client.mailboxOpen(mailbox);
 
         const processedMails: number[] = [];
         
@@ -119,7 +117,7 @@ export class MailService implements OnModuleInit {
 
             for await (const msg of messages) {
                 try {
-                    if (!this.hasTriggerAccess(msg.envelope.from[0].address)) {
+                    if (!this.isDomainAllowed(msg.envelope.from[0].address)) {
                         continue;
                     }
 
@@ -131,23 +129,30 @@ export class MailService implements OnModuleInit {
                     const process = await this.validateTitle(msg.envelope);
                     const variables = await this.extractMailBody(msg.source);
                     
-                    const input = { variables };
+                    const input = {
+                        variables: {
+                            ...variables,
+                            initiator: sender.toLocaleLowerCase(),
+                        },
+                    };
 
                     await this.queueService.createInstantJob({
                         process,
                         input,
                         user: null,
-                        trigger: ProcessTrigger.EMAIL,
-                        triggeredBy: sender.toLowerCase(),
+                        trigger: { name: TriggerEvent.EMAIL },
+                        triggerData: {
+                            sender: sender.toLowerCase(),
+                        },
                     });
-                } catch (error) {
+                } catch (error: any) {
                     this.logger.error(error.message, error);
                     await this.sendReplyErrorMail(msg.envelope, error.message);
                 }
             }
 
             if (processedMails.length) {
-                this.logger.log('Mails processsed: ', processedMails);
+                this.logger.log('Mails processed: ', processedMails);
             } else {
                 this.logger.log('No mails processed ');
             }
@@ -162,11 +167,11 @@ export class MailService implements OnModuleInit {
     }
 
     public async sendProcessResultMail(processInstance: IProcessInstance) {
-        if (!processInstance.triggeredBy) return;
+        if (processInstance.trigger.name !== TriggerEvent.EMAIL || !processInstance.triggerData) return;
 
         await this.server.sendMail({
-            from: this.serverConfigService.sendEmailConfig.auth.user,
-            to: processInstance.triggeredBy,
+            from: this.serverConfigService.writeEmailTriggerConfig.auth.user,
+            to: (processInstance.triggerData as EmailTriggerData).sender,
             subject: `Re: ${processInstance.process.id}`,
             text: this.getProcessResultMailText(processInstance),
         });
@@ -174,7 +179,7 @@ export class MailService implements OnModuleInit {
 
     private getProcessResultMailText(processInstance: IProcessInstance) {
         if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-            return `An error occured during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
+            return `An error occurred during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
         }
         
         if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
@@ -216,7 +221,7 @@ export class MailService implements OnModuleInit {
                 ...input,
                 ...this.extractAttachments(parsed.attachments)
             };
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(`Wrong body format: ${error.message}`);
             throw new Error(`Wrong body format: ${error.message}`);
         }
@@ -232,7 +237,7 @@ export class MailService implements OnModuleInit {
 
     private parseMailBody(text: string) {
         return text
-            .split(/\r?\n/)
+            ?.split(/\r?\n/)
             .reduce((input, line, index) => {
                 if (!line) return input;
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -244,8 +249,10 @@ export class MailService implements OnModuleInit {
             }, {});
     }
 
-    private hasTriggerAccess(emailAdress: string) {
-        return emailAdress.includes(`@${AUTHORISED_DOMAIN}`);
+    private isDomainAllowed(emailAddress: string) {
+        const senderDomain = emailAddress.split('@')[1];
+        return this.serverConfigService.emailTriggerConfig.domainWhitelist.length === 0
+            || this.serverConfigService.emailTriggerConfig.domainWhitelist.includes(senderDomain);
     }
 
 } 

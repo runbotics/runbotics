@@ -1,5 +1,4 @@
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { CircularProgress, IconButton } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import moment from 'moment';
 
 import { IProcessInstance } from 'runbotics-common';
@@ -7,7 +6,8 @@ import { IProcessInstance } from 'runbotics-common';
 
 
 
-import { Column, RowCustomExpandedSpan } from '#src-app/components/tables/Table';
+import { Column } from '#src-app/components/tables/Table';
+import TableRowExpander from '#src-app/components/tables/Table/TableRowExpander';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler/Scheduler.state';
@@ -55,7 +55,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ user, trigger, triggeredBy }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',
@@ -95,7 +95,7 @@ export const useWaitingProcessColumns = (): Column<QueueJob>[] => {
         {
             Header: translate('Scheduler.WaitingProcess.Table.Header.Initiator'),
             width: '20%',
-            accessor: ({ data: { user, trigger, triggeredBy } }) => mapInitiatorLabel({ user, trigger, triggeredBy }),
+            accessor: ({ data: { user, trigger, triggerData } }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',
@@ -116,13 +116,9 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) => row.original.cron ? (
-                <RowCustomExpandedSpan isExpanded={row.isExpanded}>
-                    <IconButton {...row.getToggleRowExpandedProps()} size="small">
-                        <ArrowForwardIosIcon fontSize="small" />
-                    </IconButton>
-                </RowCustomExpandedSpan>
+                <TableRowExpander row={row} />
             ) : null,
-            width: '20px',
+            width: '100px',
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.ScheduleId'),

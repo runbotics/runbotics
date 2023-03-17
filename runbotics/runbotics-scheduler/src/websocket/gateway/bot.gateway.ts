@@ -13,16 +13,12 @@ import { Logger } from 'src/utils/logger';
 import { AuthService } from 'src/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
-import { BotWsMessage, IProcessInstance, IProcessInstanceEvent, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
 import { BotAuthSocket } from 'src/types/auth-socket';
 import { WsBotJwtGuard } from 'src/auth/guards';
 import { UiGateway } from './ui.gateway';
 import { BotService } from 'src/database/bot/bot.service';
-import { ServerConfigService } from 'src/config/serverConfig.service';
-import { FileUploadService } from 'src/queue/upload/file-upload.service';
-import { MicrosoftSessionService } from 'src/auth/microsoft.session';
-
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -36,9 +32,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botProcessEventService: BotProcessEventService,
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
-        private readonly serverConfigSercvice: ServerConfigService,
-        private readonly fileUploadService: FileUploadService,
-        private readonly microsoftSessionService: MicrosoftSessionService,
     ) { }
 
     async handleConnection(client: Socket) {
@@ -46,14 +39,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         const { bot } = await this.authService.validateBotWebsocketConnection({ client });
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
-
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
         client.join(bot.installationId);
     }
 
     async handleDisconnect(client: Socket) {
         const installationId = client.handshake.auth.installationId;
-
         const botExists = await !!this.botService.findByInstallationId(installationId);
 
         if (botExists) {
@@ -75,12 +66,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
-        if (processInstance.status === ProcessInstanceStatus.COMPLETED && this.serverConfigSercvice.sharepointPassword) {
-            this.logger.log('Clearing sharepoint temporary files');
-            const { token } = await this.microsoftSessionService.getToken();
-            await this.fileUploadService.deleteTempFolder(token, processInstance.orchestratorProcessInstanceId)
-                .catch(() => this.logger.log('Temp folder not found'));
-        }
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -89,10 +74,24 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
+        if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
+            this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
+            return;
+        }
+        
+        setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
+    }
+    
+    @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT)
+    async listenForProcessInstanceLoopEvent(
+        @ConnectedSocket() socket: BotAuthSocket,
+        @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
+    ) {
         const installationId = socket.bot.installationId;
-        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, socket.bot);
-        this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+        this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -105,5 +104,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Saving logs from bot ${installationId} in a file`);
         this.botLogService.writeLogsToFile(client.bot.id, logs);
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
+    }
+
+    private async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
+        const installationId = bot.installationId;
+        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+        await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
+        this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 }

@@ -10,7 +10,7 @@ interface IBehaviour {
 export interface IActivityOwner extends BpmnEngine {
     behaviour?: IBehaviour;
 }
-export interface IEnviroment extends BpmnEngineExecutionEnvironment {
+export interface IEnvironment extends BpmnEngineExecutionEnvironment {
     runbotic: {
         disabled?: boolean;
     };

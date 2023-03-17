@@ -1,62 +1,109 @@
 @import "#src-landing/scss/main.scss";
 
-$ARROWS_HEIGHT: 450px;
-$MIN_CONTENT_WIDTH: 500px;
+$ARROWS_HEIGHT: 500px;
+$PC_CONTENT_PADDING: $padding-6 + $padding-2 + $padding-1 + $padding-2 + $padding-6;
+$MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
 
-@mixin backgroundArrowImage($image-url, $position) {
-  z-index: 1;
-  align-self: center;
-  width: 100%;
-  height: $ARROWS_HEIGHT;
-  background-image: url($image-url);
-  background-position: center $position;
-  background-repeat: no-repeat;
-  mix-blend-mode: soft-light;
+@mixin addBackgroundImage ($url, $width, $backgroundPosition, $right: auto, $left: auto) {
+    position: absolute;
+    inset: 0 $right auto $left;
+    width: $width;
+    height: 100%;
+    content: '';
+    background-image: url($url);
+    background-repeat: no-repeat;
+    background-position: $backgroundPosition;
+    mix-blend-mode: soft-light;
+}
+
+@mixin translateHorizontally ($translatePosition) {
+    transform: translateX($translatePosition);
 }
 
 .root {
-  overflow: hidden;
-  backdrop-filter: blur(4px);
-  background-image: url('/images/banners/circuits-background.png');
-  background-repeat: repeat-x;
-  isolation: isolate;
-}
-
-.backgroundBanner {
-  position: relative;
-  display: grid;
-  grid-template-columns: 2fr minmax($MIN_CONTENT_WIDTH, 1fr) 1fr;
-  justify-content: center;
-}
-
-.backgroundDimmer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-color: $text-color-dark;
-  opacity: 0.75;
-}
-
-.threeArrows {
-  @include backgroundArrowImage('/images/shapes/three-arrows-right.svg', right);
-}
-
-.oneArrow {
-  @include backgroundArrowImage('/images/shapes/arrow-right.svg', left);
-}
-  
-  @media (max-width: $breakpoint-sm) {
-    .backgroundBanner {
-      display: flex;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    background-image: url('/images/banners/circuits-background.png');
+    background-repeat: repeat-x;
+    isolation: isolate;
+    
+    &::before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 200%;
+        height: 100%;
+        content: '';
+        opacity: 0.75;
+        background-color: $text-color-dark;
     }
+}
 
-    .threeArrows {
-      display: none;
-    }
+.centered {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    min-height: $ARROWS_HEIGHT;  
+    padding-top: $padding-14;
+    padding-bottom: $padding-14;
+}
 
-    .oneArrow {
-      display: none;
+.rightColumn {
+    position: relative;
+    width: 50%;
+    color: $text-color-light;
+    padding-inline: $PC_CONTENT_PADDING;
+
+    &::before {
+        @include addBackgroundImage(
+            $url: '/images/shapes/RPA-arrows-long.svg',
+            $width: 80vw, 
+            $backgroundPosition: right,
+            $left: 0
+        );
+        @include translateHorizontally(calc(-100% + $PC_CONTENT_PADDING - $padding-2));
     }
-  }
+    
+    &::after {
+        @include addBackgroundImage(
+            $url: '/images/shapes/RPA-arrows-short.svg', 
+            $width: 60vw, 
+            $backgroundPosition: left, 
+            $right: 0
+        );
+        @include translateHorizontally(calc(100% - $PC_CONTENT_PADDING - $padding-2));
+    }
+}
+
+@media (max-width: $breakpoint-lg) {
+    .rightColumn {
+        width: 70%;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .rightColumn {
+        padding: $MOBILE_CONTENT_PADDING;
+
+        &::before {
+            @include translateHorizontally(calc(-100% + $MOBILE_CONTENT_PADDING - $padding-2));
+        }
+        
+        &::after {
+            @include translateHorizontally(calc(100% - $MOBILE_CONTENT_PADDING));
+        }
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .rightColumn {
+        width: 100%;
+        padding-inline: $padding-0;
+
+        &::before, &::after {
+            display: none;
+        }
+    }
+}

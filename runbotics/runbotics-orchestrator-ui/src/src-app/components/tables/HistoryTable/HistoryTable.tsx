@@ -4,8 +4,8 @@ import { Box, SxProps } from '@mui/material';
 import { Theme } from '@mui/system';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
-
 
 import InfoPanel from '#src-app/components/InfoPanel';
 
@@ -14,6 +14,7 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useQuery from '#src-app/hooks/useQuery';
 
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
@@ -42,11 +43,14 @@ interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
     processId?: ProcessInstanceRequestCriteria['processId'];
     title?: ReactNode;
     sx?: SxProps<Theme>;
+    rerunEnabled?: boolean;
 }
 
 // eslint-disable-next-line complexity
-const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title }, ref) => {
+const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+    const { translate } = useTranslations();
     const tableRef = useRef<HTMLDivElement>(null);
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
@@ -59,7 +63,6 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
-    const processInstanceColumns = useProcessInstanceColumns();
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
     const replaceQueryParams = useReplaceQueryParams();
 
@@ -83,7 +86,15 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                     ...(processId && { processId }),
                 },
             },
-        }));
+        }))
+            .then(unwrapResult)
+            .catch((error) => {
+                enqueueSnackbar(
+                    error?.message as string ?? translate('History.Table.Error'),
+                    { variant: 'error' },
+                );
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pageSize, page]);
 
     useImperativeHandle(ref, () => ({
@@ -116,6 +127,12 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const handleCloseButton = () => {
         setPanelInfoState({ show: false });
     };
+
+    const handleRerunProcess = () => {
+        setPanelInfoState({ show: true });
+    };
+    
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
 
     return (
         <Wrapper>

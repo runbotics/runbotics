@@ -24,4 +24,5 @@ export interface TypographyProps {
     font?: 'Roboto' | 'Montserrat';
     className?: string;
     text?: string;
+    id?: string;
 }

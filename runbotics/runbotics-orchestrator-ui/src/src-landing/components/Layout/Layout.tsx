@@ -1,14 +1,14 @@
 import React from 'react';
 
+import Footer from '#src-landing/components/Footer';
 import Header from '#src-landing/components/Header';
-
-import styles from './Layout.module.scss';
+import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
 const Layout = ({ children }) => (
     <>
         <Header />
-        <main className={styles.main}>{children}</main>
-        <footer></footer>
+        <main id={MAIN_CONTENT_ID} tabIndex={-1}>{children}</main>
+        <Footer />
     </>
 );
 

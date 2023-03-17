@@ -43,10 +43,6 @@ const StyledPage = styled(Page)(({ theme }) => ({
         backgroundColor: theme.palette.background.default,
     },
 
-    [`& .${classes.logo}`]: {
-        width: '18rem',
-    },
-
     [`& .${classes.container}`]: {
         paddingBottom: 80,
         paddingTop: 80,
@@ -72,14 +68,14 @@ const RegisterView: FC = () => {
     return (
         <StyledPage className={classes.root} title={translate('Register.Meta.Title')}>
             <Container className={classes.container} maxWidth="sm">
-                <Box mb={8} display="flex" justifyContent="center">
-                    <RouterLink href="/" legacyBehavior>
-                        <Logo className={classes.logo} />
+                <Box mb={6} display="flex" justifyContent="center">
+                    <RouterLink href="/">
+                        <Logo height={100} />
                     </RouterLink>
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>
-                        <Box alignItems="center" display="flex" justifyContent="space-between" mb={0}>
+                        <Box alignItems="center" display="flex" justifyContent="center" mb={0}>
                             <div>
                                 <Typography color="textPrimary" gutterBottom variant="h2">
                                     {translate('Register.SignUp')}
@@ -207,7 +203,7 @@ const RegisterView: FC = () => {
                             <Divider />
                         </Box>
                         <RouterLink href="/login" passHref legacyBehavior>
-                            <Link variant="body2" color="textSecondary">
+                            <Link variant="body2" color="textSecondary" sx={{ textAlign: 'center' }}>
                                 {translate('Register.SwitchToLoginMessage')}
                             </Link>
                         </RouterLink>

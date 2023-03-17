@@ -14,7 +14,7 @@
 In order to run locally RunBotics you need to fulfill the following requirements on your development environment:
 
 - `Windows OS`
-- `Node.js 14`
+- `Node.js ^14.17.x`
 - `Java 11`
 - `Visual C++ Build Tools`
 - `@microsoft/rush`

@@ -29,10 +29,13 @@ const useTranslations = () => {
         moment.locale(lang);
     };
 
+    const currentLanguage = i18n.language;
+
     return {
         translate,
         translateHTML,
         switchLanguage,
+        currentLanguage
     };
 };
 

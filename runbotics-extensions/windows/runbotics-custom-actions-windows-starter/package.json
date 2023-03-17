@@ -15,7 +15,6 @@
         "start": "microbundle watch src/**/*.ts --no-compress --format cjs",
         "postinstall": "electron-builder install-app-deps"
     },
-
     "devDependencies": {
         "microbundle": "0.13.3",
         "typescript": "3.9.9",
@@ -31,10 +30,10 @@
         "runbotics-sdk": "1.0.0-SNAPSHOT.1",
         "@nestjs/common": "^7.6.15",
         "axios": "0.21.1",
-        "winax": "3.1.5"
+        "winax": "3.3.4"
     },
     "optionalDependencies": {
-        "winax": "3.1.5"
+        "winax": "3.3.4"
     },
     "files": [
         "dist"

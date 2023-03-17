@@ -1,5 +1,6 @@
 #!/bin/sh
 mkdir -p ../common/deploy/runbotics-desktop;
+rm -rf dist;
 
 echo "[INFO] runbotics-desktop - Build started";
 rushx build;

@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+import { Emoji } from 'src/utils';
 import getLocalRbConfig from './local-config';
 import verifyRemoteRbConfig from './remote-config';
 import { PRERELEASE_ID, PRERELEASE } from './utils';
 import { VersionCommandOptions, VersionOptions } from './types';
-import { Emoji } from '../utils/emoji';
 import alterFiles from './alter-files';
 import versionControl from './version-control';
 
@@ -61,7 +61,7 @@ const createNewVersion = (version: string, options: VersionOptions) => {
         return `${major}.${minor}.${parseInt(mappedPatch) + 1}`;
     }
 
-    if (!prerelease) return `${major}.${minor}.${patch}-${PRERELEASE_ID}.0`;
+    if (!prerelease) return `${major}.${parseInt(minor) + 1}.${patch}-${PRERELEASE_ID}.1`;
 
     return `${major}.${minor}.${patch}.${parseInt(prerelease) + 1}`;
 };

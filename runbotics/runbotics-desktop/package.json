@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -12,11 +12,11 @@
         "dist": "electron-builder",
         "prebuild": "rimraf dist",
         "build": "nest build",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "node dist/src/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
         "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
-        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+        "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
@@ -24,14 +24,14 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "optionalDependencies": {
-        "winax": "^3.1.5"
+        "winax": "3.3.4"
     },
     "dependencies": {
         "@nestjs-modules/mailer": "^1.8.1",
-        "@nestjs/common": "^9.1.6",
+        "@nestjs/common": "^9.2.1",
         "@nestjs/config": "^2.2.0",
-        "@nestjs/core": "^9.1.6",
-        "@nestjs/microservices": "^9.1.6",
+        "@nestjs/core": "^9.2.1",
+        "@nestjs/microservices": "^9.2.1",
         "@nestjs/schedule": "^2.1.0",
         "@stomp/stompjs": "^6.1.0",
         "asana": "^0.18.6",
@@ -57,13 +57,11 @@
         "runbotics-common": "workspace:^1.0.0",
         "runbotics-sdk": "workspace:^1.0.0",
         "rxjs": "^7.5.5",
-        "selenium-webdriver": "^4.0.0-beta.3",
-        "semaphore-async-await": "^1.5.1",
-        "smqp": "^4.0.0",
+        "selenium-webdriver": "4.0.0-beta.4",
         "socket.io": "^4.4.1",
         "socket.io-client": "^4.4.1",
         "source-map-support": "^0.5.20",
-        "typescript": "^4.3.5",
+        "typescript": "^4.9.4",
         "uuid": "^8.3.2",
         "vm2": "^3.9.3",
         "winston": "^3.4.0",
@@ -71,7 +69,7 @@
         "ws": "^7.4.5",
         "prince": "^1.9.7",
         "puppeteer": "^15.5.0",
-        "mime-types": "~2.1.35"
+        "mime-types": "^2.1.35"
     },
     "build": {
         "productName": "RunBotics",
@@ -109,32 +107,30 @@
         }
     },
     "devDependencies": {
-        "@nestjs/cli": "^8.2.4",
-        "@nestjs/schematics": "^8.0.8",
+        "@nestjs/cli": "^9.1.8",
+        "@nestjs/schematics": "^9.0.4",
         "@nestjs/testing": "^9.2.1",
         "@types/asana": "^0.18.1",
         "@types/cron": "^2.0.0",
         "@types/jest": "^27.0.2",
         "@types/lodash": "^4.14.158",
-        "@types/node": "^17.0.36",
+        "@types/node": "^18.11.18",
         "@types/nodemailer": "^6.4.1",
         "@types/selenium-webdriver": "^4.0.12",
         "@types/supertest": "^2.0.11",
         "@types/uuid": "^8.3.0",
-        "@typescript-eslint/eslint-plugin": "^5.10.1",
-        "@typescript-eslint/parser": "^5.10.1",
+        "@typescript-eslint/eslint-plugin": "^5.48.0",
+        "@typescript-eslint/parser": "^5.48.0",
+        "@types/bpmn-moddle": "^5.1.6",
         "cross-env": "^7.0.3",
-        "electron-builder": "22.11.7",
-        "eslint": "^8.0.1",
-        "eslint-config-prettier": "^8.1.0",
-        "eslint-plugin-prettier": "^3.3.1",
+        "electron-builder": "^23.6.0",
+        "eslint": "^8.31.0",
         "jest": "^27.2.5",
-        "prettier": "^2.2.1",
         "supertest": "^6.1.3",
         "ts-jest": "^27.0.3",
-        "ts-loader": "^9.3.0",
-        "ts-node": "^10.0.0",
-        "tsconfig-paths": "^3.10.1"
+        "ts-loader": "^9.4.2",
+        "ts-node": "^10.9.1",
+        "tsconfig-paths": "^4.1.2"
     },
     "jest": {
         "moduleFileExtensions": [

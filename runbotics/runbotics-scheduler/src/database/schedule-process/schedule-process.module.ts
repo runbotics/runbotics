@@ -6,6 +6,6 @@ import { ScheduleProcessService } from './schedule-process.service';
 @Module({
     imports: [TypeOrmModule.forFeature([ScheduleProcessEntity])],
     providers: [ScheduleProcessService],
-    exports: [TypeOrmModule, ScheduleProcessService],
+    exports: [ScheduleProcessService],
 })
 export class ScheduleProcessModule {}

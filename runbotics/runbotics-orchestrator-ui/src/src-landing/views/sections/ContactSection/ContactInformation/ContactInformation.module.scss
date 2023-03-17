@@ -25,21 +25,40 @@ $INFO-MAX-WIDTH: 800px;
 .gridItemText {
     font-weight: $font-weight-semi-bold;
     color: $text-color-dark;
+    word-break: break-all;
 }
 
 @media (max-width: $breakpoint-md) {
+    $ICON-COLUMN-WIDTH: 16px;
+
     .root {
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: $padding-8;
+        max-width: $INFO-MAX-WIDTH;
     }
 
     .summary,
     .infoGrid {
         width: 100%;
-        max-width: $INFO-MAX-WIDTH;
+        grid-template-columns: $ICON-COLUMN-WIDTH 1fr;
+        gap: $padding-8;
     }
 }
 
 @media (max-width: $breakpoint-sm) {
+    .root {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: $padding-6;
+    }
+
+    .summary {
+        gap: $padding-2;
+    }
+
     .summary,
     .infoGrid {
         width: unset;
@@ -50,6 +69,6 @@ $INFO-MAX-WIDTH: 800px;
     .infoGrid {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(6, 1fr);
-        gap: $margin-2;
+        gap: $padding-2;
     }
 }

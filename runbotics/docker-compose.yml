@@ -77,12 +77,27 @@ services:
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
+      - chrome
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
+  chrome:
+    container_name: chrome
+    image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+    ports:
+      - 7900:7900
+      - 4444:4444
+    shm_size: 2gb
+    environment:
+      SE_NODE_OVERRIDE_MAX_SESSIONS: 'true'
+      SE_NODE_MAX_SESSIONS: 1
+      JAVA_OPTS=-XX:ActiveProcessorCount: 1
+      # SE_VNC_VIEW_ONLY: 1
+
 volumes:
   runbotics:
-    external: true
+    name: runbotics
+    external: false
 
 networks:
   default:

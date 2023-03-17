@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -108,14 +108,15 @@
         "react-refresh": "~0.12.0",
         "@next/react-refresh-utils": "~13.0.0",
         "@mui/x-date-pickers": "~5.0.7",
-        "sharp": "~0.31.2"
+        "sharp": "~0.31.2",
+        "ajv": "^6.12.4"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",
         "@types/react-resizable": "^1.7.2",
         "@types/react-table": "^7.0.18",
         "numeral": "^2.0.6",
-        "prettier": "^2.2.1",
+        "prettier": "~2.8.4",
         "typescript": "^4.3.5",
         "webextension-polyfill-ts": "^0.24.0",
         "@types/json-schema": "^7.0.7",
@@ -142,7 +143,9 @@
         "eslint-plugin-react": "^7.26.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint": "8.26.0",
-        "cross-env": "^7.0.3"
+        "cross-env": "^7.0.3",
+        "eslint-config-prettier": "~8.6.0",
+        "eslint-plugin-prettier": "~4.2.1"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
