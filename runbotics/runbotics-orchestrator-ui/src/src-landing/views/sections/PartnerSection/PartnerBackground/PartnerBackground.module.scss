@@ -15,19 +15,20 @@ $ARROWS_MIN_HEIGHT: 400px;
     background-color: $palette-background-tertiary;
 }
 
+.arrowWrapper {
+    position: relative;
+    width: 100%;
+    min-height: $ARROWS_MIN_HEIGHT;
+    max-height: $ARROWS_MIN_HEIGHT;
+}
+
 .arrowBackground {
-    background-image: url('/images/banners/partner-background.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+    position: absolute;
+    object-fit: cover;
 }
 
 .arrows {
-    z-index: 1;
+    position: absolute;
     opacity: 0.56;
-    width: 100%;
-    min-height: $ARROWS_MIN_HEIGHT;
-    background-image: url('/images/shapes/partner-arrows.png');
-    background-position: 25%;
-    background-size: cover;
-    mix-blend-mode: multiply;
+    object-fit: cover;
 }

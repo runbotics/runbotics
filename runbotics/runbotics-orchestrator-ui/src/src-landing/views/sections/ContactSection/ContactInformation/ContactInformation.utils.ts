@@ -6,7 +6,20 @@ import { ContactInfo } from './ContactInformation.types';
 
 
 export const CONTACT_INFO: ContactInfo[] = [
-    { icon: PhoneIcon, text: 'Landing.Contact.Info.Phone.Text', iconAlt: 'Landing.Contact.Info.Phone.IconAlt' },
-    { icon: EmailIcon, text: 'Landing.Contact.Info.Email.Text', iconAlt: 'Landing.Contact.Info.Email.IconAlt' },
-    { icon: PlaceIcon, text: 'Landing.Contact.Info.Github.Text', iconAlt: 'Landing.Contact.Info.Github.IconAlt' },
+    {
+        id: 'contact-us-phone',
+        icon: PhoneIcon,
+        text: 'Landing.Contact.Info.Phone.Text',
+        iconAlt: 'Landing.Contact.Info.Phone.IconAlt'
+    }, {
+        id: 'contact-us-email',
+        icon: EmailIcon,
+        text: 'Landing.Contact.Info.Email.Text',
+        iconAlt: 'Landing.Contact.Info.Email.IconAlt'
+    }, {
+        id: 'contact-us-github',
+        icon: PlaceIcon,
+        text: 'Landing.Contact.Info.Github.Text',
+        iconAlt: 'Landing.Contact.Info.Github.IconAlt'
+    },
 ];

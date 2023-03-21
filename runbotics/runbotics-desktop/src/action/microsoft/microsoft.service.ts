@@ -5,7 +5,7 @@ export class MicrosoftService {
     constructor() {}
 
     private readonly logger = new RunboticsLogger(MicrosoftService.name);
-    private readonly MICROSOFT_GRAPH_API_URL = "https://graph.microsoft.com/v1.0";
+    private readonly MICROSOFT_GRAPH_API_URL = 'https://graph.microsoft.com/v1.0';
     private TOKEN: string = '';
     private fileName: string = '';
     private fileId: string = '';
@@ -15,15 +15,16 @@ export class MicrosoftService {
     private sessionId: string = '';
     private sheet: string = '';
     private cloudPath: string = '';
+
     private getAuthHeader() {
         return {
-            Authorization: `Bearer ${this.TOKEN}`,
+            Authorization: `Bearer ${this.TOKEN}`
         };
     }
 
     private getSessionHeader() {
         return {
-            'workbook-session-id': this.sessionId,
+            'workbook-session-id': this.sessionId
         };
     }
 
@@ -31,16 +32,16 @@ export class MicrosoftService {
         async function performRequest<T>(url: string, method: Method, config): Promise<AxiosResponse<T>> {
             try {
                 const request = await Axios({
-                    url,
+                    url: encodeURI(url),
                     method,
                     data: config.data,
                     headers: {
-                        ...config.headers,
+                        ...config.headers
                     },
-                    cancelToken: config.cancelToken,
+                    cancelToken: config.cancelToken
                 });
-                return request
-            } catch(error) {
+                return request;
+            } catch (error) {
                 throw error;
             }
         };
@@ -51,7 +52,7 @@ export class MicrosoftService {
             put: <T>(url, config = {}) => performRequest<T>(url, 'PUT', config),
             patch: <T>(url, config = {}) => performRequest<T>(url, 'PATCH', config),
             delete: <T>(url, config = {}) => performRequest<T>(url, 'DELETE', config),
-            execute: <T>(method, url, config = {}) => performRequest<T>(url, method, config),
+            execute: <T>(method, url, config = {}) => performRequest<T>(url, method, config)
         };
     }
 
@@ -60,13 +61,13 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/me/drive/items/${this.fileId}`;
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const downloadLink = data?.['@microsoft.graph.downloadUrl'];
         return downloadLink;
     }
 
-    async getDownloadFileLinkFromSite(token: string, fileName: string, folderPath?: string, ) {
+    async getDownloadFileLinkFromSite(token: string, fileName: string, folderPath?: string) {
         this.TOKEN = token;
         let url = `${this.MICROSOFT_GRAPH_API_URL}`;
         if (folderPath) {
@@ -78,8 +79,8 @@ export class MicrosoftService {
         const authHeaders = this.getAuthHeader();
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
             headers: {
-                ...authHeaders,
-            },
+                ...authHeaders
+            }
         });
         const downloadLink = data.value.find((item) => item.name === fileName)?.['@microsoft.graph.downloadUrl'];
         return downloadLink;
@@ -102,9 +103,9 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().put<any>(url, {
             headers: {
                 ...authHeaders,
-                'Content-Type': contentType,
+                'Content-Type': contentType
             },
-            data: content,
+            data: content
         });
         this.fileId = data.id;
         this.fileName = filePath;
@@ -115,7 +116,7 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/${this.siteId}/lists/${this.listId}/items?expand=fields`;
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const nameList = data.value
             .filter((site) => site.fields[`${fieldName}`] === fieldValue)
@@ -128,7 +129,7 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/sites?search='${siteName}'`;
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const siteId = data.value.find((site) => site.name === siteName)?.id;
         this.siteId = siteId;
@@ -140,7 +141,7 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/all41sonline.sharepoint.com:/${sitePath}:`;
 
         const { data } = await MicrosoftService.makeRequest().get<SingleResponse>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         this.siteId = data.id;
         return data.id;
@@ -151,7 +152,7 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/${siteId}/lists/`;
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const listId = data.value.find((site) => site.displayName === listName)?.id;
         this.listId = listId;
@@ -163,7 +164,7 @@ export class MicrosoftService {
         const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/${siteId}/drives/`;
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const driveId = data.value.find((site) => site.name === driveName)?.id;
         this.driveId = driveId;
@@ -184,7 +185,7 @@ export class MicrosoftService {
         }
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const fileId = data.value.find((file) => file.name === fileName)?.id;
         if (!this.fileName.includes(fileName) || cloudPath !== this.cloudPath) {
@@ -209,7 +210,7 @@ export class MicrosoftService {
         }
 
         const { data } = await MicrosoftService.makeRequest().get<SingleResponse>(url, {
-            headers: this.getAuthHeader(),
+            headers: this.getAuthHeader()
         });
         const fileName = data.name;
         const fileId = data.id;
@@ -232,10 +233,10 @@ export class MicrosoftService {
                 break;
         }
 
-        const { data } = await MicrosoftService.makeRequest().get<APICell>(url, 
-        {
-            headers: this.getAuthHeader(),
-        });
+        const { data } = await MicrosoftService.makeRequest().get<APICell>(url,
+            {
+                headers: this.getAuthHeader()
+            });
         const worksheetId = data.value.find((worksheet) => worksheet.name === worksheetName)?.id;
         const sheetId = worksheetId?.slice(1, -1);
         this.sheet = sheetId;
@@ -260,9 +261,9 @@ export class MicrosoftService {
             {
                 headers: this.getAuthHeader(),
                 data: {
-                    persistChanges: persistChanges != undefined ? persistChanges : false,
-                },
-            },
+                    persistChanges: persistChanges != undefined ? persistChanges : false
+                }
+            }
         );
         this.logger.log(`Session for file ${this.fileId} and sheet: ${this.sheet} created`);
         this.cloudPath = cloudPath;
@@ -289,9 +290,9 @@ export class MicrosoftService {
             {
                 headers: {
                     ...authHeaders,
-                    ...sessionHeaders,
+                    ...sessionHeaders
                 }
-            },
+            }
         );
         this.cloudPath = '';
         this.sessionId = '';
@@ -314,8 +315,8 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().patch(url, {
             headers: this.getAuthHeader(),
             data: {
-                values: [[value]],
-            },
+                values: [ [ value ] ]
+            }
         });
         this.logger.log(`SET: ${address} value: ${value} on sheet: ${this.sheet}`);
         return `SET: ${address} value: ${value} on sheet: ${this.sheet}`;
@@ -336,8 +337,8 @@ export class MicrosoftService {
         const response = await MicrosoftService.makeRequest().patch(url, {
             headers: this.getAuthHeader(),
             data: {
-                values: values,
-            },
+                values: values
+            }
         });
 
         this.logger.log(`updateRanges: ${range} value: ${values} on sheet: ${this.sheet}`);
@@ -357,7 +358,7 @@ export class MicrosoftService {
         }
         const mapResponseToCell = (data: APICell) => ({
             address,
-            value: data.values[0][0],
+            value: data.values[0][0]
         });
 
         const sessionHeaders = this.getSessionHeader();
@@ -365,8 +366,8 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
             headers: {
                 ...authHeaders,
-                ...sessionHeaders,
-            },
+                ...sessionHeaders
+            }
         });
         this.logger.log(`READ: ${JSON.stringify(mapResponseToCell(data))} from sheet: ${this.sheet}`);
         return mapResponseToCell(data);
@@ -385,7 +386,7 @@ export class MicrosoftService {
         }
         const mapResponseToRange = (data: APICell) => ({
             range,
-            values: data.values,
+            values: data.values
         });
 
         const sessionHeaders = this.getSessionHeader();
@@ -393,8 +394,8 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
             headers: {
                 ...authHeaders,
-                ...sessionHeaders,
-            },
+                ...sessionHeaders
+            }
         });
         this.logger.log(`READ: ${JSON.stringify(mapResponseToRange(data))} from sheet: ${this.sheet}`);
         return mapResponseToRange(data);
@@ -425,13 +426,13 @@ export class MicrosoftService {
         const { data } = await MicrosoftService.makeRequest().post<any>(url, {
             headers: {
                 ...authHeaders,
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             data: {
                 'name': folderName,
-                'folder': { },
+                'folder': {},
                 '@microsoft.graph.conflictBehavior': 'rename'
-            },
+            }
         });
     }
 }
@@ -448,6 +449,6 @@ interface SingleResponse {
 }
 
 export enum CloudPath {
-    ROOT = "root",
-    SITE = "site",
+    ROOT = 'root',
+    SITE = 'site',
 }
