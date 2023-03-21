@@ -26,7 +26,8 @@ export class ProcessFileService {
         const filePath = `${orchestratorProcessInstanceId}/${fileInfo.fileName}.${fileInfo.extension}`;
 
         const data = await this.oneDriveService.uploadToWorkingDirectory(filePath, content, fileInfo.contentType);
-        return data['@microsoft.graph.downloadUrl'];
+        const absoluteFilePath = `${data.parentReference.path.split(':')[1].slice(1)}/${fileInfo.fileName}.${fileInfo.extension}`;
+        return absoluteFilePath;
     }
 
     async deleteTempFiles(orchestratorProcessInstanceId: string) {
@@ -71,7 +72,7 @@ export class ProcessFileService {
     private flattenObject(object: Record<string, any>, parentKey?: string) {
         const results: string[] = [];
 
-        for (const [key, value] of Object.entries(object)) {
+        for (const [ key, value ] of Object.entries(object)) {
             const compoundKey = parentKey ? `${parentKey}.${key}` : `${key}`;
 
             if (this.isObject(value))

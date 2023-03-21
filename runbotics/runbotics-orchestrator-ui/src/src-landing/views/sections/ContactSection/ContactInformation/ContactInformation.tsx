@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 import Image from 'next/image';
 import NextLink from 'next/link';
@@ -24,8 +24,8 @@ const ContactInformation: FC = () => {
                 </Typography>
             </div>
             <div className={styles.infoGrid}>
-                {CONTACT_INFO.map(({ icon, text, iconAlt }) => (
-                    <>
+                {CONTACT_INFO.map(({ id, icon, text, iconAlt }) => (
+                    <React.Fragment key={id}>
                         <Image src={icon} alt={translate(iconAlt)} />
                         {translate(text).startsWith('http') ? (
                             <NextLink
@@ -47,7 +47,7 @@ const ContactInformation: FC = () => {
                                 {translate(text)}
                             </Typography>
                         )}
-                    </>
+                    </React.Fragment>
                 ))}
             </div>
         </div>
