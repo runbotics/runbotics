@@ -4,7 +4,7 @@ $ARROWS_HEIGHT: 500px;
 $PC_CONTENT_PADDING: $padding-6 + $padding-2 + $padding-1 + $padding-2 + $padding-6;
 $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
 
-@mixin addBackgroundImage ($url, $width, $backgroundPosition, $right: auto, $left: auto) {
+@mixin addBackgroundImage($url, $width, $backgroundPosition, $right: auto, $left: auto) {
     position: absolute;
     inset: 0 $right auto $left;
     width: $width;
@@ -16,36 +16,28 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
     mix-blend-mode: soft-light;
 }
 
-@mixin translateHorizontally ($translatePosition) {
+@mixin translateHorizontally($translatePosition) {
     transform: translateX($translatePosition);
 }
 
 .root {
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(4px);
-    background-image: url('/images/banners/circuits-background.png');
-    background-repeat: repeat-x;
-    isolation: isolate;
-    
-    &::before {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 200%;
-        height: 100%;
-        content: '';
-        opacity: 0.75;
-        background-color: $text-color-dark;
-    }
+    background-color: $palette-background-tertiary;
 }
 
-.centered {
+.circuitsBackground {
+    position: absolute;
+    filter: blur(3px);
+    opacity: 0.25;
+}
+
+.wrapper {
     composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     position: relative;
     display: flex;
     justify-content: flex-end;
-    min-height: $ARROWS_HEIGHT;  
+    min-height: $ARROWS_HEIGHT;
     padding-top: $padding-14;
     padding-bottom: $padding-14;
 }
@@ -59,18 +51,18 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
     &::before {
         @include addBackgroundImage(
             $url: '/images/shapes/RPA-arrows-long.svg',
-            $width: 80vw, 
+            $width: 80vw,
             $backgroundPosition: right,
             $left: 0
         );
         @include translateHorizontally(calc(-100% + $PC_CONTENT_PADDING - $padding-2));
     }
-    
+
     &::after {
         @include addBackgroundImage(
-            $url: '/images/shapes/RPA-arrows-short.svg', 
-            $width: 60vw, 
-            $backgroundPosition: left, 
+            $url: '/images/shapes/RPA-arrows-short.svg',
+            $width: 60vw,
+            $backgroundPosition: left,
             $right: 0
         );
         @include translateHorizontally(calc(100% - $PC_CONTENT_PADDING - $padding-2));
@@ -90,7 +82,7 @@ $MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
         &::before {
             @include translateHorizontally(calc(-100% + $MOBILE_CONTENT_PADDING - $padding-2));
         }
-        
+
         &::after {
             @include translateHorizontally(calc(100% - $MOBILE_CONTENT_PADDING));
         }
