@@ -1,0 +1,28 @@
+@import '#src-landing/scss/main.scss';
+
+$SUBTITLE-MAX-WIDTH: 550px;
+
+.root {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.fontPrimary {
+    color: $text-color-dark;
+}
+
+.title {
+    margin-bottom: $margin-4;
+}
+
+.subtitle {
+    max-width: $SUBTITLE-MAX-WIDTH;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .title {
+        line-height: normal;
+    }
+}
