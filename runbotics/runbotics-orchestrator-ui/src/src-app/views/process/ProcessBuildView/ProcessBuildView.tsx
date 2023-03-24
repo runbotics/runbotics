@@ -9,6 +9,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -43,6 +44,25 @@ const ProcessBuildView: FC = () => {
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
+
+    useEffect(() => {
+        if (!process) return;
+
+        if (process.executionInfo && process.isAttended) {
+            const attendedVariables = extractNestedSchemaKeys(JSON.parse(process.executionInfo)?.schema);
+            dispatch(processActions
+                .setPassedInVariables(attendedVariables ?? []));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [process?.id]);
+
+    useEffect(
+        () => () => {
+            dispatch(processActions.clearModelerState());
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
         if (node) setOffSet(node.offsetTop + BORDER_SIZE);
