@@ -57,7 +57,7 @@ const useGlobalVariablesColumns = ({
             flex: 0.6,
             renderCell: (params: GridCellParams) => {
                 const user = params.row.user as IUser;
-                return user.login;
+                return user?.login ?? '';
             },
         },
         {
