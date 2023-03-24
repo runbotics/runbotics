@@ -49,9 +49,9 @@ const VariableRow: FC<VariableRowProps> = ({
                 </IconButton>
                 {menu?.variableName === name ? (
                     <VariableCopyMenu
-                        anchorElement={menu.anchorElement}
+                        anchorElement={menu?.anchorElement}
                         handleMenuClose={handleMenuClose}
-                        menuId={menu.variableName}
+                        menuId={menu?.variableName}
                         tag={tag}
                     />
                 ) : null}
