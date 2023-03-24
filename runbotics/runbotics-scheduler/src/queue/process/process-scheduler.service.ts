@@ -21,7 +21,7 @@ export class ProcessSchedulerService {
         const fileVariables = await this.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
 
         const input = instantProcess.input
-            ? _.merge(instantProcess.input?.variables, { variables: fileVariables })
+            ? _.merge(instantProcess.input, { variables: fileVariables })
             : { variables: fileVariables };
 
         const instantProcessCopy = { ...instantProcess, input };
