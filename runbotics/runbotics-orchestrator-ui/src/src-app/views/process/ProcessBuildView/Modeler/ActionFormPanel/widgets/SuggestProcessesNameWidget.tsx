@@ -4,7 +4,6 @@ import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
 import { IFormData } from '#src-app/Actions/types';
-import useProcessSearch from '#src-app/hooks/useProcessSearch';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
@@ -19,12 +18,12 @@ interface CustomWidgetProps extends WidgetProps {
 
 const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
     const dispatch = useDispatch();
-    const { page: processesPage, byId: processes } = useSelector((state) => state.process.all);
-    const { handleSearch, search } = useProcessSearch();
+    const { byId: processes } = useSelector((state) => state.process.all);
 
     useEffect(() => {
         dispatch(processActions.getProcesses());
-    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const {
         process: { id: processId },
@@ -32,13 +31,13 @@ const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
 
     const options = useMemo(
         () =>
-            processesPage?.content
-                ? processesPage.content
+            processes
+                ? Object.values(processes)
                     .filter((process) => process.id !== processId)
                     .map<GlobalVariableOption>((process) => ({ id: process.id, title: `#${process.id} - ${process.name}`}))
                 : [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [processesPage],
+        [processes],
     );
 
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
@@ -65,8 +64,6 @@ const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
                     label={label}
                     InputLabelProps={{ shrink: true }}
                     error={!!props.rawErrors}
-                    onChange={handleSearch} //TODO
-                    value={search}
                 />
             )} 
         />

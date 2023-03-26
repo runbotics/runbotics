@@ -65,7 +65,6 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         return new Promise(async (resolve, reject) => {
             const processTitle = request.input.processTitle;
             const processId = processTitle.substring(processTitle.indexOf('#') + 1, processTitle.indexOf(' '));
-            console.log(processId);
             const response = await orchestratorAxios.get<IProcess>(
                 `/api/processes/${processId}`,
                 { maxRedirects: 0 },

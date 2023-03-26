@@ -50,8 +50,6 @@ public interface ProcessService {
      */
     Optional<ProcessDTO> findOne(Long id);
 
-    Optional<ProcessDTO> findByName(String name);
-
     /**
      * Delete the "id" process.
      *

@@ -9,48 +9,64 @@ import java.util.Set;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonView;  
 
 /**
  * A DTO for the {@link com.runbotics.domain.Process} entity.
  */
 public class ProcessDTO implements Serializable {
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private Long id;
 
     @NotNull
     @NotBlank
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private String name;
 
     @Lob
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private String description;
 
-    @Lob
+    @Lob 
     private String definition;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private Boolean isPublic;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private ZonedDateTime created;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private ZonedDateTime updated;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private Long executionsCount;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private Long successExecutionsCount;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)  
     private Long failureExecutionsCount;
 
     private String executionInfo;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Boolean isAttended;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Boolean isTriggerable;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private UserDTO createdBy;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private BotSystem system;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<ScheduleProcessDTO> schedules;
 
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
 
     public Long getId() {
