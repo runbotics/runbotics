@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useMemo } from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -33,7 +34,7 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
 
         const parsedProcessForm = JSON.parse(process.executionInfo);
 
-        if (!rerunInput || !parsedProcessForm?.uiSchema) return parsedProcessForm;
+        if (!rerunInput || !rerunInput['variables'] || !parsedProcessForm?.uiSchema) return parsedProcessForm;
 
         const fileVariables = Object.entries(parsedProcessForm.uiSchema)
             .reduce<string[]>((acc, [key, value]) => {
@@ -43,7 +44,7 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
                 return acc;
             }, []);
 
-        const filteredVariables = Object.entries(rerunInput.variables)
+        const filteredVariables = Object.entries(rerunInput['variables'])
             .reduce((cos, [key, value]) => {
                 if (!fileVariables.includes(key)) {
                     cos[key] = value;
