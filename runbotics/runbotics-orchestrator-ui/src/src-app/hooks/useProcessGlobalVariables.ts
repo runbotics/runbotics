@@ -60,10 +60,10 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
 
             return extractGlobalVariables(inputOutput);
         })
-        .reduce((acc: GlobalVariable[], innerArr: []) => [
-            ...acc,
-            innerArr.flat(),
-        ], []);
+        .reduce((acc: GlobalVariable[], innerArr: GlobalVariable[]) => {
+            acc.push(...innerArr);
+            return acc;
+        }, []);
 
     return variables;
 };

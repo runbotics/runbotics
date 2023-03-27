@@ -132,8 +132,8 @@ props => {
     const extractOutputs = (outputVariables: ActionVariableObject[]) => {
         const outputs = outputVariables.map(
             outputVariable => ({
-                label: outputVariable.value,
-                value: outputVariable.value,
+                label: outputVariable.name,
+                value: outputVariable.name,
                 group: translate(
                     'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'
                 )
@@ -157,8 +157,8 @@ props => {
     const outputVariables = extractOutputs(outputActionVariables);
 
     const groupedLocalVariable = inputActionVariables.map(variable => ({
-        label: variable.value,
-        value: variable.value,
+        label: variable.name,
+        value: variable.name,
         group: translate(
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
         )
