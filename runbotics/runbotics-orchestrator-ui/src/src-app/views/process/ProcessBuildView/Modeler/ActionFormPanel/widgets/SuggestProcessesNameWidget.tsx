@@ -7,11 +7,6 @@ import { IFormData } from '#src-app/Actions/types';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
-interface GlobalVariableOption {
-    id: number;
-    title: string;
-}
-
 interface CustomWidgetProps extends WidgetProps {
     formData: IFormData;
 }
@@ -34,7 +29,7 @@ const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
             processes
                 ? Object.values(processes)
                     .filter((process) => process.id !== processId)
-                    .map<GlobalVariableOption>((process) => ({ id: process.id, title: `#${process.id} - ${process.name}`}))
+                    .map<Number>((process) => process.id)
                 : [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [processes],
@@ -42,20 +37,20 @@ const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
 
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
 
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: GlobalVariableOption) => {
-        props.onChange(newValue ? newValue.title : undefined);
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: Number) => {
+        props.onChange(newValue ? newValue : undefined);
     };
 
-    const getValue = () => {
-        const process = Object.values(processes).find((variable) => `#${variable.id} - ${variable.name}` === props.value);
-        return process ? { id: process.id, title: `#${process.id} - ${process.name}` } : null;
-    };
+    const getLabel = (option: Number) => {
+        const process = Object.values(processes).find((variable) => variable.id === option);
+        return process ? `#${process.id} - ${process.name}` : '';
+    }
 
     return (
         <Autocomplete
-            value={getValue()}
+            value={props.value ?? null}
             options={options}
-            getOptionLabel={(option) => (option as GlobalVariableOption).title}
+            getOptionLabel={(option) => getLabel(option)}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField

@@ -12,6 +12,7 @@ import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { capitalizeFirstLetter } from '#src-app/utils/text';
+
 import { useSelector } from '../../../store';
 
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
@@ -30,7 +31,7 @@ const useProcessInstanceColumns = (
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
-    const { process } = useSelector((state) => state.process.draft);
+    const { process: currentProcess } = useSelector((state) => state.process.draft);
 
     let columns = [
         {
@@ -92,7 +93,7 @@ const useProcessInstanceColumns = (
             Cell: ({ row }) =>
                 row.depth === 0 ? (
                     <BotProcessRunner
-                        process={process}
+                        process={currentProcess}
                         rerunProcessInstance={row.original}
                         onRunClick={onRerunProcess}
                     />

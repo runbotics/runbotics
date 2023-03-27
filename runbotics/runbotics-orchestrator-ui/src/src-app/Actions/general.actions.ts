@@ -98,9 +98,9 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.General.StartProcess.Input'),
                         type: 'object',
                         properties: {
-                            processTitle: {
-                                title: translate('Process.Details.Modeler.Actions.General.StartProcess.ProcessName'),
-                                type: 'string',
+                            processId: {
+                                title: translate('Process.Details.Modeler.Actions.General.StartProcess.Process'),
+                                type: 'number',
                             },
                             variables: {
                                 title: translate(
@@ -112,7 +112,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                                 },
                             },
                         },
-                        required: ['processTitle'],
+                        required: ['processId'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.General.StartProcess.Ouput'),
@@ -133,7 +133,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    processTitle: {
+                    processId: {
                         'ui:widget': 'ProcessNameSuggestionWidget',
                     },
                 },

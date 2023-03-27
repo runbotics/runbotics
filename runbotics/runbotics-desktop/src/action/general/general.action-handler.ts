@@ -14,7 +14,7 @@ export type GeneralActionRequest =
 
 // -- action
 export type StartProcessActionInput = {
-    processTitle: string;
+    processId: number;
     variables: Record<string, any>;
 };
 export type StartProcessActionOutput = {};
@@ -63,10 +63,8 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         request: DesktopRunRequest<'general.startProcess', StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
         return new Promise(async (resolve, reject) => {
-            const processTitle = request.input.processTitle;
-            const processId = processTitle.substring(processTitle.indexOf('#') + 1, processTitle.indexOf(' '));
             const response = await orchestratorAxios.get<IProcess>(
-                `/api/processes/${processId}`,
+                `/api/processes/${request.input.processId}`,
                 { maxRedirects: 0 },
             );
             const process = response.data;

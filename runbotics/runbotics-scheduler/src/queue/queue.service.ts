@@ -113,7 +113,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async getProcessById(processId: number) {
-        const process = this.processService.findById(processId);
+        const process = await this.processService.findById(processId);
 
         if (!process) {
             this.logger.error(`Process ${processId} does not exist`);
