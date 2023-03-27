@@ -77,14 +77,6 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             return;
         }
 
-        const isAvailable = await dispatch(
-            processActions.isProcessAvailable({ processName: name })
-        );
-        if (isAvailable.meta.requestStatus === 'rejected') {
-            setInputErrorType(InputErrorType.NAME_NOT_AVAILABLE);
-            return;
-        }
-
 
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };

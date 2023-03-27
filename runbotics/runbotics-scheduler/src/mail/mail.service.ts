@@ -190,7 +190,8 @@ export class MailService implements OnModuleInit {
     }
 
     private async validateTitle(envelope: MessageEnvelopeObject) {
-        const process = await this.processService.findByInfo(envelope.subject);
+        const processId = Number(envelope.subject);
+        const process = !isNaN(processId) ? await this.processService.findById(processId) : undefined;
 
         if (!process) {
             this.logger.error(`Process "${envelope.subject}" does not exist`);

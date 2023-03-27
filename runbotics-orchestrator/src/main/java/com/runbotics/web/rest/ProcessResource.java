@@ -1,10 +1,12 @@
 package com.runbotics.web.rest;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.criteria.ProcessCriteria;
+import com.runbotics.service.dto.ProcessDTOViews;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -209,6 +211,7 @@ public class ProcessResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processes in body.
      */
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_LIST_READ + "')")
+    @JsonView(ProcessDTOViews.DefaultView.class)
     @GetMapping("/processes")
     public ResponseEntity<List<ProcessDTO>> getAllProcesses(ProcessCriteria criteria) {
         log.debug("REST request to get Processes by criteria: {}", criteria);
@@ -257,27 +260,6 @@ public class ProcessResource {
         log.debug("REST request to get Process : {}", id);
         Optional<ProcessDTO> processDTO = processService.findOne(id);
         return ResponseUtil.wrapOrNotFound(processDTO);
-    }
-
-    /**
-     * {@code GET  /processes/name/:processName/is-available} : check if given process name is available
-     *
-     * @param processName the prcess name to check if available
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} or with status {@code 409 (Conflict)}.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_READ + "')")
-    @GetMapping("/processes/name/{processName}/is-available")
-    public ResponseEntity<Void> checkIfProcessExists(@PathVariable String processName) {
-        log.debug("=> REST request to check if given process name is available : {}", processName);
-        Optional<ProcessDTO> processDTO = processService.findByName(processName);
-
-        if (processDTO.isPresent()) {
-            log.debug("<= Given process name is not available : {}", processName);
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-
-        log.debug("<= Given process name is available : {}", processName);
-        return ResponseEntity.ok().build();
     }
 
     /**

@@ -11,7 +11,7 @@ export const CustomActionDescription: Record<
     'general.startProcess': element => {
         const inputParameters = getInputParameters(element);
 
-        return inputParameters?.processName;
+        return inputParameters?.processId;
     },
     'variables.assign': element => {
         const inputParameters = getInputParameters(element);

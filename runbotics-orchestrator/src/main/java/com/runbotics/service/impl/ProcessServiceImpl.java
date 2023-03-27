@@ -167,13 +167,6 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<ProcessDTO> findByName(String name) {
-        log.debug("Request to get Process : {}", name);
-        return processRepository.findByName(name).map(processMapper::toDto);
-    }
-
-    @Override
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Process : {}", id);

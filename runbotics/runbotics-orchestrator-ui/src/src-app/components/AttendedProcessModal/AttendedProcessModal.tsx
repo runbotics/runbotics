@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useMemo } from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -7,6 +8,7 @@ import { IProcess } from 'runbotics-common';
 import { translate } from '#src-app/hooks/useTranslations';
 
 
+import { isJsonValid } from '#src-app/utils/utils';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
 import ErrorBoundary from '../utils/ErrorBoundary';
@@ -14,33 +16,47 @@ import ErrorBoundary from '../utils/ErrorBoundary';
 import FormRenderer from './FormRenderer';
 
 
-
-
-
 interface UserModalProps {
     open: boolean;
     process: IProcess;
     setOpen: (open: boolean) => void;
     onSubmit: (executionInfo: Record<string, any>) => void;
+    rerunInput: unknown | null;
 }
 
-function isJsonValid(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
 
-const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit }) => {
+
+const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process, onSubmit, rerunInput }) => {
     const submitFormRef = React.useRef<any>();
-    const processForm = useMemo(() => {
-        if (isJsonValid(process?.executionInfo)) return JSON.parse(process.executionInfo);
 
-        return null;
+    const processForm = useMemo(() => {
+        if (!open || !isJsonValid(process?.executionInfo)) return null;
+
+        const parsedProcessForm = JSON.parse(process.executionInfo);
+
+        if (!rerunInput || !rerunInput['variables'] || !parsedProcessForm?.uiSchema) return parsedProcessForm;
+
+        const fileVariables = Object.entries(parsedProcessForm.uiSchema)
+            .reduce<string[]>((acc, [key, value]) => {
+                if (value['ui:widget'] && value['ui:widget'] === 'FileDropzoneWidget') {
+                    acc.push(key);
+                }
+                return acc;
+            }, []);
+
+        const filteredVariables = Object.entries(rerunInput['variables'])
+            .reduce((cos, [key, value]) => {
+                if (!fileVariables.includes(key)) {
+                    cos[key] = value;
+                }
+                return cos;
+            }, {});
+
+        parsedProcessForm.formData = filteredVariables;
+
+        return parsedProcessForm;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [process.id]);
+    }, [process.id, open]);
 
     const handleSubmit = (e: ISubmitEvent<any>) => {
         onSubmit(e.formData);

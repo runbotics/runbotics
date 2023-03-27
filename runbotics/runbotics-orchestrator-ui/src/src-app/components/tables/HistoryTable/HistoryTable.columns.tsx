@@ -13,6 +13,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
+import { useSelector } from '../../../store';
+
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
 
 import Label from '../../Label';
@@ -29,6 +31,7 @@ const useProcessInstanceColumns = (
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
+    const { process: currentProcess } = useSelector((state) => state.process.draft);
 
     let columns = [
         {
@@ -83,20 +86,20 @@ const useProcessInstanceColumns = (
             Header: translate('Component.HistoryTable.Header.Initiator'),
             accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
         },
-        // {
-        //     Header: ' ',
-        //     id: 'rerun-menu',
-        //     width: '70px',
-        //     Cell: ({ row }) =>
-        //         row.depth === 0 && row.original.input ? (
-        //             <BotProcessRunner
-        //                 process={row.original.process}
-        //                 rerunProcessInstance={row.original}
-        //                 onRunClick={onRerunProcess}
-        //             />
-        //         ) : null,
-        //     featureKeys: [FeatureKey.PROCESS_START],
-        // },
+        {
+            Header: ' ',
+            id: 'rerun-menu',
+            width: '70px',
+            Cell: ({ row }) =>
+                row.depth === 0 ? (
+                    <BotProcessRunner
+                        process={currentProcess}
+                        rerunProcessInstance={row.original}
+                        onRunClick={onRerunProcess}
+                    />
+                ) : null,
+            featureKeys: [FeatureKey.PROCESS_START],
+        },
     ];
 
     if (!rerunEnabled) {

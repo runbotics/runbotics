@@ -14,16 +14,16 @@ export class ProcessController {
     constructor(private queueService: QueueService) { }
 
     @FeatureKeys(FeatureKey.PROCESS_START)
-    @Post(':processInfo/start')
+    @Post(':processId/start')
     @UsePipes(new SchemaValidationPipe(startProcessSchema))
     async startProcess(
-        @Param('processInfo') processInfo: string,
+        @Param('processId') processId: number,
         @Body() input: ProcessInput,
         @Request() request: AuthRequest,
     ) {
         try {
-            this.logger.log(`=> Starting process ${processInfo}`);
-            const process = await this.queueService.getProcessByInfo(processInfo);
+            this.logger.log(`=> Starting process ${processId}`);
+            const process = await this.queueService.getProcessById(processId);
             await this.queueService.validateProcessAccess({ process: process, user: request.user });
 
             const response = await this.queueService.createInstantJob({
@@ -32,11 +32,11 @@ export class ProcessController {
                 user: request.user,
                 trigger: { name: TriggerEvent.MANUAL },
             });
-            this.logger.log(`<= Process ${processInfo} successfully started`);
+            this.logger.log(`<= Process ${processId} successfully started`);
 
             return response;
         } catch (err: any) {
-            this.logger.error(`<= Process ${processInfo} failed to start`);
+            this.logger.error(`<= Process ${processId} failed to start`);
             throw new HttpException({
                 message: err?.message ?? 'Internal server error',
                 statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR

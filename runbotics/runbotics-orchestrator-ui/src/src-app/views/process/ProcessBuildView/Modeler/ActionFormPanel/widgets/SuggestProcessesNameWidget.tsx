@@ -1,51 +1,56 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useMemo, useEffect } from 'react';
 
 import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
-import useProcessSearch from '#src-app/hooks/useProcessSearch';
-import { useSelector } from '#src-app/store';
+import { IFormData } from '#src-app/Actions/types';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processActions } from '#src-app/store/slices/Process';
 
-interface GlobalVariableOption {
-    id: number;
-    name: string;
+interface CustomWidgetProps extends WidgetProps {
+    formData: IFormData;
 }
 
-const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
-    const { page: processesPage } = useSelector((state) => state.process.all);
-    const { handleSearch, search } = useProcessSearch();
+const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
+    const dispatch = useDispatch();
+    const { byId: processes } = useSelector((state) => state.process.all);
+
+    useEffect(() => {
+        dispatch(processActions.getProcesses());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const {
-        process: { name: processName },
+        process: { id: processId },
     } = useSelector((state) => state.process.draft);
 
     const options = useMemo(
         () =>
-            processesPage?.content
-                ? processesPage.content
-                    .filter((process) => process.name !== processName)
-                    .map<GlobalVariableOption>((process) => ({ id: process.id, name: process.name }))
+            processes
+                ? Object.values(processes)
+                    .filter((process) => process.id !== processId)
+                    .map<Number>((process) => process.id)
                 : [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [processesPage],
+        [processes],
     );
 
     const label = props.label ? `${props.label} ${props.required ? '*' : ''}` : '';
 
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: GlobalVariableOption) => {
-        props.onChange(newValue ? newValue.name : undefined);
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>, newValue: Number) => {
+        props.onChange(newValue ? newValue : undefined);
     };
 
-    const getValue = () => {
-        const process = processesPage?.content.find((variable) => variable.name === props.value);
-        return process ? { id: process.id, name: process.name } : null;
-    };
+    const getLabel = (option: Number) => {
+        const process = Object.values(processes).find((variable) => variable.id === option);
+        return process ? `#${process.id} - ${process.name}` : '';
+    }
 
     return (
         <Autocomplete
-            value={getValue()}
+            value={props.value ?? null}
             options={options}
-            getOptionLabel={(option) => (option as GlobalVariableOption).name}
+            getOptionLabel={(option) => getLabel(option)}
             onChange={onChange}
             renderInput={(params) => (
                 <TextField
@@ -54,10 +59,8 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
                     label={label}
                     InputLabelProps={{ shrink: true }}
                     error={!!props.rawErrors}
-                    onChange={handleSearch}
-                    value={search}
                 />
-            )}
+            )} 
         />
     );
 };

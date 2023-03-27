@@ -14,7 +14,7 @@ export type GeneralActionRequest =
 
 // -- action
 export type StartProcessActionInput = {
-    processName: string;
+    processId: number;
     variables: Record<string, any>;
 };
 export type StartProcessActionOutput = {};
@@ -63,17 +63,13 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         request: DesktopRunRequest<'general.startProcess', StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
         return new Promise(async (resolve, reject) => {
-            const response = await orchestratorAxios.get<IProcess[]>(
-                `/api/processes?name.equals=${request.input.processName}`,
+            const response = await orchestratorAxios.get<IProcess>(
+                `/api/processes/${request.input.processId}`,
                 { maxRedirects: 0 },
             );
-            const processes = response.data;
-            if (processes.length == 0 || processes.length > 1) {
-                reject(new Error('Error starting process, process either not found or multiple processes returned'));
-                return;
-            }
+            const process = response.data;
             const processInstanceId = await this.runtimeService.startProcessInstance({
-                process: processes[0],
+                process: process,
                 variables: request.input.variables,
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
