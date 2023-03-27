@@ -112,12 +112,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
-        useEffect(
-            () => () => dispatch(processActions.clearModelerState()),
-
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            []
-        );
         useEffect(() => {
             dispatch(
                 processActions.setSaveDisabled(

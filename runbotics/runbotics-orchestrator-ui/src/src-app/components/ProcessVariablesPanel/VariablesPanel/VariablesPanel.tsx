@@ -10,7 +10,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import VariableRow from './VariableRow';
 import { VariableTag, VariablePanelContextMenuState } from './VariableRow.types';
 
-const VariablesPanel:FC = () => {
+const VariablesPanel: FC = () => {
     const theme = useTheme();
     const {
         globalVariables,
