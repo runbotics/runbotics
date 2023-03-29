@@ -3,9 +3,11 @@ package com.runbotics.domain;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.HashSet;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
+import com.runbotics.domain.GlobalVariable;
 
 /**
  * A Process.
@@ -77,6 +79,14 @@ public class Process implements Serializable {
     @JoinColumn(name = "bot_collection")
     private BotCollection botCollection;
 
+
+    @ManyToMany
+    @JoinTable(
+        name = "process_global_variable",
+        joinColumns = @JoinColumn(name = "process_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
+    private Set<GlobalVariable> globalVariables = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -140,6 +150,11 @@ public class Process implements Serializable {
     public Boolean getIsTriggerable() {
         return this.isTriggerable;
     }
+
+    public Set<GlobalVariable> getGlobalVariables() {
+        return this.globalVariables;
+    }
+
     public Process isPublic(Boolean isPublic) {
         this.isPublic = isPublic;
         return this;
@@ -224,6 +239,11 @@ public class Process implements Serializable {
 
     public String getExecutionInfo() {
         return this.executionInfo;
+    }
+
+    public Set<GlobalVariable> setGlobalVariables(Set<GlobalVariable> globalVariables) {
+        this.globalVariables = globalVariables;
+        return this.globalVariables;
     }
 
     public Process failureExecutionsCount(Long failureExecutionsCount) {
