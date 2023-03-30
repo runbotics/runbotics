@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 
-import { QueueModule } from 'src/queue/queue.module';
-import { MicrosoftModule } from 'src/microsoft';
+import { QueueModule } from '#/queue/queue.module';
+import { MicrosoftModule } from '#/microsoft';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from '../mail/mail.module';

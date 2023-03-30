@@ -3,7 +3,7 @@ import { ROLES_KEY } from '../roles.decorator';
 import { Role } from 'runbotics-common';
 import { ExecutionContext } from '@nestjs/common';
 import { IS_PUBLIC_KEY } from './public.guard';
-import { AuthRequest } from 'src/types/auth-request';
+import { AuthRequest } from '#/types/auth-request';
 
 export class RoleGuard extends JwtAuthGuard {
 

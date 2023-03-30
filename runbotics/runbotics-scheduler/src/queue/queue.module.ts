@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import IORedis from 'ioredis';
 
-import { ConfigModule } from 'src/config/config.module';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
-import { Logger } from 'src/utils/logger';
-import { MicrosoftModule } from 'src/microsoft';
+import { ConfigModule } from '#/config/config.module';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { Logger } from '#/utils/logger';
+import { MicrosoftModule } from '#/microsoft';
 
 import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
 import { DatabaseModule } from '../database/database.module';

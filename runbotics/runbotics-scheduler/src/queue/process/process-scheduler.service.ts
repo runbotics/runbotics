@@ -1,8 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { InstantProcess, ProcessInput, BotWsMessage, IBot, IProcess } from 'runbotics-common';
 import { randomUUID } from 'crypto';
-import { WebsocketService } from 'src/websocket/websocket.service';
+import { WebsocketService } from '#/websocket/websocket.service';
 import { ProcessFileService } from './process-file.service';
 import _ from 'lodash';
 
@@ -60,13 +60,13 @@ export class ProcessSchedulerService {
         for (const key of fileKeys) {
             const file = _.get(input.variables, key);
             if (!file) continue;
-            const downloadLink = await this.processFileService.uploadFile(file, orchestratorProcessInstanceId)
+            const uploadedFilePath = await this.processFileService.uploadFile(file, orchestratorProcessInstanceId)
                 .catch(err => {
                     this.logger.error('Failed to upload process file -', err);
                     throw new InternalServerErrorException('Failed to upload file to OneDrive', err.message);
                 });
-            this.logger.log(`Uploaded file "${key}" to ${downloadLink}`);
-            fileVariables[key] = downloadLink;
+            this.logger.log(`Uploaded file "${key}" to ${uploadedFilePath}`);
+            fileVariables[key] = uploadedFilePath;
         }
 
         return Promise.resolve(fileVariables);

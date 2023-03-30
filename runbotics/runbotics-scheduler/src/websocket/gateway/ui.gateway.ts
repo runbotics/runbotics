@@ -5,9 +5,9 @@ import {
     WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { AuthService } from 'src/auth/auth.service';
-import { AuthSocket } from 'src/types';
-import { Logger } from 'src/utils/logger';
+import { AuthService } from '#/auth/auth.service';
+import { AuthSocket } from '#/types';
+import { Logger } from '#/utils/logger';
 
 @WebSocketGateway({ path: '/ws-ui', cors: { origin: '*' } })
 export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
