@@ -26,6 +26,7 @@ const instantProcess: InstantProcess = {
             objectTestVariable: {
                 nestedStringTestVariable: 'nestedStringTestVariable',
                 nestedNumberTestVariable: 'nestedNumberTestVariable',
+                fileVariable: 'Here should be base64 of uploaded file',
             },
             stringTestVariable: 'stringTestVariable',
             numberTestVariable: 'numberTestVariable',
@@ -57,7 +58,7 @@ describe('ProcessSchedulerService', () => {
                 {
                     provide: ProcessFileService,
                     useValue: {
-                        uploadFile: jest.fn().mockReturnValue(`RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}`)
+                        uploadFile: jest.fn().mockReturnValue(`RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`)
                     }
                 },
                 {
@@ -82,23 +83,22 @@ describe('ProcessSchedulerService', () => {
         it('should merge variables', () => {
 
             const mergedInstantProcess = processSchedulerService.mergeInputVariables(instantProcess, {
-                objectTestVariable: {
-                    fileVariable: `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}`,
-                }
+                'objectTestVariable.fileVariable': `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`,
+                'objectTestVariable.anotherNesting.fileVariable': `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`,
+                'stringTestVariable': 'newStringTestVariable',
             });
 
-            expect(mergedInstantProcess).toMatchObject({
-                ...instantProcess,
-                input: {
-                    variables: {
-                        ...instantProcess.input.variables,
-                        objectTestVariable: {
-                            ...instantProcess.input.variables.objectTestVariable,
-                            fileVariable: `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}`,
-                        }
+            expect(JSON.stringify(mergedInstantProcess.input.variables)).toBe(JSON.stringify({
+                ...instantProcess.input.variables,
+                objectTestVariable: {
+                    ...instantProcess.input.variables.objectTestVariable,
+                    fileVariable: `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`,
+                    anotherNesting: {
+                        fileVariable: `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`,
                     }
-                }
-            });
+                },
+                stringTestVariable: 'newStringTestVariable',
+            }));
         });
 
     });
