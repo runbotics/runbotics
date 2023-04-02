@@ -16,14 +16,25 @@ const Header = () => {
     const { translate } = useTranslations();
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
+    
+    const headerEl = document.querySelector(`.${styles.header}`);
 
     const toggleNav = () => {
         setIsNavExpanded((prevState) => !prevState);
+
+        if (headerEl) {
+            if (!isNavExpanded) {
+                headerEl.classList.add(styles.isActive);
+            } else {
+                headerEl.classList.remove(styles.isActive);
+            }
+        }
     };
 
     const hideNav = () => {
         if (isNavExpanded) {
             setIsNavExpanded(false);
+            headerEl.classList.remove(styles.isActive);
         }
     };
 
@@ -49,6 +60,14 @@ const Header = () => {
                         text={translate('Landing.Header.Button.SkipNav')}
                     />
                 </Link>
+                {/* <button
+                    className={`${styles.menuIcon} ${iconMobileStyle}`}
+                    onClick={toggleNav}
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button> */}
                 <button
                     className={`${styles.menuIcon} ${iconMobileStyle}`}
                     onClick={toggleNav}

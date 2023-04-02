@@ -72,12 +72,15 @@
     font-weight: $font-weight-semi-bold;
 }
 
+
 @media (max-width: $breakpoint-md) {
+
     .menuIcon {
         display: block;
         user-select: none;
         appearance: none;
         margin-left: auto;
+        margin-right: $margin-3;
         border: none;
         outline: none;
         background: none;
@@ -102,8 +105,14 @@
 
     .menuIcon.isActive {
         margin-top: 3px;
-        margin-right: -$margin-1;
+        margin-right: $margin-2;        
     }
+
+    .header.isActive {
+        background-color: #FFFFFF;
+    }
+
+
     .menuIcon.isActive span:nth-child(1) {
         transform: translate(0px, -4px) rotate(45deg);
     }
@@ -116,6 +125,12 @@
     .menuIcon.isActive span:nth-child(3) {
         transform: translate(-3px, 3px) rotate(-45deg);
     }
+
+    .logInBtn {
+        display: none;
+    }
+
+   
 }
 
 @media (max-width: $breakpoint-xs) {

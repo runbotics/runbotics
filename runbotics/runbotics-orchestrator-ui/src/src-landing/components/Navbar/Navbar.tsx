@@ -3,15 +3,14 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import Typography from '#src-landing/components/Typography';
+
 
 import {
     BENEFITS_SECTION_ID,
     INTEGRATION_SECTION_ID,
-    INDUSTRY_SECTORS_SECTION_ID,
     RPA_SECTION_ID,
     PARTNER_SECTION_ID,
-    TEMPLATE_SECTION_ID,
-    CONTACT_US_SECTION_ID,
     PROS_SECTION_ID,
     OPEN_SOURCE_SECTION_ID,
 } from '#src-landing/utils/utils';
@@ -128,7 +127,7 @@ const Navbar: FC<NavbarProps> = ({
                         )}
                     </Link>
                 </li>
-                <li className={styles.listItem}>
+                {/* <li className={styles.listItem}>
                     <Link
                         href={`#${CONTACT_US_SECTION_ID}`}
                         className={styles.link}
@@ -139,8 +138,19 @@ const Navbar: FC<NavbarProps> = ({
                             'Landing.Header.Nav.Option.ContactUs'
                         )}
                     </Link>
+                </li> */}
+                <li className={styles.listItem}>
+                    <Link className={styles.logInBtn} href="/login">
+                        <Typography
+                            variant="h6"
+                            color="accent"
+                            className={styles.btnText}
+                            text={translate('Landing.Header.Button.LogIn')}
+                        />
+                    </Link>
                 </li>
             </ul>
+            
         </nav>
     );
 };
