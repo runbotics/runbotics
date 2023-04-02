@@ -20,17 +20,25 @@ export class ProcessSchedulerService {
 
         const fileVariables = await this.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
 
-        const input = instantProcess.input
-            ? _.merge(instantProcess.input, { variables: fileVariables })
-            : { variables: fileVariables };
-
-        const instantProcessCopy = { ...instantProcess, input };
+        const mergedInstantProcess = this.mergeInputVariables(instantProcess, fileVariables);
         
-        const body = this.createStartProcessResponse(instantProcessCopy, orchestratorProcessInstanceId);
+        const body = this.createStartProcessResponse(mergedInstantProcess, orchestratorProcessInstanceId);
 
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
 
         return { orchestratorProcessInstanceId };
+    }
+
+    private mergeInputVariables(instantProcess: InstantProcess, fileVariables: unknown): InstantProcess {
+        const variables = instantProcess.input.variables;
+
+        Object.entries(fileVariables).forEach(([path, value]) => {
+            _.set(variables, path, value);
+        });
+
+        const input = { variables };
+
+        return { ...instantProcess, input };
     }
 
     private async uploadAttendedFiles(
