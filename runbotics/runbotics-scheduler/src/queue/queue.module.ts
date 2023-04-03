@@ -1,27 +1,27 @@
-import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
-import IORedis from 'ioredis';
-
 import { ConfigModule } from '#/config/config.module';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
-import { Logger } from '#/utils/logger';
 import { MicrosoftModule } from '#/microsoft';
-
-import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
-import { DatabaseModule } from '../database/database.module';
+import { Logger } from '#/utils/logger';
+import { BullModule } from '@nestjs/bull';
+import { Module } from '@nestjs/common';
+import IORedis from 'ioredis';
+import { ProcessInputService } from 'src/queue/process/process-input.service';
 import { AuthModule } from '../auth/auth.module';
+import { DatabaseModule } from '../database/database.module';
 import { BotController } from './bot/bot.controller';
-import { SchedulerService } from './scheduler/scheduler.service';
-import { SchedulerController } from './scheduler/scheduler.controller';
-import { ProcessController } from './process/process.controller';
+import { BotSchedulerService } from './bot/bot.scheduler.service';
 import { ProcessInstanceController } from './process-instance/process-instance.controller';
 import { ProcessInstanceSchedulerService } from './process-instance/process-instance.scheduler.service';
-import { ProcessSchedulerService } from './process/process-scheduler.service';
-import { SchedulerProcessor } from './processor/scheduler.processor';
-import { BotSchedulerService } from './bot/bot.scheduler.service';
-import { TriggerController } from './trigger/trigger.controller';
-import { QueueService } from './queue.service';
 import { ProcessFileService } from './process/process-file.service';
+import { ProcessSchedulerService } from './process/process-scheduler.service';
+import { ProcessController } from './process/process.controller';
+import { SchedulerProcessor } from './processor/scheduler.processor';
+import { QueueService } from './queue.service';
+
+import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
+import { SchedulerController } from './scheduler/scheduler.controller';
+import { SchedulerService } from './scheduler/scheduler.service';
+import { TriggerController } from './trigger/trigger.controller';
 
 @Module({
     imports: [
@@ -30,8 +30,8 @@ import { ProcessFileService } from './process/process-file.service';
         MicrosoftModule,
         BullModule.registerQueueAsync({
             name: 'scheduler',
-            imports: [ConfigModule],
-            inject: [ServerConfigService],
+            imports: [ ConfigModule ],
+            inject: [ ServerConfigService ],
             useFactory: (serverConfigService: ServerConfigService) => ({
                 createClient: (_, redisOpts) => {
                     const logger = new Logger(BullModule.name);
@@ -50,12 +50,13 @@ import { ProcessFileService } from './process/process-file.service';
         }),
     ],
     controllers: [
-        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController
+        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
     ],
     providers: [
-        SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService,
+        SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
         ProcessInstanceSchedulerService, BotSchedulerService, QueueService,
     ],
-    exports: [QueueService, ProcessFileService]
+    exports: [ QueueService, ProcessFileService ],
 })
-export class QueueModule { }
+export class QueueModule {
+}

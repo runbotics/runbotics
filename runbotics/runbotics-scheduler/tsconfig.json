@@ -19,6 +19,9 @@
         "noFallthroughCasesInSwitch": false,
         "esModuleInterop": true,
         "strict": true,
+        "types": [
+            "vitest/globals"
+        ],
         "paths": {
             "#/*": [
                 "src/*"
