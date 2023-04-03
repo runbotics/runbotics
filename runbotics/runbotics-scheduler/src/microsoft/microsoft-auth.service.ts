@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AccountInfo, ConfidentialClientApplication, Configuration, UsernamePasswordRequest } from '@azure/msal-node';
 import { AuthenticationProvider } from '@microsoft/microsoft-graph-client';
-import { Logger } from 'src/utils/logger';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
+import { Logger } from '#/utils/logger';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
 
 const scopes = [
     // Common

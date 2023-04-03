@@ -1,10 +1,10 @@
 import { Body, Controller, HttpException, HttpStatus, Param, Post, Request, UsePipes } from '@nestjs/common';
-import { AuthRequest } from 'src/types';
+import { AuthRequest } from '#/types';
 import { QueueService } from '../queue.service';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
-import { startProcessSchema } from 'src/utils/pipes';
-import { Logger } from 'src/utils/logger';
-import { FeatureKeys } from 'src/auth/featureKey.decorator';
+import { startProcessSchema } from '#/utils/pipes';
+import { Logger } from '#/utils/logger';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
 
 @Controller('scheduler/processes')

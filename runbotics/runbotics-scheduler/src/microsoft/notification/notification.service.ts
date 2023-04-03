@@ -4,10 +4,10 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
-import { ServerConfigService } from 'src/config/server-config';
-import { ProcessService } from 'src/database/process/process.service';
-import { QueueService } from 'src/queue/queue.service';
-import { Logger } from 'src/utils/logger';
+import { ServerConfigService } from '#/config/server-config';
+import { ProcessService } from '#/database/process/process.service';
+import { QueueService } from '#/queue/queue.service';
+import { Logger } from '#/utils/logger';
 import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../outlook';
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';

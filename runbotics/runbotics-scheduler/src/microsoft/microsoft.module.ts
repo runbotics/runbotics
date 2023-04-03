@@ -4,8 +4,8 @@ import { MicrosoftAuthService } from './microsoft-auth.service';
 import { OneDriveService } from './one-drive';
 import { SubscriptionService } from './subscription';
 import { NotificationController, NotificationService } from './notification';
-import { DatabaseModule } from 'src/database/database.module';
-import { QueueModule } from 'src/queue/queue.module';
+import { DatabaseModule } from '#/database/database.module';
+import { QueueModule } from '#/queue/queue.module';
 import { MicrosoftGraphService } from './microsoft-graph/microsoft-graph.service';
 
 const services = [

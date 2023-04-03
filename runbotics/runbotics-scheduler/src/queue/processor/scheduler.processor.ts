@@ -7,13 +7,13 @@ import {
     Process,
     Processor,
 } from '@nestjs/bull';
-import { Logger } from 'src/utils/logger';
-import { SECOND, sleep } from 'src/utils/time';
+import { Logger } from '#/utils/logger';
+import { SECOND, sleep } from '#/utils/time';
 import {
     Job,
     MAX_RETRY_BOT_AVAILABILITY,
-} from 'src/utils/process';
-import { BotService } from 'src/database/bot/bot.service';
+} from '#/utils/process';
+import { BotService } from '#/database/bot/bot.service';
 import {
     BotStatus,
     IBot,
@@ -22,7 +22,7 @@ import {
     WsMessage,
 } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
-import { ProcessService } from 'src/database/process/process.service';
+import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '../../websocket/gateway/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { SchedulerService } from '../scheduler/scheduler.service';

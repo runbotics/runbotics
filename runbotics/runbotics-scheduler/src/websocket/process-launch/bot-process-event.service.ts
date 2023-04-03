@@ -12,9 +12,9 @@ import {
 } from 'runbotics-common';
 import { Connection, QueryRunner } from 'typeorm';
 import { UiGateway } from '../gateway/ui.gateway';
-import { ProcessInstanceEventEntity } from 'src/database/process-instance-event/process-instance-event.entity';
-import { ProcessInstanceEntity } from 'src/database/process-instance/process-instance.entity';
-import { ProcessInstanceLoopEventEntity } from 'src/database/process-instance-loop-event/process-instance-loop-event.entity';
+import { ProcessInstanceEventEntity } from '#/database/process-instance-event/process-instance-event.entity';
+import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
+import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',

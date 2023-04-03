@@ -1,7 +1,7 @@
 import { Controller, Param, Post } from '@nestjs/common';
 import { ProcessInstanceSchedulerService } from './process-instance.scheduler.service';
-import { Logger } from 'src/utils/logger';
-import { FeatureKeys } from 'src/auth/featureKey.decorator';
+import { Logger } from '#/utils/logger';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 
 @Controller('scheduler/process-instances')
