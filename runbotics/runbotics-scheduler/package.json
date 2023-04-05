@@ -18,7 +18,7 @@
         "test": "vitest",
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
-        "test:debug": "vitest --inspect-brk"
+        "test:debug": "vitest --inspect-brk --threads false"
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
