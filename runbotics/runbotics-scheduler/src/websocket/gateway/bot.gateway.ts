@@ -9,16 +9,16 @@ import {
 } from '@nestjs/websockets';
 import { UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { Logger } from 'src/utils/logger';
-import { AuthService } from 'src/auth/auth.service';
+import { Logger } from '#/utils/logger';
+import { AuthService } from '#/auth/auth.service';
 import { BotLogService } from '../bot-log/bot-log.service';
 import { BotProcessService } from '../process-launch/bot-process.service';
 import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '../process-launch/bot-process-event.service';
-import { BotAuthSocket } from 'src/types/auth-socket';
-import { WsBotJwtGuard } from 'src/auth/guards';
+import { BotAuthSocket } from '#/types/auth-socket';
+import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from './ui.gateway';
-import { BotService } from 'src/database/bot/bot.service';
+import { BotService } from '#/database/bot/bot.service';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {

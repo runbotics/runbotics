@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { v4 as uuidv4 } from 'uuid';
-import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
+import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { BotWsMessage, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
-import { WebsocketService } from 'src/websocket/websocket.service';
-import { Job } from 'src/utils/process';
-import { UiGateway } from 'src/websocket/gateway/ui.gateway';
+import { WebsocketService } from '#/websocket/websocket.service';
+import { Job } from '#/utils/process';
+import { UiGateway } from '#/websocket/gateway/ui.gateway';
 import dayjs from 'dayjs';
 
 @Injectable()

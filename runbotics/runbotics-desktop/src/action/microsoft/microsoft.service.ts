@@ -6,15 +6,15 @@ export class MicrosoftService {
 
     private readonly logger = new RunboticsLogger(MicrosoftService.name);
     private readonly MICROSOFT_GRAPH_API_URL = 'https://graph.microsoft.com/v1.0';
-    private TOKEN: string = '';
-    private fileName: string = '';
-    private fileId: string = '';
-    private siteId: string = '';
-    private driveId: string = '';
-    private listId: string = '';
-    private sessionId: string = '';
-    private sheet: string = '';
-    private cloudPath: string = '';
+    private TOKEN = '';
+    private fileName = '';
+    private fileId = '';
+    private siteId = '';
+    private driveId = '';
+    private listId = '';
+    private sessionId = '';
+    private sheet = '';
+    private cloudPath = '';
 
     private getAuthHeader() {
         return {
@@ -32,7 +32,7 @@ export class MicrosoftService {
         async function performRequest<T>(url: string, method: Method, config): Promise<AxiosResponse<T>> {
             try {
                 const request = await Axios({
-                    url: encodeURI(url),
+                    url,
                     method,
                     data: config.data,
                     headers: {
@@ -44,7 +44,7 @@ export class MicrosoftService {
             } catch (error) {
                 throw error;
             }
-        };
+        }
 
         return {
             get: <T>(url, config = {}) => performRequest<T>(url, 'GET', config),
@@ -72,6 +72,7 @@ export class MicrosoftService {
         let url = `${this.MICROSOFT_GRAPH_API_URL}`;
         if (folderPath) {
             url += `/sites/${this.siteId}/drives/${this.driveId}/root:/${folderPath}:/children`;
+            url = encodeURI(url);
         } else {
             url += `/sites/${this.siteId}/drives/${this.driveId}/root/children`;
         }
@@ -98,6 +99,7 @@ export class MicrosoftService {
                 url += `/sites/${this.siteId}/drives/${this.driveId}/root:/${filePath}:/content`;
                 break;
         }
+        url = encodeURI(url);
 
         const authHeaders = this.getAuthHeader();
         const { data } = await MicrosoftService.makeRequest().put<any>(url, {
@@ -183,6 +185,7 @@ export class MicrosoftService {
                 url += `/sites/${this.siteId}/drives/${this.driveId}/search(q='${fileName}')?select=name,id,webUrl`;
                 break;
         }
+        url = encodeURI(url);
 
         const { data } = await MicrosoftService.makeRequest().get<APICell>(url, {
             headers: this.getAuthHeader()
@@ -208,6 +211,7 @@ export class MicrosoftService {
                 url += `/sites/${this.siteId}/drives/${this.driveId}/root:/${filePath}:/?select=name,id,webUrl`;
                 break;
         }
+        url = encodeURI(url);
 
         const { data } = await MicrosoftService.makeRequest().get<SingleResponse>(url, {
             headers: this.getAuthHeader()

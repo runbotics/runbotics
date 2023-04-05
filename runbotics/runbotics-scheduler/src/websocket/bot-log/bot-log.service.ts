@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { EOL } from 'os';
 import dayjs from 'dayjs';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
-import { Logger } from 'src/utils/logger';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { Logger } from '#/utils/logger';
 import * as rd from 'readline';
 
 @Injectable()
