@@ -5,6 +5,7 @@ import { randomUUID } from 'crypto';
 import { WebsocketService } from 'src/websocket/websocket.service';
 import { ProcessFileService } from './process-file.service';
 import _ from 'lodash';
+import { isScheduledProcess } from 'src/utils/process';
 
 @Injectable()
 export class ProcessSchedulerService {
@@ -30,7 +31,9 @@ export class ProcessSchedulerService {
     }
 
     private mergeInputVariables(instantProcess: InstantProcess, fileVariables: unknown): InstantProcess {
-        const variables = instantProcess.input.variables;
+        if (isScheduledProcess(instantProcess)) return instantProcess;
+
+        const variables = instantProcess.input?.variables ?? {};
 
         Object.entries(fileVariables).forEach(([path, value]) => {
             _.set(variables, path, value);
