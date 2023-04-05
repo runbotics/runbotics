@@ -1,7 +1,6 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
-import { CommandStackInfo, ModelerError } from '#src-app/store/slices/Process';
 
 import {
     ModelerHTMLCanvasElement,
@@ -179,9 +178,3 @@ export const getModelerActivities = modeler => {
 
 export const areActivitiesInSync = (modelerActivities, appliedActivities) =>
     _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
-
-export const hasErrors = (
-    imported: boolean,
-    commandStack: CommandStackInfo,
-    errors: ModelerError[]
-) => imported || (commandStack.commandStackIdx >= 0 && errors.length === 0);
