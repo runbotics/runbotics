@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { DatabaseModule } from 'src/database/database.module';
-import { QueueModule } from 'src/queue/queue.module';
+import { DatabaseModule } from '#/database/database.module';
+import { QueueModule } from '#/queue/queue.module';
 import { MailService } from './mail.service';
 
 @Module({

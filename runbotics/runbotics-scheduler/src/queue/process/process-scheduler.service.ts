@@ -1,10 +1,11 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
-import { InstantProcess, ProcessInput, BotWsMessage, IBot, IProcess } from 'runbotics-common';
+import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { WebsocketService } from 'src/websocket/websocket.service';
-import { ProcessFileService } from './process-file.service';
-import _ from 'lodash';
+import { BotWsMessage, IBot, InstantProcess } from 'runbotics-common';
+
+import { Logger } from '#/utils/logger';
+import { WebsocketService } from '#/websocket/websocket.service';
+
+import { ProcessInputService } from './process-input.service';
 
 @Injectable()
 export class ProcessSchedulerService {
@@ -12,56 +13,22 @@ export class ProcessSchedulerService {
 
     constructor(
         private readonly websocketService: WebsocketService,
-        private readonly processFileService: ProcessFileService,
-    ) {}
+        private readonly processInputService: ProcessInputService,
+    ) {
+    }
 
     async startProcess(instantProcess: InstantProcess, bot: IBot) {
         const orchestratorProcessInstanceId = randomUUID();
 
-        const fileVariables = await this.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
+        const fileVariables = await this.processInputService.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
 
-        const input = instantProcess.input
-            ? _.merge(instantProcess.input, { variables: fileVariables })
-            : { variables: fileVariables };
+        const mergedInstantProcess = this.processInputService.mergeInputVariables(instantProcess, fileVariables);
 
-        const instantProcessCopy = { ...instantProcess, input };
-        
-        const body = this.createStartProcessResponse(instantProcessCopy, orchestratorProcessInstanceId);
+        const body = this.createStartProcessResponse(mergedInstantProcess, orchestratorProcessInstanceId);
 
         await this.websocketService.sendMessageByBotId(bot.id, BotWsMessage.START_PROCESS, body);
 
         return { orchestratorProcessInstanceId };
-    }
-
-    private async uploadAttendedFiles(
-        process: IProcess,
-        input: ProcessInput,
-        orchestratorProcessInstanceId: string,
-    ) {
-        if (!process.isAttended || process.schedules?.length > 0)
-            return Promise.resolve({});
-
-        const uiSchema = JSON.parse(process.executionInfo).uiSchema;
-        const fileKeys = this.processFileService.getFileSchemaKeys(uiSchema);
-
-        if (fileKeys.length <= 0)
-            return Promise.resolve({});
-
-        const fileVariables = {};
-
-        for (const key of fileKeys) {
-            const file = _.get(input.variables, key);
-            if (!file) continue;
-            const downloadLink = await this.processFileService.uploadFile(file, orchestratorProcessInstanceId)
-                .catch(err => {
-                    this.logger.error('Failed to upload process file -', err);
-                    throw new InternalServerErrorException('Failed to upload file to OneDrive', err.message);
-                });
-            this.logger.log(`Uploaded file "${key}" to ${downloadLink}`);
-            fileVariables[key] = downloadLink;
-        }
-
-        return Promise.resolve(fileVariables);
     }
 
     private createStartProcessResponse(instantProcess: InstantProcess, orchestratorProcessInstanceId: string) {

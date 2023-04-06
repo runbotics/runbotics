@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
-import { ProcessService } from 'src/database/process/process.service';
+import { ProcessService } from '#/database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
-import { QueueService } from 'src/queue/queue.service';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { QueueService } from '#/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
 
