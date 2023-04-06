@@ -1,0 +1,39 @@
+@import '#src-landing/scss/main.scss';
+
+$CARD-TEXT-MAX-WIDTH: 250px;
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    container-type: inline-size;
+}
+
+.iconWrapper {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+.title {
+    max-width: $CARD-TEXT-MAX-WIDTH;
+    margin-bottom: $margin-6;
+}
+
+.description {
+    max-width: $CARD-TEXT-MAX-WIDTH;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .iconWrapper {
+        justify-content: flex-start;
+        height: initial;
+        margin-bottom: $margin-6;
+    }
+
+    .content {
+        padding-left: $padding-4;
+    }
+}
