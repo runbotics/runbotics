@@ -283,7 +283,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </>
     );
 
-    if (rerunProcessInstance && (!isProcessAttended || !rerunInput || Object.keys(rerunInput?.variables).length === 0)) {
+    if (rerunProcessInstance && (!isProcessAttended || !rerunInput?.variables || Object.keys(rerunInput.variables).length === 0)) {
         return null;
     }
 
