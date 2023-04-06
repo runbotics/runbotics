@@ -12,14 +12,14 @@ import {
     Request,
     BadRequestException,
 } from '@nestjs/common';
-import { ScheduleProcessService } from 'src/database/schedule-process/schedule-process.service';
-import { ScheduleProcessEntity } from 'src/database/schedule-process/schedule-process.entity';
+import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
+import { ScheduleProcessEntity } from '#/database/schedule-process/schedule-process.entity';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
-import { scheduleProcessSchema } from 'src/utils/pipes';
-import { AuthRequest } from 'src/types';
-import { ProcessService } from 'src/database/process/process.service';
-import { Logger } from 'src/utils/logger';
-import { FeatureKeys } from 'src/auth/featureKey.decorator';
+import { scheduleProcessSchema } from '#/utils/pipes';
+import { AuthRequest } from '#/types';
+import { ProcessService } from '#/database/process/process.service';
+import { Logger } from '#/utils/logger';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, TriggerEvent } from 'runbotics-common';
 
 @Controller('scheduler/schedule-processes')

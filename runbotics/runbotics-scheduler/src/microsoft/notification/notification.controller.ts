@@ -1,11 +1,11 @@
 import { Body, Controller, HttpStatus, Post, Query, Res } from '@nestjs/common';
-import { Public } from 'src/auth/guards';
-import { Logger } from 'src/utils/logger';
+import { Public } from '#/auth/guards';
+import { Logger } from '#/utils/logger';
 import { LifecycleNotificationBody, NotificationBody } from './notification.types';
 import { EMAIL_NOTIFICATION_CLIENT_STATE, EMAIL_NOTIFICATION_URL_PATH, NOTIFICATION_URL } from '../subscription/subscription.utils';
 import { NotificationService } from './notification.service';
 import { Response } from 'express';
-import { ServerConfigService } from 'src/config/server-config';
+import { ServerConfigService } from '#/config/server-config';
 
 @Controller(NOTIFICATION_URL)
 export class NotificationController {

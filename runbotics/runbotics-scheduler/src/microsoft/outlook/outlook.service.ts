@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 import { Email, GetAttachmentsResponse, GetAllEmailsResponse, ReplyEmailRequest, SendEmailRequest } from './outlook.types';
