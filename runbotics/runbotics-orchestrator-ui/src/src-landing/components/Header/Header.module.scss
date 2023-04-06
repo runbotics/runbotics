@@ -47,7 +47,7 @@
     }
 }
 
-.logInBtn {
+.loginButton {
     composes: btn;
     margin: 0 $margin-3;
 }
@@ -126,7 +126,7 @@
         transform: translate(-3px, 3px) rotate(-45deg);
     }
 
-    .logInBtn {
+    .loginButton {
         display: none;
     }
 

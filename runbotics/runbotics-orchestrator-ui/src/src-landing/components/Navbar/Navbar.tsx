@@ -127,20 +127,8 @@ const Navbar: FC<NavbarProps> = ({
                         )}
                     </Link>
                 </li>
-                {/* <li className={styles.listItem}>
-                    <Link
-                        href={`#${CONTACT_US_SECTION_ID}`}
-                        className={styles.link}
-                        onClick={hideNav}
-                        scroll={false}
-                    >
-                        {translate(
-                            'Landing.Header.Nav.Option.ContactUs'
-                        )}
-                    </Link>
-                </li> */}
                 <li className={styles.listItem}>
-                    <Link className={styles.logInBtn} href="/login">
+                    <Link className={styles.loginButton} href="/login">
                         <Typography
                             variant="h6"
                             color="accent"

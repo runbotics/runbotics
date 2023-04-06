@@ -21,7 +21,7 @@
     }
 }
 
-.logInBtn {
+.loginButton {
     display: none;
 }
 
@@ -37,13 +37,11 @@
         transition: all 0.3s;
         border-style: solid;
         border-width: 2px 0;
-        border-color: #F5F5F5;
-        // border-color: $palette-background-tertiary;
+        border-color: $palette-background-disabled;
         width: 100%;
         max-height: calc(100vh - $HEADER_HEIGHT);
         padding: $padding-2 0;
-        background: #FFFFFF;
-        // background-image: $palette-background-gradient;
+        background: $palette-background-primary;
         
         .link {
             &:hover {
@@ -73,7 +71,7 @@
     .listItem {
         
         &:last-child {
-            border-top: 2px solid #F5F5F5;
+            border-top: 2px solid $palette-background-disabled;
             width: 100%;
             text-align: center;
             padding-top: $margin-2;
@@ -112,7 +110,7 @@
         }
     }
     
-    .logInBtn {
+    .loginButton {
         composes: btn;
         margin: 0 $margin-3;
     }
@@ -134,10 +132,6 @@
 
             &:last-child {
                 grid-column: span 2;
-                height: 18vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
             }
         }
     }
@@ -153,7 +147,7 @@
         }
         
         &:last-child {
-            height: 18vh;
+            height: 20%;
             display: flex;
             align-items: center;
             justify-content: center;
