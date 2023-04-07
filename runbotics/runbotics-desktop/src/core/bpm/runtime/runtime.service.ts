@@ -105,20 +105,19 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         }
     };
 
-    private async monitor() {
-        while (true) {
-            const processInstancesLength = Object.keys(
-                this.processInstances
-            ).length;
-            const enginesLength = Object.keys(this.engines).length;
-
-            this.logger.warn(
-                `Process instances: ${processInstancesLength} Engines: ${enginesLength}`
-            );
-            await new Promise((resolve) => setTimeout(resolve, 100000));
-        }
+    private logRuntimeObjects() {
+        const processInstancesLength = Object.keys(this.processInstances).length;
+        const enginesLength = Object.keys(this.engines).length;
+      
+        this.logger.warn(`Process instances: ${processInstancesLength} Engines: ${enginesLength}`);
     }
 
+    private async monitor() {
+        setInterval(() => {
+            this.logRuntimeObjects();
+        }, 100000);
+    }
+    
     public startProcessInstance = async (
         request: IStartProcessInstance
     ): Promise<string> => {

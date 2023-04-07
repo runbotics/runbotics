@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Logger } from '../../utils/logger';
-import { ProcessInstanceEventService } from '../../database/process-instance-event/process-instance-event.service';
+import { Logger } from '../../../utils/logger';
+import { ProcessInstanceEventService } from '../../../database/process-instance-event/process-instance-event.service';
 import {
     IBot,
     IProcessInstance,
@@ -11,10 +11,11 @@ import {
     WsMessage,
 } from 'runbotics-common';
 import { Connection, QueryRunner } from 'typeorm';
-import { UiGateway } from '../gateway/ui.gateway';
+import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceEventEntity } from '#/database/process-instance-event/process-instance-event.entity';
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
+import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -142,7 +143,7 @@ export class BotProcessEventService {
             //         queryRunner,
             //         processInstanceEvent.executionId
             //     );
-            // Currently we dont want to send loop events to the UI
+            // Currently we don't want to send loop events to the UI
             // if (
             //     updatedProcessInstanceEvent.processInstance
             //         .rootProcessInstanceId === null

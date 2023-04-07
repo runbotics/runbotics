@@ -17,7 +17,7 @@ import { ScheduleProcessService } from '#/database/schedule-process/schedule-pro
 import {
     IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent,
 } from 'runbotics-common';
-import { UiGateway } from '../websocket/gateway/ui.gateway';
+import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
