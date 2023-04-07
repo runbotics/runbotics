@@ -24,7 +24,7 @@ export class ProcessInstanceEventService {
         return queryRunner.manager.findOne(ProcessInstanceEventEntity, { where: { executionId }, relations: ['processInstance'] });
     }
 
-    findActiveByProcessInstanceId(processInstanceId: string) {
+    async findActiveByProcessInstanceId(processInstanceId: string) {
         return this.processInstanceEventRepository.findBy({ 
             processInstance: { id: processInstanceId },
             status: ProcessInstanceEventStatus.IN_PROGRESS,
