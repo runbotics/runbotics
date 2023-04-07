@@ -126,33 +126,38 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setAnchorEl(null);
     };
 
-    const handleTerminate = async () => {
-        await dispatch(
-            schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
-        )
-            .then(() => {
-                setStarted(false);
-                setLoading(false);
-                setSubmitting(false);
-                enqueueSnackbar(
-                    translate('Scheduler.ActiveProcess.Terminate.Success', {
-                        processName,
-                    }),
-                    {
-                        variant: 'success',
-                    }
-                );
-            })
-            .catch(() => {
-                enqueueSnackbar(
-                    translate('Scheduler.ActiveProcess.Terminate.Failed', {
-                        processName,
-                    }),
-                    {
-                        variant: 'error',
-                    }
-                );
-            });
+    const handleTerminate = () => {
+        if (!started) return;
+        
+        // 500ms delay in case of instant termination 
+        setTimeout(async () => {
+            await dispatch(
+                schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
+            )
+                .then(() => {
+                    setStarted(false);
+                    setLoading(false);
+                    setSubmitting(false);
+                    enqueueSnackbar(
+                        translate('Scheduler.ActiveProcess.Terminate.Success', {
+                            processName,
+                        }),
+                        {
+                            variant: 'success',
+                        }
+                    );
+                })
+                .catch(() => {
+                    enqueueSnackbar(
+                        translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                            processName,
+                        }),
+                        {
+                            variant: 'error',
+                        }
+                    );
+                });
+        }, 500);
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
