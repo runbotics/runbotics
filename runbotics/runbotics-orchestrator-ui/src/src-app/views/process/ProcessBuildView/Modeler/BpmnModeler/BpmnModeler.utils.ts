@@ -177,11 +177,11 @@ export const getModelerActivities = (modeler: BpmnIoModeler) => {
     );
 };
 
-export const getActivitiyById = (modeler: BpmnIoModeler, id: string) => {
+export const getActivitiyById = (modeler: BpmnIoModeler, id: string): BPMNElement | null => {
     const { _elements } = modeler.get('elementRegistry');
     return Object.values(_elements as { element: BPMNElement }[]).find(
         (item) => item.element.id === id
-    ).element;
+    ).element ?? null;
 };
 
 export const areActivitiesInSync = (modelerActivities, appliedActivities) =>
