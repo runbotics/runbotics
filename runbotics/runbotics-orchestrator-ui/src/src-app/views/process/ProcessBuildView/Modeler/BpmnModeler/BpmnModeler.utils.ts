@@ -181,7 +181,7 @@ export const getActivitiyById = (modeler: BpmnIoModeler, id: string): BPMNElemen
     const { _elements } = modeler.get('elementRegistry');
     return Object.values(_elements as { element: BPMNElement }[]).find(
         (item) => item.element.id === id
-    ).element ?? null;
+    )?.element ?? null;
 };
 
 export const areActivitiesInSync = (modelerActivities, appliedActivities) =>
