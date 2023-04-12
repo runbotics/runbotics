@@ -137,5 +137,5 @@ export const toggleValidationError = (
     const bpmnHelper = BPMNHelper.from(modeler);
     const newElement = element;
     newElement.businessObject.validationError = validationError;
-    bpmnHelper.updateBusinessObject(newElement);
+    Promise.resolve().then(() => bpmnHelper.updateBusinessObject(newElement));
 };
