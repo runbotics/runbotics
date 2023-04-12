@@ -94,6 +94,8 @@ export type BPMNElement = {
     incoming?: IBpmnConnection[];
     outgoing?: IBpmnConnection[];
     parent?: BPMNElement;
+    host?: BPMNElement;
+    attachers?: BPMNElement[];
 };
 
 export type BpmnFormalExpression = {
