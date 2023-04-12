@@ -2,21 +2,31 @@
 
 $ARROWS_HEIGHT: 176px;
 
+
+@mixin gradientBackground($first_breakpoint, $second_breakpoint, $third_breakpoint) {
+    background: transparent linear-gradient(360deg, #FFFEFC $first_breakpoint, #FFE5C0 $second_breakpoint,  #F79D36 $third_breakpoint) 0% 0% no-repeat padding-box;
+}
+
 .root {
+    @include gradientBackground(4vw, 12vw, 35vw);
+    margin-bottom: -20vh;
+    height: 120vh;
+    isolation: isolate; 
+}
+
+.heroContent {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
     justify-content: flex-end;
     height: 100vh;
-    isolation: isolate;
-    background: transparent linear-gradient(360deg, #FFE5C0 0%, #F79D36 100%) 0% 0% no-repeat padding-box;;
 }
 
 .heroHandWrapper {
     position: absolute;
     z-index: -1;
     width: 100%;
-    height: 100%;
+    height: 120vh;
     inset: 0;
     margin-right: 0;
     overflow: hidden;
@@ -25,7 +35,7 @@ $ARROWS_HEIGHT: 176px;
 .heroHand {
     position: absolute;
     width: 44vw;
-    max-width: 850px;
+    max-width: 800px;
     min-width: 600px;
     height: auto;
     right: -5vw;
@@ -73,9 +83,19 @@ $ARROWS_HEIGHT: 176px;
     object-position: center;
 }
 
+@media (max-width: 1359px) {
+    .root {
+        @include gradientBackground(10vw, 25vw, 70vw);
+        margin-bottom: -30vh;
+    }
+}
+
 
 @media (max-width: $breakpoint-md) {
-
+    .root {
+        @include gradientBackground(5vw, 20vw, 75vw);
+        margin-bottom: -22vh;
+    }
     .heroArrows {
         display: none;
     }
@@ -106,10 +126,13 @@ $ARROWS_HEIGHT: 176px;
         min-width: 0;
         transform: rotate(0rad);
     }
-
 }
 
 @media (max-width: $breakpoint-sm) {
+    .root {
+        @include gradientBackground(20vw, 50vw, 160vw);
+        margin-bottom: -30vw;
+    }
 
     .heroRobotHand {
         left: -10vw;
@@ -126,6 +149,11 @@ $ARROWS_HEIGHT: 176px;
     }
 }
 
+@media (max-width: $breakpoint-xs) {
+    .root {
+        margin-bottom: -50vw;
+    }
+}
 
 @media (min-width: $breakpoint-xxl) {
     .heroArrows {

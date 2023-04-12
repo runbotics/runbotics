@@ -17,17 +17,18 @@ const HeroBackground: FC = ({ children }) => (
             <Image src={heroHand} className={styles.heroHand} alt="" />
             <Image src={heroRobotHand} className={styles.heroRobotHand} alt="" />
         </div>
-
-        {children}
-        <div className={styles.heroFooter}>
-            {/* using div with background image to take advantage of background-position */}
-            <div className={styles.heroArrows} />
-            <div className={styles.heroTitleWrapper}>
-                <Image
-                    src={heroTitleSrc}
-                    className={styles.heroTitle}
-                    alt="RunBotics text"
-                />
+        <div className={styles.heroContent}>
+            {children}
+            <div className={styles.heroFooter}>
+                {/* using div with background image to take advantage of background-position */}
+                <div className={styles.heroArrows} />
+                <div className={styles.heroTitleWrapper}>
+                    <Image
+                        src={heroTitleSrc}
+                        className={styles.heroTitle}
+                        alt="RunBotics text"
+                    />
+                </div>
             </div>
         </div>
     </section>

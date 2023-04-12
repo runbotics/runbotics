@@ -1,8 +1,9 @@
-import { Logger } from '#/utils/logger';
-import { WebsocketService } from '#/websocket/websocket.service';
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { BotWsMessage, IBot, InstantProcess } from 'runbotics-common';
+
+import { Logger } from '#/utils/logger';
+import { WebsocketService } from '#/websocket/websocket.service';
 
 import { ProcessInputService } from './process-input.service';
 
