@@ -1,11 +1,13 @@
 
 import { Card, CardActions, CardContent, CardHeader, Chip } from '@mui/material';
+import { GetServerSidePropsContext } from 'next';
 import NextLink from 'next/link';
 
 import Layout from '#src-landing/components/Layout';
 import HeroSection from '#src-landing/views/sections/HeroSection';
 
 import { getAllPosts } from 'src/contentful/api';
+import contentfulCache from 'src/contentful/cache';
 import { BlogPost } from 'src/contentful/models';
 
 interface Props {
@@ -39,8 +41,20 @@ const BlogPage = ({ posts }: Props) => (
 
 export default BlogPage;
 
-export async function getStaticProps() {
-    const { posts } = await getAllPosts();
+type PostsResponse = Awaited<ReturnType<typeof getAllPosts>>
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const cacheKey = 'blog';
+    let postsResponse = contentfulCache.get(cacheKey) as PostsResponse | undefined;
+
+    if (!postsResponse) {
+        postsResponse = await getAllPosts();
+        contentfulCache.set(cacheKey, postsResponse);
+    } else {
+        context.res.setHeader('X-Cache', 'HIT');
+    }
+
+    const { posts } = postsResponse;
 
     return {
         props: { 

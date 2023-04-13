@@ -2,6 +2,10 @@ import { extractBlogPost, extractBlogPostEntries, extractBlogPostsPaths, extract
 import { buildAllPostsPathsQuery, buildAllPostsQuery, buildPostQuery } from './queries';
 import { GetAllPostsOptions, GetAllPostsPathsResponse, GetAllPostsResponse, GetPostOptions, GetPostResponse, QueryBuilder } from './types';
 
+/**
+ * Use preview mode for development - posts in draft or changed state
+ * Else use published posts only - without changes and drafts
+ */
 const IS_PREVIEW_MODE = process.env.NODE_ENV === 'development';
 
 async function fetchGraphQL<T>(query: ReturnType<QueryBuilder<never>>): Promise<T> {
@@ -19,7 +23,7 @@ async function fetchGraphQL<T>(query: ReturnType<QueryBuilder<never>>): Promise<
         }
     );
 
-    return await response.json();
+    return response.json();
 }
 
 export async function getAllPosts(options: GetAllPostsOptions = {}) {
