@@ -11,7 +11,6 @@ import {
     FeatureKey,
     IProcess,
     IProcessInstance,
-    ProcessInstanceEventStatus,
     ProcessInstanceStatus,
     isProcessInstanceFinished,
 } from 'runbotics-common';
@@ -100,7 +99,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
 
     const processInstances = useSelector(processInstanceSelector);
-    const { orchestratorProcessInstanceId, processInstance } =
+    const { orchestratorProcessInstanceId, processInstance, eventsMap } =
         processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
     const isProcessAttended = process?.isAttended && Boolean(process?.executionInfo);
@@ -130,28 +129,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const handleTerminate = async () => {
         if (!started) return;
 
-        const sendErrorMessage = () => {
-            enqueueSnackbar(
-                translate('Scheduler.ActiveProcess.Terminate.Failed', {
-                    processName,
-                }),
-                {
-                    variant: 'error',
-                }
-            );
-        };
-
-        const isEventInProgress = await dispatch(
-            processInstanceEventActions.getProcessInstanceEvents({ processInstanceId: processInstance?.id }),
-        )
-            .then(unwrapResult)
-            .then((events) => events[events.length - 1]?.status === ProcessInstanceEventStatus.IN_PROGRESS);
-
-        if (!isEventInProgress) {
-            sendErrorMessage();
-            return;
-        };
-
         dispatch(
             schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
         )
@@ -169,7 +146,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 );
             })
             .catch(() => {
-                sendErrorMessage();
+                enqueueSnackbar(
+                    translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                        processName,
+                    }),
+                    {
+                        variant: 'error',
+                    }
+                );
             });
     };
 
@@ -305,8 +289,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         return null;
     }
 
+    const hasEventStarted = eventsMap && Object.keys(eventsMap).length > 0;
+
     return (
-        <If condition={hasRunProcessAccess && !started} else={terminateButton}>
+        <If condition={hasRunProcessAccess && (!started || !hasEventStarted) } else={terminateButton}>
             <If condition={Boolean(rerunProcessInstance)} else={runButton}>
                 {rerunMenu}
             </If>
