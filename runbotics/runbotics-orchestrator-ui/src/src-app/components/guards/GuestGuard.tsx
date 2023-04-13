@@ -1,12 +1,10 @@
 import type { FC } from 'react';
 
+import type { GetServerSidePropsContext, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 import useAuth from '#src-app/hooks/useAuth';
-
-import BlankPage from '#src-app/utils/BlankPage';
-
-
+import { AUTH_COOKIE_NAME } from '#src-app/utils/constants';
 
 // eslint-disable-next-line react/display-name, complexity
 export const withGuestGuard = (Component: FC) => (props: any) => {
@@ -16,7 +14,22 @@ export const withGuestGuard = (Component: FC) => (props: any) => {
 
     if (isBrowser && isInitialised && isAuthenticated) router.replace('/app');
 
-    if (isBrowser && isInitialised && !isAuthenticated) return <Component {...props} />;
+    return <Component {...props} />;
+};
 
-    return <BlankPage />;
+export const withGuestGuardSSR = (getServerSidePropsFn?: GetServerSideProps) => (ctx: GetServerSidePropsContext) => {
+    const token = ctx.req.cookies?.[AUTH_COOKIE_NAME];
+    if (token) {
+        // Here we can add auth check if token is still valid
+        return {
+            redirect: {
+                permanent: false,
+                destination: '/app',
+            }
+        };
+    }
+
+    return getServerSidePropsFn?.(ctx) || {
+        props: {}
+    };
 };

@@ -5,6 +5,8 @@ import { useDispatch } from '#src-app/store';
 import { initialize } from '#src-app/store/slices/Auth/Auth.thunks';
 import BlankPage from '#src-app/utils/BlankPage';
 
+const isBrowser = typeof window !== 'undefined';
+
 const InitializeAuth = ({ children }) => {
     const dispatch = useDispatch();
     const { isInitialised } = useAuth();
@@ -14,7 +16,7 @@ const InitializeAuth = ({ children }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!isInitialised) return <BlankPage />;
+    if (isBrowser && !isInitialised) return <BlankPage />;
 
     return children;
 };

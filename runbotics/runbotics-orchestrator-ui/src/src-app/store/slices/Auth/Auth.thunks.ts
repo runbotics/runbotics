@@ -1,14 +1,22 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 
 import { User } from '#src-app/types/user';
+import { AUTH_COOKIE_NAME } from '#src-app/utils/constants';
 
 const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
+        const decoded: any = jwtDecode(accessToken);
+        Cookies.set(AUTH_COOKIE_NAME, accessToken, {
+            expires: new Date(decoded.exp * 1000)
+        });
+
         localStorage.setItem('access_token', accessToken);
         Axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     } else {
+        Cookies.remove(AUTH_COOKIE_NAME);
         localStorage.removeItem('access_token');
         delete Axios.defaults.headers.common.Authorization;
     }

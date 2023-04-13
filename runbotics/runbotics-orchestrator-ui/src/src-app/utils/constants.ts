@@ -10,3 +10,5 @@ export enum ThemeType {
 export const HEADER_HEIGHT = 65;
 export const NAVBAR_MOBILE_WIDTH = 61;
 export const NAVBAR_WIDTH = 250;
+
+export const AUTH_COOKIE_NAME = 'JWT_TOKEN';
