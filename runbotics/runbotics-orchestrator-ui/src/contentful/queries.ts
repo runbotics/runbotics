@@ -18,6 +18,18 @@ query {
 }
 `;
 
+export const buildAllPostsPathsQuery: QueryBuilder = ({
+    preview,
+}) => `
+query {
+    blogPostCollection(preview: ${preview ? 'true' : 'false'}) {
+        items {
+            slug
+        }
+    }
+}
+`;
+
 export const buildPostQuery: QueryBuilder<GetPostOptions> = ({
     preview,
     slug,

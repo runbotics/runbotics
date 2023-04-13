@@ -1,6 +1,6 @@
-import { extractBlogPost, extractBlogPostEntries, extractPaginationData } from './extractors';
-import { buildAllPostsQuery, buildPostQuery } from './queries';
-import { GetAllPostsOptions, GetAllPostsResponse, GetPostOptions, GetPostResponse, QueryBuilder } from './types';
+import { extractBlogPost, extractBlogPostEntries, extractBlogPostsPaths, extractPaginationData } from './extractors';
+import { buildAllPostsPathsQuery, buildAllPostsQuery, buildPostQuery } from './queries';
+import { GetAllPostsOptions, GetAllPostsPathsResponse, GetAllPostsResponse, GetPostOptions, GetPostResponse, QueryBuilder } from './types';
 
 const IS_PREVIEW_MODE = process.env.NODE_ENV === 'development';
 
@@ -18,11 +18,11 @@ async function fetchGraphQL<T>(query: ReturnType<QueryBuilder<never>>): Promise<
             body: JSON.stringify({ query }),
         }
     );
-    
+
     return await response.json();
 }
 
-export async function getAllPosts(options: GetAllPostsOptions) {
+export async function getAllPosts(options: GetAllPostsOptions = {}) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(buildAllPostsQuery({
         preview: IS_PREVIEW_MODE,
         ...options,
@@ -31,6 +31,16 @@ export async function getAllPosts(options: GetAllPostsOptions) {
     return {
         posts: extractBlogPostEntries(entries),
         pagination: extractPaginationData(entries),
+    };
+}
+
+export async function getAllPostsPaths() {
+    const entries = await fetchGraphQL<GetAllPostsPathsResponse>(buildAllPostsPathsQuery({
+        preview: IS_PREVIEW_MODE,
+    }));
+
+    return {
+        paths: extractBlogPostsPaths(entries),
     };
 }
 

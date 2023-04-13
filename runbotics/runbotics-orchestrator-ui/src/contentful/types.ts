@@ -5,7 +5,7 @@ export interface PaginationOptions {
     limit?: number;
 }
 
-export type QueryBuilder<T> = (options: { preview?: boolean } & T) => string;
+export type QueryBuilder<T = {}> = (options: { preview?: boolean } & T) => string;
 
 export type FetchContentfulResponse<T> = {
     data: T;
@@ -19,6 +19,12 @@ export type GetAllPostsResponse = FetchContentfulResponse<{
         skip: number;
         limit: number;
         total: number;
+    }
+}>
+
+export type GetAllPostsPathsResponse = FetchContentfulResponse<{
+    blogPostCollection: {
+        items: Pick<BlogPost, 'slug'>[];
     }
 }>
 
