@@ -67,7 +67,7 @@ export const customServices: Record<string, Function> = {
     },
     isEqual: (arg1: any, arg2: any) => {
         console.log('isEqual called:', arg1, arg2, 'BPM-service-call');
-        let result = isEqual(arg1, arg2);
+        const result = isEqual(arg1, arg2);
 
         console.log('isEqual result:', result, 'BPM-service-call');
         return result;
@@ -79,12 +79,12 @@ export const customServices: Record<string, Function> = {
     },
     incrementAndCompare: (arg1: any, arg2: any, isEqual: boolean) => {
         console.log('Script', 'incrementAndCompare', arg1, arg2, isEqual);
-        let incremented = Number(arg1) + 1;
+        const incremented = Number(arg1) + 1;
         if (isEqual) {
-            let result = incremented == arg2;
+            const result = incremented == arg2;
             return result;
         } else {
-            let result = incremented != arg2;
+            const result = incremented != arg2;
             return result;
         }
     },
@@ -148,8 +148,8 @@ export const customServices: Record<string, Function> = {
     },
 
     getPreviousWorkday() {
-        let workday = moment();
-        let day = workday.day();
+        const workday = moment();
+        const day = workday.day();
         let diff = 1; // returns yesterday
         if (day == 0 || day == 1) {
             // is Sunday or Monday
@@ -222,7 +222,7 @@ export const customServices: Record<string, Function> = {
 
     getSecondsToSpecifiedHour: (hour: any) => {
         const format = 'HH:mm:ss';
-        var specHour = moment(hour, format);
+        const specHour = moment(hour, format);
         const now = moment();
 
         if (now.isBefore(specHour)) {
@@ -237,16 +237,16 @@ export const customServices: Record<string, Function> = {
     },
 
     getFirstWorkingDayOfFutureMonth: (monthsNumber: any, format?: string) => {
-        var firstdate = moment().add(monthsNumber, 'month').startOf('month');
+        let firstdate = moment().add(monthsNumber, 'month').startOf('month');
 
         while (firstdate.day() % 6 == 0) {
             firstdate = firstdate.add(1, 'day');
         }
 
         console.log('oryginal first working day: ' + firstdate.format('DD-MM-YYYY'), 'BPM-service-call');
-        //for testing purpouse
-        //firstdate = firstdate.add(17, 'days');
-        //console.log('modified first working day: '+firstdate.format("DD-MM-YYYY"));
+        // for testing purpose
+        // firstdate = firstdate.add(17, 'days');
+        // console.log('modified first working day: '+firstdate.format("DD-MM-YYYY"));
 
         return format ? firstdate.format(format) : firstdate;
     },
@@ -256,13 +256,13 @@ export const customServices: Record<string, Function> = {
     },
 
     getLastWorkingDayOfFutureMonth: (monthsNumber: any, format?: string) => {
-        var firstdate = moment().add(monthsNumber, 'month').endOf('month');
+        let firstdate = moment().add(monthsNumber, 'month').endOf('month');
 
         while (firstdate.day() % 6 == 0) {
             firstdate = firstdate.subtract(1, 'day');
         }
 
-        //for testing purpouse
+        //for testing purpose
         //firstdate = firstdate.subtract(11, 'days');
         //console.log('modified last working day: '+firstdate.format("DD-MM-YYYY"));
 
@@ -280,28 +280,26 @@ export const customServices: Record<string, Function> = {
     },
 
     getSecondsToFirstWorkingDayOfMonth: (hour: string) => {
-        var month = 0;
-        do {
-            var firstWorkingDayOfMonth: any = customServices.getFirstWorkingDayOfFutureMonth(month);
-
+        const now = moment();
+        for (let month = 0; month <= 12; month++) {
+            const firstWorkingDayOfMonth = customServices.getFirstWorkingDayOfFutureMonth(month);
             if (hour) {
                 firstWorkingDayOfMonth.set('hour', +hour);
-                //Only for testing
-                firstWorkingDayOfMonth.set('minute', 58);
+                // Only for testing
+                // firstWorkingDayOfMonth.set('minute', 58);
             }
 
-            if (moment().isBefore(firstWorkingDayOfMonth)) {
-                return firstWorkingDayOfMonth.diff(moment());
+            if (now.isBefore(firstWorkingDayOfMonth)) {
+                return firstWorkingDayOfMonth.diff(now);
             }
-            month++;
-        } while (true);
+        }
+
+        console.log('Error: Could not get seconds to first working day of the month');
     },
 
     transformArraysToArray: (input: Record<string, { value: any }[]>) => {
-        let i = 0;
-        let elements: Record<string, any> = {};
+        const elements: Record<string, any> = {};
         Object.entries(input).map(([key, rows]) => {
-            i = 0;
             rows.forEach((row, index) => {
                 if (!elements[index]) {
                     elements[index] = {};
@@ -325,11 +323,10 @@ export const customServices: Record<string, Function> = {
                 same = false;
                 return;
             }
-            let object2 = array2[key];
+            const object2 = array2[key];
 
             Object.entries(object).forEach(([fieldKey, fieldValue]) => {
-                if (fieldValue == object2[fieldKey]) {
-                } else {
+                if (fieldValue != object2[fieldKey]) {
                     same = false;
                     return;
                 }
@@ -349,10 +346,10 @@ export const customServices: Record<string, Function> = {
         array2: Record<string, Record<string, any>>,
         field2: string,
     ) => {
-        let differ: Record<string, number> = {};
+        const differ: Record<string, number> = {};
         Object.entries(array1).forEach(([key, object]) => {
-            let value1 = object[field1];
-            let value2 = array2[key][field2];
+            const value1 = object[field1];
+            const value2 = array2[key][field2];
 
             differ[key] = Number(value2.replace(/,/g, '.')) - Number(value1.replace(/,/g, '.'));
         });
@@ -360,7 +357,7 @@ export const customServices: Record<string, Function> = {
         return differ;
     },
 
-    objFromArray: (arr: any[], key: string = 'id') => {
+    objFromArray: (arr: any[], key = 'id') => {
         return arr.reduce((accumulator, current) => {
             accumulator[current[key]] = current;
             return accumulator;
@@ -390,9 +387,9 @@ export const customServices: Record<string, Function> = {
         return 'zxss123s2s';
     },
     roundAll: (arg: Record<string, any>, precision?: string | number) => {
-        let prec = precision ? Number(precision) : 2;
-        let newObject: Record<string, any> = {};
-        for (let [key, value] of Object.entries(arg)) {
+        const prec = precision ? Number(precision) : 2;
+        const newObject: Record<string, any> = {};
+        for (const [key, value] of Object.entries(arg)) {
             if (value == null) {
                 newObject[key] = value;
             } else if (isNaN(value)) {

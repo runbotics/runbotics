@@ -1,5 +1,5 @@
-import { BotWebSocketGateway } from './gateway/bot.gateway';
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BotWebSocketGateway } from './bot/bot.gateway';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { BotService } from '#/database/bot/bot.service';
 import { BotWsMessage } from 'runbotics-common';

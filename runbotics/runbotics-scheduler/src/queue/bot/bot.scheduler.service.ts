@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Logger } from '../../utils/logger';
 import { BotService } from '../../database/bot/bot.service';
 import { BotStatus, IUser, WsMessage } from 'runbotics-common';
-import { UiGateway } from '../../websocket/gateway/ui.gateway';
+import { UiGateway } from '../../websocket/ui/ui.gateway';
 
 
 @Injectable()

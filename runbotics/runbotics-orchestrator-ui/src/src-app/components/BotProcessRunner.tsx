@@ -99,7 +99,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
 
     const processInstances = useSelector(processInstanceSelector);
-    const { orchestratorProcessInstanceId, processInstance } =
+    const { orchestratorProcessInstanceId, processInstance, eventsMap } =
         processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
     const isProcessAttended = process?.isAttended && Boolean(process?.executionInfo);
@@ -127,7 +127,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleTerminate = async () => {
-        await dispatch(
+        if (!started) return;
+
+        dispatch(
             schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
         )
             .then(() => {
@@ -287,8 +289,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         return null;
     }
 
+    const hasEventStarted = eventsMap && Object.keys(eventsMap).length > 0;
+
     return (
-        <If condition={hasRunProcessAccess && !started} else={terminateButton}>
+        <If condition={hasRunProcessAccess && (!started || !hasEventStarted) } else={terminateButton}>
             <If condition={Boolean(rerunProcessInstance)} else={runButton}>
                 {rerunMenu}
             </If>

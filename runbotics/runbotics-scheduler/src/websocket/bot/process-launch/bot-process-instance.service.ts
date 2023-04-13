@@ -11,8 +11,8 @@ import { MailService } from '#/mail/mail.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';
 import { NotificationService } from '#/microsoft/notification';
 
-import { UiGateway } from '../gateway/ui.gateway';
-import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process.service.utils';
+import { UiGateway } from '../../ui/ui.gateway';
+import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process-instance.service.utils';
 
 @Injectable()
 export class BotProcessService {
@@ -84,6 +84,7 @@ export class BotProcessService {
         }
         instanceToSave.id = processInstance.id;
         instanceToSave.status = processInstance.status;
+        instanceToSave.error = processInstance.error;
         instanceToSave.process = processInstance.process;
         instanceToSave.orchestratorProcessInstanceId = processInstance.orchestratorProcessInstanceId;
         instanceToSave.user = processInstance.user;
