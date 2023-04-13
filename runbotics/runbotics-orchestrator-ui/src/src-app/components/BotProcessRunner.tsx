@@ -128,8 +128,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleTerminate = () => {
         if (!started) return;
+
+        const TERMINATION_DELAY = 500
         
-        // 500ms delay in case of instant termination 
         setTimeout(async () => {
             await dispatch(
                 schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
@@ -157,7 +158,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         }
                     );
                 });
-        }, 500);
+        }, TERMINATION_DELAY);
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
