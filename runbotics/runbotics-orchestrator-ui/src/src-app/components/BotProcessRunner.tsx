@@ -11,6 +11,7 @@ import {
     FeatureKey,
     IProcess,
     IProcessInstance,
+    ProcessInstanceEventStatus,
     ProcessInstanceStatus,
     isProcessInstanceFinished,
 } from 'runbotics-common';
@@ -126,39 +127,50 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setAnchorEl(null);
     };
 
-    const handleTerminate = () => {
+    const handleTerminate = async () => {
         if (!started) return;
 
-        const TERMINATION_DELAY = 500
-        
-        setTimeout(async () => {
-            await dispatch(
-                schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
-            )
-                .then(() => {
-                    setStarted(false);
-                    setLoading(false);
-                    setSubmitting(false);
-                    enqueueSnackbar(
-                        translate('Scheduler.ActiveProcess.Terminate.Success', {
-                            processName,
-                        }),
-                        {
-                            variant: 'success',
-                        }
-                    );
-                })
-                .catch(() => {
-                    enqueueSnackbar(
-                        translate('Scheduler.ActiveProcess.Terminate.Failed', {
-                            processName,
-                        }),
-                        {
-                            variant: 'error',
-                        }
-                    );
-                });
-        }, TERMINATION_DELAY);
+        const sendErrorMessage = () => {
+            enqueueSnackbar(
+                translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                    processName,
+                }),
+                {
+                    variant: 'error',
+                }
+            );
+        };
+
+        const isEventInProgress = await dispatch(
+            processInstanceEventActions.getProcessInstanceEvents({ processInstanceId: processInstance?.id }),
+        )
+            .then(unwrapResult)
+            .then((events) => events[events.length - 1]?.status === ProcessInstanceEventStatus.IN_PROGRESS);
+
+        if (!isEventInProgress) {
+            sendErrorMessage();
+            return;
+        };
+
+        dispatch(
+            schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
+        )
+            .then(() => {
+                setStarted(false);
+                setLoading(false);
+                setSubmitting(false);
+                enqueueSnackbar(
+                    translate('Scheduler.ActiveProcess.Terminate.Success', {
+                        processName,
+                    }),
+                    {
+                        variant: 'success',
+                    }
+                );
+            })
+            .catch(() => {
+                sendErrorMessage();
+            });
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {

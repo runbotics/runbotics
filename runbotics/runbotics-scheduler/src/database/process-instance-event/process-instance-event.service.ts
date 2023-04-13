@@ -16,15 +16,15 @@ export class ProcessInstanceEventService {
         return event;
     }
 
-    async update(event: IProcessInstanceEvent) {
-        return await this.processInstanceEventRepository.update(event.id, event);
+    update(event: IProcessInstanceEvent) {
+        return this.processInstanceEventRepository.update(event.id, event);
     }
 
     findByExecutionId(queryRunner: QueryRunner, executionId: string) {
         return queryRunner.manager.findOne(ProcessInstanceEventEntity, { where: { executionId }, relations: ['processInstance'] });
     }
 
-    async findActiveByProcessInstanceId(processInstanceId: string) {
+    findActiveByProcessInstanceId(processInstanceId: string) {
         return this.processInstanceEventRepository.findBy({ 
             processInstance: { id: processInstanceId },
             status: ProcessInstanceEventStatus.IN_PROGRESS,
