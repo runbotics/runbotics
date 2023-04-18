@@ -8,7 +8,7 @@ import Link from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { BlogPost } from 'src/contentful/models';
 
-import CardBadge from '../CardBadge/CardBadge';
+import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './FeaturedBlogCard.module.scss';
 

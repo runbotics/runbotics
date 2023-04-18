@@ -4,9 +4,9 @@ import BlogLayout from '#src-landing/components/BlogLayout/BlogLayout';
 import Layout from '#src-landing/components/Layout';
 import { BlogPost } from 'src/contentful/models';
 
-import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection/BreadcrumbsSection';
-import CardsSection from '../sections/blog/CardsSection/CardsSection';
-import FiltersSection from '../sections/blog/FiltersSection/FiltersSection';
+import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
+import CardsSection from '../sections/blog/CardsSection';
+import FiltersSection from '../sections/blog/FiltersSection';
 
 interface Props {
     posts: BlogPost[];

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import BlogCard from '#src-landing/components/BlogCard/BlogCard';
-import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard/FeaturedBlogCard';
+import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
 import { BlogPost } from 'src/contentful/models';
 
 import styles from './CardsSection.module.scss';
