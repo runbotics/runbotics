@@ -1,0 +1,40 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    width: calc(100% - 270px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+}
+.topFilters {
+    grid-column: 1/ 4;
+}
+.featuredCard {
+    grid-column: 1/ 4;
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        width: auto;
+        margin: 0 auto;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .topFilters {
+        grid-column: 1/ 3;
+    }
+    .featuredCard {
+        grid-column: 1/ 3;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .topFilters {
+        grid-column: 1/ 2;
+    }
+    .featuredCard {
+        grid-column: 1/ 2;
+    }
+}

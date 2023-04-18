@@ -1,0 +1,13 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    display: flex;
+    flex-direction: column;
+    width: 270px;
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        width: 100%;
+    }
+}

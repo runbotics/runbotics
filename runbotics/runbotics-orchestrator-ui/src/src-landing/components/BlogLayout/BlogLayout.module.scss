@@ -1,0 +1,10 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 59px;
+    padding: 0 $x-content-padding;
+}
