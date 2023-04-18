@@ -50,6 +50,7 @@ $READ-MORE-ICON-WIDTH: 24px;
 .info {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: $margin-2;
     margin-bottom: $margin-2;
 }
