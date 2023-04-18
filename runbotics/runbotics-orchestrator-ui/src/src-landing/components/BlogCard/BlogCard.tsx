@@ -8,6 +8,7 @@ import Link from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { BlogPost } from 'src/contentful/models';
 
+import CardBadge from '../CardBadge/CardBadge';
 import Typography from '../Typography';
 import styles from './BlogCard.module.scss';
 
@@ -26,7 +27,6 @@ export const cutText = (text: string, length: number) => {
 
 const BlogCard: FC<Props> = ({ post }) => {
     const { translate } = useTranslations();
-
     return (
         <article className={styles.root}>
             <Image
@@ -35,6 +35,13 @@ const BlogCard: FC<Props> = ({ post }) => {
                 alt=""
                 className={styles.img}
             />
+            {/* temp solution to tags, to be added in contentful schema */}
+            {post.categories.items[0].slug === 'category-two' ? (
+                <CardBadge
+                    text={post.categories.items[0].title}
+                    className={styles.badge}
+                />
+            ) : null}
             <div className={styles.info}>
                 <Typography variant="body4">
                     {moment(post.date).format('D.MM.YYYY')}

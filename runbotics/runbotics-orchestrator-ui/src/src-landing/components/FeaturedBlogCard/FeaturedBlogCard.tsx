@@ -8,6 +8,7 @@ import Link from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { BlogPost } from 'src/contentful/models';
 
+import CardBadge from '../CardBadge/CardBadge';
 import Typography from '../Typography';
 import styles from './FeaturedBlogCard.module.scss';
 
@@ -37,6 +38,7 @@ const BlogCard: FC<Props> = ({ post }) => {
                     className={styles.img}
                 />
                 <div className={styles.info}>
+                    <CardBadge text={post.categories.items[0].title} />
                     <Typography variant="body4">
                         {moment(post.date).format('D.MM.YYYY')}
                     </Typography>

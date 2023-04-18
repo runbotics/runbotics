@@ -49,10 +49,9 @@ $READ-MORE-ICON-WIDTH: 24px;
 
 .info {
     display: flex;
+    align-items: center;
+    gap: $margin-2;
     margin-bottom: $margin-2;
-    p:first-child {
-        margin-right: $margin-2;
-    }
 }
 
 .category {
@@ -110,5 +109,9 @@ $READ-MORE-ICON-WIDTH: 24px;
 @media (max-width: $breakpoint-sm) {
     .root {
         grid-column: 1/ 2;
+    }
+    .content {
+        padding-top: $padding-5;
+        padding-right: $padding-5;
     }
 }

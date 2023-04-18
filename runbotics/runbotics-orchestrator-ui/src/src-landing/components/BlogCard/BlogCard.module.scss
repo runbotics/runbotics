@@ -13,6 +13,8 @@ $READ-MORE-A-RIGHT: -25px;
 $READ-MORE-ICON-HEIGHT: 24px;
 $READ-MORE-ICON-WIDTH: 24px;
 $READ-MORE-COLOR: #fbb040;
+$BADGE-TOP: calc($IMG-MAX-HEIGHT - 20px);
+$BADGE-LEFT: 20px;
 
 .root {
     position: relative;
@@ -43,7 +45,6 @@ $READ-MORE-COLOR: #fbb040;
 
 .title {
     font-weight: $font-weight-bold;
-    font-size: $font-size-h5;
     margin: 0;
     margin-bottom: $TITLE-MARGIN-BOTTOM;
 }
@@ -70,4 +71,10 @@ $READ-MORE-COLOR: #fbb040;
             width: $READ-MORE-ICON-WIDTH;
         }
     }
+}
+
+.badge {
+    position: absolute;
+    top: $BADGE-TOP;
+    left: $BADGE-LEFT;
 }
