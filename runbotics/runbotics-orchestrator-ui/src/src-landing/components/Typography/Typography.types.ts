@@ -10,6 +10,7 @@ type TypographyVariant =
     | 'body2'
     | 'body3'
     | 'body4'
+    | 'body5'
     | 'nav';
 
 type TypographyColor = 'primary' | 'secondary' | 'accent' | 'error' | 'success';

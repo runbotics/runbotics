@@ -44,7 +44,7 @@ const BlogCard: FC<Props> = ({ post }) => {
                 </Typography>
             </div>
             <div className={styles.content}>
-                <Typography variant="h3" className={styles.title}>
+                <Typography variant="h4" className={styles.title}>
                     {post.title}
                 </Typography>
                 <Typography variant="body3">

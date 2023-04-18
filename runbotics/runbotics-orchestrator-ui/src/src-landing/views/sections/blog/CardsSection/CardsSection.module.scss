@@ -9,10 +9,6 @@
 .topFilters {
     grid-column: 1/ 4;
 }
-.featuredCard {
-    grid-column: 1/ 4;
-}
-
 @media (max-width: $breakpoint-md) {
     .root {
         width: 100%;

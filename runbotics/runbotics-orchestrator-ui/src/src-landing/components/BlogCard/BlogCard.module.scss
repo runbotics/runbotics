@@ -7,7 +7,6 @@ $IMG-MARGIN-BOTTOM: 12px;
 $INFO-PADDING: 0 20px;
 $TITLE-MARGIN-BOTTOM: 10px;
 $CONTENT-PADDING: 0 20px 20px 20px;
-$DESCRIPTION-MAX-WIDTH: 966px;
 $READ-MORE-PADDING-RIGHT: 30px;
 $READ-MORE-A-TOP: 1px;
 $READ-MORE-A-RIGHT: -25px;
@@ -51,9 +50,6 @@ $READ-MORE-COLOR: #fbb040;
 
 .content {
     padding: $CONTENT-PADDING;
-}
-.description {
-    max-width: $DESCRIPTION-MAX-WIDTH;
 }
 
 .readMore {
