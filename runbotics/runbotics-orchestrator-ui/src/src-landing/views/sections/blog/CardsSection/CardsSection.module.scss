@@ -15,7 +15,7 @@
 
 @media (max-width: $breakpoint-md) {
     .root {
-        width: auto;
+        width: 100%;
         margin: 0 auto;
         grid-template-columns: repeat(2, 1fr);
     }

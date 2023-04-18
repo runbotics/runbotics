@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import BlogCard from '#src-landing/components/BlogCard/BlogCard';
 import { BlogPost } from 'src/contentful/models';
 
 import styles from './CardsSection.module.scss';
@@ -13,7 +14,7 @@ const BlogCardsSection: FC<Props> = ({ posts }) => (
         <div className={styles.topFilters}>top filters</div>
         <div className={styles.featuredCard}>blog cards</div>
         {posts.map((post) => (
-            <div key={post.slug}>asd</div>
+            <BlogCard key={post.slug} post={post} />
         ))}
     </div>
 );

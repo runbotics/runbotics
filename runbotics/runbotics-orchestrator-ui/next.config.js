@@ -35,4 +35,8 @@ module.exports = {
         mailUsername: process.env.MAIL_USERNAME,
         mailPassword: process.env.MAIL_PASSWORD,
     },
+
+    images: {
+        domains: ["images.ctfassets.net"]
+    }
 };

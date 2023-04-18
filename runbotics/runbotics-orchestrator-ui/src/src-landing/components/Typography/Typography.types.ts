@@ -1,22 +1,18 @@
 type TypographyVariant =
-    'h1' |
-    'h2' |
-    'h3' |
-    'h4' |
-    'h5' |
-    'h6' |
-    'p' |
-    'body1' |
-    'body2' |
-    'body3' |
-    'nav'
+    | 'h1'
+    | 'h2'
+    | 'h3'
+    | 'h4'
+    | 'h5'
+    | 'h6'
+    | 'p'
+    | 'body1'
+    | 'body2'
+    | 'body3'
+    | 'body4'
+    | 'nav';
 
-type TypographyColor =
-    'primary' |
-    'secondary' |
-    'accent' |
-    'error' |
-    'success'
+type TypographyColor = 'primary' | 'secondary' | 'accent' | 'error' | 'success';
 
 export interface TypographyProps {
     variant?: TypographyVariant;

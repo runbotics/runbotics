@@ -1,0 +1,77 @@
+@import '#src-landing/scss/main.scss';
+
+$CARD-PADDING: 20px 0;
+$IMG-MAX-HEIGHT: 140px;
+$IMG-BORDER-RADIUS: 20px;
+$IMG-MARGIN-BOTTOM: 12px;
+$INFO-PADDING: 0 20px;
+$TITLE-MARGIN-BOTTOM: 10px;
+$CONTENT-PADDING: 0 20px 20px 20px;
+$DESCRIPTION-MAX-WIDTH: 966px;
+$READ-MORE-PADDING-RIGHT: 30px;
+$READ-MORE-A-TOP: 1px;
+$READ-MORE-A-RIGHT: -25px;
+$READ-MORE-ICON-HEIGHT: 24px;
+$READ-MORE-ICON-WIDTH: 24px;
+$READ-MORE-COLOR: #fbb040;
+
+.root {
+    position: relative;
+    width: 100%;
+    padding: $CARD-PADDING;
+}
+
+.img {
+    position: relative !important;
+    max-height: $IMG-MAX-HEIGHT;
+    object-fit: cover;
+    border-radius: $IMG-BORDER-RADIUS;
+    margin-bottom: $IMG-MARGIN-BOTTOM;
+}
+
+.info {
+    display: flex;
+    padding: $INFO-PADDING;
+    margin-bottom: $margin-2;
+    p:first-child {
+        margin-right: $margin-2;
+    }
+}
+
+.category {
+    font-weight: $font-weight-semi-bold;
+}
+
+.title {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-h5;
+    margin: 0;
+    margin-bottom: $TITLE-MARGIN-BOTTOM;
+}
+
+.content {
+    padding: $CONTENT-PADDING;
+}
+.description {
+    max-width: $DESCRIPTION-MAX-WIDTH;
+}
+
+.readMore {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    padding-right: $READ-MORE-PADDING-RIGHT;
+    a {
+        position: relative;
+        color: $READ-MORE-COLOR;
+        &::after {
+            content: '';
+            position: absolute;
+            top: $READ-MORE-A-TOP;
+            right: $READ-MORE-A-RIGHT;
+            background-image: url('/images/icons/right-orange.svg');
+            height: $READ-MORE-ICON-HEIGHT;
+            width: $READ-MORE-ICON-WIDTH;
+        }
+    }
+}
