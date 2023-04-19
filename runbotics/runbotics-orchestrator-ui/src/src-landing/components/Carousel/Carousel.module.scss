@@ -14,38 +14,21 @@ $CONTENT-WRAPPER-WIDTH: 532px;
     isolation: isolate;
 }
 
+.contentWrapper {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    padding: 0;
+}
+
 .buttonWrapper {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-right: $BEFORE-X-OFFSET;
-}
-
-.contentWrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    width: $CONTENT-WRAPPER-WIDTH;
-    height: 100%;
-    min-height: 500px;
-    margin: 0 $margin-2;
-    // padding to offset border radius for correct word wrapping
-    padding: 90px 30px 70px 20px;
-    border-radius: $CARD-BORDER-RADIUS;
-    background-color: $palette-background-primary;
-    box-shadow: $box-shadow-primary;
-
-    &::before {
-        position: absolute;
-        z-index: -1;
-        width: 100%;
-        height: 100%;
-        content: '';
-        transform: translate(-$BEFORE-X-OFFSET, calc($BEFORE-Y-OFFSET - 90px));
-        border-radius: $CARD-BORDER-RADIUS;
-        background-color: $palette-accent-secondary;
-    }
 }
 
 .counter {

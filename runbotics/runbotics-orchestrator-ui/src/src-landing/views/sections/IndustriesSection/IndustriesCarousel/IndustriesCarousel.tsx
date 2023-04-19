@@ -24,7 +24,7 @@ const IndustriesCarousel = () => {
         />
     ));
 
-    return (<Carousel slides={slides} styles={styles} useCSSSlider hideControlsOnEdge />);
+    return (<Carousel slides={slides} customStyles={styles} useCSSSlider hideControlsOnEdge />);
 };
 
 export default IndustriesCarousel;

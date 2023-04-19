@@ -5,14 +5,16 @@ import CarouselButton from '#src-landing/components/Carousel/CarouselButton';
 import MobileCarouselNav from '#src-landing/components/Carousel/MobileCarouselNav';
 import Typography from '#src-landing/components/Typography';
 
+import defaultStyles from './Carousel.module.scss';
 import { CarouselProps } from './Carousel.types';
 
-const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, styles, useCSSSlider = false, hasCounter = false, hideControlsOnEdge = false }) => {
+const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, useCSSSlider = false, hasCounter = false, hideControlsOnEdge = false }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [sliderWidth, setSliderWidth] = useState<null | number>(subsetSize);
     const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex; // - subsetSize 
     const isFirstSlide = hideControlsOnEdge && activeIndex === 0;
     const sliderRef = useRef<HTMLDivElement>(null);
+    const styles = customStyles ?? defaultStyles;
 
     useEffect(() => {
         if (useCSSSlider && sliderRef.current) {

@@ -29,7 +29,7 @@ const BenefitsSection: FC = () => {
             aria-labelledby={BENEFITS_TITLE_ID}
         >
             <BenefitsContent />
-            <Carousel slides={slides} styles={carouselStyles} hasCounter />
+            <Carousel slides={slides} customStyles={carouselStyles} hasCounter />
         </section>
     );
 };
