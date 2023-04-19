@@ -22,6 +22,7 @@ $SHOW-MORE-RADIUS: 0px 0px 20px 20px;
 
     &__open {
         height: fit-content;
+        box-shadow: $box-shadow-primary;
 
         div:first-child {
             height: $SLIDE-OPEN-IMG;

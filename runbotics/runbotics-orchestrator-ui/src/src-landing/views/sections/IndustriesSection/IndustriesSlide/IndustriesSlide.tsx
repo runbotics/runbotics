@@ -31,11 +31,7 @@ const IndustriesSlide: FC<IndustriesSlideProps> = ({
             className={`${styles.slide} ${
                 index === openSlide ? styles.slide__open : ''
             }`}
-            dataShadow={isVisible({
-                slideIndex: index,
-                activeIndex,
-                sliderWidth,
-            })}
+            dataShadow={(index === openSlide).toString()}
         >
             <div className={styles.imgWrapper}>
                 <Image

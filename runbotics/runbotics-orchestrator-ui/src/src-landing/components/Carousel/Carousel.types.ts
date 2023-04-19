@@ -1,7 +1,12 @@
-export interface CarouselSlide {
-    content: JSX.Element;
+export interface CarouselStyles {
+    [key: string]: string;
 }
 
 export interface CarouselProps {
-    slides: CarouselSlide[];
+    slides: JSX.Element[];
+    subsetSize?: number;
+    styles?: CarouselStyles;
+    useCSSSlider?: boolean;
+    hasCounter?: boolean;
+    hideControlsOnEdge?: boolean;
 }

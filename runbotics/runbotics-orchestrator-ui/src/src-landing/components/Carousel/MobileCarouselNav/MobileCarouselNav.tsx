@@ -12,8 +12,8 @@ const MobileCarouselNav: FC<MobileCarouselNavProps> = ({
     length,
     currentSlide,
     className = '',
-    isFirstSlide = false,
-    isLastSlide = false,
+    isFirstSlide,
+    isLastSlide,
 }) => {
     const hasCounter = currentSlide !== null;
     return (

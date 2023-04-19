@@ -7,7 +7,7 @@ import { IndustrySlide } from '#src-landing/views/sections/IndustriesSection/Ind
 
 export const INDUSTRIES_TITLE_ID = 'industries-title';
 
-export const SLIDES: IndustrySlide[] = [
+export const INDUSTRIES_SLIDES: IndustrySlide[] = [
     {
         titleKey: 'Landing.Industries.Slides.IT.Title',
         imgAltKey: 'Landing.Industries.Slides.IT.ImgAlt',
