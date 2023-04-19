@@ -1,7 +1,8 @@
 @import '#src-landing/scss/main.scss';
+$FILTERS-WIDTH: 270px;
 
 .root {
-    width: calc(100% - 270px);
+    width: calc(100% - $FILTERS-WIDTH);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
