@@ -8,7 +8,7 @@ import Typography from '#src-landing/components/Typography';
 import defaultStyles from './Carousel.module.scss';
 import { CarouselProps } from './Carousel.types';
 
-const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, useCSSSlider = false, hasCounter = false, hideControlsOnEdge = false }) => {
+const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, useCSSSlider, hasCounter, hideControlsOnEdge }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [sliderWidth, setSliderWidth] = useState<null | number>(subsetSize);
     const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex; // - subsetSize 
