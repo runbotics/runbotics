@@ -8,7 +8,7 @@ import Typography from '#src-landing/components/Typography';
 import defaultStyles from './Carousel.module.scss';
 import { CarouselProps } from './Carousel.types';
 
-const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, useCSSSlider, hasCounter, hideControlsOnEdge }) => {
+const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, hasCSSSlider, hasCounter, hideControlsOnEdge }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [sliderWidth, setSliderWidth] = useState<null | number>(subsetSize);
     const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex; // - subsetSize 
@@ -17,7 +17,7 @@ const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, use
     const styles = customStyles ?? defaultStyles;
 
     useEffect(() => {
-        if (useCSSSlider && sliderRef.current) {
+        if (hasCSSSlider && sliderRef.current) {
             setSliderWidth(
                 parseInt(
                     getComputedStyle(sliderRef.current).getPropertyValue(
@@ -30,7 +30,7 @@ const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, use
                 activeIndex.toString()
             );
         }
-    }, [sliderRef, activeIndex, useCSSSlider]);
+    }, [sliderRef, activeIndex, hasCSSSlider]);
 
     const handleForward = () => {
         setActiveIndex((prevIndex) => 
@@ -54,10 +54,10 @@ const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, use
                     visible={!isFirstSlide} />
             </div>
             <div className={styles.contentWrapper}>
-                <If condition={useCSSSlider} else={slides.slice(activeIndex, activeIndex + sliderWidth)}>
-                    {<div className={styles.slider} ref={sliderRef}>
+                <If condition={hasCSSSlider} else={slides.slice(activeIndex, activeIndex + sliderWidth)}>
+                    <div className={styles.slider} ref={sliderRef}>
                         {slides}
-                    </div>}
+                    </div>
                 </If>
             </div>
             <div className={styles.buttonWrapper}>

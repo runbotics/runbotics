@@ -6,7 +6,7 @@ export interface CarouselProps {
     slides: JSX.Element[];
     subsetSize?: number;
     customStyles?: CarouselStyles;
-    useCSSSlider?: boolean;
+    hasCSSSlider?: boolean;
     hasCounter?: boolean;
     hideControlsOnEdge?: boolean;
 }

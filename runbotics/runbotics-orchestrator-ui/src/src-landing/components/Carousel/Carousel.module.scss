@@ -60,15 +60,6 @@ $CONTENT-WRAPPER-WIDTH: 532px;
         display: none;
     }
 
-    .contentWrapper {
-        width: calc(100% - 20px);
-        max-width: 520px;
-
-        &::before {
-            transform: translate(-5px, calc(20px - 90px));
-        }
-    }
-
     .counter {
         position: relative;
         min-width: none;

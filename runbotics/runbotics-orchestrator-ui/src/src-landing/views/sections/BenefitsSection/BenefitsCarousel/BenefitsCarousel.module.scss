@@ -78,11 +78,11 @@ $CONTENT-WRAPPER-WIDTH: 532px;
     }
 
     .contentWrapper {
-        width: calc(100% - 20px);
+        width: calc(100% - $BEFORE-X-OFFSET);
         max-width: 520px;
 
         &::before {
-            transform: translate(-5px, calc(20px - 90px));
+            transform: translate(-5px, calc($BEFORE-X-OFFSET - 90px));
         }
     }
 
