@@ -8,23 +8,23 @@ import Typography from '#src-landing/components/Typography';
 import defaultStyles from './Carousel.module.scss';
 import { CarouselProps } from './Carousel.types';
 
-const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, hasCSSSlider, hasCounter, hideControlsOnEdge }) => {
+const Carousel: FC<CarouselProps> = ({ slides, itemsPerSlider = 1, customStyles, hasCSSSlider, hasCounter, hideControlsOnEdge }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [sliderWidth, setSliderWidth] = useState<null | number>(subsetSize);
-    const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex; // - subsetSize 
+    const [sliderWidth, setSliderWidth] = useState<null | number>(itemsPerSlider);
+    const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex;
     const isFirstSlide = hideControlsOnEdge && activeIndex === 0;
     const sliderRef = useRef<HTMLDivElement>(null);
     const styles = customStyles ?? defaultStyles;
 
     useEffect(() => {
         if (hasCSSSlider && sliderRef.current) {
-            setSliderWidth(
-                parseInt(
-                    getComputedStyle(sliderRef.current).getPropertyValue(
-                        '--items-per-slider'
-                    )
+            const cssSliderWidth = parseInt(
+                getComputedStyle(sliderRef.current).getPropertyValue(
+                    '--items-per-slider'
                 )
             );
+            if (Number.isNaN(cssSliderWidth)) return;
+            setSliderWidth(cssSliderWidth);
             sliderRef.current.style.setProperty(
                 '--index',
                 activeIndex.toString()
