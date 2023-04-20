@@ -151,6 +151,7 @@ export class RuntimeSubscriptionsService {
                     event.processInstance.rootProcessInstanceId,
                 trigger: event.processInstance.trigger,
                 triggerData: event.processInstance.triggerData,
+                error: event.processInstance.error,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:

@@ -5,10 +5,11 @@ import { useDispatch } from 'react-redux';
 import { BpmnElementType } from 'runbotics-common';
 
 import internalBpmnActions from '#src-app/Actions';
-import { useSelector } from '#src-app/store';
+import store, { useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import getElementLabel from '#src-app/utils/getElementLabel';
 
+import { getActivitiyById } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
 import { ModelerEvent } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler/BpmnModeler.types';
 import {
     applyModelerElement,
@@ -57,7 +58,13 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         dispatch(processActions.removeError(elementId));
     };
 
-    const handleInvalidShape = ({ element, modeler, errorType, nameKey }) => {
+    const handleInvalidShape = ({
+        element,
+        modeler,
+        errorType,
+        nameKey,
+        relatedElements,
+    }) => {
         dispatch(
             processActions.setError({
                 elementId: element.id,
@@ -65,6 +72,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                     ? translate(nameKey)
                     : getElementLabel(element),
                 type: errorType,
+                relatedElements: relatedElements ?? [],
             })
         );
 
@@ -222,6 +230,23 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             setCurrentTab(null);
             dispatch(processActions.removeAppliedAction(event.element.id));
             dispatch(processActions.removeError(event.element.id));
+            const relatedError = store
+                .getState()
+                .process.modeler.errors.find((error) =>
+                    error.relatedElements.includes(event.element.id)
+                );
+            if (relatedError) {
+                const elementToValidate = getActivitiyById(
+                    modeler,
+                    relatedError.elementId
+                );
+                validateElement({
+                    element: elementToValidate,
+                    handleInvalidElement: handleInvalidShape,
+                    handleValidElement: handleValidShape,
+                    modeler,
+                });
+            }
         },
         [ModelerEvent.SHAPE_CHANGED]: (event: EventBusEvent) => {
             validateElement({

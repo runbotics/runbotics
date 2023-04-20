@@ -16,4 +16,11 @@
         "runbotics-common",
         "runbotics-cli",
     ],
+    "cSpell.words": [
+        "nestjs",
+        "runbotics",
+        "typeorm",
+        "uuidv",
+        "websockets"
+    ],
 }
