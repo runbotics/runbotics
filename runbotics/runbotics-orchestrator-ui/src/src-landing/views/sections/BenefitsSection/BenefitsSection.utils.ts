@@ -6,19 +6,19 @@ export const BENEFITS_ARTICLES: Article[] = [
     {
         descriptionKey: 'Landing.Benefits.Slides.Repetitive.Description',
         imageSrc: '/images/shapes/beach_access.svg',
-        imageAlt: 'beach icon',
+        imageAlt: 'Beach',
         titleKey: 'Landing.Benefits.Slides.Repetitive.Title',
     },
     {
         descriptionKey: 'Landing.Benefits.Slides.Efficiency.Description',
         imageSrc: '/images/shapes/hourglass.svg',
-        imageAlt: 'Hourglass icon',
+        imageAlt: 'Hourglass',
         titleKey: 'Landing.Benefits.Slides.Efficiency.Title',
     },
     {
         descriptionKey: 'Landing.Benefits.Slides.Accuracy.Description',
         imageSrc: '/images/shapes/layers.svg',
-        imageAlt: 'Layers icon',
+        imageAlt: 'Layers',
         titleKey: 'Landing.Benefits.Slides.Accuracy.Title',
     },
 ];

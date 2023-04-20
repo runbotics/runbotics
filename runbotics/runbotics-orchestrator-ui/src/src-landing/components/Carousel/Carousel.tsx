@@ -1,6 +1,6 @@
-/* eslint-disable complexity */
 import { FC, useState, useRef, useEffect } from 'react';
 
+import If from '#src-app/components/utils/If';
 import CarouselButton from '#src-landing/components/Carousel/CarouselButton';
 import MobileCarouselNav from '#src-landing/components/Carousel/MobileCarouselNav';
 import Typography from '#src-landing/components/Typography';
@@ -54,12 +54,11 @@ const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, use
                     visible={!isFirstSlide} />
             </div>
             <div className={styles.contentWrapper}>
-                {useCSSSlider ? 
-                    (<div className={styles.slider} ref={sliderRef}>
+                <If condition={useCSSSlider} else={slides.slice(activeIndex, activeIndex + sliderWidth)}>
+                    {<div className={styles.slider} ref={sliderRef}>
                         {slides}
-                    </div>)
-                    :
-                    slides.slice(activeIndex, activeIndex + sliderWidth)}
+                    </div>}
+                </If>
             </div>
             <div className={styles.buttonWrapper}>
                 <CarouselButton 
@@ -67,13 +66,15 @@ const Carousel: FC<CarouselProps> = ({ slides, subsetSize = 1, customStyles, use
                     onClick={handleForward} 
                     visible={!isLastSlide}
                 />
-                {hasCounter && (<Typography variant="body1" className={styles.counter}>
-                    <span className={styles.counterCurrent}>
-                        {activeIndex + 1}
-                    </span>
-                    /&nbsp;
-                    {slides.length}
-                </Typography>)}
+                <If condition={hasCounter}>
+                    <Typography variant="body1" className={styles.counter}>
+                        <span className={styles.counterCurrent}>
+                            {activeIndex + 1}
+                        </span>
+                        /&nbsp;
+                        {slides.length}
+                    </Typography>
+                </If>
             </div>
             <MobileCarouselNav
                 className={styles.mobileNav}

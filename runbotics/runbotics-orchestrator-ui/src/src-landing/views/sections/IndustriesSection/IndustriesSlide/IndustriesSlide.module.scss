@@ -3,7 +3,7 @@
 $SLIDER-FLEX-GAP: 25px;
 
 $SLIDE-HEIGHT: 500px;
-$SLIDE-OPEN-IMG: 230px;
+$SLIDE-OPEN-IMG-HEIGHT: 230px;
 $SLIDE-OPEN-CONTENT: 330px;
 $SLIDE-CLOSED-CONTENT: 400px;
 
@@ -25,7 +25,7 @@ $SHOW-MORE-RADIUS: 0px 0px 20px 20px;
         box-shadow: $box-shadow-primary;
 
         div:first-child {
-            height: $SLIDE-OPEN-IMG;
+            height: $SLIDE-OPEN-IMG-HEIGHT;
             button {
                 border-radius: 0px 53px 20px 20px;
             }
@@ -33,7 +33,7 @@ $SHOW-MORE-RADIUS: 0px 0px 20px 20px;
 
         div:last-child {
             height: $SLIDE-OPEN-CONTENT;
-            margin-top: $SLIDE-OPEN-IMG;
+            margin-top: $SLIDE-OPEN-IMG-HEIGHT;
         }
     }
 }
