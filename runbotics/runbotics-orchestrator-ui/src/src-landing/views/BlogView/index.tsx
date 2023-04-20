@@ -8,11 +8,11 @@ import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import CardsSection from '../sections/blog/CardsSection';
 import FiltersSection from '../sections/blog/FiltersSection';
 
-interface Props {
+interface BlogViewProps {
     posts: BlogPost[];
 }
 
-const BlogView: FC<Props> = ({ posts }) => (
+const BlogView: FC<BlogViewProps> = ({ posts }) => (
     <Layout>
         <BlogLayout>
             <BreadcrumbsSection />

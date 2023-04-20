@@ -5,11 +5,11 @@ import { getAllPosts } from 'src/contentful/api';
 import contentfulCache from 'src/contentful/cache';
 import { BlogPost } from 'src/contentful/models';
 
-interface Props {
+interface BlogPageProps {
     posts: BlogPost[];
 }
 
-const BlogPage = ({ posts }: Props) => <BlogView posts={posts} />;
+const BlogPage = ({ posts }: BlogPageProps) => <BlogView posts={posts} />;
 
 export default BlogPage;
 

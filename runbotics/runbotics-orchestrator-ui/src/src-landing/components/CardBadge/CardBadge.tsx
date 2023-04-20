@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import Typography from '../Typography';
 import styles from './CardBadge.module.scss';
 
-interface Props {
+interface CardBadgeProps {
     text: string;
     backgroundColor?: string;
     textColor?: string;
@@ -12,7 +12,7 @@ interface Props {
 const DEFAULT_BACKGROUND_COLOR = '#1E6BF0';
 const DEFAULT_TEXT_COLOR = '#FFF';
 
-const CardBadge: FC<Props> = ({
+const CardBadge: FC<CardBadgeProps> = ({
     backgroundColor = DEFAULT_BACKGROUND_COLOR,
     textColor = DEFAULT_TEXT_COLOR,
     text,

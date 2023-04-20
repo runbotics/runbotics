@@ -6,11 +6,11 @@ import { BlogPost } from 'src/contentful/models';
 
 import styles from './CardsSection.module.scss';
 
-interface Props {
+interface BlogCardsSectionProps {
     posts: BlogPost[];
 }
 
-const BlogCardsSection: FC<Props> = ({ posts }) => (
+const BlogCardsSection: FC<BlogCardsSectionProps> = ({ posts }) => (
     <div className={styles.root}>
         <div className={styles.topFilters}>top filters</div>
         <FeaturedBlogCard post={posts[0]} />

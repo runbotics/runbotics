@@ -8,11 +8,10 @@ import Link from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { BlogPost } from 'src/contentful/models';
 
-import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './FeaturedBlogCard.module.scss';
 
-interface Props {
+interface FeaturedBlogCardProps {
     post: BlogPost;
 }
 
@@ -25,9 +24,9 @@ export const cutText = (text: string, length: number) => {
     return cut.substring(0, lastSpace) + '...';
 };
 
-const BlogCard: FC<Props> = ({ post }) => {
+const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
     const { translate } = useTranslations();
-
+    if(!post) return null;
     return (
         <article className={styles.root}>
             <div className={styles.content}>
@@ -38,13 +37,13 @@ const BlogCard: FC<Props> = ({ post }) => {
                     className={styles.img}
                 />
                 <div className={styles.info}>
-                    <CardBadge text={post.categories.items[0].title} />
+                    {/* <CardBadge text={post.categories.items[0].title} /> */}
                     <Typography variant="body4">
                         {moment(post.date).format('D.MM.YYYY')}
                     </Typography>
-                    <Typography variant="body4" className={styles.category}>
+                    {/* <Typography variant="body4" className={styles.category}>
                         {post.categories.items[0].title}
-                    </Typography>
+                    </Typography> */}
                 </div>
                 <Typography variant="h3" className={styles.title}>
                     {post.title}
@@ -64,4 +63,4 @@ const BlogCard: FC<Props> = ({ post }) => {
     );
 };
 
-export default BlogCard;
+export default FeaturedBlogCard;
