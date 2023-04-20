@@ -40,9 +40,7 @@ const Post = ({ post }: Props) => {
                         {post.date}
                     </div>
                     <div>
-                        {post.categories.items.map(category => (
-                            <Chip key={category.slug} label={category.title} />
-                        ))}
+                        <Chip key={post.category.slug} label={post.category.title} />
                     </div>
                     <div>
                         {post.authors.items.map(author => author.name)}
