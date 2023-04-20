@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import CarouselButton from '#src-landing/components/CarouselButton';
+import CarouselButton from '#src-landing/components/Carousel/CarouselButton';
 import Typography from '#src-landing/components/Typography';
 
 import styles from './MobileCarouselNav.module.scss';
@@ -12,8 +12,8 @@ const MobileCarouselNav: FC<MobileCarouselNavProps> = ({
     length,
     currentSlide,
     className = '',
-    isFirstSlide = false,
-    isLastSlide = false,
+    isFirstSlide,
+    isLastSlide,
 }) => {
     const hasCounter = currentSlide !== null;
     return (

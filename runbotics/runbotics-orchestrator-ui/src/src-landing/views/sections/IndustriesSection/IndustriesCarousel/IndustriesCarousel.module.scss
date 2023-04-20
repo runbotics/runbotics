@@ -22,7 +22,7 @@ $SLIDE-CLOSED-CONTENT: 400px;
     --items-per-slider: 3;
 }
 
-.container {
+.contentWrapper {
     composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     position: relative;
     display: flex;
@@ -45,7 +45,7 @@ $SLIDE-CLOSED-CONTENT: 400px;
     gap: $SLIDER-FLEX-GAP;
 }
 
-.buttonContainer {
+.buttonWrapper {
     display: flex;
     align-items: center;
     flex-grow: 1;
@@ -81,11 +81,11 @@ $SLIDE-CLOSED-CONTENT: 400px;
         padding-inline: calc($x-content-padding - $SLIDER-GAP-OFFSET);
     }
 
-    .buttonContainer {
+    .buttonWrapper {
         display: none;
     }
 
-    .container {
+    .contentWrapper {
         max-width: $MOBILE-CONTAINER-MAX-WIDTH;
     }
 
