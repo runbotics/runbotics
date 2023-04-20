@@ -8,6 +8,7 @@ import Link from 'next/link';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { BlogPost } from 'src/contentful/models';
 
+import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './BlogCard.module.scss';
 
@@ -17,7 +18,7 @@ interface BlogCardProps {
 
 export const cutText = (text: string, length: number) => {
     if(!text) return null;
-    if (text.length < length) {
+    if (text.trim().length < length) {
         return text;
     }
     const cut = text.substring(0, length);
@@ -37,19 +38,19 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                 className={styles.img}
             />
             {/* temp solution to tags, to be added in contentful schema */}
-            {/* {post.categories.items[0]?.slug === 'category-two' ? (
+            {post.category.slug === 'category-two' ? (
                 <CardBadge
-                    text={post.categories.items[0].title}
+                    text={post.category.title}
                     className={styles.badge}
                 />
-            ) : null} */}
+            ) : null}
             <div className={styles.info}>
                 <Typography variant="body4">
                     {moment(post.date).format('D.MM.YYYY')}
                 </Typography>
-                {/* <Typography variant="body4" className={styles.category}>
-                    {post.categories.items[0]?.title}
-                </Typography> */}
+                <Typography variant="body4" className={styles.category}>
+                    {post.category.title}
+                </Typography>
             </div>
             <div className={styles.content}>
                 <Typography variant="h4" className={styles.title}>
