@@ -20,6 +20,7 @@ import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
+import { ProcessInstanceEventService } from '#/database/process-instance-event/process-instance-event.service';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -34,6 +35,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
         private readonly botLifecycleService: BotLifecycleService,
+        private readonly processInstanceEventService: ProcessInstanceEventService,
     ) { }
 
     async handleConnection(client: Socket) {
@@ -67,9 +69,23 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @MessageBody() processInstance: IProcessInstance,
     ) {
         const installationId = socket.bot.installationId;
+        
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
+        
+        if(processInstance.status !== ProcessInstanceStatus.TERMINATED) return;
+        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+        
+        if(activeEvents.length === 0) return;
+
+        activeEvents.forEach(async (event) => {
+            const newProcessInstanceEvent: IProcessInstanceEvent = { ...event, status: ProcessInstanceEventStatus.TERMINATED };
+
+            this.logger.log(`=> Updating process-instance-event (${newProcessInstanceEvent.executionId}) by bot (${installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+            await this.processInstanceEventService.update(newProcessInstanceEvent);
+            this.logger.log(`<= Success: process-instance-event (${newProcessInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+        });
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -81,14 +97,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
-        }
-
-        if (
-            processInstanceEvent.processInstance.status === ProcessInstanceStatus.TERMINATED && 
-            processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
-        ) {
-            const newProcessInstanceEvent = { ...processInstanceEvent, status: ProcessInstanceEventStatus.TERMINATED };
-            this.updateProcessInstanceEvent(socket.bot, newProcessInstanceEvent);
         }
         
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
