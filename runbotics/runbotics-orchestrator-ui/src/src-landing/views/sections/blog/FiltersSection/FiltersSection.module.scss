@@ -1,0 +1,15 @@
+@import '#src-landing/scss/main.scss';
+
+$FILTERS-WIDTH: 270px;
+
+.root {
+    display: flex;
+    flex-direction: column;
+    width: $FILTERS-WIDTH;
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        width: 100%;
+    }
+}

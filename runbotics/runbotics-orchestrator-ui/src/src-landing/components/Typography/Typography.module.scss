@@ -81,6 +81,16 @@
         line-height: $line-height-base;
     }
 
+    &__body4 {
+        font-size: $font-size-body4;
+        line-height: $line-height-base;
+    }
+
+    &__body5 {
+        font-size: $font-size-body5;
+        line-height: $line-height-base;
+    }
+
     &__Roboto {
         @include font-face-roboto;
     }

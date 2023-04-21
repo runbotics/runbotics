@@ -7,6 +7,8 @@ $font-size-h6: clamp(1rem, 1vw + 1rem, 1.125rem);
 $font-size-body1: clamp(1rem, 2vw + 1rem, 1.75rem);
 $font-size-body2: clamp(1rem, 1vw + 1rem, 1.125rem);
 $font-size-body3: 1rem;
+$font-size-body4: 0.875rem;
+$font-size-body5: 0.75rem;
 $font-size-caption: 0.875rem;
 
 $font-weight-bold: 700;
@@ -25,16 +27,16 @@ $line-height-body2: 1.5rem;
 $text-color-dark: #000000;
 $text-color-light: #ffffff;
 $text-color-gray: #707070;
-$text-color-disabled: #BBBBBB;
+$text-color-disabled: #bbbbbb;
 $text-placeholder-color: rgb($text-color-gray, 0.4);
 $text-color-error: #e73e3e;
 $text-color-success: #428f29;
 $text-accent-color: $palette-accent-primary;
 
 @mixin font-face-base {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 
 @mixin font-face-roboto {
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
 }

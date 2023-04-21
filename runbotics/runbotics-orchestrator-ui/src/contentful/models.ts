@@ -17,11 +17,11 @@ export interface BlogPost {
     summary: string;
     body: ContentfulRichText;
     authors: ContentfulCollection<Author>;
-    categories: ContentfulCollection<Category>;
+    category: Category;
 }
 
 export interface Category {
-    title: string;
+    title: string; 
     slug: string;
 }
 

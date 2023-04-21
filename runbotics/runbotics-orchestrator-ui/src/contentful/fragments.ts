@@ -31,10 +31,8 @@ export const BLOG_POST_FRAGMENT = `
             ${AUTHOR_FRAGMENT}
         }
     }
-    categories: categoriesCollection {
-        items {
-            ${BLOG_CATEGORY_FRAGMENT}
-        }
+    category{
+        ${BLOG_CATEGORY_FRAGMENT}
     }
 `;
 
@@ -47,9 +45,7 @@ export const BLOG_POST_LIST_FRAGMENT = `
     }
     tags
     summary
-    categories: categoriesCollection {
-        items {
-            ${BLOG_CATEGORY_FRAGMENT}
-        }
+    category{
+        ${BLOG_CATEGORY_FRAGMENT}
     }
 `;
