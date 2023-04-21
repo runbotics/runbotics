@@ -45,18 +45,24 @@ export class BotLifecycleService {
                     this.logger.log(`<= Error: process-instance (${newProcessInstance.id}) update after bot disconnection failed | Error: ${err}`);
                 });
 
-            this.handleInterruptedProcessInstanceEvent(bot, processInstance.id);
+            this.handleInterruptedProcessInstanceEvent(processInstance.id);
         });
     }
 
-    private async handleInterruptedProcessInstanceEvent (bot: IBot, processInstanceId: string): Promise<void> {
-        const activeProcessInstanceEvents = this.processInstanceEventService.findActiveByProcessInstanceId(processInstanceId);
-        const newProcessInstanceEvent = {
-            ...activeProcessInstanceEvents,
-            status: ProcessInstanceEventStatus.ERRORED,
-            error: 'Bot has been shut down',
-        };
+    private async handleInterruptedProcessInstanceEvent (processInstanceId: string): Promise<void> {
+        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstanceId);
 
-        this.botProcessEventService.updateProcessInstanceEvent(newProcessInstanceEvent, bot);
+        if(!activeEvents) return;
+
+        activeEvents.forEach(async event => {
+            const newProcessInstanceEvent = {
+                ...event,
+                status: ProcessInstanceEventStatus.ERRORED,
+                error: 'Bot has been shut down',
+            };
+    
+            await this.processInstanceEventService.update(newProcessInstanceEvent);
+        });
+
     }
 }
