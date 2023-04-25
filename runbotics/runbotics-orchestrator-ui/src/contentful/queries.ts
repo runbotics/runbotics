@@ -6,11 +6,12 @@ import {
     GetCategorisedPostsOptions,
     GetFilteredPostsOptions,
 } from './types';
+import { DEFAULT_PAGE_SIZE } from './utils';
 
 export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
     preview,
     skip = 0,
-    limit = 10,
+    limit = DEFAULT_PAGE_SIZE,
 }) => `
 query {
     blogPostCollection(order: date_DESC, preview: ${
@@ -28,7 +29,7 @@ query {
 
 export const buildCategorisedPostsQuery: QueryBuilder<
     GetCategorisedPostsOptions
-> = ({ preview, skip = 0, limit = 10, category }) => `
+> = ({ preview, skip = 0, limit = DEFAULT_PAGE_SIZE, category }) => `
 query {
     blogPostCollection(
         order: date_DESC, 
@@ -50,7 +51,7 @@ query {
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
     skip = 0,
-    limit = 10,
+    limit = DEFAULT_PAGE_SIZE,
     filterFragment,
 }) => `
 query {
@@ -58,7 +59,7 @@ query {
         order: date_DESC, 
         preview: ${preview ? 'true' : 'false'}, 
         skip: ${skip ?? 0},
-        limit: ${limit ?? 10},
+        limit: ${limit ?? DEFAULT_PAGE_SIZE},
         where: { ${filterFragment} }
     ) { 
         items {

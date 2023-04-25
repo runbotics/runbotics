@@ -10,14 +10,15 @@ import FiltersSection from '../sections/blog/FiltersSection';
 
 interface BlogViewProps {
     posts: BlogPost[];
+    featuredPost: BlogPost;
 }
 
-const BlogView: FC<BlogViewProps> = ({ posts }) => (
+const BlogView: FC<BlogViewProps> = ({ posts, featuredPost }) => (
     <Layout>
         <BlogLayout>
             <BreadcrumbsSection />
             <FiltersSection />
-            <CardsSection posts={posts}></CardsSection>
+            <CardsSection posts={posts} featuredPost={featuredPost} />
         </BlogLayout>
     </Layout>
 );

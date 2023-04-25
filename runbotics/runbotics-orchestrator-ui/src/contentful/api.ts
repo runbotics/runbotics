@@ -2,6 +2,7 @@ import {
     extractBlogPost,
     extractBlogPostEntries,
     extractBlogPostsPaths,
+    extractFeaturedBlogPostEntry,
     extractPaginationData,
 } from './extractors';
 import {
@@ -60,6 +61,7 @@ export async function getAllPosts(options: GetAllPostsOptions = {}) {
 
     return {
         posts: extractBlogPostEntries(entries),
+        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
     };
 }
@@ -78,6 +80,7 @@ export async function getCategorisedPosts(
 
     return {
         posts: extractBlogPostEntries(entries),
+        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
     };
 }
@@ -96,6 +99,7 @@ export async function getFilteredPosts(
 
     return {
         posts: extractBlogPostEntries(entries),
+        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
     };
 }

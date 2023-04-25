@@ -52,6 +52,7 @@ export type FilterQueryParams = {
     selectedTags?: FilterQueryParamsEnum.SelectedTags[];
     startDate?: FilterQueryParamsEnum.StartDate;
     endDate?: FilterQueryParamsEnum.EndDate;
+    page?: FilterQueryParamsEnum.Page;
 };
 
 export enum FilterQueryParamsEnum {
@@ -59,4 +60,5 @@ export enum FilterQueryParamsEnum {
     SelectedTags = 'selectedTags',
     StartDate = 'startDate',
     EndDate = 'endDate',
+    Page = 'page',
 }

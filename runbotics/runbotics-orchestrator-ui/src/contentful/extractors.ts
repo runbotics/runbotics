@@ -5,7 +5,11 @@ export function extractBlogPost(fetchResponse: GetPostResponse) {
 }
 
 export function extractBlogPostEntries(fetchResponse: GetAllPostsResponse) {
-    return fetchResponse?.data?.blogPostCollection?.items;
+    return fetchResponse?.data?.blogPostCollection?.items.slice(1);
+}
+
+export function extractFeaturedBlogPostEntry(fetchResponse: GetAllPostsResponse) {
+    return fetchResponse?.data?.blogPostCollection?.items[0];
 }
 
 export function extractBlogPostsPaths(fetchResponse: GetAllPostsPathsResponse) {
