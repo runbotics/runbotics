@@ -57,7 +57,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        this.botLifecycleService.handleInterruptedProcessInstanceExecution(bot);
+        this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
     }
@@ -69,22 +69,29 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @MessageBody() processInstance: IProcessInstance,
     ) {
         const installationId = socket.bot.installationId;
-        
+
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
-        
+
         if(processInstance.status !== ProcessInstanceStatus.TERMINATED) return;
         const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
         
         if(activeEvents.length === 0) return;
 
         activeEvents.forEach(async (event) => {
-            const newProcessInstanceEvent: IProcessInstanceEvent = { ...event, status: ProcessInstanceEventStatus.TERMINATED };
+            const newProcessInstanceEvent: IProcessInstanceEvent = { 
+                ...event, 
+                status: ProcessInstanceEventStatus.TERMINATED, 
+                processInstance: {
+                    id: processInstance.id,
+                    process: {
+                        id: processInstance.process.id
+                    }
+                }
+            };
 
-            this.logger.log(`=> Updating process-instance-event (${newProcessInstanceEvent.executionId}) by bot (${installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
-            await this.processInstanceEventService.update(newProcessInstanceEvent);
-            this.logger.log(`<= Success: process-instance-event (${newProcessInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+            await this.updateProcessInstanceEvent(socket.bot, newProcessInstanceEvent);
         });
     }
 

@@ -22,7 +22,6 @@ export const getProcessInstanceUpdateFieldsByStatus = (
             if (dbStatus) return STARTING_PROCESS_INSTANCE_FIELDS;
             return ['status', ...STARTING_PROCESS_INSTANCE_FIELDS];
         }
-
         case ProcessInstanceStatus.COMPLETED:
         case ProcessInstanceStatus.ERRORED:
         case ProcessInstanceStatus.STOPPED:
