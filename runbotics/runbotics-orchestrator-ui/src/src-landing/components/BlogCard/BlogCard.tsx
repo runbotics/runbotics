@@ -61,7 +61,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                 </Typography>
             </div>
             <div className={styles.readMore}>
-                <Link href={`/blog/${post.slug}`}>
+                <Link href={`/blog/post/${post.slug}`}>
                     <Typography variant="body3">
                         {translate('Landing.Blog.Card.ReadMore')}
                     </Typography>
