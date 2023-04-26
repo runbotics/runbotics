@@ -177,11 +177,8 @@ export class DesktopRunnerService implements OnModuleInit {
     }
 
     async loadExternalModule(externalModule: string) {
-        const validPath = externalModule === 'runbotics-actions-windows'
-            ? 'runbotics-actions-windows'
-            // below walkaround is not required if node >= 16 
-            : 'file://' + externalModule.replace(/\\/g, '/') + '/dist/index.js';
-        const { default: module } = await import(validPath);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const module = require(externalModule);
         if (!module) {
             throw new Error(`Missing default export in external module: ${externalModule}`);
         }
