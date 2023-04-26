@@ -115,7 +115,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['processName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.General.StartProcess.Ouput'),
+                        title: translate('Process.Details.Modeler.Actions.General.StartProcess.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
