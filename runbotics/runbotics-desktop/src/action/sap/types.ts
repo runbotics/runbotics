@@ -50,6 +50,7 @@ export type SAPSendVKeyActionOutput = {};
 // --- action
 export type SAPConnectActionInput = {
     connectionName: string;
+    client: string;
     user: string;
     password: string;
 };
