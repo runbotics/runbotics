@@ -44,7 +44,6 @@ export class BotLifecycleService {
         if(!activeEvents) return;
         
         activeEvents.forEach(async event => {
-
             const newProcessInstanceEvent: IProcessInstanceEvent = {
                 ...event, 
                 status: ProcessInstanceEventStatus.ERRORED, 
@@ -72,25 +71,17 @@ export class BotLifecycleService {
             }"`
         );
 
-        this.botProcessService.updateProcessInstance(installationId, processInstance)
-        .then(() => {
-            this.logger.log(
-                `=> Updating process-instance (${
-                    processInstance.id
-                }) updated after bot disconnection | status: ${
-                    processInstance.status
-                }, error message: "${
-                    processInstance.error
-                }"`
-            );
-        }).catch(error => {
-            this.logger.error(
-                `=> Error updating process-instance (${
-                    processInstance.id
-                }): ${error}`,
-            );
-        });
+        this.botProcessService.updateProcessInstance(installationId, processInstance);
 
+        this.logger.log(
+            `=> Updating process-instance (${
+                processInstance.id
+            }) updated after bot disconnection | status: ${
+                processInstance.status
+            }, error message: "${
+                processInstance.error
+            }"`
+        );
     }
 
     private async updateInterruptedProcessInstanceEvent(processInstanceEvent: IProcessInstanceEvent, bot: IBot) {
@@ -103,24 +94,17 @@ export class BotLifecycleService {
                 processInstanceEvent.error
             }"`
         );
+        console.log('bot.id', bot.id);
+        this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         
-        this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot)
-            .then(() => {
-                this.logger.log(
-                    `<= Success process-instance-event (${
-                        processInstanceEvent.id
-                    }) has been updated after bot disconnection | status: ${
-                        processInstanceEvent.status
-                    }, error message: "${
-                        processInstanceEvent.error
-                    }"`
-                );
-            }).catch(error => {
-                this.logger.error(
-                    `=> Error updating process-instance-event (${
-                        processInstanceEvent.id
-                    }): ${error}`,
-                );
-            });
+        this.logger.log(
+            `<= Success process-instance-event (${
+                processInstanceEvent.id
+            }) has been updated after bot disconnection | status: ${
+                processInstanceEvent.status
+            }, error message: "${
+                processInstanceEvent.error
+            }"`
+        );
     }
 }

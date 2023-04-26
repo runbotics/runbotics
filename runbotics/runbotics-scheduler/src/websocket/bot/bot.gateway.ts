@@ -75,24 +75,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
         if(processInstance.status !== ProcessInstanceStatus.TERMINATED) return;
-        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
-        
-        if(activeEvents.length === 0) return;
 
-        activeEvents.forEach(async (event) => {
-            const newProcessInstanceEvent: IProcessInstanceEvent = { 
-                ...event, 
-                status: ProcessInstanceEventStatus.TERMINATED, 
-                processInstance: {
-                    id: processInstance.id,
-                    process: {
-                        id: processInstance.process.id
-                    }
-                }
-            };
-
-            await this.updateProcessInstanceEvent(socket.bot, newProcessInstanceEvent);
-        });
+        this.setEventStatusOnInstanceTermination(socket.bot, processInstance);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -138,5 +122,35 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+    }
+
+    private async setEventStatusOnInstanceTermination(bot: IBot, processInstance: IProcessInstance, retryCount = 0) {
+        if(retryCount === 3) {
+            this.logger.log(`<= No active events of process-instance (${processInstance.id}) were found. Aborting.`);
+            return;
+        }
+
+        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+        
+        if(activeEvents.length === 0) {
+            this.logger.log(`<= No active events of process-instance (${processInstance.id}) were found. Retrying (${retryCount + 1}/3)`);
+            setTimeout(() => this.setEventStatusOnInstanceTermination(bot, processInstance, retryCount + 1), 1000);
+            return;
+        }
+
+        await activeEvents.forEach(async (event) => {
+            const newProcessInstanceEvent: IProcessInstanceEvent = { 
+                ...event, 
+                status: ProcessInstanceEventStatus.TERMINATED, 
+                processInstance: {
+                    id: processInstance.id,
+                    process: {
+                        id: processInstance.process.id
+                    }
+                }
+            };
+
+            await this.updateProcessInstanceEvent(bot, newProcessInstanceEvent);
+        });
     }
 }
