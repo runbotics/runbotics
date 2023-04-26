@@ -36,7 +36,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['client', 'user', 'password', 'connectionName'],
+                        required: ['user', 'password', 'connectionName'],
                     },
                 },
             },
@@ -47,8 +47,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     connectionName: '',
                     user: 'SAP_USERNAME',
-                    password: 'SAP_PASSWORD',
-                    client: '100'
+                    password: 'SAP_PASSWORD'
                 },
             },
         },

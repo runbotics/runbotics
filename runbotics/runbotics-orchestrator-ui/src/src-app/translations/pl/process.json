@@ -399,7 +399,7 @@
     "Process.Details.Modeler.Actions.SAP.Connect.SID": "Określony Identyfikator Systemu",
     "Process.Details.Modeler.Actions.SAP.Connect.User": "Użytkownik [zmienna środowiskowa]",
     "Process.Details.Modeler.Actions.SAP.Connect.Password": "Hasło [zmienna środowiskowa]",
-    "Process.Details.Modeler.Actions.SAP.Connect.Client": "Klient",
+    "Process.Details.Modeler.Actions.SAP.Connect.Client": "Mandant",
     "Process.Details.Modeler.Actions.Sap.Disconnect.Label": "SAP: Rozłączenie",
     "Process.Details.Modeler.Actions.SAP.Disconnect.Input": "Dane wejściowe",
     "Process.Details.Modeler.Actions.Sap.StartTransaction.Label": "SAP: Rozpocznij transakcję",
