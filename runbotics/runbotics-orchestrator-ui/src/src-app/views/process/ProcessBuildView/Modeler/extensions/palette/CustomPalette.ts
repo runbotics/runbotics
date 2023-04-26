@@ -97,7 +97,7 @@ export default class CustomPalette {
                 {
                     label: 'init loop',
                     businessObject: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.InitLoop'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.InitLoop'),
                     },
                     inputParameters: {},
                     outputParameters: {
@@ -143,7 +143,7 @@ export default class CustomPalette {
                 {
                     label: 'takeItemAndPerformAction',
                     businessObject: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.TakeItem'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.TakeItem'),
                     },
                     inputParameters: {},
                     outputParameters: {
@@ -188,7 +188,7 @@ export default class CustomPalette {
                 {
                     label: 'Increment',
                     businessObject: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Increment'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Increment'),
                     },
                     inputParameters: {},
                     outputParameters: {
@@ -270,22 +270,22 @@ export default class CustomPalette {
         const taskTypes = {
             selenium: this.createScriptServiceTask({
                 script: 'selenium',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Selenium'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Selenium'),
                 inputParameters: {
                     script: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Selenium.Script'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Selenium.Script'),
                         value: 'selenium',
                     },
                     command: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Selenium.Command'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Selenium.Command'),
                         value: '',
                     },
                     target: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Selenium.Target'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Selenium.Target'),
                         value: '',
                     },
                     value: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Selenium.Value'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Selenium.Value'),
                         value: '',
                     },
                 },
@@ -294,10 +294,10 @@ export default class CustomPalette {
 
             write: this.createScriptServiceTask({
                 script: 'write',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.WriteToPage'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.WriteToPage'),
                 inputParameters: {
                     example: {
-                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Example'),
+                        name: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Example'),
                         type: ParameterType.MAP,
                         value: '',
                         map: {
@@ -311,7 +311,7 @@ export default class CustomPalette {
             }),
             read: this.createScriptServiceTask({
                 script: 'read',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ReadFromPage'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ReadFromPage'),
                 inputParameters: {
                     exampleInput: {
                         name: 'exampleInput',
@@ -331,7 +331,7 @@ export default class CustomPalette {
             }),
             click: this.createScriptServiceTask({
                 script: 'click',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Click'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Click'),
                 inputParameters: {
                     script: {
                         name: 'script',
@@ -346,7 +346,7 @@ export default class CustomPalette {
             }),
             waitAndClick: this.createScriptServiceTask({
                 script: 'waitAndClick',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.WaitClick'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.WaitClick'),
                 inputParameters: {
                     script: {
                         name: 'script',
@@ -361,7 +361,7 @@ export default class CustomPalette {
             }),
             redirect: this.createScriptServiceTask({
                 script: 'redirect',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Redirect'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Redirect'),
                 inputParameters: {
                     script: {
                         name: 'script',
@@ -376,7 +376,7 @@ export default class CustomPalette {
             }),
             wait: this.createScriptServiceTask({
                 script: 'wait',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Wait'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Wait'),
                 inputParameters: {
                     script: {
                         name: 'script',
@@ -392,7 +392,7 @@ export default class CustomPalette {
 
             storageWrite: this.createBackgroundServiceTask({
                 script: 'storage.write',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.StoreToStorage'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.StoreToStorage'),
                 inputParameters: {
                     key: {
                         name: 'key',
@@ -407,7 +407,7 @@ export default class CustomPalette {
             }),
             storageRead: this.createBackgroundServiceTask({
                 script: 'storage.read',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ReadFromStorage'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ReadFromStorage'),
                 inputParameters: {
                     key: {
                         name: 'key',
@@ -422,7 +422,7 @@ export default class CustomPalette {
                 },
             }),
             decisionSignal: this.createManualTask({
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.DecisionSignal'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.DecisionSignal'),
                 inputParameters: {
                     component: {
                         name: 'component',
@@ -430,16 +430,16 @@ export default class CustomPalette {
                     },
                     title: {
                         name: 'title',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ApprovalRequired'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ApprovalRequired'),
                     },
                     message: {
                         name: 'message',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ApprovalRequired.ConfirmationMsg'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ApprovalRequired.ConfirmationMsg'),
                     },
                     decisions: {
                         name: 'decisions',
                         type: ParameterType.MAP,
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ApprovalRequired.ConfirmationDecision'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ApprovalRequired.ConfirmationDecision'),
                         map: {
                             YES: t('Common.Yes'),
                             NO: t('Common.No'),
@@ -463,20 +463,20 @@ export default class CustomPalette {
                     },
                     xpath: {
                         name: 'xpath',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.XPathOfElement'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.XPathOfElement'),
                     },
                     title: {
                         name: 'title',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.WindowTitle'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.WindowTitle'),
                     },
                     message: {
                         name: 'message',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.Decision.Message'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.Decision.Message'),
                     },
                     decisions: {
                         name: 'decisions',
                         type: ParameterType.MAP,
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.OptionsForUser'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.OptionsForUser'),
                         map: {
                             YES: t('Common.Yes'),
                             NO: t('Common.No'),
@@ -500,14 +500,14 @@ export default class CustomPalette {
                     },
                     title: {
                         name: 'title',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.DataInput'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.DataInput'),
                     },
                     fields: {
                         name: 'fields',
                         type: ParameterType.MAP,
                         value: '',
                         map: {
-                            ExampleField: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ExampleField'),
+                            ExampleField: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ExampleField'),
                         },
                     },
                     defaultValues: {
@@ -515,7 +515,7 @@ export default class CustomPalette {
                         type: ParameterType.MAP,
                         value: '',
                         map: {
-                            ExampleField: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ExampleValue'),
+                            ExampleField: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ExampleValue'),
                         },
                     },
                 },
@@ -535,12 +535,12 @@ export default class CustomPalette {
                     },
                     message: {
                         name: 'message',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ExampleMessage'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ExampleMessage'),
                     },
                     decisions: {
                         name: 'decisions',
                         type: ParameterType.MAP,
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.ApprovalRequired.ConfirmationMsg'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.ApprovalRequired.ConfirmationMsg'),
                         map: {
                             YES: t('Common.Yes'),
                             NO: t('Common.No'),
@@ -563,24 +563,24 @@ export default class CustomPalette {
             }),
             startProcess: this.createBackgroundServiceTask({
                 script: 'startProcess',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.StartProcess'),
                 inputParameters: {
                     name: {
                         name: 'name',
-                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartProcess.Name'),
+                        value: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.StartProcess.Name'),
                     },
                 },
                 outputParameters: {},
             }),
             startThread: this.createBackgroundServiceTask({
                 script: 'startThread',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.StartThread'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.StartThread'),
                 inputParameters: {},
                 outputParameters: {},
             }),
             endThread: this.createBackgroundServiceTask({
                 script: 'endThread',
-                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPallete.EndThread'),
+                label: t('Process.Details.Modeler.Extensions.Tasks.CustomPalette.EndThread'),
                 inputParameters: {},
                 outputParameters: {},
             }),
