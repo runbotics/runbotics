@@ -38,7 +38,7 @@ export class BotLifecycleService {
     }
 
     private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance, bot: IBot): Promise<void> {
-        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+        const activeEvents: IProcessInstanceEvent[] = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
         const processId: number = await this.processInstanceService.findById(processInstance.id).then(processInstance => processInstance.process.id);
         
         if(!activeEvents) return;
@@ -94,7 +94,7 @@ export class BotLifecycleService {
                 processInstanceEvent.error
             }"`
         );
-        console.log('bot.id', bot.id);
+
         this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         
         this.logger.log(

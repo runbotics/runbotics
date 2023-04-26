@@ -5,7 +5,6 @@ import { MicrosoftModule } from '#/microsoft';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from '../mail/mail.module';
-
 import { BotProcessService } from './bot/process-launch/bot-process-instance.service';
 import { BotProcessEventService } from './bot/process-launch/bot-process-instance-event.service';
 import { BotLogService } from './bot/bot-log.service';
