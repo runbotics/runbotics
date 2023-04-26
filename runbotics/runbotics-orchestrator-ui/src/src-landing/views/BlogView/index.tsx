@@ -10,7 +10,7 @@ import FiltersSection from '../sections/blog/FiltersSection';
 
 interface BlogViewProps {
     posts: BlogPost[];
-    featuredPost: BlogPost;
+    featuredPost?: BlogPost;
 }
 
 const BlogView: FC<BlogViewProps> = ({ posts, featuredPost }) => (

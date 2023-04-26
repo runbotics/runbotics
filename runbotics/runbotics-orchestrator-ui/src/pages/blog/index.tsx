@@ -14,10 +14,12 @@ import {
 
 interface BlogPageProps {
     posts: BlogPost[];
-    featuredPost: BlogPost;
+    featuredPost?: BlogPost;
 }
 
-const BlogPage = ({ posts, featuredPost }: BlogPageProps) => <BlogView posts={posts} featuredPost={featuredPost} />;
+const BlogPage = ({ posts, featuredPost }: BlogPageProps) => (
+    <BlogView posts={posts} featuredPost={featuredPost} />
+);
 
 export default BlogPage;
 
@@ -31,6 +33,7 @@ const FILTER_QUERY_PARAMS = [
     FilterQueryParamsEnum.Page,
 ];
 
+// eslint-disable-next-line complexity
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (hasQueryParams(context.query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(context.query);
@@ -42,7 +45,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         return {
             props: {
                 posts: response.posts ?? [],
-                featuredPost: response.featuredPost,
             },
         };
     }
@@ -64,7 +66,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
         props: {
             posts: posts ?? [],
-            featuredPost, 
+            featuredPost: featuredPost ?? null,
         },
     };
 }

@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 
 import { FilterQueryParams } from './types';
 export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_OFFSET = 1;
 
 // eslint-disable-next-line complexity
 export const extractFilterQueryParams = (
@@ -31,7 +32,7 @@ export const extractFilterQueryParams = (
 export const getPaginationSize = (page: string) => {
     if (!page) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
     const pageNumber = parseInt(page);
-    const limit = pageNumber * DEFAULT_PAGE_SIZE;
+    const limit = pageNumber * DEFAULT_PAGE_SIZE - DEFAULT_PAGE_OFFSET;
     const skip = limit - DEFAULT_PAGE_SIZE;
     return { limit, skip };
 };

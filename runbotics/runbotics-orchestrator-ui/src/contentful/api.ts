@@ -52,6 +52,7 @@ async function fetchGraphQL<T>(
 }
 
 export async function getAllPosts(options: GetAllPostsOptions = {}) {
+    const isFirstPage = !options.skip;
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
@@ -60,8 +61,12 @@ export async function getAllPosts(options: GetAllPostsOptions = {}) {
     );
 
     return {
-        posts: extractBlogPostEntries(entries),
-        featuredPost: extractFeaturedBlogPostEntry(entries),
+        posts: isFirstPage
+            ? extractBlogPostEntries(entries).slice(1)
+            : extractBlogPostEntries(entries),
+        featuredPost: isFirstPage
+            ? extractFeaturedBlogPostEntry(entries)
+            : null,
         pagination: extractPaginationData(entries),
     };
 }
@@ -70,6 +75,7 @@ export async function getCategorisedPosts(
     category: string,
     options: GetCategorisedPostsOptions = {}
 ) {
+    const isFirstPage = !options.skip;
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildCategorisedPostsQuery({
             preview: IS_PREVIEW_MODE,
@@ -79,8 +85,12 @@ export async function getCategorisedPosts(
     );
 
     return {
-        posts: extractBlogPostEntries(entries),
-        featuredPost: extractFeaturedBlogPostEntry(entries),
+        posts: isFirstPage
+            ? extractBlogPostEntries(entries).slice(1)
+            : extractBlogPostEntries(entries),
+        featuredPost: isFirstPage
+            ? extractFeaturedBlogPostEntry(entries)
+            : null,
         pagination: extractPaginationData(entries),
     };
 }
@@ -99,7 +109,6 @@ export async function getFilteredPosts(
 
     return {
         posts: extractBlogPostEntries(entries),
-        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
     };
 }

@@ -8,13 +8,16 @@ import styles from './CardsSection.module.scss';
 
 interface BlogCardsSectionProps {
     posts: BlogPost[];
-    featuredPost: BlogPost;
+    featuredPost?: BlogPost;
 }
 
-const BlogCardsSection: FC<BlogCardsSectionProps> = ({ posts, featuredPost }) => (
+const BlogCardsSection: FC<BlogCardsSectionProps> = ({
+    posts,
+    featuredPost,
+}) => (
     <div className={styles.root}>
         <div className={styles.topFilters}>top filters</div>
-        <FeaturedBlogCard post={featuredPost} />
+        {featuredPost ? <FeaturedBlogCard post={featuredPost} /> : null}
         {posts.map((post) => (
             <BlogCard key={post.slug} post={post} />
         ))}

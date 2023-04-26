@@ -21,7 +21,9 @@ interface BlogPageProps {
     featuredPost: BlogPost;
 }
 
-const BlogPage = ({ posts, featuredPost }: BlogPageProps) => <BlogView posts={posts} featuredPost={featuredPost} />;
+const BlogPage = ({ posts, featuredPost }: BlogPageProps) => (
+    <BlogView posts={posts} featuredPost={featuredPost} />
+);
 
 export default BlogPage;
 
@@ -37,6 +39,7 @@ const FILTER_QUERY_PARAMS = [
 ];
 
 type PostsResponse = Awaited<ReturnType<typeof getAllPosts>>;
+// eslint-disable-next-line complexity
 export async function getServerSideProps(
     context: GetServerSidePropsContext<Params>
 ) {
@@ -50,7 +53,6 @@ export async function getServerSideProps(
         return {
             props: {
                 posts: response.posts ?? [],
-                featuredPost: response.featuredPost,
             },
         };
     }
@@ -73,7 +75,7 @@ export async function getServerSideProps(
     return {
         props: {
             posts: posts ?? [],
-            featuredPost,
+            featuredPost: featuredPost ?? null,
         },
     };
 }
