@@ -1,4 +1,8 @@
-import { GetAllPostsPathsResponse, GetAllPostsResponse, GetPostResponse } from './types';
+import {
+    GetAllPostsPathsResponse,
+    GetAllPostsResponse,
+    GetPostResponse,
+} from './types';
 
 export function extractBlogPost(fetchResponse: GetPostResponse) {
     return fetchResponse?.data?.blogPostCollection?.items?.[0];
@@ -6,6 +10,12 @@ export function extractBlogPost(fetchResponse: GetPostResponse) {
 
 export function extractBlogPostEntries(fetchResponse: GetAllPostsResponse) {
     return fetchResponse?.data?.blogPostCollection?.items;
+}
+
+export function extractFeaturedBlogPostEntry(
+    fetchResponse: GetAllPostsResponse
+) {
+    return fetchResponse?.data?.blogPostCollection?.items[0];
 }
 
 export function extractBlogPostsPaths(fetchResponse: GetAllPostsPathsResponse) {

@@ -44,7 +44,7 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                     {cutText(post.summary, 230)}
                 </Typography>
                 <div className={styles.readMore}>
-                    <Link href={`/blog/${post.slug}`}>
+                    <Link href={`/blog/post/${post.slug}`}>
                         <Typography variant="body5">
                             {translate('Landing.Blog.Card.ReadMore')}
                         </Typography>

@@ -1,6 +1,27 @@
-import { extractBlogPost, extractBlogPostEntries, extractBlogPostsPaths, extractPaginationData } from './extractors';
-import { buildAllPostsPathsQuery, buildAllPostsQuery, buildPostQuery } from './queries';
-import { GetAllPostsOptions, GetAllPostsPathsResponse, GetAllPostsResponse, GetPostOptions, GetPostResponse, QueryBuilder } from './types';
+import {
+    extractBlogPost,
+    extractBlogPostEntries,
+    extractBlogPostsPaths,
+    extractFeaturedBlogPostEntry,
+    extractPaginationData,
+} from './extractors';
+import {
+    buildAllPostsPathsQuery,
+    buildAllPostsQuery,
+    buildCategorisedPostsQuery,
+    buildFilteredPostsQuery,
+    buildPostQuery,
+} from './queries';
+import {
+    GetAllPostsOptions,
+    GetAllPostsPathsResponse,
+    GetAllPostsResponse,
+    GetPostOptions,
+    GetPostResponse,
+    QueryBuilder,
+    GetCategorisedPostsOptions,
+    GetFilteredPostsOptions,
+} from './types';
 
 /**
  * Use preview mode for development - posts in draft or changed state
@@ -8,16 +29,20 @@ import { GetAllPostsOptions, GetAllPostsPathsResponse, GetAllPostsResponse, GetP
  */
 const IS_PREVIEW_MODE = process.env.NODE_ENV === 'development';
 
-async function fetchGraphQL<T>(query: ReturnType<QueryBuilder<never>>): Promise<T> {
+async function fetchGraphQL<T>(
+    query: ReturnType<QueryBuilder<never>>
+): Promise<T> {
     const response = await fetch(
         `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
         {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${IS_PREVIEW_MODE
-                    ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
-                    : process.env.CONTENTFUL_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${
+                    IS_PREVIEW_MODE
+                        ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
+                        : process.env.CONTENTFUL_ACCESS_TOKEN
+                }`,
             },
             body: JSON.stringify({ query }),
         }
@@ -27,10 +52,60 @@ async function fetchGraphQL<T>(query: ReturnType<QueryBuilder<never>>): Promise<
 }
 
 export async function getAllPosts(options: GetAllPostsOptions = {}) {
-    const entries = await fetchGraphQL<GetAllPostsResponse>(buildAllPostsQuery({
-        preview: IS_PREVIEW_MODE,
-        ...options,
-    }));
+    const isFirstPage = !options.skip;
+    const entries = await fetchGraphQL<GetAllPostsResponse>(
+        buildAllPostsQuery({
+            preview: IS_PREVIEW_MODE,
+            ...options,
+        })
+    );
+
+    return {
+        posts: isFirstPage
+            ? extractBlogPostEntries(entries).slice(1)
+            : extractBlogPostEntries(entries),
+        featuredPost: isFirstPage
+            ? extractFeaturedBlogPostEntry(entries)
+            : null,
+        pagination: extractPaginationData(entries),
+    };
+}
+
+export async function getCategorisedPosts(
+    category: string,
+    options: GetCategorisedPostsOptions = {}
+) {
+    const isFirstPage = !options.skip;
+    const entries = await fetchGraphQL<GetAllPostsResponse>(
+        buildCategorisedPostsQuery({
+            preview: IS_PREVIEW_MODE,
+            category,
+            ...options,
+        })
+    );
+
+    return {
+        posts: isFirstPage
+            ? extractBlogPostEntries(entries).slice(1)
+            : extractBlogPostEntries(entries),
+        featuredPost: isFirstPage
+            ? extractFeaturedBlogPostEntry(entries)
+            : null,
+        pagination: extractPaginationData(entries),
+    };
+}
+
+export async function getFilteredPosts(
+    filterFragment: string,
+    options: GetFilteredPostsOptions = {}
+) {
+    const entries = await fetchGraphQL<GetAllPostsResponse>(
+        buildFilteredPostsQuery({
+            preview: IS_PREVIEW_MODE,
+            filterFragment,
+            ...options,
+        })
+    );
 
     return {
         posts: extractBlogPostEntries(entries),
@@ -39,9 +114,11 @@ export async function getAllPosts(options: GetAllPostsOptions = {}) {
 }
 
 export async function getAllPostsPaths() {
-    const entries = await fetchGraphQL<GetAllPostsPathsResponse>(buildAllPostsPathsQuery({
-        preview: IS_PREVIEW_MODE,
-    }));
+    const entries = await fetchGraphQL<GetAllPostsPathsResponse>(
+        buildAllPostsPathsQuery({
+            preview: IS_PREVIEW_MODE,
+        })
+    );
 
     return {
         paths: extractBlogPostsPaths(entries),
@@ -49,10 +126,12 @@ export async function getAllPostsPaths() {
 }
 
 export async function getPost(options: GetPostOptions) {
-    const entry = await fetchGraphQL<GetPostResponse>(buildPostQuery({
-        preview: IS_PREVIEW_MODE,
-        ...options,
-    }));
+    const entry = await fetchGraphQL<GetPostResponse>(
+        buildPostQuery({
+            preview: IS_PREVIEW_MODE,
+            ...options,
+        })
+    );
 
     return {
         post: extractBlogPost(entry),

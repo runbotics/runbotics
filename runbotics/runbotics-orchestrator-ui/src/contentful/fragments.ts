@@ -1,5 +1,7 @@
 // Full fragments of graphql types
 
+import { FilterQueryParams } from './types';
+
 export const AUTHOR_FRAGMENT = `
     name: entryTitle
     slug
@@ -49,3 +51,19 @@ export const BLOG_POST_LIST_FRAGMENT = `
         ${BLOG_CATEGORY_FRAGMENT}
     }
 `;
+
+export const buildFilterFragment = (options: FilterQueryParams) => {
+    const { category, selectedTags, startDate, endDate } = options;
+    const query = [];
+
+    if (category) query.push(`category: { slug: "${category}" }`);
+    if (selectedTags?.length) {
+        query.push(
+            `tags_contains_all: [${selectedTags.map((tag) => `"${tag}"`)}]`
+        );
+    }
+    if (startDate) query.push(`date_gte: "${startDate}"`);
+    if (endDate) query.push(`date_lte: "${endDate}"`);
+
+    return query.join(', ');
+};
