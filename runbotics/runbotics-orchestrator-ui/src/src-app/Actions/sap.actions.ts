@@ -31,8 +31,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SAP.Connect.Password'),
                                 type: 'string',
                             },
+                            client: {
+                                title: translate('Process.Details.Modeler.Actions.SAP.Connect.Client'),
+                                type: 'string',
+                            },
                         },
-                        required: ['user', 'password', 'connectionName'],
+                        required: ['client', 'user', 'password', 'connectionName'],
                     },
                 },
             },
@@ -44,6 +48,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                     connectionName: '',
                     user: 'SAP_USERNAME',
                     password: 'SAP_PASSWORD',
+                    client: '100'
                 },
             },
         },
