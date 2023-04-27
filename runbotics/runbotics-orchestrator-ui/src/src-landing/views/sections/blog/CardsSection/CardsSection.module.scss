@@ -1,11 +1,13 @@
 @import '#src-landing/scss/main.scss';
 $FILTERS-WIDTH: 270px;
+$SECTION-PADDING-BOTTOM: 30px;
 
 .root {
     width: calc(100% - $FILTERS-WIDTH);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
+    padding-bottom: $SECTION-PADDING-BOTTOM;
 }
 .topFilters {
     grid-column: 1/ 4;
