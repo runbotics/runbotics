@@ -119,7 +119,6 @@ props => {
     );
     const { translate } = useTranslations();
     const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
-    
 
     const attendedProcessVariables = attendedVariables.map(variable => ({
         label: variable.name,

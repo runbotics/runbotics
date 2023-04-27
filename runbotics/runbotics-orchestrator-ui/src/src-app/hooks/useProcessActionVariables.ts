@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { is } from 'bpmn-js/lib/util/ModelUtil';
+
 import {
     BPMNElement,
     ExtensionElement,
@@ -22,10 +24,62 @@ const useProcessActionVariables = () => {
             item.id.includes('Activity_')
         );
 
+    const extractLocalVariable = (
+        inputOutput: any
+    ) => {
+        const localVariable = inputOutput.inputParameters.find(
+            inputParameter => inputParameter.name === 'variable'
+        );
+        if (localVariable) {
+            return {
+                label: localVariable.value,
+                value: localVariable.value,
+                group: 'Local Variables'
+            };
+        }
+        return undefined;
+    };
+
+    const assignVariablesElements =
+        context?.modeler
+            ?.get('elementRegistry')
+            .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
+            .filter(
+                (element: BPMNElement) =>
+                    element.businessObject.actionId ===
+                        'variables.assign' ||
+                    element.businessObject.actionId ===
+                        'variables.assignList' ||
+                    element.businessObject.actionId ===
+                        'variables.assignGlobalVariable'
+            ) ?? [];
+
+    console.log('old actions>>>', assignVariablesElements);
+
+    const variables = assignVariablesElements
+        .map(assignVariablesElement => {
+            const inputOutput: any =
+                assignVariablesElement.businessObject?.extensionElements
+                    ?.values[0];
+
+            if (!inputOutput) {
+                return undefined;
+            }
+            return (
+                extractLocalVariable(inputOutput)
+            );
+        })
+        .filter(variable => variable !== undefined)
+        .flatMap(variable => variable);
+
+    console.log('old actions', variables);
+
     const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
         if (!allActionsWithVariables || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
+
+        console.log('allActionsWithVariables: ', allActionsWithVariables);
 
         /**
          * @name inputActionVariables
@@ -34,15 +88,20 @@ const useProcessActionVariables = () => {
          * Variables -> Assign value to variable
          * Variables -> Assign list variable
          */
-        const inputActionVariables = allActionsWithVariables
+        const customArr: ModdleElement[] = assignVariablesElements.map(
+            (shape) => shape.businessObject
+        );
+        console.log(customArr);
+
+        const inputActionVariables = customArr
             .filter(
                 (element: ModdleElement) =>
                     element.actionId === 'variables.assign' ||
-                    element.actionId === 'variables.assignList'
+                        element.actionId === 'variables.assignList'
             )
             .map((variable: ModdleElement) => {
                 const variableInfo: ExtensionElement[] =
-                    variable.extensionElements.values[0].inputParameters;
+                        variable.extensionElements.values[0].inputParameters;
 
                 if (!variableInfo) {
                     return [];
@@ -62,6 +121,8 @@ const useProcessActionVariables = () => {
             .flatMap((variable: ActionVariableObject[]) =>
                 variable[0].name ? variable : []
             );
+
+        console.log('WORKING: ', inputActionVariables);
 
         const outputActionVariables = allActionsWithVariables
             .map((element: ModdleElement) => {
