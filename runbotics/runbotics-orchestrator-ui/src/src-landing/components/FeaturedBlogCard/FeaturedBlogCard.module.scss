@@ -21,7 +21,7 @@ $READ-MORE-BORDER-RADIUS: 20px;
 $READ-MORE-BORDER: #2e2e22 1px solid;
 $READ-MORE-ICON-HEIGHT: 24px;
 $READ-MORE-ICON-WIDTH: 24px;
-$CARD-HOVER-TRANSLATE: -3px;
+$CARD-HOVER-TRANSLATE-Y: -3px;
 $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
 
@@ -38,7 +38,7 @@ $FONT-COLOR: #000;
     border-radius: $IMG-BORDER-RADIUS;
 
     &:hover {
-        transform: translate(0, $CARD-HOVER-TRANSLATE);
+        transform: translateY($CARD-HOVER-TRANSLATE-Y);
         box-shadow: $box-shadow-primary;
 
         .title,
@@ -56,7 +56,7 @@ $FONT-COLOR: #000;
     width: 100%;
     color: $FONT-COLOR;
     text-decoration: none;
-    transition: all $LINK-HOVER-TRANSITION ease;
+    transition: all $CARD-HOVER-TRANSITION ease;
     isolation: isolate;
 }
 
