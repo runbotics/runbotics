@@ -11,24 +11,52 @@ $CONTENT-BORDER-RADIOUS: 20px 120px 20px 20px;
 $DESCRIPTION-MAX-WIDTH: 966px;
 $READ-MORE-PADDING-RIGHT: 30px;
 $READ-MORE-PADDING-BOTTOM: 30px;
+$READ-MORE-PADDING-TOP: 20px;
 $READ-MORE-WIDTH: 116px;
 $READ-MORE-HEIGHT: 32px;
 $READ-MORE-A-TOP: 4px;
 $READ-MORE-A-RIGHT: 7px;
-$READ-MORE-COLOR: #000;
 $READ-MORE-BACKGROUND-COLOR: #ffffff80;
 $READ-MORE-BORDER-RADIUS: 20px;
 $READ-MORE-BORDER: #2e2e22 1px solid;
 $READ-MORE-ICON-HEIGHT: 24px;
 $READ-MORE-ICON-WIDTH: 24px;
+$CARD-HOVER-TRANSLATE-Y: -3px;
+$CARD-HOVER-TRANSITION: 200ms;
+$FONT-COLOR: #000;
 
 .root {
+    grid-column: 1 / 4;
+}
+
+.link {
+    position: relative;
+    display: flex;
+    color: $FONT-COLOR;
+    text-decoration: none;
+    transition: all $CARD-HOVER-TRANSITION ease;
+    border-radius: $IMG-BORDER-RADIUS;
+
+    &:hover {
+        transform: translateY($CARD-HOVER-TRANSLATE-Y);
+        box-shadow: $box-shadow-primary;
+
+        .title,
+        .readMore {
+            text-decoration: underline;
+        }
+    }
+}
+
+.article {
     position: relative;
     display: flex;
     align-items: flex-end;
-    width: 100%;
     min-height: $ROOT-MIN-HEIGHT;
-    grid-column: 1 / 4;
+    width: 100%;
+    color: $FONT-COLOR;
+    text-decoration: none;
+    transition: all $CARD-HOVER-TRANSITION ease;
     isolation: isolate;
 }
 
@@ -75,7 +103,8 @@ $READ-MORE-ICON-WIDTH: 24px;
     width: 100%;
     justify-content: flex-end;
     padding-right: $READ-MORE-PADDING-RIGHT;
-    a {
+    padding-top: $READ-MORE-PADDING-TOP;
+    p {
         position: relative;
         display: flex;
         justify-content: flex-start;
@@ -83,7 +112,7 @@ $READ-MORE-ICON-WIDTH: 24px;
         width: $READ-MORE-WIDTH;
         height: $READ-MORE-HEIGHT;
         padding-left: $padding-2;
-        color: $READ-MORE-COLOR;
+        color: $FONT-COLOR;
         background-color: $READ-MORE-BACKGROUND-COLOR;
         border-radius: $READ-MORE-BORDER-RADIUS;
         border: $READ-MORE-BORDER;
