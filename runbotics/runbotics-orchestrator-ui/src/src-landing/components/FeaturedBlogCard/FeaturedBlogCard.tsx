@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 
-import moment from 'moment';
 import Image from 'next/image';
-
 import Link from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import { formatBlogPostDate } from '#src-landing/views/sections/blog/CardsSection/CardsSection.utils';
 import { BlogPost } from 'src/contentful/models';
 
 import { cutText } from '../BlogCard';
@@ -18,7 +17,9 @@ interface FeaturedBlogCardProps {
 }
 const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
     const { translate } = useTranslations();
+    const postDate = formatBlogPostDate(post.date);
     if(!post) return null;
+
     return (
         <div className={styles.root}>
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
@@ -33,7 +34,7 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                         <div className={styles.info}>
                             <CardBadge text={post.category.title} />
                             <Typography variant="body4">
-                                {moment(post.date).format('D.MM.YYYY')}
+                                {postDate}
                             </Typography>
                             <Typography variant="body4" className={styles.category}>
                                 {post.category.title}
