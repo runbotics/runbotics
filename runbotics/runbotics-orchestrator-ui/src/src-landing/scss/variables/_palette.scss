@@ -20,8 +20,8 @@ $gradient-direction: to right;
 $gradient-color-secondary: rgba(
   $palette-background-primary,
   $gradient-secondary-opacity
-  );
-  $palette-background-gradient: linear-gradient(
+);
+$palette-background-gradient: linear-gradient(
     $gradient-direction,
   $palette-background-primary 8%,
   $gradient-color-secondary
