@@ -11,20 +11,19 @@ $palette-background-primary: #ffffff;
 $palette-background-secondary: #f8f7ff;
 $palette-background-secondary-dark: #eae8fa;
 $palette-background-tertiary: #000000;
-$palette-background-disabled: #F5F5F5;
+$palette-background-disabled: #f5f5f5;
 $palette-background-accent: #f7b80c;
 $palette-background-accent-dark: #cf9b0b;
 
-
 $gradient-direction: to right;
 $gradient-color-secondary: rgba(
-  $palette-background-primary,
-  $gradient-secondary-opacity
+    $palette-background-primary,
+    $gradient-secondary-opacity
 );
 $palette-background-gradient: linear-gradient(
     $gradient-direction,
-  $palette-background-primary 8%,
-  $gradient-color-secondary
+    $palette-background-primary 8%,
+    $gradient-color-secondary
 );
 
 $box-shadow-primary: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
