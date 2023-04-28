@@ -1,56 +1,16 @@
-import { Chip, Typography } from '@mui/material';
 
 import { GetServerSidePropsContext } from 'next';
-import Head from 'next/head';
 
-import Layout from '#src-landing/components/Layout';
-import RichTextRenderer from '#src-landing/components/Renderer/renderer';
-
-import { getPost } from 'src/contentful/api';
-import contentfulCache from 'src/contentful/cache';
-import { BlogPost } from 'src/contentful/models';
+import { getPost } from '#contentful/api';
+import contentfulCache from '#contentful/cache';
+import { BlogPost } from '#contentful/models';
+import BlogPostView from '#src-landing/views/BlogPostView';
 
 interface Props {
     post: BlogPost;
 }
 
-const Post = ({ post }: Props) => {
-    if (!post) {
-        return '404';
-    }
-  
-    return (
-        <Layout>
-            <article>
-                <Head>
-                    <title>
-                        {`${post.title} | Runbotics Blog`}
-                    </title>
-                    <meta property="og:image" content={post.featuredImage.url} />
-                </Head>
-                <img src={post.featuredImage.url} alt=''/>
-                <div>
-                    {post.tags?.map(tag => (
-                        <Chip key={tag} label={tag} />
-                    ))}
-                </div>
-                <Typography variant="h1">{post.title}</Typography>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                    <div>
-                        {post.date}
-                    </div>
-                    <div>
-                        <Chip key={post.category.slug} label={post.category.title} />
-                    </div>
-                    <div>
-                        {post.authors.items.map(author => author.name)}
-                    </div>
-                </div>
-                <RichTextRenderer content={post.body} />
-            </article>
-        </Layout>
-    );
-};
+const Post = ({ post }: Props) => <BlogPostView post={post} />;
   
 export default Post;
 
@@ -73,9 +33,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext<Para
 
     const { post } = postResponse;
 
+    if (!post) {
+        return {
+            notFound: true,
+        };
+    }
+
     return {
         props: { 
-            post: post ?? null
+            post,
         },
     };
 }

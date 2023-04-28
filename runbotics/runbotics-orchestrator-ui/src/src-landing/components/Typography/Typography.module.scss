@@ -31,9 +31,12 @@
     &__h2,
     &__h3,
     &__h4,
-    &__h5,
-    &__h6 {
+    &__h5 {
         font-weight: $font-weight-bold;
+    }
+
+    &__h6 {
+        font-weight: $font-weight-semi-bold;
     }
 
     &__h1 {

@@ -51,6 +51,7 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
         let compiled = input.url;
+        // this for is not used
         for (const prop in input.templateData) {
             if (input.templateData.hasOwnProperty(prop)) {
                 compiled = compiled.replace(new RegExp('\\${' + prop + '}', 'g'), input.templateData[prop]);
