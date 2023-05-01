@@ -28,6 +28,12 @@ export const cutText = (text: string, length: number) => {
 const BlogCard: FC<BlogCardProps> = ({ post }) => {
     const { translate } = useTranslations();
 
+    const tags = post.tags?.items.map(({ name }) => <CardBadge
+        key={name}
+        text={name}
+        className={styles.badge}
+    />);
+
     return (
         <div className={styles.root}>
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
@@ -38,13 +44,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                         alt=""
                         className={styles.img}
                     />
-                    {/* temp solution to tags, to be added in contentful schema */}
-                    {post.category.slug === 'category-two' ? (
-                        <CardBadge
-                            text={post.category.title}
-                            className={styles.badge}
-                        />
-                    ) : null}
+                    {tags}
                     <div className={styles.info}>
                         <Typography variant="body4">
                             {new Intl.DateTimeFormat().format(new Date(post.date))}

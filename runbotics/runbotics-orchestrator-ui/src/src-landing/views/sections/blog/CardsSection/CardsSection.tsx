@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
+import { BlogPost } from '#contentful/models';
 import BlogCard from '#src-landing/components/BlogCard/BlogCard';
 import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
-import { BlogPost } from 'src/contentful/models';
 
 import styles from './CardsSection.module.scss';
 
@@ -16,7 +16,6 @@ const BlogCardsSection: FC<BlogCardsSectionProps> = ({
     featuredPost,
 }) => (
     <div className={styles.root}>
-        <div className={styles.topFilters}>top filters</div>
         {featuredPost ? <FeaturedBlogCard post={featuredPost} /> : null}
         {posts.map((post) => (
             <BlogCard key={post.slug} post={post} />

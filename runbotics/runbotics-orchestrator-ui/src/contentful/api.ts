@@ -2,12 +2,16 @@ import {
     extractBlogPost,
     extractBlogPostEntries,
     extractBlogPostsPaths,
+    extractCategory,
     extractFeaturedBlogPostEntry,
     extractPaginationData,
+    extractTag,
 } from './extractors';
 import {
+    buildAllCategoriesQuery,
     buildAllPostsPathsQuery,
     buildAllPostsQuery,
+    buildAllTagsQuery,
     buildCategorisedPostsQuery,
     buildFilteredPostsQuery,
     buildPostQuery,
@@ -21,13 +25,15 @@ import {
     QueryBuilder,
     GetCategorisedPostsOptions,
     GetFilteredPostsOptions,
+    GetAllCategoriesResponse,
+    GetAllTagsResponse,
 } from './types';
 
 /**
  * Use preview mode for development - posts in draft or changed state
  * Else use published posts only - without changes and drafts
  */
-const IS_PREVIEW_MODE = process.env.NODE_ENV === 'development';
+const IS_PREVIEW_MODE = process.env.NODE_ENV === 'development' || process.env.IS_BLOG_PREVIEW === 'true';
 
 async function fetchGraphQL<T>(
     query: ReturnType<QueryBuilder<never>>
@@ -95,6 +101,16 @@ export async function getCategorisedPosts(
     };
 }
 
+export async function getAllCategories() {
+    const entries = await fetchGraphQL<GetAllCategoriesResponse>(
+        buildAllCategoriesQuery({
+            preview: IS_PREVIEW_MODE
+        })
+    );
+
+    return extractCategory(entries);
+}
+
 export async function getFilteredPosts(
     filterFragment: string,
     options: GetFilteredPostsOptions = {}
@@ -136,4 +152,14 @@ export async function getPost(options: GetPostOptions) {
     return {
         post: extractBlogPost(entry),
     };
+}
+
+export async function getAllTags() {
+    const entries = await fetchGraphQL<GetAllTagsResponse>(
+        buildAllTagsQuery({
+            preview: IS_PREVIEW_MODE
+        })
+    );
+
+    return extractTag(entries);
 }

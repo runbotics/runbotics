@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { FC, useState } from 'react';
 
 import Remove from '@mui/icons-material/Remove';

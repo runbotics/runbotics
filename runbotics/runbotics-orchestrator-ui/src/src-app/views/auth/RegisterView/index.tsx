@@ -128,7 +128,6 @@ const RegisterView: FC = () => {
                                 }}
                             >
                                 {
-                                // eslint-disable-next-line complexity
                                     ({
                                         errors,
                                         handleBlur,

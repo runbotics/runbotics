@@ -18,7 +18,7 @@ interface Props extends Pick<BlogPost, 'authors' | 'category' | 'tags' | 'date' 
 
 const PostHeader: VFC<Props> = (props) => {
     const { translate } = useTranslations();
-    const tags = props.tags?.map(tag => <CardBadge key={tag} text={tag.toUpperCase()} />);
+    const tags = props.tags?.items.map(({ name }) => <CardBadge key={name} text={name} />);
 
     return (
         <div className={styles.wrapper}>

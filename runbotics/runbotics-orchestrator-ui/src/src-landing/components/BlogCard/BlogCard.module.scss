@@ -22,18 +22,21 @@ $FONT-COLOR: #000;
 
 .root {
     padding-top: $CARD-PADDING-TOP;
+    height: 100%;
 }
 
 .link {
     display: block;
     text-decoration: none;
+    height: 100%;
     color: $FONT-COLOR;
     border-radius: $IMG-BORDER-RADIUS;
     transition: transform $CARD-HOVER-TRANSITION ease;
+    box-shadow: $box-shadow-primary;
 
     &:hover {
         transform: translateY($CARD-HOVER-TRANSLATE-Y);
-        box-shadow: $box-shadow-primary;
+        box-shadow: $box-shadow-primary-hover;
 
         .title,
         .readMore {
@@ -44,7 +47,10 @@ $FONT-COLOR: #000;
 
 .article {
     position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    height: 100%;
     padding-bottom: $CARD-PADDING-BOTTOM;
 }
 
@@ -76,6 +82,7 @@ $FONT-COLOR: #000;
 }
 
 .content {
+    flex-grow: 1;
     padding: $CONTENT-PADDING;
 }
 

@@ -48,6 +48,31 @@ query {
 }
 `;
 
+export const buildAllCategoriesQuery: QueryBuilder = ({ preview }) => `
+query {
+    blogCategoryCollection(
+      preview: ${preview ? 'true' : 'false'}
+    ) {
+        items {
+            title,
+            slug
+        }
+    }
+}
+`;
+
+export const buildAllTagsQuery: QueryBuilder = ({ preview }) => `
+query {
+    tagCollection(
+      preview: ${preview ? 'true' : 'false'}
+    ) {
+        items {
+            name
+        }
+    }
+}
+`;
+
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
     skip = 0,

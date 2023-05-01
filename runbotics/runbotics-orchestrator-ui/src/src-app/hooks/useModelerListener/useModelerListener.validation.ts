@@ -22,7 +22,6 @@ export const getModelerActivities = (elements: BPMNElement[]) =>
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
 
-// eslint-disable-next-line complexity
 export const isModelerSync = ({
     modeler,
     appliedActivities,
@@ -58,7 +57,7 @@ const validateForm = (element: BPMNElement) => {
     const validate = ajv.compile(getFormSchema(element));
     return { isValid: validate(formData), formData };
 };
-// eslint-disable-next-line complexity
+
 const validateConnections = (element: BPMNElement) => {
     const incomingConnections = element.incoming?.filter(
         (flow) => flow.type === BpmnElementType.SEQUENCE_FLOW
@@ -111,7 +110,6 @@ const validateHostElement = (element: BPMNElement) => {
     return true;
 };
 
-// eslint-disable-next-line complexity
 export const validateElement = ({
     element,
     handleInvalidElement,

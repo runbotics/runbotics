@@ -16,6 +16,14 @@ export const BLOG_CATEGORY_FRAGMENT = `
     slug
 `;
 
+export const BLOG_TAGS_FRAGMENT = `
+    tagsCollection {
+        items {
+            name
+        }
+    }
+`;
+
 export const BLOG_POST_FRAGMENT = `
     title
     slug
@@ -23,7 +31,7 @@ export const BLOG_POST_FRAGMENT = `
     featuredImage {
         url
     }
-    tags
+    ${BLOG_TAGS_FRAGMENT}
     summary
     body {
         json
@@ -45,22 +53,34 @@ export const BLOG_POST_LIST_FRAGMENT = `
     featuredImage {
         url
     }
-    tags
+    tags: ${BLOG_TAGS_FRAGMENT}
     summary
-    category{
+    category {
         ${BLOG_CATEGORY_FRAGMENT}
     }
 `;
 
 export const buildFilterFragment = (options: FilterQueryParams) => {
-    const { category, selectedTags, startDate, endDate } = options;
+    const { categories, search, startDate, endDate } = options;
     const query = [];
 
-    if (category) query.push(`category: { slug: "${category}" }`);
-    if (selectedTags?.length) {
+    if (categories?.length) {
         query.push(
-            `tags_contains_all: [${selectedTags.map((tag) => `"${tag}"`)}]`
+            `category: { slug_in: ${JSON.stringify(categories)} }`
         );
+    }
+    // if (tags?.length) {
+    //     query.push(
+    //         `tags: { name_in: ${JSON.stringify(tags)} }`
+    //     );
+    // }
+    if (search) {
+        query.push(`
+            OR: [
+                { title_contains: "${search}" },
+                { summary_contains: "${search}" }
+            ]
+        `);
     }
     if (startDate) query.push(`date_gte: "${startDate}"`);
     if (endDate) query.push(`date_lte: "${endDate}"`);

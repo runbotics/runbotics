@@ -24,7 +24,6 @@ interface Props {
     processInstance: IProcessInstance;
 }
 
-// eslint-disable-next-line complexity
 const ProcessInstanceDetailsTable: VFC<Props> = ({ processInstance }) => {
     const { translate } = useTranslations();
 

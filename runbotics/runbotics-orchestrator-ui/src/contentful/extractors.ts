@@ -1,6 +1,8 @@
 import {
+    GetAllCategoriesResponse,
     GetAllPostsPathsResponse,
     GetAllPostsResponse,
+    GetAllTagsResponse,
     GetPostResponse,
 } from './types';
 
@@ -28,4 +30,12 @@ export function extractPaginationData(fetchResponse: GetAllPostsResponse) {
         limit: fetchResponse?.data?.blogPostCollection?.limit,
         total: fetchResponse?.data?.blogPostCollection?.total,
     };
+}
+
+export function extractCategory(fetchResponse: GetAllCategoriesResponse) {
+    return fetchResponse?.data?.blogCategoryCollection?.items;
+}
+
+export function extractTag(fetchResponse: GetAllTagsResponse) {
+    return fetchResponse?.data?.tagCollection?.items;
 }

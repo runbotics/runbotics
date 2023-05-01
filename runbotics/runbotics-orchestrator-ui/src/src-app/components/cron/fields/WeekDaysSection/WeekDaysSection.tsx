@@ -8,7 +8,6 @@ import NthWeekDaysSelect from './NthWeekDaysSelect';
 import { WeekDaysSectionProps } from './WeekDaysSection.types';
 import WeekDaysSelect from './WeekDaysSelect';
 
-// eslint-disable-next-line complexity
 const WeekDaysSection: FC<WeekDaysSectionProps> = ({ 
     locale,
     humanizeLabels,

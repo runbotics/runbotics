@@ -6,8 +6,8 @@ $IMG-BORDER-RADIUS: 20px;
 $IMG-MARGIN-BOTTOM: 12px;
 $TITLE-MARGIN-BOTTOM: 10px;
 $CONTENT-PADDING: $margin-3;
-$CONTENT-MIN-HEIGTH: 220px;
-$CONTENT-BORDER-RADIOUS: 20px 120px 20px 20px;
+$CONTENT-MIN-HEIGHT: 220px;
+$CONTENT-BORDER-RADIUS: 20px 120px 20px 20px;
 $DESCRIPTION-MAX-WIDTH: 966px;
 $READ-MORE-PADDING-RIGHT: 30px;
 $READ-MORE-PADDING-BOTTOM: 30px;
@@ -36,10 +36,11 @@ $FONT-COLOR: #000;
     text-decoration: none;
     transition: all $CARD-HOVER-TRANSITION ease;
     border-radius: $IMG-BORDER-RADIUS;
+    box-shadow: $box-shadow-primary;
 
     &:hover {
         transform: translateY($CARD-HOVER-TRANSLATE-Y);
-        box-shadow: $box-shadow-primary;
+        box-shadow: $box-shadow-primary-hover;
 
         .title,
         .readMore {
@@ -52,8 +53,10 @@ $FONT-COLOR: #000;
     position: relative;
     display: flex;
     align-items: flex-end;
+
     min-height: $ROOT-MIN-HEIGHT;
     width: 100%;
+
     color: $FONT-COLOR;
     text-decoration: none;
     transition: all $CARD-HOVER-TRANSITION ease;
@@ -61,11 +64,13 @@ $FONT-COLOR: #000;
 }
 
 .content {
-    background-color: #ffffffb3;
-    padding: $CONTENT-PADDING;
     width: 100%;
-    min-height: $CONTENT-MIN-HEIGTH;
-    border-radius: $CONTENT-BORDER-RADIOUS;
+    min-height: $CONTENT-MIN-HEIGHT;
+    
+    padding: $CONTENT-PADDING;
+
+    background-color: rgba($palette-white, 65%);
+    border-radius: $CONTENT-BORDER-RADIUS;
 }
 
 .img {
@@ -89,7 +94,8 @@ $FONT-COLOR: #000;
 
 .title {
     font-weight: $font-weight-bold;
-    font-size: $font-size-h2;
+    // font-size: $font-size-h2;
+    font-size: clamp(1rem, 3vw + 1rem, 2rem);
     margin: 0;
     margin-bottom: $TITLE-MARGIN-BOTTOM;
 }
@@ -100,10 +106,12 @@ $FONT-COLOR: #000;
 
 .readMore {
     display: flex;
-    width: 100%;
     justify-content: flex-end;
+    width: 100%;
+
     padding-right: $READ-MORE-PADDING-RIGHT;
     padding-top: $READ-MORE-PADDING-TOP;
+
     p {
         position: relative;
         display: flex;

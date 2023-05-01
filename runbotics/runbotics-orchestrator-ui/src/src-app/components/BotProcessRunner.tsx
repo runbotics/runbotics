@@ -77,7 +77,7 @@ interface BotProcessRunnerProps {
     variant?: 'text' | 'outlined' | 'contained';
 }
 
-// eslint-disable-next-line complexity, max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
 const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     className,
     process,

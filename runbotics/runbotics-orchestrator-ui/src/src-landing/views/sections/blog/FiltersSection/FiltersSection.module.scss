@@ -1,13 +1,9 @@
 @import '#src-landing/scss/main.scss';
 
 $FILTERS-WIDTH: 270px;
-$SEARCH-MARGIN: 10px;
-$SEARCH-BAR-BORDER-RADIUS: 100px;
-$SEARCH-BAR-BORDER-WIDTH: 3px;
 $SEARCH-ICON-SIZE: 30px;
-$SEARCH-ICON-LEFT: 16px;
-$SEARCH-ICON-TOP: 6px;
-$SEARCH-FONT-SIZE: $font-size-body3;
+$SEARCH-ICON-LEFT: 20px;
+$SEARCH-ICON-TOP: 14px;
 $BORDER-COLOR-SELECTED: $palette-background-tertiary;
 $BORDER-COLOR-UNSELECTED: rgba(
     $palette-background-tertiary,
@@ -15,15 +11,23 @@ $BORDER-COLOR-UNSELECTED: rgba(
 );
 
 .root {
-    font-family: 'Roboto', sans-serif;
+    @include font-face-roboto;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+
     width: $FILTERS-WIDTH;
+    height: fit-content;
+    gap: 16px;
+}
+
+.root > div {
+    width: 100%;
 }
 
 .search {
     position: relative;
-    margin: $SEARCH-MARGIN;
+    padding: 10px;
     outline: none;
 
     &:hover {
@@ -38,24 +42,28 @@ $BORDER-COLOR-UNSELECTED: rgba(
             border-color: $palette-accent-primary;
         }
     }
+}
 
-    .icon {
-        position: absolute;
-        left: $SEARCH-ICON-LEFT;
-        top: $SEARCH-ICON-TOP;
-        width: $SEARCH-ICON-SIZE;
-        height: $SEARCH-ICON-SIZE;
-    }
+.search input {
+    font-size: $font-size-body3;
+    padding: $padding-1 $padding-2;
+    padding-inline: $SEARCH-ICON-SIZE + $padding-2 $padding-2;
+    border: 2px solid $BORDER-COLOR-UNSELECTED;
+    border-radius: 100px;
+}
 
-    .input {
-        font-size: $SEARCH-FONT-SIZE;
-        padding: $padding-1 $padding-2;
-        padding-inline: $SEARCH-ICON-SIZE + $padding-2 $padding-2;
-        border-style: solid;
-        border-color: $BORDER-COLOR-UNSELECTED;
-        border-width: $SEARCH-BAR-BORDER-WIDTH;
-        border-radius: $SEARCH-BAR-BORDER-RADIUS;
-    }
+.icon {
+    position: absolute;
+    left: $SEARCH-ICON-LEFT;
+    top: $SEARCH-ICON-TOP;
+    width: $SEARCH-ICON-SIZE;
+    height: $SEARCH-ICON-SIZE;
+}
+
+.filterSectionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 @media (max-width: $breakpoint-md) {

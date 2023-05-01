@@ -16,7 +16,10 @@ interface FeaturedBlogCardProps {
 }
 const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
     const { translate } = useTranslations();
-    if(!post) return null;
+
+    if (!post) return null;
+
+    const tags = post.tags?.items.map(({ name }) => <CardBadge key={name} text={name} />);
 
     return (
         <div className={styles.root}>
@@ -30,7 +33,7 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                             className={styles.img}
                         />
                         <div className={styles.info}>
-                            <CardBadge text={post.category.title} />
+                            {tags}
                             <Typography variant="body4">
                                 {new Intl.DateTimeFormat().format(new Date(post.date))}
                             </Typography>

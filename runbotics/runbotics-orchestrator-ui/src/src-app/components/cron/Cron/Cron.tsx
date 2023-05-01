@@ -15,7 +15,7 @@ import { CronProps, PeriodType } from '../types';
 import { cronShortcuts, initialCronState } from '../utils';
 import { ClearButton, CronContainer } from './Cron.styles';
 
-// eslint-disable-next-line max-lines-per-function, complexity
+// eslint-disable-next-line max-lines-per-function
 const Cron: FC<CronProps> = ({
     locale = DEFAULT_LOCALE_EN,
     value = '',

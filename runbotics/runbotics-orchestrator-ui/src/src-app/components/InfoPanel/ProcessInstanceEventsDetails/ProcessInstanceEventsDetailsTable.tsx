@@ -36,7 +36,6 @@ interface ProcessInstanceEventsDetailsTableProps {
 
 const ProcessInstanceEventsDetailsTable: VFC<
     ProcessInstanceEventsDetailsTableProps
-// eslint-disable-next-line complexity
 > = ({ processInstanceEvent }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();

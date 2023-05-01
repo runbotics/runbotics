@@ -1,0 +1,42 @@
+@import "#src-landing/scss/main";
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 5px;
+}
+
+.wrapper > input{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid $palette-gray;
+    
+    @include font-face-roboto;
+    font-size: $font-size-caption;
+    line-height: 1.25rem;
+    
+    &::-webkit-datetime-edit-fields-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+        padding-top: 1px;
+        padding-bottom: 3px;
+        filter: $black-to-accent-filter;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.divider {
+    width: 10px;
+    border-bottom: 2px solid #000000;
+    border-radius: 2px;
+}

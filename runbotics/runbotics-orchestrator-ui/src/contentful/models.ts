@@ -13,7 +13,7 @@ export interface BlogPost {
     featuredImage: {
         url: string;
     }
-    tags: string[]
+    tags: ContentfulCollection<Tag>;
     summary: string;
     body: ContentfulRichText;
     authors: ContentfulCollection<Author>;
@@ -30,4 +30,8 @@ export interface Author {
     slug: string;
     jobTitle?: string;
     bio: ContentfulRichText
+}
+
+export interface Tag {
+    name: string;
 }

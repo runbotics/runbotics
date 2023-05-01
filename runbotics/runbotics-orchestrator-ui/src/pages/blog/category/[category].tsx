@@ -2,13 +2,14 @@ import { GetServerSidePropsContext } from 'next';
 
 import BlogView from '#src-landing/views/BlogView';
 import {
+    getAllCategories,
     getAllPosts,
     getCategorisedPosts,
     getFilteredPosts,
 } from 'src/contentful/api';
 import contentfulCache from 'src/contentful/cache';
 import { buildFilterFragment } from 'src/contentful/fragments';
-import { BlogPost } from 'src/contentful/models';
+import { BlogPost, Category, Tag } from 'src/contentful/models';
 import { FilterQueryParamsEnum } from 'src/contentful/types';
 import {
     extractFilterQueryParams,
@@ -19,10 +20,17 @@ import {
 interface BlogPageProps {
     posts: BlogPost[];
     featuredPost: BlogPost;
+    categories: Category[];
+    tags: Tag[];
 }
 
-const BlogPage = ({ posts, featuredPost }: BlogPageProps) => (
-    <BlogView posts={posts} featuredPost={featuredPost} />
+const BlogPage = ({ posts, featuredPost, tags, categories }: BlogPageProps) => (
+    <BlogView
+        posts={posts}
+        featuredPost={featuredPost}
+        categories={categories}
+        tags={tags}
+    />
 );
 
 export default BlogPage;
@@ -32,17 +40,19 @@ interface Params extends Record<string, string> {
 }
 
 const FILTER_QUERY_PARAMS = [
-    FilterQueryParamsEnum.SelectedTags,
+    // FilterQueryParamsEnum.Tag,
     FilterQueryParamsEnum.StartDate,
     FilterQueryParamsEnum.EndDate,
     FilterQueryParamsEnum.Page,
 ];
 
 type PostsResponse = Awaited<ReturnType<typeof getAllPosts>>;
-// eslint-disable-next-line complexity
+
 export async function getServerSideProps(
     context: GetServerSidePropsContext<Params>
 ) {
+    const categories = await getAllCategories();
+
     if (hasQueryParams(context.query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(context.query);
         const { limit, skip } = getPaginationSize(queryParams.page);
@@ -53,6 +63,8 @@ export async function getServerSideProps(
         return {
             props: {
                 posts: response.posts ?? [],
+                categories: categories ?? [],
+                tags: [],
             },
         };
     }
@@ -76,6 +88,8 @@ export async function getServerSideProps(
         props: {
             posts: posts ?? [],
             featuredPost: featuredPost ?? null,
+            categories: categories ?? [],
+            tags: [],
         },
     };
 }

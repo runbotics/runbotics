@@ -1,4 +1,4 @@
-import { BlogPost } from './models';
+import { BlogPost, Category, Tag } from './models';
 
 export interface PaginationOptions {
     skip?: number;
@@ -31,6 +31,12 @@ export type GetAllPostsResponse = FetchContentfulResponse<{
     };
 }>;
 
+export type GetAllCategoriesResponse = FetchContentfulResponse<{
+    blogCategoryCollection: {
+        items: Category[];
+    }
+}>;
+
 export type GetAllPostsPathsResponse = FetchContentfulResponse<{
     blogPostCollection: {
         items: Pick<BlogPost, 'slug'>[];
@@ -47,17 +53,26 @@ export type GetPostResponse = FetchContentfulResponse<{
     };
 }>;
 
+export type GetAllTagsResponse = FetchContentfulResponse<{
+    tagCollection: {
+        items: Tag[];
+    };
+}>;
+
 export type FilterQueryParams = {
-    category?: FilterQueryParamsEnum.Category;
-    selectedTags?: FilterQueryParamsEnum.SelectedTags[];
+    categories?: FilterQueryParamsEnum.Category[];
+    // tags?: FilterQueryParamsEnum.Tag[];
     startDate?: FilterQueryParamsEnum.StartDate;
     endDate?: FilterQueryParamsEnum.EndDate;
+    search?: FilterQueryParamsEnum.Search;
     page?: FilterQueryParamsEnum.Page;
 };
 
 export enum FilterQueryParamsEnum {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     Category = 'category',
-    SelectedTags = 'selectedTags',
+    // Tag = 'tag',
+    Search = 'search',
     StartDate = 'startDate',
     EndDate = 'endDate',
     Page = 'page',

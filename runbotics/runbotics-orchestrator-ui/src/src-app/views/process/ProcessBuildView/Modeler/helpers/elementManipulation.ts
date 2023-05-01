@@ -56,7 +56,6 @@ const disablePreviousElements = (
     }
 };
 
-// eslint-disable-next-line complexity
 export const applyModelerElement = ({
     modeler,
     element,
