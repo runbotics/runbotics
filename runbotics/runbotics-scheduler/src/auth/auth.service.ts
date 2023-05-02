@@ -138,8 +138,8 @@ export class AuthService {
         const mutableBotParams = { system: botSystem, collection: collectionEntity, version };
         const bot = await this.validateBot(installationId)
             .then(async (bot) => {
-                const isVersionFullfiled = await this.isBotMinimumVersionFulfilled(version);
-                if (!isVersionFullfiled) {
+                const isVersionFulfilled = await this.isBotMinimumVersionFulfilled(version);
+                if (!isVersionFulfilled) {
                     this.logger.warn(`Bot cannot be registered. Provided version ${version} does not fulfill minimum ${this.serverConfigService.requiredBotVersion}`);
                     throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`);
                 }

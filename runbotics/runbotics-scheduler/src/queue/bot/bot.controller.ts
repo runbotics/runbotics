@@ -7,7 +7,7 @@ import {
     Query,
     Req,
 } from '@nestjs/common';
-import { BotLogService } from '#/websocket/bot-log/bot-log.service';
+import { BotLogService } from '#/websocket/bot/bot-log.service';
 import { IBot, FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
 import { BotSchedulerService } from './bot.scheduler.service';
 import { Logger } from '#/utils/logger';

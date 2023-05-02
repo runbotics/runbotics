@@ -1,0 +1,12 @@
+@import '#src-landing/scss/main.scss';
+$NAVBAR_HEIGHT: 59px;
+
+.root {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: $NAVBAR_HEIGHT;
+    padding: 0 $x-content-padding;
+}

@@ -4,11 +4,8 @@ $BEFORE-X-OFFSET: 20px;
 $BEFORE-Y-OFFSET: 40px;
 
 $CARD-BORDER-RADIUS: 20px 20px 150px 20px;
-$CARD-TEXT-MAX-WIDTH: 250px;
 $COUNTER-MIN-WIDTH: 120px;
 $CONTENT-WRAPPER-WIDTH: 532px;
-
-$CARD-CONTAINER-ICON-QUERY: 325px;
 
 .root {
     display: flex;
@@ -32,7 +29,7 @@ $CARD-CONTAINER-ICON-QUERY: 325px;
     width: $CONTENT-WRAPPER-WIDTH;
     height: 100%;
     min-height: 500px;
-    margin: 0 $margin-2;
+    margin: $margin-0 $margin-2;
     // padding to offset border radius for correct word wrapping
     padding: 90px 30px 70px 20px;
     border-radius: $CARD-BORDER-RADIUS;
@@ -49,30 +46,6 @@ $CARD-CONTAINER-ICON-QUERY: 325px;
         border-radius: $CARD-BORDER-RADIUS;
         background-color: $palette-accent-secondary;
     }
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100%;
-    container-type: inline-size;
-}
-
-.iconWrapper {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-}
-
-.title {
-    max-width: $CARD-TEXT-MAX-WIDTH;
-    margin-bottom: $margin-6;
-}
-
-.description {
-    max-width: $CARD-TEXT-MAX-WIDTH;
 }
 
 .counter {
@@ -105,34 +78,17 @@ $CARD-CONTAINER-ICON-QUERY: 325px;
     }
 
     .contentWrapper {
-        width: calc(100% - 20px);
+        width: calc(100% - $BEFORE-X-OFFSET);
         max-width: 520px;
 
         &::before {
-            transform: translate(-5px, calc(20px - 90px));
+            transform: translate(-5px, calc($BEFORE-X-OFFSET - 90px));
         }
-    }
-
-    .iconWrapper {
-        justify-content: flex-start;
-        height: initial;
-        margin-bottom: $margin-6;
-    }
-
-    .content {
-        padding-left: $padding-4;
     }
 
     .counter {
         position: relative;
         min-width: none;
         text-align: center;
-    }
-
-    .mobileNavWrapper {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-evenly;
-        width: 100%;
     }
 }

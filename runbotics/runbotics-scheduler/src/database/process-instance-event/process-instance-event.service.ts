@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import { ProcessInstanceEventEntity } from './process-instance-event.entity';
-import { IProcessInstanceEvent } from 'runbotics-common';
+import { IProcessInstanceEvent, ProcessInstanceEventStatus } from 'runbotics-common';
 
 @Injectable()
 export class ProcessInstanceEventService {
@@ -16,7 +16,18 @@ export class ProcessInstanceEventService {
         return event;
     }
 
+    update(event: IProcessInstanceEvent) {
+        return this.processInstanceEventRepository.update(event.id, event);
+    }
+
     findByExecutionId(queryRunner: QueryRunner, executionId: string) {
         return queryRunner.manager.findOne(ProcessInstanceEventEntity, { where: { executionId }, relations: ['processInstance'] });
+    }
+
+    findActiveByProcessInstanceId(processInstanceId: string) {
+        return this.processInstanceEventRepository.findBy({ 
+            processInstance: { id: processInstanceId },
+            status: ProcessInstanceEventStatus.IN_PROGRESS,
+        });
     }
 }

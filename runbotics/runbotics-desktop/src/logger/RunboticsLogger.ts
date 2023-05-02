@@ -1,8 +1,6 @@
-import { Injectable, Logger, LoggerService, OnModuleInit, Optional, Scope } from '@nestjs/common';
+import { Injectable, LoggerService, OnModuleInit, Optional } from '@nestjs/common';
 import winston from 'winston';
-import { ConsoleTransportInstance } from 'winston/lib/winston/transports';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { parentPort } from 'worker_threads';
 
 const LOG_LEVEL_VALUES: Record<LogLevel, number> = {
     debug: 4,
@@ -111,7 +109,7 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         return new Date(Date.now()).toLocaleString(undefined, localeStringOptions as Intl.DateTimeFormatOptions);
     }
 
-    public static print(type: LogLevel, data: any[], context = '', isTimeDiffEnabled: boolean = true) {
+    public static print(type: LogLevel, data: any[], context = '', isTimeDiffEnabled = true) {
         let color;
         switch (type) {
             case 'error':

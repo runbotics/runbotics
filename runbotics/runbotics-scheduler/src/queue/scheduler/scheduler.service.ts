@@ -1,13 +1,13 @@
 import { ProcessService } from '#/database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Job as QueueJob, JobInformation, JobStatus, Queue } from 'bull';
+import { JobInformation, JobStatus, Queue } from 'bull';
 import { Job } from '#/utils/process';
 import { Logger } from '#/utils/logger';
 
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import { WsMessage } from 'runbotics-common';
-import { UiGateway } from '#/websocket/gateway/ui.gateway';
+import { UiGateway } from '#/websocket/ui/ui.gateway';
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
     'waiting',

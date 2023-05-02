@@ -10,4 +10,4 @@ WORKDIR /usr/src/app/runbotics-scheduler
 
 EXPOSE 4000
 
-CMD node ../create-links.js create && node dist/main
+CMD node ../create-links.js create && node dist/src/main

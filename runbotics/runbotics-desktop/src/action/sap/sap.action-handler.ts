@@ -27,6 +27,9 @@ export default class SapActionHandler extends StatefulActionHandler {
             const scriptingEngine = sapGuiAuto.GetScriptingEngine();
             const result = scriptingEngine.OpenConnection(input.connectionName, true);
             this.session = result.children[0];
+            if (input.client) {
+                this.session.FindById('wnd[0]/usr/txtRSYST-MANDT').text = input.client;
+            }
             this.session.FindById('wnd[0]/usr/txtRSYST-BNAME').text = process.env[input.user];
             this.session.FindById('wnd[0]/usr/pwdRSYST-BCODE').text = process.env[input.password];
             this.session.FindById('wnd[0]').SendVKey(0);

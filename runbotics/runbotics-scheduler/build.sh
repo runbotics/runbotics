@@ -1,5 +1,6 @@
 #!/bin/sh
 mkdir -p ../common/deploy/runbotics-scheduler;
+rm -rf dist;
 
 echo "[INFO] runbotics-scheduler - Build started";
 rushx build;

@@ -10,7 +10,7 @@ export interface IndustriesSlideProps {
     index: number;
     openSlide: number;
     toggleSlide: (idx: number) => void;
-    activeIndex: number;
-    sliderWidth: number;
+    activeIndex?: number;
+    sliderWidth?: number;
     slide: IndustrySlide;
 }

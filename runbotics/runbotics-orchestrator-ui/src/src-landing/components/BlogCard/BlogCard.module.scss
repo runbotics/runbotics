@@ -1,0 +1,104 @@
+@import '#src-landing/scss/main.scss';
+
+$CARD-PADDING-TOP: 20px;
+$CARD-PADDING-BOTTOM: 20px;
+$IMG-MAX-HEIGHT: 140px;
+$IMG-BORDER-RADIUS: 20px;
+$IMG-MARGIN-BOTTOM: 12px;
+$INFO-PADDING: 0 20px;
+$TITLE-MARGIN-BOTTOM: 10px;
+$CONTENT-PADDING: 0 20px 20px 20px;
+$READ-MORE-PADDING-RIGHT: 30px;
+$READ-MORE-A-TOP: 1px;
+$READ-MORE-A-RIGHT: 5px;
+$READ-MORE-ICON-HEIGHT: 24px;
+$READ-MORE-ICON-WIDTH: 24px;
+$READ-MORE-COLOR: #fbb040;
+$BADGE-TOP: calc($IMG-MAX-HEIGHT - 40px);
+$BADGE-LEFT: 20px;
+$CARD-HOVER-TRANSLATE-Y: -3px;
+$CARD-HOVER-TRANSITION: 200ms;
+$FONT-COLOR: #000;
+
+.root {
+    padding-top: $CARD-PADDING-TOP;
+}
+
+.link {
+    display: block;
+    text-decoration: none;
+    color: $FONT-COLOR;
+    border-radius: $IMG-BORDER-RADIUS;
+    transition: transform $CARD-HOVER-TRANSITION ease;
+
+    &:hover {
+        transform: translateY($CARD-HOVER-TRANSLATE-Y);
+        box-shadow: $box-shadow-primary;
+
+        .title,
+        .readMore {
+            text-decoration: underline;
+        }
+    }
+}
+
+.article {
+    position: relative;
+    width: 100%;
+    padding-bottom: $CARD-PADDING-BOTTOM;
+}
+
+.img {
+    position: relative !important;
+    max-height: $IMG-MAX-HEIGHT;
+    object-fit: cover;
+    border-radius: $IMG-BORDER-RADIUS;
+    margin-bottom: $IMG-MARGIN-BOTTOM;
+}
+
+.info {
+    display: flex;
+    padding: $INFO-PADDING;
+    margin-bottom: $margin-2;
+    p:first-child {
+        margin-right: $margin-2;
+    }
+}
+
+.category {
+    font-weight: $font-weight-semi-bold;
+}
+
+.title {
+    font-weight: $font-weight-bold;
+    margin: 0;
+    margin-bottom: $TITLE-MARGIN-BOTTOM;
+}
+
+.content {
+    padding: $CONTENT-PADDING;
+}
+
+.readMore {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    padding-right: $READ-MORE-PADDING-RIGHT;
+    color: $READ-MORE-COLOR;
+    &::after {
+        content: '';
+        position: absolute;
+        top: $READ-MORE-A-TOP;
+        right: $READ-MORE-A-RIGHT;
+        background-image: url('/images/icons/right-orange.svg');
+        height: $READ-MORE-ICON-HEIGHT;
+        width: $READ-MORE-ICON-WIDTH;
+    }
+}
+
+.badge {
+    position: absolute;
+    top: $BADGE-TOP;
+    left: $BADGE-LEFT;
+}

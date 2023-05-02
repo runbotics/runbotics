@@ -23,7 +23,7 @@ import {
 } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
-import { UiGateway } from '../../websocket/gateway/ui.gateway';
+import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { SchedulerService } from '../scheduler/scheduler.service';
 

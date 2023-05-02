@@ -36,6 +36,7 @@ export interface ModelerElementValidationParams {
     element: BPMNElement;
     errorType?: ModelerErrorType;
     nameKey?: string;
+    relatedElements?: string[];
 }
 
 export interface ModelerListenerHookProps {
