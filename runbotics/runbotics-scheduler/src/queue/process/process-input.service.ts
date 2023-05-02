@@ -1,3 +1,4 @@
+import { isScheduledProcess } from '#/utils/process';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import _ from 'lodash';
 import { InstantProcess, IProcess, ProcessInput } from 'runbotics-common';
@@ -14,7 +15,9 @@ export class ProcessInputService {
     }
 
     public mergeInputVariables(instantProcess: InstantProcess, fileVariables: unknown): InstantProcess {
-        const variables = instantProcess.input.variables;
+        if (isScheduledProcess(instantProcess)) return instantProcess;
+
+        const variables = instantProcess.input?.variables ?? {};
 
         Object.entries(fileVariables).forEach(([ path, value ]) => {
             _.set(variables, path, value);

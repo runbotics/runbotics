@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { InstantProcess, IProcess, TriggerEvent } from 'runbotics-common';
+import { InstantProcess, IProcess, ScheduledProcess, TriggerEvent } from 'runbotics-common';
 import { ProcessFileService } from './process-file.service';
 import { ProcessInputService } from './process-input.service';
 
@@ -29,6 +29,13 @@ const INSTANT_PROCESS: InstantProcess = {
             numberTestVariable: 'numberTestVariable',
         },
     },
+};
+
+const SCHEDULED_PROCESS: ScheduledProcess = {
+    ...INSTANT_PROCESS,
+    input: undefined,
+    id: 1232,
+    cron: '* * * * *',
 };
 
 describe('ProcessInputService', () => {
@@ -85,6 +92,21 @@ describe('ProcessInputService', () => {
             };
 
             expect(mergedInstantProcess).toEqual(expectedInstantProcess);
+        });
+
+        it('should skip scheduled process', () => {
+            const mergedInstantProcess = processInputService.mergeInputVariables(SCHEDULED_PROCESS, {});
+
+            expect(mergedInstantProcess).toEqual(SCHEDULED_PROCESS);
+        });
+        
+        it('should skip empty process input', () => {
+            const emptyInputInstantProcess: InstantProcess = {
+                ...INSTANT_PROCESS,
+                input: undefined,
+            };
+            const mergedInstantProcess = processInputService.mergeInputVariables(emptyInputInstantProcess, {});
+            expect(mergedInstantProcess).toEqual({ ...emptyInputInstantProcess, input: { variables: {} }});
         });
 
     });

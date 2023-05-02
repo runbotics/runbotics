@@ -8,6 +8,7 @@ $MAX-CONTENT-WIDTH: 520px;
     align-items: center;
     max-width: $MAX-CONTENT-WIDTH;
     gap: $margin-5;
+    isolation: isolate;
 }
 
 .title {
