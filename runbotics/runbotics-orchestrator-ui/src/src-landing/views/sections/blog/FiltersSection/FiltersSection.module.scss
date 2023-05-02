@@ -1,14 +1,6 @@
 @import '#src-landing/scss/main.scss';
 
 $FILTERS-WIDTH: 270px;
-$SEARCH-ICON-SIZE: 30px;
-$SEARCH-ICON-LEFT: 20px;
-$SEARCH-ICON-TOP: 14px;
-$BORDER-COLOR-SELECTED: $palette-background-tertiary;
-$BORDER-COLOR-UNSELECTED: rgba(
-    $palette-background-tertiary,
-    $accent-secondary-opacity
-);
 
 .root {
     @include font-face-roboto;
@@ -25,39 +17,24 @@ $BORDER-COLOR-UNSELECTED: rgba(
     width: 100%;
 }
 
-.search {
-    position: relative;
-    padding: 10px;
-    outline: none;
+.filtersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clearLink {
+    @include font-face-base;
+    color: $palette-accent-primary;
+    font-size: $font-size-body3;
+    line-height: $line-height-body2;
+    font-weight: $font-weight-semi-bold;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
 
     &:hover {
-        .input {
-            border-color: $BORDER-COLOR-SELECTED;
-        }
+        border-color: $palette-accent-primary;
     }
-
-    &:focus {
-        .input {
-            outline: none;
-            border-color: $palette-accent-primary;
-        }
-    }
-}
-
-.search input {
-    font-size: $font-size-body3;
-    padding: $padding-1 $padding-2;
-    padding-inline: $SEARCH-ICON-SIZE + $padding-2 $padding-2;
-    border: 2px solid $BORDER-COLOR-UNSELECTED;
-    border-radius: 100px;
-}
-
-.icon {
-    position: absolute;
-    left: $SEARCH-ICON-LEFT;
-    top: $SEARCH-ICON-TOP;
-    width: $SEARCH-ICON-SIZE;
-    height: $SEARCH-ICON-SIZE;
 }
 
 .filterSectionWrapper {

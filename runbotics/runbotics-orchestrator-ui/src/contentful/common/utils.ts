@@ -1,8 +1,17 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { FilterQueryParams } from './types';
+import { FilterQueryParams, FilterQueryParamsEnum } from './types';
+
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_OFFSET = 1;
+
+export const FILTER_QUERY_PARAMS = [
+    FilterQueryParamsEnum.Category,
+    FilterQueryParamsEnum.Search,
+    FilterQueryParamsEnum.StartDate,
+    FilterQueryParamsEnum.EndDate,
+    FilterQueryParamsEnum.Page,
+];
 
 export const extractFilterQueryParams = (
     query: GetServerSidePropsContext['query']
@@ -12,9 +21,6 @@ export const extractFilterQueryParams = (
     if (category) {
         result.categories = paramToArray(category);
     }
-    // if (tag) {
-    //     result.tags = paramToArray(tag);
-    // }
     if (search) {
         result.search = paramToString(search);
     }
@@ -32,10 +38,12 @@ export const extractFilterQueryParams = (
 };
 
 export const getPaginationSize = (page: string) => {
-    if (!page) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
-    const pageNumber = parseInt(page);
+    if (!page || Number(page) === 1) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
+
+    const pageNumber = Number(page);
     const limit = pageNumber * DEFAULT_PAGE_SIZE - DEFAULT_PAGE_OFFSET;
     const skip = limit - DEFAULT_PAGE_SIZE;
+
     return { limit, skip };
 };
 

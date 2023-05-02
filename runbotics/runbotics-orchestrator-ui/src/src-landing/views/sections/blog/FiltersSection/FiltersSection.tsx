@@ -1,33 +1,32 @@
-import { ChangeEvent, VFC, useLayoutEffect, useState } from 'react';
+import { VFC, useEffect, useState } from 'react';
 
-import Image from 'next/image';
-
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { Category, Tag } from '#contentful/models';
-import { FilterQueryParamsEnum } from '#contentful/types';
-import SearchIcon from '#public/images/icons/search-black.svg';
+import { FilterQueryParamsEnum, Category } from '#contentful/common';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Checkbox from '#src-landing/components/Checkbox';
 import DateRange, { IDateRange } from '#src-landing/components/DateRange';
+import SearchInput from '#src-landing/components/SearchInput';
 import Typography from '#src-landing/components/Typography';
 
 import styles from './FiltersSection.module.scss';
 
 interface Props {
     categories: Category[];
-    tags: Tag[];
 }
 
-const FiltersSection: VFC<Props> = ({ categories, tags }) => {
+const FiltersSection: VFC<Props> = ({ categories }) => {
     const { translate } = useTranslations();
     const { query, push } = useRouter();
-    const [search, setSearch] = useState<string>('');
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    // const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [dateRange, setDateRange] = useState<Partial<IDateRange>>();
 
-    useLayoutEffect(() => {
+    const searchParam = Array.isArray(query?.search)
+        ? query.search[0]
+        : query.search;
+
+    useEffect(() => {
         if (query?.category) {
             setSelectedCategories(Array.isArray(query.category) ? query.category : [query.category]);
         } else {
@@ -43,17 +42,7 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
             initialDateRange.endDate = query.endDate;
         }
         setDateRange(initialDateRange);
-
-        const searchInitialValue = Array.isArray(query?.search)
-            ? query.search[0]
-            : query.search;
-
-        setSearch(searchInitialValue ?? '');
     }, [query]);
-
-    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value);
-    };
 
     const handleCategoryCheckboxChange = (slug: string) => {
         if (selectedCategories.includes(slug)) {
@@ -63,7 +52,7 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
         }
     };
 
-    const handleFilterClick = () => {
+    const pushFilters = (search?: string) => {
         const searchParams = new URLSearchParams();
         
         selectedCategories
@@ -81,6 +70,10 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
         push(`/blog${searchParams.toString() ? '?' + searchParams.toString() : ''}`);
     };
 
+    useEffect(() => {
+        pushFilters(searchParam);
+    }, [selectedCategories.length, dateRange?.endDate, dateRange?.startDate]);
+
     const categoriesCheckboxes = categories.map(category => (
         <Checkbox
             key={category.slug}
@@ -92,39 +85,22 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
         />
     ));
 
-    // const tagsCheckboxes = tags.map(({ name }) => (
-    //     <Checkbox
-    //         key={name}
-    //         checked={selectedTags.includes(name)}
-    //         // onChange={() => handleCategoryCheckboxChange(category.slug)}
-    //         label={name}
-    //         title={name}
-    //         singleLine
-    //     />
-    // ));
-
     return (
         <div className={styles.root}>
-            <div className={styles.search}>
-                <Image
-                    className={styles.icon}
-                    src={SearchIcon}
-                    alt="search"
-                    width={24}
-                    height={24}
-                />
-                <input
-                    className={styles.input}
-                    type="text"
-                    placeholder={'Search'}
-                    onChange={handleSearch}
-                    value={search}
-                />
-            </div>
-            <div>
-                <Typography variant='body3'>
-                    Filter by:
+            <SearchInput
+                initialValue={searchParam}
+                onClick={pushFilters}
+            />
+            <div className={styles.filtersHeader}>
+                <Typography variant='h4'>
+                    Filters
                 </Typography>
+                <Link
+                    className={styles.clearLink}
+                    href={'/blog'}
+                >
+                    Clear All
+                </Link>
             </div>
             <div className={styles.filterSectionWrapper}>
                 <Typography variant='h6'>
@@ -134,14 +110,6 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                     {categoriesCheckboxes}
                 </div>
             </div>
-            {/* <div className={styles.filterSectionWrapper}>
-                <Typography variant='h6'>
-                    Tag
-                </Typography>
-                <div>
-                    {tagsCheckboxes}
-                </div>
-            </div> */}
             <div className={styles.filterSectionWrapper}>
                 <Typography variant='h6'>
                     Date
@@ -151,12 +119,6 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                     onChange={setDateRange}
                 />
             </div>
-            <button onClick={handleFilterClick}>
-                Filter
-            </button>
-            <button onClick={() => { push('/blog'); }}>
-                Clear
-            </button>
         </div>
 
     );

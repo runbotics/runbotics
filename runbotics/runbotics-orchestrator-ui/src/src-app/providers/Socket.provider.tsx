@@ -8,13 +8,14 @@ export const SocketContext = React.createContext<Socket | null>(null);
 
 interface SocketProviderProps {
     uri: string;
+    shouldAttach: boolean;
 }
 
-const SocketProvider: FC<SocketProviderProps> = ({ children, uri }) => {
+const SocketProvider: FC<SocketProviderProps> = ({ children, uri, shouldAttach }) => {
     const { isAuthenticated } = useAuth();
 
     const socket = useMemo(() => {
-        if (!isAuthenticated) return null;
+        if (!isAuthenticated || !shouldAttach) return null;
 
         const accessToken = window.localStorage.getItem('access_token');
 
@@ -26,7 +27,7 @@ const SocketProvider: FC<SocketProviderProps> = ({ children, uri }) => {
             },
             path: '/ws-ui/',
         });
-    }, [isAuthenticated, uri]);
+    }, [isAuthenticated, uri, shouldAttach]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => () => socket?.disconnect(), [isAuthenticated]);

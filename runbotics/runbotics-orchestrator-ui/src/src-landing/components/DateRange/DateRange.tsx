@@ -1,4 +1,6 @@
-import { ChangeEvent, VFC, useEffect, useState } from 'react';
+import {
+    ChangeEvent, VFC, useEffect, useState
+} from 'react';
 
 import styles from './DateRange.module.scss';
 
@@ -8,8 +10,8 @@ export interface IDateRange {
 }
 
 interface Props {
-    initialDateRange: Partial<IDateRange> | undefined;
     onChange: (dateRange: IDateRange) => void;
+    initialDateRange?: Partial<IDateRange>;
 }
 
 const DateRange: VFC<Props> = ({ initialDateRange, onChange }) => {
