@@ -133,14 +133,6 @@ const Navbar: FC<NavbarProps> = ({
                     </Link>
                 </li>
                 <li className={styles.listItem}>
-                    <button className={styles.loginButton} onClick={() => push('/login')}>
-                        <Typography
-                            variant="h6"
-                            color="accent"
-                            className={styles.btnText}
-                            text={translate('Landing.Header.Button.LogIn')}
-                        />
-                    </button>
                     <Link
                         href={`/#${CONTACT_US_SECTION_ID}`}
                         className={styles.link}
@@ -163,6 +155,16 @@ const Navbar: FC<NavbarProps> = ({
                             'Landing.Header.Nav.Option.Blog'
                         )}
                     </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <button className={styles.loginButton} onClick={() => push('/login')}>
+                        <Typography
+                            variant="h6"
+                            color="accent"
+                            className={styles.btnText}
+                            text={translate('Landing.Header.Button.LogIn')}
+                        />
+                    </button>
                 </li>
             </ul>
             
