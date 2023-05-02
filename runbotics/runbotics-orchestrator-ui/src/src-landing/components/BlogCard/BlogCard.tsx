@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 
 import Image from 'next/image';
-
 import Link from 'next/link';
 
+import { BlogPost } from '#contentful/common';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { BlogPost } from 'src/contentful/models';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';

@@ -3,7 +3,8 @@
 $INPUT-BORDER-THICKNESS: 2px;
 
 $CHECKBOX-WRAPPER-MAX-WIDTH: 450px;
-$CHECKBOX-SIZE: 26px;
+$CHECKBOX-LARGE-SIZE: 26px;
+$CHECKBOX-REGULAR-SIZE: 20px;
 $CHECKBOX-BORDER-RADIUS: 6px;
 $CHECKBOX-TRANSFORM-Y: -1.2px;
 
@@ -14,11 +15,13 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
     gap: $margin-3;
 }
 
+.checkboxWrapper:has(.checkbox[data-size='regular']) {
+    gap: $margin-2;
+}
+
 .checkbox {
     font: inherit;
     display: grid;
-    width: $CHECKBOX-SIZE;
-    height: $CHECKBOX-SIZE;
     margin: $INPUT-BORDER-THICKNESS 0;
     padding: $padding-1;
     transform: translateY($CHECKBOX-TRANSFORM-Y);
@@ -32,6 +35,16 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
     &:hover {
         cursor: pointer;
     }
+}
+
+.checkbox[data-size='large'] {
+    width: $CHECKBOX-LARGE-SIZE;
+    height: $CHECKBOX-LARGE-SIZE;
+}
+
+.checkbox[data-size='regular'] {
+    width: $CHECKBOX-REGULAR-SIZE;
+    height: $CHECKBOX-REGULAR-SIZE;
 }
 
 .checkboxLabel {

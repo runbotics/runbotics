@@ -9,10 +9,11 @@ import styles from './SearchInput.module.scss';
 
 interface Props {
     onClick: (search: string) => void;
+    className?: string;
     initialValue?: string;
 }
 
-const SearchInput: VFC<Props> = ({ onClick, initialValue }) => {
+const SearchInput: VFC<Props> = ({ onClick, className, initialValue }) => {
     const { translate } = useTranslations();
     const [search, setSearch] = useState<string>(initialValue ?? '');
 
@@ -31,7 +32,7 @@ const SearchInput: VFC<Props> = ({ onClick, initialValue }) => {
 
     return (
         <form
-            className={styles.form}
+            className={styles.form + ' ' + className}
             onSubmit={handleSubmit}
         >
             <input

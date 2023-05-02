@@ -1,14 +1,12 @@
 @import '#src-landing/scss/main.scss';
 
-$FILTERS-WIDTH: 270px;
-
 .root {
     @include font-face-roboto;
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
     justify-content: center;
 
-    width: $FILTERS-WIDTH;
+    width: $BLOG_FILTERS_WIDTH;
     height: fit-content;
     gap: 16px;
 }
@@ -21,29 +19,101 @@ $FILTERS-WIDTH: 270px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+}
+
+.hidden {
+    display: none;
 }
 
 .clearLink {
     @include font-face-base;
     color: $palette-accent-primary;
     font-size: $font-size-body3;
-    line-height: $line-height-body2;
+    line-height: $line-height-base;
     font-weight: $font-weight-semi-bold;
     text-decoration: none;
     border-bottom: 3px solid transparent;
+    border-top: 3px solid transparent;
 
     &:hover {
-        border-color: $palette-accent-primary;
+        border-bottom-color: $palette-accent-primary;
     }
+}
+
+.categoriesSectionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.expandSectionButton {
+    display: flex;
+    align-items: center;
+
+    width: fit-content;
+
+    gap: 5px;
+    padding: 4px 8px;
+
+    font-size: $font-size-body3;
+
+    border: none;
+    border-radius: 10px;
+    background-color: $palette-background-primary;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $palette-background-secondary;
+    }
+}
+
+.expandSectionButton[data-hide='true'] {
+    display: none;
+}
+
+.expandSectionButton img {
+    filter: $black-to-accent-filter;
+}
+
+.expandSectionButton span {
+    font-weight: 600;
 }
 
 .filterSectionWrapper {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
 }
 
 @media (max-width: $breakpoint-md) {
+    .root {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: $breakpoint-sm) and (min-width: calc($breakpoint-xs + 1px)) {
+    .root {
+        grid-row: unset;
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filtersHeader {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .searchForm {
+        grid-column: 2;
+    }
+
+    .filterSectionWrapper[data-type='category'] {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
     .root {
         width: 100%;
     }

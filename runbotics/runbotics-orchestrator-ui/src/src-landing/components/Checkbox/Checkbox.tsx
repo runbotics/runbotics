@@ -9,9 +9,11 @@ export interface CheckboxProps extends Omit<HTMLAttributes<HTMLInputElement>, 'v
     disabled?: boolean;
     required?: boolean;
     singleLine?: boolean;
+    size?: 'large' | 'regular';
 }
 
 const Checkbox: VFC<CheckboxProps> = ({
+    className,
     placeholder,
     name,
     disabled,
@@ -19,11 +21,15 @@ const Checkbox: VFC<CheckboxProps> = ({
     label,
     singleLine,
     title,
+    size = 'large',
     ...props
 }) => {
-    const labelStyles = singleLine ? [styles.checkboxLabel, styles.singleLine] : [styles.checkboxLabel];
+    const labelStyles = singleLine
+        ? [styles.checkboxLabel, styles.singleLine]
+        : [styles.checkboxLabel];
+
     return (
-        <div className={styles.checkboxWrapper}>
+        <div className={[styles.checkboxWrapper, className].join(' ')}>
             <input
                 className={styles.checkbox}
                 placeholder={placeholder}
@@ -33,6 +39,7 @@ const Checkbox: VFC<CheckboxProps> = ({
                 name={name}
                 id={name}
                 checked={checked}
+                data-size={size}
             />
             <label className={labelStyles.join(' ')} title={title} htmlFor={name}>
                 {label}

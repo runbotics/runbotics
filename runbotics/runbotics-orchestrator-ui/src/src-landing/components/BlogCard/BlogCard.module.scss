@@ -63,6 +63,7 @@ $FONT-COLOR: #000;
 
 .info {
     display: flex;
+    flex-wrap: wrap;
     padding: $INFO-PADDING;
     margin-bottom: $margin-2;
     p:first-child {
