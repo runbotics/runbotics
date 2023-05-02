@@ -18,7 +18,7 @@ const Header = () => {
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
-    const { query, push } = useRouter();
+    const { push } = useRouter();
 
     const toggleNav = () => {
         setIsNavExpanded((prevState) => !prevState);

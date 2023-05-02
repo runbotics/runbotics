@@ -29,7 +29,7 @@ const Navbar: FC<NavbarProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    const { query, push } = useRouter();
+    const { push } = useRouter();
 
     const navMobileStyle = isNavExpanded
         ? styles.navLinksExpanded
