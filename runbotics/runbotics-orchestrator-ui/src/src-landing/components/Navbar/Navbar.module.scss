@@ -44,6 +44,7 @@
         background: $palette-background-primary;
         
         .link {
+            font-size: $font-size-h4;
             &:hover {
                 border-bottom: 3px solid $palette-accent-primary;
             }
@@ -121,7 +122,6 @@
         grid-template-columns: repeat(2, 1fr);
         .listItem {        
             
-
             &:nth-child(-n+4) {
                 grid-column: span 1;
             }
@@ -139,7 +139,13 @@
     .navLinksExpanded,
     .hideNavLinksExpanded {
         height: 100vh;
+
+        .link {
+            font-size: $font-size-h5;
+        }
+    
     }
+
 
     .listItem {
         &:first-child {
