@@ -9,11 +9,6 @@ export const buildFilterFragment = (options: FilterQueryParams) => {
             `category: { slug_in: ${JSON.stringify(categories)} }`
         );
     }
-    // if (tags?.length) {
-    //     query.push(
-    //         `tags: { name_in: ${JSON.stringify(tags)} }`
-    //     );
-    // }
     if (search) {
         query.push(`
             OR: [

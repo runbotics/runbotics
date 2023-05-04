@@ -20,7 +20,9 @@ interface UserModalProps {
     process: IProcess;
     setOpen: (open: boolean) => void;
     onSubmit: (executionInfo: Record<string, any>) => void;
-    rerunInput: unknown | null;
+    rerunInput?: {
+        variables: unknown | null;
+    };
 }
 
 
@@ -33,7 +35,7 @@ const AttendedProcessModal: React.FC<UserModalProps> = ({ open, setOpen, process
 
         const parsedProcessForm = JSON.parse(process.executionInfo);
 
-        if (!rerunInput || !rerunInput.variables || !parsedProcessForm?.uiSchema) return parsedProcessForm;
+        if (!rerunInput || !rerunInput?.variables || !parsedProcessForm?.uiSchema) return parsedProcessForm;
 
         const fileVariables = Object.entries(parsedProcessForm.uiSchema)
             .reduce<string[]>((acc, [key, value]) => {

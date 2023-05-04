@@ -23,13 +23,18 @@ export const BLOG_TAGS_FRAGMENT = `
 `;
 
 export const BLOG_POST_FRAGMENT = `
+    sys {
+        publishedAt
+    }
     title
     slug
     date
+    readingTime
     featuredImage {
         url
     }
-    ${BLOG_TAGS_FRAGMENT}
+    imageAlt
+    tags: ${BLOG_TAGS_FRAGMENT}
     summary
     body {
         json
@@ -39,18 +44,24 @@ export const BLOG_POST_FRAGMENT = `
             ${AUTHOR_FRAGMENT}
         }
     }
-    category{
+    category {
         ${BLOG_CATEGORY_FRAGMENT}
     }
 `;
 
 export const BLOG_POST_LIST_FRAGMENT = `
+    status: sys {
+        publishedAt
+        publishedVersion
+    }
     title
     slug
     date
+    readingTime
     featuredImage {
         url
     }
+    imageAlt
     tags: ${BLOG_TAGS_FRAGMENT}
     summary
     category {

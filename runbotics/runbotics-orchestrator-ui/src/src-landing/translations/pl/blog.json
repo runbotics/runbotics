@@ -6,10 +6,13 @@
     "Landing.Blog.Filters.Date": "Data",
     "Landing.Blog.Filters.Less": "Mniej",
     "Landing.Blog.Filters.More": "Więcej",
+    "Landing.Blog.EmptyPage.Title": "Nie mogliśmy znaleźć postów, których szukasz",
     "Landing.Blog.Card.ReadMore": "Read more",
     "Landing.Blog.Post.Author": "autor",
     "Landing.Blog.Post.PublicationDate": "data publikacji",
     "Landing.Blog.Post.Category": "kategoria",
+    "Landing.Blog.Post.ReadingTime": "czas czytania",
+    "Landing.Blog.Post.ReadingTime.Unit": "minut",
     "Landing.Blog.Post.Share.LikeShare": "Podoba&nbsp;Ci&nbsp;się? Udostępnij!",
     "Landing.Blog.Post.Share.CopyLink": "Kopiuj link",
     "Landing.Blog.Post.Share.Copied": "skopiowano!"

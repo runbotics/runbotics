@@ -3,7 +3,7 @@ import { VFC } from 'react';
 import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer';
 import { BLOCKS } from '@contentful/rich-text-types';
 
-import { ContentfulRichText } from '#contentful/models';
+import { ContentfulRichText } from '#contentful/common';
 
 import Typography from '../Typography';
 import styles from './RichTextRenderer.module.scss';

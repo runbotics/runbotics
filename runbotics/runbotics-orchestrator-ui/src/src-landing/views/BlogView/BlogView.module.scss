@@ -1,0 +1,19 @@
+@import "#src-landing/scss/main";
+
+.emptyPageContentWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+    padding: 1.5rem;
+
+    text-align: center;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .emptyPageContentWrapper {
+        grid-row: 3;
+        grid-column: 1;
+    }
+}

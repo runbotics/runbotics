@@ -43,26 +43,26 @@
 
 .details {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 
-    gap: clamp(1rem, 3vw, 5rem);
-    height: 80px;
+    gap: clamp(1rem, 3vw, 3rem);
+    min-height: 80px;
     width: 100%;
+    padding: 16px;
 
-    background-color: rgba($palette-white, 65%);
+    background-color: rgba($palette-white, 70%);
 }
 
 .details > div {
     display: flex;
     align-items: center;
     gap: 10px;
+    white-space: nowrap;
+    width: fit-content;
 }
 
-@media (max-width: $breakpoint-sm) {
-    .details {
-        flex-direction: column;
-        height: fit-content;
-        padding-top: 16px;
-        padding-bottom: 16px;
-    }
+.detailTitle {
+    font-size: clamp(0.875rem, 1vw + 0.25rem, 1.125rem);
+    line-height: $line-height-base;
 }

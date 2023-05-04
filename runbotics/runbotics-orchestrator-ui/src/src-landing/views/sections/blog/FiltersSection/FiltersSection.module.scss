@@ -9,6 +9,11 @@
     width: $BLOG_FILTERS_WIDTH;
     height: fit-content;
     gap: 16px;
+    padding: 10px;
+
+    background-color: $palette-background-secondary;
+    border-radius: 14px;
+    border: 1px solid $palette-background-secondary-dark;
 }
 
 .root > div {
@@ -62,11 +67,12 @@
 
     border: none;
     border-radius: 10px;
-    background-color: $palette-background-primary;
+    background-color: $palette-background-secondary;
+    transition: background-color 300ms;
 
     &:hover {
         cursor: pointer;
-        background-color: $palette-background-secondary;
+        background-color: $palette-background-secondary-dark;
     }
 }
 

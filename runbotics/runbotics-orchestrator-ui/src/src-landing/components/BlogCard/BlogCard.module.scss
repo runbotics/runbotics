@@ -1,13 +1,12 @@
 @import '#src-landing/scss/main.scss';
 
 $CARD-PADDING-TOP: 20px;
-$CARD-PADDING-BOTTOM: 20px;
+$CARD-PADDING: 20px;
 $IMG-MAX-HEIGHT: 140px;
 $IMG-BORDER-RADIUS: 20px;
-$IMG-MARGIN-BOTTOM: 12px;
 $INFO-PADDING: 0 20px;
 $TITLE-MARGIN-BOTTOM: 10px;
-$CONTENT-PADDING: 0 20px 20px 20px;
+$CONTENT-PADDING: 12px 20px 20px 20px;
 $READ-MORE-PADDING-RIGHT: 30px;
 $READ-MORE-A-TOP: 1px;
 $READ-MORE-A-RIGHT: 5px;
@@ -44,13 +43,11 @@ $FONT-COLOR: #000;
     }
 }
 
-.article {
+.wrapper {
     position: relative;
-    display: flex;
-    flex-direction: column;
+
     width: 100%;
     height: 100%;
-    padding-bottom: $CARD-PADDING-BOTTOM;
 }
 
 .img {
@@ -58,17 +55,12 @@ $FONT-COLOR: #000;
     max-height: $IMG-MAX-HEIGHT;
     object-fit: cover;
     border-radius: $IMG-BORDER-RADIUS;
-    margin-bottom: $IMG-MARGIN-BOTTOM;
 }
 
 .info {
     display: flex;
     flex-wrap: wrap;
-    padding: $INFO-PADDING;
-    margin-bottom: $margin-2;
-    p:first-child {
-        margin-right: $margin-2;
-    }
+    gap: 16px;
 }
 
 .category {
@@ -82,25 +74,28 @@ $FONT-COLOR: #000;
 }
 
 .content {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
     padding: $CONTENT-PADDING;
+    gap: 10px;
 }
 
 .readMore {
-    position: relative;
     display: flex;
-    width: 100%;
     justify-content: flex-end;
-    padding-right: $READ-MORE-PADDING-RIGHT;
+
+    width: 100%;
     color: $READ-MORE-COLOR;
+
     &::after {
         content: '';
-        position: absolute;
         top: $READ-MORE-A-TOP;
         right: $READ-MORE-A-RIGHT;
-        background-image: url('/images/icons/right-orange.svg');
+
         height: $READ-MORE-ICON-HEIGHT;
         width: $READ-MORE-ICON-WIDTH;
+
+        background-image: url('/images/icons/right-orange.svg');
     }
 }
 
