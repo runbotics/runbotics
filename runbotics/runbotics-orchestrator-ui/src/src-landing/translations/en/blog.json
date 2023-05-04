@@ -1,5 +1,11 @@
 {
-    "Landing.Blog.Search": "Search",
+    "Landing.Blog.Filters.Search": "Search",
+    "Landing.Blog.Filters.Title": "Filters",
+    "Landing.Blog.Filters.ClearAll": "Clear All",
+    "Landing.Blog.Filters.Category": "Category",
+    "Landing.Blog.Filters.Date": "Date",
+    "Landing.Blog.Filters.Less": "Less",
+    "Landing.Blog.Filters.More": "More",
     "Landing.Blog.Card.ReadMore": "Read more",
     "Landing.Blog.Post.Author": "author",
     "Landing.Blog.Post.PublicationDate": "publication date",

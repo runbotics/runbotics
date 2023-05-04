@@ -105,13 +105,13 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
             />
             <div className={styles.filtersHeader}>
                 <Typography variant='h4'>
-                    Filters
+                    {translate('Landing.Blog.Filters.Title')}
                 </Typography>
                 <Link
                     className={styles.clearLink}
                     href={'/blog'}
                 >
-                    Clear&nbsp;All
+                    {translate('Landing.Blog.Filters.ClearAll')}
                 </Link>
             </div>
             <div
@@ -119,7 +119,7 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                 data-type='category'
             >
                 <Typography variant='h6'>
-                    Category
+                    {translate('Landing.Blog.Filters.Category')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
                     {categoriesCheckboxes}
@@ -140,7 +140,9 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                         height={14}
                     />
                     <Typography variant='body4' element='span' color='accent'>
-                        {isCategoriesSectionExpanded ? 'Less' : 'More'}
+                        {isCategoriesSectionExpanded
+                            ? translate('Landing.Blog.Filters.Less')
+                            : translate('Landing.Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
@@ -149,7 +151,7 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                 data-type='date'
             >
                 <Typography variant='h6'>
-                    Date
+                    {translate('Landing.Blog.Filters.Date')}
                 </Typography>
                 <DateRange
                     initialDateRange={dateRange}
@@ -157,7 +159,6 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                 />
             </div>
         </aside>
-
     );
 };
 

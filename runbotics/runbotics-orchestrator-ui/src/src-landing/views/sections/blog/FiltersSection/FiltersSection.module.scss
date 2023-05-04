@@ -35,6 +35,7 @@
     text-decoration: none;
     border-bottom: 3px solid transparent;
     border-top: 3px solid transparent;
+    white-space: nowrap;
 
     &:hover {
         border-bottom-color: $palette-accent-primary;
@@ -45,6 +46,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-left: 5px;
 }
 
 .expandSectionButton {

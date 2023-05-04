@@ -38,7 +38,7 @@ const SearchInput: VFC<Props> = ({ onClick, className, initialValue }) => {
             <input
                 className={styles.input}
                 type="text"
-                placeholder={translate('Landing.Blog.Search')}
+                placeholder={translate('Landing.Blog.Filters.Search')}
                 onChange={handleSearch}
                 value={search}
             />
