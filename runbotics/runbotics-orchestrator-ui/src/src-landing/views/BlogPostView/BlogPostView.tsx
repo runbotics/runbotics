@@ -8,6 +8,7 @@ import Layout from '#src-landing/components/Layout';
 import PostHeader from '#src-landing/components/PostHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 
+import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
 
 interface Props {
@@ -27,6 +28,7 @@ const BlogPostView: VFC<Props> = ({ post }) => {
             </Head>
             <Layout>
                 <article className={styles.blogArticle}>
+                    <BreadcrumbsSection />
                     <PostHeader
                         {...postHeaderProps}
                     />

@@ -1,5 +1,55 @@
+@import '#src-landing/scss/main.scss';
+
+$SEPARATOR_SPACE: $padding-1;
+
 .root {
+    display: flex;
+    align-items: center;
     grid-column: span 2;
     width: 100%;
     height: 59px;
+}
+
+.breadcrumb {
+    display: flex;
+
+    &:last-child {
+        overflow: hidden;
+        p {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+}
+
+.link {
+    position: relative;
+    text-decoration: none;
+
+    &:hover::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: $palette-accent-primary;
+    }
+}
+
+.homeLink {
+    text-decoration: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .icon {
+        margin-right: $SEPARATOR_SPACE;
+    }
+}
+
+.separator {
+    padding-inline: $SEPARATOR_SPACE;
+    user-select: none;
 }
