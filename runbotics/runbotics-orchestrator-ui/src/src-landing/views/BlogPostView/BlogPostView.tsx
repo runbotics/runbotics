@@ -28,13 +28,10 @@ const BlogPostView: VFC<Props> = ({ post }) => {
             </Head>
             <Layout>
                 <article className={styles.blogArticle}>
-                    <BreadcrumbsSection />
                     <PostHeader
                         {...postHeaderProps}
                     />
-                    <div style={{ height: '100px' }}>
-                        {/* TODO: breadcrumbs */}
-                    </div>
+                    <BreadcrumbsSection postTitle={post.title} />
                     <section className={styles.contentSection}>
                         <RichTextRenderer content={body} />
                         <BlogSharePanel />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,9 +8,14 @@ import robotIcon from '#public/images/icons/toy-orange.svg';
 import If from '#src-app/components/utils/If';
 import Typography from '#src-landing/components/Typography';
 
-import styles from './BreadcrumbsSection.module.scss';
+import { capitalizeFirstLetter } from '#src-landing/utils/utils';
 
-const BreadcrumbsSection = () => {
+import styles from './BreadcrumbsSection.module.scss';
+import { BreadcrumbsSectionProps } from './BreadcrumbsSection.types';
+
+const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
+    postTitle,
+}) => {
     const router = useRouter();
     const { pathname, asPath } = router;
     const queryChars = ['?', '&', '='];
@@ -29,14 +34,7 @@ const BreadcrumbsSection = () => {
             (breadcrumb) => breadcrumb !== ''
         );
 
-    const formatBreadcrumbUrl = (title: string) => {
-        const titleWords = title.split('-');
-        titleWords[0] = titleWords[0].charAt(0).toUpperCase() + titleWords[0].slice(1);
-        return titleWords.join(' ');
-    };
-
     const formattedBreadcrumbs = breadcrumbs.map((breadcrumb, index) => {
-        const formattedUrlPart = formatBreadcrumbUrl(breadcrumb);
         const isLast = index === breadcrumbs.length - 1;
         const actualUrl = `/${breadcrumbs.slice(0, index + 1).join('/')}`;
 
@@ -46,7 +44,7 @@ const BreadcrumbsSection = () => {
                     <If condition={!isLast} 
                         else={
                             <Typography>
-                                {formattedUrlPart}
+                                {postTitle ?? capitalizeFirstLetter(breadcrumb)}
                             </Typography>
                         }
                     >
@@ -55,7 +53,7 @@ const BreadcrumbsSection = () => {
                             href={actualUrl}
                         >
                             <Typography color='accent'>
-                                {formattedUrlPart}
+                                {capitalizeFirstLetter(breadcrumb)}
                             </Typography>
                         </Link>
                         <Typography 
