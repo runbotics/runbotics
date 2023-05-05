@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import robotIcon from '#public/images/icons/toy-orange.svg';
 import If from '#src-app/components/utils/If';
 import Typography from '#src-landing/components/Typography';
-
 import { capitalizeFirstLetter } from '#src-landing/utils/utils';
 
 import styles from './BreadcrumbsSection.module.scss';
@@ -28,15 +27,15 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
         )
         .length === 0 ? asPath : pathname;
 
-    const breadcrumbs: string[] = relevantPath
+    const rawBreadcrumbs: string[] = relevantPath
         .split('/')
         .filter(
             (breadcrumb) => breadcrumb !== ''
         );
 
-    const formattedBreadcrumbs = breadcrumbs.map((breadcrumb, index) => {
-        const isLast = index === breadcrumbs.length - 1;
-        const actualUrl = `/${breadcrumbs.slice(0, index + 1).join('/')}`;
+    const breadcrumbs = rawBreadcrumbs.map((breadcrumb, index) => {
+        const isLast = index === rawBreadcrumbs.length - 1;
+        const actualUrl = `/${rawBreadcrumbs.slice(0, index + 1).join('/')}`;
 
         return (
             <div key={breadcrumb} className={styles.breadcrumb}>
@@ -85,7 +84,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
             <Typography className={styles.separator}>
                     /
             </Typography>
-            {formattedBreadcrumbs}
+            {breadcrumbs}
         </div>
     );
 };

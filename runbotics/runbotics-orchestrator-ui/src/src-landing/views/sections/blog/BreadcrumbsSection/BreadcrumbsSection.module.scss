@@ -1,5 +1,6 @@
 @import '#src-landing/scss/main.scss';
 
+$SECTION-HEIGHT: 59px;
 $SEPARATOR_SPACE: $padding-1;
 
 .root {
@@ -8,7 +9,7 @@ $SEPARATOR_SPACE: $padding-1;
     align-items: center;
     grid-column: span 2;
     width: 100%;
-    height: 59px;
+    height: $SECTION-HEIGHT;
     margin-top: $padding-2;
     margin-bottom: $padding-2;
 }
@@ -33,10 +34,9 @@ $SEPARATOR_SPACE: $padding-1;
 }
 
 .homeLink {
-    text-decoration: none;
-    position: relative;
     display: flex;
     align-items: center;
+    text-decoration: none;
 
     .icon {
         margin-right: $SEPARATOR_SPACE;
