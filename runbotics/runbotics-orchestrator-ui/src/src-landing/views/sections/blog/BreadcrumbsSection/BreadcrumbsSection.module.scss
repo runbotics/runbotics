@@ -1,6 +1,5 @@
 @import '#src-landing/scss/main.scss';
 
-$SECTION-HEIGHT: 59px;
 $SEPARATOR_SPACE: $padding-1;
 
 .root {
@@ -9,9 +8,7 @@ $SEPARATOR_SPACE: $padding-1;
     align-items: center;
     grid-column: span 2;
     width: 100%;
-    height: $SECTION-HEIGHT;
-    margin-top: $padding-2;
-    margin-bottom: $padding-2;
+    margin-top: $padding-3;
 }
 
 .breadcrumb {
@@ -19,17 +16,11 @@ $SEPARATOR_SPACE: $padding-1;
 }
 
 .link {
-    position: relative;
     text-decoration: none;
+    border-bottom: 2px solid transparent;
 
-    &:hover::after {
-        content: '';
-        position: absolute;
-        bottom: -3px;
-        display: block;
-        width: 100%;
-        height: 2px;
-        background-color: $palette-accent-primary;
+    &:hover {
+        border-color: $palette-accent-primary;
     }
 }
 
@@ -40,7 +31,7 @@ $SEPARATOR_SPACE: $padding-1;
 
     .icon {
         filter: $black-to-accent-filter;
-        margin-right: $SEPARATOR_SPACE;
+        padding-right: $SEPARATOR_SPACE;
     }
 }
 

@@ -15,35 +15,32 @@ import { BreadcrumbsSectionProps } from './BreadcrumbsSection.types';
 const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
     postTitle,
 }) => {
-    const router = useRouter();
-    const { pathname, asPath } = router;
-    const queryChars = ['?', '&', '='];
+    const { pathname, asPath } = useRouter();
     const uncoveredUrlPart = 'post';
 
-    const relevantPath = queryChars
-        .filter(
-            param => 
-                asPath.indexOf(param) !== -1
-        )
-        .length === 0 ? asPath : pathname;
+    const relevantPath = asPath.includes(uncoveredUrlPart) ? asPath : pathname;
 
-    const rawBreadcrumbs: string[] = relevantPath
-        .split('/')
+    const urlParts: string[] = relevantPath
+        .slice(1)
+        .split('/');
+
+    const rawParts = urlParts
         .filter(
-            (breadcrumb) => breadcrumb !== ''
+            (part) => part !== uncoveredUrlPart
         );
 
-    const breadcrumbs = rawBreadcrumbs.map((breadcrumb, index) => {
-        const isLast = index === rawBreadcrumbs.length - 1;
-        const actualUrl = `/${rawBreadcrumbs.slice(0, index + 1).join('/')}`;
-
-        return (
-            <div key={breadcrumb} className={styles.breadcrumb}>
-                <If condition={breadcrumb !== uncoveredUrlPart}>
+    const breadcrumbs = rawParts.map(
+        (part, index) => {
+            const isLast = index === rawParts.length - 1;
+            const actualUrl = `/${urlParts.slice(0, index + 1).join('/')}`;
+            const capitalizedPart = capitalizeFirstLetter(part);
+        
+            return (
+                <div key={part} className={styles.breadcrumb}>
                     <If condition={!isLast} 
                         else={
                             <Typography>
-                                {postTitle ?? capitalizeFirstLetter(breadcrumb)}
+                                {postTitle ?? capitalizedPart}
                             </Typography>
                         }
                     >
@@ -52,7 +49,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                             href={actualUrl}
                         >
                             <Typography color='accent'>
-                                {capitalizeFirstLetter(breadcrumb)}
+                                {capitalizedPart}
                             </Typography>
                         </Link>
                         <Typography 
@@ -62,10 +59,9 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                             /
                         </Typography>
                     </If>
-                </If>
-            </div>
-        );
-    });
+                </div>
+            );
+        });
 
     return (
         <div className={styles.root}>
@@ -74,8 +70,8 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                     src={homeIcon} 
                     alt='robot' 
                     className={styles.icon} 
-                    width="24" 
-                    height="24"
+                    width="32" 
+                    height="32"
                 />
                 <Typography className={styles.link} color='accent'>
                     Home
