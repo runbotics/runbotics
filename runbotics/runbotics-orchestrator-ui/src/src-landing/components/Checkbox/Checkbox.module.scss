@@ -1,6 +1,6 @@
-@import "#src-landing/scss/main";
+@import '#src-landing/scss/main';
 
-$INPUT-BORDER-THICKNESS: 2px;
+$INPUT-BORDER-THICKNESS: 4px;
 
 $CHECKBOX-WRAPPER-MAX-WIDTH: 450px;
 $CHECKBOX-LARGE-SIZE: 26px;
@@ -22,7 +22,7 @@ $CHECKBOX-TRANSFORM-Y: -1.2px;
 .checkbox {
     font: inherit;
     display: grid;
-    margin: $INPUT-BORDER-THICKNESS 0;
+    margin-top: $INPUT-BORDER-THICKNESS;
     padding: $padding-1;
     transform: translateY($CHECKBOX-TRANSFORM-Y);
     border: 1px solid currentColor;

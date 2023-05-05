@@ -39,6 +39,7 @@ $SEPARATOR_SPACE: $padding-1;
     text-decoration: none;
 
     .icon {
+        filter: $black-to-accent-filter;
         margin-right: $SEPARATOR_SPACE;
     }
 }
@@ -46,4 +47,5 @@ $SEPARATOR_SPACE: $padding-1;
 .separator {
     padding-inline: $SEPARATOR_SPACE;
     user-select: none;
+    -webkit-user-select: none;
 }

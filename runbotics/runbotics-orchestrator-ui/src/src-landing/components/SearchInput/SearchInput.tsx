@@ -2,7 +2,7 @@ import { ChangeEvent, VFC, useState, FormEvent, useEffect } from 'react';
 
 import Image from 'next/image';
 
-import SearchIcon from '#public/images/icons/search-black.svg';
+import SearchIcon from '#public/images/icons/search-light.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import styles from './SearchInput.module.scss';

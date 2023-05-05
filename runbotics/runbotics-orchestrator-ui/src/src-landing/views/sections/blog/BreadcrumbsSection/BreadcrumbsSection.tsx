@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import robotIcon from '#public/images/icons/toy-orange.svg';
+import homeIcon from '#public/images/icons/home.svg';
 import If from '#src-app/components/utils/If';
 import Typography from '#src-landing/components/Typography';
 import { capitalizeFirstLetter } from '#src-landing/utils/utils';
@@ -71,11 +71,11 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
         <div className={styles.root}>
             <Link href='/' className={styles.homeLink}>
                 <Image 
-                    src={robotIcon} 
+                    src={homeIcon} 
                     alt='robot' 
                     className={styles.icon} 
-                    width="25" 
-                    height="25"
+                    width="24" 
+                    height="24"
                 />
                 <Typography className={styles.link} color='accent'>
                     Home
