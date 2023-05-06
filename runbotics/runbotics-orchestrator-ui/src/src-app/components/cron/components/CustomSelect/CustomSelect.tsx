@@ -63,7 +63,6 @@ const CustomSelect: FC<CustomSelectProps> = ({
     );
 
     const renderTag = useCallback(
-        // eslint-disable-next-line complexity
         (tagProps) => {
             const propsValue = tagProps;
 

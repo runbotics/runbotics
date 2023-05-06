@@ -18,7 +18,6 @@ interface ProcessInstanceDetailsProps {
     processInstanceId: string;
 }
 
-// eslint-disable-next-line complexity
 const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInstanceId }) => {
     const dispatch = useDispatch();
     const containerRef = React.useRef<HTMLDivElement>(null);

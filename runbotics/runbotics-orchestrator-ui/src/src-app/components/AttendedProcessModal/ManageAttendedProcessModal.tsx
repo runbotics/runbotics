@@ -75,7 +75,6 @@ function isJsonValid(str) {
     return true;
 }
 
-// eslint-disable-next-line complexity
 const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     open,
     setOpen,

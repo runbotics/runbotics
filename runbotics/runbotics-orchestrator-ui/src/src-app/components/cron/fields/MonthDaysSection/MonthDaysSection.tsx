@@ -7,7 +7,6 @@ import { MonthDaysSectionProps } from './MonthDaysSection.types';
 import MonthDaysSelect from './MonthDaysSelect';
 import NthMonthDaysSelect from './NthMonthDaysSelect';
 
-// eslint-disable-next-line complexity
 const MonthDaysSection: FC<MonthDaysSectionProps> = ({
     locale,
     className,

@@ -126,7 +126,6 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         modeler.get('create').start(event, shape);
     };
 
-    // eslint-disable-next-line complexity
     const handleItemClick = (event, item: Item) => {
         if (!item) return;
         if (CustomLoopHandler[item.id]) {

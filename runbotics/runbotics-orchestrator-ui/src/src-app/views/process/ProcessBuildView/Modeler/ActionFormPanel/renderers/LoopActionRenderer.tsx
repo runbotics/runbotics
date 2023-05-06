@@ -84,7 +84,6 @@ const LoopActionRenderer: FC = () => {
         return `${collectionName.slice(0, -1)}.length}`;
     };
 
-    // eslint-disable-next-line complexity
     const handleSubmit = (formState: IFormData) => {
         if (!isLoopElement(selectedElement)) return;
 

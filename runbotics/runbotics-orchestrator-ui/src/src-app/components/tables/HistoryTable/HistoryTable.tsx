@@ -46,7 +46,6 @@ interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
     rerunEnabled?: boolean;
 }
 
-// eslint-disable-next-line complexity
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();

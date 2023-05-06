@@ -1,13 +1,12 @@
 @import '#src-landing/scss/main.scss';
 
 $CARD-PADDING-TOP: 20px;
-$CARD-PADDING-BOTTOM: 20px;
+$CARD-PADDING: 20px;
 $IMG-MAX-HEIGHT: 140px;
 $IMG-BORDER-RADIUS: 20px;
-$IMG-MARGIN-BOTTOM: 12px;
 $INFO-PADDING: 0 20px;
 $TITLE-MARGIN-BOTTOM: 10px;
-$CONTENT-PADDING: 0 20px 20px 20px;
+$CONTENT-PADDING: 12px 20px 20px 20px;
 $READ-MORE-PADDING-RIGHT: 30px;
 $READ-MORE-A-TOP: 1px;
 $READ-MORE-A-RIGHT: 5px;
@@ -21,19 +20,21 @@ $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
 
 .root {
-    padding-top: $CARD-PADDING-TOP;
+    height: 100%;
 }
 
 .link {
     display: block;
     text-decoration: none;
+    height: 100%;
     color: $FONT-COLOR;
     border-radius: $IMG-BORDER-RADIUS;
     transition: transform $CARD-HOVER-TRANSITION ease;
+    box-shadow: $box-shadow-primary;
 
     &:hover {
         transform: translateY($CARD-HOVER-TRANSLATE-Y);
-        box-shadow: $box-shadow-primary;
+        box-shadow: $box-shadow-primary-hover;
 
         .title,
         .readMore {
@@ -42,10 +43,11 @@ $FONT-COLOR: #000;
     }
 }
 
-.article {
+.wrapper {
     position: relative;
+
     width: 100%;
-    padding-bottom: $CARD-PADDING-BOTTOM;
+    height: 100%;
 }
 
 .img {
@@ -53,16 +55,12 @@ $FONT-COLOR: #000;
     max-height: $IMG-MAX-HEIGHT;
     object-fit: cover;
     border-radius: $IMG-BORDER-RADIUS;
-    margin-bottom: $IMG-MARGIN-BOTTOM;
 }
 
 .info {
     display: flex;
-    padding: $INFO-PADDING;
-    margin-bottom: $margin-2;
-    p:first-child {
-        margin-right: $margin-2;
-    }
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .category {
@@ -76,24 +74,29 @@ $FONT-COLOR: #000;
 }
 
 .content {
+    display: flex;
+    flex-direction: column;
     padding: $CONTENT-PADDING;
+    gap: 10px;
 }
 
 .readMore {
-    position: relative;
     display: flex;
-    width: 100%;
     justify-content: flex-end;
-    padding-right: $READ-MORE-PADDING-RIGHT;
+
+    width: 100%;
     color: $READ-MORE-COLOR;
+
     &::after {
         content: '';
-        position: absolute;
+        filter: $black-to-accent-filter;
         top: $READ-MORE-A-TOP;
         right: $READ-MORE-A-RIGHT;
-        background-image: url('/images/icons/right-orange.svg');
+
         height: $READ-MORE-ICON-HEIGHT;
         width: $READ-MORE-ICON-WIDTH;
+
+        background-image: url('/images/icons/right.svg');
     }
 }
 

@@ -5,7 +5,6 @@ import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
 import { NthMonthDaysSelectProps } from './NthMonthDaysSelect.types';
 
-// eslint-disable-next-line complexity
 const NthMonthDaysSelect: FC<NthMonthDaysSelectProps>= ({ 
     value, 
     setValue, 

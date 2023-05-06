@@ -23,4 +23,5 @@
         "uuidv",
         "websockets"
     ],
+    "svg.preview.background": "transparent",
 }

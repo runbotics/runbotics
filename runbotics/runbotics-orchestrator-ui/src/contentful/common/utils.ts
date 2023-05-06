@@ -1,20 +1,28 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { FilterQueryParams } from './types';
+import { FilterQueryParams, FilterQueryParamsEnum } from './types';
+
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_OFFSET = 1;
 
-// eslint-disable-next-line complexity
+export const FILTER_QUERY_PARAMS = [
+    FilterQueryParamsEnum.Category,
+    FilterQueryParamsEnum.Search,
+    FilterQueryParamsEnum.StartDate,
+    FilterQueryParamsEnum.EndDate,
+    FilterQueryParamsEnum.Page,
+];
+
 export const extractFilterQueryParams = (
     query: GetServerSidePropsContext['query']
 ) => {
     const result: FilterQueryParams = {};
-    const { category, selectedTags, startDate, endDate, page } = query;
+    const { category, search, startDate, endDate, page } = query;
     if (category) {
-        result.category = paramToString(category);
+        result.categories = paramToArray(category);
     }
-    if (selectedTags) {
-        result.selectedTags = paramToArray(selectedTags);
+    if (search) {
+        result.search = paramToString(search);
     }
     if (startDate) {
         result.startDate = paramToString(startDate);
@@ -30,10 +38,12 @@ export const extractFilterQueryParams = (
 };
 
 export const getPaginationSize = (page: string) => {
-    if (!page) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
-    const pageNumber = parseInt(page);
+    if (!page || Number(page) === 1) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
+
+    const pageNumber = Number(page);
     const limit = pageNumber * DEFAULT_PAGE_SIZE - DEFAULT_PAGE_OFFSET;
     const skip = limit - DEFAULT_PAGE_SIZE;
+
     return { limit, skip };
 };
 

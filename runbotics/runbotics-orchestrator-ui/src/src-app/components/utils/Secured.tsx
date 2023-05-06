@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { FC, ReactNode } from 'react';
 
 import { FeatureKey, Role } from 'runbotics-common';

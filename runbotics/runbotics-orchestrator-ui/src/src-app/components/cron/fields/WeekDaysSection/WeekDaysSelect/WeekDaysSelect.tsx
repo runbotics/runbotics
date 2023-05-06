@@ -5,7 +5,6 @@ import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
 import { WeekDaysSelectProps } from './WeekDaysSelect.types';
 
-// eslint-disable-next-line complexity
 const WeekDaysSelect = ({ 
     value, 
     setValue, 

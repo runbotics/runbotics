@@ -5,7 +5,6 @@ interface ImportInfo extends AdditionalInfo {
     definition: string;
 }
 const useProcessImport = () => {
-    // eslint-disable-next-line complexity
     const extractImportInfo = (xmlString: string): ImportInfo => {
         const parser = new DOMParser();
         const serializer = new XMLSerializer();

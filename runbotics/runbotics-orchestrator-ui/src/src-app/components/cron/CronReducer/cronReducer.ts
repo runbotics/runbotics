@@ -1,6 +1,5 @@
 import { CRON_ACTIONS, CronActionProps, CronStateProps } from './cronReducer.types';
 
-/* eslint-disable complexity */
 export const cronReducer = (state: CronStateProps, action: CronActionProps): CronStateProps => {
     const newValue = action?.payload?.newValue;
     const newState = action?.payload?.newState;

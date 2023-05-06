@@ -120,7 +120,6 @@ export type BpmnSubProcess = BPMNElement & {
     businessObject: IBpmnSubProcessBusinessObject;
 };
 
-// eslint-disable-next-line complexity
 export const getParameterValue = (parameter: CamundaParameter) => {
     if (parameter.$attrs && parameter.$attrs.type === 'Boolean') {
         const result = Expressions.resolveExpression(parameter.value, {}, {});

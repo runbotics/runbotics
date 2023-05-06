@@ -1,0 +1,73 @@
+@import '#src-landing/scss/main';
+
+$INPUT-BORDER-THICKNESS: 4px;
+
+$CHECKBOX-WRAPPER-MAX-WIDTH: 450px;
+$CHECKBOX-LARGE-SIZE: 26px;
+$CHECKBOX-REGULAR-SIZE: 20px;
+$CHECKBOX-BORDER-RADIUS: 6px;
+$CHECKBOX-TRANSFORM-Y: -1.2px;
+
+.checkboxWrapper {
+    display: flex;
+    align-items: center;
+    max-width: $CHECKBOX-WRAPPER-MAX-WIDTH;
+    gap: $margin-3;
+}
+
+.checkboxWrapper:has(.checkbox[data-size='regular']) {
+    gap: $margin-2;
+}
+
+.checkbox {
+    font: inherit;
+    display: grid;
+    margin-top: $INPUT-BORDER-THICKNESS;
+    padding: $padding-1;
+    transform: translateY($CHECKBOX-TRANSFORM-Y);
+    border: 1px solid currentColor;
+    border-radius: $CHECKBOX-BORDER-RADIUS;
+    background-color: $palette-background-primary;
+    color: currentColor;
+    appearance: none;
+    place-content: center;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.checkbox[data-size='large'] {
+    width: $CHECKBOX-LARGE-SIZE;
+    height: $CHECKBOX-LARGE-SIZE;
+}
+
+.checkbox[data-size='regular'] {
+    width: $CHECKBOX-REGULAR-SIZE;
+    height: $CHECKBOX-REGULAR-SIZE;
+}
+
+.checkboxLabel {
+    @include font-face-roboto;
+}
+
+.singleLine {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.checkbox::before {
+    width: 0.75em;
+    height: 0.75em;
+    content: '';
+    transition: 120ms transform ease-in-out;
+    transform: scale(0);
+    transform-origin: bottom left;
+    box-shadow: inset 1em 1em $palette-accent-primary;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.checkbox:checked::before {
+    transform: scale(1);
+}
