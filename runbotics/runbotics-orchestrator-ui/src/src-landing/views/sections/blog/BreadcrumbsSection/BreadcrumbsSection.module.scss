@@ -1,5 +1,42 @@
+@import '#src-landing/scss/main.scss';
+
+$SEPARATOR_SPACE: $padding-1;
+
 .root {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     grid-column: span 2;
     width: 100%;
-    height: 59px;
+    margin-top: $padding-3;
+}
+
+.breadcrumb {
+    display: flex;
+}
+
+.link {
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+        border-color: $palette-accent-primary;
+    }
+}
+
+.homeLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    .icon {
+        filter: $black-to-accent-filter;
+        padding-right: $SEPARATOR_SPACE;
+    }
+}
+
+.separator {
+    padding-inline: $SEPARATOR_SPACE;
+    user-select: none;
+    -webkit-user-select: none;
 }

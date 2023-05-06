@@ -89,13 +89,14 @@ $FONT-COLOR: #000;
 
     &::after {
         content: '';
+        filter: $black-to-accent-filter;
         top: $READ-MORE-A-TOP;
         right: $READ-MORE-A-RIGHT;
 
         height: $READ-MORE-ICON-HEIGHT;
         width: $READ-MORE-ICON-WIDTH;
 
-        background-image: url('/images/icons/right-orange.svg');
+        background-image: url('/images/icons/right.svg');
     }
 }
 

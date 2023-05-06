@@ -8,6 +8,7 @@ import Layout from '#src-landing/components/Layout';
 import PostHeader from '#src-landing/components/PostHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 
+import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
 
 interface Props {
@@ -30,9 +31,7 @@ const BlogPostView: VFC<Props> = ({ post }) => {
                     <PostHeader
                         {...postHeaderProps}
                     />
-                    <div style={{ height: '100px' }}>
-                        {/* TODO: breadcrumbs */}
-                    </div>
+                    <BreadcrumbsSection postTitle={post.title} />
                     <section className={styles.contentSection}>
                         <RichTextRenderer content={body} />
                         <BlogSharePanel />

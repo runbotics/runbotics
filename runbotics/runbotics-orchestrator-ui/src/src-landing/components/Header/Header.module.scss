@@ -76,6 +76,7 @@
     .menuIcon {
         display: block;
         user-select: none;
+        -webkit-user-select: none;
         appearance: none;
         margin-left: auto;
         border: none;
