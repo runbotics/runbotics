@@ -52,7 +52,4 @@ export const BLOG_POST_FRAGMENT = `
             ${AUTHOR_FRAGMENT}
         }
     }
-    category {
-        ${BLOG_CATEGORY_FRAGMENT}
-    }
 `;
