@@ -22,33 +22,6 @@ export const BLOG_TAGS_FRAGMENT = `
     }
 `;
 
-export const BLOG_POST_FRAGMENT = `
-    sys {
-        publishedAt
-    }
-    title
-    slug
-    date
-    readingTime
-    featuredImage {
-        url
-    }
-    imageAlt
-    tags: ${BLOG_TAGS_FRAGMENT}
-    summary
-    body {
-        json
-    }
-    authors: authorsCollection {
-        items {
-            ${AUTHOR_FRAGMENT}
-        }
-    }
-    category {
-        ${BLOG_CATEGORY_FRAGMENT}
-    }
-`;
-
 export const BLOG_POST_LIST_FRAGMENT = `
     status: sys {
         publishedAt
@@ -64,6 +37,21 @@ export const BLOG_POST_LIST_FRAGMENT = `
     imageAlt
     tags: ${BLOG_TAGS_FRAGMENT}
     summary
+    category {
+        ${BLOG_CATEGORY_FRAGMENT}
+    }
+`;
+
+export const BLOG_POST_FRAGMENT = `
+    ${BLOG_POST_LIST_FRAGMENT}
+    body {
+        json
+    }
+    authors: authorsCollection {
+        items {
+            ${AUTHOR_FRAGMENT}
+        }
+    }
     category {
         ${BLOG_CATEGORY_FRAGMENT}
     }
