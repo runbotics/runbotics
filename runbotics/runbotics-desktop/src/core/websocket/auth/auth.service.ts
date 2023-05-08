@@ -34,7 +34,7 @@ export class AuthService {
             });
 
         const token = response.data['id_token'];
-        orchestratorAxios.defaults.headers.Authorization = `Bearer ${token}`;
+        orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         await this.storageService.setItem('token', token);
         const installationId = await this.getInstallationId();
         this.logger.log('<= Authenticated with server: ' + this.serverConfigService.entrypointUrl);
