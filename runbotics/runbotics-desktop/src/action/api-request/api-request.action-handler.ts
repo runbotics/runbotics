@@ -50,43 +50,42 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
     };
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
-        let compiled = input.url;
-        // this for is not used
-        for (const prop in input.templateData) {
-            if (input.templateData.hasOwnProperty(prop)) {
-                compiled = compiled.replace(new RegExp('\\${' + prop + '}', 'g'), input.templateData[prop]);
-            }
-        }
         let response;
-        const method = input.method ? input.method : 'GET';
         try {
+            const method = input.method ? input.method : 'GET';
+            let body = JSON.parse(input.body);
+            if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+                const qs = await import('qs');
+                body = qs.stringify(body);
+            }
             switch (method) {
                 case 'GET':
-                    response = await Axios.get(compiled, { headers: input.headers });
+                    response = await Axios.get(input.url, { headers: input.headers });
                     break;
                 case 'DELETE':
-                    response = await Axios.delete(compiled, { headers: input.headers });
+                    response = await Axios.delete(input.url, { headers: input.headers });
                     break;
                 case 'PATCH':
-                    response = await Axios.patch(compiled, JSON.parse(input.body), { headers: input.headers });
+                    response = await Axios.patch(input.url, body, { headers: input.headers });
                     break;
                 case 'PUT':
-                    response = await Axios.put(compiled, JSON.parse(input.body), { headers: input.headers });
+                    response = await Axios.put(input.url, body, { headers: input.headers });
                     break;
                 case 'POST':
-                    response = await Axios.post(compiled, JSON.parse(input.body), { headers: input.headers });
+                    response = await Axios.post(input.url, body, { headers: input.headers });
                     break;
                 default:
-                    response = await Axios.get(compiled, { headers: input.headers });
+                    response = await Axios.get(input.url, { headers: input.headers });
                     break;
             }
         } catch (e) {
             this.logger.log(e);
             response = e.response;
-            if (!response || response.status > 400) {
+            if (!response || response.status >= 400) {
                 throw new InternalServerErrorException(e);
             }
         }
+
         return {
             data: response.data,
             status: response.status,

@@ -5,7 +5,7 @@ export type ResourceMapper = {
     hardcoded?: Record<string, any>;
 };
 
-export interface ApiResource {
+export interface ApiRequestInput {
     url: string;
     method?: string;
     headers?: Record<string, string>;
@@ -17,11 +17,6 @@ export interface ApiResource {
 export type ApiRequestActionRequest =
 | DesktopRunRequest<'api.request', ApiRequestInput>
 | DesktopRunRequest<'api.downloadFile', ApiDownloadFileInput>;
-
-
-export type ApiRequestInput = ApiResource & {
-    templateData?: Record<string, any>;
-};
 
 export type ApiRequestOutput<T> = {
     data: T;
