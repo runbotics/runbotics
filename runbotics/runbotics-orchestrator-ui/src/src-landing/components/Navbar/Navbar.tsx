@@ -1,8 +1,11 @@
 import { FC } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import Typography from '#src-landing/components/Typography';
+
 
 import {
     BENEFITS_SECTION_ID,
@@ -25,6 +28,8 @@ const Navbar: FC<NavbarProps> = ({
     isMobileVisible
 }) => {
     const { translate } = useTranslations();
+
+    const { push } = useRouter();
 
     const navMobileStyle = isNavExpanded
         ? styles.navLinksExpanded
@@ -151,7 +156,18 @@ const Navbar: FC<NavbarProps> = ({
                         )}
                     </Link>
                 </li>
+                <li className={styles.listItem}>
+                    <button className={styles.loginButton} onClick={() => push('/login')}>
+                        <Typography
+                            variant="h6"
+                            color="accent"
+                            className={styles.btnText}
+                            text={translate('Landing.Header.Button.LogIn')}
+                        />
+                    </button>
+                </li>
             </ul>
+            
         </nav>
     );
 };
