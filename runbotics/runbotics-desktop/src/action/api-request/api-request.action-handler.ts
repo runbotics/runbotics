@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
 import { StatelessActionHandler } from 'runbotics-sdk';
@@ -50,10 +50,14 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
     };
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
-        let response;
+        let response: AxiosResponse | undefined;
+        let body: unknown | undefined;
+
         try {
-            const method = input.method ? input.method : 'GET';
-            let body = JSON.parse(input.body);
+            const method = input.method ?? 'GET';
+            if (['PUT', 'POST', 'PATCH'].includes(method)) {
+                body = JSON.parse(input.body);
+            }
             if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
                 const qs = await import('qs');
                 body = qs.stringify(body);
@@ -79,10 +83,14 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
                     break;
             }
         } catch (e) {
-            this.logger.log(e);
+            if (!Axios.isAxiosError(e)) {
+                throw new Error(e);
+            }
+
+            this.logger.error(e);
             response = e.response;
             if (!response || response.status >= 400) {
-                throw new InternalServerErrorException(e);
+                throw new Error(e.message);
             }
         }
 
