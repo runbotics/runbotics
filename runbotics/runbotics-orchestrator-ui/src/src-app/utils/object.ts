@@ -1,6 +1,5 @@
 // copied then trimmed from https://raw.githubusercontent.com/auth0/auth0.js/master/src/helper/object.js
 
-// eslint-disable-next-line complexity
 function camelToSnake(str: string) {
     let newKey = '';
     let index = 0;
@@ -53,7 +52,6 @@ export function toCamelCase(object: any, exceptions: string[] = []) {
     }, {});
 }
 
-// eslint-disable-next-line complexity
 export function camelToWords(str: string) {
     let newKey = '';
     let index = 0;

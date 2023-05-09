@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { forwardRef } from 'react';
 
+import { BlogPost } from '#contentful/common';
 import BlogCard from '#src-landing/components/BlogCard/BlogCard';
 import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
-import { BlogPost } from 'src/contentful/models';
 
 import styles from './CardsSection.module.scss';
 
@@ -11,17 +11,18 @@ interface BlogCardsSectionProps {
     featuredPost?: BlogPost;
 }
 
-const BlogCardsSection: FC<BlogCardsSectionProps> = ({
+const BlogCardsSection = forwardRef<HTMLDivElement, BlogCardsSectionProps>(({
     posts,
     featuredPost,
-}) => (
-    <div className={styles.root}>
-        <div className={styles.topFilters}>top filters</div>
+}, ref) => (
+    <div ref={ref} className={styles.root}>
         {featuredPost ? <FeaturedBlogCard post={featuredPost} /> : null}
         {posts.map((post) => (
             <BlogCard key={post.slug} post={post} />
         ))}
     </div>
-);
+));
+
+BlogCardsSection.displayName = 'BlogCardsSection';
 
 export default BlogCardsSection;

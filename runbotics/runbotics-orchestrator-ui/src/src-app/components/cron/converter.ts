@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 /* eslint-disable max-params */
 import { UNITS, CronOrder as CronOrder } from './constants';
 import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';

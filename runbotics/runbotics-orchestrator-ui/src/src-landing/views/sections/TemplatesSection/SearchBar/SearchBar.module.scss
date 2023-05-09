@@ -1,4 +1,4 @@
-@import "#src-landing/scss/main.scss";
+@import '#src-landing/scss/main.scss';
 
 .root {
     position: relative;
@@ -21,19 +21,19 @@
     border-width: 3px;
     border-style: solid;
     background-color: rgb($text-color-gray, 0.05);
-    background-image: url('#public/images/icons/search.svg');
+    background-image: url('#public/images/icons/search-light.svg');
     transition: border-color 100ms ease;
 
     &:focus {
         border-color: $palette-accent-primary;
         color: $palette-accent-primary;
     }
-    
+
     &::placeholder {
         color: $text-placeholder-color;
         transition: color 200ms ease;
     }
-    
+
     &:focus::placeholder {
         color: $palette-accent-primary;
     }

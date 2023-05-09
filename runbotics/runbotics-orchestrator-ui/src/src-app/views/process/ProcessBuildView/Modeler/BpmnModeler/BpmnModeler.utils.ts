@@ -58,7 +58,6 @@ export const createReviver = (moddle) => {
      *
      * @return {Object} actual element
      */
-    // eslint-disable-next-line complexity
     return (key, object) => {
         if (typeof object === 'object' && typeof object.$type === 'string') {
             const objectId = object.id;

@@ -24,7 +24,6 @@ import { DataTableProps } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
 
 
-// eslint-disable-next-line complexity
 const Table = <T extends object>({
     columns,
     data: propData,

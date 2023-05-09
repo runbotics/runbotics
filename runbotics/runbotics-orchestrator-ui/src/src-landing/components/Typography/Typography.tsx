@@ -6,6 +6,7 @@ import { typographyVariantsMap } from './Typography.utils';
 
 const Typography: FC<TypographyProps> = ({
     variant,
+    element,
     color,
     children,
     font = 'Montserrat',
@@ -14,7 +15,7 @@ const Typography: FC<TypographyProps> = ({
     id,
     ...props
 }) => {
-    const TypographyRoot = typographyVariantsMap[variant] || 'p';
+    const TypographyRoot = (element ?? typographyVariantsMap[variant]) ?? 'p';
     const classes = [
         styles.root,
         styles[`typography__${variant}`],

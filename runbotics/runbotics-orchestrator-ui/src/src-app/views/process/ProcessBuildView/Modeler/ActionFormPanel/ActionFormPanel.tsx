@@ -13,7 +13,6 @@ import ActionFormRenderer from './renderers/ActionFormRenderer';
 import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
 import LoopActionRenderer from './renderers/LoopActionRenderer';
 
-// eslint-disable-next-line complexity
 const ActionFormPanel: FC = () => {
     const { selectedElement, selectedAction } = useSelector(
         state => state.process.modeler

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import internalBpmnActions from '#src-app/Actions';
@@ -111,7 +110,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                 return null;
         }
     };
-    // eslint-disable-next-line complexity
+
     const calculateOffset = ({
         element,
         direction,

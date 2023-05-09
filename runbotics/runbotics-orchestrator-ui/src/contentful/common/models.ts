@@ -1,19 +1,25 @@
 export interface ContentfulRichText {
-    json: JSON
+    json: JSON;
 }
 
 export type ContentfulCollection<T> = {
-    items: T[]
+    items: T[];
 }
 
 export interface BlogPost {
+    status: {
+        publishedAt: string | null;
+        publishedVersion: number | null;
+    };
     title: string;
     slug: string;
     date: string;
+    readingTime: number;
     featuredImage: {
         url: string;
-    }
-    tags: string[]
+    };
+    imageAlt?: string;
+    tags: ContentfulCollection<Tag>;
     summary: string;
     body: ContentfulRichText;
     authors: ContentfulCollection<Author>;
@@ -29,5 +35,9 @@ export interface Author {
     name: string;
     slug: string;
     jobTitle?: string;
-    bio: ContentfulRichText
+    bio: ContentfulRichText;
+}
+
+export interface Tag {
+    name: string;
 }

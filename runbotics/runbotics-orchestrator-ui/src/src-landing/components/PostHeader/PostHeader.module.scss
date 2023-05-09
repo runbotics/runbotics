@@ -5,8 +5,9 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    background-color: #000000;
+    background-color: $palette-black;
     border-radius: 10px;
+    isolation: isolate;
 }
 
 .wrapper h1 {
@@ -15,6 +16,7 @@
 }
 
 .featuredImage {
+    z-index: -1;
     object-fit: cover;
     opacity: 70%;
 }
@@ -41,26 +43,26 @@
 
 .details {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: clamp(1rem, 3vw, 5rem);
-    height: 80px;
+
+    gap: clamp(1rem, 3vw, 3rem);
+    min-height: 80px;
     width: 100%;
-    background: #ffffff;
-    opacity: 65%;
-    backdrop-filter: blur(50px);
+    padding: 16px;
+
+    background-color: rgba($palette-white, 70%);
 }
 
 .details > div {
     display: flex;
     align-items: center;
     gap: 10px;
+    white-space: nowrap;
+    width: fit-content;
 }
 
-@media (max-width: $breakpoint-sm) {
-    .details {
-        flex-direction: column;
-        height: fit-content;
-        padding-top: 16px;
-        padding-bottom: 16px;
-    }
+.detailTitle {
+    font-size: clamp(0.875rem, 1vw + 0.25rem, 1.125rem);
+    line-height: $line-height-base;
 }

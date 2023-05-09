@@ -8,7 +8,6 @@ import { UNITS, UnitIndex } from '../../constants';
 import { PeriodType } from '../../types';
 import { MinutesSelectProps } from './MinutesSelect.types';
 
-// eslint-disable-next-line complexity
 const MinutesSelect: FC<MinutesSelectProps> = ({ 
     value, 
     setValue, 

@@ -8,7 +8,7 @@ import BlankPage from '#src-app/utils/BlankPage';
 
 
 
-// eslint-disable-next-line react/display-name, complexity
+// eslint-disable-next-line react/display-name
 export const withGuestGuard = (Component: FC) => (props: any) => {
     const { isAuthenticated, isInitialised } = useAuth();
     const router = useRouter();

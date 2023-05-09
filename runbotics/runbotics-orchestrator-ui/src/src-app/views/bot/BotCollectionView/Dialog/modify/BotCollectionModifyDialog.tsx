@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';

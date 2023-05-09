@@ -1,12 +1,20 @@
-import { BLOG_POST_FRAGMENT, BLOG_POST_LIST_FRAGMENT } from './fragments';
+import { BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
+
 import {
     GetAllPostsOptions,
-    GetPostOptions,
-    QueryBuilder,
-    GetCategorisedPostsOptions,
     GetFilteredPostsOptions,
 } from './types';
-import { DEFAULT_PAGE_SIZE } from './utils';
+
+const blogAllCategoriesQuery = (preview: boolean) => `
+blogCategoryCollection(
+    preview: ${preview ? 'true' : 'false'}
+) {
+    items {
+        title
+        slug
+    }
+}
+`;
 
 export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
     preview,
@@ -14,29 +22,11 @@ export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
     limit = DEFAULT_PAGE_SIZE,
 }) => `
 query {
-    blogPostCollection(order: date_DESC, preview: ${
-    preview ? 'true' : 'false'
-}, skip: ${skip ?? 0}, limit: ${limit ?? 10}) {
-        items {
-            ${BLOG_POST_LIST_FRAGMENT}
-        }
-        skip
-        limit
-        total
-    }
-}
-`;
-
-export const buildCategorisedPostsQuery: QueryBuilder<
-    GetCategorisedPostsOptions
-> = ({ preview, skip = 0, limit = DEFAULT_PAGE_SIZE, category }) => `
-query {
     blogPostCollection(
-        order: date_DESC, 
-        preview: ${preview ? 'true' : 'false'}, 
+        order: date_DESC,
+        preview: ${preview ? 'true' : 'false'},
         skip: ${skip ?? 0},
-        limit: ${limit ?? 10},
-        where: { category: { slug: "${category}" } }
+        limit: ${limit ?? 10}
     ) {
         items {
             ${BLOG_POST_LIST_FRAGMENT}
@@ -45,8 +35,13 @@ query {
         limit
         total
     }
-}
-`;
+    ${blogAllCategoriesQuery(preview)}
+}`;
+
+export const buildAllCategoriesQuery: QueryBuilder = ({ preview }) => `
+query {
+    ${blogAllCategoriesQuery(preview)}
+}`;
 
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
@@ -69,8 +64,8 @@ query {
         limit
         total
     }
-}
-`;
+    ${blogAllCategoriesQuery(preview)}
+}`;
 
 export const buildAllPostsPathsQuery: QueryBuilder = ({ preview }) => `
 query {
@@ -79,20 +74,4 @@ query {
             slug
         }
     }
-}
-`;
-
-export const buildPostQuery: QueryBuilder<GetPostOptions> = ({
-    preview,
-    slug,
-}) => `
-query {
-    blogPostCollection(where: { slug: "${slug}" }, preview: ${
-    preview ? 'true' : 'false'
-}, limit: 1) {
-        items {
-            ${BLOG_POST_FRAGMENT}
-        }
-    }
-}
-`;
+}`;

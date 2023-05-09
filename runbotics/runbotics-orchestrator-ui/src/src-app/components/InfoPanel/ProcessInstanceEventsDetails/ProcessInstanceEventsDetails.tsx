@@ -40,7 +40,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         all: { events, eventsBreadcrumbTrail, nestedEvents: loopEvents },
     } = useSelector(processInstanceEventSelector);
     const { active } = useSelector(processInstanceSelector);
-    // eslint-disable-next-line complexity
+
     useEffect(() => {
         if (processInstanceId === active.processInstance?.id) {
             setProcessInstanceEvents({
