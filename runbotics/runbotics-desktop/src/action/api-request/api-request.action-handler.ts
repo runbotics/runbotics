@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
 import { StatelessActionHandler } from 'runbotics-sdk';
@@ -50,38 +50,48 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
     };
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
-        let response;
+        let response: AxiosResponse | undefined;
         let body: unknown | undefined;
 
-        const method = input.method ?? 'GET';
+        try {
+            const method = input.method ?? 'GET';
+            if (['PUT', 'POST', 'PATCH'].includes(method)) {
+                body = JSON.parse(input.body);
+            }
+            if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+                const qs = await import('qs');
+                body = qs.stringify(body);
+            }
+            switch (method) {
+                case 'GET':
+                    response = await Axios.get(input.url, { headers: input.headers });
+                    break;
+                case 'DELETE':
+                    response = await Axios.delete(input.url, { headers: input.headers });
+                    break;
+                case 'PATCH':
+                    response = await Axios.patch(input.url, body, { headers: input.headers });
+                    break;
+                case 'PUT':
+                    response = await Axios.put(input.url, body, { headers: input.headers });
+                    break;
+                case 'POST':
+                    response = await Axios.post(input.url, body, { headers: input.headers });
+                    break;
+                default:
+                    response = await Axios.get(input.url, { headers: input.headers });
+                    break;
+            }
+        } catch (e) {
+            if (!Axios.isAxiosError(e)) {
+                throw new Error(e);
+            }
 
-        if (['PUT', 'POST', 'PATCH'].includes(method)) {
-            body = JSON.parse(input.body);
-        }
-
-        if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-            const qs = await import('qs');
-            body = qs.stringify(body);
-        }
-
-        switch (method) {
-            case 'GET':
-                response = await Axios.get(input.url, { headers: input.headers });
-                break;
-            case 'DELETE':
-                response = await Axios.delete(input.url, { headers: input.headers });
-                break;
-            case 'PATCH':
-                response = await Axios.patch(input.url, body, { headers: input.headers });
-                break;
-            case 'PUT':
-                response = await Axios.put(input.url, body, { headers: input.headers });
-                break;
-            case 'POST':
-                response = await Axios.post(input.url, body, { headers: input.headers });
-                break;
-            default:
-                response = await Axios.get(input.url, { headers: input.headers });
+            this.logger.error(e);
+            response = e.response;
+            if (!response || response.status >= 400) {
+                throw new Error(e.message);
+            }
         }
 
         return {
