@@ -1,8 +1,10 @@
 import React, { forwardRef } from 'react';
-import styles from './CardsSection.module.scss';
+
 import { BlogPost } from '#contentful/common';
 import BlogCard from '#src-landing/components/BlogCard/BlogCard';
 import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
+
+import styles from './CardsSection.module.scss';
 
 
 interface BlogCardsSectionProps {
