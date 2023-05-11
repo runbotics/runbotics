@@ -4,7 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { BlogPost } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#src-landing/utils/utils';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
@@ -37,13 +39,18 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
         <article className={styles.root}>
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
+                    <If condition={checkIsDraft(post.status)}>
+                        <CardBadge className={styles.draftBadge} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} text={translate('Landing.Blog.Post.DraftBadge')} />
+                    </If>
                     <Image
                         src={post.featuredImage?.url}
                         fill
                         alt={post.imageAlt ?? ''}
                         className={styles.img}
                     />
-                    {tags}
+                    <div className={styles.badges}>
+                        {tags}
+                    </div>
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <Typography variant="body4">

@@ -74,6 +74,12 @@ $FONT-COLOR: #000;
     border-radius: $CONTENT-BORDER-RADIUS;
 }
 
+.draftBadge {
+    position: absolute;
+    left: $CONTENT-PADDING;
+    top: $CONTENT-PADDING;
+}
+
 .img {
     z-index: -1;
     object-fit: cover;

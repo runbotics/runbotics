@@ -11,6 +11,7 @@ import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
 
+
 interface Props {
     post: BlogPost;
 }

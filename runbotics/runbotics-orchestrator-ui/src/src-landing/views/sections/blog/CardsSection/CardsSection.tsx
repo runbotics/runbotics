@@ -6,6 +6,7 @@ import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
 
 import styles from './CardsSection.module.scss';
 
+
 interface BlogCardsSectionProps {
     posts: BlogPost[];
     featuredPost?: BlogPost;

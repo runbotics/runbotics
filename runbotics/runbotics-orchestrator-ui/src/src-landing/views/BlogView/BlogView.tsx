@@ -11,6 +11,7 @@ import CardsSection from '../sections/blog/CardsSection';
 import FiltersSection from '../sections/blog/FiltersSection';
 import styles from './BlogView.module.scss';
 
+
 interface BlogViewProps {
     posts: BlogPost[];
     categories: Category[];

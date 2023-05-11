@@ -15,6 +15,9 @@ $READ-MORE-ICON-WIDTH: 24px;
 $READ-MORE-COLOR: #fbb040;
 $BADGE-TOP: calc($IMG-MAX-HEIGHT - 40px);
 $BADGE-LEFT: 20px;
+$DRAFT-BADGE-TOP: calc($IMG-MAX-HEIGHT - 120px);
+$BADGE-GAP: 15px;
+$BADGES-BORDER-RADIUS: 25px;
 $CARD-HOVER-TRANSLATE-Y: -3px;
 $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
@@ -55,6 +58,7 @@ $FONT-COLOR: #000;
     max-height: $IMG-MAX-HEIGHT;
     object-fit: cover;
     border-radius: $IMG-BORDER-RADIUS;
+    z-index: -1;
 }
 
 .info {
@@ -100,8 +104,27 @@ $FONT-COLOR: #000;
     }
 }
 
-.badge {
+.badges {
     position: absolute;
     top: $BADGE-TOP;
+    left: $BADGE-LEFT;
+
+    display: flex;
+    flex-wrap: nowrap;
+    gap: $BADGE-GAP;
+
+    width: calc(100% - 2 * $BADGE-LEFT);
+
+    border-radius: $BADGES-BORDER-RADIUS;
+    overflow: hidden;
+}
+
+.badge {
+    width: max-content;
+}
+
+.draftBadge {
+    position: absolute;
+    top: $DRAFT-BADGE-TOP;
     left: $BADGE-LEFT;
 }

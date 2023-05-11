@@ -7,10 +7,7 @@ export type ContentfulCollection<T> = {
 }
 
 export interface BlogPost {
-    status: {
-        publishedAt: string | null;
-        publishedVersion: number | null;
-    };
+    status: PostStatus;
     title: string;
     slug: string;
     date: string;
@@ -41,3 +38,8 @@ export interface Author {
 export interface Tag {
     name: string;
 }
+
+export interface PostStatus {
+    publishedAt: string | null;
+    publishedVersion: number | null;
+};
