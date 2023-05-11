@@ -34,6 +34,7 @@ $FONT-COLOR: #000;
     border-radius: $IMG-BORDER-RADIUS;
     transition: transform $CARD-HOVER-TRANSITION ease;
     box-shadow: $box-shadow-primary;
+    border: none;
 
     &:hover {
         transform: translateY($CARD-HOVER-TRANSLATE-Y);

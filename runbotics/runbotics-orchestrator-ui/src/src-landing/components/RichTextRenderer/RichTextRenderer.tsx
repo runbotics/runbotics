@@ -3,18 +3,19 @@ import { VFC } from 'react';
 import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer';
 import { BLOCKS } from '@contentful/rich-text-types';
 
+import Image from 'next/image';
+
 import { ContentfulRichText } from '#contentful/common';
 
 import Typography from '../Typography';
 import styles from './RichTextRenderer.module.scss';
-
 
 interface Props {
     content: ContentfulRichText;
 }
 
 /**
- * Customize contentful rich text renderer with MUI typography
+ * Customize contentful rich text renderer
  */
 const RichTextRenderer: VFC<Props> = ({ content }) => {
     const renderOptions: Options = {
@@ -26,6 +27,19 @@ const RichTextRenderer: VFC<Props> = ({ content }) => {
             [BLOCKS.HEADING_5]: (_, children) => <Typography font="Roboto" className={styles.p} variant="h5">{children}</Typography>,
             [BLOCKS.HEADING_6]: (_, children) => <Typography font="Roboto" className={styles.p} variant="h6">{children}</Typography>,
             [BLOCKS.PARAGRAPH]: (_, children) => <Typography font="Roboto" className={styles.p} variant="body3">{children}</Typography>,
+            [BLOCKS.HR]: () => <hr className={styles.hr} />,
+            [BLOCKS.TABLE_CELL]: (_, children) => <td className={styles.td}>{children}</td>,
+            [BLOCKS.UL_LIST]: (_, children) => <ul className={styles.ul}>{children}</ul>,
+            [BLOCKS.OL_LIST]: (_, children) => <ol className={styles.ol}>{children}</ol>,
+            [BLOCKS.EMBEDDED_ASSET]: (embeddedAsset) => {
+                const asset = content.links.assets.blocks.find(el => el.sys.id === embeddedAsset.data.target.sys.id);
+                const ratio = `${asset?.width} / ${asset?.height}`;
+                return (
+                    <div className={styles.imageWrapper} style={{ aspectRatio: ratio }}>
+                        <Image className={styles.image} title={asset?.title} src={asset?.url} alt={asset?.title} fill />
+                    </div>
+                );
+            },
         }
     };
 

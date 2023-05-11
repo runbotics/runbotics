@@ -19,8 +19,13 @@
             "name": "ui debug",
             "type": "node-terminal",
             "request": "launch",
-            "command": "rushx start:dev",
+            "command": "rushx start:debug",
             "cwd": "${workspaceFolder}/runbotics/runbotics-orchestrator-ui",
+            "serverReadyAction": {
+                "pattern": "started server on .+, url: (https?://.+)",
+                "uriFormat": "%s",
+                "action": "debugWithChrome"
+            }
         }
     ]
 }

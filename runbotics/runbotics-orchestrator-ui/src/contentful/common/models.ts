@@ -1,5 +1,22 @@
+interface AssetBlock {
+    sys: {
+        id: string;
+    };
+    url: string;
+    title: string;
+    description: string;
+    width: number;
+    height: number;
+}
+interface Asset {
+    blocks: AssetBlock[];
+}
+
 export interface ContentfulRichText {
     json: JSON;
+    links: {
+        assets: Asset;
+    };
 }
 
 export type ContentfulCollection<T> = {

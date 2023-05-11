@@ -30,10 +30,10 @@ $FONT-COLOR: #000;
     position: relative;
     display: flex;
     color: $FONT-COLOR;
-    text-decoration: none;
     transition: all $CARD-HOVER-TRANSITION ease;
     border-radius: $IMG-BORDER-RADIUS;
     box-shadow: $box-shadow-primary;
+    border-bottom: none;
 
     &:hover {
         transform: translateY($CARD-HOVER-TRANSLATE-Y);

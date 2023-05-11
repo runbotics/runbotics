@@ -73,7 +73,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                     width="32" 
                     height="32"
                 />
-                <Typography className={styles.link} color='accent'>
+                <Typography className={styles.linkContent} color='accent'>
                     Home
                 </Typography>
             </Link>

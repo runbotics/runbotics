@@ -33,7 +33,7 @@ const BlogSharePanel = () => {
                 <li>
                     <Link
                         className={styles.link}
-                        href={'#'}
+                        href={'https://www.facebook.com/RunBotics'}
                         scroll={false}
                     >
                         Facebook
@@ -43,17 +43,7 @@ const BlogSharePanel = () => {
                 <li>
                     <Link
                         className={styles.link}
-                        href={'#'}
-                        scroll={false}
-                    >
-                        Twitter
-                    </Link>
-                </li>
-                <li className={styles.divider} />
-                <li>
-                    <Link
-                        className={styles.link}
-                        href={'#'}
+                        href={'https://www.linkedin.com/company/runbotics'}
                         scroll={false}
                     >
                         LinkedIn
