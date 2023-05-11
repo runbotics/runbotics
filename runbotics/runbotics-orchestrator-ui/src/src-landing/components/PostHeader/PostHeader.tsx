@@ -2,16 +2,22 @@ import { VFC } from 'react';
 
 import Image from 'next/image';
 
+
+
+
 import { BlogPost } from '#contentful/common';
 import CalendarIcon from '#public/images/icons/calendar.svg';
 import CategoryIcon from '#public/images/icons/category_label.svg';
 import CoffeeIcon from '#public/images/icons/coffee.svg';
 import ToyIcon from '#public/images/icons/toy.svg';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from 'src/pages/blog/utils';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './PostHeader.module.scss';
+
 
 type Props = Omit<
     BlogPost,
@@ -32,6 +38,9 @@ const PostHeader: VFC<Props> = (props) => {
             />
             <div className={styles.info}>
                 <div className={styles.tagContainer}>
+                    <If condition={checkIsDraft(props.status)}>
+                        <CardBadge className={styles.draftBadge} text={translate('Landing.Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
+                    </If>
                     {tags}
                 </div>
                 <div>

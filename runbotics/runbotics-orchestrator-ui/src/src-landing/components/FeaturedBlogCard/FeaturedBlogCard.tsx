@@ -4,7 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { BlogPost } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from 'src/pages/blog/utils';
 
 import { cutText } from '../BlogCard';
 import CardBadge from '../CardBadge';
@@ -14,6 +16,7 @@ import styles from './FeaturedBlogCard.module.scss';
 interface FeaturedBlogCardProps {
     post: BlogPost;
 }
+
 const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
     const { translate } = useTranslations();
 
@@ -31,6 +34,9 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                         alt={post.imageAlt ?? ''}
                         className={styles.img}
                     />
+                    <If condition={checkIsDraft(post.status)}>
+                        <CardBadge className={styles.draftBadge} text={translate('Landing.Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
+                    </If>
                     <div className={styles.content}>
                         <div className={styles.info}>
                             {tags}

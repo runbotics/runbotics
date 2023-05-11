@@ -12,6 +12,7 @@ import {
 } from '#contentful/common';
 import BlogView from '#src-landing/views/BlogView';
 
+
 interface BlogPageProps {
     posts: BlogPost[];
     categories: Category[];

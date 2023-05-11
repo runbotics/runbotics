@@ -22,7 +22,7 @@ const CardBadge: FC<CardBadgeProps> = ({
         className={`${styles.root} ${className}`}
         style={{ backgroundColor, color: textColor }}
     >
-        <Typography variant="body5">{text.toUpperCase()}</Typography>
+        <Typography variant="body5" className={styles.badge}>{text.toUpperCase()}</Typography>
     </div>
 );
 

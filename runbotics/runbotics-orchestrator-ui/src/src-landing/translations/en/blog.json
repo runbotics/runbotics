@@ -13,6 +13,7 @@
     "Landing.Blog.Post.Category": "category",
     "Landing.Blog.Post.ReadingTime": "reading time",
     "Landing.Blog.Post.ReadingTime.Unit": "mins",
+    "Landing.Blog.Post.DraftBadge": "draft",
     "Landing.Blog.Post.Share.LikeShare": "Like&nbsp;it? Share&nbsp;it!",
     "Landing.Blog.Post.Share.CopyLink": "Copy link",
     "Landing.Blog.Post.Share.Copied": "Copied!"
