@@ -14,7 +14,6 @@ import Typography from '#src-landing/components/Typography';
 
 import styles from './IndustriesSlide.module.scss';
 import { IndustriesSlideProps } from './IndustriesSlide.types';
-import { isVisible } from './IndustriesSlide.utils';
 
 const IndustriesSlide: FC<IndustriesSlideProps> = ({
     index,

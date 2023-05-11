@@ -12,7 +12,7 @@ import CoffeeIcon from '#public/images/icons/coffee.svg';
 import ToyIcon from '#public/images/icons/toy.svg';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from 'src/pages/blog/utils';
+import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from 'src/pages/blog/(utils)';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';

@@ -44,7 +44,7 @@ const ProcessNameSuggestionWidget: FC<CustomWidgetProps> = (props) => {
     const getLabel = (option: Number) => {
         const process = Object.values(processes).find((variable) => variable.id === option);
         return process ? `#${process.id} - ${process.name}` : '';
-    }
+    };
 
     return (
         <Autocomplete
