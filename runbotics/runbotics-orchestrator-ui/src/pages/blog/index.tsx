@@ -12,17 +12,24 @@ import {
 } from '#contentful/common';
 import BlogView from '#src-landing/views/BlogView';
 
+const DEFAULT_POSTS_PER_PAGE = 1;
+
 interface BlogPageProps {
     posts: BlogPost[];
     categories: Category[];
     featuredPost?: BlogPost;
+    currentPage: number;
+    postsPerPage: number;
 }
 
-const BlogPage: VFC<BlogPageProps> = ({ posts, categories, featuredPost }) => (
+
+const BlogPage: VFC<BlogPageProps> = ({ posts, categories, featuredPost, currentPage, postsPerPage }) => (
     <BlogView
         posts={posts}
         categories={categories}
         featuredPost={featuredPost}
+        currentPage={currentPage}
+        postsPerPage={postsPerPage}
     />
 );
 
@@ -40,6 +47,8 @@ export async function getServerSideProps({ query, res }: GetServerSidePropsConte
             props: {
                 posts: posts ?? [],
                 categories: categories ?? [],
+                limit: limit ?? DEFAULT_POSTS_PER_PAGE,
+                currentPage: skip ?? 1,
             },
         };
     }
@@ -60,6 +69,8 @@ export async function getServerSideProps({ query, res }: GetServerSidePropsConte
             posts: posts ?? [],
             featuredPost: featuredPost ?? null,
             categories: categories ?? [],
+            postsPerPage: DEFAULT_POSTS_PER_PAGE,
+            currentPage: 2,
         },
     };
 }
