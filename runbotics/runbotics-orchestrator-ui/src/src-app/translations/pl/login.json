@@ -1,5 +1,6 @@
 {
     "Login.SignIn": "Zaloguj się",
+    "Login.SignIn.Success": "Zalogowano pomyślnie",
     "Login.Form.Action": "Login",
     "Login.Form.Email.Label": "Adres Email",
     "Login.Form.Email.Required": "Adres email jest wymagany",

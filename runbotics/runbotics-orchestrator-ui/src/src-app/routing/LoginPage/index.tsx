@@ -11,13 +11,14 @@ import {
     Link,
     Typography,
     TextField,
-    FormHelperText,
     Button,
+    FormHelperText,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
@@ -70,6 +71,7 @@ const LoginPage: FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleFormSubmit = async (
         values: typeof initialValues,
@@ -87,6 +89,11 @@ const LoginPage: FC = () => {
                 setStatus({ success: true });
                 setSubmitting(false);
                 router.push('/app/processes');
+
+                enqueueSnackbar(
+                    translate('Login.SignIn.Success'),
+                    { variant: 'success' }
+                );
             })
             .catch((error) => {
                 setStatus({ success: false });
@@ -99,14 +106,22 @@ const LoginPage: FC = () => {
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate('Login.Error.UnexpectedError')}`;
                     setErrors({ submit: customErrorMessage });
+                    // enqueueSnackbar(
+                    //     customErrorMessage,
+                    //     { variant: 'error' }
+                    // );
                     return;
                 }
 
-                const customErrorMessage = `${error.message}: ${translate(
-                    errorKey
-                )}`;
+                const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
+
+                // enqueueSnackbar(
+                //     customErrorMessage,
+                //     { variant: 'error' }
+                // );
             });
+            
     };
 
     const renderForm = ({
