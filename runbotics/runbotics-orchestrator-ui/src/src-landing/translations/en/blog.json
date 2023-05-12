@@ -17,5 +17,7 @@
     "Landing.Blog.Post.DraftBadge": "draft",
     "Landing.Blog.Post.Share.LikeShare": "Like&nbsp;it? Share&nbsp;it!",
     "Landing.Blog.Post.Share.CopyLink": "Copy link",
-    "Landing.Blog.Post.Share.Copied": "Copied!"
+    "Landing.Blog.Post.Share.Copied": "Copied!",
+    "Landing.Blog.Post.Pagination.Previous": "previous",
+    "Landing.Blog.Post.Pagination.Next": "next"
 }

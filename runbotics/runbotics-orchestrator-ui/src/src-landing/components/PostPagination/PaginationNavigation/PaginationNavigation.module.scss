@@ -1,0 +1,49 @@
+@import '#src-landing/scss/main';
+
+$PAGE_NUM_RADIUS: 25px;
+$PAGE_NUM_SIZE: 50px;
+$OVERLAY_CAPACITY: 5;
+
+.root {
+    width: $OVERLAY_CAPACITY * ($PAGE_NUM_SIZE);
+    overflow: hidden;
+    --current-page: 1;
+}
+
+.pageNumbersWrapper {
+    display: flex;
+
+    transition: transform 300ms ease;
+    transform: translateX(
+        calc((var(--current-page) * $PAGE_NUM_SIZE * -1) + (3 * $PAGE_NUM_SIZE))
+    );
+}
+
+.pageNumberBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 0 0 $PAGE_NUM_SIZE;
+
+    height: $PAGE_NUM_SIZE;
+    width: $PAGE_NUM_SIZE;
+
+    transition: border-color 300ms;
+
+    p {
+        border-bottom: 3px solid transparent;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        p {
+            border-color: $palette-black;
+        }
+    }
+
+    &.active p {
+        border-color: $palette-background-accent;
+    }
+}

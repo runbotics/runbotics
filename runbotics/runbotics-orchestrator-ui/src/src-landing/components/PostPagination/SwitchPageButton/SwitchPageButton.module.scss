@@ -1,0 +1,25 @@
+@import '#src-landing/scss/main';
+
+$NAVIGATION_BUTTON_POSITION: -40px;
+
+.previous,
+.next {
+    position: absolute;
+
+    border: none;
+    background: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.previous {
+    left: $NAVIGATION_BUTTON_POSITION;
+
+    transform: rotate(180deg);
+}
+
+.next {
+    right: $NAVIGATION_BUTTON_POSITION;
+}

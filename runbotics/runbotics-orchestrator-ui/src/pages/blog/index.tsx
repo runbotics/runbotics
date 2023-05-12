@@ -15,6 +15,8 @@ interface Props {
     tags: Tag[];
     page: Page;
     featuredPost?: BlogPost;
+    currentPage: number;
+    postsPerPage: number;
 }
 
 const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) => (
@@ -24,6 +26,8 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
         tags={tags}
         page={page}
         featuredPost={featuredPost}
+        currentPage={currentPage}
+        postsPerPage={postsPerPage}
     />
 );
 
