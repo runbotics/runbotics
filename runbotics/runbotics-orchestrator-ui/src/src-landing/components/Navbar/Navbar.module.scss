@@ -14,10 +14,10 @@
     font-size: $font-size-h6;
     line-height: $line-height-base;
     font-weight: $font-weight-semi-bold;
-    text-decoration: none;
+    border-bottom: 3px solid transparent;
 
     &:hover {
-        border-bottom: 3px solid $palette-background-tertiary;
+        border-bottom-color: $palette-background-tertiary;
     }
 }
 

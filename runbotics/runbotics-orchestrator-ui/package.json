@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.6.0-SNAPSHOT.18",
+    "version": "2.6.0-SNAPSHOT.19",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -9,7 +9,8 @@
     "sideEffects": false,
     "scripts": {
         "start": "next start",
-        "start:dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+        "start:dev": "next dev",
+        "start:debug": "cross-env NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "lint": "next lint",
         "lint:fix": "next lint --fix"

@@ -15,23 +15,25 @@ $SEPARATOR_SPACE: $padding-1;
     display: flex;
 }
 
-.link {
-    text-decoration: none;
+.linkContent {
     border-bottom: 2px solid transparent;
-
-    &:hover {
-        border-color: $palette-accent-primary;
-    }
+    transition: border-color 300ms;
 }
 
 .homeLink {
     display: flex;
     align-items: center;
-    text-decoration: none;
+    border: none;
 
     .icon {
         filter: $black-to-accent-filter;
         padding-right: $SEPARATOR_SPACE;
+    }
+
+    &:hover {
+        .linkContent {
+            border-color: $palette-accent-primary;
+        }
     }
 }
 

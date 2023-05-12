@@ -1,4 +1,5 @@
 @import './variables/_common.scss';
+@import './variables/_palette.scss';
 
 * {
     box-sizing: border-box;
@@ -48,6 +49,17 @@ h4,
 h5,
 h6 {
     overflow-wrap: break-word;
+}
+
+a {
+    color: $palette-accent-primary;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: border-color 300ms;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
+    }
 }
 
 #root,

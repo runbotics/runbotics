@@ -46,6 +46,19 @@ export const BLOG_POST_FRAGMENT = `
     ${BLOG_POST_LIST_FRAGMENT}
     body {
         json
+        links {
+            assets {
+                blocks: block {
+                    sys {
+                        id
+                    }
+                    url
+                    title
+                    width
+                    height
+                }
+            }
+        }
     }
     authors: authorsCollection {
         items {

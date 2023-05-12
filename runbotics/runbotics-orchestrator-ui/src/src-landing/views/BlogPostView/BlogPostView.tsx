@@ -28,16 +28,16 @@ const BlogPostView: VFC<Props> = ({ post }) => {
                 <meta property="og:image" content={post.featuredImage?.url} />
             </Head>
             <Layout>
-                <article className={styles.blogArticle}>
+                <div className={styles.blogWrapper}>
                     <PostHeader
                         {...postHeaderProps}
                     />
                     <BreadcrumbsSection postTitle={post.title} />
-                    <section className={styles.contentSection}>
+                    <article className={styles.contentArticle}>
                         <RichTextRenderer content={body} />
                         <BlogSharePanel />
-                    </section>
-                </article>
+                    </article>
+                </div>
             </Layout>
         </>
     );

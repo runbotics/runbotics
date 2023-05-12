@@ -30,11 +30,9 @@
 
 @mixin link-styles {
     @include font-face-base;
-    color: $palette-accent-primary;
     font-size: $font-size-h5;
     line-height: $line-height-base;
     font-weight: $font-weight-semi-bold;
-    text-decoration: none;
 }
 
 .copyButton {
@@ -46,6 +44,7 @@
 
     border-radius: 10px;
     border: none;
+    color: $palette-accent-primary;
     background-color: transparent;
     transition: background-color 300ms ease;
     white-space: nowrap;
