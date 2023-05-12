@@ -95,18 +95,17 @@ const LoginPage: FC = () => {
                     ' ',
                     ''
                 )}`;
-                
+
                 if (!checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message}: ${translate(
-                        'Login.Error.UnexpectedError'
-                    )}`;
+                    const customErrorMessage = `${error.message}: ${translate('Login.Error.UnexpectedError')}`;
                     setErrors({ submit: customErrorMessage });
                     return;
                 }
 
-                const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+                const customErrorMessage = `${error.message}: ${translate(
+                    errorKey
+                )}`;
                 setErrors({ submit: customErrorMessage });
-                
             });
     };
 
