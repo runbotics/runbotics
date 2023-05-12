@@ -5,5 +5,10 @@
     "Login.Form.Email.Required": "Email is required",
     "Login.Form.Password.Label": "Password",
     "Login.Form.Password.Required": "Password is required",
-    "Login.SwitchToRegisterMessage": "Don't have an account? Sign up"
+    "Login.SwitchToRegisterMessage": "Don't have an account? Sign up",
+    "Login.Error.NoInternet": "No internet connection",
+    "Login.Error.BadRequest": "Email and/or password are incorrect or user does not exist",
+    "Login.Error.InternalServerError": "A problem with server has occured. Please try again later and if the problem persist - contact us via contact form on the main page",
+    "Login.Error.UnexpectedError": "Unhandled error has occured. Contact us via contact form on the main page"
+
 }

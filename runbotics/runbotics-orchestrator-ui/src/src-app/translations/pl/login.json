@@ -5,5 +5,9 @@
     "Login.Form.Email.Required": "Adres email jest wymagany",
     "Login.Form.Password.Label": "Hasło",
     "Login.Form.Password.Required": "Hasło jest wymagane",
-    "Login.SwitchToRegisterMessage": "Nie masz konta? Zapisz się"
+    "Login.SwitchToRegisterMessage": "Nie masz konta? Zapisz się",
+    "Login.Error.NoInternet": "Brak połączenia z internetem",
+    "Login.Error.BadRequest": "Błędny email i/lub hasło lub użytkownik nie istnieje",
+    "Login.Error.InternalServerError": "Wystąpił problem z serwerem. Spróbuj ponownie później a jeśli problem się utrzymuje - skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }

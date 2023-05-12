@@ -17,20 +17,26 @@ const setAccessToken = (accessToken: string | null): void => {
 export const login = createAsyncThunk(
     'auth/login',
     async (payload: { email: string; password: string }) => {
-        const response = await Axios.post<{ id_token: string }>(
-            '/api/authenticate',
-            {
-                username: payload.email,
-                password: payload.password,
-                rememberMe: true,
-            }
-        );
-        const { id_token: idToken } = response.data;
+        try {
 
-        setAccessToken(idToken);
-        const responseUser = await Axios.get<User>('/api/account');
-        const user = responseUser.data;
-        return { ...user, authoritiesById: user?.roles };
+            const response = await Axios.post<{ id_token: string }>(
+                '/api/authenticate',
+                {
+                    username: payload.email,
+                    password: payload.password,
+                    rememberMe: true,
+                }
+            );
+            const { id_token: idToken } = response.data;
+    
+            setAccessToken(idToken);
+            const responseUser = await Axios.get<User>('/api/account');
+            const user = responseUser.data;
+            return { ...user, authoritiesById: user?.roles };
+        } catch (error) {
+            const axiosCustomError = new Error(error.response.statusText);
+            throw axiosCustomError;
+        }
     }
 );
 

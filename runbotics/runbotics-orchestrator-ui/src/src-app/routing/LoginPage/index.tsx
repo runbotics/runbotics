@@ -15,7 +15,6 @@ import {
     Button,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -23,10 +22,13 @@ import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo/Logo';
-import useTranslations from '#src-app/hooks/useTranslations';
+import useTranslations, {
+    checkIfKeyExists,
+} from '#src-app/hooks/useTranslations';
 
 import { useDispatch } from '#src-app/store';
 import { login } from '#src-app/store/slices/Auth/Auth.thunks';
+
 
 import { useLoginValidationSchema } from './login.schema';
 
@@ -69,9 +71,9 @@ const LoginPage: FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
-    const [requestStatus, setRequestStatus] = useState({
+    const [requestErrorStatus, setRequestErrorStatus] = useState({
         success: false,
-        errorMessage: '',
+        message: '',
     });
 
     const handleFormSubmit = async (
@@ -79,16 +81,15 @@ const LoginPage: FC = () => {
         { setErrors, setStatus, setSubmitting }
     ) => {
         if (!window.navigator.onLine) {
-            setRequestStatus({
+            setRequestErrorStatus({
                 success: false,
-                errorMessage: 'No internet connection',
+                message: translate('Login.Error.NoInternet'),
             });
             setStatus({ success: false });
             setSubmitting(false);
+            setErrors({ submit: requestErrorStatus.message });
             return;
         }
-        // console.log('submitclicked');
-        // console.log(result);
         await dispatch(login(values))
             .then(unwrapResult)
             .then(() => {
@@ -96,15 +97,23 @@ const LoginPage: FC = () => {
                 setSubmitting(false);
                 router.push('/app/processes');
             })
-            .catch((err) => {
-                if (axios.isAxiosError(err)) {
-                    console.log('axios err');
-                }
-                console.log(err.message);
+            .catch((error) => {
                 setStatus({ success: false });
-                // will be handled another way ()
-                setErrors({ submit: err.message });
                 setSubmitting(false);
+                const errorKey = `Login.Error.${error.message.replaceAll(
+                    ' ',
+                    ''
+                )}`;
+
+                if (checkIfKeyExists(errorKey)) {
+                    const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+                    setErrors({ submit: customErrorMessage });
+                }
+
+                const customErrorMessage = `${error.message}: ${translate(
+                    'Login.Error.UnexpectedError'
+                )}`;
+                setErrors({ submit: customErrorMessage });
             });
     };
 
