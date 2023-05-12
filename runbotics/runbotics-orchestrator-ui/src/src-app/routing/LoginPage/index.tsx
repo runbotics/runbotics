@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable complexity */
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import {
     Box,
@@ -71,23 +71,15 @@ const LoginPage: FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
-    const [requestErrorStatus, setRequestErrorStatus] = useState({
-        success: false,
-        message: '',
-    });
 
     const handleFormSubmit = async (
-        values,
+        values: typeof initialValues,
         { setErrors, setStatus, setSubmitting }
     ) => {
         if (!window.navigator.onLine) {
-            setRequestErrorStatus({
-                success: false,
-                message: translate('Login.Error.NoInternet'),
-            });
             setStatus({ success: false });
             setSubmitting(false);
-            setErrors({ submit: requestErrorStatus.message });
+            setErrors({ submit: translate('Login.Error.NoInternet') });
             return;
         }
         await dispatch(login(values))
@@ -104,16 +96,18 @@ const LoginPage: FC = () => {
                     ' ',
                     ''
                 )}`;
-
-                if (checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+                
+                if (!checkIfKeyExists(errorKey)) {
+                    const customErrorMessage = `${error.message}: ${translate(
+                        'Login.Error.UnexpectedError'
+                    )}`;
                     setErrors({ submit: customErrorMessage });
+                    return;
                 }
 
-                const customErrorMessage = `${error.message}: ${translate(
-                    'Login.Error.UnexpectedError'
-                )}`;
+                const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
+                
             });
     };
 
