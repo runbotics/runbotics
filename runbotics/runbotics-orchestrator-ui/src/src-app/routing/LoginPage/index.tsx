@@ -29,7 +29,6 @@ import useTranslations, {
 import { useDispatch } from '#src-app/store';
 import { login } from '#src-app/store/slices/Auth/Auth.thunks';
 
-
 import { useLoginValidationSchema } from './login.schema';
 
 const PREFIX = 'LoginPage';
@@ -194,14 +193,10 @@ const LoginPage: FC = () => {
                         </Box>
                         <Box flexGrow={1} mt={3}>
                             <Formik
-                                // move up, above the component
                                 initialValues={initialValues}
-                                // move to diff file (login.schema.ts), check scheduler
                                 validationSchema={loginValidationSchema}
-                                // move up to another func
                                 onSubmit={handleFormSubmit}
                             >
-                                {/* // move up, name it renderForm */}
                                 {renderForm}
                             </Formik>
                         </Box>
