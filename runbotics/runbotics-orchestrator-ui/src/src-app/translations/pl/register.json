@@ -12,5 +12,9 @@
     "Register.Form.Fields.Password.Label": "Hasło",
     "Register.Form.Fields.PasswordConfirmation.Label": "Powtórz Hasło",
     "Register.Form.Actions.Register": "Rejestracja",
-    "Register.SwitchToLoginMessage": "Mam już konto"
+    "Register.SwitchToLoginMessage": "Mam już konto",
+    "Register.Error.NoInternet": "Brak połączenia z internetem",
+    "Register.Error.BadRequest": "Błędny email i/lub hasło lub użytkownik nie istnieje",
+    "Register.Error.InternalServerError": "Wystąpił problem z serwerem. Spróbuj ponownie później a jeśli problem się utrzymuje - skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Register.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }

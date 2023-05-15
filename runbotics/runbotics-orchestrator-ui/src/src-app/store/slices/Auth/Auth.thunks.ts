@@ -18,7 +18,6 @@ export const login = createAsyncThunk(
     'auth/login',
     async (payload: { email: string; password: string }) => {
         try {
-
             const response = await Axios.post<{ id_token: string }>(
                 '/api/authenticate',
                 {
@@ -86,11 +85,16 @@ export const initialize = createAsyncThunk<{
 export const register = createAsyncThunk(
     'auth/register',
     async (payload: { email: string; name: string; password: string }) => {
-        await Axios.post('/api/register', {
-            email: payload.email,
-            login: payload.email,
-            langKey: 'pl',
-            password: payload.password,
-        });
+        try {
+            await Axios.post('/api/register', {
+                email: payload.email,
+                login: payload.email,
+                langKey: 'pl',
+                password: payload.password,
+            });
+        } catch (error) {
+            const axiosCustomError = new Error(error.response.statusText);
+            throw axiosCustomError;
+        }
     }
 );

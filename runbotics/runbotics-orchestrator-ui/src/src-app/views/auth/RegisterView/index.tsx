@@ -9,9 +9,10 @@ import {
     Link,
     Typography,
     TextField,
-    FormHelperText,
     Button,
+    FormHelperText,
 } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
@@ -23,7 +24,7 @@ import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo/Logo';
 
 
-import useTranslations from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 
@@ -75,9 +76,14 @@ const RegisterView: FC = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleFormSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-        try {
-            await dispatch(register(values));
+    const handleFormSubmit = async (values: typeof initialValues, { setErrors, setStatus, setSubmitting }) => {
+        if (!window.navigator.onLine) {
+            setStatus({ success: false });
+            setSubmitting(false);
+            setErrors({ submit: translate('Register.Error.NoInternet') });
+            return;
+        }
+        await dispatch(register(values)).then(unwrapResult).then(() => {
             setStatus({ success: true });
             setSubmitting(false);
             router.push('/app/processes');
@@ -85,14 +91,25 @@ const RegisterView: FC = () => {
                 variant: 'success',
                 autoHideDuration: 5000,
             });
-        } catch (err) {
+        }).catch((error) => {
             setStatus({ success: false });
-            setErrors({ submit: err.message });
             setSubmitting(false);
-            enqueueSnackbar(translate('Register.Registration.Error'), {
-                variant: 'error',
-            });
-        }
+            const errorKey = `Register.Error.${error.message.replaceAll(
+                ' ',
+                ''
+            )}`;
+                
+            if (!checkIfKeyExists(errorKey)) {
+                const customErrorMessage = `${error.message}: ${translate(
+                    'Register.Error.UnexpectedError'
+                )}`;
+                setErrors({ submit: customErrorMessage });
+                return;
+            }
+
+            const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+            setErrors({ submit: customErrorMessage });
+        });
     };
 
     const renderForm = ({
