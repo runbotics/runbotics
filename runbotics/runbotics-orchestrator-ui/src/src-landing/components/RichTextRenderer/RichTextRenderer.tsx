@@ -15,7 +15,7 @@ interface Props {
 }
 
 /**
- * Customize contentful rich text renderer
+ * Customizable contentful rich text renderer
  */
 const RichTextRenderer: VFC<Props> = ({ content }) => {
     const renderOptions: Options = {

@@ -9,7 +9,6 @@ interface AllPostsCollection {
     }
 }
 
-export type GetAllPostsOptions = PaginationOptions;
 export type GetAllPostsResponse = FetchContentfulResponse<
     & AllPostsCollection
     & AllCategoriesCollection

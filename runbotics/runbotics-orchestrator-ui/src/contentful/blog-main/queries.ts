@@ -1,7 +1,6 @@
-import { BLOG_POST_FRAGMENT, BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
 
 import {
-    GetAllPostsOptions,
     GetFilteredPostsOptions,
 } from './types';
 
@@ -41,17 +40,13 @@ query {
     ${blogAllTagsQuery(preview)}
 }`;
 
-export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
+export const buildAllPostsQuery: QueryBuilder = ({
     preview,
-    skip = 0,
-    limit = DEFAULT_PAGE_SIZE,
 }) => `
 query {
     blogPostCollection(
         order: date_DESC,
-        preview: ${preview ? 'true' : 'false'},
-        skip: ${skip ?? 0},
-        limit: ${limit ?? 10}
+        preview: ${preview ? 'true' : 'false'}
     ) {
         items {
             ${BLOG_POST_LIST_FRAGMENT}

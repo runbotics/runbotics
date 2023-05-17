@@ -8,7 +8,6 @@ $SEPARATOR_SPACE: $padding-1;
     align-items: center;
     grid-column: span 2;
     width: 100%;
-    margin-top: $padding-3;
 }
 
 .breadcrumb {
@@ -24,6 +23,7 @@ $SEPARATOR_SPACE: $padding-1;
     display: flex;
     align-items: center;
     border: none;
+    text-decoration: none;
 
     .icon {
         filter: $black-to-accent-filter;
@@ -34,6 +34,17 @@ $SEPARATOR_SPACE: $padding-1;
         .linkContent {
             border-color: $palette-accent-primary;
         }
+    }
+}
+
+.link {
+    color: $palette-accent-primary;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: border-color 300ms;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
     }
 }
 

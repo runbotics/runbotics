@@ -35,7 +35,11 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                         className={styles.img}
                     />
                     <If condition={checkIsDraft(post.status)}>
-                        <CardBadge className={styles.draftBadge} text={translate('Landing.Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
+                        <CardBadge
+                            className={styles.draftBadge}
+                            text={translate('Landing.Blog.Post.DraftBadge')}
+                            backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
+                        />
                     </If>
                     <div className={styles.content}>
                         <div className={styles.info}>

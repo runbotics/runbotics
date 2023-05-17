@@ -45,7 +45,6 @@ export const extractFilterQueryParams = (
 export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) => posts
     .filter(post => {
         const hasCategory = (!queryParams.categories || queryParams.categories?.includes(post.category.slug));
-        // TODO naprawić
         const hasTag = (!queryParams.tags || queryParams.tags?.some(tag => post.tags.items.map(postTag => postTag.slug).includes(tag)));
         const isInTimePeriod = (!queryParams.startDate || new Date(post.date) >= new Date(queryParams.startDate))
             && (!queryParams.endDate || new Date(post.date) <= new Date(queryParams.endDate));

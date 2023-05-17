@@ -20,26 +20,19 @@ import {
     GetAllPostsResponse,
     GetFilteredPostsOptions,
     GetAllCategoriesResponse,
-    GetAllPostsOptions,
     GetAllModelsResponse,
 } from './types';
 
-export async function getAllPosts(options: GetAllPostsOptions = {}) {
-    const isFirstPage = !options.skip;
+export async function getAllPosts() {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
-            ...options,
         })
     );
 
     return {
-        posts: isFirstPage
-            ? extractBlogPostEntries(entries).slice(1)
-            : extractBlogPostEntries(entries),
-        featuredPost: isFirstPage
-            ? extractFeaturedBlogPostEntry(entries)
-            : null,
+        posts: extractBlogPostEntries(entries).slice(1),
+        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
         categories: extractCategoryEntries(entries),
     };

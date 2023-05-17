@@ -24,24 +24,20 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ re
 
     if (isCacheUpToDate()) {
         post = getSinglePostCache(params.slug);
+        res.setHeader('X-Cache', 'HIT');
     } else {
         recreateCache();
     }
 
     if (!post) {
-        post = await getPost({ slug: params.slug });
-    }
-
-    if (!post) {
         return {
-            notFound: true
+            props: {
+                post: await getPost({ slug: params.slug }),
+            },
         };
     }
-    
-    res.setHeader('X-Cache', 'HIT');
+
     return {
-        props: {
-            post,
-        },
+        notFound: true
     };
 };

@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
             },
         };
     }
-    
+
     const { posts } = cache;
     const regularPosts = posts.slice(1);
     const totalPages = Math.ceil(regularPosts.length / DEFAULT_PAGE_SIZE);
