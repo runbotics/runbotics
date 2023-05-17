@@ -1,8 +1,8 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { useRouter } from 'next/router';
 
-import { BlogPost, FILTER_QUERY_PARAMS, FilterQueryParamsEnum, extractFilterQueryParams, hasQueryParams } from '#contentful/common';
+import { BlogPost, Page } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import CardsSection from '#src-landing/views/sections/blog/CardsSection';
 
@@ -14,17 +14,16 @@ export interface PostsPaginationProps {
     posts: BlogPost[];
     featuredPost?: BlogPost;
     cardsSectionRef: React.RefObject<HTMLDivElement>;
-    currentPage: number;
-    totalPages: number;
+    page: Page;
 }
 
 
-const PostsPagination: FC<PostsPaginationProps> = ({ posts, featuredPost, cardsSectionRef, currentPage, totalPages }) => {
+const PostsPagination: FC<PostsPaginationProps> = ({ posts, featuredPost, cardsSectionRef, page }) => {
     const router = useRouter();
     const { pathname, query } = router;
+    const { current: currentPage, total: totalPages } = page;
 
     const switchPage = (pageNumber: number) => {
-
         router.push({
             pathname,
             query: { 

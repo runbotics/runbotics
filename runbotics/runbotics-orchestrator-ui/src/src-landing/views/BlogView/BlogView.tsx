@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 
 import { BlogPost, Category, Page, Tag } from '#contentful/common';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -17,12 +17,11 @@ interface BlogViewProps {
     tags: Tag[];
     page: Page;
     featuredPost?: BlogPost;
-    currentPage: number;
-    totalPages: number;
 }
 
 const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
     const { translate } = useTranslations();
+    const cardsSectionRef = useRef<HTMLDivElement>(null);
 
     return (
         <Layout>
@@ -37,8 +36,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                         posts={posts} 
                         featuredPost={featuredPost} 
                         cardsSectionRef={cardsSectionRef} 
-                        currentPage={currentPage} 
-                        totalPages={totalPages}
+                        page={page}
                     />
                     : (
                         <div className={styles.emptyPageContentWrapper}>

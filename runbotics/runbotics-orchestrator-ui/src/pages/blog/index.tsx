@@ -15,8 +15,6 @@ interface Props {
     tags: Tag[];
     page: Page;
     featuredPost?: BlogPost;
-    currentPage: number;
-    totalPages: number;
 }
 
 const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) => (
@@ -26,8 +24,6 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
         tags={tags}
         page={page}
         featuredPost={featuredPost}
-        currentPage={currentPage}
-        totalPages={totalPages}
     />
 );
 
@@ -45,9 +41,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
         const filteredPosts = filterPosts(cache.posts, queryParams);
-
         const totalPages = Math.ceil(filteredPosts.length / FILTERED_PAGE_SIZE);
-        const currentPage = queryParams.page && queryParams.page > 0 ? queryParams.page : 1;
+        const currentPage = query.page ? Number(query.page) : 1;
         const firstPageElementIndex = (currentPage - 1) * FILTERED_PAGE_SIZE;
 
         return {
