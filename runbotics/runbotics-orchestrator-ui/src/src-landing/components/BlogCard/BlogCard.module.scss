@@ -23,7 +23,7 @@ $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
 
 .root {
-    height: 100%;
+    height: fit-content;
 }
 
 .link {
@@ -127,5 +127,5 @@ $FONT-COLOR: #000;
 .draftBadge {
     position: absolute;
     top: $DRAFT-BADGE-TOP;
-    left: $BADGE-LEFT;
+    right: $BADGE-LEFT;
 }

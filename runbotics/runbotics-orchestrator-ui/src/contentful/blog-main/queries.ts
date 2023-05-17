@@ -1,7 +1,6 @@
-import { BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_LIST_FRAGMENT, QueryBuilder } from '#contentful/common';
 
 import {
-    GetAllPostsOptions,
     GetFilteredPostsOptions,
 } from './types';
 
@@ -13,20 +12,41 @@ blogCategoryCollection(
         title
         slug
     }
-}
-`;
+}`;
 
-export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
+const blogAllTagsQuery = (preview: boolean) => `
+tagCollection(preview:  ${preview ? 'true' : 'false'}) {
+    items {
+        name
+        slug
+    }
+}`;
+
+const blogAllPostsQuery = (preview: boolean) => `
+blogPostCollection(
+    order: date_DESC,
+    preview: ${preview ? 'true' : 'false'},
+) {
+    items {
+        ${BLOG_POST_LIST_FRAGMENT}
+    }
+    total
+}`;
+
+export const buildMainPageQuery: QueryBuilder = ({ preview }) => `
+query {
+    ${blogAllPostsQuery(preview)}
+    ${blogAllCategoriesQuery(preview)}
+    ${blogAllTagsQuery(preview)}
+}`;
+
+export const buildAllPostsQuery: QueryBuilder = ({
     preview,
-    skip = 0,
-    limit = DEFAULT_PAGE_SIZE,
 }) => `
 query {
     blogPostCollection(
         order: date_DESC,
-        preview: ${preview ? 'true' : 'false'},
-        skip: ${skip ?? 0},
-        limit: ${limit ?? 10}
+        preview: ${preview ? 'true' : 'false'}
     ) {
         items {
             ${BLOG_POST_LIST_FRAGMENT}
@@ -45,16 +65,12 @@ query {
 
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
-    skip = 0,
-    limit = DEFAULT_PAGE_SIZE,
     filterFragment,
 }) => `
 query {
     blogPostCollection(
         order: date_DESC, 
         preview: ${preview ? 'true' : 'false'}, 
-        skip: ${skip ?? 0},
-        limit: ${limit ?? DEFAULT_PAGE_SIZE},
         where: { ${filterFragment} }
     ) { 
         items {

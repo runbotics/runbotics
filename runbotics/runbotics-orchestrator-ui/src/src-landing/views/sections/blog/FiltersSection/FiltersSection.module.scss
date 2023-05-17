@@ -10,7 +10,6 @@
     height: fit-content;
     gap: 16px;
     padding: 10px;
-    margin-bottom: $padding-4;
 
     background-color: $palette-background-secondary;
     border-radius: 14px;
@@ -119,6 +118,11 @@
 
     .filterSectionWrapper[data-type='category'] {
         grid-column: 1;
+    }
+
+    .filterSectionWrapper[data-type='date'] {
+        align-items: center;
+        grid-column: span 2;
     }
 }
 

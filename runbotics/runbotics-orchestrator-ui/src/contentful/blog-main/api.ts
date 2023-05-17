@@ -1,6 +1,7 @@
 import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
 
 import {
+    extractAllModelsEntries as extractMainPageEntries,
     extractBlogPostEntries,
     extractBlogPostsPaths,
     extractCategoryEntries,
@@ -9,6 +10,7 @@ import {
 } from './extractors';
 import {
     buildAllCategoriesQuery,
+    buildMainPageQuery,
     buildAllPostsPathsQuery,
     buildAllPostsQuery,
     buildFilteredPostsQuery,
@@ -18,25 +20,19 @@ import {
     GetAllPostsResponse,
     GetFilteredPostsOptions,
     GetAllCategoriesResponse,
-    GetAllPostsOptions,
+    GetAllModelsResponse,
 } from './types';
 
-export async function getAllPosts(options: GetAllPostsOptions = {}) {
-    const isFirstPage = !options.skip;
+export async function getAllPosts() {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
-            ...options,
         })
     );
 
     return {
-        posts: isFirstPage
-            ? extractBlogPostEntries(entries).slice(1)
-            : extractBlogPostEntries(entries),
-        featuredPost: isFirstPage
-            ? extractFeaturedBlogPostEntry(entries)
-            : null,
+        posts: extractBlogPostEntries(entries).slice(1),
+        featuredPost: extractFeaturedBlogPostEntry(entries),
         pagination: extractPaginationData(entries),
         categories: extractCategoryEntries(entries),
     };
@@ -81,4 +77,14 @@ export async function getAllPostsPaths() {
     return {
         paths: extractBlogPostsPaths(entries),
     };
+}
+
+export async function getMainPage() {
+    const entries = await fetchGraphQL<GetAllModelsResponse>(
+        buildMainPageQuery({
+            preview: IS_PREVIEW_MODE,
+        })
+    );
+
+    return extractMainPageEntries(entries);
 }

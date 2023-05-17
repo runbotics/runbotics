@@ -40,14 +40,20 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     <If condition={checkIsDraft(post.status)}>
-                        <CardBadge className={styles.draftBadge} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} text={translate('Landing.Blog.Post.DraftBadge')} />
+                        <CardBadge
+                            className={styles.draftBadge}
+                            backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
+                            text={translate('Landing.Blog.Post.DraftBadge')}
+                        />
                     </If>
-                    <Image
-                        src={post.featuredImage?.url}
-                        fill
-                        alt={post.imageAlt ?? ''}
-                        className={styles.img}
-                    />
+                    {post.featuredImage?.url &&
+                        <Image
+                            src={post.featuredImage?.url}
+                            fill
+                            alt={post.imageAlt ?? ''}
+                            className={styles.img}
+                        />
+                    }
                     <div className={styles.badges}>
                         {tags}
                     </div>

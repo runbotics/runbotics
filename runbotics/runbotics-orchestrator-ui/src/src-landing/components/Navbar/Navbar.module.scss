@@ -15,7 +15,10 @@
     line-height: $line-height-base;
     font-weight: $font-weight-semi-bold;
     border-bottom: 3px solid transparent;
-
+    
+    text-decoration: none;
+    transition: border-color 300ms;
+    
     &:hover {
         border-bottom-color: $palette-background-tertiary;
     }

@@ -18,6 +18,7 @@ export const BLOG_TAGS_FRAGMENT = `
     tagsCollection {
         items {
             name
+            slug
         }
     }
 `;

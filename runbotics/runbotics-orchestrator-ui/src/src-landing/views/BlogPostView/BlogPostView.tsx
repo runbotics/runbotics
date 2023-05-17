@@ -32,7 +32,9 @@ const BlogPostView: VFC<Props> = ({ post }) => {
                     <PostHeader
                         {...postHeaderProps}
                     />
-                    <BreadcrumbsSection postTitle={post.title} />
+                    <div className={styles.breadCrumbsWrapper}>
+                        <BreadcrumbsSection postTitle={post.title} />
+                    </div>
                     <article className={styles.contentArticle}>
                         <RichTextRenderer content={body} />
                         <BlogSharePanel />

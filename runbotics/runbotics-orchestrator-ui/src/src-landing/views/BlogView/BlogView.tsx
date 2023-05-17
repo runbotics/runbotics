@@ -1,6 +1,6 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 
-import { BlogPost, Category } from '#contentful/common';
+import { BlogPost, Category, Page, Tag } from '#contentful/common';
 import useTranslations from '#src-app/hooks/useTranslations';
 import BlogLayout from '#src-landing/components/BlogLayout';
 import Layout from '#src-landing/components/Layout';
@@ -11,16 +11,16 @@ import CardsSection from '../sections/blog/CardsSection';
 import FiltersSection from '../sections/blog/FiltersSection';
 import styles from './BlogView.module.scss';
 
-
 interface BlogViewProps {
     posts: BlogPost[];
     categories: Category[];
+    tags: Tag[];
+    page: Page;
     featuredPost?: BlogPost;
 }
 
-const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost }) => {
+const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
     const { translate } = useTranslations();
-    const cardsSectionRef = useRef<HTMLDivElement>(null);
 
     return (
         <Layout>
@@ -28,14 +28,11 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost }) => {
                 <BreadcrumbsSection />
                 <FiltersSection
                     categories={categories}
-                    onReload={() => {
-                        cardsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }}
+                    tags={tags}
                 />
                 {posts.length
                     ? (
                         <CardsSection
-                            ref={cardsSectionRef}
                             posts={posts}
                             featuredPost={featuredPost}
                         />)

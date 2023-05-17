@@ -30,12 +30,14 @@ const PostHeader: VFC<Props> = (props) => {
 
     return (
         <div className={styles.wrapper}>
-            <Image
-                className={styles.featuredImage}
-                src={props.featuredImage?.url}
-                alt={props.imageAlt ?? ''}
-                fill
-            />
+            {props.featuredImage?.url &&
+                <Image
+                    className={styles.featuredImage}
+                    src={props.featuredImage?.url}
+                    alt={props.imageAlt ?? ''}
+                    fill
+                />
+            }
             <div className={styles.info}>
                 <div className={styles.tagContainer}>
                     <If condition={checkIsDraft(props.status)}>
