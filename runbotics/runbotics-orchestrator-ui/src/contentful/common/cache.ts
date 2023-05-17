@@ -5,4 +5,6 @@ import LRUMap from 'mnemonist/lru-map';
  * It is hard cache, which means that there is no expiration, cache will be refreshed once server is restarted
  * Adjust size of cache accordingly to number of posts
  */
-export const contentfulCache = new LRUMap<string, unknown>(50);
+export const contentfulCache = new LRUMap<CacheKeys, unknown>(53);
+
+type CacheKeys = `posts_${string}` | `categories_${string}` | `tags_${string}` | string;

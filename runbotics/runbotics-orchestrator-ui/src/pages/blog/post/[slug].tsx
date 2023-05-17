@@ -1,6 +1,9 @@
-import { GetServerSidePropsContext } from 'next';
+import type { VFC } from 'react';
 
-import { getPost, getPostCache, setPostCache } from '#contentful/blog-post';
+import { GetServerSideProps } from 'next';
+
+import { getSinglePostCache, isCacheUpToDate, recreateCache } from '#contentful/blog-main';
+import { getPost } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
 import BlogPostView from '#src-landing/views/BlogPostView';
 
@@ -8,7 +11,7 @@ interface Props {
     post: BlogPost;
 }
 
-const Post = ({ post }: Props) => <BlogPostView post={post} />;
+const Post: VFC<Props> = ({ post }) => <BlogPostView post={post} />;
   
 export default Post;
 
@@ -16,27 +19,29 @@ interface Params extends Record<string, string> {
     slug: string;
 }
 
-export async function getServerSideProps({ res, params }: GetServerSidePropsContext<Params>) {
-    let postResponse = getPostCache(params.slug);
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ res, params }) => {
+    let post: BlogPost | undefined;
 
-    if (!postResponse) {
-        postResponse = await getPost({ slug: params.slug });
-        setPostCache(params.slug, postResponse);
+    if (isCacheUpToDate()) {
+        post = getSinglePostCache(params.slug);
     } else {
-        res.setHeader('X-Cache', 'HIT');
+        recreateCache();
     }
 
-    const { post } = postResponse;
+    if (!post) {
+        post = await getPost({ slug: params.slug });
+    }
 
     if (!post) {
         return {
-            notFound: true,
+            notFound: true
         };
     }
-
+    
+    res.setHeader('X-Cache', 'HIT');
     return {
-        props: { 
+        props: {
             post,
         },
     };
-}
+};

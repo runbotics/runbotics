@@ -1,4 +1,4 @@
-import { BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_FRAGMENT, BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
 
 import {
     GetAllPostsOptions,
@@ -13,8 +13,33 @@ blogCategoryCollection(
         title
         slug
     }
-}
-`;
+}`;
+
+const blogAllTagsQuery = (preview: boolean) => `
+tagCollection(preview:  ${preview ? 'true' : 'false'}) {
+    items {
+        name
+        slug
+    }
+}`;
+
+const blogAllPostsQuery = (preview: boolean) => `
+blogPostCollection(
+    order: date_DESC,
+    preview: ${preview ? 'true' : 'false'},
+) {
+    items {
+        ${BLOG_POST_LIST_FRAGMENT}
+    }
+    total
+}`;
+
+export const buildMainPageQuery: QueryBuilder = ({ preview }) => `
+query {
+    ${blogAllPostsQuery(preview)}
+    ${blogAllCategoriesQuery(preview)}
+    ${blogAllTagsQuery(preview)}
+}`;
 
 export const buildAllPostsQuery: QueryBuilder<GetAllPostsOptions> = ({
     preview,

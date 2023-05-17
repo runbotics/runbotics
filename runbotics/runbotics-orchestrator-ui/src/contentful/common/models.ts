@@ -54,6 +54,7 @@ export interface Author {
 
 export interface Tag {
     name: string;
+    slug: string;
 }
 
 export interface PostStatus {
