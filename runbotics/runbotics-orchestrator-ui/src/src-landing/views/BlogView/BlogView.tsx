@@ -18,7 +18,7 @@ interface BlogViewProps {
     page: Page;
     featuredPost?: BlogPost;
     currentPage: number;
-    postsPerPage: number;
+    totalPages: number;
 }
 
 const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
@@ -38,7 +38,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                         featuredPost={featuredPost} 
                         cardsSectionRef={cardsSectionRef} 
                         currentPage={currentPage} 
-                        postsPerPage={postsPerPage}
+                        totalPages={totalPages}
                     />
                     : (
                         <div className={styles.emptyPageContentWrapper}>
