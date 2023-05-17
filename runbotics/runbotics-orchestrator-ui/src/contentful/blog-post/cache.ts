@@ -1,9 +1,9 @@
-import { BlogPost, BlogPostCacheKey, contentfulCache } from '#contentful/common';
+import { BlogPost, contentfulCache } from '#contentful/common';
 
-export function getPostCache(cacheKey: BlogPostCacheKey) {
+export function getPostCache(cacheKey: string) {
     return contentfulCache.get(cacheKey) as BlogPost | undefined;
 }
 
-export function setPostCache(cacheKey: BlogPostCacheKey, cacheValue: BlogPost) {
+export function setPostCache(cacheKey: string, cacheValue: BlogPost) {
     contentfulCache.set(cacheKey, cacheValue);
 }

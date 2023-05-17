@@ -1,4 +1,4 @@
-import { BLOG_POST_LIST_FRAGMENT, DEFAULT_PAGE_SIZE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_LIST_FRAGMENT, QueryBuilder } from '#contentful/common';
 
 import {
     GetFilteredPostsOptions,
@@ -65,16 +65,12 @@ query {
 
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
-    skip = 0,
-    limit = DEFAULT_PAGE_SIZE,
     filterFragment,
 }) => `
 query {
     blogPostCollection(
         order: date_DESC, 
         preview: ${preview ? 'true' : 'false'}, 
-        skip: ${skip ?? 0},
-        limit: ${limit ?? DEFAULT_PAGE_SIZE},
         where: { ${filterFragment} }
     ) { 
         items {
