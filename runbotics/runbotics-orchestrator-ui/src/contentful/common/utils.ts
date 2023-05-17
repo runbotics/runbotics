@@ -4,6 +4,7 @@ import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_PAGE_OFFSET = 1;
+export const DEFAULT_PAGE = 1;
 
 export const FILTER_QUERY_PARAMS = [
     FilterQueryParamsEnum.Category,

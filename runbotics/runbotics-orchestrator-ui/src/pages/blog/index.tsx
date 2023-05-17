@@ -7,29 +7,26 @@ import {
     setBlogPostsCache, getAllPosts
 } from '#contentful/blog-main';
 import {
-    BlogPost, Category, FILTER_QUERY_PARAMS, extractFilterQueryParams,
+    BlogPost, Category, DEFAULT_PAGE, DEFAULT_PAGE_SIZE, FILTER_QUERY_PARAMS, extractFilterQueryParams,
     getPaginationSize, hasQueryParams
 } from '#contentful/common';
 import BlogView from '#src-landing/views/BlogView';
-
-const DEFAULT_POSTS_PER_PAGE = 1;
 
 interface BlogPageProps {
     posts: BlogPost[];
     categories: Category[];
     featuredPost?: BlogPost;
     currentPage: number;
-    postsPerPage: number;
+    totalPages: number;
 }
 
-
-const BlogPage: VFC<BlogPageProps> = ({ posts, categories, featuredPost, currentPage, postsPerPage }) => (
+const BlogPage: VFC<BlogPageProps> = ({ posts, categories, featuredPost, currentPage, totalPages }) => (
     <BlogView
         posts={posts}
         categories={categories}
         featuredPost={featuredPost}
         currentPage={currentPage}
-        postsPerPage={postsPerPage}
+        totalPages={totalPages}
     />
 );
 
@@ -38,17 +35,21 @@ export default BlogPage;
 export async function getServerSideProps({ query, res }: GetServerSidePropsContext) {
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
-        const { limit, skip } = getPaginationSize(queryParams.page);
-        const { posts, categories } = await getFilteredPosts(
+        const { page } = queryParams;
+        const { limit, skip } = getPaginationSize(page);
+        const { posts, categories, pagination } = await getFilteredPosts(
             buildFilterFragment(queryParams),
             { limit, skip },
         );
+        const totalPages = Math.ceil(pagination.total / DEFAULT_PAGE_SIZE) ?? DEFAULT_PAGE;
+        const currentPage = page ? Number(page) : DEFAULT_PAGE;
+
         return {
             props: {
                 posts: posts ?? [],
                 categories: categories ?? [],
-                limit: limit ?? DEFAULT_POSTS_PER_PAGE,
-                currentPage: skip ?? 1,
+                currentPage,
+                totalPages,
             },
         };
     }
@@ -62,15 +63,16 @@ export async function getServerSideProps({ query, res }: GetServerSidePropsConte
         res.setHeader('X-Cache', 'HIT');
     }
 
-    const { posts, featuredPost, categories } = postsResponse;
+    const { posts, featuredPost, categories, pagination } = postsResponse;
+    const totalPages = Math.ceil(pagination.total / DEFAULT_PAGE_SIZE);
 
     return {
         props: {
             posts: posts ?? [],
             featuredPost: featuredPost ?? null,
             categories: categories ?? [],
-            postsPerPage: DEFAULT_POSTS_PER_PAGE,
-            currentPage: 2,
+            currentPage: DEFAULT_PAGE,
+            totalPages,
         },
     };
 }

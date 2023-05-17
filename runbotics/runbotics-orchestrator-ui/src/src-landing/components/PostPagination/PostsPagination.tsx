@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 
 import { useRouter } from 'next/router';
 
-import { BlogPost } from '#contentful/common';
+import { BlogPost, FILTER_QUERY_PARAMS, FilterQueryParamsEnum, extractFilterQueryParams, hasQueryParams } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import CardsSection from '#src-landing/views/sections/blog/CardsSection';
 
@@ -14,33 +14,24 @@ export interface PostsPaginationProps {
     posts: BlogPost[];
     featuredPost?: BlogPost;
     cardsSectionRef: React.RefObject<HTMLDivElement>;
-    currentPage?: number;
-    postsPerPage?: number;
+    currentPage: number;
+    totalPages: number;
 }
 
 
-const PostsPagination: FC<PostsPaginationProps> = ({ posts, featuredPost, cardsSectionRef  }) => {
-    const [tempCurrentPage, setTempCurrentPage] = useState(1);
-    // const tempPages = [1, 2];
-    // const tempPages = [1, 2, 3];
-    // const tempPages = [1, 2, 3, 4];
-    // const tempPages = [1, 2, 3, 4, 5];
-    // const tempPages = [1, 2, 3, 4, 5, 6];
-    // const tempPages = [1, 2, 3, 4, 5, 6, 7];
-    // const tempPages = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    const tempPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-    
+const PostsPagination: FC<PostsPaginationProps> = ({ posts, featuredPost, cardsSectionRef, currentPage, totalPages }) => {
     const router = useRouter();
-    const { pathname } = router;
+    const { pathname, query } = router;
 
     const switchPage = (pageNumber: number) => {
-        setTempCurrentPage(pageNumber);
-        // router.push({
-        //     pathname,
-        //     query: { 
-        //         page: pageNumber,
-        //     },
-        // });
+
+        router.push({
+            pathname,
+            query: { 
+                ...query,
+                page: pageNumber,
+            },
+        });
     };
 
     return (
@@ -52,24 +43,24 @@ const PostsPagination: FC<PostsPaginationProps> = ({ posts, featuredPost, cardsS
                     featuredPost={featuredPost}
                 />
             </div>
-            <If condition={tempPages.length > 1}>
+            <If condition={totalPages > 1}>
                 <div className={styles.slider}>
-                    <If condition={tempCurrentPage > 1}>
+                    <If condition={currentPage > 1}>
                         <SwitchPageButton
                             direction='Previous'
-                            currentPage={tempCurrentPage}
+                            currentPage={currentPage}
                             switchPage={switchPage}
                         />
                     </If>
                     <PaginationNavigation
                         switchPage={switchPage}
-                        currentPage={tempCurrentPage}
-                        totalPages={tempPages.length}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
                     />
-                    <If condition={tempCurrentPage < tempPages.length}>
+                    <If condition={currentPage < totalPages}>
                         <SwitchPageButton
                             direction='Next'
-                            currentPage={tempCurrentPage}
+                            currentPage={currentPage}
                             switchPage={switchPage}
                         />
                     </If>

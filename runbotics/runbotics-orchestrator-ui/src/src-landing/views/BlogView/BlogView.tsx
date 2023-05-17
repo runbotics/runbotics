@@ -16,10 +16,10 @@ interface BlogViewProps {
     categories: Category[];
     featuredPost?: BlogPost;
     currentPage: number;
-    postsPerPage: number;
+    totalPages: number;
 }
 
-const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost, currentPage, postsPerPage }) => {
+const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost, currentPage, totalPages }) => {
     const { translate } = useTranslations();
     const cardsSectionRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +39,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost, currentP
                         featuredPost={featuredPost} 
                         cardsSectionRef={cardsSectionRef} 
                         currentPage={currentPage} 
-                        postsPerPage={postsPerPage}
+                        totalPages={totalPages}
                     />
                     : (
                         <div className={styles.emptyPageContentWrapper}>
