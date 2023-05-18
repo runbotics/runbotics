@@ -30,18 +30,20 @@ const PaginationNavigation: FC<PaginationNavigationProps> = ({ currentPage, tota
     return (
         <div className={styles.root} ref={paginationNavRef}>
             <div className={styles.pageNumbersWrapper}>
-                {pageNumbers
-                    .map((number) => (
-                        <div 
-                            key={number}
-                            className={`${styles.pageNumberBtn} ${number === currentPage ? styles.active : ''}`} 
-                            onClick={() => switchPage(number)}
-                        >
-                            <Typography variant="body2">
-                                {number}
-                            </Typography>
-                        </div>
-                    ))}
+                {
+                    pageNumbers
+                        .map((number) => (
+                            <div 
+                                key={number}
+                                className={`${styles.pageNumberBtn} ${number === currentPage ? styles.active : ''}`} 
+                                onClick={() => switchPage(number)}
+                            >
+                                <Typography variant="body2">
+                                    {number}
+                                </Typography>
+                            </div>
+                        ))
+                }
             </div>
         </div>
     );

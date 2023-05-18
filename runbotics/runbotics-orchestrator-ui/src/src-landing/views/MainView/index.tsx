@@ -10,8 +10,6 @@ import PartnerSection from '#src-landing/views/sections/PartnerSection';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 import RPASection from '#src-landing/views/sections/RPASection';
 
-import IndustriesSection from '../sections/IndustriesSection';
-import TemplatesSection from '../sections/TemplatesSection';
 
 const MainView = () => (
     <Layout>
@@ -19,9 +17,9 @@ const MainView = () => (
         <BenefitsSection />
         <RPASection />
         <ProsSection />
-        <IndustriesSection />
+        {/* <IndustriesSection /> */}
         <OpenSourceSection />
-        <TemplatesSection />
+        {/* <TemplatesSection /> */}
         <IntegrationSection />
         <PartnerSection />
         <ContactSection />
