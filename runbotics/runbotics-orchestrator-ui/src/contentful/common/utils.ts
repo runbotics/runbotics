@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { BlogPost } from './models';
+import { BlogPost, PostStatus } from './models';
 import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
 export const DEFAULT_PAGE_SIZE = 9;
@@ -124,3 +124,5 @@ export const getPaginatedUrl = (page: number, initialParams?: string): string =>
 
     return newUrl;
 };
+
+export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;

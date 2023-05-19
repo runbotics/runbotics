@@ -1,4 +1,3 @@
-import { PostStatus } from '#contentful/common';
 
 export const MAIN_CONTENT_ID = 'main-content';
 export const BENEFITS_SECTION_ID = 'runbotics';
@@ -14,5 +13,3 @@ export const CONTACT_US_SECTION_ID = 'contact-us';
 export const BLOG_PATH = 'blog';
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
-
-export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;
