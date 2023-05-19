@@ -1,6 +1,6 @@
 @import '#src-landing/scss/main';
 
-$NAVIGATION_BUTTON_POSITION: -40px;
+$ARROW_POSITION: -40px;
 
 .previous,
 .next {
@@ -15,11 +15,11 @@ $NAVIGATION_BUTTON_POSITION: -40px;
 }
 
 .previous {
-    left: $NAVIGATION_BUTTON_POSITION;
+    left: $ARROW_POSITION;
 
     transform: rotate(180deg);
 }
 
 .next {
-    right: $NAVIGATION_BUTTON_POSITION;
+    right: $ARROW_POSITION;
 }

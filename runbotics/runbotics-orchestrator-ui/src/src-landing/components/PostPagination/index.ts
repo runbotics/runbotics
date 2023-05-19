@@ -1,3 +1,3 @@
-import PostsPagination from './PostsPagination';
+import CardsPagination from './CardsPagination';
 
-export default PostsPagination;
+export default CardsPagination;

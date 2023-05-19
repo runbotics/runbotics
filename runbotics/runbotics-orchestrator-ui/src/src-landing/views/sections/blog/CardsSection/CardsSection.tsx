@@ -1,29 +1,33 @@
-import React, { forwardRef } from 'react';
+import React, { FC } from 'react';
 
-import { BlogPost } from '#contentful/common';
-import BlogCard from '#src-landing/components/BlogCard/BlogCard';
-import FeaturedBlogCard from '#src-landing/components/FeaturedBlogCard';
+import { BlogPost, Page } from '#contentful/common';
+import If from '#src-app/components/utils/If';
+import CardsGrid from '#src-landing/components/BlogCardsGrid';
+import CardsPagination from '#src-landing/components/PostPagination';
 
 import styles from './CardsSection.module.scss';
 
-
-interface BlogCardsSectionProps {
+interface CardsSectionProps {
     posts: BlogPost[];
     featuredPost?: BlogPost;
+    page: Page;
 }
 
-const BlogCardsSection = forwardRef<HTMLDivElement, BlogCardsSectionProps>(({
+
+const CardsSection: FC<CardsSectionProps> = ({
     posts,
     featuredPost,
-}, ref) => (
-    <div ref={ref} className={styles.root}>
-        {featuredPost ? <FeaturedBlogCard post={featuredPost} /> : null}
-        {posts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-        ))}
+    page,
+}) => (
+    <div className={styles.root}>
+        <CardsGrid
+            posts={posts}
+            featuredPost={featuredPost}
+        />
+        <If condition={page.total > 1}>
+            <CardsPagination page={page} />
+        </If>
     </div>
-));
+);
 
-BlogCardsSection.displayName = 'BlogCardsSection';
-
-export default BlogCardsSection;
+export default CardsSection;

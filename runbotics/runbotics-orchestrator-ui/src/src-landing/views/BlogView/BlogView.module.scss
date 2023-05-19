@@ -1,4 +1,6 @@
-@import "#src-landing/scss/main";
+@import '#src-landing/scss/main';
+
+$PADDING-INLINE: 1.5rem;
 
 .emptyPageContentWrapper {
     display: flex;
@@ -6,8 +8,7 @@
     align-items: center;
     width: 100%;
 
-    padding: 1.5rem;
-
+    padding-inline: $PADDING-INLINE;
     text-align: center;
 }
 

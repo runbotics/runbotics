@@ -77,7 +77,7 @@
     @include link-styles;
     border-bottom: 3px solid transparent;
     text-decoration: none;
-    transition: border-color 300ms;
+    transition: $landing-link-transition;
 
     &:hover {
         border-bottom-color: $palette-accent-primary;

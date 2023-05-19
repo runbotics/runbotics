@@ -16,7 +16,7 @@ $SEPARATOR_SPACE: $padding-1;
 
 .linkContent {
     border-bottom: 2px solid transparent;
-    transition: border-color 300ms;
+    transition: $landing-link-transition;
 }
 
 .homeLink {
@@ -41,7 +41,7 @@ $SEPARATOR_SPACE: $padding-1;
     color: $palette-accent-primary;
     border-bottom: 2px solid transparent;
     text-decoration: none;
-    transition: border-color 300ms;
+    transition: $landing-link-transition;
 
     &:hover {
         border-bottom-color: $palette-accent-primary;

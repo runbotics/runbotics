@@ -13,8 +13,6 @@ export const TEMPLATE_SECTION_ID = 'resources';
 export const CONTACT_US_SECTION_ID = 'contact-us';
 export const BLOG_PATH = 'blog';
 
-export const DRAFT_BADGE_BACKGROUND_COLOR = '#FFC107';
-
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;

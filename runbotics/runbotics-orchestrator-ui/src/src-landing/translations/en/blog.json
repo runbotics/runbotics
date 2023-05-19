@@ -18,6 +18,7 @@
     "Landing.Blog.Post.Share.LikeShare": "Like&nbsp;it? Share&nbsp;it!",
     "Landing.Blog.Post.Share.CopyLink": "Copy link",
     "Landing.Blog.Post.Share.Copied": "Copied!",
-    "Landing.Blog.Post.Pagination.Previous": "previous",
-    "Landing.Blog.Post.Pagination.Next": "next"
+    "Landing.Blog.Post.Pagination.Previous": "go to previous page",
+    "Landing.Blog.Post.Pagination.Next": "go to next page",
+    "Landing.Blog.Post.Pagination.ParticularPage": "go to page {{ number }}"
 }

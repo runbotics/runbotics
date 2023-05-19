@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FilterQueryParamsEnum, Category, Tag } from '#contentful/common';
+import { FilterQueryParamsEnum, Category, Tag, getBlogUrl } from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -91,7 +91,9 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
             searchParams.append(FilterQueryParamsEnum.Search, search);
         }
 
-        push(`/blog${searchParams.toString() ? '?' + searchParams.toString() : ''}`);
+        const newUrl = getBlogUrl(searchParams);
+
+        push(newUrl);
     };
 
     useEffect(() => {

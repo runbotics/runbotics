@@ -22,7 +22,7 @@
     border-style: solid;
     background-color: rgb($text-color-gray, 0.05);
     background-image: url('#public/images/icons/search-light.svg');
-    transition: border-color 100ms ease;
+    transition: $landing-link-transition;
 
     &:focus {
         border-color: $palette-accent-primary;
