@@ -111,12 +111,16 @@ export const hasQueryParams = (
     paramsToInclude: string[]
 ) => paramsToInclude.some((param) => query[param]);
 
-export const getBlogUrl = (params: URLSearchParams): string => `/blog${params.toString() ? '?' + params.toString() : ''}`;
+export const getBlogUrl = (params: URLSearchParams): string => `/blog${
+    params.toString() ?
+        '?' + params.toString() : 
+        ''
+}`;
 
 export const getPaginatedUrl = (page: number, initialParams?: string): string => {
     const searchParams = new URLSearchParams(initialParams);
     searchParams.set(FilterQueryParamsEnum.Page, String(page));
-    const url = getBlogUrl(searchParams);
+    const newUrl = getBlogUrl(searchParams);
 
-    return url;
+    return newUrl;
 };

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { BlogPost } from '#contentful/common';
-
+import If from '#src-app/components/utils/If';
 
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
@@ -18,7 +18,9 @@ const CardsGrid: FC<CardsGridProps> = ({
     featuredPost,
 }) => (
     <div className={styles.root}>
-        {featuredPost ? <FeaturedBlogCard post={featuredPost} /> : null}
+        <If condition={Boolean(featuredPost)}>
+            <FeaturedBlogCard post={featuredPost} />
+        </If>
         {posts.map((post) => (
             <BlogCard key={post.slug} post={post} />
         ))}
