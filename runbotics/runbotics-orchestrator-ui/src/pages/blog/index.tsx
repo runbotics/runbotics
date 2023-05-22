@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
         const filteredPosts = filterPosts(cache.posts, queryParams);
-        const currentPage = queryParams.page ?? 1;
+        const currentPage = queryParams.page && queryParams.page > 0 ? queryParams.page : 1;
         const totalPages = Math.ceil(filteredPosts.length / DEFAULT_PAGE_SIZE);
         const firstPageElementIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
         const currentPagePosts = filteredPosts.slice(firstPageElementIndex, currentPage * DEFAULT_PAGE_SIZE);
