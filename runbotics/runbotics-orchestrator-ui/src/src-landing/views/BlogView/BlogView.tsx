@@ -26,7 +26,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
     const postsNotFoundInfo = (
         <div className={styles.emptyPageContentWrapper}>
             <Typography variant='h3'>
-                {translate('Landing.Blog.EmptyPage.Title')}
+                {translate('Blog.EmptyPage.Title')}
             </Typography>
         </div>
     );

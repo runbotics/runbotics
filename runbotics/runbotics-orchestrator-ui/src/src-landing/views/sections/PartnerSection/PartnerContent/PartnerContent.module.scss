@@ -27,37 +27,12 @@ $A41LOGO_HEIGHT: 100px;
 .btnSpace {
     grid-column: 2;
     grid-row: 1 / 3;
-    justify-self: right;
-    align-self: center;
-}
 
-.btn { 
-    position: relative;
-    display: inline-block; 
-    border-radius: 30px;
-    padding: 18px 95px;
-    background: $palette-background-accent;
-    text-align: center;
-    text-decoration: none;
-}
-
-.circle {
-    position: absolute;
-    top: 0; 
-    right: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin: 4px;
-    border: none;
-    border-radius: 50%;
-    padding: 14px 14px 14px 15px;
-    background-color: $palette-background-primary;
-}
+    justify-content: center;
 
-.btnText {
-    font-weight: $font-weight-semi-bold;
-    color: $palette-background-tertiary;
+    width: 100%;
 }
 
 @media (max-width: $breakpoint-md) {
@@ -72,9 +47,6 @@ $A41LOGO_HEIGHT: 100px;
         grid-template-columns: 1fr 1fr;
     }
 
-    .btn {
-        padding: 18px 70px;
-    }
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -88,13 +60,6 @@ $A41LOGO_HEIGHT: 100px;
         justify-self: center;
     }
 
-    .btn {
-        padding: 18px 30px;
-    }
-
-    .circle {
-        display: none;
-    }
 }
 
 @media (max-width: $breakpoint-xs) {

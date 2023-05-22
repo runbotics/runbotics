@@ -2,10 +2,10 @@ import type { VFC } from 'react';
 
 import { BlogPost } from '#contentful/common';
 import useTranslations from '#src-app/hooks/useTranslations';
+import LinkButton from '#src-landing/components/LinkButton';
 import Typography from '#src-landing/components/Typography';
 import { BLOG_SECTION_ID } from '#src-landing/utils/utils';
 
-import BlogButton from './BlogButton/BlogButton';
 import BlogPostCarousel from './BlogPostCarousel/BlogPostCarousel';
 import styles from './BlogSection.module.scss';
 import { BLOG_SECTION_TITLE_ID } from './BlogSection.utils';
@@ -34,9 +34,7 @@ const BlogSection: VFC<Props> = ({ posts }) => {
             <div className={styles.background}></div>
             <BlogPostCarousel posts={posts}/>
             <div className={styles.blogButtonWrapper}>
-                <div />
-                <BlogButton />
-                <div />
+                <LinkButton href={'/blog'} title={translate('Landing.Blog.Link.Title')} />
             </div>
         </section>
     );

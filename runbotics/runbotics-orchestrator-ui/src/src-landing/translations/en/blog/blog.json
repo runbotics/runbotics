@@ -17,5 +17,8 @@
     "Blog.Post.DraftBadge": "draft",
     "Blog.Post.Share.LikeShare": "Like&nbsp;it? Share&nbsp;it!",
     "Blog.Post.Share.CopyLink": "Copy link",
-    "Blog.Post.Share.Copied": "Copied!"
+    "Blog.Post.Share.Copied": "Copied!",
+    "Blog.Post.Pagination.Previous": "Go to previous page",
+    "Blog.Post.Pagination.Next": "Go to next page",
+    "Blog.Post.Pagination.ParticularPage": "Go to page {{ number }}"
 }
