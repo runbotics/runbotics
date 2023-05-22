@@ -7,11 +7,15 @@ import Typography from '#src-landing/components/Typography';
 
 import styles from './LoginLink.module.scss';
 
-const LoginLink: VFC = () => {
+interface Props {
+    className?: string;
+}
+
+const LoginLink: VFC<Props> = ({ className }) => {
     const { translate } = useTranslations();
     
     return (
-        <Link className={styles.link} href={'/login'}>
+        <Link className={`${styles.link} ${className}`} href={'/login'}>
             <Typography
                 variant="h6"
                 color="accent"

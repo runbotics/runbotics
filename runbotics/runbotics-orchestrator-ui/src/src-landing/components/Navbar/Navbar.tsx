@@ -125,8 +125,10 @@ const Navbar: FC<NavbarProps> = ({
                         {translate('Landing.Header.Nav.Option.ContactUs')}
                     </Link>
                 </li>
+                <li className={styles.listItem}>
+                    <LoginLink />
+                </li>
             </ul>
-            <LoginLink />
         </nav>
     );
 };

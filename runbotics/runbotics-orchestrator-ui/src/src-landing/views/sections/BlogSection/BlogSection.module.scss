@@ -28,8 +28,29 @@ $BACKGROUND-HEIGHT: 400px;
     background-size: cover;
 }
 
+.blogButtonWrapper {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    justify-content: flex-end;
+    padding: 70px 20px;
+}
+
 @media (min-width: $breakpoint-xl) {
     .background {
         background-position: center;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .blogButtonWrapper {
+        max-width: 600px;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: $breakpoint-xl) {
+    .blogButtonWrapper {
+        // padding-right: clamp(0px, 3vw, );
+        // padding-left: 80px;
     }
 }

@@ -116,11 +116,9 @@
         transform: translate(-3px, 3px) rotate(-45deg);
     }
 
-    .loginButton {
+    .loginLink {
         display: none;
     }
-
-   
 }
 
 @media (max-width: $breakpoint-xs) {

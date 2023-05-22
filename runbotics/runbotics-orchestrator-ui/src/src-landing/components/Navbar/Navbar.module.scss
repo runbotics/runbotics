@@ -11,9 +11,14 @@
 .navLinkWrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 30px;
     padding: 0;
     list-style: none;
+
+    li:last-child {
+        display: none;
+    }
 }
 
 .link {
@@ -32,19 +37,19 @@
 }
 
 .btn {
-        display: inline-block;
-        border: none;
-        border-radius: 24px;
-        padding: 10px $padding-3;
-        background-color: $palette-background-tertiary;
-        text-align: center;
-        cursor: pointer;
-        text-decoration: none;
-    
-        & > *:hover {
-            color: $text-color-light;
-        }
+    display: inline-block;
+    border: none;
+    border-radius: 24px;
+    padding: 10px $padding-3;
+    background-color: $palette-background-tertiary;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    & > *:hover {
+        color: $text-color-light;
     }
+}
 
 .loginLink {
     composes: btn;
@@ -88,6 +93,11 @@
         backdrop-filter: blur(6px);
     }
 
+    .navLinkWrapper li:last-child {
+        display: flex;
+        justify-content: center;
+    }
+    
     .navLinksExpanded {
         left: 0;
     }
@@ -95,16 +105,14 @@
     .hideNavLinksExpanded {
         left: -100%;
     }
-
-    .listItem {
-        &:last-child {
-            border-top: 2px solid $palette-background-disabled;
-            width: 100%;
-            text-align: center;
-            padding-top: $margin-2;
-        }
+    
+    .listItem:last-child {
+        border-top: 2px solid $palette-background-disabled;
+        width: 100%;
+        text-align: center;
+        padding-top: $margin-2;
     }
-
+    
     .minimized {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
