@@ -14,19 +14,18 @@ import styles from './FeaturedBlogCard.module.scss';
 
 interface FeaturedBlogCardProps {
     post: BlogPost;
+    className?: string;
+    brief?: boolean;
 }
 
-
-const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
+const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post, className, brief }) => {
     const { translate } = useTranslations();
 
     if (!post) return null;
 
-    const tags = post.tags?.items.map(({ name }) => <CardBadge key={name} text={name} />);
-
     return (
-        <article className={styles.root}>
-            <Link className={styles.link} href={`/blog/post/${post.slug}`}>
+        <article className={`${styles.root} ${className}`}>
+            <Link className={styles.link} data-brief={brief} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     <Image
                         src={post.featuredImage.url}
@@ -37,34 +36,35 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post }) => {
                     <If condition={checkIsDraft(post.status)}>
                         <CardBadge
                             className={styles.draftBadge}
-                            text={translate('Landing.Blog.Post.DraftBadge')}
+                            text={translate('Blog.Post.DraftBadge')}
                             backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
                         />
                     </If>
                     <div className={styles.content}>
                         <div className={styles.info}>
-                            {tags}
                             <Typography variant="body4">
                                 {new Intl.DateTimeFormat().format(new Date(post.date))}
                             </Typography>
                             <Typography variant="body4">
-                                {post.readingTime}&nbsp;{translate('Landing.Blog.Post.ReadingTime.Unit')}
+                                {post.readingTime}&nbsp;{translate('Blog.Post.ReadingTime.Unit')}
                             </Typography>
                             <Typography variant="body4" className={styles.category}>
                                 {post.category.title}
                             </Typography>
                         </div>
                         <div>
-                            <Typography variant="h3" className={styles.title}>
+                            <Typography variant="h3" data-brief={brief} className={styles.title}>
                                 {post.title}
                             </Typography>
-                            <Typography variant="body3" className={styles.description}>
-                                {cutText(post.summary, 230)}
-                            </Typography>
+                            {!brief &&
+                                <Typography variant="body3" className={styles.description}>
+                                    {cutText(post.summary, 230)}
+                                </Typography>
+                            }
                         </div>
                         <div className={styles.readMore}>
                             <Typography variant="body5">
-                                {translate('Landing.Blog.Card.ReadMore')}
+                                {translate('Blog.Card.ReadMore')}
                             </Typography>
                         </div>
                     </div>

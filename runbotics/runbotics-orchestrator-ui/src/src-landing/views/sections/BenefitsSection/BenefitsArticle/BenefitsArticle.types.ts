@@ -1,4 +1,4 @@
-import benefitsTranslation from '#src-landing/translations/en/benefits.json';
+import benefitsTranslation from '#src-landing/translations/en/landing/benefits.json';
 
 type ArticleTranslationKey = keyof typeof benefitsTranslation;
 

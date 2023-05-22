@@ -1,12 +1,24 @@
 @import '#src-landing/scss/main.scss';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
+.nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .navLinkWrapper {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 30px;
     padding: 0;
     list-style: none;
+
+    li:last-child {
+        display: none;
+    }
 }
 
 .link {
@@ -24,8 +36,25 @@
     }
 }
 
-.loginButton {
-    display: none;
+.btn {
+    display: inline-block;
+    border: none;
+    border-radius: 24px;
+    padding: 10px $padding-3;
+    background-color: $palette-background-tertiary;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    & > *:hover {
+        color: $text-color-light;
+    }
+}
+
+.loginLink {
+    composes: btn;
+    text-decoration: none;
+    margin: 0 $margin-3;
 }
 
 @media (max-width: $breakpoint-md) {
@@ -64,6 +93,11 @@
         backdrop-filter: blur(6px);
     }
 
+    .navLinkWrapper li:last-child {
+        display: flex;
+        justify-content: center;
+    }
+    
     .navLinksExpanded {
         left: 0;
     }
@@ -71,16 +105,14 @@
     .hideNavLinksExpanded {
         left: -100%;
     }
-
-    .listItem {
-        &:last-child {
-            border-top: 2px solid $palette-background-disabled;
-            width: 100%;
-            text-align: center;
-            padding-top: $margin-2;
-        }
+    
+    .listItem:last-child {
+        border-top: 2px solid $palette-background-disabled;
+        width: 100%;
+        text-align: center;
+        padding-top: $margin-2;
     }
-
+    
     .minimized {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -96,26 +128,6 @@
                 grid-column: span 4;
             }
         }
-    }
-
-    .btn {
-        display: inline-block;
-        border: none;
-        border-radius: 24px;
-        padding: 10px $padding-3;
-        background-color: $palette-background-tertiary;
-        text-align: center;
-        cursor: pointer;
-        text-decoration: none;
-
-        & > *:hover {
-            color: $text-color-light;
-        }
-    }
-
-    .loginButton {
-        composes: btn;
-        margin: 0 $margin-3;
     }
 }
 
@@ -152,10 +164,10 @@
         }
 
         &:last-child {
-            height: 20%;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 20%;
         }
     }
 }

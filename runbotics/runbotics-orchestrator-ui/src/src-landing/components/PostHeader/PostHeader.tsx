@@ -37,7 +37,7 @@ const PostHeader: VFC<Props> = (props) => {
             <div className={styles.info}>
                 <div className={styles.tagContainer}>
                     <If condition={checkIsDraft(props.status)}>
-                        <CardBadge className={styles.draftBadge} text={translate('Landing.Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
+                        <CardBadge className={styles.draftBadge} text={translate('Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
                     </If>
                     {tags}
                 </div>
@@ -47,7 +47,7 @@ const PostHeader: VFC<Props> = (props) => {
                     </Typography>
                 </div>
                 <div className={styles.details}>
-                    <div title={translate('Landing.Blog.Post.PublicationDate')}>
+                    <div title={translate('Blog.Post.PublicationDate')}>
                         <Image
                             src={CalendarIcon}
                             alt='publication date icon'
@@ -59,19 +59,19 @@ const PostHeader: VFC<Props> = (props) => {
                             {new Intl.DateTimeFormat().format(new Date(props.date))}
                         </Typography>
                     </div>
-                    <div title={translate('Landing.Blog.Post.ReadingTime')}>
+                    <div title={translate('Blog.Post.ReadingTime')}>
                         <Image src={CoffeeIcon} width={24} height={24} alt='reading time icon' />
                         <Typography className={styles.detailTitle} variant='h6'>
-                            {props.readingTime}&nbsp;{translate('Landing.Blog.Post.ReadingTime.Unit')}
+                            {props.readingTime}&nbsp;{translate('Blog.Post.ReadingTime.Unit')}
                         </Typography>
                     </div>
-                    <div title={translate('Landing.Blog.Post.Category')}>
+                    <div title={translate('Blog.Post.Category')}>
                         <Image src={CategoryIcon} width={24} height={24} alt='category icon' />
                         <Typography className={styles.detailTitle} variant='h6'>
                             {props.category.title}
                         </Typography>
                     </div>
-                    <div title={translate('Landing.Blog.Post.Author')}>
+                    <div title={translate('Blog.Post.Author')}>
                         <Image src={ToyIcon} width={24} height={24} alt='author icon' />
                         <Typography className={styles.detailTitle} variant='h6'>
                             {props.authors.items.map(item => item.name).join(', ')}

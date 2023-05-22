@@ -35,7 +35,7 @@ const PaginationNavigation: FC<PaginationNavigationProps> = ({ currentPage, tota
                 <Link 
                     className={`${styles.pageNumber} ${number === currentPage ? styles.active : ''}`} 
                     href={getPaginatedUrl(number, currentUrl.split('?')[1])}
-                    title={translate('Landing.Blog.Post.Pagination.ParticularPage', { number })}
+                    title={translate('Blog.Post.Pagination.ParticularPage', { number })}
                 >
                     <Typography variant="body2">
                         {number}

@@ -31,11 +31,11 @@ const SwitchPageButton: FC<SwitchPageButtonProps> = ({ direction, currentPage })
         <Link 
             className={styles[direction.toLowerCase()]}
             href={paginatedUrl}
-            title={translate(`Landing.Blog.Post.Pagination.${direction}`)}
+            title={translate(`Blog.Post.Pagination.${direction}`)}
         >
             <Image
                 src={arrowRight}
-                alt={translate(`Landing.Blog.Post.Pagination.${direction}`)}
+                alt={translate(`Blog.Post.Pagination.${direction}`)}
                 width={ARROW_SIZE}
                 height={ARROW_SIZE}
             />

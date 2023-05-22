@@ -8,13 +8,15 @@ import Typography from '#src-landing/components/Typography';
 import defaultStyles from './Carousel.module.scss';
 import { CarouselProps } from './Carousel.types';
 
-const Carousel: FC<CarouselProps> = ({ slides, itemsPerSlider = 1, customStyles, hasCSSSlider, hasCounter, hideControlsOnEdge }) => {
+const Carousel: FC<CarouselProps> = ({
+    slides, itemsPerSlider = 1, styles = defaultStyles,
+    hasCSSSlider, hasCounter, hideControlsOnEdge,
+}) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [sliderWidth, setSliderWidth] = useState<null | number>(itemsPerSlider);
     const isLastSlide = hideControlsOnEdge && slides.length - sliderWidth === activeIndex;
     const isFirstSlide = hideControlsOnEdge && activeIndex === 0;
     const sliderRef = useRef<HTMLDivElement>(null);
-    const styles = customStyles ?? defaultStyles;
 
     useEffect(() => {
         if (hasCSSSlider && sliderRef.current) {
@@ -43,7 +45,6 @@ const Carousel: FC<CarouselProps> = ({ slides, itemsPerSlider = 1, customStyles,
             prevIndex === 0 ? slides.length - 1 : prevIndex - 1
         );
     };
-
 
     return (
         <div className={styles.root}>

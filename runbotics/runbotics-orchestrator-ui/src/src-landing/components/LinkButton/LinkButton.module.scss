@@ -1,0 +1,36 @@
+@import '#src-landing/scss/main';
+
+.link {
+    position: relative;;
+    display: block;
+
+    width: 100%;
+    max-width: 360px;
+
+    text-decoration: none;
+    border-radius: 30px;
+    padding: 20px;
+    color: $palette-black;
+    background-color: $palette-background-accent;
+    transition: background-color 0.4s;
+    box-shadow: $box-shadow-primary;
+
+    &:hover {
+        background-color: $palette-background-accent-dark;
+    }
+}
+
+.title {
+    text-align: center;
+}
+
+.iconWrapper {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    margin: auto 0;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: $palette-white;
+}
+
