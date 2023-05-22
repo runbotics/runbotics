@@ -1,7 +1,7 @@
 import { integrationNames } from '#public/images/logos';
-import templatesTranslations from '#src-landing/translations/en/templates.json';
+import templatesTranslations from '#src-landing/translations/en/landing/templates.json';
 
-import { templatesProps } from './TemplatesSection.types';
+import { TemplatesProps } from './TemplatesSection.types';
 
 export const checkTranslationKey = (key: string): key is keyof typeof templatesTranslations => templatesTranslations.hasOwnProperty(key);
 
@@ -25,7 +25,7 @@ export const categoriesTranslationKeys: Array<categoriesNames> = [
     categoriesNames.CATEGORY_FIVE,
 ];
 
-export const templates: Array<templatesProps> = [
+export const templates: Array<TemplatesProps> = [
     {
         title: 'ONE title title1 ilomet',
         description: 'example descrippor incididunptate veli.',

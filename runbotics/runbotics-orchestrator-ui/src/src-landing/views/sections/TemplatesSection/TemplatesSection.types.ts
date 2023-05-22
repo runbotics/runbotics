@@ -1,4 +1,4 @@
-export interface templatesProps { 
+export interface TemplatesProps { 
     title: string; 
     description: string; 
     categories: string[]; 
