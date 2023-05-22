@@ -42,7 +42,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                         <CardBadge
                             className={styles.draftBadge}
                             backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
-                            text={translate('Landing.Blog.Post.DraftBadge')}
+                            text={translate('Blog.Post.DraftBadge')}
                         />
                     </If>
                     {post.featuredImage?.url &&
@@ -62,7 +62,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                                 {new Intl.DateTimeFormat().format(new Date(post.date))}
                             </Typography>
                             <Typography variant="body4">
-                                {post.readingTime}&nbsp;{translate('Landing.Blog.Post.ReadingTime.Unit')}
+                                {post.readingTime}&nbsp;{translate('Blog.Post.ReadingTime.Unit')}
                             </Typography>
                             <Typography variant="body4" className={styles.category}>
                                 {post.category.title}
@@ -78,7 +78,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                         </div>
                         <div className={styles.readMore}>
                             <Typography variant="body3">
-                                {translate('Landing.Blog.Card.ReadMore')}
+                                {translate('Blog.Card.ReadMore')}
                             </Typography>
                         </div>
                     </div>

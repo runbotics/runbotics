@@ -26,7 +26,7 @@ const BlogSharePanel = () => {
         <div className={styles.wrapper}>
             <div className={styles.panelTitle}>
                 <Typography variant='h5'>
-                    {translateHTML('Landing.Blog.Post.Share.LikeShare')}
+                    {translateHTML('Blog.Post.Share.LikeShare')}
                 </Typography>
             </div>
             <ul className={styles.linkList}>
@@ -52,11 +52,11 @@ const BlogSharePanel = () => {
                 <li className={styles.divider} />
                 <li className={styles.copyTooltipContainer}>
                     <span className={styles.copyTooltip} ref={copyTooltipRef}>
-                        {translate('Landing.Blog.Post.Share.Copied')}
+                        {translate('Blog.Post.Share.Copied')}
                     </span>
                     <button className={styles.copyButton} onClick={handleCopy} type='button'>
                         <ClipboardIcon />
-                        {translate('Landing.Blog.Post.Share.CopyLink')}
+                        {translate('Blog.Post.Share.CopyLink')}
                     </button>
                 </li>
             </ul>

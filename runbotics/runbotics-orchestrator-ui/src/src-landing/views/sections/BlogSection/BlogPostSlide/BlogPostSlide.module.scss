@@ -1,0 +1,29 @@
+@import '#src-landing/scss/main.scss';
+
+$TILE-BORDER-RADIUS: 20px 150px 20px 20px;
+
+$SLIDER-FLEX-GAP: 25px;
+
+.root {
+    $slide-width: calc(100% / var(--items-per-slider));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    width: 100%;
+    height: clamp(400px, 80vw, 500px);
+    border-radius: $TILE-BORDER-RADIUS;
+
+    flex: 0 0 $slide-width;
+    max-width: calc($slide-width - $SLIDER-FLEX-GAP + 2px);
+
+    & > a {
+        height: 100%;
+        box-shadow: none;
+        border-radius: $TILE-BORDER-RADIUS;
+        > div {
+            border-radius: $TILE-BORDER-RADIUS;
+        }
+    }
+}

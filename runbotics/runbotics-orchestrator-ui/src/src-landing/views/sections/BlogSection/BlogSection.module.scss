@@ -1,0 +1,35 @@
+@import '#src-landing/scss/main.scss';
+
+$BACKGROUND-HEIGHT: 400px;
+
+.root {
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+    isolation: isolate;
+}
+
+.title {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-block: $padding-4;
+}
+
+.background {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: $BACKGROUND-HEIGHT;
+    background-image: url('/images/shapes/Industries-arrows.svg');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: cover;
+}
+
+@media (min-width: $breakpoint-xl) {
+    .background {
+        background-position: center;
+    }
+}

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -17,8 +16,6 @@ const Header = () => {
     const { translate } = useTranslations();
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
-
-    const { push } = useRouter();
 
     const toggleNav = () => {
         setIsNavExpanded((prevState) => !prevState);
@@ -60,15 +57,11 @@ const Header = () => {
                     <span></span>
                     <span></span>
                 </button>
-                <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
-                <button className={styles.loginButton} onClick={() => push('/login')}>
-                    <Typography
-                        variant="h6"
-                        color="accent"
-                        className={styles.btnText}
-                        text={translate('Landing.Header.Button.LogIn')}
-                    />
-                </button>
+                <Navbar
+                    isNavExpanded={isNavExpanded}
+                    hideNav={hideNav}
+                    isMobileVisible={false}
+                />
             </div>
         </header>
     );

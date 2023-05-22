@@ -47,11 +47,6 @@
     }
 }
 
-.loginButton {
-    composes: btn;
-    margin: 0 $margin-3;
-}
-
 .menuIcon {
     display: none;
 }
@@ -68,13 +63,7 @@
     transform: translateY(0);
 }
 
-.btnText {
-    font-weight: $font-weight-semi-bold;
-}
-
-
 @media (max-width: $breakpoint-md) {
-
     .menuIcon {
         display: block;
         user-select: none;

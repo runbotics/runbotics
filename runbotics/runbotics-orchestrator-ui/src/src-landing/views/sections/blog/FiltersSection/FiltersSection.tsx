@@ -144,13 +144,13 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
             />
             <div className={styles.filtersHeader}>
                 <Typography variant='h4'>
-                    {translate('Landing.Blog.Filters.Title')}
+                    {translate('Blog.Filters.Title')}
                 </Typography>
                 <Link
                     className={styles.clearLink}
                     href={'/blog'}
                 >
-                    {translate('Landing.Blog.Filters.ClearAll')}
+                    {translate('Blog.Filters.ClearAll')}
                 </Link>
             </div>
             <div
@@ -158,7 +158,7 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                 data-type='category'
             >
                 <Typography variant='h6'>
-                    {translate('Landing.Blog.Filters.Category')}
+                    {translate('Blog.Filters.Category')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
                     {categoriesCheckboxes}
@@ -179,8 +179,8 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                     />
                     <Typography variant='body4' element='span' color='accent'>
                         {isCategoriesSectionExpanded
-                            ? translate('Landing.Blog.Filters.Less')
-                            : translate('Landing.Blog.Filters.More')}
+                            ? translate('Blog.Filters.Less')
+                            : translate('Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
@@ -189,7 +189,7 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                 data-type='tag'
             >
                 <Typography variant='h6'>
-                    {translate('Landing.Blog.Filters.Tag')}
+                    {translate('Blog.Filters.Tag')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
                     {tagsCheckboxes}
@@ -210,8 +210,8 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                     />
                     <Typography variant='body4' element='span' color='accent'>
                         {isTagsSectionExpanded
-                            ? translate('Landing.Blog.Filters.Less')
-                            : translate('Landing.Blog.Filters.More')}
+                            ? translate('Blog.Filters.Less')
+                            : translate('Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
@@ -220,7 +220,7 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                 data-type='date'
             >
                 <Typography variant='h6'>
-                    {translate('Landing.Blog.Filters.Date')}
+                    {translate('Blog.Filters.Date')}
                 </Typography>
                 <DateRange
                     initialDateRange={dateRange}

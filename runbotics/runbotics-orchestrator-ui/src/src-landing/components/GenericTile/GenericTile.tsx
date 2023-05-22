@@ -4,16 +4,14 @@ import styles from './GenericTile.module.scss';
 import { GenericTileProps } from './GenericTile.types';
 
 const GenericTile: FC<GenericTileProps> = ({
-    children,
-    className,
-    dataShadow,
+    children, className, dataShadow,
 }) => (
-    <div
+    <article
         className={`${styles.root} ${className}`}
         data-shadow={dataShadow}
     >
         {children}
-    </div>
+    </article>
 );
 
 export default GenericTile;

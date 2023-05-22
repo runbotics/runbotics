@@ -1,6 +1,13 @@
 @import '#src-landing/scss/main.scss';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
+.nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .navLinkWrapper {
     display: flex;
     justify-content: space-between;
@@ -24,8 +31,25 @@
     }
 }
 
-.loginButton {
-    display: none;
+.btn {
+        display: inline-block;
+        border: none;
+        border-radius: 24px;
+        padding: 10px $padding-3;
+        background-color: $palette-background-tertiary;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+    
+        & > *:hover {
+            color: $text-color-light;
+        }
+    }
+
+.loginLink {
+    composes: btn;
+    text-decoration: none;
+    margin: 0 $margin-3;
 }
 
 @media (max-width: $breakpoint-md) {
@@ -97,26 +121,6 @@
             }
         }
     }
-
-    .btn {
-        display: inline-block;
-        border: none;
-        border-radius: 24px;
-        padding: 10px $padding-3;
-        background-color: $palette-background-tertiary;
-        text-align: center;
-        cursor: pointer;
-        text-decoration: none;
-
-        & > *:hover {
-            color: $text-color-light;
-        }
-    }
-
-    .loginButton {
-        composes: btn;
-        margin: 0 $margin-3;
-    }
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -152,10 +156,10 @@
         }
 
         &:last-child {
-            height: 20%;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 20%;
         }
     }
 }
