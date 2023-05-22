@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { BlogPost, Category, Page, Tag } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import BlogLayout from '#src-landing/components/BlogLayout';
 import Layout from '#src-landing/components/Layout';
@@ -22,6 +23,14 @@ interface BlogViewProps {
 const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
     const { translate } = useTranslations();
 
+    const postsNotFoundInfo = (
+        <div className={styles.emptyPageContentWrapper}>
+            <Typography variant='h3'>
+                {translate('Landing.Blog.EmptyPage.Title')}
+            </Typography>
+        </div>
+    );
+
     return (
         <Layout>
             <BlogLayout>
@@ -30,19 +39,13 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                     categories={categories}
                     tags={tags}
                 />
-                {posts.length
-                    ? (
-                        <CardsSection
-                            posts={posts}
-                            featuredPost={featuredPost}
-                        />)
-                    : (
-                        <div className={styles.emptyPageContentWrapper}>
-                            <Typography variant='h3'>
-                                {translate('Landing.Blog.EmptyPage.Title')}
-                            </Typography>
-                        </div>)
-                }
+                <If condition={Boolean(posts.length)} else={postsNotFoundInfo}>
+                    <CardsSection
+                        posts={posts}
+                        featuredPost={featuredPost}
+                        page={page}
+                    />
+                </If>
             </BlogLayout>
         </Layout>
     );

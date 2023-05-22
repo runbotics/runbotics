@@ -10,6 +10,7 @@ import PartnerSection from '#src-landing/views/sections/PartnerSection';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 import RPASection from '#src-landing/views/sections/RPASection';
 
+
 const MainView = () => (
     <Layout>
         <HeroSection />

@@ -5,7 +5,7 @@ import { GetServerSideProps } from 'next';
 import { getBlogMainCache, recreateCache
 } from '#contentful/blog-main';
 import {
-    BlogPost, Category, DEFAULT_PAGE_SIZE, FILTERED_PAGE_SIZE, FILTER_QUERY_PARAMS, Tag, filterPosts, extractFilterQueryParams, hasQueryParams, Page
+    BlogPost, Category, DEFAULT_PAGE_SIZE, FILTER_QUERY_PARAMS, Tag, filterPosts, extractFilterQueryParams, hasQueryParams, Page
 } from '#contentful/common';
 import BlogView from '#src-landing/views/BlogView';
 
@@ -41,15 +41,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
         const filteredPosts = filterPosts(cache.posts, queryParams);
-
-        const totalPages = Math.ceil(filteredPosts.length / FILTERED_PAGE_SIZE);
         const currentPage = queryParams.page && queryParams.page > 0 ? queryParams.page : 1;
-        const firstPageElementIndex = (currentPage - 1) * FILTERED_PAGE_SIZE;
+        const totalPages = Math.ceil(filteredPosts.length / DEFAULT_PAGE_SIZE);
+        const firstPageElementIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
+        const currentPagePosts = filteredPosts.slice(firstPageElementIndex, currentPage * DEFAULT_PAGE_SIZE);
 
         return {
             props: {
                 ...cache,
-                posts: filteredPosts.slice(firstPageElementIndex, currentPage * FILTERED_PAGE_SIZE) ?? [],
+                posts: currentPagePosts ?? [],
                 featuredPost: null,
                 page: {
                     current: currentPage,

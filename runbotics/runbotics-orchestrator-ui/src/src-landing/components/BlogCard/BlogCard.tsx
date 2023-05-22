@@ -3,10 +3,9 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { BlogPost } from '#contentful/common';
+import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#src-landing/utils/utils';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
