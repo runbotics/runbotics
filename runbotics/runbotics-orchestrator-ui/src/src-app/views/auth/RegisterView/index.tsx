@@ -104,11 +104,19 @@ const RegisterView: FC = () => {
                     'Register.Error.UnexpectedError'
                 )}`;
                 setErrors({ submit: customErrorMessage });
+                enqueueSnackbar(
+                    customErrorMessage,
+                    { variant: 'error', autoHideDuration: 10000}
+                );
                 return;
             }
 
-            const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+            const customErrorMessage = `${translate(errorKey)}`;
             setErrors({ submit: customErrorMessage });
+            enqueueSnackbar(
+                customErrorMessage,
+                { variant: 'error', autoHideDuration: 10000}
+            );
         });
     };
 

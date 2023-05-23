@@ -14,7 +14,7 @@
     "Register.Form.Actions.Register": "Register",
     "Register.SwitchToLoginMessage": "I already have an account",
     "Register.Error.NoInternet": "No internet connection",
-    "Register.Error.BadRequest": "Email and/or password are incorrect or user does not exist",
+    "Register.Error.BadRequest": "The server was unable to process the request due to malformation or incorrect syntax",
     "Register.Error.InternalServerError": "A problem with server has occured. Please try again later and if the problem persist - contact us via contact form on the main page",
     "Register.Error.UnexpectedError": "Unhandled error has occured. Contact us via contact form on the main page"
 }

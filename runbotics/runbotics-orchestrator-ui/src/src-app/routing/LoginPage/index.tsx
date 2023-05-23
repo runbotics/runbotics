@@ -12,7 +12,6 @@ import {
     Typography,
     TextField,
     Button,
-    FormHelperText,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
@@ -89,11 +88,6 @@ const LoginPage: FC = () => {
                 setStatus({ success: true });
                 setSubmitting(false);
                 router.push('/app/processes');
-
-                enqueueSnackbar(
-                    translate('Login.SignIn.Success'),
-                    { variant: 'success' }
-                );
             })
             .catch((error) => {
                 setStatus({ success: false });
@@ -106,20 +100,21 @@ const LoginPage: FC = () => {
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate('Login.Error.UnexpectedError')}`;
                     setErrors({ submit: customErrorMessage });
-                    // enqueueSnackbar(
-                    //     customErrorMessage,
-                    //     { variant: 'error' }
-                    // );
+                    enqueueSnackbar(
+                        customErrorMessage,
+                        { variant: 'error', autoHideDuration: 10000}
+                    );
                     return;
                 }
 
-                const customErrorMessage = `${error.message}: ${translate(errorKey)}`;
+                console.log(error);
+                const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
 
-                // enqueueSnackbar(
-                //     customErrorMessage,
-                //     { variant: 'error' }
-                // );
+                enqueueSnackbar(
+                    customErrorMessage,
+                    { variant: 'error', autoHideDuration: 10000 }
+                );
             });
             
     };
@@ -161,11 +156,6 @@ const LoginPage: FC = () => {
                 value={values.password}
                 variant="outlined"
             />
-            {errors.submit && (
-                <Box mt={3}>
-                    <FormHelperText error>{errors.submit}</FormHelperText>
-                </Box>
-            )}
             <Box mt={2}>
                 <Button
                     color="secondary"
