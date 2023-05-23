@@ -2,7 +2,7 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getSinglePostCache, isCacheUpToDate, recreateCache } from '#contentful/blog-main';
+import { getSinglePostCache, isCacheUpToDate, recreateCache, setSinglePostCache } from '#contentful/blog-main';
 import { getPost } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
 import BlogPostView from '#src-landing/views/BlogPostView';
@@ -30,14 +30,20 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ re
     }
 
     if (!post) {
+        post = await getPost({ slug: params.slug });
+    }
+
+    if (post) {
+        setSinglePostCache(post);
+    } else {
         return {
-            props: {
-                post: await getPost({ slug: params.slug }),
-            },
+            notFound: true,
         };
     }
 
     return {
-        notFound: true
+        props: {
+            post,
+        },
     };
 };

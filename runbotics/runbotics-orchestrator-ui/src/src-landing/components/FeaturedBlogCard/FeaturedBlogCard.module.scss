@@ -85,6 +85,9 @@ $FONT-COLOR: #000;
 }
 
 .img {
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    
     z-index: -1;
     object-fit: cover;
     border-radius: $IMG-BORDER-RADIUS;

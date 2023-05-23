@@ -1,9 +1,9 @@
 import { VFC } from 'react';
 
 import { BlogPost } from '#contentful/common';
-import Carousel from '#src-landing/components/Carousel/Carousel';
+import BlogCard from '#src-landing/components/BlogCard';
+import MediaScroller from '#src-landing/components/MediaScroller';
 
-import BlogPostSlide from '../BlogPostSlide';
 import styles from './BlogPostCarousel.module.scss';
 
 interface Props {
@@ -11,21 +11,18 @@ interface Props {
 }
 
 const BlogPostCarousel: VFC<Props> = ({ posts }) => {
-    const slides = posts.map((post, index) => (
-        <BlogPostSlide
+    const slides = posts.map((post) => (
+        <BlogCard
             key={post.slug}
-            index={index}
+            className={styles.blogCard}
             post={post}
         />
     ));
 
     return (
-        <Carousel
-            slides={slides}
-            styles={styles}
-            hasCSSSlider
-            hideControlsOnEdge
-        />
+        <MediaScroller className={styles.mediaScroller}>
+            {slides}
+        </MediaScroller>
     );
 };
 

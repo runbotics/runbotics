@@ -13,6 +13,7 @@ import styles from './BlogCard.module.scss';
 
 interface BlogCardProps {
     post: BlogPost;
+    className?: string;
 }
 
 export const cutText = (text: string, length: number) => {
@@ -25,7 +26,7 @@ export const cutText = (text: string, length: number) => {
     return cut.substring(0, lastSpace) + '...';
 };
 
-const BlogCard: FC<BlogCardProps> = ({ post }) => {
+const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
 
     const tags = post.tags?.items.map(({ name }) => <CardBadge
@@ -35,16 +36,9 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
     />);
 
     return (
-        <article className={styles.root}>
+        <article className={`${styles.root} ${className}`}>
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
-                    <If condition={checkIsDraft(post.status)}>
-                        <CardBadge
-                            className={styles.draftBadge}
-                            backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
-                            text={translate('Blog.Post.DraftBadge')}
-                        />
-                    </If>
                     {post.featuredImage?.url &&
                         <Image
                             src={post.featuredImage?.url}
@@ -53,6 +47,13 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                             className={styles.img}
                         />
                     }
+                    <If condition={checkIsDraft(post.status)}>
+                        <CardBadge
+                            className={styles.draftBadge}
+                            backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
+                            text={translate('Blog.Post.DraftBadge')}
+                        />
+                    </If>
                     <div className={styles.badges}>
                         {tags}
                     </div>
