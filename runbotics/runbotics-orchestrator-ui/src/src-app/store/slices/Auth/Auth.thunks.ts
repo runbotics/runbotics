@@ -16,7 +16,10 @@ const setAccessToken = (accessToken: string | null): void => {
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (payload: { email: string; password: string }) => {
+    async (
+        payload: { email: string; password: string },
+        { rejectWithValue }
+    ) => {
         try {
             const response = await Axios.post<{ id_token: string }>(
                 '/api/authenticate',
@@ -27,14 +30,17 @@ export const login = createAsyncThunk(
                 }
             );
             const { id_token: idToken } = response.data;
-    
+
             setAccessToken(idToken);
             const responseUser = await Axios.get<User>('/api/account');
             const user = responseUser.data;
             return { ...user, authoritiesById: user?.roles };
         } catch (error) {
-            const axiosCustomError = new Error(error.response.statusText);
-            throw axiosCustomError;
+            if (!error.response) {
+                throw error;
+            }
+
+            return rejectWithValue(error.response.data);
         }
     }
 );
@@ -84,7 +90,10 @@ export const initialize = createAsyncThunk<{
 
 export const register = createAsyncThunk(
     'auth/register',
-    async (payload: { email: string; name: string; password: string }) => {
+    async (
+        payload: { email: string; name: string; password: string },
+        { rejectWithValue }
+    ) => {
         try {
             await Axios.post('/api/register', {
                 email: payload.email,
@@ -92,9 +101,15 @@ export const register = createAsyncThunk(
                 langKey: 'pl',
                 password: payload.password,
             });
+
+            // should return something?
+            return {};
         } catch (error) {
-            const axiosCustomError = new Error(error.response.statusText);
-            throw axiosCustomError;
+            if (!error.response) {
+                throw error;
+            }
+
+            return rejectWithValue(error.response.data);
         }
     }
 );

@@ -92,10 +92,7 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const errorKey = `Login.Error.${error.message.replaceAll(
-                    ' ',
-                    ''
-                )}`;
+                const errorKey = `Login.Error.${error.status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate('Login.Error.UnexpectedError')}`;
@@ -107,7 +104,6 @@ const LoginPage: FC = () => {
                     return;
                 }
 
-                console.log(error);
                 const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
 
