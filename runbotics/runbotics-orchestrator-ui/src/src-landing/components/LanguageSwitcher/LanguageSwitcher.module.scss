@@ -1,33 +1,22 @@
 @import '#src-landing/scss/main';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
-
-
-
 .selectWrapper {
-
     margin-top: auto;
     margin-bottom: auto;
     width: 35px;
     height: 35px;
     position: relative;
     display: flex;
-    // border: 1px solid $palette-black;
     border-radius: 0.25em;
     font-size: 1.25rem;
-
     background-color: transparent;
-
     align-items: center;
-
     grid-template-areas: 'select';
-
-    transition:  background-color ease-in-out 150ms;
-    
-    &:hover{
-        background-color: rgba($palette-gray,0.3);
+    transition: background-color ease-in-out 150ms;
+    &:hover {
+        background-color: rgba($palette-gray, 0.3);
     }
-
     &::-ms-expand {
         display: none;
     }
@@ -46,13 +35,12 @@
 }
 
 .select {
-    
     cursor: pointer;
     left: 0;
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    border-radius:5px;
+    border-radius: 5px;
     padding: 10px;
     z-index: $header-z-index;
     opacity: 0;
@@ -64,17 +52,14 @@
     appearance: none;
     border: none;
     outline: none;
-
     .option {
         @include font-face-base;
         font-size: $font-size-h6;
         font-weight: $font-weight-medium;
         padding: 10px;
-        cursor: pointer;    
-        &:hover{
-            box-shadow: 0 0 10px 100px #1882A8 inset;
+        cursor: pointer;
+        &:hover {
+            box-shadow: 0 0 10px 100px #1882a8 inset;
         }
-     
-    
     }
 }
