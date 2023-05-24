@@ -8,7 +8,7 @@ interface Props {
 }
 
 const MediaScroller: VFC<Props> = ({ className, children }) => (
-    <div className={`${styles.mediaScroller} ${styles.snapsInline} ${className}`}>
+    <div className={`${className} ${styles.mediaScroller} ${styles.snapsInline}`}>
         {children}
     </div>
 );

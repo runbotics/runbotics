@@ -1,6 +1,7 @@
 import type { VFC } from 'react';
 
 import { BlogPost } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import LinkButton from '#src-landing/components/LinkButton';
 import Typography from '#src-landing/components/Typography';
@@ -32,7 +33,9 @@ const BlogSection: VFC<Props> = ({ posts }) => {
                 </Typography>
             </div>
             <div className={styles.background}></div>
-            <BlogPostCarousel posts={posts}/>
+            <If condition={posts.length > 0}>
+                <BlogPostCarousel posts={posts}/>
+            </If>
             <div className={styles.blogButtonWrapper}>
                 <LinkButton href={'/blog'} title={translate('Landing.Blog.Link.Title')} />
             </div>

@@ -9,5 +9,6 @@
 
 .blogCard {
     min-width: 300px;
-    max-width: 33%;
+    max-width: calc($MAX_SECTION_CONTENT_WIDTH / 3);
+    width: 100%;
 }
