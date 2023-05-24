@@ -1,14 +1,14 @@
 {
-    "Landing.Header.Button.SkipNav": "Pomiń nawigację",
+    "Landing.Header.Button.SkipNav": "Skip navigation",
     "Landing.Header.Nav.Option.RunBotics": "RunBotics",
     "Landing.Header.Nav.Option.RPA": "RPA",
-    "Landing.Header.Nav.Option.Pros": "Zalety",
+    "Landing.Header.Nav.Option.Pros": "Pros",
     "Landing.Header.Nav.Option.ForWho": "For who?",
-    "Landing.Header.Nav.Option.Resources": "Zasoby",
-    "Landing.Header.Nav.Option.Integration": "Integracja",
+    "Landing.Header.Nav.Option.Resources": "Resources",
+    "Landing.Header.Nav.Option.Integration": "Integration",
     "Landing.Header.Nav.Option.OpenSource": "Open source",
-    "Landing.Header.Nav.Option.Partners": "Partnerzy",
-    "Landing.Header.Nav.Option.ContactUs": "Skontaktuj się z nami",
+    "Landing.Header.Nav.Option.Partners": "Partners",
+    "Landing.Header.Nav.Option.ContactUs": "Contact us",
     "Landing.Header.Nav.Option.Blog": "Blog",
-    "Landing.Header.Button.LogIn": "Zaloguj się"
+    "Landing.Header.Button.LogIn": "Log in"
 }
