@@ -10,7 +10,7 @@ import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
 import Navbar from '../Navbar';
-
+import LanguageSwitcher from '../LanguageSwitcher';
 import styles from './Header.module.scss';
 
 const Header = () => {
@@ -52,6 +52,13 @@ const Header = () => {
                         text={translate('Landing.Header.Button.SkipNav')}
                     />
                 </Link>
+
+                <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
+
+                <div className={styles.buttonGroup}>               
+                <LanguageSwitcher></LanguageSwitcher>
+
+                
                 <button
                     className={`${styles.menuIcon} ${iconMobileStyle}`}
                     onClick={toggleNav}
@@ -60,7 +67,6 @@ const Header = () => {
                     <span></span>
                     <span></span>
                 </button>
-                <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
                 <button className={styles.loginButton} onClick={() => push('/login')}>
                     <Typography
                         variant="h6"
@@ -69,7 +75,10 @@ const Header = () => {
                         text={translate('Landing.Header.Button.LogIn')}
                     />
                 </button>
+             
+                </div> 
             </div>
+         
         </header>
     );
 };

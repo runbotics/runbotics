@@ -47,6 +47,12 @@
     }
 }
 
+
+.buttonGroup{
+    display: flex;
+ 
+}
+
 .loginButton {
     composes: btn;
     margin: 0 $margin-3;
@@ -73,7 +79,15 @@
 }
 
 
-@media (max-width: $breakpoint-md) {
+
+
+@media (max-width: $breakpoint-lg) {
+
+    .buttonGroup{
+        display: flex;
+        gap:10px;
+    }
+    
 
     .menuIcon {
         display: block;

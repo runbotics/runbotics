@@ -165,7 +165,11 @@ const Navbar: FC<NavbarProps> = ({
                             text={translate('Landing.Header.Button.LogIn')}
                         />
                     </button>
+
+            
+          
                 </li>
+
             </ul>
             
         </nav>

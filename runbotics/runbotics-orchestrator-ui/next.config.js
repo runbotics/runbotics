@@ -1,4 +1,6 @@
 module.exports = {
+
+
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
             {
@@ -38,5 +40,10 @@ module.exports = {
 
     images: {
         domains: ["images.ctfassets.net"]
-    }
+    },
+    i18n:{
+        locales: ['en','pl'],
+        defaultLocale: 'en',
+        localeDetection: false,
+    },
 };
