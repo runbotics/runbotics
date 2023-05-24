@@ -1,17 +1,28 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import styles from './LanguageSwitcher.module.scss';
-import useTranslations from '#src-app/hooks/useTranslations';
-
 import { languages, Language } from '#src-app/translations/translations';
 
-export default function LanguageSwitcher() {
+
+import styles from './LanguageSwitcher.module.scss';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+
+import React, { VFC, useEffect } from 'react';
+
+import { useRouter } from 'next/router';
+
+const LanguageSwitcher: VFC = () => {
     const { switchLanguage, translate } = useTranslations();
 
     const { push, locale: activeLocale, pathname } = useRouter();
 
-    function capitalizeFirstLetter(string: string) {
+
+
+
+    const capitalizeFirstLetter = (string: string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    const handleLanguageSwitch = (language: Language) => {
+        switchLanguage(language);
     }
 
     useEffect(() => {
@@ -22,28 +33,22 @@ export default function LanguageSwitcher() {
     }, []);
 
     return (
-        <>
+       
             <div className={styles.selectWrapper}>
                 <select
-                    onChange={(event) => {
-                        switchLanguage(event.target.value as Language);
-                        push(pathname, undefined, {
-                            locale: event.target.value,
-                        });
-                    }}
+                    onChange={(event) => handleLanguageSwitch(event.target.value as Language)}
                     className={styles.select}
                 >
-                    {languages.map((el) => {
+                    {languages.map((language) => {
                         return (
                             <option
-                                key={el}
+                                key={language}
                                 defaultValue={activeLocale}
                                 className={styles.option}
-                                value={el}
+                                value={language}
                             >
-                                &nbsp;
                                 {capitalizeFirstLetter(
-                                    translate(`Common.Languages.${el}`)
+                                    translate(`Common.Languages.${language}`)
                                 )}
                                 &nbsp;
                             </option>
@@ -51,6 +56,8 @@ export default function LanguageSwitcher() {
                     })}
                 </select>
             </div>
-        </>
+       
     );
 }
+
+export default LanguageSwitcher

@@ -66,7 +66,7 @@ const Header = () => {
                 />
 
                 <div className={styles.buttonGroup}>
-                    <LanguageSwitcher></LanguageSwitcher>
+                    <LanguageSwitcher />
 
                     <button
                         className={`${styles.menuIcon} ${iconMobileStyle}`}
