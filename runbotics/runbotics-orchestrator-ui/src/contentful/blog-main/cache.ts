@@ -36,8 +36,8 @@ export function getBlogMainCache(): Awaited<ReturnType<typeof getMainPage>> | nu
 
     const posts = getBlogPostsCache();
     const featuredPost = posts[0];
-    const categories = getBlogCategoriesCache();
-    const tags = getBlogTagsCache();
+    const categories = getBlogCategoriesCache() ?? [];
+    const tags = getBlogTagsCache() ?? [];
 
     return {
         posts,
@@ -68,10 +68,24 @@ export function isCacheUpToDate() {
 
 export async function recreateCache() {
     contentfulCache.clear();
+    console.log('Contentful cache cleared');
     const modelMap = await getMainPage();
-    modelMap.posts && setBlogPostsCache(modelMap.posts);
-    modelMap.categories && setBlogCategoriesCache(modelMap.categories);
-    modelMap.tags && setBlogTagsCache(modelMap.tags);
+    console.log('Fetched', modelMap);
 
-    return modelMap;
+    if (modelMap.posts) {
+        setBlogPostsCache(modelMap.posts);
+    }
+    if (modelMap.categories) {
+        setBlogCategoriesCache(modelMap.categories);
+    }
+    if (modelMap.tags) {
+        setBlogTagsCache(modelMap.tags);
+    }
+
+    return {
+        ...modelMap,
+        posts: modelMap.posts ?? [],
+        categories: modelMap.categories ?? [],
+        tags: modelMap.tags ?? [],
+    };
 }

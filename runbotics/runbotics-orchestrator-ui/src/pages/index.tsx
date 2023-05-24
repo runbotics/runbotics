@@ -21,8 +21,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ res }) => 
     } else {
         res.setHeader('X-Cache', 'HIT');
     }
-    
-    const blogPosts = cache.posts.slice(0, 3);
+
+    const blogPosts = cache.posts?.slice(0, 3) ?? [];
+
 
     return {
         props: {

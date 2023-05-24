@@ -47,10 +47,3 @@ $BACKGROUND-HEIGHT: 400px;
         padding: 30px 20px;
     }
 }
-
-@media (max-width: $breakpoint-xl) {
-    .blogButtonWrapper {
-        // padding-right: clamp(0px, 3vw, );
-        // padding-left: 80px;
-    }
-}
