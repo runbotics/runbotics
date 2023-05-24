@@ -19,17 +19,16 @@ const LanguageSwitcher: VFC = () => {
     const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
 
     const handleLanguageSwitch = (language: Language) => {
-        switchLanguage(language);
         push(pathname, undefined, {
-            locale: activeLocale,
+            locale: language,
         });
     };
 
     useEffect(() => {
         switchLanguage(activeLocale as Language);
-        // push(pathname, undefined, {
-        //     locale: activeLocale,
-        // });
+        push(pathname, undefined, {
+            locale: activeLocale,
+        });
     }, [activeLocale]);
 
     return (
@@ -38,11 +37,12 @@ const LanguageSwitcher: VFC = () => {
             <select
                 onChange={(event) => handleLanguageSwitch(event.target.value as Language)}
                 className={styles.select}
+                defaultValue={activeLocale}
             >
                 {languages.map((language) => (
                     <option
                         key={language}
-                        defaultValue={activeLocale}
+                      
                         className={styles.option}
                         value={language}
                     >
