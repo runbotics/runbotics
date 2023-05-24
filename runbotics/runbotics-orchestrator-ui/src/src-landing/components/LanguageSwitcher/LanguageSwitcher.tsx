@@ -20,14 +20,17 @@ const LanguageSwitcher: VFC = () => {
 
     const handleLanguageSwitch = (language: Language) => {
         switchLanguage(language);
+        push(pathname, undefined, {
+            locale: activeLocale,
+        });
     };
 
     useEffect(() => {
         switchLanguage(activeLocale as Language);
-        push(pathname, undefined, {
-            locale: activeLocale,
-        });
-    }, []);
+        // push(pathname, undefined, {
+        //     locale: activeLocale,
+        // });
+    }, [activeLocale]);
 
     return (
        
