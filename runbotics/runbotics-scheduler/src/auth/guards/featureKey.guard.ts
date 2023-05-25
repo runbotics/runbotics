@@ -2,7 +2,7 @@ import { JwtAuthGuard } from './jwt.guard';
 import { FeatureKey } from 'runbotics-common';
 import { ExecutionContext } from '@nestjs/common';
 import { IS_PUBLIC_KEY } from './public.guard';
-import { AuthRequest } from 'src/types/auth-request';
+import { AuthRequest } from '#/types/auth-request';
 import { FEATURE_KEY } from '../featureKey.decorator';
 
 export class FeatureKeyGuard extends JwtAuthGuard {

@@ -18,6 +18,14 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "esModuleInterop": true,
-        "strict": true
+        "strict": true,
+        "types": [
+            "vitest/globals"
+        ],
+        "paths": {
+            "#/*": [
+                "src/*"
+            ],
+        }
     }
 }

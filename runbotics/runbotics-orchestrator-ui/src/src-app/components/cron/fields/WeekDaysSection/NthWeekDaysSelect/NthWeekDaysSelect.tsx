@@ -5,7 +5,6 @@ import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
 import { NthWeekDaysSelectProps } from './NthWeekDaysSelect.types';
 
-// eslint-disable-next-line complexity
 const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({ 
     value, 
     setValue, 

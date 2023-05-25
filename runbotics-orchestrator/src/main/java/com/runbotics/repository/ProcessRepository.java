@@ -18,8 +18,6 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
     @Query("select process from Process process where process.createdBy.login = ?#{principal.username}")
     List<Process> findByCreatedByIsCurrentUser();
 
-    Optional<Process> findByName(String name);
-
     @Query(
         "select process from Process process where process.createdBy.login like %?1% and (process.createdBy.login = ?2 or process.isPublic = true)"
     )

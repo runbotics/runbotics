@@ -24,3 +24,12 @@ export const formatTimeDiff = (fromDate: string | Date, toDate: string | Date) =
 
     return durationText;
 };
+
+export function isJsonValid(str: string) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+};

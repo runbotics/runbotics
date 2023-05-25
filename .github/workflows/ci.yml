@@ -7,6 +7,7 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
+  RUSHX: node ../common/scripts/install-run-rushx.js
   NODE_VERSION: 14.x
 
 jobs:
@@ -160,6 +161,9 @@ jobs:
 
       - name: Install dependencies
         run: $RUSH install -t .
+
+      - name: Execute Unit test
+        run: $RUSHX test
 
       - name: Build
         run: $RUSH rebuild -t . --verbose

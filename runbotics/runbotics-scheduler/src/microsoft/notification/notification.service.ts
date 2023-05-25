@@ -4,10 +4,10 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
-import { ServerConfigService } from 'src/config/server-config';
-import { ProcessService } from 'src/database/process/process.service';
-import { QueueService } from 'src/queue/queue.service';
-import { Logger } from 'src/utils/logger';
+import { ServerConfigService } from '#/config/server-config';
+import { ProcessService } from '#/database/process/process.service';
+import { QueueService } from '#/queue/queue.service';
+import { Logger } from '#/utils/logger';
 import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../outlook';
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';
@@ -50,13 +50,15 @@ export class NotificationService {
                         variables[filename] = fileContent;
                     });
                 }
+                
+                variables['senderEmailAddress'] = email.sender.emailAddress.address.toLowerCase();
 
                 const input = { variables };
 
                 const ccRecipients = email.ccRecipients
-                    .map(recipient => recipient.emailAddress.address.toLocaleLowerCase());
+                    .map(recipient => recipient.emailAddress.address.toLowerCase());
                 const bccRecipients = email.bccRecipients
-                    .map(recipient => recipient.emailAddress.address.toLocaleLowerCase());
+                    .map(recipient => recipient.emailAddress.address.toLowerCase());
 
                 await this.queueService.createInstantJob({
                     process,
@@ -65,7 +67,7 @@ export class NotificationService {
                     trigger: { name: TriggerEvent.EMAIL },
                     triggerData: {
                         emailId,
-                        sender: email.sender.emailAddress.address.toLocaleLowerCase(),
+                        sender: email.sender.emailAddress.address.toLowerCase(),
                         ...(ccRecipients.length && { ccRecipients }),
                         ...(bccRecipients.length && { bccRecipients }),
                     } as EmailTriggerData,

@@ -26,7 +26,6 @@ const useProcessInstanceSocket = ({
     const processState = useSelector(processSelector);
 
     useEffect(() => {
-        // eslint-disable-next-line complexity
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
             if (
                 !!orchestratorProcessInstanceId &&

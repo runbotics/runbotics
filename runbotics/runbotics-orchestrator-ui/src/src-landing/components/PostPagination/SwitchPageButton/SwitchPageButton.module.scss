@@ -1,0 +1,25 @@
+@import '#src-landing/scss/main';
+
+$ARROW_POSITION: -40px;
+
+.previous,
+.next {
+    position: absolute;
+
+    border: none;
+    background: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.previous {
+    left: $ARROW_POSITION;
+
+    transform: rotate(180deg);
+}
+
+.next {
+    right: $ARROW_POSITION;
+}

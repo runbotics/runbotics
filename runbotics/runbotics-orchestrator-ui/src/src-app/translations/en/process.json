@@ -320,7 +320,7 @@
     "Process.Details.Modeler.Actions.General.Delay.Unit": "Unit",
     "Process.Details.Modeler.Actions.General.StartProcess.Label": "Start Process",
     "Process.Details.Modeler.Actions.General.StartProcess.Input": "Input",
-    "Process.Details.Modeler.Actions.General.StartProcess.ProcessName": "Process name",
+    "Process.Details.Modeler.Actions.General.StartProcess.Process": "Process",
     "Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess": "Variables passed to process",
     "Process.Details.Modeler.Actions.General.StartProcess.Output": "Output",
     "Process.Details.Modeler.Actions.General.StartProcess.Variable": "Variable name",

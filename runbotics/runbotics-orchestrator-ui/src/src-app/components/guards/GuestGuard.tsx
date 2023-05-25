@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, VFC } from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -8,8 +8,8 @@ import BlankPage from '#src-app/utils/BlankPage';
 
 
 
-// eslint-disable-next-line react/display-name, complexity
-export const withGuestGuard = (Component: FC) => (props: any) => {
+// eslint-disable-next-line react/display-name
+export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { isAuthenticated, isInitialised } = useAuth();
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';

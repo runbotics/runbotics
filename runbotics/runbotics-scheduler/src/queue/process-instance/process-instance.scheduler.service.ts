@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { v4 as uuidv4 } from 'uuid';
-import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
-import { BotWsMessage, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
-import { WebsocketService } from 'src/websocket/websocket.service';
-import { Job } from 'src/utils/process';
-import { UiGateway } from 'src/websocket/gateway/ui.gateway';
+import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
+import { ProcessInstanceEventService } from '#/database/process-instance-event/process-instance-event.service';
+import { BotWsMessage, IProcessInstance, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { WebsocketService } from '#/websocket/websocket.service';
+import { Job } from '#/utils/process';
+import { UiGateway } from '#/websocket/ui/ui.gateway';
 import dayjs from 'dayjs';
 
 @Injectable()
@@ -13,8 +14,9 @@ export class ProcessInstanceSchedulerService {
     private readonly logger = new Logger(ProcessInstanceSchedulerService.name);
     constructor(
         private readonly processInstanceService: ProcessInstanceService,
+        private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly websocketService: WebsocketService,
-        private readonly uiGateway: UiGateway
+        private readonly uiGateway: UiGateway,
     ) { }
 
     async saveFailedProcessInstance(job: Job, errorMessage: string) {
@@ -37,12 +39,12 @@ export class ProcessInstanceSchedulerService {
 
     async terminateProcessInstance(processInstanceId: string) {
         const processInstance = await this.processInstanceService.findById(processInstanceId);
-
+        
         if (!processInstance) {
             this.logger.error(`Process instance ${processInstanceId} does not exist`);
             throw new NotFoundException(`Process instance (${processInstanceId}) does not exist`);
         }
-
+        
         await this.websocketService.sendMessageByBotId(
             processInstance.bot.id,
             BotWsMessage.TERMINATE,

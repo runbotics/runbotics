@@ -1,7 +1,7 @@
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
 
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { ServerConfigService } from './server-config';
 
 const NODE_ENV = process.env.NODE_ENV ? '.' + process.env.NODE_ENV : '';

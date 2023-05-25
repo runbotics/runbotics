@@ -80,8 +80,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             imported,
         } = useSelector((state) => state.process.modeler);
 
-        // eslint-disable-next-line complexity
-
         useNavigationLock(
             !isSaveDisabled,
             translate('Process.Modeler.LoseModelerChangesContent')

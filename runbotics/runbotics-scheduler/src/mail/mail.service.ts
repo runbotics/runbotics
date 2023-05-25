@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
-import { ProcessService } from 'src/database/process/process.service';
+import { ProcessService } from '#/database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
-import { QueueService } from 'src/queue/queue.service';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { QueueService } from '#/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
 
@@ -190,7 +190,8 @@ export class MailService implements OnModuleInit {
     }
 
     private async validateTitle(envelope: MessageEnvelopeObject) {
-        const process = await this.processService.findByInfo(envelope.subject);
+        const processId = Number(envelope.subject);
+        const process = !isNaN(processId) ? await this.processService.findById(processId) : undefined;
 
         if (!process) {
             this.logger.error(`Process "${envelope.subject}" does not exist`);

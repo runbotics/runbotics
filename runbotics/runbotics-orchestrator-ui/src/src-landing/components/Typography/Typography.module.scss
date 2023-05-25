@@ -31,9 +31,12 @@
     &__h2,
     &__h3,
     &__h4,
-    &__h5,
-    &__h6 {
+    &__h5 {
         font-weight: $font-weight-bold;
+    }
+
+    &__h6 {
+        font-weight: $font-weight-semi-bold;
     }
 
     &__h1 {
@@ -78,6 +81,16 @@
 
     &__body3 {
         font-size: $font-size-body3;
+        line-height: $line-height-base;
+    }
+
+    &__body4 {
+        font-size: $font-size-body4;
+        line-height: $line-height-base;
+    }
+
+    &__body5 {
+        font-size: $font-size-body5;
         line-height: $line-height-base;
     }
 

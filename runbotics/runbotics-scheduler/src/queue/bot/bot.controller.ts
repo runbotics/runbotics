@@ -7,14 +7,14 @@ import {
     Query,
     Req,
 } from '@nestjs/common';
-import { BotLogService } from 'src/websocket/bot-log/bot-log.service';
+import { BotLogService } from '#/websocket/bot/bot-log.service';
 import { IBot, FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
 import { BotSchedulerService } from './bot.scheduler.service';
-import { Logger } from 'src/utils/logger';
-import { AuthService } from 'src/auth/auth.service';
+import { Logger } from '#/utils/logger';
+import { AuthService } from '#/auth/auth.service';
 import { BotService } from '../../database/bot/bot.service';
-import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
-import { FeatureKeys } from 'src/auth/featureKey.decorator';
+import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 
 
 @Controller('scheduler/bots')

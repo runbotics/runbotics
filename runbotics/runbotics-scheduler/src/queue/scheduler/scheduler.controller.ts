@@ -2,7 +2,7 @@ import {
     Controller, Delete, Get, HttpCode, HttpStatus, Param,
 } from '@nestjs/common';
 import { FeatureKey } from 'runbotics-common';
-import { FeatureKeys } from 'src/auth/featureKey.decorator';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { Public } from '../../auth/guards';
 import { Logger } from '../../utils/logger';
 import { SchedulerService } from './scheduler.service';

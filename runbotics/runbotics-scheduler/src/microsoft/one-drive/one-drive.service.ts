@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
 import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';

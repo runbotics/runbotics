@@ -1,0 +1,19 @@
+@import '#src-landing/scss/main.scss';
+$BADGE-BORDER-RADIUS: 20px;
+$BADGE-HEIGHT: 25px;
+
+.root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $padding-1 $padding-2;
+    height: $BADGE-HEIGHT;
+    border-radius: $BADGE-BORDER-RADIUS;
+    line-height: initial;
+}
+
+.badge {
+    width: max-content;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

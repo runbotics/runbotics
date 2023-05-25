@@ -115,7 +115,6 @@ const VariableDetails: FunctionComponent<VariableDetailsProps> = ({ onClose, var
             });
     };
 
-    // eslint-disable-next-line complexity
     const validateForm = (): boolean => {
         if (variable.name.trim() === '') {
             setValidation({ name: true });

@@ -22,7 +22,6 @@ export const getModelerActivities = (elements: BPMNElement[]) =>
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
 
-// eslint-disable-next-line complexity
 export const isModelerSync = ({
     modeler,
     appliedActivities,
@@ -58,12 +57,12 @@ const validateForm = (element: BPMNElement) => {
     const validate = ajv.compile(getFormSchema(element));
     return { isValid: validate(formData), formData };
 };
-// eslint-disable-next-line complexity
+
 const validateConnections = (element: BPMNElement) => {
-    const incomingConnections = element.incoming.filter(
+    const incomingConnections = element.incoming?.filter(
         (flow) => flow.type === BpmnElementType.SEQUENCE_FLOW
     );
-    const outgoingConnections = element.outgoing.filter(
+    const outgoingConnections = element.outgoing?.filter(
         (flow) => flow.type === BpmnElementType.SEQUENCE_FLOW
     );
     const hasOutgoingConnection = outgoingConnections.length >= 1;
@@ -106,13 +105,27 @@ const validateConnections = (element: BPMNElement) => {
     return true;
 };
 
-// eslint-disable-next-line complexity
+const validateHostElement = (element: BPMNElement) => {
+    if (element?.attachers?.length > 1) return false;
+    return true;
+};
+
 export const validateElement = ({
     element,
     handleInvalidElement,
     handleValidElement,
     modeler,
 }: ValidateElementProps) => {
+    const isValidHost = validateHostElement(element);
+    if (element.host) {
+        validateElement({
+            element: element.host,
+            handleInvalidElement,
+            handleValidElement,
+            modeler,
+        });
+    }
+
     const isConnectionValid = validateConnections(element);
     if (element.id.includes('Activity') === false) {
         if (!isConnectionValid) {
@@ -151,6 +164,16 @@ export const validateElement = ({
             element,
             modeler,
             errorType: ModelerErrorType.CONNECTION_ERROR,
+        });
+        return;
+    }
+
+    if (!isValidHost && !formData.disabled) {
+        handleInvalidElement({
+            element,
+            modeler,
+            errorType: ModelerErrorType.CONNECTION_ERROR,
+            relatedElements: element.attachers.map((item) => item.id),
         });
         return;
     }

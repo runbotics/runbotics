@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Logger } from 'src/utils/logger';
+import { Logger } from '#/utils/logger';
 import {
     CreateSubscriptionRequest, CreateSubscriptionResponse, GetAllSubscriptionsResponse, GetSubscriptionResponse, Subscription, SubscriptionValidation,
 } from './subscription.types';
@@ -7,7 +7,7 @@ import { EMAIL_NOTIFICATION_CLIENT_STATE, EMAIL_NOTIFICATION_URL_PATH, initialSu
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { ServerConfigService } from 'src/config/server-config/server-config.service';
+import { ServerConfigService } from '#/config/server-config/server-config.service';
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 dayjs.extend(utc);
 

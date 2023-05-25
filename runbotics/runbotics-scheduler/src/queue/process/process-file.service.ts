@@ -1,6 +1,6 @@
 import mime from 'mime-types';
-import { OneDriveService } from 'src/microsoft/one-drive';
-import { Logger } from 'src/utils/logger';
+import { OneDriveService } from '#/microsoft/one-drive';
+import { Logger } from '#/utils/logger';
 import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 

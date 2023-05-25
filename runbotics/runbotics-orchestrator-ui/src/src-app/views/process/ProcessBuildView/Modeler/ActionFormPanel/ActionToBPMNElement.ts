@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7 } from 'json-schema';
 import _ from 'lodash';

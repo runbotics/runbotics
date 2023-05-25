@@ -9,7 +9,6 @@ import { PeriodType } from '../../types';
 import { PeriodContainer, PeriodSelect } from './Period.styles';
 import { PeriodProps } from './Period.types';
 
-// eslint-disable-next-line complexity
 const Period: FC<PeriodProps> = ({ value, setValue, locale, disabled, readOnly }) => {
     const options = [
         {

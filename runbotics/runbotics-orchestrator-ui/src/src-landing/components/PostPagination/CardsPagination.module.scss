@@ -1,0 +1,16 @@
+@import '#src-landing/scss/main';
+
+.root {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-top: $padding-3;
+    padding-bottom: $padding-3;
+
+    width: fit-content;
+
+    user-select: none;
+}

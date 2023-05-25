@@ -1,0 +1,29 @@
+@import '#src-landing/scss/main';
+
+.mediaScroller {
+    --_spacer: var(--size-3, 2rem);
+
+    display: grid;
+    grid-gap: var(--_spacer);
+    grid-auto-flow: column;
+
+    padding: 0 var(--_spacer) var(--_spacer);
+
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+}
+
+.snapsInline {
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: var(--_spacer);
+}
+  
+.snapsInline > * {
+    scroll-snap-align: start;
+}
+
+@media (hover: none) and (max-width: $breakpoint-sm) {
+    .mediaScroller::-webkit-scrollbar {
+        display: none;
+    }
+}
