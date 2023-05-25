@@ -39,8 +39,6 @@ const IterationSlide: FC<IterationSlideProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    console.log(iterationGutter);
-
     return (
         <Slide
             direction="left"
