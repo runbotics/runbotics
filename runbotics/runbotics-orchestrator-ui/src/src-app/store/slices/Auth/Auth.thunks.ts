@@ -95,21 +95,28 @@ export const register = createAsyncThunk(
         { rejectWithValue }
     ) => {
         try {
-            await Axios.post('/api/register', {
+            const response = await Axios.post('/api/register', {
                 email: payload.email,
                 login: payload.email,
                 langKey: 'pl',
                 password: payload.password,
             });
 
-            // should return something?
-            return {};
+            return response;
         } catch (error) {
             if (!error.response) {
                 throw error;
             }
 
-            return rejectWithValue(error.response.data);
+            return rejectWithValue({status: error.response.status, message: error.response.statusText});
         }
+        // const response = await Axios.post('/api/register', {
+        //     email: payload.email,
+        //     login: payload.email,
+        //     langKey: 'pl',
+        //     password: payload.password,
+        // });
+
+        // return response;
     }
 );

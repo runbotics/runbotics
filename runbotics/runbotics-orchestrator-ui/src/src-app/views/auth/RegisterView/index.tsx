@@ -10,7 +10,6 @@ import {
     Typography,
     TextField,
     Button,
-    FormHelperText,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
@@ -94,10 +93,7 @@ const RegisterView: FC = () => {
         }).catch((error) => {
             setStatus({ success: false });
             setSubmitting(false);
-            const errorKey = `Register.Error.${error.message.replaceAll(
-                ' ',
-                ''
-            )}`;
+            const errorKey = `Register.Error.${error.status}`;
                 
             if (!checkIfKeyExists(errorKey)) {
                 const customErrorMessage = `${error.message}: ${translate(
@@ -169,11 +165,6 @@ const RegisterView: FC = () => {
                 value={values.passwordConfirmation}
                 variant="outlined"
             />
-            {errors.submit && (
-                <Box mt={3}>
-                    <FormHelperText error>{errors.submit}</FormHelperText>
-                </Box>
-            )}
             <Box mt={2}>
                 <Button
                     color="secondary"
