@@ -108,15 +108,10 @@ export const register = createAsyncThunk(
                 throw error;
             }
 
-            return rejectWithValue({status: error.response.status, message: error.response.statusText});
+            return rejectWithValue({
+                status: error.response.status,
+                message: error.response.statusText,
+            });
         }
-        // const response = await Axios.post('/api/register', {
-        //     email: payload.email,
-        //     login: payload.email,
-        //     langKey: 'pl',
-        //     password: payload.password,
-        // });
-
-        // return response;
     }
 );

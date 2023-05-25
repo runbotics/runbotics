@@ -18,12 +18,12 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import styled from 'styled-components';
 
-
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo/Logo';
 
-
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import useTranslations, {
+    checkIfKeyExists,
+} from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 
@@ -68,52 +68,60 @@ const initialValues = {
 // eslint-disable-next-line max-lines-per-function
 const RegisterView: FC = () => {
     const { translate } = useTranslations();
-    const registrationText = translate('Register.AccountCreated.ActivationNeededMessage');
+    const registrationText = translate(
+        'Register.AccountCreated.ActivationNeededMessage'
+    );
     const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
     const dispatch = useDispatch();
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleFormSubmit = async (values: typeof initialValues, { setErrors, setStatus, setSubmitting }) => {
+    const handleFormSubmit = async (
+        values: typeof initialValues,
+        { setErrors, setStatus, setSubmitting }
+    ) => {
         if (!window.navigator.onLine) {
             setStatus({ success: false });
             setSubmitting(false);
             setErrors({ submit: translate('Register.Error.NoInternet') });
             return;
         }
-        await dispatch(register(values)).then(unwrapResult).then(() => {
-            setStatus({ success: true });
-            setSubmitting(false);
-            router.push('/app/processes');
-            enqueueSnackbar(registrationText, {
-                variant: 'success',
-                autoHideDuration: 5000,
-            });
-        }).catch((error) => {
-            setStatus({ success: false });
-            setSubmitting(false);
-            const errorKey = `Register.Error.${error.status}`;
-                
-            if (!checkIfKeyExists(errorKey)) {
-                const customErrorMessage = `${error.message}: ${translate(
-                    'Register.Error.UnexpectedError'
-                )}`;
-                setErrors({ submit: customErrorMessage });
-                enqueueSnackbar(
-                    customErrorMessage,
-                    { variant: 'error', autoHideDuration: 10000}
-                );
-                return;
-            }
+        await dispatch(register(values))
+            .then(unwrapResult)
+            .then(() => {
+                setStatus({ success: true });
+                setSubmitting(false);
+                router.push('/app/processes');
+                enqueueSnackbar(registrationText, {
+                    variant: 'success',
+                    autoHideDuration: 5000,
+                });
+            })
+            .catch((error) => {
+                setStatus({ success: false });
+                setSubmitting(false);
+                const errorKey = `Register.Error.${error.status}`;
 
-            const customErrorMessage = `${translate(errorKey)}`;
-            setErrors({ submit: customErrorMessage });
-            enqueueSnackbar(
-                customErrorMessage,
-                { variant: 'error', autoHideDuration: 10000}
-            );
-        });
+                if (!checkIfKeyExists(errorKey)) {
+                    const customErrorMessage = `${error.message}: ${translate(
+                        'Register.Error.UnexpectedError'
+                    )}`;
+                    setErrors({ submit: customErrorMessage });
+                    enqueueSnackbar(customErrorMessage, {
+                        variant: 'error',
+                        autoHideDuration: 10000,
+                    });
+                    return;
+                }
+
+                const customErrorMessage = `${translate(errorKey)}`;
+                setErrors({ submit: customErrorMessage });
+                enqueueSnackbar(customErrorMessage, {
+                    variant: 'error',
+                    autoHideDuration: 10000,
+                });
+            });
     };
 
     const renderForm = ({
@@ -153,10 +161,16 @@ const RegisterView: FC = () => {
                 variant="outlined"
             />
             <TextField
-                error={Boolean(touched.passwordConfirmation && errors.passwordConfirmation)}
+                error={Boolean(
+                    touched.passwordConfirmation && errors.passwordConfirmation
+                )}
                 fullWidth
-                helperText={touched.passwordConfirmation && errors.passwordConfirmation}
-                label={translate('Register.Form.Fields.PasswordConfirmation.Label')}
+                helperText={
+                    touched.passwordConfirmation && errors.passwordConfirmation
+                }
+                label={translate(
+                    'Register.Form.Fields.PasswordConfirmation.Label'
+                )}
                 margin="normal"
                 name="passwordConfirmation"
                 onBlur={handleBlur}
@@ -181,7 +195,10 @@ const RegisterView: FC = () => {
     );
 
     return (
-        <StyledPage className={classes.root} title={translate('Register.Meta.Title')}>
+        <StyledPage
+            className={classes.root}
+            title={translate('Register.Meta.Title')}
+        >
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={6} display="flex" justifyContent="center">
                     <RouterLink href="/">
@@ -190,9 +207,18 @@ const RegisterView: FC = () => {
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>
-                        <Box alignItems="center" display="flex" justifyContent="center" mb={0}>
+                        <Box
+                            alignItems="center"
+                            display="flex"
+                            justifyContent="center"
+                            mb={0}
+                        >
                             <div>
-                                <Typography color="textPrimary" gutterBottom variant="h2">
+                                <Typography
+                                    color="textPrimary"
+                                    gutterBottom
+                                    variant="h2"
+                                >
                                     {translate('Register.SignUp')}
                                 </Typography>
                             </div>
@@ -210,7 +236,11 @@ const RegisterView: FC = () => {
                             <Divider />
                         </Box>
                         <RouterLink href="/login" passHref legacyBehavior>
-                            <Link variant="body2" color="textSecondary" sx={{ textAlign: 'center' }}>
+                            <Link
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ textAlign: 'center' }}
+                            >
                                 {translate('Register.SwitchToLoginMessage')}
                             </Link>
                         </RouterLink>

@@ -95,24 +95,25 @@ const LoginPage: FC = () => {
                 const errorKey = `Login.Error.${error.status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message}: ${translate('Login.Error.UnexpectedError')}`;
+                    const customErrorMessage = `${error.message}: ${translate(
+                        'Login.Error.UnexpectedError'
+                    )}`;
                     setErrors({ submit: customErrorMessage });
-                    enqueueSnackbar(
-                        customErrorMessage,
-                        { variant: 'error', autoHideDuration: 10000}
-                    );
+                    enqueueSnackbar(customErrorMessage, {
+                        variant: 'error',
+                        autoHideDuration: 10000,
+                    });
                     return;
                 }
 
                 const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
 
-                enqueueSnackbar(
-                    customErrorMessage,
-                    { variant: 'error', autoHideDuration: 10000 }
-                );
+                enqueueSnackbar(customErrorMessage, {
+                    variant: 'error',
+                    autoHideDuration: 10000,
+                });
             });
-            
     };
 
     const renderForm = ({
