@@ -34,10 +34,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
     
     if (!cache) {
         cache = await recreateCache();
-        console.log('/blog - no cache found', cache);
     } else {
         res.setHeader('X-Cache', 'HIT');
-        console.log('/blog - cache hit', cache);
     }
 
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
