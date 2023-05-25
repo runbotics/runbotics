@@ -3,8 +3,15 @@ import { GetServerSidePropsContext } from 'next';
 import { BlogPost, PostStatus } from './models';
 import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
+
 export const DEFAULT_PAGE_SIZE = 9;
 export const DRAFT_BADGE_BACKGROUND_COLOR = '#FFC107';
+
+export const QUERRY_LANGAUGE = {
+    en: 'en-US',
+    pl: 'pl'
+};
+
 
 export const FILTER_QUERY_PARAMS = [
     FilterQueryParamsEnum.Category,
@@ -126,3 +133,4 @@ export const getPaginatedUrl = (page: number, initialParams?: string): string =>
 };
 
 export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;
+

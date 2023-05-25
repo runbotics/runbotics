@@ -1,4 +1,6 @@
-import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
+
+
+
 
 import {
     extractAllModelsEntries as extractMainPageEntries,
@@ -23,10 +25,15 @@ import {
     GetAllModelsResponse,
 } from './types';
 
-export async function getAllPosts() {
+import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
+
+import { Language } from '#src-app/translations/translations';
+
+export async function getAllPosts(locale:Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
+            locale
         })
     );
 
@@ -38,10 +45,11 @@ export async function getAllPosts() {
     };
 }
 
-export async function getAllCategories() {
+export async function getAllCategories(locale:Language) {
     const entries = await fetchGraphQL<GetAllCategoriesResponse>(
         buildAllCategoriesQuery({
-            preview: IS_PREVIEW_MODE
+            preview: IS_PREVIEW_MODE,
+            locale
         })
     );
 
@@ -50,13 +58,16 @@ export async function getAllCategories() {
 
 export async function getFilteredPosts(
     filterFragment: string,
-    options: GetFilteredPostsOptions = {}
+    locale: Language,
+    options: GetFilteredPostsOptions = {},
+  
 ) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildFilteredPostsQuery({
             preview: IS_PREVIEW_MODE,
             filterFragment,
             ...options,
+            locale
         })
     );
 
@@ -67,10 +78,11 @@ export async function getFilteredPosts(
     };
 }
 
-export async function getAllPostsPaths() {
+export async function getAllPostsPaths(locale:Language) {
     const entries = await fetchGraphQL<GetAllPostsPathsResponse>(
         buildAllPostsPathsQuery({
             preview: IS_PREVIEW_MODE,
+            locale
         })
     );
 
@@ -79,10 +91,11 @@ export async function getAllPostsPaths() {
     };
 }
 
-export async function getMainPage() {
+export async function getMainPage(locale:Language) {
     const entries = await fetchGraphQL<GetAllModelsResponse>(
         buildMainPageQuery({
             preview: IS_PREVIEW_MODE,
+            locale
         })
     );
 
