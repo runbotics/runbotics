@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 export const useRegisterValidationSchema = () => {
-    const {translate} = useTranslations();
+    const { translate } = useTranslations();
 
     return Yup.object().shape({
         email: Yup.string()
@@ -17,9 +17,12 @@ export const useRegisterValidationSchema = () => {
         passwordConfirmation: Yup.string()
             .oneOf(
                 [Yup.ref('password'), null],
-                translate('Register.Form.Validation.Password.Match'),
+                translate('Register.Form.Validation.Password.Match')
             )
-            .required(translate('Register.Form.Validation.PasswordConfirmation.Required')),
+            .required(
+                translate(
+                    'Register.Form.Validation.PasswordConfirmation.Required'
+                )
+            ),
     });
 };
-
