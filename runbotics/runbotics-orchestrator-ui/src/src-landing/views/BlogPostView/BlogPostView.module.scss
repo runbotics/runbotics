@@ -1,6 +1,6 @@
 @import '#src-landing/scss/main';
 
-.blogArticle {
+.blogWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,11 +13,20 @@
     padding-top: calc($x-content-padding + $HEADER_HEIGHT);
 }
 
-.contentSection {
-    display: flex;
-    flex-direction: column;
+.contentArticle {
     max-width: $MAX_BLOG_CONTENT_WIDTH;
 
     padding-top: $padding-5;
     padding-bottom: 64px;
+}
+
+.breadCrumbsWrapper {
+    width: 100%;
+    padding: 24px clamp(10px, 8vw, 140px);
+}
+
+@media (max-width: $breakpoint-md) {
+    .breadCrumbsWrapper {
+        padding: 24px 0;
+    }
 }

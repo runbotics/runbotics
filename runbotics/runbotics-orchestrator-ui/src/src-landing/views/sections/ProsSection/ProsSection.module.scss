@@ -18,6 +18,10 @@ $GRID-GAPS: 27px 23px;
     grid-auto-rows: $GRID-ROWS;
 }
 
+.mediaScroller:has(article) {
+    display: none;
+}
+
 .grid {
     &__item {
         max-width: 100%;
@@ -82,16 +86,21 @@ $GRID-GAPS: 27px 23px;
 
 @media (max-width: $breakpoint-sm) {
     .root {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: $ONE-COLUMN-BREAKPOINT) {
-    .root {
-        grid-template-columns: repeat(1, 1fr);
+        display: flex;
+        flex-direction: column;
     }
 
-    .grid__head__2 {
-        grid-column: 1 / 2;
+    .root > article {
+        display: none;
+    }
+
+    .grid__head__3 {
+        display: none;
+    }
+
+    .mediaScroller:has(article) {
+        display: grid;
+        grid-auto-columns: minmax(300px, 40%);
+        padding: 5px;
     }
 }

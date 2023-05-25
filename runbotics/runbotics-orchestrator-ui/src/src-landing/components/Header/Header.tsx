@@ -11,6 +11,7 @@ import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 import Navbar from '../Navbar';
 
 import styles from './Header.module.scss';
+import LoginLink from './LoginLink';
 
 const Header = () => {
     const { translate } = useTranslations();
@@ -34,7 +35,7 @@ const Header = () => {
     const iconMobileStyle = isNavExpanded ? styles.isActive : '';
 
     return (
-        <header className={styles.header}>
+        <header className={`${styles.header} ${!isNavExpanded ? '' : styles.isActive}`}>
             <div className={styles.inner}>
                 <Image
                     src={logo}
@@ -57,15 +58,12 @@ const Header = () => {
                     <span></span>
                     <span></span>
                 </button>
-                <Navbar isNavExpanded={isNavExpanded} hideNav={hideNav} isMobileVisible={false}/>
-                <Link className={styles.logInBtn} href="/login">
-                    <Typography
-                        variant="h6"
-                        color="accent"
-                        className={styles.btnText}
-                        text={translate('Landing.Header.Button.LogIn')}
-                    />
-                </Link>
+                <Navbar
+                    isNavExpanded={isNavExpanded}
+                    hideNav={hideNav}
+                    isMobileVisible={false}
+                />
+                <LoginLink className={styles.loginLink} />
             </div>
         </header>
     );

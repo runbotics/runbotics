@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FilterQueryParamsEnum, Category } from '#contentful/common';
+import { FilterQueryParamsEnum, Category, Tag, getBlogUrl } from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -17,14 +17,17 @@ import styles from './FiltersSection.module.scss';
 
 interface Props {
     categories: Category[];
-    onReload: () => void;
+    tags: Tag[];
 }
 
-const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
+// eslint-disable-next-line max-lines-per-function
+const FiltersSection: VFC<Props> = ({ categories, tags }) => {
     const { translate } = useTranslations();
     const { query, push } = useRouter();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [isCategoriesSectionExpanded, setCategoriesSectionExpand] = useState<boolean>(false);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [isCategoriesSectionExpanded, setCategoriesSectionExpand] = useState(false);
+    const [isTagsSectionExpanded, setTagsSectionExpand] = useState(false);
     const [dateRange, setDateRange] = useState<Partial<IDateRange>>();
 
     const searchParam = Array.isArray(query?.search)
@@ -32,23 +35,28 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
         : query.search;
 
     useEffect(() => {
-        if (query?.category) {
+        if (query.category) {
             setSelectedCategories(Array.isArray(query.category) ? query.category : [query.category]);
         } else {
             setSelectedCategories([]);
         }
 
+        if (query.tag) {
+            setSelectedTags(Array.isArray(query.tag) ? query.tag : [query.tag]);
+        } else {
+            setSelectedTags([]);
+        }
+
         const initialDateRange: Partial<IDateRange> = {};
-        if (query?.startDate && typeof query.startDate === 'string') {
+        if (query.startDate && typeof query.startDate === 'string') {
             initialDateRange.startDate = query.startDate;
         }
         
-        if (query?.endDate && typeof query.endDate === 'string') {
+        if (query.endDate && typeof query.endDate === 'string') {
             initialDateRange.endDate = query.endDate;
         }
         setDateRange(initialDateRange);
-        onReload();
-    }, [onReload, query]);
+    }, [query]);
 
     const handleCategoryCheckboxChange = (slug: string) => {
         if (selectedCategories.includes(slug)) {
@@ -57,12 +65,22 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
             setSelectedCategories(prevState => [...prevState, slug]);
         }
     };
+    
+    const handleTagCheckboxChange = (slug: string) => {
+        if (selectedTags.includes(slug)) {
+            setSelectedTags(prevState => prevState.filter(tag => tag !== slug));
+        } else {
+            setSelectedTags(prevState => [...prevState, slug]);
+        }
+    };
 
     const pushFilters = (search?: string) => {
         const searchParams = new URLSearchParams();
         
         selectedCategories
             .forEach(category => searchParams.append(FilterQueryParamsEnum.Category, category));
+        selectedTags
+            .forEach(tag => searchParams.append(FilterQueryParamsEnum.Tag, tag));
         if (dateRange?.startDate) {
             searchParams.append(FilterQueryParamsEnum.StartDate, dateRange.startDate);
         }
@@ -73,13 +91,21 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
             searchParams.append(FilterQueryParamsEnum.Search, search);
         }
 
-        push(`/blog${searchParams.toString() ? '?' + searchParams.toString() : ''}`);
+        const newUrl = getBlogUrl(searchParams);
+
+        push(newUrl);
     };
 
     useEffect(() => {
         pushFilters(searchParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParam, selectedCategories.length, dateRange?.endDate, dateRange?.startDate]);
+    }, [
+        searchParam,
+        selectedCategories.length,
+        selectedTags.length,
+        dateRange?.endDate,
+        dateRange?.startDate,
+    ]);
 
     const categoriesCheckboxes = categories.map((category, index) => (
         <Checkbox
@@ -89,6 +115,19 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
             onChange={() => handleCategoryCheckboxChange(category.slug)}
             label={category.title}
             title={category.title}
+            size='regular'
+            singleLine
+        />
+    ));
+
+    const tagsCheckboxes = tags.map((tag, index) => (
+        <Checkbox
+            key={tag.slug}
+            className={index < 5 || isTagsSectionExpanded ? '' : styles.hidden}
+            checked={selectedTags.includes(tag.slug)}
+            onChange={() => handleTagCheckboxChange(tag.slug)}
+            label={tag.name}
+            title={tag.name}
             size='regular'
             singleLine
         />
@@ -105,13 +144,13 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
             />
             <div className={styles.filtersHeader}>
                 <Typography variant='h4'>
-                    {translate('Landing.Blog.Filters.Title')}
+                    {translate('Blog.Filters.Title')}
                 </Typography>
                 <Link
                     className={styles.clearLink}
                     href={'/blog'}
                 >
-                    {translate('Landing.Blog.Filters.ClearAll')}
+                    {translate('Blog.Filters.ClearAll')}
                 </Link>
             </div>
             <div
@@ -119,7 +158,7 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                 data-type='category'
             >
                 <Typography variant='h6'>
-                    {translate('Landing.Blog.Filters.Category')}
+                    {translate('Blog.Filters.Category')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
                     {categoriesCheckboxes}
@@ -130,7 +169,6 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                     data-hide={categories.length <= 5}
                     onClick={() => {
                         setCategoriesSectionExpand(prevState => !prevState);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                 >
                     <Image
@@ -141,8 +179,39 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                     />
                     <Typography variant='body4' element='span' color='accent'>
                         {isCategoriesSectionExpanded
-                            ? translate('Landing.Blog.Filters.Less')
-                            : translate('Landing.Blog.Filters.More')}
+                            ? translate('Blog.Filters.Less')
+                            : translate('Blog.Filters.More')}
+                    </Typography>
+                </button>
+            </div>
+            <div
+                className={styles.filterSectionWrapper}
+                data-type='tag'
+            >
+                <Typography variant='h6'>
+                    {translate('Blog.Filters.Tag')}
+                </Typography>
+                <div className={styles.categoriesSectionWrapper}>
+                    {tagsCheckboxes}
+                </div>
+                <button
+                    className={styles.expandSectionButton}
+                    type='button'
+                    data-hide={tags.length <= 5}
+                    onClick={() => {
+                        setTagsSectionExpand(prevState => !prevState);
+                    }}
+                >
+                    <Image
+                        src={isTagsSectionExpanded ? MinusIcon : PlusIcon}
+                        alt={isTagsSectionExpanded ? 'minus' : 'plus'}
+                        width={14}
+                        height={14}
+                    />
+                    <Typography variant='body4' element='span' color='accent'>
+                        {isTagsSectionExpanded
+                            ? translate('Blog.Filters.Less')
+                            : translate('Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
@@ -151,7 +220,7 @@ const FiltersSection: VFC<Props> = ({ categories, onReload }) => {
                 data-type='date'
             >
                 <Typography variant='h6'>
-                    {translate('Landing.Blog.Filters.Date')}
+                    {translate('Blog.Filters.Date')}
                 </Typography>
                 <DateRange
                     initialDateRange={dateRange}

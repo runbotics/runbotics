@@ -6,7 +6,10 @@
     align-self: center;
     align-items: center;
     width: 100%;
+
     margin-top: 72px;
+    margin-left: auto;
+    margin-right: auto;
     min-height: 100px;
     padding: 20px;
     gap: 16px;
@@ -30,11 +33,11 @@
 
 @mixin link-styles {
     @include font-face-base;
-    color: $palette-accent-primary;
     font-size: $font-size-h5;
     line-height: $line-height-base;
     font-weight: $font-weight-semi-bold;
-    text-decoration: none;
+
+    color: $palette-accent-primary;
 }
 
 .copyButton {
@@ -46,6 +49,7 @@
 
     border-radius: 10px;
     border: none;
+    color: $palette-accent-primary;
     background-color: transparent;
     transition: background-color 300ms ease;
     white-space: nowrap;
@@ -71,8 +75,12 @@
 
 .link {
     @include link-styles;
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
+    transition: $landing-link-transition;
+
     &:hover {
-        border-bottom: 3px solid $palette-accent-primary;
+        border-bottom-color: $palette-accent-primary;
     }
 }
 
@@ -118,6 +126,10 @@
         li {
             text-align: center;
         }
+    }
+
+    .copyTooltipContainer {
+        grid-column: span 2;
     }
 
     .divider {

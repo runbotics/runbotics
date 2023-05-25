@@ -1,6 +1,7 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 
-import { BlogPost, Category } from '#contentful/common';
+import { BlogPost, Category, Page, Tag } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import BlogLayout from '#src-landing/components/BlogLayout';
 import Layout from '#src-landing/components/Layout';
@@ -14,12 +15,21 @@ import styles from './BlogView.module.scss';
 interface BlogViewProps {
     posts: BlogPost[];
     categories: Category[];
+    tags: Tag[];
+    page: Page;
     featuredPost?: BlogPost;
 }
 
-const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost }) => {
+const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
     const { translate } = useTranslations();
-    const cardsSectionRef = useRef<HTMLDivElement>(null);
+
+    const postsNotFoundInfo = (
+        <div className={styles.emptyPageContentWrapper}>
+            <Typography variant='h3'>
+                {translate('Blog.EmptyPage.Title')}
+            </Typography>
+        </div>
+    );
 
     return (
         <Layout>
@@ -27,24 +37,15 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, featuredPost }) => {
                 <BreadcrumbsSection />
                 <FiltersSection
                     categories={categories}
-                    onReload={() => {
-                        cardsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }}
+                    tags={tags}
                 />
-                {posts.length
-                    ? (
-                        <CardsSection
-                            ref={cardsSectionRef}
-                            posts={posts}
-                            featuredPost={featuredPost}
-                        />)
-                    : (
-                        <div className={styles.emptyPageContentWrapper}>
-                            <Typography variant='h3'>
-                                {translate('Landing.Blog.EmptyPage.Title')}
-                            </Typography>
-                        </div>)
-                }
+                <If condition={Boolean(posts.length)} else={postsNotFoundInfo}>
+                    <CardsSection
+                        posts={posts}
+                        featuredPost={featuredPost}
+                        page={page}
+                    />
+                </If>
             </BlogLayout>
         </Layout>
     );

@@ -10,7 +10,6 @@
     height: fit-content;
     gap: 16px;
     padding: 10px;
-    margin-bottom: $padding-4;
 
     background-color: $palette-background-secondary;
     border-radius: 14px;
@@ -42,6 +41,7 @@
     border-bottom: 3px solid transparent;
     border-top: 3px solid transparent;
     white-space: nowrap;
+    transition: $landing-link-transition;
 
     &:hover {
         border-bottom-color: $palette-accent-primary;
@@ -119,6 +119,11 @@
 
     .filterSectionWrapper[data-type='category'] {
         grid-column: 1;
+    }
+
+    .filterSectionWrapper[data-type='date'] {
+        align-items: center;
+        grid-column: span 2;
     }
 }
 

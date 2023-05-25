@@ -12,7 +12,5 @@ export async function getPost(options: GetPostOptions) {
         })
     );
 
-    return {
-        post: extractBlogPost(entry),
-    };
+    return extractBlogPost(entry);
 }

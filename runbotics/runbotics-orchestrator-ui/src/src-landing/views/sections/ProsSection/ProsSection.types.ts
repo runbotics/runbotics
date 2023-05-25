@@ -1,6 +1,6 @@
 import { StaticImageData } from 'next/image';
 
-import prosTranslations from '#src-landing/translations/en/pros.json';
+import prosTranslations from '#src-landing/translations/en/landing/pros.json';
 
 export interface ProsTile {
     title: keyof typeof prosTranslations;

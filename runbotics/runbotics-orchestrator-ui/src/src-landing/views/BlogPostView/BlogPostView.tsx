@@ -11,6 +11,7 @@ import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
 
+
 interface Props {
     post: BlogPost;
 }
@@ -27,16 +28,18 @@ const BlogPostView: VFC<Props> = ({ post }) => {
                 <meta property="og:image" content={post.featuredImage?.url} />
             </Head>
             <Layout>
-                <article className={styles.blogArticle}>
+                <div className={styles.blogWrapper}>
                     <PostHeader
                         {...postHeaderProps}
                     />
-                    <BreadcrumbsSection postTitle={post.title} />
-                    <section className={styles.contentSection}>
+                    <div className={styles.breadCrumbsWrapper}>
+                        <BreadcrumbsSection postTitle={post.title} />
+                    </div>
+                    <article className={styles.contentArticle}>
                         <RichTextRenderer content={body} />
                         <BlogSharePanel />
-                    </section>
-                </article>
+                    </article>
+                </div>
             </Layout>
         </>
     );

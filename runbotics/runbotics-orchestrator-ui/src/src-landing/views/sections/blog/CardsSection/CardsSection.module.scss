@@ -1,13 +1,10 @@
 @import '#src-landing/scss/main.scss';
 
-$SECTION-PADDING-BOTTOM: 30px;
-
 .root {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-    width: 100%;
-    padding-bottom: $SECTION-PADDING-BOTTOM;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 @media (max-width: $breakpoint-md) {

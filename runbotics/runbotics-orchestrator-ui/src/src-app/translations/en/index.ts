@@ -1,4 +1,5 @@
-import landingPageTranslations from '#src-landing/translations/en';
+import blogTranslations from '#src-landing/translations/en/blog';
+import landingPageTranslations from '#src-landing/translations/en/landing';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
@@ -32,6 +33,7 @@ const translationResources = {
     ...installTranslations,
     ...componentsTranslations,
     ...paletteTranslations,
-    ...landingPageTranslations
+    ...landingPageTranslations,
+    ...blogTranslations,
 };
 export default translationResources;

@@ -3,7 +3,8 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { BlogPost } from '#contentful/common';
+import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import CardBadge from '../CardBadge';
@@ -12,6 +13,7 @@ import styles from './BlogCard.module.scss';
 
 interface BlogCardProps {
     post: BlogPost;
+    className?: string;
 }
 
 export const cutText = (text: string, length: number) => {
@@ -24,7 +26,7 @@ export const cutText = (text: string, length: number) => {
     return cut.substring(0, lastSpace) + '...';
 };
 
-const BlogCard: FC<BlogCardProps> = ({ post }) => {
+const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
 
     const tags = post.tags?.items.map(({ name }) => <CardBadge
@@ -34,23 +36,34 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
     />);
 
     return (
-        <article className={styles.root}>
+        <article className={`${styles.root} ${className}`}>
             <Link className={styles.link} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
-                    <Image
-                        src={post.featuredImage?.url}
-                        fill
-                        alt={post.imageAlt ?? ''}
-                        className={styles.img}
-                    />
-                    {tags}
+                    {post.featuredImage?.url &&
+                        <Image
+                            src={post.featuredImage?.url}
+                            fill
+                            alt={post.imageAlt ?? ''}
+                            className={styles.img}
+                        />
+                    }
+                    <If condition={checkIsDraft(post.status)}>
+                        <CardBadge
+                            className={styles.draftBadge}
+                            backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR}
+                            text={translate('Blog.Post.DraftBadge')}
+                        />
+                    </If>
+                    <div className={styles.badges}>
+                        {tags}
+                    </div>
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <Typography variant="body4">
                                 {new Intl.DateTimeFormat().format(new Date(post.date))}
                             </Typography>
                             <Typography variant="body4">
-                                {post.readingTime}&nbsp;{translate('Landing.Blog.Post.ReadingTime.Unit')}
+                                {post.readingTime}&nbsp;{translate('Blog.Post.ReadingTime.Unit')}
                             </Typography>
                             <Typography variant="body4" className={styles.category}>
                                 {post.category.title}
@@ -66,7 +79,7 @@ const BlogCard: FC<BlogCardProps> = ({ post }) => {
                         </div>
                         <div className={styles.readMore}>
                             <Typography variant="body3">
-                                {translate('Landing.Blog.Card.ReadMore')}
+                                {translate('Blog.Card.ReadMore')}
                             </Typography>
                         </div>
                     </div>
