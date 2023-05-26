@@ -2,7 +2,7 @@ import useProcessActionVariables from './useProcessActionVariables';
 import useProcessAttendedVariables from './useProcessAttendedVariables';
 import useProcessGlobalVariables from './useProcessGlobalVariables';
 
-const useProcessVariables = (selectedElementParentId: string) => {
+const useProcessVariables = (selectedElementParentId?: string) => {
     const globalVariables = useProcessGlobalVariables();
     const { inputActionVariables, outputActionVariables } =
         useProcessActionVariables(selectedElementParentId);

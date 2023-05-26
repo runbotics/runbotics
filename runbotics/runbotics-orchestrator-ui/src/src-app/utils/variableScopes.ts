@@ -1,37 +1,34 @@
 import { ActionVariableObject, Scope } from '#src-app/hooks/useProcessVariables.types';
 
-export const addScope = (mainObj: Scope, localScopeId: string, newScopeId: string): void => {
-    if (mainObj.id === localScopeId) {
-        if (!mainObj.children) mainObj.children = [];
-
-        mainObj.children.push({ id: newScopeId });
-        
+export const addScope = (scopeTree: Scope, localScopeId: string, newScopeId: string): void => {
+    if (scopeTree.id === localScopeId) { 
+        scopeTree.children ? scopeTree.children.push({ id: newScopeId }) : scopeTree.children = [{ id: newScopeId }];
         return;
     }
-    
-    if (!mainObj.children) return;
-    
-    for (let i = 0; i < mainObj.children.length; i++) {
-        addScope(
-            mainObj.children[i],
-            localScopeId,
-            newScopeId
-        );
-    }
+
+    if (!scopeTree.children) return;
+
+    scopeTree.children.forEach(
+        child => addScope(child, localScopeId, newScopeId)
+    );
 };
 
-export const getAncestorScope = (scopeObj: Scope, scopeId: string): string[] | number => {
-    if (scopeObj.id === scopeId) return [scopeObj.id];
+export const getAncestorScope = (scopeTree: Scope, scopeId: string): string[] | number => {
+    if (scopeTree.id === scopeId) return [scopeTree.id];
 
-    if (!scopeObj.children) return -1;
+    if (!scopeTree.children) return -1;
         
-    const childrenScopes = scopeObj.children
-        .map(child => getAncestorScope(child, scopeId))
-        .filter(child => child !== -1);
+    const childrenScopes = scopeTree.children
+        .map(
+            child => getAncestorScope(child, scopeId)
+        )
+        .filter(
+            child => child !== -1
+        );
 
     if (childrenScopes.length === 0) return -1;
 
-    return [scopeObj.id, ...childrenScopes.flat() as string[]];
+    return [scopeTree.id, ...childrenScopes.flat() as string[]];
 };
 
 export const getAncestorScopesActions = (scopeIds: string[], allActions: ActionVariableObject[]): ActionVariableObject[] =>
