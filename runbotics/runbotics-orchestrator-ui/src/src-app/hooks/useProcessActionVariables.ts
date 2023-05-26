@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
 
-import { is } from 'bpmn-js/lib/util/ModelUtil';
-
 import {
-    BPMNElement,
     ExtensionElement,
     ModdleElement,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { useModelerContext } from './useModelerContext';
 
+import { Scope, ScopedModdleElement } from './useProcessAttendedVariables.types';
 import {
     ActionVariableObject,
     ActionVariables,
@@ -19,67 +17,87 @@ const useProcessActionVariables = () => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
     const rootElement = canvas?.getRootElement();
-    const allActionsWithVariables: ModdleElement[] =
-        rootElement?.businessObject?.flowElements.filter((item: BPMNElement) =>
-            item.id.includes('Activity_')
-        );
-
-    const extractLocalVariable = (
-        inputOutput: any
-    ) => {
-        const localVariable = inputOutput.inputParameters.find(
-            inputParameter => inputParameter.name === 'variable'
-        );
-        if (localVariable) {
-            return {
-                label: localVariable.value,
-                value: localVariable.value,
-                group: 'Local Variables'
-            };
-        }
-        return undefined;
+    const rootElementScopeId = rootElement?.businessObject?.id;
+    const ProcessScopes: Scope = { 
+        id: rootElementScopeId,
+        children: []
     };
 
-    const assignVariablesElements =
-        context?.modeler
-            ?.get('elementRegistry')
-            .filter((element: BPMNElement) => is(element, 'bpmn:Task'))
-            .filter(
-                (element: BPMNElement) =>
-                    element.businessObject.actionId ===
-                        'variables.assign' ||
-                    element.businessObject.actionId ===
-                        'variables.assignList' ||
-                    element.businessObject.actionId ===
-                        'variables.assignGlobalVariable'
-            ) ?? [];
+    const getLocalVarsActions = (element: ModdleElement[]): ModdleElement[] => element ? element.filter(
+        (item: ModdleElement) =>
+            item.id.includes('Activity_')
+    ) : [];
 
-    console.log('old actions>>>', assignVariablesElements);
+    const filterLocalVarsActions = (elements: ModdleElement[], scopeId: string): ScopedModdleElement[] => {
+        const varsElements = elements.filter(
+            element => 
+                (element.actionId === 'variables.assign' ||
+                element.actionId === 'variables.assignList')
+        );
+        
+        const scopedVarsElements = varsElements.map(
+            element => ({ ...element, scopeId })
+        );
 
-    const variables = assignVariablesElements
-        .map(assignVariablesElement => {
-            const inputOutput: any =
-                assignVariablesElement.businessObject?.extensionElements
-                    ?.values[0];
+        return scopedVarsElements;
+    };
 
-            if (!inputOutput) {
-                return undefined;
+    const getScopeLoops = (elements: ModdleElement[]): ModdleElement[] => elements
+        .filter(element => element.actionId === 'loop.loop');
+
+    const addScope = (mainObject, localScopeId, newScopeId) => {
+        if (mainObject.id === localScopeId) {
+            if (!mainObject.children) {
+                mainObject.children = [];
             }
-            return (
-                extractLocalVariable(inputOutput)
-            );
-        })
-        .filter(variable => variable !== undefined)
-        .flatMap(variable => variable);
+            mainObject.children.push({ id: newScopeId });
+            return;
+        }
+        
+        if (mainObject.children) {
+            for (let i = 0; i < mainObject.children.length; i++) {
+                addScope(mainObject.children[i], localScopeId, newScopeId);
+            }
+        }
+    };
 
-    console.log('old actions', variables);
+    const getActionsAssigningVars = (elements: ModdleElement[], scopeId: string): ScopedModdleElement[] => {
+        if (!elements) return [];
+        
+        const scopeLoops = getScopeLoops(elements);
+
+        const localActionsWithoutLoops = filterLocalVarsActions(elements, scopeId)
+            .filter(element => element.actionId !== 'loop.loop');
+        
+        if (scopeLoops.length <= 0) return localActionsWithoutLoops;
+
+        const scopeLoopsActions = scopeLoops.map(scopeLoop => {
+            const loopScopeId = scopeLoop.id;
+
+            addScope(ProcessScopes, scopeId, loopScopeId);
+
+            if (scopeLoop.flowElements.length <= 0) return [];
+            
+            const loopScopeActions = getActionsAssigningVars(scopeLoop.flowElements, loopScopeId);
+
+            return loopScopeActions;
+        });
+
+        const scopeLoopsActionsFlat = scopeLoopsActions.flat();
+
+        return [...localActionsWithoutLoops, ...scopeLoopsActionsFlat];
+    };
+
+    const allActionsWithVariables: ModdleElement[] = getLocalVarsActions(
+        rootElement?.businessObject?.flowElements
+    );
+
+    const allActionsAssigningVars: ModdleElement[] = getActionsAssigningVars(allActionsWithVariables, rootElementScopeId);
 
     const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
         if (!allActionsWithVariables || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
-
-        console.log('allActionsWithVariables: ', allActionsWithVariables);
 
         /**
          * @name inputActionVariables
@@ -88,20 +106,11 @@ const useProcessActionVariables = () => {
          * Variables -> Assign value to variable
          * Variables -> Assign list variable
          */
-        const customArr: ModdleElement[] = assignVariablesElements.map(
-            (shape) => shape.businessObject
-        );
-        console.log(customArr);
 
-        const inputActionVariables = customArr
-            .filter(
-                (element: ModdleElement) =>
-                    element.actionId === 'variables.assign' ||
-                        element.actionId === 'variables.assignList'
-            )
-            .map((variable: ModdleElement) => {
+        const inputActionVariables = allActionsAssigningVars
+            .map((variable: ScopedModdleElement) => {
                 const variableInfo: ExtensionElement[] =
-                        variable.extensionElements.values[0].inputParameters;
+                    variable.extensionElements.values[0].inputParameters;
 
                 if (!variableInfo) {
                     return [];
@@ -114,6 +123,7 @@ const useProcessActionVariables = () => {
                     .map((item: ActionVariableObject) => ({
                         name: item.value,
                         value: item.name,
+                        scopeId: variable.scopeId
                     }));
 
                 return inputVariables;
@@ -122,9 +132,7 @@ const useProcessActionVariables = () => {
                 variable[0].name ? variable : []
             );
 
-        console.log('WORKING: ', inputActionVariables);
-
-        const outputActionVariables = allActionsWithVariables
+        const outputActionVariables = allActionsAssigningVars
             .map((element: ModdleElement) => {
                 const variableInfo: ExtensionElement[] =
                     element.extensionElements.values[0].outputParameters;
@@ -149,8 +157,10 @@ const useProcessActionVariables = () => {
             .flat();
 
         return { inputActionVariables, outputActionVariables };
-    }, [allActionsWithVariables, canvas]);
+    }, [allActionsWithVariables, allActionsAssigningVars, canvas]);
 
+    console.log('ProcessScopes', ProcessScopes);
+    console.log('allActionVariables', allActionVariables);
     return allActionVariables;
 };
 
