@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { addScope, getAncestorScope, getAncestorScopesActions } from '#src-app/utils/variableScopes';
 import {
     ExtensionElement,
     ModdleElement,
@@ -12,6 +13,7 @@ import {
     ActionVariableObject,
     ActionVariables,
 } from './useProcessVariables.types';
+
 
 const useProcessActionVariables = () => {
     const context = useModelerContext();
@@ -42,29 +44,13 @@ const useProcessActionVariables = () => {
         return scopedVarsElements;
     };
 
-    const getScopeLoops = (elements: ModdleElement[]): ModdleElement[] => elements
+    const getLocalLoops = (elements: ModdleElement[]): ModdleElement[] => elements
         .filter(element => element.actionId === 'loop.loop');
-
-    const addScope = (mainObject, localScopeId, newScopeId) => {
-        if (mainObject.id === localScopeId) {
-            if (!mainObject.children) {
-                mainObject.children = [];
-            }
-            mainObject.children.push({ id: newScopeId });
-            return;
-        }
-        
-        if (mainObject.children) {
-            for (let i = 0; i < mainObject.children.length; i++) {
-                addScope(mainObject.children[i], localScopeId, newScopeId);
-            }
-        }
-    };
 
     const getActionsAssigningVars = (elements: ModdleElement[], scopeId: string): ScopedModdleElement[] => {
         if (!elements) return [];
         
-        const scopeLoops = getScopeLoops(elements);
+        const scopeLoops = getLocalLoops(elements);
 
         const localActionsWithoutLoops = filterLocalVarsActions(elements, scopeId)
             .filter(element => element.actionId !== 'loop.loop');
@@ -159,9 +145,29 @@ const useProcessActionVariables = () => {
         return { inputActionVariables, outputActionVariables };
     }, [allActionsWithVariables, allActionsAssigningVars, canvas]);
 
-    console.log('ProcessScopes', ProcessScopes);
-    console.log('allActionVariables', allActionVariables);
+    // console.log('ProcessScopes', ProcessScopes);
+    // console.log('allActionVariables', allActionVariables);
+    const myAction = 'Activity_065r1xa';
+    const ancestorScopes = getAncestorScope(ProcessScopes, myAction);
+    console.log('getAncestorActions', getAncestorScopesActions(ancestorScopes, allActionVariables.inputActionVariables));
     return allActionVariables;
+};
+
+const exampleObj = {
+    'id': 'Process_1', // TOPSCOPE
+    'children': [
+        {
+            'id': 'Activity_1xtcdrf', // FIRST LOOP 
+            'children': [
+                {
+                    'id': 'Activity_01qglph' // LOOP INSIDE FIRST LOOP
+                }
+            ]
+        },
+        {
+            'id': 'Activity_065r1xa' // SECOND LOOP
+        }
+    ]
 };
 
 export default useProcessActionVariables;

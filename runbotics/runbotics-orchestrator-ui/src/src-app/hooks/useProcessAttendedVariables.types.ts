@@ -2,7 +2,7 @@ import { ModdleElement } from '#src-app/views/process/ProcessBuildView/Modeler/h
 
 export interface Scope {
     id: string;
-    children: Scope[];
+    children?: Scope[];
 }
 
 export interface ScopedModdleElement extends ModdleElement {
