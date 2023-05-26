@@ -117,7 +117,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         inputActionVariables,
         outputActionVariables,
         attendedVariables,
-    } = useProcessVariables();
+    } = useProcessVariables(selectedElement?.parent?.id);
 
     const attendedProcessVariables = attendedVariables.map((variable) => ({
         label: variable.name,
@@ -186,6 +186,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                 label: `\${environment.variables.${option.value}}`,
                 value: `\${environment.variables.${option.value}}`,
             }));
+
             const hashVariables = variables.map((option) => ({
                 ...option,
                 label: `#{${option.value}}`,

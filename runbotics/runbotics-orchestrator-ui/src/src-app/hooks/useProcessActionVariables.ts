@@ -7,30 +7,27 @@ import {
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { useModelerContext } from './useModelerContext';
-
-import { Scope, ScopedModdleElement } from './useProcessAttendedVariables.types';
 import {
     ActionVariableObject,
     ActionVariables,
+    Scope,
+    ScopedModdleElement,
 } from './useProcessVariables.types';
 
 
-const useProcessActionVariables = () => {
+const useProcessActionVariables = (selectedElementParentId: string) => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
     const rootElement = canvas?.getRootElement();
     const rootElementScopeId = rootElement?.businessObject?.id;
-    const ProcessScopes: Scope = { 
-        id: rootElementScopeId,
-        children: []
-    };
+    const ProcessScopes: Scope = useMemo<Scope>(() => ({ id: rootElementScopeId }), [rootElementScopeId]);
 
     const getLocalVarsActions = (element: ModdleElement[]): ModdleElement[] => element ? element.filter(
         (item: ModdleElement) =>
             item.id.includes('Activity_')
     ) : [];
 
-    const filterLocalVarsActions = (elements: ModdleElement[], scopeId: string): ScopedModdleElement[] => {
+    const filterLocalVarsActions = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
         const varsElements = elements.filter(
             element => 
                 (element.actionId === 'variables.assign' ||
@@ -47,7 +44,7 @@ const useProcessActionVariables = () => {
     const getLocalLoops = (elements: ModdleElement[]): ModdleElement[] => elements
         .filter(element => element.actionId === 'loop.loop');
 
-    const getActionsAssigningVars = (elements: ModdleElement[], scopeId: string): ScopedModdleElement[] => {
+    const getActionsAssigningVars = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
         if (!elements) return [];
         
         const scopeLoops = getLocalLoops(elements);
@@ -74,11 +71,11 @@ const useProcessActionVariables = () => {
         return [...localActionsWithoutLoops, ...scopeLoopsActionsFlat];
     };
 
-    const allActionsWithVariables: ModdleElement[] = getLocalVarsActions(
+    const allActionsWithVariables = useMemo(() => getLocalVarsActions(
         rootElement?.businessObject?.flowElements
-    );
+    ), [rootElement]);
 
-    const allActionsAssigningVars: ModdleElement[] = getActionsAssigningVars(allActionsWithVariables, rootElementScopeId);
+    const allActionsAssigningVars = getActionsAssigningVars(allActionsWithVariables, rootElementScopeId);
 
     const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
         if (!allActionsWithVariables || !canvas) {
@@ -118,6 +115,12 @@ const useProcessActionVariables = () => {
                 variable[0].name ? variable : []
             );
 
+        const ancestorScopes = getAncestorScope(ProcessScopes, selectedElementParentId);
+
+        if(!Array.isArray(ancestorScopes)) return { inputActionVariables: [], outputActionVariables: [] };
+
+        const localScopeInputActionVariables = getAncestorScopesActions(ancestorScopes as string[], inputActionVariables);
+
         const outputActionVariables = allActionsAssigningVars
             .map((element: ModdleElement) => {
                 const variableInfo: ExtensionElement[] =
@@ -142,32 +145,10 @@ const useProcessActionVariables = () => {
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flat();
 
-        return { inputActionVariables, outputActionVariables };
-    }, [allActionsWithVariables, allActionsAssigningVars, canvas]);
-
-    // console.log('ProcessScopes', ProcessScopes);
-    // console.log('allActionVariables', allActionVariables);
-    const myAction = 'Activity_065r1xa';
-    const ancestorScopes = getAncestorScope(ProcessScopes, myAction);
-    console.log('getAncestorActions', getAncestorScopesActions(ancestorScopes, allActionVariables.inputActionVariables));
+        return { inputActionVariables: localScopeInputActionVariables, outputActionVariables };
+    }, [allActionsWithVariables, allActionsAssigningVars, canvas, selectedElementParentId, ProcessScopes]);
+    
     return allActionVariables;
-};
-
-const exampleObj = {
-    'id': 'Process_1', // TOPSCOPE
-    'children': [
-        {
-            'id': 'Activity_1xtcdrf', // FIRST LOOP 
-            'children': [
-                {
-                    'id': 'Activity_01qglph' // LOOP INSIDE FIRST LOOP
-                }
-            ]
-        },
-        {
-            'id': 'Activity_065r1xa' // SECOND LOOP
-        }
-    ]
 };
 
 export default useProcessActionVariables;
