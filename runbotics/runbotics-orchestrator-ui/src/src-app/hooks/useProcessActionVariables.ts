@@ -62,7 +62,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
             addScope(ProcessScopes, scopeId, loopScopeId);
 
-            if (scopeLoop.flowElements.length <= 0) return [];
+            if (scopeLoop?.flowElements?.length <= 0) return [];
             
             const loopScopeActions = getVarsAssigningActions(scopeLoop.flowElements, loopScopeId);
 
