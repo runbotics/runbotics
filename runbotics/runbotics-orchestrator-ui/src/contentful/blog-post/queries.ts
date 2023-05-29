@@ -1,6 +1,7 @@
-import { GetPostOptions } from './types';
-
 import { BLOG_POST_FRAGMENT, QUERRY_LANGAUGE, QueryBuilder } from '#contentful/common';
+
+
+import { GetPostOptions } from './types';
 
 export const buildPostQuery: QueryBuilder<GetPostOptions> = ({
     preview,

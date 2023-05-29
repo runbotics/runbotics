@@ -1,8 +1,12 @@
-import type { FC, VFC } from 'react';
+import { FC, VFC, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
 
+
 import useAuth from '#src-app/hooks/useAuth';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+import { Language } from '#src-app/translations/translations';
 
 import BlankPage from '#src-app/utils/BlankPage';
 
@@ -13,6 +17,10 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { isAuthenticated, isInitialised } = useAuth();
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
+    const { switchLanguage } = useTranslations();
+    useEffect(() => {
+        switchLanguage(router.locale as Language);
+    }, [router.locale, switchLanguage] );
 
     if (isBrowser && isInitialised && isAuthenticated) router.replace('/app');
 

@@ -1,10 +1,11 @@
 
-import {
-    GetFilteredPostsOptions,
-} from './types';
 
 import { BLOG_POST_LIST_FRAGMENT, QueryBuilder, QUERRY_LANGAUGE } from '#contentful/common';
 import { Language } from '#src-app/translations/translations';
+
+import {
+    GetFilteredPostsOptions,
+} from './types';
 
 const blogAllCategoriesQuery = (preview: boolean, locale: Language) => `
 blogCategoryCollection(

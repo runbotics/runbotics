@@ -2,11 +2,11 @@ import React, { VFC, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
 
-import styles from './LanguageSwitcher.module.scss';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages, Language } from '#src-app/translations/translations';
 
+import styles from './LanguageSwitcher.module.scss';
 
 const LanguageSwitcher: VFC = () => {
     const { switchLanguage, translate } = useTranslations();

@@ -1,14 +1,14 @@
-import { getMainPage } from './api';
 
 import { BlogPost, Category, Tag, contentfulCache, createCacheInstance } from '#contentful/common';
 import { Language } from '#src-app/translations/translations';
 
+import { getMainPage } from './api';
 
 function getCurrentDateString() {
     return new Date().toLocaleDateString();
 }
 
-export function getBlogPostsCache(language:Language) {
+export function getBlogPostsCache(language:Language = 'en') {
     return contentfulCache[language].get(`posts_${getCurrentDateString()}`) as BlogPost[] | undefined;
 }
 
@@ -32,7 +32,7 @@ export function setBlogTagsCache(language:Language, cacheValue: Tag[]) {
     contentfulCache[language].set(`tags_${getCurrentDateString()}`, cacheValue);
 }
 
-export function getBlogMainCache(language:Language): Awaited<ReturnType<typeof getMainPage>> | null {
+export function getBlogMainCache(language:Language='en'): Awaited<ReturnType<typeof getMainPage>> | null {
 
     if(!contentfulCache[language]){
         return null;

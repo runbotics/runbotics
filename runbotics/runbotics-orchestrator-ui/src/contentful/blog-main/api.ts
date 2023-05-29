@@ -1,6 +1,8 @@
 
 
+import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
 
+import { Language } from '#src-app/translations/translations';
 
 import {
     extractAllModelsEntries as extractMainPageEntries,
@@ -25,9 +27,7 @@ import {
     GetAllModelsResponse,
 } from './types';
 
-import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
 
-import { Language } from '#src-app/translations/translations';
 
 export async function getAllPosts(locale:Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
