@@ -3,6 +3,8 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useRouter } from 'next/router';
+
 import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -10,6 +12,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './BlogCard.module.scss';
+
 
 interface BlogCardProps {
     post: BlogPost;
@@ -28,6 +31,7 @@ export const cutText = (text: string, length: number) => {
 
 const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
+    const router = useRouter();
 
     const tags = post.tags?.items.map(({ name }) => <CardBadge
         key={name}
@@ -37,7 +41,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
 
     return (
         <article className={`${styles.root} ${className}`}>
-            <Link className={styles.link} href={`/blog/post/${post.slug}`}>
+            <Link className={styles.link} locale={router.locale} href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     {post.featuredImage?.url &&
                         <Image

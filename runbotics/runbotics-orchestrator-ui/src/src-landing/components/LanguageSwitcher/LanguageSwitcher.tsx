@@ -11,20 +11,20 @@ import styles from './LanguageSwitcher.module.scss';
 const LanguageSwitcher: VFC = () => {
     const { switchLanguage, translate } = useTranslations();
 
-    const { push, locale: activeLocale, pathname } = useRouter();
+    const { push, locale: activeLocale, asPath } = useRouter();
 
     const capitalizeFirstLetter = (string: string) =>
         string.charAt(0).toUpperCase() + string.slice(1);
 
     const handleLanguageSwitch = (language: Language) => {
-        push(pathname, undefined, {
+        push(asPath, undefined, {
             locale: language,
         });
     };
 
     useEffect(() => {
         switchLanguage(activeLocale as Language);
-        push(pathname, undefined, {
+        push(asPath, undefined, {
             locale: activeLocale,
         });
     }, [activeLocale]);

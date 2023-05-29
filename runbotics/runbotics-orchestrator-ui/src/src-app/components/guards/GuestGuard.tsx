@@ -20,7 +20,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { switchLanguage } = useTranslations();
     useEffect(() => {
         switchLanguage(router.locale as Language);
-    }, [router.locale, switchLanguage] );
+    }, [] );
 
     if (isBrowser && isInitialised && isAuthenticated) router.replace('/app');
 

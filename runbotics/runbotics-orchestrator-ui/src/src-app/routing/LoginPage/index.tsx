@@ -95,7 +95,7 @@ const LoginPage: FC = () => {
                                         await dispatch(login(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
-                                        router.push('/app/processes');
+                                        router.push('/app/processes', null, {locale:router.locale});
                                     } catch (err) {
                                         setStatus({ success: false });
                                         setErrors({ submit: err.message });
