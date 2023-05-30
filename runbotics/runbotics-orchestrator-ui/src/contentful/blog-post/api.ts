@@ -1,12 +1,13 @@
 
+import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
+
+import { Language } from '#src-app/translations/translations';
 
 import { extractBlogPost } from './extractors';
 import { buildPostQuery } from './queries';
 import { GetPostOptions, GetPostResponse } from './types';
 
-import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
 
-import { Language } from '#src-app/translations/translations';
 
 
 

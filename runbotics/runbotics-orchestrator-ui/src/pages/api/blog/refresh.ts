@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { recreateCache } from '#contentful/blog-main';
 
+import { languages } from '#src-app/translations/translations';
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {
         return res.status(404).end();
@@ -11,7 +13,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(401).send('Invalid secret');
     }
 
-    await recreateCache();
+    languages.forEach(async (language) => {
+        await recreateCache(language);
+    });
+    
 
     return res.send('RunBotics blog cache recreated');
 };
