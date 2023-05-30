@@ -44,6 +44,8 @@ public class ProcessInstanceDTO implements Serializable {
 
     private Set<ProcessInstance> subProcesses;
 
+    private boolean hasSubProcesses;
+
     private String error;
 
     private TriggerEvent trigger;
@@ -152,8 +154,17 @@ public class ProcessInstanceDTO implements Serializable {
         return subProcesses;
     }
 
+    public boolean getHasSubProcesses() {
+        return hasSubProcesses;
+    }
+
+    public void setHasSubProcesses(boolean hasSubProcesses) {
+        this.hasSubProcesses = hasSubProcesses;
+    }
+
     public void setSubProcesses(Set<ProcessInstance> subProcesses) {
         this.subProcesses = subProcesses;
+        this.hasSubProcesses = subProcesses != null && !subProcesses.isEmpty();
     }
 
     public String getError() {
