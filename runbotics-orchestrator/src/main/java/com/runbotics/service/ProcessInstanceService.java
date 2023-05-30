@@ -4,6 +4,7 @@ import com.runbotics.service.dto.ProcessInstanceDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,6 +43,14 @@ public interface ProcessInstanceService {
      * @return the entity.
      */
     Optional<ProcessInstanceDTO> findOne(UUID id);
+
+    /**
+     * Get all the subprocesses for the given processInstance ID.
+     *
+     * @param processInstanceId the ID of the processInstance.
+     * @return the list of subprocesses.
+     */
+    List<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId);
 
     /**
      * Delete the "id" processInstance.
