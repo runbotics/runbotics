@@ -5,6 +5,7 @@ $BACKGROUND-HEIGHT-MD: 280px;
 $BACKGROUND-HEIGHT-S:225px;
 $BACKGROUND-HEIGHT-XS: 61px;
 
+
 .image {
     display: flex;
     position: relative;
@@ -31,9 +32,9 @@ $BACKGROUND-HEIGHT-XS: 61px;
         position: absolute;
         z-index: 1;
         content: "RunNews";
-        bottom: -10px;
+        bottom: -15px;
         right: 30px;
-        font-size: 10em;
+        font-size: 12em;
         color: white;
         font-weight: $font-weight-semi-bold;
         letter-spacing: -0.08em;
@@ -42,10 +43,15 @@ $BACKGROUND-HEIGHT-XS: 61px;
 
     @media (max-width: $breakpoint-md) {
             height: $BACKGROUND-HEIGHT-MD;
+            font-size: 0.9em;
+            &::after{
+                right: 10px;
+            }
     }
     @media (max-width: $breakpoint-xs) {
         height: $BACKGROUND-HEIGHT-S;
         font-size: 0.5em;
+        right: 0px;
     }
     @media (max-width: $breakpoint-sm) {
         height: $BACKGROUND-HEIGHT-XS;
