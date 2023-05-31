@@ -50,7 +50,6 @@ const ProcessRunView: FC = () => {
 
     const { translate } = useTranslations();
     
-    console.log(isAttended);
     useEffect(() => {
         if (hasReadSchedulesAccess)
         { dispatch(

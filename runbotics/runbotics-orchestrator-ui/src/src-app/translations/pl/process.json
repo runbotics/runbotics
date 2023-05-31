@@ -46,6 +46,7 @@
     "Process.Run.BotCollection": "Zbiory bota",
     "Process.Run.ManageProcessForm": "FORMULARZ STARTOWY",
     "Process.Run.ScheduleAttended.Message": "Harmonogram jest dostępny tylko dla nienadzorowanych botów",
+    "Process.Configure.Attended.Schedule.Message": "Bot dodany do harmonogramu nie może być nadzorowany",
     "Process.MainView.Tabs.Build.Title": "Buduj",
     "Process.MainView.Tabs.Run.Title": "Uruchom",
     "Process.MainView.Tabs.Configure.Title": "Konfiguruj",
