@@ -59,6 +59,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                             /
                         </Typography>
                     </If>
+                 
                 </div>
             );
         });
@@ -81,6 +82,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                     /
             </Typography>
             {breadcrumbs}
+            <button  className={styles.filter}/>
         </div>
     );
 };

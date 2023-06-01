@@ -27,6 +27,9 @@
     gap: 8px;
 }
 
+
+
+
 .hidden {
     display: none;
 }
@@ -95,6 +98,10 @@
     gap: 8px;
 }
 
+.applyFilter{
+    display: none;
+}
+
 @media (max-width: $breakpoint-md) {
     .root {
         grid-column: 1;
@@ -128,7 +135,36 @@
 }
 
 @media (max-width: $breakpoint-xs) {
+
     .root {
+        display: grid;
+        justify-items: center;
+        left: 0;
+        z-index: 9999999;
+        position: fixed;
         width: 100%;
+        height: 100%;
+        grid-template-rows: 50px repeat(4,0.1fr);
+
+    }
+
+    .applyFilter{
+    
+        display: block;
+        width: 212px;
+        height: 32px;
+        border-radius: 16px;
+        border: none;
+        background-color: $palette-accent-primary;
+    }
+
+
+}
+
+
+.hideFilters{
+    @media (max-width: $breakpoint-xs) {
+        display: none;
     }
 }
+
