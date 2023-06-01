@@ -6,7 +6,7 @@ import styles from './BlogLayout.module.scss';
 
 const BlogLayout: FC = ({ children }) => (
     <>
-        <BlogHeadImage></BlogHeadImage>
+        <BlogHeadImage/>
         <div className={styles.root}>{children}</div>
     </>
 );

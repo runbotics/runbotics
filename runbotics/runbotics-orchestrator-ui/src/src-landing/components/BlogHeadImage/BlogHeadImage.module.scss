@@ -15,7 +15,8 @@ $BACKGROUND-HEIGHT-XS: 61px;
     background: url('/images/banners/blog-header.png') no-repeat;
     background-position: center;
     background-size: cover;
-
+    isolation: isolate;
+    font-size: 250px;
     &::before {
         content: '';
         position: absolute;
@@ -34,7 +35,7 @@ $BACKGROUND-HEIGHT-XS: 61px;
         content: "RunNews";
         bottom: -40px;
         right: 70px;
-        font-size: 17em;
+
         color: white;
         font-weight: $font-weight-semi-bold;
         letter-spacing: -0.08em;
@@ -43,21 +44,25 @@ $BACKGROUND-HEIGHT-XS: 61px;
 
     @media (max-width: $breakpoint-md) {
             height: $BACKGROUND-HEIGHT-MD;
-            font-size: 0.6em;
+            font-size: 180px;
             &::after{
                 right: 20px;
             }
     }
-    @media (max-width: $breakpoint-xs) {
-        height: $BACKGROUND-HEIGHT-S;
-        font-size: 0.5em;
-        right: 0px;
-    }
+
     @media (max-width: $breakpoint-sm) {
-        height: $BACKGROUND-HEIGHT-XS;
-        font-size: 0.2em;
+        height: $BACKGROUND-HEIGHT-S;
+        font-size: 80px;
         &::after{
+        
             bottom: -10px;
         }
     }
+
+    @media (max-width: $breakpoint-xs) {
+        right: 0px;
+        height: $BACKGROUND-HEIGHT-XS;
+        font-size: 50px;
+    }
+
 }
