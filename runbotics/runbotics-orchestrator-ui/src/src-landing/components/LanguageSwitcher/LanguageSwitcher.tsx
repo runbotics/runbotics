@@ -5,11 +5,9 @@ import { useRouter } from 'next/router';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages, Language } from '#src-app/translations/translations';
 
-import {capitalizeFirstLetter} from '../../utils/utils';
-
+import { capitalizeFirstLetter } from '../../utils/utils';
 
 import styles from './LanguageSwitcher.module.scss';
-
 
 const LanguageSwitcher: VFC = () => {
     const { switchLanguage, translate } = useTranslations();
@@ -17,7 +15,7 @@ const LanguageSwitcher: VFC = () => {
     const { push, locale: activeLocale, asPath } = useRouter();
 
     const handleLanguageSwitch = (language: Language) => {
-        push(asPath, undefined, {
+        push(asPath, null, {
             locale: language,
         });
     };

@@ -1,6 +1,6 @@
 
 
-import { BLOG_POST_LIST_FRAGMENT, QueryBuilder, QUERRY_LANGAUGE } from '#contentful/common';
+import { BLOG_POST_LIST_FRAGMENT, QueryBuilder, QUERY_LANGAUGE } from '#contentful/common';
 import { Language } from '#src-app/translations/translations';
 
 import {
@@ -9,7 +9,7 @@ import {
 
 const blogAllCategoriesQuery = (preview: boolean, locale: Language) => `
 blogCategoryCollection(
-    preview: ${preview ? 'true' : 'false'}, locale: "${QUERRY_LANGAUGE[locale]}"
+    preview: ${preview ? 'true' : 'false'}, locale: "${QUERY_LANGAUGE[locale]}"
 ) {
     items {
         title
@@ -17,19 +17,19 @@ blogCategoryCollection(
     }
 }`;
 
-const blogAllTagsQuery = (preview: boolean, locale: Language) => `
-tagCollection(preview:  ${preview ? 'true' : 'false'},   locale: "${QUERRY_LANGAUGE[locale]}") {
+const blogAllTagsQuery = (preview: boolean, language: Language) => `
+tagCollection(preview:  ${preview ? 'true' : 'false'},   locale: "${QUERY_LANGAUGE[language]}") {
     items {
         name
         slug
     }
 }`;
 
-const blogAllPostsQuery = (preview: boolean, locale: Language) => `
+const blogAllPostsQuery = (preview: boolean, language: Language) => `
 blogPostCollection(
     order: date_DESC,
     preview: ${preview ? 'true' : 'false'},
-    locale: "${QUERRY_LANGAUGE[locale]}"
+    locale: "${QUERY_LANGAUGE[language]}"
 ) {
     items {
         ${BLOG_POST_LIST_FRAGMENT}
@@ -37,16 +37,16 @@ blogPostCollection(
     total
 }`;
 
-export const buildMainPageQuery: QueryBuilder = ({ preview, locale }) => `
+export const buildMainPageQuery: QueryBuilder = ({ preview, language }) => `
 query {
-    ${blogAllPostsQuery(preview, locale)}
-    ${blogAllCategoriesQuery(preview, locale)}
-    ${blogAllTagsQuery(preview, locale)}
+    ${blogAllPostsQuery(preview, language)}
+    ${blogAllCategoriesQuery(preview, language)}
+    ${blogAllTagsQuery(preview, language)}
 }`;
 
 export const buildAllPostsQuery: QueryBuilder = ({
     preview,
-    locale
+    language
 }) => `
 query {
     blogPostCollection(
@@ -60,25 +60,25 @@ query {
         limit
         total
     }
-    ${blogAllCategoriesQuery(preview, locale)}
+    ${blogAllCategoriesQuery(preview, language)}
 }`;
 
-export const buildAllCategoriesQuery: QueryBuilder = ({ preview, locale }) => `
+export const buildAllCategoriesQuery: QueryBuilder = ({ preview, language }) => `
 query {
-    ${blogAllCategoriesQuery(preview, locale)}
+    ${blogAllCategoriesQuery(preview, language)}
 }`;
 
 export const buildFilteredPostsQuery: QueryBuilder<GetFilteredPostsOptions> = ({
     preview,
     filterFragment,
-    locale
+    language
 }) => `
 query {
     blogPostCollection(
-        order: date_DESC, 
-        preview: ${preview ? 'true' : 'false'}, 
+        order: date_DESC,
+        preview: ${preview ? 'true' : 'false'},
         where: { ${filterFragment} }
-    ) { 
+    ) {
         items {
             ${BLOG_POST_LIST_FRAGMENT}
         }
@@ -86,7 +86,7 @@ query {
         limit
         total
     }
-    ${blogAllCategoriesQuery(preview, locale)}
+    ${blogAllCategoriesQuery(preview, language)}
 }`;
 
 export const buildAllPostsPathsQuery: QueryBuilder = ({ preview }) => `

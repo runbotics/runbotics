@@ -74,7 +74,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     </Typography>
                 </If>
                 <Box ml={2} flexGrow={1} />
-                <LanguageSwitcher></LanguageSwitcher>
+                <LanguageSwitcher />
                 {isAuthenticated && hasBotInstallAccess && <HowToRun />}
                 <Box ml={2}>
                     <Account />

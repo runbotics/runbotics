@@ -7,7 +7,7 @@ import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 export const DEFAULT_PAGE_SIZE = 9;
 export const DRAFT_BADGE_BACKGROUND_COLOR = '#FFC107';
 
-export const QUERRY_LANGAUGE = {
+export const QUERY_LANGAUGE = {
     en: 'en-US',
     pl: 'pl'
 };

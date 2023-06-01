@@ -29,11 +29,11 @@ import {
 
 
 
-export async function getAllPosts(locale:Language) {
+export async function getAllPosts(language:Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
-            locale
+            language
         })
     );
 
@@ -45,11 +45,11 @@ export async function getAllPosts(locale:Language) {
     };
 }
 
-export async function getAllCategories(locale:Language) {
+export async function getAllCategories(language:Language) {
     const entries = await fetchGraphQL<GetAllCategoriesResponse>(
         buildAllCategoriesQuery({
             preview: IS_PREVIEW_MODE,
-            locale
+            language
         })
     );
 
@@ -58,7 +58,7 @@ export async function getAllCategories(locale:Language) {
 
 export async function getFilteredPosts(
     filterFragment: string,
-    locale: Language,
+    language: Language,
     options: GetFilteredPostsOptions = {},
   
 ) {
@@ -67,7 +67,7 @@ export async function getFilteredPosts(
             preview: IS_PREVIEW_MODE,
             filterFragment,
             ...options,
-            locale
+            language
         })
     );
 
@@ -78,11 +78,11 @@ export async function getFilteredPosts(
     };
 }
 
-export async function getAllPostsPaths(locale:Language) {
+export async function getAllPostsPaths(language:Language) {
     const entries = await fetchGraphQL<GetAllPostsPathsResponse>(
         buildAllPostsPathsQuery({
             preview: IS_PREVIEW_MODE,
-            locale
+            language
         })
     );
 
@@ -91,11 +91,11 @@ export async function getAllPostsPaths(locale:Language) {
     };
 }
 
-export async function getMainPage(locale:Language) {
+export async function getMainPage(language:Language) {
     const entries = await fetchGraphQL<GetAllModelsResponse>(
         buildMainPageQuery({
             preview: IS_PREVIEW_MODE,
-            locale
+            language
         })
     );
 

@@ -1,4 +1,4 @@
-import { BLOG_POST_FRAGMENT, QUERRY_LANGAUGE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_FRAGMENT, QUERY_LANGAUGE, QueryBuilder } from '#contentful/common';
 
 
 import { GetPostOptions } from './types';
@@ -11,7 +11,7 @@ export const buildPostQuery: QueryBuilder<GetPostOptions> = ({
 query {
     blogPostCollection(where: { slug: "${slug}" }, preview: ${
     preview ? 'true' : 'false'
-}, locale: "${QUERRY_LANGAUGE[locale]}" ,limit: 1) {
+}, locale: "${QUERY_LANGAUGE[locale]}" ,limit: 1) {
         items {
             ${BLOG_POST_FRAGMENT}
         }

@@ -6,7 +6,7 @@ export interface Page {
 }
 
 export type QueryBuilder<T = {}> = (
-    options: { preview?: boolean, locale: Language } & T
+    options: { preview?: boolean, language: Language } & T
 ) => string;
 
 export type FetchContentfulResponse<T> = {
