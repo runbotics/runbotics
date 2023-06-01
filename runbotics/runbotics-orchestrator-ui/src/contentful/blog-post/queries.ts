@@ -6,12 +6,12 @@ import { GetPostOptions } from './types';
 export const buildPostQuery: QueryBuilder<GetPostOptions> = ({
     preview,
     slug,
-    locale
+    language
 }) => `
 query {
     blogPostCollection(where: { slug: "${slug}" }, preview: ${
     preview ? 'true' : 'false'
-}, locale: "${QUERY_LANGAUGE[locale]}" ,limit: 1) {
+}, locale: "${QUERY_LANGAUGE[language]}" ,limit: 1) {
         items {
             ${BLOG_POST_FRAGMENT}
         }
