@@ -57,25 +57,3 @@ $SEPARATOR_SPACE: $padding-1;
 .filter {
     display: none;
 }
-
-@media (max-width: $breakpoint-xs) {
-    .filter {
-        transition: background-color ease-in-out 100ms;
-        user-select: none;
-        display: block;
-        background: url('/images/icons/filter.svg') no-repeat;
-        border: none;
-        background-position: center;
-        outline: none;
-        position: absolute;
-        content: '';
-        width: 24px;
-        height: 24px;
-        right: 30px;
-        border-radius: 5px;
-        cursor: pointer;
-        &:active{
-            background-color: rgba($palette-gray,0.6);
-        }
-    }
-}

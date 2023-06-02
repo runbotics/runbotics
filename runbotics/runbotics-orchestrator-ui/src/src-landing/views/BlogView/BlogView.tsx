@@ -40,7 +40,8 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
     return (
         <Layout>
             <BlogLayout>
-                <BreadcrumbsSection  handleFilterDisplayed={setFilterDisplayed} />
+                <BreadcrumbsSection/>
+                <button onClick={() => setFilterDisplayed(true)} className={styles.filter}/>
                 <FiltersSection
                     isFilterDisplayed={isFilterDisplayed}
                     handleFilterDisplayed={setFilterDisplayed}

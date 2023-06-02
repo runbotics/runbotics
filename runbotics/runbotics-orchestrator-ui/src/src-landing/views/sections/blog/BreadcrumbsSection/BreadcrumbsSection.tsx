@@ -14,7 +14,7 @@ import { BreadcrumbsSectionProps } from './BreadcrumbsSection.types';
 
 
 const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
-    postTitle,handleFilterDisplayed
+    postTitle
 }) => {
 
     const { pathname, asPath } = useRouter();
@@ -84,7 +84,6 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                     /
             </Typography>
             {breadcrumbs}
-            <button onClick={() => handleFilterDisplayed(true)} className={styles.filter}/>
         </div>
     );
 };

@@ -28,7 +28,7 @@ interface Props {
 }
 
 // eslint-disable-next-line max-lines-per-function
-const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed,categories, tags }) => {
+const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, categories, tags }) => {
     const { translate } = useTranslations();
     const { query, push } = useRouter();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -174,7 +174,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed,c
                 <Typography variant="h4">
                     {translate('Blog.Filters.Title')}
                 </Typography>
-                <Link className={styles.clearLink} href={'/blog'}>
+                <Link onClick={() => handleFilterDisplayed(false)} className={styles.clearLink} href={'/blog'}>
                     {translate('Blog.Filters.ClearAll')}
                 </Link>
             </div>

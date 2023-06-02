@@ -27,9 +27,6 @@
     gap: 8px;
 }
 
-
-
-
 .hidden {
     display: none;
 }
@@ -98,9 +95,11 @@
     gap: 8px;
 }
 
-.applyFilter{
+.applyFilter {
     display: none;
 }
+
+
 
 @media (max-width: $breakpoint-md) {
     .root {
@@ -135,24 +134,22 @@
 }
 
 @media (max-width: $breakpoint-xs) {
-
     .root {
-
         position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        top:0;
-        left: 0;
         isolation: isolate;
         display: grid;
         justify-items: center;
-        z-index: 99999;
-        grid-template-rows: 50px repeat(4,0.1fr);
-        overflow: scroll;
+        z-index: $header-z-index;
+        grid-template-rows: 50px repeat(4, 0.1fr);
+        overflow-y: scroll;
         border-radius: 0;
     }
 
-    .applyFilter{
+    .applyFilter {
         display: block;
         width: 212px;
         height: 32px;
@@ -161,13 +158,7 @@
         background-color: $palette-accent-primary;
     }
 
-
-}
-
-
-.hideFilters{
-    @media (max-width: $breakpoint-xs) {
+    .hideFilters {
         display: none;
     }
 }
-

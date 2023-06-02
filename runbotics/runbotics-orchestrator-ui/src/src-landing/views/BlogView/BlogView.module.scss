@@ -2,12 +2,15 @@
 
 $PADDING-INLINE: 1.5rem;
 
+.filter {
+    display: none;
+}
+
 .emptyPageContentWrapper {
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    width: 100%;
-
     padding-inline: $PADDING-INLINE;
     text-align: center;
 }
@@ -16,5 +19,28 @@ $PADDING-INLINE: 1.5rem;
     .emptyPageContentWrapper {
         grid-row: 3;
         grid-column: 1;
+    }
+}
+
+@media (max-width: $breakpoint-xs){
+    .filter {
+        position: absolute;
+        right: 10px;
+        top: $HEADER_HEIGHT + $BACKGROUND-HEIGHT-XS + 5px;
+        width: 24px;
+        height: 24px;
+        transition: background-color ease-in-out 100ms;
+        user-select: none;
+        display: block;
+        background: url('/images/icons/filter.svg') no-repeat;
+        border: none;
+        background-position: center;
+        outline: none;
+        content: '';
+        border-radius: 5px;
+        cursor: pointer;
+        &:active{
+            background-color: rgba($palette-gray,0.6);
+        }
     }
 }
