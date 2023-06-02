@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { addScope, getAncestorScope, getAncestorScopesActions } from '#src-app/utils/variableScopes';
+import { addScope, getParentScope, getParentScopesActionVars } from '#src-app/utils/variableScopes';
 import {
     ExtensionElement,
     ModdleElement,
@@ -10,7 +10,6 @@ import { useModelerContext } from './useModelerContext';
 import {
     ActionVariableObject,
     ActionVariables,
-    Scope,
     ScopedModdleElement,
 } from './useProcessVariables.types';
 
@@ -20,14 +19,14 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
     const canvas = context?.modeler?.get('canvas');
     const rootElement = canvas?.getRootElement();
     const rootElementScopeId = rootElement?.businessObject?.id;
-    const ProcessScopes: Scope = useMemo<Scope>(() => ({ id: rootElementScopeId }), [rootElementScopeId]);
+    const processScopes = ({ id: rootElementScopeId });
 
     const getLocalVarsActions = (element: ModdleElement[]): ModdleElement[] => element ? element.filter(
         (item: ModdleElement) =>
             item.id.includes('Activity_')
     ) : [];
 
-    const getLocalVarsAsigningsActions = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
+    const getLocalVarsAssigningActions = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
         const varsElements = elements.filter(
             element => 
                 (element.actionId === 'variables.assign' ||
@@ -52,36 +51,36 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
         
         const scopeLoops = getLocalLoops(elements);
 
-        const localActionsWithoutLoops = getLocalVarsAsigningsActions(elements, scopeId)
+        const localActionsWithoutLoops = getLocalVarsAssigningActions(elements, scopeId)
             .filter(element => element.actionId !== 'loop.loop');
         
         if (scopeLoops.length <= 0) return localActionsWithoutLoops;
 
-        const scopeLoopsActions = scopeLoops.map(scopeLoop => {
-            const loopScopeId = scopeLoop.id;
+        const scopeLoopsActions = scopeLoops
+            .map(scopeLoop => {
+                const loopScopeId = scopeLoop.id;
 
-            addScope(ProcessScopes, scopeId, loopScopeId);
+                addScope(processScopes, scopeId, loopScopeId);
 
-            if (scopeLoop?.flowElements?.length <= 0) return [];
+                if (scopeLoop?.flowElements?.length <= 0) return [];
             
-            const loopScopeActions = getVarsAssigningActions(scopeLoop.flowElements, loopScopeId);
+                const loopScopeActions = getVarsAssigningActions(scopeLoop.flowElements, loopScopeId);
 
-            return loopScopeActions;
-        });
+                return loopScopeActions;
+            })
+            .flat();
 
-        const scopeLoopsActionsFlat = scopeLoopsActions.flat();
-
-        return [...localActionsWithoutLoops, ...scopeLoopsActionsFlat];
+        return [...localActionsWithoutLoops, ...scopeLoopsActions];
     };
 
-    const allActionsWithVariables = useMemo(() => getLocalVarsActions(
+    const allLocalVarsActions = useMemo(() => getLocalVarsActions(
         rootElement?.businessObject?.flowElements
     ), [rootElement]);
 
-    const allActionsAssigningVars = getVarsAssigningActions(allActionsWithVariables, rootElementScopeId);
+    const allVarsAssigningActions = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId);
 
-    const allActionVariables = useMemo<ActionVariables>((): ActionVariables => {
-        if (!allActionsWithVariables || !canvas) {
+    const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
+        if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
 
@@ -93,7 +92,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
          * Variables -> Assign list variable
          */
 
-        const inputActionVariables = allActionsAssigningVars
+        const inputActionVars = allVarsAssigningActions
             .map((variable: ScopedModdleElement) => {
                 const variableInfo: ExtensionElement[] =
                     variable.extensionElements.values[0].inputParameters;
@@ -118,7 +117,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                 variable[0].name ? variable : []
             );
 
-        const outputActionVariables = allActionsAssigningVars
+        const outputActionVars = allVarsAssigningActions
             .map((element: ModdleElement) => {
                 const variableInfo: ExtensionElement[] =
                     element.extensionElements.values[0].outputParameters;
@@ -142,18 +141,19 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flat();
 
-        if(!selectedElementParentId) return { inputActionVariables, outputActionVariables };
+        if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars };
             
-        const ancestorScopes = getAncestorScope(ProcessScopes, selectedElementParentId);
+        const parentScopes = getParentScope(processScopes, selectedElementParentId);
 
-        if(!Array.isArray(ancestorScopes)) return { inputActionVariables: [], outputActionVariables: [] };
+        if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
 
-        const localScopeInputActionVariables = getAncestorScopesActions(ancestorScopes, inputActionVariables);
+        const localInputActionVars = getParentScopesActionVars(parentScopes, inputActionVars);
 
-        return { inputActionVariables: localScopeInputActionVariables, outputActionVariables };
-    }, [allActionsWithVariables, allActionsAssigningVars, canvas, selectedElementParentId, ProcessScopes]);
+        return { inputActionVariables: localInputActionVars, outputActionVariables: outputActionVars };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [allLocalVarsActions, allVarsAssigningActions, canvas, selectedElementParentId]);
     
-    return allActionVariables;
+    return allVarsActions;
 };
 
 export default useProcessActionVariables;

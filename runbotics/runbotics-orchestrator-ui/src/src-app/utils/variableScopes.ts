@@ -13,14 +13,14 @@ export const addScope = (scopeTree: Scope, localScopeId: string, newScopeId: str
     );
 };
 
-export const getAncestorScope = (scopeTree: Scope, scopeId: string): string[] | number => {
+export const getParentScope = (scopeTree: Scope, scopeId: string): string[] | number => {
     if (scopeTree.id === scopeId) return [scopeTree.id];
 
     if (!scopeTree.children) return -1;
         
     const childrenScopes = scopeTree.children
         .map(
-            child => getAncestorScope(child, scopeId)
+            child => getParentScope(child, scopeId)
         )
         .filter(
             child => child !== -1
@@ -31,7 +31,7 @@ export const getAncestorScope = (scopeTree: Scope, scopeId: string): string[] | 
     return [scopeTree.id, ...childrenScopes.flat() as string[]];
 };
 
-export const getAncestorScopesActions = (scopeIds: string[], allActions: ActionVariableObject[]): ActionVariableObject[] =>
+export const getParentScopesActionVars = (scopeIds: string[], allActions: ActionVariableObject[]): ActionVariableObject[] =>
     scopeIds
         .map(
             scopeId => allActions.filter(
