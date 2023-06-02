@@ -64,19 +64,15 @@ $SEPARATOR_SPACE: $padding-1;
         user-select: none;
         display: block;
         background: url('/images/icons/filter.svg') no-repeat;
-
         border: none;
         background-position: center;
         outline: none;
-        position: fixed;
+        position: absolute;
         content: '';
-
         width: 24px;
         height: 24px;
-
         right: 30px;
         border-radius: 5px;
-
         cursor: pointer;
         &:active{
             background-color: rgba($palette-gray,0.6);

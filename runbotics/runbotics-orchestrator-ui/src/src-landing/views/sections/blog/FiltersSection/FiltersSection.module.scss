@@ -137,19 +137,22 @@
 @media (max-width: $breakpoint-xs) {
 
     .root {
-        display: grid;
-        justify-items: center;
-        left: 0;
-        z-index: 9999999;
+
         position: fixed;
         width: 100%;
         height: 100%;
+        top:0;
+        left: 0;
+        isolation: isolate;
+        display: grid;
+        justify-items: center;
+        z-index: 99999;
         grid-template-rows: 50px repeat(4,0.1fr);
-
+        overflow: scroll;
+        border-radius: 0;
     }
 
     .applyFilter{
-    
         display: block;
         width: 212px;
         height: 32px;

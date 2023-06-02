@@ -21,12 +21,14 @@ import Typography from '#src-landing/components/Typography';
 import styles from './FiltersSection.module.scss';
 
 interface Props {
+    isFilterDisplayed: Boolean;
+    handleFilterDisplayed: Function;
     categories: Category[];
     tags: Tag[];
 }
 
 // eslint-disable-next-line max-lines-per-function
-const FiltersSection: VFC<Props> = ({ categories, tags }) => {
+const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed,categories, tags }) => {
     const { translate } = useTranslations();
     const { query, push } = useRouter();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -35,8 +37,6 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
         useState(false);
     const [isTagsSectionExpanded, setTagsSectionExpand] = useState(false);
     const [dateRange, setDateRange] = useState<Partial<IDateRange>>();
-
-    const [isFilterDisplayed, setFilterDisplayed] = useState(true);
 
     const searchParam = Array.isArray(query?.search)
         ? query.search[0]
@@ -160,7 +160,11 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
     ));
 
     return (
-        <aside className={`${styles.root} ${isFilterDisplayed?'':styles.hideFilters}`}>
+        <aside
+            className={`${styles.root} ${
+                isFilterDisplayed ? '' : styles.hideFilters
+            }`}
+        >
             <SearchInput
                 className={styles.searchForm}
                 initialValue={searchParam}
@@ -239,9 +243,10 @@ const FiltersSection: VFC<Props> = ({ categories, tags }) => {
                     onChange={setDateRange}
                 />
             </div>
-            <button onClick={()=>{
-                setFilterDisplayed(false);
-            }} className={styles.applyFilter}>
+            <button
+                className={styles.applyFilter}
+                onClick={() => handleFilterDisplayed(false)}
+            >
                 <Typography variant="h6">
                     {translate('Blog.Filters.ApplyFilters')}
                 </Typography>

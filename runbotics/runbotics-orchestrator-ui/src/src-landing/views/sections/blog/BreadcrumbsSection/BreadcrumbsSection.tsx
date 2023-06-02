@@ -12,9 +12,11 @@ import { capitalizeFirstLetter } from '#src-landing/utils/utils';
 import styles from './BreadcrumbsSection.module.scss';
 import { BreadcrumbsSectionProps } from './BreadcrumbsSection.types';
 
+
 const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
-    postTitle,
+    postTitle,handleFilterDisplayed
 }) => {
+
     const { pathname, asPath } = useRouter();
     const uncoveredUrlPart = 'post';
 
@@ -82,7 +84,7 @@ const BreadcrumbsSection: FC<BreadcrumbsSectionProps> = ({
                     /
             </Typography>
             {breadcrumbs}
-            <button  className={styles.filter}/>
+            <button onClick={() => handleFilterDisplayed(true)} className={styles.filter}/>
         </div>
     );
 };
