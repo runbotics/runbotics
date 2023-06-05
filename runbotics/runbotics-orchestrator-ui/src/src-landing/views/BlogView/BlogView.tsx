@@ -10,6 +10,7 @@ import Typography from '#src-landing/components/Typography';
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import CardsSection from '../sections/blog/CardsSection';
 import FiltersSection from '../sections/blog/FiltersSection';
+
 import styles from './BlogView.module.scss';
 
 interface BlogViewProps {
