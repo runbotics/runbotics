@@ -33,12 +33,6 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
     const router = useRouter();
 
-    const tags = post.tags?.items.map(({ name }) => <CardBadge
-        key={name}
-        text={name}
-        className={styles.badge}
-    />);
-
     return (
         <article className={`${styles.root} ${className}`}>
             <Link className={styles.link}  href={`/blog/post/${post.slug}`}>
@@ -58,9 +52,6 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                             text={translate('Blog.Post.DraftBadge')}
                         />
                     </If>
-                    <div className={styles.badges}>
-                        {tags}
-                    </div>
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <Typography variant="body4">
