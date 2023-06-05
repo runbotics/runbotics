@@ -7,17 +7,21 @@ $AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
 
 .selectWrapper {
     position: relative;
+
+    display: flex;
+
     width: $WRAPPER_WIDRG_AND_HEIGHT;
     height: $WRAPPER_WIDRG_AND_HEIGHT;
+
     margin-top: auto;
     margin-bottom: auto;
+
     isolation: isolate;
-    display: flex;
+
+    align-items: center;
     border-radius: 0.25em;
     font-size: 1.25rem;
     background-color: transparent;
-    align-items: center;
-    grid-template-areas: 'select';
     transition: background-color ease-in-out 150ms;
     &:hover {
         background-color: rgba($palette-gray, 0.3);
@@ -27,13 +31,17 @@ $AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
     }
     &::after {
         position: absolute;
+
         left: 0;
         right: 0;
+
         width: $AFTER_WIDRG_AND_HEIGHT;
         height: $AFTER_WIDRG_AND_HEIGHT;
-        margin-left: auto;
-        margin-right: auto;
+
+        margin-inline: auto;
+
         content: '';
+
         background: url('/images/flags/globe.svg') no-repeat;
         background-size: cover;
     }
@@ -41,12 +49,16 @@ $AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
 
 .select {
     position: absolute;
+
     left: 0;
     right: 0;
+
     height: 100%;
     width: 100%;
+
     margin-inline: auto;
     padding: 10px;
+
     cursor: pointer;
     z-index: $header-z-index;
     opacity: 0;
@@ -58,6 +70,7 @@ $AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
     outline: none;
     .option {
         padding: 10px;
+
         @include font-face-base;
         font-size: $font-size-h6;
         font-weight: $font-weight-medium;

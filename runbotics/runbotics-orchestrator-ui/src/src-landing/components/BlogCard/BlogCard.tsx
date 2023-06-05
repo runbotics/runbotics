@@ -41,7 +41,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
 
     return (
         <article className={`${styles.root} ${className}`}>
-            <Link className={styles.link} locale={router.locale} href={`/blog/post/${post.slug}`}>
+            <Link className={styles.link}  href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     {post.featuredImage?.url &&
                         <Image

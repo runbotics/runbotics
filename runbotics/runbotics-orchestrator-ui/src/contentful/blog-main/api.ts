@@ -2,7 +2,7 @@
 
 import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
 
-import { Language } from '#src-app/translations/translations';
+import { DEFAULT_LANG, Language } from '#src-app/translations/translations';
 
 import {
     extractAllModelsEntries as extractMainPageEntries,
@@ -29,7 +29,7 @@ import {
 
 
 
-export async function getAllPosts(language:Language) {
+export async function getAllPosts(language: Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
@@ -45,7 +45,7 @@ export async function getAllPosts(language:Language) {
     };
 }
 
-export async function getAllCategories(language:Language) {
+export async function getAllCategories(language: Language) {
     const entries = await fetchGraphQL<GetAllCategoriesResponse>(
         buildAllCategoriesQuery({
             preview: IS_PREVIEW_MODE,
@@ -78,7 +78,7 @@ export async function getFilteredPosts(
     };
 }
 
-export async function getAllPostsPaths(language:Language) {
+export async function getAllPostsPaths(language: Language) {
     const entries = await fetchGraphQL<GetAllPostsPathsResponse>(
         buildAllPostsPathsQuery({
             preview: IS_PREVIEW_MODE,
@@ -91,7 +91,7 @@ export async function getAllPostsPaths(language:Language) {
     };
 }
 
-export async function getMainPage(language:Language) {
+export async function getMainPage(language: Language = DEFAULT_LANG) {
     const entries = await fetchGraphQL<GetAllModelsResponse>(
         buildMainPageQuery({
             preview: IS_PREVIEW_MODE,
