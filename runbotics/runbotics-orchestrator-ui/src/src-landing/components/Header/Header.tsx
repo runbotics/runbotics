@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
+
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
@@ -13,8 +16,11 @@ import Navbar from '../Navbar';
 import styles from './Header.module.scss';
 import LoginLink from './LoginLink';
 
+
 const Header = () => {
     const { translate } = useTranslations();
+
+    const {locale} = useRouter();
 
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
@@ -37,11 +43,13 @@ const Header = () => {
     return (
         <header className={`${styles.header} ${!isNavExpanded ? '' : styles.isActive}`}>
             <div className={styles.inner}>
-                <Image
-                    src={logo}
-                    className={styles.logo}
-                    alt="RunBotics logo"
-                />
+                <Link href={'/'} locale={locale}>
+                    <Image
+                        src={logo}
+                        className={styles.logo}
+                        alt="RunBotics logo"
+                    />
+                </Link>
                 <Link className={styles.skipNavLink} href={`#${MAIN_CONTENT_ID}`} onClick={handleFocus}>
                     <Typography
                         variant="h6"
