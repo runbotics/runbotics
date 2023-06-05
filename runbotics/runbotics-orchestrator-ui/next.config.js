@@ -1,6 +1,7 @@
-const config = require('./config.json');
+
 
 module.exports = {
+
 
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
@@ -42,9 +43,10 @@ module.exports = {
     images: {
         domains: ["images.ctfassets.net"]
     },
+    //runbotics\runbotics\runbotics-orchestrator-ui\src\src-app\translations\translations.ts
     i18n:{
-        locales: config.all_languages,
-        defaultLocale: config.default_lang,
-        localeDetection: config.localeDetection,
+        locales: ['en','pl'],
+        defaultLocale: 'en',
+        localeDetection: false,
     },
 };
