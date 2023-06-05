@@ -1,6 +1,7 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.7.0-SNAPSHOT.1",
+
+    "version": "2.7.0-SNAPSHOT.3",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"

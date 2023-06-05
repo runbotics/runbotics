@@ -20,5 +20,6 @@
     "Blog.Post.Share.Copied": "Skopiowano!",
     "Blog.Post.Pagination.Previous": "Przejdź do poprzedniej strony",
     "Blog.Post.Pagination.Next": "Przejdź do następnej strony",
-    "Blog.Post.Pagination.ParticularPage": "Przejdź do strony {{ number }}"
+    "Blog.Post.Pagination.ParticularPage": "Przejdź do strony {{ number }}",
+    "Blog.Post.Tags": "Tagi:"
 }
