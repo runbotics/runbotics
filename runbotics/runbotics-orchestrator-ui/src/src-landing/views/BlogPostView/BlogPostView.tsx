@@ -1,10 +1,12 @@
 import { VFC } from 'react';
 
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
-import { BlogPost, FilterQueryParamsEnum, getBlogUrl } from '#contentful/common';
+import { BlogPost } from '#contentful/common';
+import TagIcon from '#public/images/icons/category_label.svg';
+import useTranslations from '#src-app/hooks/useTranslations';
 import BlogSharePanel from '#src-landing/components/BlogSharePanel';
 import Layout from '#src-landing/components/Layout';
 import PostHeader from '#src-landing/components/PostHeader';
@@ -20,18 +22,11 @@ interface Props {
 
 const BlogPostView: VFC<Props> = ({ post }) => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const { body, summary, slug: postSlug, tags, ...postHeaderProps } = post;
-    const { push } = useRouter();
+    const { body, summary, slug: postSlug, tags: postTags, ...postHeaderProps } = post;
+    const { translate } = useTranslations();
 
-    const onLinkClick = (slug: string) => {
-        const searchParams = new URLSearchParams();
-        searchParams.append(FilterQueryParamsEnum.Tag, slug);
-        const newUrl = getBlogUrl(searchParams);
-
-        push(newUrl);
-    }
-    const tagsArr = tags.items.map(({ name, slug }) => (
-        <Link key={name} href={`/blog?tag=${slug}`} className={styles.tagLink} onClick={() => onLinkClick(slug)}>
+    const tags = postTags.items.map(({ name, slug }) => (
+        <Link key={name} href={`/blog?tag=${slug}`} className={styles.tagLink}>
             {`${name}`}
         </Link>
     ));
@@ -50,9 +45,22 @@ const BlogPostView: VFC<Props> = ({ post }) => {
                     </div>
                     <article className={styles.contentArticle}>
                         <RichTextRenderer content={body} />
-                        <div className={styles.tagsWrapper} >
-                            <Typography font="Roboto" className={styles.h4} variant="h4">Tags:</Typography>
-                            {tagsArr}
+                        <div className={styles.tagsWrapper}>
+                            <Image
+                                src={TagIcon}
+                                width={24}
+                                height={24}
+                                className={styles.tag}
+                                alt="tag icon"
+                            />
+                            <Typography
+                                font="Roboto"
+                                className={`${styles.h4} ${styles.tag}`}
+                                variant="h4"
+                            >
+                                {translate('Blog.Post.Tags')}
+                            </Typography>
+                            {tags}
                         </div>
                         <BlogSharePanel />
                     </article>

@@ -28,11 +28,17 @@
 
 .tagsWrapper {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.tag {
+    margin-right: $margin-1;
 }
 
 .tagLink {
     @extend .typography__primary, .typography__Roboto, .typography__h4;
-    padding-left: 5px;
+    composes: tag;
 }
 
 @media (max-width: $breakpoint-md) {
