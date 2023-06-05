@@ -1,4 +1,4 @@
-const {languages,DEFAULT_LANG,localeDetection} = require('./config.json');
+const config = require('./config.json');
 
 module.exports = {
 
@@ -43,8 +43,8 @@ module.exports = {
         domains: ["images.ctfassets.net"]
     },
     i18n:{
-        locales: languages,
-        defaultLocale: DEFAULT_LANG,
-        localeDetection: localeDetection,
+        locales: config.all_languages,
+        defaultLocale: config.default_lang,
+        localeDetection: config.localeDetection,
     },
 };
