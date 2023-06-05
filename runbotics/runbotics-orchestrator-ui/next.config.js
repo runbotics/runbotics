@@ -1,7 +1,6 @@
-
+const {languages,DEFAULT_LANG,localeDetection} = require('./config.json');
 
 module.exports = {
-
 
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
@@ -44,8 +43,8 @@ module.exports = {
         domains: ["images.ctfassets.net"]
     },
     i18n:{
-        locales: ['en','pl'],
-        defaultLocale: 'en',
-        localeDetection: false,
+        locales: languages,
+        defaultLocale: DEFAULT_LANG,
+        localeDetection: localeDetection,
     },
 };

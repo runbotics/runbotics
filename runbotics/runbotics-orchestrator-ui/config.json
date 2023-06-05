@@ -1,0 +1,5 @@
+{
+    "languages": ["en", "pl"],
+    "DEFAULT_LANG": "en",
+    "localeDetection":false
+}
