@@ -1,5 +1,5 @@
 {
-    "languages": ["en", "pl"],
-    "DEFAULT_LANG": "en",
+    "all_languages": ["en", "pl"],
+    "default_lang": "en",
     "localeDetection":false
 }

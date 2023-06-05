@@ -1,5 +1,7 @@
 import LRUMap from 'mnemonist/lru-map';
 
+import { Language } from '#src-app/translations/translations';
+
 type CacheKeys = `posts_${string}` | `categories_${string}` | `tags_${string}` | string;
 
 /**
@@ -12,7 +14,11 @@ export function createCacheInstance() {
     return new LRUMap<CacheKeys, unknown>(53);
 }
 
-export const contentfulCache = {
-    en: createCacheInstance(),
-    pl: createCacheInstance()
+export const contentfulCache = (lang:Language) => {
+    switch(lang){
+        case 'pl': return createCacheInstance();
+        default:
+            //english cache;
+            return createCacheInstance();
+    }
 };
