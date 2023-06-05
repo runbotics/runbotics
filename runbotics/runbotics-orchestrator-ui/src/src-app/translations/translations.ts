@@ -1,9 +1,11 @@
+import config from '../../../config.json';
 import englishTranslations from './en';
 import polishTranslations from './pl';
 
-export const languages = ['en', 'pl'] as const;
 
-export const DEFAULT_LANG = 'en';
+export const languages = [...config.languages] as const;
+
+export const DEFAULT_LANG = config.DEFAULT_LANG;
 
 export type Language = (typeof languages)[number];
 
