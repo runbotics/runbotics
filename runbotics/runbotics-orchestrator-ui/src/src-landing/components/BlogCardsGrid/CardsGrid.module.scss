@@ -6,6 +6,7 @@ $SECTION-PADDING-BOTTOM: 30px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 20px;
+
     width: 100%;
     padding-bottom: $SECTION-PADDING-BOTTOM;
 }
