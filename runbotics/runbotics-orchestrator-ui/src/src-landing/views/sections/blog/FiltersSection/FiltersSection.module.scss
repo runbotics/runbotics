@@ -137,8 +137,8 @@
     .root {
         display: grid;
 
-        position: fixed;
-        top: 0;
+        position: absolute;
+        top: $HEADER_HEIGHT;
         left: 0;
 
         width: 100%;

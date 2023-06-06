@@ -38,7 +38,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
     );
 
     return (
-        <Layout>
+        <Layout disableScroll={isFilterDisplayed}>
             <BlogLayout>
                 <BreadcrumbsSection/>
                 <button onClick={() => setFilterDisplayed(true)} className={styles.filter}/>
