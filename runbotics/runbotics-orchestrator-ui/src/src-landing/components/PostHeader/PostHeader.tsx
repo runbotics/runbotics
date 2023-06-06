@@ -17,12 +17,11 @@ import styles from './PostHeader.module.scss';
 
 type Props = Omit<
     BlogPost,
-    'slug' | 'summary' | 'body'
+    'slug' | 'summary' | 'body' | 'tags'
 >;
 
 const PostHeader: VFC<Props> = (props) => {
     const { translate } = useTranslations();
-    const tags = props.tags?.items.map(({ name }) => <CardBadge key={name} text={name} />);
 
     return (
         <div className={styles.wrapper}>
@@ -39,7 +38,6 @@ const PostHeader: VFC<Props> = (props) => {
                     <If condition={checkIsDraft(props.status)}>
                         <CardBadge className={styles.draftBadge} text={translate('Blog.Post.DraftBadge')} backgroundColor={DRAFT_BADGE_BACKGROUND_COLOR} />
                     </If>
-                    {tags}
                 </div>
                 <div>
                     <Typography variant='h1' color='secondary'>
