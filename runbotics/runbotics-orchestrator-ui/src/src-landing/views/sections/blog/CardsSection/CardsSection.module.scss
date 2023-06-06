@@ -1,11 +1,14 @@
 @import '#src-landing/scss/main.scss';
 
+
+
 .root {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
+
 
 @media (max-width: $breakpoint-md) {
     .root {

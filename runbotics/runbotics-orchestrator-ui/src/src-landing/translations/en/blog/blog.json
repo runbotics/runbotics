@@ -7,6 +7,7 @@
     "Blog.Filters.Date": "Date",
     "Blog.Filters.Less": "Less",
     "Blog.Filters.More": "More",
+    "Blog.Filters.ApplyFilters":"Apply Filters",
     "Blog.EmptyPage.Title": "We could not find the posts you are looking for",
     "Blog.Card.ReadMore": "Read more",
     "Blog.Post.Author": "author",
