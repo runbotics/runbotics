@@ -11,6 +11,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
+import LanguageSwitcher from '../LanguageSwitcher';
+
 import Navbar from '../Navbar';
 
 import styles from './Header.module.scss';
@@ -41,7 +43,11 @@ const Header = () => {
     const iconMobileStyle = isNavExpanded ? styles.isActive : '';
 
     return (
-        <header className={`${styles.header} ${!isNavExpanded ? '' : styles.isActive}`}>
+        <header
+            className={`${styles.header} ${
+                !isNavExpanded ? '' : styles.isActive
+            }`}
+        >
             <div className={styles.inner}>
                 <Link href={'/'} locale={locale}>
                     <Image
@@ -58,20 +64,26 @@ const Header = () => {
                         text={translate('Landing.Header.Button.SkipNav')}
                     />
                 </Link>
-                <button
-                    className={`${styles.menuIcon} ${iconMobileStyle}`}
-                    onClick={toggleNav}
-                >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+
                 <Navbar
                     isNavExpanded={isNavExpanded}
                     hideNav={hideNav}
                     isMobileVisible={false}
                 />
-                <LoginLink className={styles.loginLink} />
+
+                <div className={styles.buttonGroup}>
+                    <LanguageSwitcher />
+
+                    <button
+                        className={`${styles.menuIcon} ${iconMobileStyle}`}
+                        onClick={toggleNav}
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <LoginLink className={styles.loginLink} />
+                </div>
             </div>
         </header>
     );
