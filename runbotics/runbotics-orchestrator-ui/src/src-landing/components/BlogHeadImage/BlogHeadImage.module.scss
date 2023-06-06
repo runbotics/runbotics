@@ -23,7 +23,7 @@
         height: 100%;
 
         z-index: $header-z-index;
-        background: $palette-accent-primary;
+        background: $palette-mask;
         mix-blend-mode: color;
         content: '';
     }
