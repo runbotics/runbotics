@@ -26,21 +26,20 @@ $PADDING-INLINE: 1.5rem;
     .filter {
         display: block;
 
-
         position: absolute;
         right: 10px;
-        top: $HEADER_HEIGHT + $BACKGROUND-HEIGHT-XS + 5px;
+        top: $HEADER_HEIGHT + $BACKGROUND-HEIGHT-XS +2px;
+
+        padding: 14px;
 
         width: 24px;
         height: 24px;
 
+        background-color: transparent;
         transition: background-color ease-in-out 100ms;
         user-select: none;
-        background: url('/images/icons/filter.svg') no-repeat;
         border: none;
-        background-position: center;
         outline: none;
-        content: '';
         border-radius: 5px;
         cursor: pointer;
         &:active{
