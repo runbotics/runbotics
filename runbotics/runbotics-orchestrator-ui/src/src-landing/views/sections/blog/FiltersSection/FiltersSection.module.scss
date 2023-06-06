@@ -57,14 +57,13 @@
 
 .expandSectionButton {
     display: flex;
-    align-items: center;
 
     width: fit-content;
 
     gap: 5px;
     padding: 4px 8px;
 
-    font-size: $font-size-body3;
+    align-items: center;
 
     border: none;
     border-radius: 10px;
