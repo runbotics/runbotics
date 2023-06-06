@@ -8,7 +8,6 @@ const BlogHeadImage: FC = () => (
     <div className={styles.image}>
         <Image src='/images/banners/blog-header.png' alt='banner' style={{objectFit: 'cover'}} fill={true}/>
     </div>
-
 );
 
 export default BlogHeadImage;
