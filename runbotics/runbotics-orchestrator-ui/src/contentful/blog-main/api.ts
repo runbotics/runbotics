@@ -27,8 +27,6 @@ import {
     GetAllModelsResponse,
 } from './types';
 
-
-
 export async function getAllPosts(language: Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
