@@ -6,10 +6,14 @@ import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
 import styles from './Layout.module.scss';
 
-const Layout = ({ children, disableScroll=false }) => (
+const Layout = ({ children, disableScroll = false }) => (
     <>
         <Header />
-        <div className={`${styles.mainWrapper} ${disableScroll?styles.disableScroll:''}`}>
+        <div
+            className={`${styles.mainWrapper} ${
+                disableScroll ? styles.disableScroll : ''
+            }`}
+        >
             <main id={MAIN_CONTENT_ID} tabIndex={-1}>
                 {children}
             </main>
