@@ -1,6 +1,8 @@
 @import '#src-landing/scss/main.scss';
 
-
+.background{
+    objectFit: 'cover'
+}
 
 .image {
     position: relative;
@@ -21,11 +23,11 @@
         height: 100%;
 
         z-index: $header-z-index;
-        background: #FBB040;
+        background: $palette-accent-primary;
         mix-blend-mode: color;
         content: '';
     }
-    
+
     &::after{
         @include font-face-base;
         position: absolute;
@@ -34,6 +36,7 @@
         right: 70px;
 
         z-index: 1;
+        isolation: isolate;
         content: "RunNews";
         color: white;
         font-weight: $font-weight-semi-bold;
