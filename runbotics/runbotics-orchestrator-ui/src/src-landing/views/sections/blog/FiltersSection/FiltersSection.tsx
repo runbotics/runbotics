@@ -141,7 +141,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
             onChange={() => handleCategoryCheckboxChange(category.slug)}
             label={category.title}
             title={category.title}
-            size="regular"
+            size='regular'
             singleLine
         />
     ));
@@ -154,7 +154,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
             onChange={() => handleTagCheckboxChange(tag.slug)}
             label={tag.name}
             title={tag.name}
-            size="regular"
+            size='regular'
             singleLine
         />
     ));
@@ -171,15 +171,15 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                 onClick={pushFilters}
             />
             <div className={styles.filtersHeader}>
-                <Typography variant="h4">
+                <Typography variant='h4'>
                     {translate('Blog.Filters.Title')}
                 </Typography>
                 <Link onClick={() => handleFilterDisplayed(false)} className={styles.clearLink} href={'/blog'}>
                     {translate('Blog.Filters.ClearAll')}
                 </Link>
             </div>
-            <div className={styles.filterSectionWrapper} data-type="category">
-                <Typography variant="h6">
+            <div className={styles.filterSectionWrapper} data-type='category'>
+                <Typography variant='h6'>
                     {translate('Blog.Filters.Category')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
@@ -187,7 +187,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                 </div>
                 <button
                     className={styles.expandSectionButton}
-                    type="button"
+                    type='button'
                     data-hide={categories.length <= 5}
                     onClick={() => {
                         setCategoriesSectionExpand((prevState) => !prevState);
@@ -199,15 +199,15 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                         width={14}
                         height={14}
                     />
-                    <Typography variant="body4" element="span" color="accent">
+                    <Typography variant='body4' element='span' color='accent'>
                         {isCategoriesSectionExpanded
                             ? translate('Blog.Filters.Less')
                             : translate('Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
-            <div className={styles.filterSectionWrapper} data-type="tag">
-                <Typography variant="h6">
+            <div className={styles.filterSectionWrapper} data-type='tag'>
+                <Typography variant='h6'>
                     {translate('Blog.Filters.Tag')}
                 </Typography>
                 <div className={styles.categoriesSectionWrapper}>
@@ -215,7 +215,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                 </div>
                 <button
                     className={styles.expandSectionButton}
-                    type="button"
+                    type='button'
                     data-hide={tags.length <= 5}
                     onClick={() => {
                         setTagsSectionExpand((prevState) => !prevState);
@@ -227,15 +227,15 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                         width={14}
                         height={14}
                     />
-                    <Typography variant="body4" element="span" color="accent">
+                    <Typography variant='body4' element='span' color='accent'>
                         {isTagsSectionExpanded
                             ? translate('Blog.Filters.Less')
                             : translate('Blog.Filters.More')}
                     </Typography>
                 </button>
             </div>
-            <div className={styles.filterSectionWrapper} data-type="date">
-                <Typography variant="h6">
+            <div className={styles.filterSectionWrapper} data-type='date'>
+                <Typography variant='h6'>
                     {translate('Blog.Filters.Date')}
                 </Typography>
                 <DateRange
@@ -247,7 +247,7 @@ const FiltersSection: VFC<Props> = ({ isFilterDisplayed, handleFilterDisplayed, 
                 className={styles.applyFilter}
                 onClick={() => handleFilterDisplayed(false)}
             >
-                <Typography variant="h6">
+                <Typography variant='h6'>
                     {translate('Blog.Filters.ApplyFilters')}
                 </Typography>
             </button>
