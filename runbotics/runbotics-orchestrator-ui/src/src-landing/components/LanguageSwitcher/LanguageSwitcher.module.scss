@@ -1,0 +1,82 @@
+@import '#src-landing/scss/main';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+
+$WRAPPER_WIDRG_AND_HEIGHT: 35px;
+$AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
+
+.selectWrapper {
+    position: relative;
+
+    display: flex;
+
+    width: $WRAPPER_WIDRG_AND_HEIGHT;
+    height: $WRAPPER_WIDRG_AND_HEIGHT;
+
+    margin-top: auto;
+    margin-bottom: auto;
+
+    isolation: isolate;
+
+    align-items: center;
+    border-radius: 0.25em;
+    font-size: 1.25rem;
+    background-color: transparent;
+    transition: background-color ease-in-out 150ms;
+    &:hover {
+        background-color: rgba($palette-gray, 0.3);
+    }
+    &::-ms-expand {
+        display: none;
+    }
+    &::after {
+        position: absolute;
+
+        left: 0;
+        right: 0;
+
+        width: $AFTER_WIDRG_AND_HEIGHT;
+        height: $AFTER_WIDRG_AND_HEIGHT;
+
+        margin-inline: auto;
+
+        content: '';
+
+        background: url('/images/flags/globe.svg') no-repeat;
+        background-size: cover;
+    }
+}
+
+.select {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    height: 100%;
+    width: 100%;
+
+    margin-inline: auto;
+    padding: 10px;
+
+    cursor: pointer;
+    z-index: $header-z-index;
+    opacity: 0;
+    content: '';
+    cursor: pointer;
+    appearance: none;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    .option {
+        padding: 10px;
+
+        @include font-face-base;
+        font-size: $font-size-h6;
+        font-weight: $font-weight-medium;
+        cursor: pointer;
+        &:hover {
+            box-shadow: $box-shadow-primary;
+        }
+    }
+}

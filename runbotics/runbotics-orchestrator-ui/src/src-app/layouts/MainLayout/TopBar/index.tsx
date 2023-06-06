@@ -8,7 +8,6 @@ import styled from 'styled-components';
 
 
 
-
 import If from '#src-app/components/utils/If';
 import Logo from '#src-app/components/utils/Logo/Logo';
 import useAuth from '#src-app/hooks/useAuth';
@@ -17,11 +16,14 @@ import useRole from '#src-app/hooks/useRole';
 import { HEADER_HEIGHT } from '#src-app/utils/constants';
 
 
+
 import environment from '#src-app/utils/environment';
+
+import LanguageSwitcher from '#src-landing/components/LanguageSwitcher';
 
 import Account from './Account';
 import HowToRun from './HowToRun';
-import LangSwitcher from './LangSwitcher';
+
 
 
 const PREFIX = 'TopBar';
@@ -72,7 +74,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     </Typography>
                 </If>
                 <Box ml={2} flexGrow={1} />
-                <LangSwitcher />
+                <LanguageSwitcher />
                 {isAuthenticated && hasBotInstallAccess && <HowToRun />}
                 <Box ml={2}>
                     <Account />

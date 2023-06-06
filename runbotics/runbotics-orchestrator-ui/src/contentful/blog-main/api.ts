@@ -1,4 +1,8 @@
+
+
 import { IS_PREVIEW_MODE, fetchGraphQL } from '#contentful/common';
+
+import { DEFAULT_LANG, Language } from '#src-app/translations/translations';
 
 import {
     extractAllModelsEntries as extractMainPageEntries,
@@ -23,10 +27,11 @@ import {
     GetAllModelsResponse,
 } from './types';
 
-export async function getAllPosts() {
+export async function getAllPosts(language: Language) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildAllPostsQuery({
             preview: IS_PREVIEW_MODE,
+            language
         })
     );
 
@@ -38,10 +43,11 @@ export async function getAllPosts() {
     };
 }
 
-export async function getAllCategories() {
+export async function getAllCategories(language: Language) {
     const entries = await fetchGraphQL<GetAllCategoriesResponse>(
         buildAllCategoriesQuery({
-            preview: IS_PREVIEW_MODE
+            preview: IS_PREVIEW_MODE,
+            language
         })
     );
 
@@ -50,13 +56,16 @@ export async function getAllCategories() {
 
 export async function getFilteredPosts(
     filterFragment: string,
-    options: GetFilteredPostsOptions = {}
+    language: Language,
+    options: GetFilteredPostsOptions = {},
+  
 ) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildFilteredPostsQuery({
             preview: IS_PREVIEW_MODE,
             filterFragment,
             ...options,
+            language
         })
     );
 
@@ -67,10 +76,11 @@ export async function getFilteredPosts(
     };
 }
 
-export async function getAllPostsPaths() {
+export async function getAllPostsPaths(language: Language) {
     const entries = await fetchGraphQL<GetAllPostsPathsResponse>(
         buildAllPostsPathsQuery({
             preview: IS_PREVIEW_MODE,
+            language
         })
     );
 
@@ -79,10 +89,11 @@ export async function getAllPostsPaths() {
     };
 }
 
-export async function getMainPage() {
+export async function getMainPage(language: Language = DEFAULT_LANG) {
     const entries = await fetchGraphQL<GetAllModelsResponse>(
         buildMainPageQuery({
             preview: IS_PREVIEW_MODE,
+            language
         })
     );
 

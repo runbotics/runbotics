@@ -18,10 +18,10 @@ import LoginLink from '../Header/LoginLink';
 import styles from './Navbar.module.scss';
 import { NavbarProps } from './Navbar.types';
 
-const Navbar: FC<NavbarProps> = ({ 
-    isNavExpanded = true, 
+const Navbar: FC<NavbarProps> = ({
+    isNavExpanded = true,
     hideNav,
-    isMobileVisible
+    isMobileVisible,
 }) => {
     const { translate } = useTranslations();
 
@@ -31,7 +31,11 @@ const Navbar: FC<NavbarProps> = ({
 
     return (
         <nav className={styles.nav}>
-            <ul className={`${styles.navLinkWrapper} ${isMobileVisible ? styles.minimized : navMobileStyle}`}>
+            <ul
+                className={`${styles.navLinkWrapper} ${
+                    isMobileVisible ? styles.minimized : navMobileStyle
+                }`}
+            >
                 <li className={styles.listItem}>
                     <Link
                         href={`/#${BENEFITS_SECTION_ID}`}

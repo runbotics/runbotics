@@ -45,8 +45,8 @@ const BotBrowseView: VFC = () => {
     }, [hasBotsTabAccess, hasBotsCollectionTabAccess]);
 
     const handleTabChange = (event: ChangeEvent<HTMLInputElement>, value: BotCollectionTab) => {
-        if (value === BotCollectionTab.COLLECTIONS) router.push('/app/bots/collections');
-        else router.push('/app/bots');
+        if (value === BotCollectionTab.COLLECTIONS) router.push('/app/bots/collections', null, {locale:router.locale});
+        else router.push('/app/bots', null, {locale:router.locale});
     };
 
     const getTabValue = () =>

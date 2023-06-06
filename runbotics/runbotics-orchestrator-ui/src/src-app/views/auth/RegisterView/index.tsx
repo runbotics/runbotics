@@ -112,7 +112,7 @@ const RegisterView: FC = () => {
                                         await dispatch(register(values));
                                         setStatus({ success: true });
                                         setSubmitting(false);
-                                        router.push('/app/processes');
+                                        router.push('/app/processes', null, { locale:router.locale });
                                         enqueueSnackbar(registrationText, {
                                             variant: 'success',
                                             autoHideDuration: 5000,

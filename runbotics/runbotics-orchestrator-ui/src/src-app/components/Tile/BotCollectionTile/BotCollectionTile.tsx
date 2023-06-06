@@ -12,7 +12,7 @@ const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, display
     const router = useRouter();
 
     const handleRedirect = () => {
-        router.push(`/app/bots?collection=${botCollection.id}`);
+        router.push(`/app/bots?collection=${botCollection.id}`, null, { locale:router.locale });
     };
 
     return (
