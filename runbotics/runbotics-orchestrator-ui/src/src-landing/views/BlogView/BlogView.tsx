@@ -1,4 +1,6 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+
+import Image from 'next/image';
 
 import { BlogPost, Category, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
@@ -21,7 +23,12 @@ interface BlogViewProps {
     featuredPost?: BlogPost;
 }
 
+
+
+
 const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
+    const [isFilterDisplayed, setFilterDisplayed] = useState(false);
+
     const { translate } = useTranslations();
 
     const postsNotFoundInfo = (
@@ -33,10 +40,15 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
     );
 
     return (
-        <Layout>
+        <Layout disableScroll={isFilterDisplayed}>
             <BlogLayout>
-                <BreadcrumbsSection />
+                <BreadcrumbsSection/>
+                <button onClick={() => setFilterDisplayed(true)} className={styles.filter}>
+                    <Image alt='filterIcon' src={'/images/icons/filter.svg'} fill={true}/>
+                </button>
                 <FiltersSection
+                    isFilterDisplayed={isFilterDisplayed}
+                    handleFilterDisplayed={setFilterDisplayed}
                     categories={categories}
                     tags={tags}
                 />

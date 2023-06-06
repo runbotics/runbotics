@@ -7,8 +7,9 @@
     "Blog.Filters.Date": "Data",
     "Blog.Filters.Less": "Mniej",
     "Blog.Filters.More": "Więcej",
+    "Blog.Filters.ApplyFilters":"Zastosuj filtry",
     "Blog.EmptyPage.Title": "Nie mogliśmy znaleźć postów, których szukasz",
-    "Blog.Card.ReadMore": "Read more",
+    "Blog.Card.ReadMore": "Więcej",
     "Blog.Post.Author": "autor",
     "Blog.Post.PublicationDate": "data publikacji",
     "Blog.Post.Category": "kategoria",
@@ -20,5 +21,6 @@
     "Blog.Post.Share.Copied": "Skopiowano!",
     "Blog.Post.Pagination.Previous": "Przejdź do poprzedniej strony",
     "Blog.Post.Pagination.Next": "Przejdź do następnej strony",
-    "Blog.Post.Pagination.ParticularPage": "Przejdź do strony {{ number }}"
+    "Blog.Post.Pagination.ParticularPage": "Przejdź do strony {{ number }}",
+    "Blog.Post.Tags": "Tagi:"
 }
