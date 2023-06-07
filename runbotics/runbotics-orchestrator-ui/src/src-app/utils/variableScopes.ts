@@ -1,17 +1,33 @@
+/* 
+    DOCUMENTATION: https://all41.atlassian.net/wiki/spaces/RPA/pages/2317746190/Scope+zmiennych
+*/
+
 import { ActionVariableObject, Scope } from '#src-app/hooks/useProcessVariables.types';
 
-export const addScope = (scopeTree: Scope, localScopeId: string, newScopeId: string): void => {
-    if (scopeTree.id === localScopeId) { 
-        scopeTree.children ? scopeTree.children.push({ id: newScopeId }) : scopeTree.children = [{ id: newScopeId }];
-        return;
+export const getUpdatedScopeTree = (scopeTree: Scope, localScopeId: string, newScopeId: string): Scope => {
+    if (scopeTree.id === localScopeId) {
+        const updatedChildren = scopeTree.children ? [...scopeTree.children, { id: newScopeId }] : [{ id: newScopeId }];
+        return { ...scopeTree, children: updatedChildren };
     }
-
-    if (!scopeTree.children) return;
-
-    scopeTree.children.forEach(
-        child => addScope(child, localScopeId, newScopeId)
-    );
+  
+    if (!scopeTree.children) return scopeTree;
+  
+    const updatedChildren = scopeTree.children.map(child => getUpdatedScopeTree(child, localScopeId, newScopeId));
+    return { ...scopeTree, children: updatedChildren };
 };
+
+export const mergeTrees = (treeOne: Scope, treeTwo: Scope): Scope | Scope[]  => 
+    treeOne.id !== treeTwo.id 
+        ? [treeOne, treeTwo]
+        : {
+            id: treeOne.id,
+            children: treeOne.children
+                .map(childOne => treeTwo.children
+                    .map(childTwo => mergeTrees(childOne, childTwo))
+                    .flat())
+                .flat()
+        };
+
 
 export const getParentScope = (scopeTree: Scope, scopeId: string): string[] | number => {
     if (scopeTree.id === scopeId) return [scopeTree.id];

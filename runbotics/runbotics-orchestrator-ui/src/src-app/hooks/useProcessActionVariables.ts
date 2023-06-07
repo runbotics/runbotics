@@ -1,6 +1,10 @@
+/* 
+    DOCUMENTATION: https://all41.atlassian.net/wiki/spaces/RPA/pages/2317746190/Scope+zmiennych
+*/
+
 import { useMemo } from 'react';
 
-import { addScope, getParentScope, getParentScopesActionVars } from '#src-app/utils/variableScopes';
+import { getParentScope, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
 import {
     ExtensionElement,
     ModdleElement,
@@ -10,76 +14,83 @@ import { useModelerContext } from './useModelerContext';
 import {
     ActionVariableObject,
     ActionVariables,
+    CategorizedElements,
+    Scope,
     ScopedModdleElement,
 } from './useProcessVariables.types';
 
-
+// eslint-disable-next-line max-lines-per-function
 const useProcessActionVariables = (selectedElementParentId?: string) => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
     const rootElement = canvas?.getRootElement();
     const rootElementScopeId = rootElement?.businessObject?.id;
-    const processScopes = ({ id: rootElementScopeId });
 
     const getLocalVarsActions = (element: ModdleElement[]): ModdleElement[] => element ? element.filter(
         (item: ModdleElement) =>
             item.id.includes('Activity_')
     ) : [];
 
-    const getLocalVarsAssigningActions = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
-        const varsElements = elements.filter(
-            element => 
-                (element.actionId === 'variables.assign' ||
-                element.actionId === 'variables.assignList')
-        );
-        
-        const scopedVarsElements = varsElements.map(
-            element => ({ ...element, scopeId })
+    const splitByScope = (elements: ModdleElement[], scopeId: string): CategorizedElements => {
+        const localVarsAssigningActions = [];
+        const localLoops = [];
+
+        elements.forEach(
+            element => {
+                if (element.actionId === 'loop.loop') {
+                    localLoops.push(element);
+                    return;
+                }
+                if(
+                    element.actionId !== 'variables.assign' &&
+                    element.actionId !== 'variables.assignList'
+                ) return;
+                localVarsAssigningActions.push({ ...element, scopeId });
+            }
         );
 
-        return scopedVarsElements;
+        return { localVarsAssigningActions, localLoops };
     };
 
-    const getLocalLoops = (elements: ModdleElement[]): ModdleElement[] => 
-        elements
-            .filter(
-                element => element.actionId === 'loop.loop'
-            );
-
-    const getVarsAssigningActions = (elements: ModdleElement[], scopeId: string): ModdleElement[] => {
-        if (!elements) return [];
+    const scopeTree: Scope = { id: rootElementScopeId };
+    
+    const getVarsAssigningActions = (elements: ModdleElement[], scopeId: string, currScopeTree: Scope): { varsAssigningActions: ModdleElement[], updatedScopeTree: Scope } => {
+        if (!elements) return { varsAssigningActions: [], updatedScopeTree: currScopeTree };
         
-        const scopeLoops = getLocalLoops(elements);
-
-        const localActionsWithoutLoops = getLocalVarsAssigningActions(elements, scopeId)
-            .filter(element => element.actionId !== 'loop.loop');
+        const { localVarsAssigningActions, localLoops } = splitByScope(elements, scopeId);
         
-        if (scopeLoops.length <= 0) return localActionsWithoutLoops;
-
-        const scopeLoopsActions = scopeLoops
+        if (localLoops.length <= 0) return { varsAssigningActions: localVarsAssigningActions, updatedScopeTree: currScopeTree };
+                
+        const scopeLoopsActions = [];
+        
+        // eslint-disable-next-line 
+        const updatedScopeTree = localLoops
             .map(scopeLoop => {
                 const loopScopeId = scopeLoop.id;
-
-                addScope(processScopes, scopeId, loopScopeId);
-
-                if (scopeLoop?.flowElements?.length <= 0) return [];
-            
-                const loopScopeActions = getVarsAssigningActions(scopeLoop.flowElements, loopScopeId);
-
-                return loopScopeActions;
+                
+                if (scopeLoop?.flowElements?.length <= 0) return getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId);
+                
+                const { varsAssigningActions, updatedScopeTree: tempUpdatedScopeTree } = getVarsAssigningActions(
+                    scopeLoop.flowElements,
+                    loopScopeId,
+                    getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId)
+                );
+                scopeLoopsActions.push(...varsAssigningActions);
+                return tempUpdatedScopeTree;
             })
-            .flat();
-
-        return [...localActionsWithoutLoops, ...scopeLoopsActions];
+            .reduce((acc: Scope, curr: Scope) => mergeTrees(acc, curr) as Scope);
+            
+        return { varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions], updatedScopeTree };
     };
 
     const allLocalVarsActions = useMemo(() => getLocalVarsActions(
         rootElement?.businessObject?.flowElements
     ), [rootElement]);
 
-    const allVarsAssigningActions = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId);
-
+    
     const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
+        const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId, scopeTree);
+
         if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
@@ -143,7 +154,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars };
             
-        const parentScopes = getParentScope(processScopes, selectedElementParentId);
+        const parentScopes = getParentScope(updatedScopeTree ?? scopeTree, selectedElementParentId);
 
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
 
@@ -151,7 +162,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         return { inputActionVariables: localInputActionVars, outputActionVariables: outputActionVars };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allLocalVarsActions, allVarsAssigningActions, canvas, selectedElementParentId]);
+    }, [allLocalVarsActions, canvas, selectedElementParentId]);
     
     return allVarsActions;
 };

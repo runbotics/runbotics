@@ -22,3 +22,8 @@ export interface Scope {
 export interface ScopedModdleElement extends ModdleElement {
     scopeId: string;
 }
+
+export interface CategorizedElements { 
+    localVarsAssigningActions: ModdleElement[];
+    localLoops: ModdleElement[];
+}
