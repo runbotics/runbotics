@@ -4,7 +4,7 @@
 
 import { useMemo } from 'react';
 
-import { getParentScope, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
+import { getParentsScope, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
 import {
     ExtensionElement,
     ModdleElement,
@@ -19,7 +19,6 @@ import {
     ScopedModdleElement,
 } from './useProcessVariables.types';
 
-// eslint-disable-next-line max-lines-per-function
 const useProcessActionVariables = (selectedElementParentId?: string) => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
@@ -63,7 +62,6 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                 
         const scopeLoopsActions = [];
         
-        // eslint-disable-next-line 
         const updatedScopeTree = localLoops
             .map(scopeLoop => {
                 const loopScopeId = scopeLoop.id;
@@ -76,9 +74,16 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                     getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId)
                 );
                 scopeLoopsActions.push(...varsAssigningActions);
+
                 return tempUpdatedScopeTree;
             })
-            .reduce((acc: Scope, curr: Scope) => mergeTrees(acc, curr) as Scope);
+            .reduce((acc: Scope, curr: Scope) => {
+                console.log('acc', acc);
+                console.log('curr', curr);
+                console.log('depth', scopeId);
+                console.log('=======');
+                return mergeTrees(acc, curr) as Scope;
+            });
             
         return { varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions], updatedScopeTree };
     };
@@ -90,7 +95,9 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
     
     const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
         const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId, scopeTree);
-
+        
+        console.log('updatedScopeTree', updatedScopeTree);
+        
         if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
         }
@@ -154,7 +161,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars };
             
-        const parentScopes = getParentScope(updatedScopeTree ?? scopeTree, selectedElementParentId);
+        const parentScopes = getParentsScope(updatedScopeTree ?? scopeTree, selectedElementParentId);
 
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
 
