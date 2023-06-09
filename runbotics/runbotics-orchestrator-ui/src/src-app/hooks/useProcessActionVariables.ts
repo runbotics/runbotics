@@ -1,7 +1,3 @@
-/* 
-    DOCUMENTATION: https://all41.atlassian.net/wiki/spaces/RPA/pages/2317746190/Scope+zmiennych
-*/
-
 import { useMemo } from 'react';
 
 import { getParentsScope, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
@@ -77,13 +73,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 return tempUpdatedScopeTree;
             })
-            .reduce((acc: Scope, curr: Scope) => {
-                console.log('acc', acc);
-                console.log('curr', curr);
-                console.log('depth', scopeId);
-                console.log('=======');
-                return mergeTrees(acc, curr) as Scope;
-            });
+            .reduce((acc: Scope, curr: Scope) => mergeTrees(acc, curr) as Scope);
             
         return { varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions], updatedScopeTree };
     };
@@ -95,8 +85,6 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
     
     const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
         const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId, scopeTree);
-        
-        console.log('updatedScopeTree', updatedScopeTree);
         
         if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
