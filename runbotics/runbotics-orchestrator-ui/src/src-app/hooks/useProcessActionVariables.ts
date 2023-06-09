@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { getParentsScope, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
+import { getParentScopes, getParentScopesActionVars, getUpdatedScopeTree, mergeTrees } from '#src-app/utils/variableScopes';
 import {
     ExtensionElement,
     ModdleElement,
@@ -10,11 +10,13 @@ import { useModelerContext } from './useModelerContext';
 import {
     ActionVariableObject,
     ActionVariables,
+    ActionsAssignedVars,
     CategorizedElements,
     Scope,
     ScopedModdleElement,
 } from './useProcessVariables.types';
 
+// eslint-disable-next-line max-lines-per-function
 const useProcessActionVariables = (selectedElementParentId?: string) => {
     const context = useModelerContext();
     const canvas = context?.modeler?.get('canvas');
@@ -26,7 +28,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
             item.id.includes('Activity_')
     ) : [];
 
-    const splitByScope = (elements: ModdleElement[], scopeId: string): CategorizedElements => {
+    const extractElementsMatchingScope = (elements: ModdleElement[], scopeId: string): CategorizedElements => {
         const localVarsAssigningActions = [];
         const localLoops = [];
 
@@ -46,36 +48,60 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         return { localVarsAssigningActions, localLoops };
     };
-
-    const scopeTree: Scope = { id: rootElementScopeId };
     
-    const getVarsAssigningActions = (elements: ModdleElement[], scopeId: string, currScopeTree: Scope): { varsAssigningActions: ModdleElement[], updatedScopeTree: Scope } => {
-        if (!elements) return { varsAssigningActions: [], updatedScopeTree: currScopeTree };
+    const getVarsAssigningActions = (
+        elements: ModdleElement[], 
+        scopeId: string, 
+        currScopeTree: Scope
+    ): ActionsAssignedVars => {
+        if (!elements) return ({ varsAssigningActions: [], updatedScopeTree: currScopeTree });
         
-        const { localVarsAssigningActions, localLoops } = splitByScope(elements, scopeId);
+        const { localVarsAssigningActions, localLoops } = extractElementsMatchingScope(elements, scopeId);
         
-        if (localLoops.length <= 0) return { varsAssigningActions: localVarsAssigningActions, updatedScopeTree: currScopeTree };
+        if (localLoops.length <= 0) {
+            return ({ 
+                varsAssigningActions: localVarsAssigningActions,
+                updatedScopeTree: currScopeTree 
+            });
+        };
                 
         const scopeLoopsActions = [];
         
         const updatedScopeTree = localLoops
-            .map(scopeLoop => {
-                const loopScopeId = scopeLoop.id;
+            .map(
+                scopeLoop => {
+                    const loopScopeId = scopeLoop.id;
                 
-                if (scopeLoop?.flowElements?.length <= 0) return getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId);
+                    if (scopeLoop?.flowElements?.length <= 0) { 
+                        return getUpdatedScopeTree(
+                            currScopeTree,
+                            scopeId,
+                            loopScopeId
+                        ); 
+                    } 
                 
-                const { varsAssigningActions, updatedScopeTree: tempUpdatedScopeTree } = getVarsAssigningActions(
-                    scopeLoop.flowElements,
-                    loopScopeId,
-                    getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId)
-                );
-                scopeLoopsActions.push(...varsAssigningActions);
+                    const { 
+                        varsAssigningActions, 
+                        updatedScopeTree: tempUpdatedScopeTree 
+                    } = getVarsAssigningActions(
+                        scopeLoop.flowElements,
+                        loopScopeId,
+                        getUpdatedScopeTree(currScopeTree, scopeId, loopScopeId)
+                    );
 
-                return tempUpdatedScopeTree;
-            })
-            .reduce((acc: Scope, curr: Scope) => mergeTrees(acc, curr) as Scope);
+                    scopeLoopsActions.push(...varsAssigningActions);
+
+                    return tempUpdatedScopeTree;
+                })
+            .reduce(
+                (acc: Scope, curr: Scope) => 
+                    mergeTrees(acc, curr) as Scope
+            );
             
-        return { varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions], updatedScopeTree };
+        return ({
+            varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions],
+            updatedScopeTree
+        });
     };
 
     const allLocalVarsActions = useMemo(() => getLocalVarsActions(
@@ -84,7 +110,13 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
     
     const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
-        const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = getVarsAssigningActions(allLocalVarsActions, rootElementScopeId, scopeTree);
+        const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = 
+            getVarsAssigningActions(
+                allLocalVarsActions, 
+                rootElementScopeId, 
+                { id: rootElementScopeId }
+            );
+
         
         if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [] };
@@ -149,7 +181,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars };
             
-        const parentScopes = getParentsScope(updatedScopeTree ?? scopeTree, selectedElementParentId);
+        const parentScopes = getParentScopes(updatedScopeTree, selectedElementParentId);
 
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
 

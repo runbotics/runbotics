@@ -27,3 +27,8 @@ export interface CategorizedElements {
     localVarsAssigningActions: ModdleElement[];
     localLoops: ModdleElement[];
 }
+
+export interface ActionsAssignedVars {
+    varsAssigningActions: ModdleElement[], 
+    updatedScopeTree: Scope
+}
