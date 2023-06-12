@@ -24,7 +24,7 @@ export const login = createAsyncThunk(
             const response = await Axios.post<{ id_token: string }>(
                 '/api/authenticate',
                 {
-                    usernames: payload.email,
+                    username: payload.email,
                     password: payload.password,
                     rememberMe: true,
                 }
