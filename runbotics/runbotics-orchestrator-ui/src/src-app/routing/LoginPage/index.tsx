@@ -92,7 +92,7 @@ const LoginPage: FC = () => {
             .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                router.push('/app/processes');
+                router.push({pathname:'/app/processes'}, null, { locale:router.locale });
             })
             .catch((error) => {
                 setStatus({ success: false });
