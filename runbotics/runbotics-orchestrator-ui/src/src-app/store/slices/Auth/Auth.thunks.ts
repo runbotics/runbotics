@@ -91,14 +91,14 @@ export const initialize = createAsyncThunk<{
 export const register = createAsyncThunk(
     'auth/register',
     async (
-        payload: { email: string; name: string; password: string },
+        payload: { email: string; name: string; password: string, langKey: string },
         { rejectWithValue }
     ) => {
         try {
             const response = await Axios.post('/api/register', {
                 email: payload.email,
                 login: payload.email,
-                langKey: 'pl',
+                langKey: payload.langKey,
                 password: payload.password,
             });
 

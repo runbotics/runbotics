@@ -27,6 +27,8 @@ import useTranslations, {
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 
+import { Language } from '#src-app/translations/translations';
+
 import { useRegisterValidationSchema } from './register.schema';
 
 const PREFIX = 'RegisterView';
@@ -62,7 +64,8 @@ interface RegisterFormState {
     name: string,
     password: string,
     passwordConfirmation: string,
-    submit: null | boolean
+    submit: null | boolean,
+    langKey: Language
 }
 
 const initialValues: RegisterFormState = {
@@ -71,6 +74,7 @@ const initialValues: RegisterFormState = {
     password: '',
     passwordConfirmation: '',
     submit: null,
+    langKey: 'en'
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -95,12 +99,15 @@ const RegisterView: FC = () => {
             setErrors({ submit: translate('Register.Error.NoInternet') });
             return;
         }
-        await dispatch(register(values))
+
+        const registerValues = router.locale ? {... values, langKey: router.locale} : values;
+
+        await dispatch(register(registerValues))
             .then(unwrapResult)
             .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                router.push('/app', null, { locale:router.locale });
+                router.push('/app', null, { locale: router.locale });
                 enqueueSnackbar(registrationText, {
                     variant: 'success',
                     autoHideDuration: 5000,
