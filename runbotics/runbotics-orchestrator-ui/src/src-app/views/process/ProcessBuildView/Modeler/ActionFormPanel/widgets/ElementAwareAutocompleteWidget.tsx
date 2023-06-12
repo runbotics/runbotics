@@ -17,7 +17,7 @@ import { useSelector } from '#src-app/store';
 import AutocompleteWidget from './AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
 
-const services = [
+const SERVICES = [
     'environment.services.idt',
     'environment.services.slice',
     'environment.services.merge',
@@ -73,7 +73,7 @@ const services = [
     ),
 }));
 
-const utils = [
+const UTILS = [
     'false',
     'true',
     'content.output',
@@ -84,6 +84,16 @@ const utils = [
     label: `\${${util}}`,
     group: t(
         'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
+    ),
+}));
+
+const VARIABLES = [
+    'tempFolder',
+].map(variable => ({
+    label: variable,
+    value: variable,
+    group: t(
+        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
     ),
 }));
 
@@ -172,13 +182,14 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         React.useMemo(() => {
             let result = [];
 
-            const defaultOptions = [...services, ...utils];
+            const defaultOptions = [...SERVICES, ...UTILS];
             result = [...defaultOptions, ...result];
 
             const variables = [
                 ...groupedLocalVariables,
                 ...groupedGlobalVariables,
                 ...attendedProcessVariables,
+                ...VARIABLES,
             ];
 
             const dollarVariables = variables.map((option) => ({
