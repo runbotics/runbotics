@@ -30,6 +30,6 @@
     "Common.Time.Miliseconds.Short": "ms",
     "Common.Errors.Request.GeneralError": "Something went wrong",
     "Common.Errors.UnexpectedError": "An unexpected error has occurred.",
-    "Common.Languages.pl": "polish",
+    "Common.Languages.pl": "polski",
     "Common.Languages.en": "english"
 }

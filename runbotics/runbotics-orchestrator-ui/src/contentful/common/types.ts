@@ -1,10 +1,12 @@
+import { Language } from '#src-app/translations/translations';
+
 export interface Page {
     current: number;
     total: number;
 }
 
 export type QueryBuilder<T = {}> = (
-    options: { preview?: boolean } & T
+    options: { preview?: boolean, language: Language } & T
 ) => string;
 
 export type FetchContentfulResponse<T> = {
@@ -19,6 +21,7 @@ export type FilterQueryParams = {
     search?: string;
     page?: number;
 };
+
 
 export enum FilterQueryParamsEnum {
     Category = 'category',
