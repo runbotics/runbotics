@@ -1,0 +1,10 @@
+@import '#src-landing/scss/main';
+
+.link {
+    composes: btn from '../Header.module.scss';
+    margin: 0 $margin-3;
+}
+
+.linkText {
+    font-weight: $font-weight-semi-bold;
+}

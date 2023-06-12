@@ -1,16 +1,16 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.6.0-SNAPSHOT.16",
+    "version": "2.7.0-SNAPSHOT.8",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
     "license": "MIT",
-    "main": "./dist/main.js",
+    "main": "./dist/src/main.js",
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
-        "start": "node dist/main",
+        "start": "node dist/src/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
         "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
         "lint": "eslint \"{src,test}/**/*.ts\"",

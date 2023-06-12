@@ -47,10 +47,14 @@
     }
 }
 
-.logInBtn {
-    composes: btn;
-    margin: 0 $margin-3;
+
+
+.buttonGroup{
+    display: flex;
+ 
 }
+
+
 
 .menuIcon {
     display: none;
@@ -68,17 +72,28 @@
     transform: translateY(0);
 }
 
-.btnText {
-    font-weight: $font-weight-semi-bold;
-}
 
-@media (max-width: $breakpoint-md) {
+
+@media (max-width: $breakpoint-lg) {
+
+    .btnText {
+        font-weight: $font-weight-semi-bold;
+    }
+    
+
+    .buttonGroup{
+        display: flex;
+        gap:10px;
+    }
+    
+
     .menuIcon {
         display: block;
         user-select: none;
         -webkit-user-select: none;
         appearance: none;
         margin-left: auto;
+        margin-right: $margin-3;
         border: none;
         outline: none;
         background: none;
@@ -103,8 +118,14 @@
 
     .menuIcon.isActive {
         margin-top: 3px;
-        margin-right: -$margin-1;
+        margin-right: $margin-2;  
     }
+
+    .header.isActive {
+        background-color: $palette-background-primary;
+    }
+
+
     .menuIcon.isActive span:nth-child(1) {
         transform: translate(0px, -4px) rotate(45deg);
     }
@@ -116,6 +137,10 @@
 
     .menuIcon.isActive span:nth-child(3) {
         transform: translate(-3px, 3px) rotate(-45deg);
+    }
+
+    .loginLink {
+        display: none;
     }
 }
 

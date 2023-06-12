@@ -85,6 +85,7 @@ export type ModdleElement = {
     id: string,
     implementation: string,
     label: string
+    flowElements?: ModdleElement[],
 }
 
 export type BPMNElement = {

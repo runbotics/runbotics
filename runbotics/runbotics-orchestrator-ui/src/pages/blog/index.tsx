@@ -1,65 +1,90 @@
 import { VFC } from 'react';
 
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
+
+import { getBlogMainCache, recreateCache
+} from '#contentful/blog-main';
+
+
 
 import {
-    getFilteredPosts, getBlogPostsCache, buildFilterFragment,
-    setBlogPostsCache, getAllPosts
-} from '#contentful/blog-main';
-import {
-    BlogPost, Category, FILTER_QUERY_PARAMS, extractFilterQueryParams,
-    getPaginationSize, hasQueryParams
+    BlogPost, Category, DEFAULT_PAGE_SIZE, FILTER_QUERY_PARAMS, Tag, filterPosts, extractFilterQueryParams, hasQueryParams, Page, FilterQueryParamsEnum
 } from '#contentful/common';
+
+import { Language } from '#src-app/translations/translations';
+
 import BlogView from '#src-landing/views/BlogView';
 
-interface BlogPageProps {
+interface Props {
     posts: BlogPost[];
     categories: Category[];
+    tags: Tag[];
+    page: Page;
     featuredPost?: BlogPost;
 }
 
-const BlogPage: VFC<BlogPageProps> = ({ posts, categories, featuredPost }) => (
+const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) => (
     <BlogView
         posts={posts}
         categories={categories}
+        tags={tags}
+        page={page}
         featuredPost={featuredPost}
     />
 );
 
 export default BlogPage;
 
-export async function getServerSideProps({ query, res }: GetServerSidePropsContext) {
-    if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
-        const queryParams = extractFilterQueryParams(query);
-        const { limit, skip } = getPaginationSize(queryParams.page);
-        const { posts, categories } = await getFilteredPosts(
-            buildFilterFragment(queryParams),
-            { limit, skip },
-        );
-        return {
-            props: {
-                posts: posts ?? [],
-                categories: categories ?? [],
-            },
-        };
-    }
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res, locale }) => {
 
-    let postsResponse = getBlogPostsCache();
+    let cache = getBlogMainCache(locale as Language);
 
-    if (!postsResponse) {
-        postsResponse = await getAllPosts();
-        setBlogPostsCache(postsResponse);
+
+    if (!cache) {
+        cache = await recreateCache(locale as Language);
+
     } else {
         res.setHeader('X-Cache', 'HIT');
     }
 
-    const { posts, featuredPost, categories } = postsResponse;
+    if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
+        const queryParams = extractFilterQueryParams(query);
+
+        const isMoreThanPage = Object.keys(queryParams).length > 1
+            || !Object.keys(queryParams).includes(FilterQueryParamsEnum.Page);
+        const filteredPosts = filterPosts(cache.posts, queryParams);
+        const currentPage = queryParams.page && queryParams.page > 1 ? queryParams.page : 1;
+        const totalPages = Math.ceil(filteredPosts.length / DEFAULT_PAGE_SIZE);
+
+        const firstPageElementIndex = (currentPage - 1) * DEFAULT_PAGE_SIZE;
+        const regularPosts = isMoreThanPage ? filteredPosts : (filteredPosts?.slice(1) ?? []);
+        const currentPagePosts = regularPosts?.slice(firstPageElementIndex, currentPage * DEFAULT_PAGE_SIZE) ?? [];
+
+        return {
+            props: {
+                ...cache,
+                posts: currentPagePosts,
+                featuredPost: !isMoreThanPage && currentPage === 1 ? cache.featuredPost : null,
+                page: {
+                    current: currentPage,
+                    total: totalPages,
+                }
+            },
+        };
+    }
+
+    const { posts } = cache;
+    const regularPosts = posts?.slice(1) ?? [];
+    const totalPages = Math.ceil(regularPosts.length / DEFAULT_PAGE_SIZE);
 
     return {
         props: {
-            posts: posts ?? [],
-            featuredPost: featuredPost ?? null,
-            categories: categories ?? [],
+            ...cache,
+            posts: regularPosts.slice(0, DEFAULT_PAGE_SIZE),
+            page: {
+                current: 1,
+                total: totalPages,
+            }
         },
     };
-}
+};

@@ -4,34 +4,52 @@ $SEPARATOR_SPACE: $padding-1;
 
 .root {
     display: flex;
+
+    height: 20px;
+    width: 100%;
+
+    padding-top: 5px;
+
     flex-wrap: wrap;
     align-items: center;
     grid-column: span 2;
-    width: 100%;
-    margin-top: $padding-3;
 }
 
 .breadcrumb {
     display: flex;
 }
 
-.link {
-    text-decoration: none;
+.linkContent {
     border-bottom: 2px solid transparent;
-
-    &:hover {
-        border-color: $palette-accent-primary;
-    }
+    transition: $landing-link-transition;
 }
 
 .homeLink {
     display: flex;
     align-items: center;
+    border: none;
     text-decoration: none;
 
     .icon {
         filter: $black-to-accent-filter;
         padding-right: $SEPARATOR_SPACE;
+    }
+
+    &:hover {
+        .linkContent {
+            border-color: $palette-accent-primary;
+        }
+    }
+}
+
+.link {
+    color: $palette-accent-primary;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: $landing-link-transition;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
     }
 }
 
@@ -39,4 +57,8 @@ $SEPARATOR_SPACE: $padding-1;
     padding-inline: $SEPARATOR_SPACE;
     user-select: none;
     -webkit-user-select: none;
+}
+
+.filter {
+    display: none;
 }

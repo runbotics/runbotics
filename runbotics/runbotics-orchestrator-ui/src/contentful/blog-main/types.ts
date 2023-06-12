@@ -1,4 +1,4 @@
-import { BlogPost, Category, FetchContentfulResponse, PaginationOptions } from '#contentful/common';
+import { BlogPost, Category, FetchContentfulResponse, Tag } from '#contentful/common';
 
 interface AllPostsCollection {
     blogPostCollection: {
@@ -9,14 +9,13 @@ interface AllPostsCollection {
     }
 }
 
-export type GetAllPostsOptions = PaginationOptions;
 export type GetAllPostsResponse = FetchContentfulResponse<
     & AllPostsCollection
     & AllCategoriesCollection
 >
 
 // Filtered Posts
-export type GetFilteredPostsOptions = PaginationOptions & {
+export type GetFilteredPostsOptions = {
     filterFragment?: string;
 };
 
@@ -34,3 +33,15 @@ interface AllCategoriesCollection {
         items: Category[];
     }
 }
+
+interface AllTagsCollection {
+    tagCollection: {
+        items: Tag[];
+    }
+}
+
+export type GetAllModelsResponse = FetchContentfulResponse<
+    & AllPostsCollection
+    & AllCategoriesCollection
+    & AllTagsCollection
+>

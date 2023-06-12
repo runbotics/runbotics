@@ -1,10 +1,12 @@
-export interface PaginationOptions {
-    skip?: number;
-    limit?: number;
+import { Language } from '#src-app/translations/translations';
+
+export interface Page {
+    current: number;
+    total: number;
 }
 
 export type QueryBuilder<T = {}> = (
-    options: { preview?: boolean } & T
+    options: { preview?: boolean, language: Language } & T
 ) => string;
 
 export type FetchContentfulResponse<T> = {
@@ -12,17 +14,20 @@ export type FetchContentfulResponse<T> = {
 };
 
 export type FilterQueryParams = {
-    categories?: FilterQueryParamsEnum.Category[];
-    startDate?: FilterQueryParamsEnum.StartDate;
-    endDate?: FilterQueryParamsEnum.EndDate;
-    search?: FilterQueryParamsEnum.Search;
-    page?: FilterQueryParamsEnum.Page;
+    categories?: string[];
+    tags?: string[];
+    startDate?: string;
+    endDate?: string;
+    search?: string;
+    page?: number;
 };
+
 
 export enum FilterQueryParamsEnum {
     Category = 'category',
-    Search = 'search',
+    Tag = 'tag',
     StartDate = 'startDate',
     EndDate = 'endDate',
+    Search = 'search',
     Page = 'page',
 }

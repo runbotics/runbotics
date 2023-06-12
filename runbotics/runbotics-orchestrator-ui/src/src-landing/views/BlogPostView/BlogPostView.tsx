@@ -1,12 +1,17 @@
 import { VFC } from 'react';
 
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import { BlogPost } from '#contentful/common';
+import TagIcon from '#public/images/icons/category_label.svg';
+import useTranslations from '#src-app/hooks/useTranslations';
 import BlogSharePanel from '#src-landing/components/BlogSharePanel';
 import Layout from '#src-landing/components/Layout';
 import PostHeader from '#src-landing/components/PostHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
+import Typography from '#src-landing/components/Typography';
 
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
@@ -17,26 +22,49 @@ interface Props {
 
 const BlogPostView: VFC<Props> = ({ post }) => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const { body, summary, slug, ...postHeaderProps} = post;
+    const { body, summary, slug: postSlug, tags: postTags, ...postHeaderProps } = post;
+    const { translate } = useTranslations();
+
+    const tags = postTags.items.map(({ name, slug }) => (
+        <Link key={name} href={`/blog?tag=${slug}`} className={styles.tagLink}>
+            {`${name}`}
+        </Link>
+    ));
+
     return (
         <>
             <Head>
-                <title>
-                    {`${post.title} | Runbotics Blog`}
-                </title>
+                <title>{`${post.title} | Runbotics Blog`}</title>
                 <meta property="og:image" content={post.featuredImage?.url} />
             </Head>
             <Layout>
-                <article className={styles.blogArticle}>
-                    <PostHeader
-                        {...postHeaderProps}
-                    />
-                    <BreadcrumbsSection postTitle={post.title} />
-                    <section className={styles.contentSection}>
+                <div className={styles.blogWrapper}>
+                    <PostHeader {...postHeaderProps} />
+                    <div className={styles.breadCrumbsWrapper}>
+                        <BreadcrumbsSection postTitle={post.title} />
+                    </div>
+                    <article className={styles.contentArticle}>
                         <RichTextRenderer content={body} />
+                        <div className={styles.tagsWrapper}>
+                            <Image
+                                src={TagIcon}
+                                width={24}
+                                height={24}
+                                className={styles.tag}
+                                alt="tag icon"
+                            />
+                            <Typography
+                                font="Roboto"
+                                className={`${styles.h4} ${styles.tag}`}
+                                variant="h4"
+                            >
+                                {translate('Blog.Post.Tags')}
+                            </Typography>
+                            {tags}
+                        </div>
                         <BlogSharePanel />
-                    </section>
-                </article>
+                    </article>
+                </div>
             </Layout>
         </>
     );

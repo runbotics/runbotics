@@ -5,9 +5,12 @@ $ROOT-MIN-HEIGHT: 400px;
 $IMG-BORDER-RADIUS: 20px;
 $IMG-MARGIN-BOTTOM: 12px;
 $TITLE-MARGIN-BOTTOM: 10px;
+$CONTENT-TOP-MARGIN: 180px;
+$CONTENT-TOP-MARGIN-XS: 140px;
 $CONTENT-PADDING: $margin-3;
 $CONTENT-MIN-HEIGHT: 220px;
-$CONTENT-BORDER-RADIUS: 20px 120px 20px 20px;
+$CONTENT-BORDER-RADIUS: 20px;
+$CONTENT-BORDER-TOP-RIGHT-RADIUS: 120px;
 $DESCRIPTION-MAX-WIDTH: 966px;
 $READ-MORE-WIDTH: 116px;
 $READ-MORE-HEIGHT: 32px;
@@ -34,16 +37,20 @@ $FONT-COLOR: #000;
     transition: all $CARD-HOVER-TRANSITION ease;
     border-radius: $IMG-BORDER-RADIUS;
     box-shadow: $box-shadow-primary;
+    border-bottom: none;
 
     &:hover {
-        transform: translateY($CARD-HOVER-TRANSLATE-Y);
-        box-shadow: $box-shadow-primary-hover;
-
         .title,
         .readMore {
             text-decoration: underline;
         }
     }
+}
+
+.link:hover[data-brief='false']
+.link:hover[data-brief='undefined'] {
+    transform: translateY($CARD-HOVER-TRANSLATE-Y);
+    box-shadow: $box-shadow-primary-hover;
 }
 
 .wrapper {
@@ -63,18 +70,27 @@ $FONT-COLOR: #000;
 .content {
     display: flex;
     flex-direction: column;
-
-    width: 100%;
-    min-height: $CONTENT-MIN-HEIGHT;
-
-    padding: $CONTENT-PADDING;
     gap: 16px;
 
-    background-color: rgba($palette-white, 70%);
+    margin-top: $CONTENT-TOP-MARGIN;
     border-radius: $CONTENT-BORDER-RADIUS;
+    border-top-right-radius: $CONTENT-BORDER-TOP-RIGHT-RADIUS;
+    width: 100%;
+    min-height: $CONTENT-MIN-HEIGHT;
+    padding: $CONTENT-PADDING;
+    background-color: rgba($palette-white, 70%);
+}
+
+.draftBadge {
+    position: absolute;
+    right: $CONTENT-PADDING;
+    top: $CONTENT-PADDING;
 }
 
 .img {
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    
     z-index: -1;
     object-fit: cover;
     border-radius: $IMG-BORDER-RADIUS;
@@ -94,9 +110,13 @@ $FONT-COLOR: #000;
 
 .title {
     font-weight: $font-weight-bold;
-    font-size: clamp(1rem, 3vw + 1rem, 2rem);
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
     margin: 0;
     margin-bottom: $TITLE-MARGIN-BOTTOM;
+}
+
+.title[data-brief='true'] {
+    font-size: clamp(0.5rem, 2vw + 0.5rem, 1.25rem);
 }
 
 .description {
@@ -147,5 +167,25 @@ $FONT-COLOR: #000;
     .content {
         padding-top: $padding-5;
         padding-right: $padding-5;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .content {
+        margin-top: $CONTENT-TOP-MARGIN-XS;
+        border-top-right-radius: $CONTENT-BORDER-RADIUS;
+        background-color: $palette-white;
+    }
+
+    .title {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+                line-clamp: 3; 
+        -webkit-box-orient: vertical;
+    }
+    
+    .readMore {
+        justify-content: center;
     }
 }

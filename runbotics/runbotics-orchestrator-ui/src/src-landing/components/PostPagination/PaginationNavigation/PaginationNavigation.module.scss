@@ -1,0 +1,56 @@
+@import '#src-landing/scss/main';
+
+$PAGE_NUM_RADIUS: 25px;
+$PAGE_LINK_SIZE: 50px;
+$VISIBLE_PAGE_LINKS: 5;
+
+:export {
+    visiblePageLinks: $VISIBLE_PAGE_LINKS;
+    pageLinkSize: $PAGE_LINK_SIZE;
+}
+
+.root {
+    width: $VISIBLE_PAGE_LINKS * ($PAGE_LINK_SIZE);
+    overflow: hidden;
+}
+
+.pageNumbersWrapper {
+    display: flex;
+
+    transition: transform 300ms ease;
+
+    li {
+        list-style: none;
+    }
+}
+
+.pageNumber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 0 0 $PAGE_LINK_SIZE;
+
+    height: $PAGE_LINK_SIZE;
+    width: $PAGE_LINK_SIZE;
+
+    color: $palette-black;
+    text-decoration: none;
+
+    &:hover {
+        cursor: pointer;
+
+        p {
+            border-color: $palette-black;
+        }
+    }
+
+    p {
+        transition: $landing-link-transition;
+        border-bottom: 3px solid transparent;
+    }
+
+    &.active p {
+        border-color: $palette-background-accent;
+    }
+}

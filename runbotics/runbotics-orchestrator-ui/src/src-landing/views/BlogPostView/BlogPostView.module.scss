@@ -1,6 +1,7 @@
 @import '#src-landing/scss/main';
+@import '#src-landing/components/Typography/Typography.module.scss';
 
-.blogArticle {
+.blogWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,11 +14,35 @@
     padding-top: calc($x-content-padding + $HEADER_HEIGHT);
 }
 
-.contentSection {
-    display: flex;
-    flex-direction: column;
+.contentArticle {
     max-width: $MAX_BLOG_CONTENT_WIDTH;
 
     padding-top: $padding-5;
     padding-bottom: 64px;
+}
+
+.breadCrumbsWrapper {
+    width: 100%;
+    padding: 24px clamp(10px, 8vw, 140px);
+}
+
+.tagsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.tag {
+    margin-right: $margin-1;
+}
+
+.tagLink {
+    @extend .typography__primary, .typography__Roboto, .typography__h4;
+    composes: tag;
+}
+
+@media (max-width: $breakpoint-md) {
+    .breadCrumbsWrapper {
+        padding: 24px 0;
+    }
 }

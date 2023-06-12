@@ -35,9 +35,10 @@ const IterationSlide: FC<IterationSlideProps> = ({
     expandedEventId,
     onChange,
     iterationGutter,
-    container
+    container,
 }) => {
     const { translate } = useTranslations();
+
     return (
         <Slide
             direction="left"
@@ -84,8 +85,8 @@ const IterationSlide: FC<IterationSlideProps> = ({
                                     {iterationGutter.iteratorElement && (
                                         <ReactJson
                                             src={{
-                                                iterator: 
-                                                    JSON.parse(iterationGutter.iteratorElement as string)
+                                                iterator:
+                                                    iterationGutter.iteratorElement
                                             }}
                                         />
                                     )}

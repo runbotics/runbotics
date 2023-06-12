@@ -1,12 +1,19 @@
 import { GetServerSidePropsContext } from 'next';
 
+import { BlogPost, PostStatus } from './models';
 import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
-export const DEFAULT_PAGE_SIZE = 10;
-export const DEFAULT_PAGE_OFFSET = 1;
+export const DEFAULT_PAGE_SIZE = 9;
+export const DRAFT_BADGE_BACKGROUND_COLOR = '#FFC107';
+
+export const QUERY_LANGAUGE = {
+    en: 'en-US',
+    pl: 'pl'
+};
 
 export const FILTER_QUERY_PARAMS = [
     FilterQueryParamsEnum.Category,
+    FilterQueryParamsEnum.Tag,
     FilterQueryParamsEnum.Search,
     FilterQueryParamsEnum.StartDate,
     FilterQueryParamsEnum.EndDate,
@@ -17,9 +24,12 @@ export const extractFilterQueryParams = (
     query: GetServerSidePropsContext['query']
 ) => {
     const result: FilterQueryParams = {};
-    const { category, search, startDate, endDate, page } = query;
+    const { category, tag, search, startDate, endDate, page } = query;
     if (category) {
         result.categories = paramToArray(category);
+    }
+    if (tag) {
+        result.tags = paramToArray(tag);
     }
     if (search) {
         result.search = paramToString(search);
@@ -31,27 +41,67 @@ export const extractFilterQueryParams = (
         result.endDate = paramToString(endDate);
     }
     if (page) {
-        result.page = paramToString(page);
+        result.page = paramToNumber(page);
     }
 
     return result;
 };
 
-export const getPaginationSize = (page: string) => {
-    if (!page || Number(page) === 1) return { limit: DEFAULT_PAGE_SIZE, skip: 0 };
+export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) => posts
+    .filter(post => {
+        const { categories, tags, startDate, endDate, search } = queryParams;
+        const hasCategory = (
+            !categories || categories
+                ?.includes(post.category.slug)
+        );
+        const hasTag = (
+            !tags || tags
+                ?.some(
+                    tag => post.tags.items
+                        .map(
+                            postTag => postTag.slug
+                        )
+                        .includes(tag)
+                )
+        );
+        const isInTimePeriod = (
+            !queryParams.startDate || 
+            new Date(post.date) >= new Date(startDate)
+        ) && (
+            !endDate || 
+            new Date(post.date) <= new Date(endDate)
+        );
+        const containsSearchPhrase = (
+            !search || 
+            post.title
+                .toLowerCase()
+                .includes(
+                    search.toLowerCase()
+                ) || 
+            post.summary
+                .toLowerCase()
+                .includes((
+                    search.toLowerCase()
+                ))
+        );
+        return hasCategory && hasTag && isInTimePeriod && containsSearchPhrase;
+    });
 
-    const pageNumber = Number(page);
-    const limit = pageNumber * DEFAULT_PAGE_SIZE - DEFAULT_PAGE_OFFSET;
-    const skip = limit - DEFAULT_PAGE_SIZE;
+const paramToNumber = (param: string | string[]): number | undefined => {
+    if (Array.isArray(param)) {
+        const numberParam = Number(param[0]);
+        return Number.isNaN(numberParam) ? undefined : numberParam;
+    }
 
-    return { limit, skip };
+    const numberParam = Number(param);
+    return Number.isNaN(numberParam) ? undefined : numberParam;
 };
 
-const paramToString = <T>(param: string | string[]): T => {
+const paramToString = (param: string | string[]): string => {
     if (Array.isArray(param) && param.length > 0) {
-        return param[0] as T;
+        return param[0];
     }
-    return param as T;
+    return param as string;
 };
 
 const paramToArray = <T>(param: string | string[]): T[] => {
@@ -65,3 +115,20 @@ export const hasQueryParams = (
     query: GetServerSidePropsContext['query'],
     paramsToInclude: string[]
 ) => paramsToInclude.some((param) => query[param]);
+
+export const getBlogUrl = (params: URLSearchParams): string => `/blog${
+    params.toString() ?
+        '?' + params.toString() : 
+        ''
+}`;
+
+export const getPaginatedUrl = (page: number, initialParams?: string): string => {
+    const searchParams = new URLSearchParams(initialParams);
+    searchParams.set(FilterQueryParamsEnum.Page, String(page));
+    const newUrl = getBlogUrl(searchParams);
+
+    return newUrl;
+};
+
+export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;
+

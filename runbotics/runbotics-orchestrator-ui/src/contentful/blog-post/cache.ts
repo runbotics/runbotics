@@ -1,13 +1,10 @@
-import { contentfulCache } from '#contentful/common';
+import { BlogPost, contentfulCache } from '#contentful/common';
+import { Language } from '#src-app/translations/translations';
 
-import { getPost } from './api';
-
-type PostCache = Awaited<ReturnType<typeof getPost>>
-
-export function getPostCache(cacheKey: string) {
-    return contentfulCache.get(cacheKey) as PostCache | undefined;
+export function getPostCache(cacheKey: string, language: Language) {
+    return contentfulCache[language].get(cacheKey) as BlogPost | undefined;
 }
 
-export function setPostCache(cacheKey: string, cacheValue: PostCache) {
-    contentfulCache.set(cacheKey, cacheValue);
+export function setPostCache(cacheKey: string, cacheValue: BlogPost, language: Language) {
+    contentfulCache[language].set(cacheKey, cacheValue);
 }

@@ -1,8 +1,45 @@
-import React from 'react';
+import type { VFC } from 'react';
 
+import { GetServerSideProps } from 'next';
+
+import { useRouter } from 'next/router';
+
+
+import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
+import { BlogPost } from '#contentful/common';
 import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
+
+import { Language } from '#src-app/translations/translations';
+
 import MainView from '#src-landing/views/MainView';
 
-const IndexPage = () => <MainView />;
+interface Props {
+    blogPosts: BlogPost[];
+}
+
+
+
+const IndexPage: VFC<Props> = ({ blogPosts }) => <MainView blogPosts={blogPosts} />;
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({ res, locale }) => {
+
+
+    let cache = getBlogMainCache(locale as Language);
+
+    if (!cache) {
+        cache = await recreateCache(locale as Language);
+    } else {
+        res.setHeader('X-Cache', 'HIT');
+    }
+
+    const blogPosts = cache.posts?.slice(0, 3) ?? [];
+
+
+    return {
+        props: {
+            blogPosts,
+        },
+    };
+};
 
 export default withGuestGuard(IndexPage);

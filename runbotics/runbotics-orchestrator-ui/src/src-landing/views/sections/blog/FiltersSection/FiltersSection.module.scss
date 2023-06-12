@@ -1,5 +1,7 @@
 @import '#src-landing/scss/main.scss';
 
+$EXIT_BUTTON_DIMM: 25px;
+
 .root {
     @include font-face-roboto;
     display: grid;
@@ -10,7 +12,6 @@
     height: fit-content;
     gap: 16px;
     padding: 10px;
-    margin-bottom: $padding-4;
 
     background-color: $palette-background-secondary;
     border-radius: 14px;
@@ -42,6 +43,7 @@
     border-bottom: 3px solid transparent;
     border-top: 3px solid transparent;
     white-space: nowrap;
+    transition: $landing-link-transition;
 
     &:hover {
         border-bottom-color: $palette-accent-primary;
@@ -57,12 +59,13 @@
 
 .expandSectionButton {
     display: flex;
-    align-items: center;
 
     width: fit-content;
 
     gap: 5px;
     padding: 4px 8px;
+
+    align-items: center;
 
     font-size: $font-size-body3;
 
@@ -95,6 +98,16 @@
     gap: 8px;
 }
 
+.applyFilter {
+    display: none;
+}
+
+.exitBtn{
+    display: none;
+}
+
+
+
 @media (max-width: $breakpoint-md) {
     .root {
         grid-column: 1;
@@ -120,10 +133,96 @@
     .filterSectionWrapper[data-type='category'] {
         grid-column: 1;
     }
+
+    .filterSectionWrapper[data-type='date'] {
+        align-items: center;
+        grid-column: span 2;
+    }
 }
 
 @media (max-width: $breakpoint-xs) {
     .root {
+        display: grid;
+        grid-template-rows: 60px repeat(4, 0.1fr);
+
+        position: fixed;
+        top: 0;
+        left: 0;
+
         width: 100%;
+        height: 100%;
+
+        padding-left: 25px;
+
+        justify-items: center;
+
+        isolation: isolate;
+        z-index: $header-z-index;
+        overflow-y: scroll;
+        border-radius: 0;
     }
+
+    .applyFilter {
+        display: block;
+
+        width: 212px;
+        height: 32px;
+
+        border-radius: 16px;
+        border: none;
+        background-color: $palette-accent-primary;
+    }
+
+    .hideFilters {
+        display: none;
+    }
+
+    .wrapper{
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .exitBtn{
+        display: flex;
+
+        position: relative;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 15px;
+
+        background-color: transparent;
+        border: none;
+        content: '';
+        user-select: none;
+        transition: background-color ease-in-out 100ms;
+
+        > span{
+            display: block;
+
+            position: absolute;
+
+            width: 3px;
+            height: 85%;
+
+            border-radius: 5px;
+            background-color: black;
+            content: '';
+        }
+
+        :active{
+            background-color: rgba($palette-gray,0.6);
+        }
+
+        :first-child{
+            transform: rotate(45deg);
+        }
+        :last-child{
+            transform: rotate(-45deg);
+        }
+
+    }
+
 }

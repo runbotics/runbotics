@@ -1,5 +1,22 @@
+interface AssetBlock {
+    sys: {
+        id: string;
+    };
+    url: string;
+    title: string;
+    description: string;
+    width: number;
+    height: number;
+}
+interface Asset {
+    blocks: AssetBlock[];
+}
+
 export interface ContentfulRichText {
     json: JSON;
+    links: {
+        assets: Asset;
+    };
 }
 
 export type ContentfulCollection<T> = {
@@ -7,10 +24,7 @@ export type ContentfulCollection<T> = {
 }
 
 export interface BlogPost {
-    status: {
-        publishedAt: string | null;
-        publishedVersion: number | null;
-    };
+    status: PostStatus;
     title: string;
     slug: string;
     date: string;
@@ -40,4 +54,10 @@ export interface Author {
 
 export interface Tag {
     name: string;
+    slug: string;
 }
+
+export interface PostStatus {
+    publishedAt: string | null;
+    publishedVersion: number | null;
+};
