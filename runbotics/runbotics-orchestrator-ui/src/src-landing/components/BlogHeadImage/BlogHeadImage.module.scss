@@ -1,25 +1,26 @@
 @import '#src-landing/scss/main.scss';
 
-.background{
-    object-fit: 'cover'
-}
+$BACKGROUND-MAX-WIDTH:  1630px;
 
 .image {
     position: relative;
 
+    display: flex;
+    justify-content: center;
+
     width: 100%;
+
     height: $BACKGROUND-HEIGHT;
 
     margin-top: $HEADER_HEIGHT;
 
-    background-position: center;
-    background-size: cover;
     isolation: isolate;
     font-size: 250px;
     &::before {
         position: absolute;
 
         width: 100%;
+        max-width: $BACKGROUND-MAX-WIDTH;
         height: 100%;
 
         z-index: $header-z-index;
@@ -33,8 +34,7 @@
         position: absolute;
 
         bottom: -40px;
-        right: 70px;
-
+        right:  calc((100vw - $BACKGROUND-MAX-WIDTH)/2 + 40px);
         z-index: 1;
         isolation: isolate;
         content: "RunNews";
@@ -42,6 +42,12 @@
         font-weight: $font-weight-semi-bold;
         letter-spacing: -0.05em;
         mix-blend-mode: soft-light;
+    }
+
+    @media (max-width: $BACKGROUND-MAX-WIDTH){
+        &::after{
+            right:  40px;
+        }
     }
 
     @media (max-width: $breakpoint-md) {
@@ -69,4 +75,8 @@
         font-size: 50px;
     }
 
+}
+
+.background{
+    max-width: $BACKGROUND-MAX-WIDTH;
 }
