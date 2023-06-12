@@ -12,6 +12,7 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
+import { currentProcessSelector } from '#src-app/store/slices/Process';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -38,6 +39,7 @@ const ProcessRunView: FC = () => {
     const dispatch = useDispatch();
     const { id } = useRouter().query;
     const processId = Number(id);
+    const { isAttended } = useSelector(currentProcessSelector);
     const { process, loading } = useSelector((state) => state.process.draft);
     const { schedules } = useSelector(scheduleProcessSelector);
     const hasReadHistoryAccess = useFeatureKey([
@@ -47,7 +49,7 @@ const ProcessRunView: FC = () => {
     const hasAddScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_ADD]);
 
     const { translate } = useTranslations();
-
+    
     useEffect(() => {
         if (hasReadSchedulesAccess)
         { dispatch(
@@ -109,7 +111,15 @@ const ProcessRunView: FC = () => {
                     <Grid item xs={12}>
                         <SavedSchedule processId={processId} />
                     </Grid>
-                    <If condition={schedules.length === 0}>
+                    <If condition={isAttended}>
+                        <Grid item>
+                            <ValidationSchedule>
+                                {translate('Process.Run.ScheduleAttended.Message')}
+                            </ValidationSchedule>
+                        </Grid>
+                    </If>
+                    <If condition={schedules.length === 0 && 
+                        !isAttended}>
                         <Grid item>
                             <ValidationSchedule>
                                 {translate('Process.Run.NoSchedules.Message')}
