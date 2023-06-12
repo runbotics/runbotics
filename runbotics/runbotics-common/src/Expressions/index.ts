@@ -69,8 +69,9 @@ export class Expressions {
 
             const expressionMatch = templatedString.match(jexlPattern);
             const innerProperty = expressionMatch[1];
+            const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
             response.jexl = true;
-            response.result = Jexl.evalSync(innerProperty, jexlContext);
+            response.result = templatedString.replace(jexlPattern, evaluatedProperty);
         }
 
         return response;
