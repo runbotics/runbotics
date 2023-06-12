@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/* eslint-disable complexity */
 import { FC } from 'react';
 
 import {
@@ -59,7 +58,13 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
-const initialValues = {
+interface LoginFormState {
+    email: string,
+    password: string,
+    submit: null | boolean
+}
+
+const initialValues: LoginFormState = {
     email: '',
     password: '',
     submit: null,
@@ -73,7 +78,7 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFormSubmit = async (
-        values: typeof initialValues,
+        values: LoginFormState,
         { setErrors, setStatus, setSubmitting }
     ) => {
         if (!window.navigator.onLine) {

@@ -57,7 +57,15 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
-const initialValues = {
+interface RegisterFormState {
+    email: string,
+    name: string,
+    password: string,
+    passwordConfirmation: string,
+    submit: null | boolean
+}
+
+const initialValues: RegisterFormState = {
     email: '',
     name: '',
     password: '',
@@ -78,7 +86,7 @@ const RegisterView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFormSubmit = async (
-        values: typeof initialValues,
+        values: RegisterFormState,
         { setErrors, setStatus, setSubmitting }
     ) => {
         if (!window.navigator.onLine) {
