@@ -97,7 +97,9 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const errorKey = `Login.Error.${error.status}`;
+                const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
+                
+                const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate(

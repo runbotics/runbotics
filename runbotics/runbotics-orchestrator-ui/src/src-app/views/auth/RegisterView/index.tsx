@@ -100,7 +100,7 @@ const RegisterView: FC = () => {
             .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                router.push('/app/processes', null, { locale:router.locale });
+                router.push('/app', null, { locale:router.locale });
                 enqueueSnackbar(registrationText, {
                     variant: 'success',
                     autoHideDuration: 5000,
@@ -109,7 +109,10 @@ const RegisterView: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const errorKey = `Register.Error.${error.status}`;
+                const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
+                
+                const errorKey = `Register.Error.${status}`;
+
 
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate(

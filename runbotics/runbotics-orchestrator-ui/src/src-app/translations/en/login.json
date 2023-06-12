@@ -8,8 +8,7 @@
     "Login.Form.Password.Required": "Password is required",
     "Login.SwitchToRegisterMessage": "Don't have an account? Sign up",
     "Login.Error.NoInternet": "No internet connection",
-    "Login.Error.400": "Bad request",
-    "Login.Error.401": "Authentication failed",
+    "Login.Error.4xx": "Incorrect e-mail and/or password or the user already exists",
     "Login.Error.500": "A problem with server has occured. If the problem persist - contact us via contact form on the main page",
     "Login.Error.503": "The requested service is not available",
     "Login.Error.UnexpectedError": "Unhandled error has occured. Contact us via contact form on the main page"
