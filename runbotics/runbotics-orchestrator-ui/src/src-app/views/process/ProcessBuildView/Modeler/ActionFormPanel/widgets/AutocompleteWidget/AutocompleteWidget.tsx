@@ -4,7 +4,7 @@ import { TextField, Autocomplete } from '@mui/material';
 
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
-const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({ 
+const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     customErrors,
     rawErrors,
     label,
@@ -18,11 +18,15 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     const [open, setOpen] = useState(false);
 
     const handleInputChange = (event: any, newInputValue: string) => {
-        if (event && newInputValue && (newInputValue.startsWith('$') || newInputValue.startsWith('#'))) 
-        { setOpen(true); }
-        else 
-        { setOpen(false); }
-        
+        if (
+            event &&
+            newInputValue &&
+            (newInputValue.startsWith('$') || newInputValue.startsWith('#'))
+        ) {
+            setOpen(true);
+        } else {
+            setOpen(false);
+        }
     };
 
     const handleOnClose = () => {
@@ -54,7 +58,9 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     variant="outlined"
                     required={required}
                     label={label}
-                    onChange={(event) => handleChange(event, event.target.value)}
+                    onChange={(event) =>
+                        handleChange(event, event.target.value)
+                    }
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
