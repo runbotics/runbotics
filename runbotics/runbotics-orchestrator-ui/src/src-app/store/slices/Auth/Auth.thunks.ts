@@ -14,26 +14,45 @@ const setAccessToken = (accessToken: string | null): void => {
     }
 };
 
-export const login = createAsyncThunk('auth/login', async (payload: { email: string; password: string }) => {
-    const response = await Axios.post<{ id_token: string }>('/api/authenticate', {
-        username: payload.email,
-        password: payload.password,
-        rememberMe: true,
-    });
-    const { id_token: idToken } = response.data;
+export const login = createAsyncThunk(
+    'auth/login',
+    async (
+        payload: { email: string; password: string },
+        { rejectWithValue }
+    ) => {
+        try {
+            const response = await Axios.post<{ id_token: string }>(
+                '/api/authenticate',
+                {
+                    username: payload.email,
+                    password: payload.password,
+                    rememberMe: true,
+                }
+            );
+            const { id_token: idToken } = response.data;
 
-    setAccessToken(idToken);
-    const responseUser = await Axios.get<User>('/api/account');
-    const user = responseUser.data;
-    return { ...user, authoritiesById: user?.roles };
-});
+            setAccessToken(idToken);
+            const responseUser = await Axios.get<User>('/api/account');
+            const user = responseUser.data;
+            return { ...user, authoritiesById: user?.roles };
+        } catch (error) {
+            if (!error.response) {
+                throw error;
+            }
+
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
 
 export const logout = createAsyncThunk('auth/logout', () => {
     setAccessToken(null);
 });
 
 const isValidToken = (accessToken: string): boolean => {
-    if (!accessToken) { return false; }
+    if (!accessToken) {
+        return false;
+    }
 
     const decoded: any = jwtDecode(accessToken);
     const currentTime = Date.now() / 1000;
@@ -71,12 +90,28 @@ export const initialize = createAsyncThunk<{
 
 export const register = createAsyncThunk(
     'auth/register',
-    async (payload: { email: string; name: string; password: string }) => {
-        await Axios.post('/api/register', {
-            email: payload.email,
-            login: payload.email,
-            langKey: 'pl',
-            password: payload.password,
-        });
-    },
+    async (
+        payload: { email: string; name: string; password: string, langKey: string },
+        { rejectWithValue }
+    ) => {
+        try {
+            const response = await Axios.post('/api/register', {
+                email: payload.email,
+                login: payload.email,
+                langKey: payload.langKey,
+                password: payload.password,
+            });
+
+            return response;
+        } catch (error) {
+            if (!error.response) {
+                throw error;
+            }
+
+            return rejectWithValue({
+                status: error.response.status,
+                message: error.response.statusText,
+            });
+        }
+    }
 );
