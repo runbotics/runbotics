@@ -16,6 +16,11 @@ $BACKGROUND-MAX-WIDTH:  1630px;
 
     isolation: isolate;
     font-size: 250px;
+
+    > * {
+        max-width: $BACKGROUND-MAX-WIDTH;
+    }
+
     &::before {
         position: absolute;
 
@@ -77,6 +82,4 @@ $BACKGROUND-MAX-WIDTH:  1630px;
 
 }
 
-.background{
-    max-width: $BACKGROUND-MAX-WIDTH;
-}
+
