@@ -50,6 +50,12 @@ export class RuntimeSubscriptionsService {
                         event.activity.owner as IActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
+                        case 'bpmn:ErrorEventDefinition':
+                            processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
+                            processInstanceEvent.step = 'ErrorEventDefinition';
+                            break;
+                        case 'bpmn:BoundaryEvent':
+                            break;
                         case 'bpmn:ServiceTask':
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
                             // eslint-disable-next-line no-case-declarations
@@ -90,6 +96,8 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = 'Loop';
                             }
                             break;
+
+
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Activity';
