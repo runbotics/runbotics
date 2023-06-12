@@ -10,6 +10,8 @@ import * as yup from 'yup';
 import Cron from '#src-app/components/cron';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { currentProcessSelector } from '#src-app/store/slices/Process';
+
 import { useCurrentLocale } from '../../../components/cron/useCurrentLocale';
 import If from '../../../components/utils/If';
 import { useSelector } from '../../../store';
@@ -59,6 +61,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         },
     });
     const { translate } = useTranslations();
+    const { isAttended } = useSelector(currentProcessSelector);
 
     const renderCronComponent = (props) => {
         const splitted = _.split(props.value, ' ');
@@ -72,6 +75,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 value={cron5Digit}
                 setValue={(cron) => props.onChange(`${splitted[0]} ${cron}`)}
                 locale={currentLocale}
+                disabled={isAttended}
             />
         );
     };
@@ -82,12 +86,15 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     }, [isSubmitSuccessful]);
 
     const { process } = useSelector((state) => state.process.draft);
-    const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
+    const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection || isAttended;
+    const tooltipMessage = isAttended ? translate('Process.Schedule.Tooltip.Attended') : translate('Common.Schedule');
+
     const submitButton = (
         <SubmitButton disabled={isSubmitButtonDisabled} type="submit" variant="contained" color="primary">
             {translate('Common.Schedule')}
         </SubmitButton>
     );
+
 
     return (
         <Box>
@@ -95,10 +102,10 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 <form onSubmit={handleSubmit(onProcessScheduler)}>
                     <DialogActions>
                         <StyledBox display="flex" gap="0.5rem" alignContent="center">
-                            <Controller name="cron" control={control} render={renderCronComponent} />
+                            <Controller name="cron" control={control} render={renderCronComponent}/>
                             <If condition={isSubmitButtonDisabled} else={submitButton}>
                                 <Tooltip
-                                    title={translate('Process.Schedule.Tooltip.PickBotAndCollection')}
+                                    title={tooltipMessage}
                                     placement="top"
                                 >
                                     <span>{submitButton}</span>
