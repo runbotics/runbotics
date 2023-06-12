@@ -6,11 +6,11 @@
     "Login.Form.Email.Required": "Adres email jest wymagany",
     "Login.Form.Password.Label": "Hasło",
     "Login.Form.Password.Required": "Hasło jest wymagane",
-    "Login.SwitchToRegisterMessage": "Nie masz konta? Zapisz się",
+    "Login.SwitchToRegisterMessage": "Nie masz konta? Zarejestruj się",
     "Login.Error.NoInternet": "Brak połączenia z internetem",
-    "Login.Error.400": "Serwer nie był w stanie przetworzyć żądania ze względu na nieprawidłowe sformułowanie lub niepoprawną składnię",
-    "Login.Error.401": "Błędny email i/lub hasło lub użytkownik nie istnieje",
-    "Login.Error.500": "Wystąpił problem z serwerem. Spróbuj ponownie później a jeśli problem się utrzymuje - skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.400": "Błędne zapytanie",
+    "Login.Error.401": "Autoryzacja zakończona niepowodzeniem",
+    "Login.Error.500": "Wystąpił problem z serwerem. Gdyby problem się powielał skontaktuj się z nami poprzez formularz na stronie głownej",
     "Login.Error.503": "Serwis niedostępny",
     "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }
