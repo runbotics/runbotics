@@ -33,7 +33,7 @@
     background-color: $palette-white;
 }
 
-@media (max-width: 420px) {
+@media (max-width: $breakpoint-sm) {
     .link {
         display: flex;
     }

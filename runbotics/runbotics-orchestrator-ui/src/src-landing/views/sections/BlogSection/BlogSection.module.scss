@@ -60,7 +60,7 @@ $BACKGROUND-HEIGHT: 400px;
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: $breakpoint-sm) {
     .blogTitle {
         padding: $padding-4 $padding-3;
     }
