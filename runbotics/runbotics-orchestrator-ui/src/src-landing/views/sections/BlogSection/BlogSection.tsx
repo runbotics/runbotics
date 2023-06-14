@@ -24,21 +24,24 @@ const BlogSection: VFC<Props> = ({ posts }) => {
             id={BLOG_SECTION_ID}
             aria-labelledby={BLOG_SECTION_TITLE_ID}
         >
-            <div className={styles.title}>
-                <Typography variant="h2" id={BLOG_SECTION_TITLE_ID}>
-                    {translate('Landing.Blog.Title.Part.1')}
-                </Typography>
-                <Typography variant="h6">
-                    {translate('Landing.Blog.Title.Part.2')}
-                </Typography>
+            <div className={styles.blogTitle}>
+                <div className={styles.title}>
+                    <Typography variant="h2" id={BLOG_SECTION_TITLE_ID}>
+                        {translate('Landing.Blog.Title.Part.1')}
+                    </Typography>
+                    <Typography variant="h6">
+                        {translate('Landing.Blog.Title.Part.2')}
+                    </Typography>
+                </div>
+                <div className={styles.blogButtonWrapper}>
+                    <LinkButton href={'/blog'} title={translate('Landing.Blog.Link.Title')} />
+                </div>
             </div>
             <div className={styles.background}></div>
             <If condition={posts.length > 0}>
                 <BlogPostCarousel posts={posts}/>
             </If>
-            <div className={styles.blogButtonWrapper}>
-                <LinkButton href={'/blog'} title={translate('Landing.Blog.Link.Title')} />
-            </div>
+            
         </section>
     );
 };

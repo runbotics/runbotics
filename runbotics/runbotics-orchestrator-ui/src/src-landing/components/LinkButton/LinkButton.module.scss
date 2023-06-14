@@ -34,3 +34,8 @@
     background-color: $palette-white;
 }
 
+@media (max-width: 420px) {
+    .link {
+        display: flex;
+    }
+}
