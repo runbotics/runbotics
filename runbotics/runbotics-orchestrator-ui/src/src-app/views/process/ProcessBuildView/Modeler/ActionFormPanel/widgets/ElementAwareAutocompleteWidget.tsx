@@ -87,16 +87,6 @@ const UTILS = [
     ),
 }));
 
-const VARIABLES = [
-    'tempFolder',
-].map(variable => ({
-    label: variable,
-    value: variable,
-    group: t(
-        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-    ),
-}));
-
 const reduceList = (list: any[]) =>
     list.reduce((previousValue, currentValue) => {
         const newPrev = previousValue;
@@ -165,9 +155,15 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
     const groupedLocalVariables = inputActionVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
-        group: translate(
-            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        ),
+        group: 
+            variable.scopeId === 'Process_1' 
+                ? translate(
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+                ) 
+                : translate(
+                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.LocalVariables'
+                ),
+
     }));
 
     const groupedGlobalVariables = globalVariables.map((variable) => ({
@@ -189,7 +185,6 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                 ...groupedLocalVariables,
                 ...groupedGlobalVariables,
                 ...attendedProcessVariables,
-                ...VARIABLES,
             ];
 
             const dollarVariables = variables.map((option) => ({
