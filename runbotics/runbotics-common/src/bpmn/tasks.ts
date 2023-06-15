@@ -10,5 +10,8 @@ export enum BpmnElementType {
   ASSOCIATION = 'bpmn:Association',
   SEQUENCE_FLOW = 'bpmn:SequenceFlow',
   ITERMEDIATE_THROW_EVENT = 'bpmn:IntermediateThrowEvent',
-  TASK = 'bpmn:Task'
+  TASK = 'bpmn:Task',
+  BOUNDARY_ERROR = 'bpmn:ErrorEventDefinition'
+
+
 }

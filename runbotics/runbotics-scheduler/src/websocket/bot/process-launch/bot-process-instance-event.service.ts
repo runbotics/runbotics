@@ -26,6 +26,10 @@ const COMPLETED_UPDATE_FIELDS = [
 ];
 const STARTED_UPDATE_FIELDS = ['input', 'created'];
 
+function setWarning(processInstanceEvent: IProcessInstanceEvent): boolean {
+    return processInstanceEvent.step === 'event.warning';
+}
+
 @Injectable()
 export class BotProcessEventService {
     private readonly logger = new Logger(BotProcessEventService.name);
@@ -34,7 +38,7 @@ export class BotProcessEventService {
         private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway
-    ) { }
+    ) {}
 
     async updateProcessInstanceEvent(
         processInstanceEvent: IProcessInstanceEvent,
@@ -55,6 +59,7 @@ export class BotProcessEventService {
                 } as IProcessInstance)
                 .orIgnore()
                 .execute();
+
             await queryRunner.manager
                 .createQueryBuilder()
                 .insert()
@@ -68,18 +73,28 @@ export class BotProcessEventService {
                     ['execution_id']
                 )
                 .execute();
+
             await this.updateProcessInstance(queryRunner, processInstanceEvent);
+
             await queryRunner.commitTransaction();
+
             const updatedProcessInstanceEvent =
                 await this.processInstanceEventService.findByExecutionId(
                     queryRunner,
                     processInstanceEvent.executionId
                 );
-            const isStatusInProgress = processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS;
+
+            const isStatusInProgress =
+                processInstanceEvent.status ===
+                ProcessInstanceEventStatus.IN_PROGRESS;
             const hasUpdatedStatus =
-                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED ||
-                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.ERRORED;
-            const hasProcessInstanceEventChanged = !(isStatusInProgress && hasUpdatedStatus);
+                updatedProcessInstanceEvent.status ===
+                    ProcessInstanceEventStatus.COMPLETED ||
+                updatedProcessInstanceEvent.status ===
+                    ProcessInstanceEventStatus.ERRORED;
+            const hasProcessInstanceEventChanged = !(
+                isStatusInProgress && hasUpdatedStatus
+            );
 
             if (
                 updatedProcessInstanceEvent.processInstance
@@ -177,10 +192,18 @@ export class BotProcessEventService {
             await queryRunner.manager
                 .createQueryBuilder()
                 .update(ProcessInstanceEntity)
-                .set({
-                    error: processInstanceEvent.error,
-                    step: processInstanceEvent.step,
-                })
+                .set(
+                    setWarning(processInstanceEvent)
+                        ? {
+                              error: processInstanceEvent.error,
+                              step: processInstanceEvent.step,
+                              warning: true,
+                          }
+                        : {
+                              error: processInstanceEvent.error,
+                              step: processInstanceEvent.step,
+                          }
+                )
                 .where('id = :id', { id: processInstance.id })
                 .execute();
         }

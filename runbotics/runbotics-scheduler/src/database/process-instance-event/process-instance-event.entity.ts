@@ -17,7 +17,7 @@ export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
 
     @Column()
         step: string;
-        
+
     @Column()
         script: string;
 
@@ -42,5 +42,7 @@ export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
 
     @Column()
         status: ProcessInstanceEventStatus;
+
+
 
 }
