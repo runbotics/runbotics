@@ -20,6 +20,7 @@ export interface IProcessInstance {
     trigger?: ITriggerEvent;
     triggerData?: EmailTriggerData | unknown;
     subProcesses?: IProcess[];
+    warning?: Boolean;
 }
 
 export interface EmailTriggerData {

@@ -34,7 +34,11 @@
     {
       "fieldName": "step",
       "fieldType": "String"
-    }
+    },
+      {
+          "fieldName": "warning",
+          "fieldType": "Boolean"
+      }
   ],
   "relationships": [
     {
