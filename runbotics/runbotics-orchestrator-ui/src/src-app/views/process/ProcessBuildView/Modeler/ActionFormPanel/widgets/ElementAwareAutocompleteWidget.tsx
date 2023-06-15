@@ -167,7 +167,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         value: variable.name,
         group: translate(
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        ),
+        ) 
     }));
 
     const groupedGlobalVariables = globalVariables.map((variable) => ({

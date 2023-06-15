@@ -38,10 +38,6 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                     localLoops.push(element);
                     return;
                 }
-                if(
-                    element.actionId !== 'variables.assign' &&
-                    element.actionId !== 'variables.assignList'
-                ) return;
                 localVarsAssigningActions.push({ ...element, scopeId });
             }
         );
@@ -124,16 +120,15 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         /**
          * @name inputActionVariables
-         * @name outputActionVariables
-         * @description Variables used by actions:
-         * Variables -> Assign value to variable
-         * Variables -> Assign list variable
+         * @description Variables assigned by actions:
+         * - Variables > Assign value to variable
+         * - Variables > Assign list variable
          */
 
         const inputActionVars = allVarsAssigningActions
             .map((variable: ScopedModdleElement) => {
                 const variableInfo: ExtensionElement[] =
-                    variable.extensionElements.values[0].inputParameters;
+                    variable.extensionElements?.values[0].inputParameters;
 
                 if (!variableInfo) {
                     return [];
@@ -152,13 +147,21 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                 return inputVariables;
             })
             .flatMap((variable: ActionVariableObject[]) =>
-                variable[0].name ? variable : []
+                variable[0]?.name ? variable : []
             );
 
+        /**
+         * @name outputActionVariables
+         * @description Variables assigned (in "Output" field) for example by actions:
+         * - JavaScript > TypeScript
+         * - API > API Request
+         * - Browser > Count
+         */
+
         const outputActionVars = allVarsAssigningActions
-            .map((element: ModdleElement) => {
+            .map((element: ScopedModdleElement) => {
                 const variableInfo: ExtensionElement[] =
-                    element.extensionElements.values[0].outputParameters;
+                    element.extensionElements?.values[0].outputParameters;
 
                 if (!variableInfo) {
                     return [];
@@ -172,6 +175,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                     .map((item: ActionVariableObject) => ({
                         name: item.value,
                         value: item.name,
+                        scopeId: element.scopeId
                     }));
 
                 return outputVariables;
@@ -186,8 +190,9 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
 
         const localInputActionVars = getParentScopesActionVars(parentScopes, inputActionVars);
+        const localOutputActionVars = getParentScopesActionVars(parentScopes, outputActionVars);
 
-        return { inputActionVariables: localInputActionVars, outputActionVariables: outputActionVars };
+        return { inputActionVariables: localInputActionVars, outputActionVariables: localOutputActionVars };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allLocalVarsActions, canvas, selectedElementParentId]);
     
