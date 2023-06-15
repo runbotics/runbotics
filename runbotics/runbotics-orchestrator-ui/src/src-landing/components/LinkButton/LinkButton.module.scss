@@ -2,14 +2,16 @@
 
 .link {
     position: relative;;
-    display: block;
+    display: flex;
+    align-items: center;
+
 
     width: 100%;
     max-width: 360px;
 
     text-decoration: none;
     border-radius: 30px;
-    padding: 20px;
+    padding: $padding-1;
     color: $palette-black;
     background-color: $palette-background-accent;
     transition: background-color 0.4s;
@@ -22,15 +24,17 @@
 
 .title {
     text-align: center;
+    width: 100%;
 }
 
 .iconWrapper {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    margin: auto 0;
     padding: 4px;
     border-radius: 50%;
     background-color: $palette-white;
 }
 
+@media (max-width: $breakpoint-sm) {
+    .link {
+        display: flex;
+    }
+}
