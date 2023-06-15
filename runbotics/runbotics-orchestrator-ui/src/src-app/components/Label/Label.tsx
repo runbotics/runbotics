@@ -5,16 +5,15 @@ import { ProcessInstanceStatus, isProcessInstanceFinished } from 'runbotics-comm
 
 import { Wrapper, LabelGroup } from './Label.styles';
 
-
-
 export type Color = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success';
-
 interface LabelProps {
     className?: string;
     color?: Color;
     children?: ReactNode;
-    warning?:boolean
+    warning?: boolean
 }
+
+const isWarningDisplayed = (warning: boolean, children: ReactNode) : boolean => warning  && isProcessInstanceFinished(ProcessInstanceStatus[children as ProcessInstanceStatus]) && children as string in ProcessInstanceStatus;
 
 const Label: FC<LabelProps> = ({
     color = 'secondary', children, warning = false, ...rest
@@ -26,7 +25,7 @@ const Label: FC<LabelProps> = ({
         >
             {children}
         </Wrapper>
-        {warning && isProcessInstanceFinished(ProcessInstanceStatus[children.toString()])?
+        {isWarningDisplayed(warning, children)?
             <WarningAmberRoundedIcon color="warning"/> : ''}
     </LabelGroup>
 );

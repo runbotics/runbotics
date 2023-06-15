@@ -39,6 +39,12 @@ export enum ProcessInstanceStatus {
     TERMINATED = "TERMINATED",
 }
 
+export enum ProcessInstanceStep {
+    START = 'event.start',
+    END = 'event.end',
+    WARNING = 'event.warning'
+}
+
 export const isEmailTriggerData = (data: unknown): data is EmailTriggerData => data
     && typeof data === 'object'
     && 'sender' in data
