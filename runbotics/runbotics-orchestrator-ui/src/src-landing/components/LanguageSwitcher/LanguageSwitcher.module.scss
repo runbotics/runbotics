@@ -2,81 +2,102 @@
 @import '#src-landing/components/Typography/Typography.module.scss';
 
 
-$WRAPPER_WIDRG_AND_HEIGHT: 35px;
-$AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
+$WRAPPER_WIDTH_AND_HEIGHT: 35px;
+$AFTER_WIDTH_AND_HEIGHT: $WRAPPER_WIDTH_AND_HEIGHT - 10px;
+$ARROW_HEIGHT: 8px;
+$CONTENT_BACKGROUND_COLOR: $palette-gray;
 
-.selectWrapper {
+.selectGroup{
+    @include font-face-base;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-weight: $font-weight-semi-bold;
+}
+
+.languageButton{
+
     position: relative;
 
     display: flex;
 
-    width: $WRAPPER_WIDRG_AND_HEIGHT;
-    height: $WRAPPER_WIDRG_AND_HEIGHT;
-
-    margin-top: auto;
-    margin-bottom: auto;
-
-    isolation: isolate;
-
     align-items: center;
+    justify-content: center;
+
+    width: $WRAPPER_WIDTH_AND_HEIGHT;
+    height: $WRAPPER_WIDTH_AND_HEIGHT;
+
     border-radius: 0.25em;
-    font-size: 1.25rem;
+    outline: none;
+    border: none;
+    isolation: isolate;
     background-color: transparent;
     transition: background-color ease-in-out 150ms;
+    cursor: pointer;
+
     &:hover {
-        background-color: rgba($palette-gray, 0.3);
+        background-color: $palette-background-disabled;
     }
-    &::-ms-expand {
-        display: none;
-    }
+
     &::after {
         position: absolute;
 
-        left: 0;
-        right: 0;
-
-        width: $AFTER_WIDRG_AND_HEIGHT;
-        height: $AFTER_WIDRG_AND_HEIGHT;
-
-        margin-inline: auto;
+        width: $AFTER_WIDTH_AND_HEIGHT;
+        height: $AFTER_WIDTH_AND_HEIGHT;
 
         content: '';
-
         background: url('/images/flags/globe.svg') no-repeat;
         background-size: cover;
     }
 }
 
-.select {
+.content{
     position: absolute;
 
-    left: 0;
-    right: 0;
+    display: grid;
 
-    height: 100%;
-    width: 100%;
+    top: $WRAPPER_WIDTH_AND_HEIGHT + $ARROW_HEIGHT + 1px;
 
-    margin-inline: auto;
-    padding: 10px;
+    padding: 5px 3px 5px 3px;
 
-    cursor: pointer;
-    z-index: $header-z-index;
-    opacity: 0;
-    content: '';
-    cursor: pointer;
-    appearance: none;
-    border: none;
+    background-color: $CONTENT_BACKGROUND_COLOR;
+
     border-radius: 5px;
-    outline: none;
-    .option {
-        padding: 10px;
 
-        @include font-face-base;
-        font-size: $font-size-h6;
-        font-weight: $font-weight-medium;
-        cursor: pointer;
-        &:hover {
-            box-shadow: $box-shadow-primary;
-        }
+    &::after {
+        position: absolute;
+
+        top: -$ARROW_HEIGHT;
+
+        justify-self: center;
+
+        width: 0;
+        height: 0;
+
+        border-left: $ARROW_HEIGHT solid transparent;
+        border-right: $ARROW_HEIGHT solid transparent;
+        border-bottom: $ARROW_HEIGHT solid $CONTENT_BACKGROUND_COLOR;
+        content: '';
+
+    }
+}
+
+.hide{
+    display: none;
+}
+
+.option{
+
+    padding: 5px;
+
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover{
+        background-color: $palette-background-secondary-dark;
     }
 }

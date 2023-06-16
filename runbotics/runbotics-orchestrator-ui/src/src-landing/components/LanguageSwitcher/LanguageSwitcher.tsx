@@ -1,4 +1,4 @@
-import React, { VFC, useEffect } from 'react';
+import React, { VFC, useEffect, useState, useRef } from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -9,8 +9,37 @@ import { capitalizeFirstLetter } from '../../utils/utils';
 
 import styles from './LanguageSwitcher.module.scss';
 
+
+function useClickOutside(ref, handler) {
+    useEffect(() => {
+        /**
+       * Alert if clicked on outside of element
+       */
+        function handleClickOutside(event) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                handler();
+            }
+        }
+        // Bind the event listener
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+        // Unbind the event listener on clean up
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [ref]);
+}
+
 const LanguageSwitcher: VFC = () => {
+
+    const [toggle, setToggle] = useState(false);
+
+    const selectRef = useRef();
+
+    useClickOutside(selectRef, () => setToggle(false));
+
     const { switchLanguage, translate } = useTranslations();
+
+
 
     const { push, locale: activeLocale, asPath } = useRouter();
 
@@ -27,28 +56,20 @@ const LanguageSwitcher: VFC = () => {
         });
     }, [activeLocale]);
 
+
+
     return (
-        <div className={styles.selectWrapper}>
-            <select
-                onChange={(event) =>
-                    handleLanguageSwitch(event.target.value as Language)
-                }
-                className={styles.select}
-                defaultValue={activeLocale}
-            >
+        <div className={styles.selectGroup}>
+            <button onClick= {() => setToggle(!toggle)} className={styles.languageButton} />
+            <div ref={selectRef} className={toggle?styles.content:styles.hide}>
                 {languages.map((language) => (
-                    <option
-                        key={language}
-                        className={styles.option}
-                        value={language}
-                    >
+                    <div onClick = {() => handleLanguageSwitch(language)} key={language} className={styles.option}>
                         {capitalizeFirstLetter(
                             translate(`Common.Languages.${language}`)
                         )}
-                        &nbsp;
-                    </option>
+                    </div>
                 ))}
-            </select>
+            </div>
         </div>
     );
 };
