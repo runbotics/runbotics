@@ -20,6 +20,7 @@ export interface IProcessInstance {
     trigger?: ITriggerEvent;
     triggerData?: EmailTriggerData | unknown;
     subProcesses?: IProcess[];
+    warning?: boolean;
 }
 
 export interface EmailTriggerData {
@@ -36,6 +37,12 @@ export enum ProcessInstanceStatus {
     ERRORED = 'ERRORED',
     STOPPED = 'STOPPED',
     TERMINATED = "TERMINATED",
+}
+
+export enum ProcessInstanceStep {
+    START = 'event.start',
+    END = 'event.end',
+    ERROR_BOUNDARY = 'event.errorBoundary'
 }
 
 export const isEmailTriggerData = (data: unknown): data is EmailTriggerData => data

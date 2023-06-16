@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import { FeatureKey } from 'runbotics-common';
 
+
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
 
 import useAuth from '#src-app/hooks/useAuth';
@@ -49,16 +50,17 @@ const useProcessInstanceColumns = (
         },
         {
             Header: translate('Component.HistoryTable.Header.Status'),
-            accessor: 'status',
+            accessor: ({ status, warning }) => ({  status: status, warning: warning }),
             width: '200px',
             Cell: ({ value }) => {
                 const formattedStatus = capitalizeFirstLetter({
-                    text: value,
+                    text: value.status,
                     lowerCaseRest: true,
                     delimiter: /_| /,
                 });
+
                 return (
-                    <Label color={getProcessInstanceStatusColor(value)}>
+                    <Label warning={value.warning} color={getProcessInstanceStatusColor(value.status)}>
                         {/* @ts-ignore */}
                         {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
                     </Label>

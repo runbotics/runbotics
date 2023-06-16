@@ -50,6 +50,8 @@ public class ProcessInstanceDTO implements Serializable {
 
     private JsonNode triggerData;
 
+    private Boolean warning;
+
     public UUID getId() {
         return id;
     }
@@ -176,6 +178,14 @@ public class ProcessInstanceDTO implements Serializable {
 
     public void setTriggerData(JsonNode triggerData) {
         this.triggerData = triggerData;
+    }
+
+    public Boolean getWarning(){
+        return this.warning;
+    }
+
+    public void setWarning(Boolean warning){
+        this.warning = warning;
     }
 
     @Override

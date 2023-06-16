@@ -31,6 +31,7 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const timeDiff = formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished);
     const formattedTimeDiff = timeDiff ? timeDiff : `< 500${translate('Common.Time.Miliseconds.Short')}`;
     
+
     return (
         <GridContainer>
             <GridItem width="100%">
@@ -38,11 +39,12 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
             </GridItem>
             <GridItem>
                 <Typography>
-                    <Label color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
+                    <Label  color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
                         {/* @ts-ignore */}
                         {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
                     </Label>
                 </Typography>
+
             </GridItem>
             <If condition={!!processInstanceEvent.created && !!processInstanceEvent.finished}>
                 <GridItem>
