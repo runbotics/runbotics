@@ -76,7 +76,7 @@ const validateConnections = (element: BPMNElement) => {
         element.type === BpmnElementType.END_EVENT && !hasIncomingConnection;
 
     const isIntermediateEventWithoutIncomingConnection =
-        element.type === BpmnElementType.ITERMEDIATE_THROW_EVENT &&
+        element.type === BpmnElementType.INTERMEDIATE_THROW_EVENT &&
         !hasIncomingConnection;
 
     const isExclusiveGatewayWithoutConnections =

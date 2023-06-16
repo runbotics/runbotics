@@ -79,6 +79,9 @@ public class ProcessInstance implements Serializable {
     @Column(name = "error")
     private String error;
 
+    @Column(name = "warning")
+    private Boolean warning;
+
     @ManyToOne
     @JoinColumn(name = "trigger", referencedColumnName = "name")
     private TriggerEvent trigger;
@@ -263,6 +266,14 @@ public class ProcessInstance implements Serializable {
 
     public void setTriggerData(JsonNode triggerData) {
         this.triggerData = triggerData;
+    }
+
+    public Boolean getWarning(){
+        return this.warning;
+    }
+
+    public void setWarning(Boolean warning){
+        this.warning = warning;
     }
 
     @Override

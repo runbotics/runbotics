@@ -4,10 +4,15 @@ $SEPARATOR_SPACE: $padding-1;
 
 .root {
     display: flex;
+
+    height: 20px;
+    width: 100%;
+
+    padding-top: 5px;
+
     flex-wrap: wrap;
     align-items: center;
     grid-column: span 2;
-    width: 100%;
 }
 
 .breadcrumb {

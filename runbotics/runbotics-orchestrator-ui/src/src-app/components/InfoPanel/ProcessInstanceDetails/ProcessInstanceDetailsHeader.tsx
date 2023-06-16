@@ -25,7 +25,7 @@ const isProcessInstanceActive = (
     || status === ProcessInstanceStatus.IN_PROGRESS;
 
 const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
-    
+
     const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
 
     return (
@@ -33,10 +33,9 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
             <Grid item xs={12}>
                 <Typography variant="h4">{processInstance.process.name}</Typography>
             </Grid>
-
             <Grid item>
                 <Typography>
-                    <Label color={getProcessInstanceStatusColor(processInstance.status)}>
+                    <Label warning={processInstance.warning} color={getProcessInstanceStatusColor(processInstance.status)}>
                         {/* @ts-ignore */}
                         {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
                     </Label>

@@ -8,6 +8,8 @@ import {
     IProcessInstanceLoopEvent,
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
+    BpmnElementType,
+    ProcessInstanceStep
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
@@ -50,7 +52,11 @@ export class RuntimeSubscriptionsService {
                         event.activity.owner as IActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
-                        case 'bpmn:ServiceTask':
+                        case BpmnElementType.BOUNDARY_ERROR:
+                            processInstanceEvent.log = `ErrorBoundaryEvent: ${event.activity.content.type} ${event.eventType}`;
+                            processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
+                            break;
+                        case BpmnElementType.SERVICE_TASK:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
                             // eslint-disable-next-line no-case-declarations
                             const label = eventBehaviour?.label;
@@ -62,19 +68,19 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = script;
                             }
                             break;
-                        case 'bpmn:EndEvent':
-                            processInstanceEvent.step = 'event.end';
+                        case  BpmnElementType.END_EVENT:
+                            processInstanceEvent.step = ProcessInstanceStep.END;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
-                        case 'bpmn:StartEvent':
+                        case  BpmnElementType.START_EVENT:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = 'event.start';
+                            processInstanceEvent.step = ProcessInstanceStep.START;
                             break;
-                        case 'bpmn:ExclusiveGateway':
+                        case  BpmnElementType.EXCLUSIVE_GATEWAY:
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Gateway';
                             break;
-                        case 'bpmn:SubProcess':
+                        case  BpmnElementType.SUBPROCESS:
                             // @ts-ignore
                             if (event.activity.content.isMultiInstance) {
                                 // @ts-ignore
@@ -90,6 +96,7 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = 'Loop';
                             }
                             break;
+
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Activity';

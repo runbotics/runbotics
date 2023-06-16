@@ -17,6 +17,7 @@
         "runbotics-cli",
     ],
     "cSpell.words": [
+        "Moddle",
         "nestjs",
         "runbotics",
         "typeorm",

@@ -24,3 +24,11 @@ export const Wrapper = styled.span<{ color: Color }>(({ theme, color }) => `
     color: ${theme.palette[color].main};
     background-color: ${alpha(theme.palette[color].main, 0.08)};
 `);
+
+export const LabelGroup = styled.div`
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+    `;

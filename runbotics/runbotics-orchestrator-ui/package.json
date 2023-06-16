@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.7.0-SNAPSHOT.5",
+    "version": "2.7.0-SNAPSHOT.15",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -67,7 +67,6 @@
         "mnemonist": "^0.39.5",
         "moment": "^2.27.0",
         "nodemailer": "^6.6.0",
-        "node-sass": "^7.0.0",
         "notistack": "^2.0.8",
         "react": "^18.2.0",
         "react-app-polyfill": "^1.0.6",
