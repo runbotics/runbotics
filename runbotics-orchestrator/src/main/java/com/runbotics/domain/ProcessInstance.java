@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -75,6 +76,9 @@ public class ProcessInstance implements Serializable {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "root_process_instance_id", referencedColumnName = "id")
     private Set<ProcessInstance> subProcesses;
+
+    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
+    private boolean hasSubProcesses;
 
     @Column(name = "error")
     private String error;
@@ -244,6 +248,14 @@ public class ProcessInstance implements Serializable {
         this.subProcesses = subProcesses;
     }
 
+    public boolean getHasSubProcesses() {
+        return hasSubProcesses;
+    }
+
+    public void setHasSubProcesses(boolean hasSubProcesses) {
+        this.hasSubProcesses = hasSubProcesses;
+    }
+
     public String getError() {
         return this.error;
     }
@@ -310,6 +322,7 @@ public class ProcessInstance implements Serializable {
             ", error='" + getError() + "'" +
             ", trigger='" + getTrigger() + "'" +
             ", triggerData='" + getTriggerData() + "'" +
+            ", hasSubProcesses='" + getHasSubProcesses() + "'" +
             "}";
     }
 }
