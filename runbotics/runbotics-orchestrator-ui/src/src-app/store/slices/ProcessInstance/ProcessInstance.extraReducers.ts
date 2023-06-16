@@ -9,6 +9,7 @@ import {
     getAllByProcessId,
     getBotProcessInstances,
     getProcessInstance,
+    getSubProcesses,
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
@@ -78,6 +79,19 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                 );
             }
 
+        })
+
+        // GET SUB PROCESSES
+        .addCase(getSubProcesses.pending, (state) => {
+            state.subProcesses.loading = true;
+        })
+        .addCase(getSubProcesses.fulfilled, (state, action) => {
+            console.log('HELLO');
+            state.subProcesses.subProcesses = action.payload;
+            state.subProcesses.loading = false;
+        })
+        .addCase(getSubProcesses.rejected, (state) => {
+            state.subProcesses.loading = false;
         })
 
         // GET PAGE

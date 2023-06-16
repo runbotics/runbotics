@@ -25,7 +25,7 @@ export const updateActiveEvents = (state: ProcessInstanceState, action: PayloadA
     action.payload.forEach((event) => updateEvent(state, event));
 };
 
-export const resetActiveProcessInstaceAndEvents = (state: ProcessInstanceState) => {
+export const resetActiveProcessInstanceAndEvents = (state: ProcessInstanceState) => {
     state.active.eventsMap = initialState.active.eventsMap;
     state.active.processInstance = initialState.active.processInstance;
 };

@@ -8,15 +8,17 @@ import { Row } from 'react-table';
 
 import { IProcessInstance } from 'runbotics-common';
 
-
-
-
 import InternalPage from '#src-app/components/pages/InternalPage';
 import { DataTableRow } from '#src-app/components/tables/Table';
 import useScheduledStatusSocket from '#src-app/hooks/useScheduledStatusSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { schedulerActions, schedulerSelector, ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler';
+import {
+    schedulerActions,
+    schedulerSelector,
+    ScheduledJob,
+    QueueJob,
+} from '#src-app/store/slices/Scheduler';
 
 import Header from './Header';
 import {
@@ -26,14 +28,12 @@ import {
 } from './SchedulerTable.columns';
 import SchedulerTableContainer from './SchedulerTable.container';
 
-
-
-
 const SchedulerView = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { translate } = useTranslations();
-    const { scheduledJobs, activeJobs, waitingJobs } = useSelector(schedulerSelector);
+    const { scheduledJobs, activeJobs, waitingJobs } =
+        useSelector(schedulerSelector);
     useScheduledStatusSocket();
 
     useEffect(() => {
@@ -48,11 +48,13 @@ const SchedulerView = () => {
     const scheduledProcessColumns = useScheduledProcessColumns();
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
-        if (rowData.process) router.push(`/app/processes/${rowData.process.id}/build`);
+        if (rowData.process)
+            router.push(`/app/processes/${rowData.process.id}/build`);
     };
 
     const handleSchedulerJobRedirect = (rowData: QueueJob) => {
-        if (rowData.data.process) router.push(`/app/processes/${rowData.data.process.id}/build`);
+        if (rowData.data.process)
+            router.push(`/app/processes/${rowData.data.process.id}/build`);
     };
 
     const handleScheduledJobRedirect = (rowData: ScheduledJob) => {
@@ -61,13 +63,20 @@ const SchedulerView = () => {
 
     const renderScheduledJobSubRow = (row: Row<ScheduledJob>) => {
         const humanReadableCron = (cronExpression: string) =>
-            translate('Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable', {
-                cron: cronstrue.toString(cronExpression, { locale: i18n.language }).toLowerCase(),
-            });
+            translate(
+                'Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable',
+                {
+                    cron: cronstrue
+                        .toString(cronExpression, { locale: i18n.language })
+                        .toLowerCase(),
+                }
+            );
 
         return (
-            <DataTableRow isSubRoww>
-                <TableCell colSpan={row.cells.length}>{humanReadableCron(row.original.cron)}</TableCell>
+            <DataTableRow isSubRow>
+                <TableCell colSpan={row.cells.length}>
+                    {humanReadableCron(row.original.cron)}
+                </TableCell>
             </DataTableRow>
         );
     };

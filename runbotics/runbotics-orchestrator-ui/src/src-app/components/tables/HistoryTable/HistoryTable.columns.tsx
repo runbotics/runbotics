@@ -32,14 +32,16 @@ const useProcessInstanceColumns = (
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
-    const { process: currentProcess } = useSelector((state) => state.process.draft);
+    const { process: currentProcess } = useSelector(
+        (state) => state.process.draft
+    );
 
     let columns = [
         {
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.subProcesses?.length > 0 ? (
+                row.original.hasSubProcesses ? (
                     <TableRowExpander row={row} />
                 ) : null,
         },
@@ -71,13 +73,15 @@ const useProcessInstanceColumns = (
             Header: translate('Component.HistoryTable.Header.Started'),
             accessor: 'created',
             width: '200px',
-            Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
+            Cell: ({ value }) =>
+                value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : '',
         },
         {
             Header: translate('Component.HistoryTable.Header.Finished'),
             accessor: 'updated',
             width: '200px',
-            Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
+            Cell: ({ value }) =>
+                value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : '',
         },
         {
             Header: translate('Component.HistoryTable.Header.Bot'),
@@ -86,7 +90,8 @@ const useProcessInstanceColumns = (
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
+            accessor: ({ user, trigger, triggerData }) =>
+                mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',
@@ -105,7 +110,7 @@ const useProcessInstanceColumns = (
     ];
 
     if (!rerunEnabled) {
-        columns = columns.filter(column => column.id !== 'rerun-menu');
+        columns = columns.filter((column) => column.id !== 'rerun-menu');
     }
 
     const accessedColumns = columns.filter((column) =>
