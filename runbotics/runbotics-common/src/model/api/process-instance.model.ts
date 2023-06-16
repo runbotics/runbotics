@@ -42,7 +42,7 @@ export enum ProcessInstanceStatus {
 export enum ProcessInstanceStep {
     START = 'event.start',
     END = 'event.end',
-    WARNING = 'event.warning'
+    ERROR_BOUNDARY = 'event.errorBoundary'
 }
 
 export const isEmailTriggerData = (data: unknown): data is EmailTriggerData => data

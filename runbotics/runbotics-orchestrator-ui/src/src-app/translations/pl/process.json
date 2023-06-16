@@ -639,7 +639,7 @@
     "Process.List.Table.Header.Scheduled": "Zaplanowanego",
     "Process.List.Table.Header.Actions": "Akcje",
     "Process.Details.Modeler.Actions.Event.Start.Label": "Zdarzenie początkowe",
-    "Process.Details.Modeler.Actions.Event.Warning.Label": "Ostrzerzenie",
+    "Process.Details.Modeler.Actions.Event.ErrorBoundary.Label": "Ostrzeżenie",
     "Process.Details.Modeler.Actions.Event.End.Label": "Zdarzenie końcowe",
     "Process.Details.Modeler.Actions.Loop.Label": "Pętla",
     "Process.Details.Modeler.Actions.Gateway.Label": "Bramka logiczna",

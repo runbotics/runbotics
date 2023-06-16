@@ -52,9 +52,9 @@ export class RuntimeSubscriptionsService {
                         event.activity.owner as IActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
-                        case 'bpmn:ErrorEventDefinition':
+                        case BpmnElementType.BOUNDARY_ERROR:
                             processInstanceEvent.log = `ErrorBoundaryEvent: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = ProcessInstanceStep.WARNING;
+                            processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
                         case BpmnElementType.SERVICE_TASK:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;

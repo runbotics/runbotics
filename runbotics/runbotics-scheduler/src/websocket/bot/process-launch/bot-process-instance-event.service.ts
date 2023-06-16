@@ -27,7 +27,7 @@ const COMPLETED_UPDATE_FIELDS = [
 const STARTED_UPDATE_FIELDS = ['input', 'created'];
 
 function hasWarning(processInstanceEvent: IProcessInstanceEvent): boolean {
-    return processInstanceEvent.step === ProcessInstanceStep.WARNING;
+    return processInstanceEvent.step === ProcessInstanceStep.ERROR_BOUNDARY;
 }
 
 @Injectable()
