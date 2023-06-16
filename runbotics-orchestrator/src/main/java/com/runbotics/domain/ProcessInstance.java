@@ -6,7 +6,6 @@ import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import com.runbotics.service.impl.ProcessInstanceEntityListener;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -72,10 +71,6 @@ public class ProcessInstance implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "root_process_instance_id", referencedColumnName = "id")
-    private Set<ProcessInstance> subProcesses;
 
     @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
     private boolean hasSubProcesses;
@@ -238,14 +233,6 @@ public class ProcessInstance implements Serializable {
 
     public void setBot(Bot bot) {
         this.bot = bot;
-    }
-
-    public Set<ProcessInstance> getSubProcesses() {
-        return subProcesses;
-    }
-
-    public void setSubProcesses(Set<ProcessInstance> subProcesses) {
-        this.subProcesses = subProcesses;
     }
 
     public boolean getHasSubProcesses() {
