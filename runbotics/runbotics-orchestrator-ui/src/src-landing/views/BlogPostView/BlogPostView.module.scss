@@ -29,7 +29,9 @@
 .tagsWrapper {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    justify-content: center;
+    align-items: center;  
+    margin-top: $margin-5;
 }
 
 .tag {

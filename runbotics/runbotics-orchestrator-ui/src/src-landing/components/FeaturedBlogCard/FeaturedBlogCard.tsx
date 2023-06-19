@@ -3,7 +3,12 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
+import {
+    BlogPost,
+    DRAFT_BADGE_BACKGROUND_COLOR,
+    checkIsDraft,
+} from '#contentful/common';
+import arrowIcon from '#public/images/icons/right.svg';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -18,14 +23,22 @@ interface FeaturedBlogCardProps {
     brief?: boolean;
 }
 
-const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post, className, brief }) => {
+const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({
+    post,
+    className,
+    brief,
+}) => {
     const { translate } = useTranslations();
 
     if (!post) return null;
 
     return (
         <article className={`${styles.root} ${className}`}>
-            <Link className={styles.link} data-brief={brief} href={`/blog/post/${post.slug}`}>
+            <Link
+                className={styles.link}
+                data-brief={brief}
+                href={`/blog/post/${post.slug}`}
+            >
                 <div className={styles.wrapper}>
                     <Image
                         src={post.featuredImage.url}
@@ -43,29 +56,50 @@ const FeaturedBlogCard: FC<FeaturedBlogCardProps> = ({ post, className, brief })
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <Typography variant="body4">
-                                {new Intl.DateTimeFormat().format(new Date(post.date))}
+                                {new Intl.DateTimeFormat().format(
+                                    new Date(post.date)
+                                )}
                             </Typography>
                             <Typography variant="body4">
-                                {post.readingTime}&nbsp;{translate('Blog.Post.ReadingTime.Unit')}
+                                {post.readingTime}&nbsp;
+                                {translate('Blog.Post.ReadingTime.Unit')}
                             </Typography>
-                            <Typography variant="body4" className={styles.category}>
+                            <Typography
+                                variant="body4"
+                                className={styles.category}
+                            >
                                 {post.category.title}
                             </Typography>
                         </div>
                         <div>
-                            <Typography variant="h3" data-brief={brief} className={styles.title}>
+                            <Typography
+                                variant="h3"
+                                data-brief={brief}
+                                className={styles.title}
+                            >
                                 {post.title}
                             </Typography>
-                            {!brief &&
-                                <Typography variant="body3" className={styles.description}>
+                            {!brief && (
+                                <Typography
+                                    variant="body3"
+                                    className={styles.description}
+                                >
                                     {cutText(post.summary, 230)}
                                 </Typography>
-                            }
+                            )}
                         </div>
                         <div className={styles.readMore}>
-                            <Typography variant="body5">
-                                {translate('Blog.Card.ReadMore')}
-                            </Typography>
+                            <div className={styles.buttonWrapper}>
+                                <Typography variant="body5">
+                                    {translate('Blog.Card.ReadMore')}
+                                </Typography>
+                                <Image
+                                    src={arrowIcon}
+                                    alt="Arrow"
+                                    width="24"
+                                    height="24"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
