@@ -4,8 +4,31 @@
 
 $WRAPPER_WIDTH_AND_HEIGHT: 35px;
 $AFTER_WIDTH_AND_HEIGHT: $WRAPPER_WIDTH_AND_HEIGHT - 10px;
-$ARROW_HEIGHT: 8px;
-$CONTENT_BACKGROUND_COLOR: $palette-gray;
+$ARROW_HEIGHT: 13px;
+$CONTENT_BACKGROUND_COLOR: $palette-background-primary;
+$TICK_DIMENSIONS: 15px;
+$OPTION_BORDER_RADIUS: 5px;
+
+
+@mixin darken-on-hover {
+    position: relative;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: $OPTION_BORDER_RADIUS;
+        background: rgba(0, 0, 0, 0);
+    }
+
+    &:hover:before {
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
 
 .selectGroup{
     @include font-face-base;
@@ -15,11 +38,13 @@ $CONTENT_BACKGROUND_COLOR: $palette-gray;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     font-weight: $font-weight-semi-bold;
 }
 
 .languageButton{
+    @include darken-on-hover;
 
     position: relative;
 
@@ -39,10 +64,6 @@ $CONTENT_BACKGROUND_COLOR: $palette-gray;
     transition: background-color ease-in-out 150ms;
     cursor: pointer;
 
-    &:hover {
-        background-color: $palette-background-disabled;
-    }
-
     &::after {
         position: absolute;
 
@@ -60,44 +81,54 @@ $CONTENT_BACKGROUND_COLOR: $palette-gray;
 
     display: grid;
 
+    row-gap: 5px;
+
     top: $WRAPPER_WIDTH_AND_HEIGHT + $ARROW_HEIGHT + 1px;
 
-    padding: 5px 3px 5px 3px;
+    padding: 8px 3px 8px 3px;
 
     background-color: $CONTENT_BACKGROUND_COLOR;
-
     border-radius: 5px;
 
     &::after {
         position: absolute;
 
-        top: -$ARROW_HEIGHT;
+        top: -6px;
 
         justify-self: center;
 
         width: 0;
         height: 0;
 
-        border-left: $ARROW_HEIGHT solid transparent;
-        border-right: $ARROW_HEIGHT solid transparent;
-        border-bottom: $ARROW_HEIGHT solid $CONTENT_BACKGROUND_COLOR;
+        border-style: solid;
+        border-width: $ARROW_HEIGHT $ARROW_HEIGHT 0 0;
+        border-color:  $CONTENT_BACKGROUND_COLOR transparent transparent;
+        transform: rotate(45deg);
+        -webkit-filter:  drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));;
+        filter: drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));
         content: '';
-
     }
+
+    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
 }
 
 .hide{
     display: none;
 }
 
+
 .option{
+    @include darken-on-hover;
+
+    display: flex;
+    align-items: center;
 
     padding: 5px;
 
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: $OPTION_BORDER_RADIUS;
+}
 
-    &:hover{
-        background-color: $palette-background-secondary-dark;
-    }
+.active{
+    background-color: $palette-accent-primary;
 }
