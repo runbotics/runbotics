@@ -2,26 +2,14 @@
 
 $BACKGROUND-HEIGHT: 400px;
 
-.root {
-    position: relative;
-    width: 100%;
-    overflow-x: hidden;
-    isolation: isolate;
-}
-
 .blogTitle {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: $padding-9 $padding-5 $padding-3;
-}
-
-.title {
     composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-block: $padding-4;
+    display: grid;
+    grid-row: 1 / 3;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 5px;
+    row-gap: 30px;
+    padding: $padding-10;
 }
 
 .background {
@@ -31,15 +19,18 @@ $BACKGROUND-HEIGHT: 400px;
     height: $BACKGROUND-HEIGHT;
     background-image: url('/images/shapes/Industries-arrows.svg');
     background-repeat: no-repeat;
-    background-position: left top;
+    background-position: top left;
     background-size: cover;
+    left: 0;
+    padding: 0;
 }
 
 .blogButtonWrapper {
-    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    grid-column: 2;
+    grid-row: 1 / 3;
     display: flex;
-    justify-content: flex-end;
-    padding: $padding-4;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (min-width: $breakpoint-xl) {
@@ -49,29 +40,33 @@ $BACKGROUND-HEIGHT: 400px;
 }
 
 @media (max-width: $breakpoint-md) {
-  .blogTitle {
-    flex-direction: column;
-    padding: $padding-4;
-  }
+    .blogTitle {
+        padding: $padding-10 $padding-6 $padding-6 $padding-6;
+        grid-template-columns: 1fr 1fr;
+    }
 
-  .blogButtonWrapper {
-    padding: 0 $padding-4;
-    width: 100%;
-  }
+    .blogButtonWrapper {
+        align-self: center;
+        width: 100%;
+    }
 }
 
 @media (max-width: $breakpoint-sm) {
     .blogTitle {
-        padding: $padding-4 $padding-3;
-    }
-    
-    .title {
-        padding: $padding-0;
+        grid-template-columns: 1fr;
     }
 
     .blogButtonWrapper {
-        margin: $margin-2 $margin-0;
-        padding: $padding-0;
-        
+        grid-column: 1;
+        grid-row: 3;
+        justify-self: center;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .blogTitle {
+        padding-left: $padding-3;
+        padding-right: $padding-3;
+        padding-bottom: $padding-3;
     }
 }
