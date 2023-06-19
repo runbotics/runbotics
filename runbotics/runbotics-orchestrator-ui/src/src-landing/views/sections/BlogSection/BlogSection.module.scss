@@ -3,25 +3,26 @@
 $BACKGROUND-HEIGHT: 400px;
 
 .root {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     position: relative;
     width: 100%;
     overflow-x: hidden;
     isolation: isolate;
+    padding: $padding-10;
 }
 
 .blogTitle {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: $padding-9 $padding-5 $padding-3;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 5px;
+    row-gap: 30px;
+    padding-bottom: $padding-10;
 }
 
 .title {
-    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-block: $padding-4;
+    justify-content: space-around;
 }
 
 .background {
@@ -36,10 +37,10 @@ $BACKGROUND-HEIGHT: 400px;
 }
 
 .blogButtonWrapper {
-    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    grid-column: 2;
     display: flex;
-    justify-content: flex-end;
-    padding: $padding-4;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (min-width: $breakpoint-xl) {
@@ -49,29 +50,42 @@ $BACKGROUND-HEIGHT: 400px;
 }
 
 @media (max-width: $breakpoint-md) {
-  .blogTitle {
-    flex-direction: column;
-    padding: $padding-4;
-  }
+    .root {
+        padding: $padding-0;
+    }
 
-  .blogButtonWrapper {
-    padding: 0 $padding-4;
-    width: 100%;
-  }
+    .blogTitle {
+        padding: $padding-6;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .blogButtonWrapper {
+        align-self: center;
+        width: 100%;
+    }
 }
 
 @media (max-width: $breakpoint-sm) {
     .blogTitle {
-        padding: $padding-4 $padding-3;
+        grid-template-columns: 1fr;
     }
-    
+
     .title {
-        padding: $padding-0;
+        grid-row: 1 / 3;
+        row-gap: 30px;
     }
 
     .blogButtonWrapper {
-        margin: $margin-2 $margin-0;
-        padding: $padding-0;
-        
+        grid-column: 1;
+        grid-row: 3;
+        justify-self: center;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .blogTitle {
+        padding-left: $padding-3;
+        padding-right: $padding-3;
+        padding-bottom: $padding-3;
     }
 }
