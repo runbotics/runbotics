@@ -40,12 +40,8 @@ $BACKGROUND-HEIGHT: 400px;
 }
 
 @media (max-width: $breakpoint-md) {
-    .root {
-        padding: $padding-0;
-    }
-
     .blogTitle {
-        padding: $padding-6;
+        padding: $padding-10 $padding-6 $padding-6 $padding-6;
         grid-template-columns: 1fr 1fr;
     }
 
