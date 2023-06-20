@@ -1,7 +1,8 @@
-import React, { VFC, useEffect } from 'react';
+import React, { VFC, useEffect, useState, useRef } from 'react';
 
 import { useRouter } from 'next/router';
 
+import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages, Language } from '#src-app/translations/translations';
 
@@ -10,6 +11,12 @@ import { capitalizeFirstLetter } from '../../utils/utils';
 import styles from './LanguageSwitcher.module.scss';
 
 const LanguageSwitcher: VFC = () => {
+    const [toggle, setToggle] = useState(false);
+
+    const selectRef = useRef();
+
+    useClickOutsideComponent(selectRef, () => setToggle(false));
+
     const { switchLanguage, translate } = useTranslations();
 
     const { push, locale: activeLocale, asPath } = useRouter();
@@ -18,6 +25,7 @@ const LanguageSwitcher: VFC = () => {
         push(asPath, null, {
             locale: language,
         });
+        setToggle(!toggle);
     };
 
     useEffect(() => {
@@ -28,27 +36,26 @@ const LanguageSwitcher: VFC = () => {
     }, [activeLocale]);
 
     return (
-        <div className={styles.selectWrapper}>
-            <select
-                onChange={(event) =>
-                    handleLanguageSwitch(event.target.value as Language)
-                }
-                className={styles.select}
-                defaultValue={activeLocale}
-            >
+        <div ref={selectRef} className={styles.selectGroup}>
+            <button
+                onClick={() => setToggle(!toggle)}
+                className={styles.languageButton}
+            />
+            <div className={toggle ? styles.content : styles.hide}>
                 {languages.map((language) => (
-                    <option
+                    <div
+                        onClick={() => handleLanguageSwitch(language)}
                         key={language}
-                        className={styles.option}
-                        value={language}
+                        className={`${styles.option} ${
+                            language === activeLocale ? styles.active : ''
+                        }`}
                     >
                         {capitalizeFirstLetter(
                             translate(`Common.Languages.${language}`)
                         )}
-                        &nbsp;
-                    </option>
+                    </div>
                 ))}
-            </select>
+            </div>
         </div>
     );
 };

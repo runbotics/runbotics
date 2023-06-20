@@ -2,81 +2,133 @@
 @import '#src-landing/components/Typography/Typography.module.scss';
 
 
-$WRAPPER_WIDRG_AND_HEIGHT: 35px;
-$AFTER_WIDRG_AND_HEIGHT: $WRAPPER_WIDRG_AND_HEIGHT - 10px;
+$WRAPPER_WIDTH_AND_HEIGHT: 35px;
+$AFTER_WIDTH_AND_HEIGHT: $WRAPPER_WIDTH_AND_HEIGHT - 10px;
+$ARROW_HEIGHT: 13px;
+$CONTENT_BACKGROUND_COLOR: $palette-background-primary;
+$TICK_DIMENSIONS: 15px;
+$OPTION_BORDER_RADIUS: 5px;
 
-.selectWrapper {
+
+@mixin darken-on-hover {
+    position: relative;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: $OPTION_BORDER_RADIUS;
+        background: rgba(0, 0, 0, 0);
+    }
+
+    &:hover:before {
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
+
+.selectGroup{
+    @include font-face-base;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: $font-weight-semi-bold;
+}
+
+.languageButton{
+    @include darken-on-hover;
+
     position: relative;
 
     display: flex;
 
-    width: $WRAPPER_WIDRG_AND_HEIGHT;
-    height: $WRAPPER_WIDRG_AND_HEIGHT;
-
-    margin-top: auto;
-    margin-bottom: auto;
-
-    isolation: isolate;
-
     align-items: center;
+    justify-content: center;
+
+    width: $WRAPPER_WIDTH_AND_HEIGHT;
+    height: $WRAPPER_WIDTH_AND_HEIGHT;
+
     border-radius: 0.25em;
-    font-size: 1.25rem;
+    outline: none;
+    border: none;
+    isolation: isolate;
     background-color: transparent;
     transition: background-color ease-in-out 150ms;
-    &:hover {
-        background-color: rgba($palette-gray, 0.3);
-    }
-    &::-ms-expand {
-        display: none;
-    }
+    cursor: pointer;
+
     &::after {
         position: absolute;
 
-        left: 0;
-        right: 0;
-
-        width: $AFTER_WIDRG_AND_HEIGHT;
-        height: $AFTER_WIDRG_AND_HEIGHT;
-
-        margin-inline: auto;
+        width: $AFTER_WIDTH_AND_HEIGHT;
+        height: $AFTER_WIDTH_AND_HEIGHT;
 
         content: '';
-
         background: url('/images/flags/globe.svg') no-repeat;
         background-size: cover;
     }
 }
 
-.select {
+.content{
     position: absolute;
 
-    left: 0;
-    right: 0;
+    display: grid;
 
-    height: 100%;
-    width: 100%;
+    row-gap: 5px;
 
-    margin-inline: auto;
-    padding: 10px;
+    top: $WRAPPER_WIDTH_AND_HEIGHT + $ARROW_HEIGHT + 1px;
 
-    cursor: pointer;
-    z-index: $header-z-index;
-    opacity: 0;
-    content: '';
-    cursor: pointer;
-    appearance: none;
-    border: none;
+    padding: 8px 3px 8px 3px;
+
+    background-color: $CONTENT_BACKGROUND_COLOR;
     border-radius: 5px;
-    outline: none;
-    .option {
-        padding: 10px;
 
-        @include font-face-base;
-        font-size: $font-size-h6;
-        font-weight: $font-weight-medium;
-        cursor: pointer;
-        &:hover {
-            box-shadow: $box-shadow-primary;
-        }
+    &::after {
+        position: absolute;
+
+        top: -6px;
+
+        justify-self: center;
+
+        width: 0;
+        height: 0;
+
+        border-style: solid;
+        border-width: $ARROW_HEIGHT $ARROW_HEIGHT 0 0;
+        border-color:  $CONTENT_BACKGROUND_COLOR transparent transparent;
+        transform: rotate(45deg);
+        -webkit-filter:  drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));;
+        filter: drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));
+        content: '';
     }
+
+    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+}
+
+.hide{
+    display: none;
+}
+
+
+.option{
+    @include darken-on-hover;
+
+    display: flex;
+    align-items: center;
+
+    padding: 5px;
+
+    cursor: pointer;
+    border-radius: $OPTION_BORDER_RADIUS;
+}
+
+.active{
+    background-color: $palette-accent-primary;
 }
