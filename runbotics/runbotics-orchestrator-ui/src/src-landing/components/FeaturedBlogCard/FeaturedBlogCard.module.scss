@@ -12,10 +12,9 @@ $CONTENT-MIN-HEIGHT: 220px;
 $CONTENT-BORDER-RADIUS: 20px;
 $CONTENT-BORDER-TOP-RIGHT-RADIUS: 120px;
 $DESCRIPTION-MAX-WIDTH: 966px;
-$READ-MORE-WIDTH: 116px;
 $READ-MORE-HEIGHT: 32px;
-$READ-MORE-A-TOP: 4px;
-$READ-MORE-A-RIGHT: 7px;
+$READ-MORE-GAP-BETWEEN: 6px;
+$READ-MORE-MARGIN-RIGHT: 7px;
 $READ-MORE-BACKGROUND-COLOR: #ffffff80;
 $READ-MORE-BORDER-RADIUS: 20px;
 $READ-MORE-BORDER: #2e2e22 1px solid;
@@ -127,31 +126,28 @@ $FONT-COLOR: #000;
     display: flex;
     justify-content: flex-end;
     width: 100%;
+}
 
-    p {
-        position: relative;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        width: $READ-MORE-WIDTH;
-        height: $READ-MORE-HEIGHT;
-        padding-left: $padding-2;
-        color: $FONT-COLOR;
-        background-color: $READ-MORE-BACKGROUND-COLOR;
-        border-radius: $READ-MORE-BORDER-RADIUS;
-        border: $READ-MORE-BORDER;
-        text-decoration: none;
+.buttonWrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $READ-MORE-GAP-BETWEEN;
+    height: $READ-MORE-HEIGHT;
+    background-color: $READ-MORE-BACKGROUND-COLOR;
+    border-radius: $READ-MORE-BORDER-RADIUS;
+    border: $READ-MORE-BORDER;
 
-        &::after {
-            content: '';
-            position: absolute;
-            top: $READ-MORE-A-TOP;
-            right: $READ-MORE-A-RIGHT;
-            background-image: url('/images/icons/right.svg');
-            height: $READ-MORE-ICON-HEIGHT;
-            width: $READ-MORE-ICON-WIDTH;
+        p {
+            padding-left: $padding-2;
+            color: $FONT-COLOR;
+            text-decoration: none;
         }
-    }
+
+        img {
+            margin-right: $READ-MORE-MARGIN-RIGHT;
+        }
 }
 
 @media (max-width: $breakpoint-md) {
@@ -175,6 +171,7 @@ $FONT-COLOR: #000;
         margin-top: $CONTENT-TOP-MARGIN-XS;
         border-top-right-radius: $CONTENT-BORDER-RADIUS;
         background-color: $palette-white;
+        padding-right: $CONTENT-PADDING;
     }
 
     .title {
