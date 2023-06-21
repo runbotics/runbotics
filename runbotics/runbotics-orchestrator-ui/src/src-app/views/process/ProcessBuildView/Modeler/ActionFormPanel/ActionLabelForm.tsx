@@ -3,7 +3,6 @@ import React, { useEffect, useState, VFC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import WarningIcon from '@mui/icons-material/WarningAmberOutlined';
 
 import {
     Alert,
@@ -41,11 +40,11 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const translationKey = `Process.Details.Modeler.Actions.${
         actionId
             ? capitalizeFirstLetter({
-                  text: actionId,
-                  lowerCaseRest: false,
-                  delimiter: '.',
-                  join: '.',
-              })
+                text: actionId,
+                lowerCaseRest: false,
+                delimiter: '.',
+                join: '.',
+            })
             : ''
     }.Label`;
 
