@@ -41,11 +41,11 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const translationKey = `Process.Details.Modeler.Actions.${
         actionId
             ? capitalizeFirstLetter({
-                text: actionId,
-                lowerCaseRest: false,
-                delimiter: '.',
-                join: '.',
-            })
+                  text: actionId,
+                  lowerCaseRest: false,
+                  delimiter: '.',
+                  join: '.',
+              })
             : ''
     }.Label`;
 
@@ -121,34 +121,25 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         </Stack>
     );
 
-    const ActionSystemTooltip = () => (
-        <Tooltip
-            title={translate(
-                'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
-                { system: selectedAction.system }
-            )}
-        >
-            <IconButton sx={{ p: (theme) => theme.spacing(0.625) }}>
-                <WarningIcon sx={{ width: 20, height: 20 }} color="warning" />
-            </IconButton>
-        </Tooltip>
-    );
-
     const ActionSystemLabel = () => (
         <>
             {selectedAction && selectedAction.system && (
-                <Alert
-                    icon={
-                        <ActionSystemTooltip />
-                    }
-                    sx={{ '& .MuiAlert-message': { p: (theme) => theme.spacing(1.5, 0) } }}
-                    severity="warning"
-                >
-                    {translate(
-                        'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
+                <Tooltip
+                    title={translate(
+                        'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
                         { system: selectedAction.system }
                     )}
-                </Alert>
+                >
+                    <Alert
+                        severity="warning"
+                        sx={{ mt: (theme) => theme.spacing(1) }}
+                    >
+                        {translate(
+                            'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
+                            { system: selectedAction.system }
+                        )}
+                    </Alert>
+                </Tooltip>
             )}
         </>
     );
