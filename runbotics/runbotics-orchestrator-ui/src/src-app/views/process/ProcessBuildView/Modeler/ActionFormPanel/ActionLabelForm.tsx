@@ -3,9 +3,16 @@ import React, { useEffect, useState, VFC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
+import WarningIcon from '@mui/icons-material/WarningAmberOutlined';
 
-import { Alert, IconButton, Stack, TextField, Typography } from '@mui/material';
-
+import {
+    Alert,
+    IconButton,
+    Stack,
+    TextField,
+    Typography,
+    Tooltip,
+} from '@mui/material';
 import i18n from 'i18next';
 
 import If from '#src-app/components/utils/If';
@@ -114,10 +121,29 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         </Stack>
     );
 
+    const ActionSystemTooltip = () => (
+        <Tooltip
+            title={translate(
+                'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
+                { system: selectedAction.system }
+            )}
+        >
+            <IconButton sx={{ p: (theme) => theme.spacing(0.625) }}>
+                <WarningIcon sx={{ width: 20, height: 20 }} color="warning" />
+            </IconButton>
+        </Tooltip>
+    );
+
     const ActionSystemLabel = () => (
         <>
             {selectedAction && selectedAction.system && (
-                <Alert severity="warning">
+                <Alert
+                    icon={
+                        <ActionSystemTooltip />
+                    }
+                    sx={{ '& .MuiAlert-message': { p: (theme) => theme.spacing(1.5, 0) } }}
+                    severity="warning"
+                >
                     {translate(
                         'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
                         { system: selectedAction.system }
