@@ -31,6 +31,7 @@ export interface DataTableProps<T extends object> {
 
 export interface TableRowExpanderProps {
     row: Row;
+    handleClick?: (row: Row) => void;
 }
 
 export type Column<D extends object = {}> = ReactTableColumn<D> & {

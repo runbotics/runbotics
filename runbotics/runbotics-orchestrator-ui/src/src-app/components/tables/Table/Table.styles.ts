@@ -1,4 +1,4 @@
-import { TableRow } from '@mui/material';
+import { LinearProgress, TableRow } from '@mui/material';
 import styled, { css } from 'styled-components';
 
 import { TABLE_ROW_HEIGHT } from './Table.utils';
@@ -56,5 +56,12 @@ export const DataTableRow = styled(TableRow) <{
 
     & > :first-child {
         cursor: default;
+    }
+`;
+
+export const LoadingRow = styled(LinearProgress)`
+    && {
+        width: 90%;
+        margin: auto;        
     }
 `;

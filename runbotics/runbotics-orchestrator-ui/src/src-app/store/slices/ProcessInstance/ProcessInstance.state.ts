@@ -16,10 +16,6 @@ export interface ProcessInstanceState {
         ids: string[];
         page: Page<IProcessInstance> | null;
     };
-    subProcesses: {
-        loading: boolean;
-        subProcesses: IProcessInstance[];
-    };
 }
 
 export interface ProcessInstanceRequestCriteria extends Omit<IProcessInstance, 'process' | 'bot'> {

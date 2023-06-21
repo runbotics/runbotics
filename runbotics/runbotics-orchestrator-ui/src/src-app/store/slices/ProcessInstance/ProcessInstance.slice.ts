@@ -20,10 +20,6 @@ export const initialState: ProcessInstanceState = {
         loadingPage: false,
         page: null,
     },
-    subProcesses: {
-        loading: false,
-        subProcesses: [],
-    },
 };
 
 export const slice = createSlice({
@@ -34,8 +30,6 @@ export const slice = createSlice({
 });
 
 export const processInstanceSelector = (state: RootState) => state.processInstance;
-
-export const subProcessesSelector = (state: RootState) => state.processInstance.subProcesses;
 
 export const processInstanceReducer = slice.reducer;
 

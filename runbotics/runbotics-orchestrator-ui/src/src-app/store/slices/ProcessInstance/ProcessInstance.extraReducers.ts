@@ -13,6 +13,7 @@ import {
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
+import { updateSubProcessRelatedProps } from './ProcessInstance.utils';
 
 const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceState>) => {
     builder
@@ -82,16 +83,14 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
         })
 
         // GET SUB PROCESSES
-        .addCase(getSubProcesses.pending, (state) => {
-            state.subProcesses.loading = true;
+        .addCase(getSubProcesses.pending, (state, action) => {
+            updateSubProcessRelatedProps(state, true, action);
         })
         .addCase(getSubProcesses.fulfilled, (state, action) => {
-            console.log('HELLO');
-            state.subProcesses.subProcesses = action.payload;
-            state.subProcesses.loading = false;
+            updateSubProcessRelatedProps(state, false, action);
         })
-        .addCase(getSubProcesses.rejected, (state) => {
-            state.subProcesses.loading = false;
+        .addCase(getSubProcesses.rejected, (state, action) => {
+            updateSubProcessRelatedProps(state, false, action);
         })
 
         // GET PAGE

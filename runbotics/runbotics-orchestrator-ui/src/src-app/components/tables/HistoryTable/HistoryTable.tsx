@@ -102,6 +102,18 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         },
     }));
 
+    const handleRowExpand = (currRow) => {
+        if (currRow.subRows.length > 0 || currRow.isExpanded) return;
+        dispatch(processInstanceActions.getSubProcesses({ processInstanceId: currRow.original.id }))
+            .then(unwrapResult)
+            .catch((error) => {
+                enqueueSnackbar(
+                    error?.message as string ?? translate('History.Table.Error'),
+                    { variant: 'error' },
+                );
+            });
+    };
+
     const handleOnClick = async (processInstance: IProcessInstance) => {
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
         if (
@@ -131,7 +143,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setPanelInfoState({ show: true });
     };
     
-    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, handleRowExpand);
 
     return (
         <Wrapper>

@@ -1,33 +1,27 @@
 import React from 'react';
 
 import moment from 'moment';
+import { Row } from 'react-table';
 import { FeatureKey } from 'runbotics-common';
 
 
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
-
 import useAuth from '#src-app/hooks/useAuth';
-
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
-
 import useTranslations from '#src-app/hooks/useTranslations';
-
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { useSelector } from '../../../store';
-
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
-
 import Label from '../../Label';
-
 import { hasFeatureKeyAccess } from '../../utils/Secured';
-
 import { Column } from '../Table';
 import TableRowExpander from '../Table/TableRowExpander';
 
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
-    onRerunProcess: () => void
+    onRerunProcess: () => void,
+    handleRowExpand?: (row: Row) => void
 ): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
@@ -42,7 +36,7 @@ const useProcessInstanceColumns = (
             id: 'expander',
             Cell: ({ row }) =>
                 row.original.hasSubProcesses ? (
-                    <TableRowExpander row={row} />
+                    <TableRowExpander row={row} handleClick={handleRowExpand} />
                 ) : null,
         },
         {
