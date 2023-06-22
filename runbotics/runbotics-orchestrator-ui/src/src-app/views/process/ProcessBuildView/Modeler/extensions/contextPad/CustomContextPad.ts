@@ -19,5 +19,5 @@ export default class CustomContextPad {
     }
 
 }
-
+// @ts-ignore
 CustomContextPad.$inject = ['contextPad'];
