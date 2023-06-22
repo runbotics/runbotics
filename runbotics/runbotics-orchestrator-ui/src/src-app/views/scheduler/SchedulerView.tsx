@@ -48,13 +48,11 @@ const SchedulerView = () => {
     const scheduledProcessColumns = useScheduledProcessColumns();
 
     const handleProcessInstanceRedirect = (rowData: IProcessInstance) => {
-        if (rowData.process)
-            router.push(`/app/processes/${rowData.process.id}/build`);
+        if (rowData.process) router.push(`/app/processes/${rowData.process.id}/build`);
     };
 
     const handleSchedulerJobRedirect = (rowData: QueueJob) => {
-        if (rowData.data.process)
-            router.push(`/app/processes/${rowData.data.process.id}/build`);
+        if (rowData.data.process) router.push(`/app/processes/${rowData.data.process.id}/build`);
     };
 
     const handleScheduledJobRedirect = (rowData: ScheduledJob) => {
