@@ -116,6 +116,7 @@ public class ProcessInstanceResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of subprocesses in the body,
      *         or with status {@code 404 (Not Found)} if the processInstance does not exist.
      */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
     @GetMapping("/process-instances/{id}/subprocesses")
     public ResponseEntity<List<ProcessInstanceDTO>> getProcessInstanceSubprocesses(@PathVariable UUID id) {
         log.debug("REST request to get subprocesses for ProcessInstance: {}", id);

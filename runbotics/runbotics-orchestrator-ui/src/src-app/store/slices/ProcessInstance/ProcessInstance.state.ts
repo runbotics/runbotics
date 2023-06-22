@@ -14,11 +14,17 @@ export interface ProcessInstanceState {
         byId: Record<string, IProcessInstance>;
         byProcessId: Record<number, IProcessInstance[]>;
         ids: string[];
-        page: Page<IProcessInstance> | null;
+        page: Page<InstanceExtendedWithSubProcesses> | null;
     };
 }
 
 export interface ProcessInstanceRequestCriteria extends Omit<IProcessInstance, 'process' | 'bot'> {
     botId?: number;
     processId?: number;
+}
+
+export interface InstanceExtendedWithSubProcesses extends IProcessInstance {
+    hasSubProcesses?: boolean;
+    isLoadingSubProcesses?: boolean;
+    subProcesses?: IProcessInstance[];
 }

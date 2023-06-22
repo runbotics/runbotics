@@ -1,7 +1,6 @@
-import React, { forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { Box, SxProps } from '@mui/material';
-import { Theme } from '@mui/system';
+import { Box } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -21,30 +20,14 @@ import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstan
 import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
-    ProcessInstanceRequestCriteria,
     processInstanceSelector,
 } from '../../../store/slices/ProcessInstance';
 import { DefaultPageSize } from '../../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 import ResizableDrawer from '../../ResizableDrawer';
 import If from '../../utils/If';
-import Table from '../Table';
+import Table, { HistoryTableProps, PanelInfoState } from '../Table';
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
-
-
-
-interface PanelInfoState {
-    show: boolean;
-    processInstanceId?: string;
-}
-
-interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
-    botId?: ProcessInstanceRequestCriteria['botId'];
-    processId?: ProcessInstanceRequestCriteria['processId'];
-    title?: ReactNode;
-    sx?: SxProps<Theme>;
-    rerunEnabled?: boolean;
-}
 
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
@@ -102,19 +85,6 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         },
     }));
 
-    const handleRowExpand = (currRow) => {
-        if (currRow.subRows.length > 0 || currRow.isExpanded) return;
-        dispatch(processInstanceActions.getSubProcesses({ processInstanceId: currRow.original.id }))
-            .then(unwrapResult)
-            .catch(() => {
-                enqueueSnackbar(
-                    translate('History.Table.Error.SubProcessesNotFound'),
-                    { variant: 'error' },
-                );
-                dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubProcesses: false }));
-            });
-    };
-
     const handleOnClick = async (processInstance: IProcessInstance) => {
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
         if (
@@ -144,7 +114,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setPanelInfoState({ show: true });
     };
     
-    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, handleRowExpand);
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
 
     return (
         <Wrapper>

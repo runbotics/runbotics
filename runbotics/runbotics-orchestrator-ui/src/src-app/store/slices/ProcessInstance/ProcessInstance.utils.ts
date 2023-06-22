@@ -1,14 +1,12 @@
-import { IProcessInstance } from 'runbotics-common';
+import { ProcessInstanceState, InstanceExtendedWithSubProcesses } from './ProcessInstance.state';
 
-import { ProcessInstanceState } from './ProcessInstance.state';
-
-export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: IProcessInstance) => {
+export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubProcesses) => {
     const { id, subProcesses, hasSubProcesses, isLoadingSubProcesses } = processInstance;
     const pageContent = state.all.page?.content;
     if (!pageContent) return;
 
     state.all.page.content = pageContent
-        .map((instance: IProcessInstance) => 
+        .map((instance: InstanceExtendedWithSubProcesses) => 
             instance.id !== id
                 ? instance 
                 : ({ 

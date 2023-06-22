@@ -54,7 +54,7 @@ export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { reject
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateAttendedance = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+export const updateAttendance = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/is-attended',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-attended`, process)
         .then((response) => response.data)

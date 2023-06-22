@@ -54,10 +54,7 @@ export const getSubProcesses = createAsyncThunk<IProcessInstance[], {
     'processInstances/getSubProcesses',
     ({ processInstanceId }) => 
         Axios.get<IProcessInstance[]>(`/api/process-instances/${processInstanceId}/subprocesses`)
-            .then((response) => {
-                if(response.data.length > 0) return response.data;
-                throw new Error('Could not found any sub processes');
-            }),
+            .then((response) =>  response.data),
 );
 
 export const getProcessInstanceAndUpdatePage = createAsyncThunk<IProcessInstance, { processInstanceId?: string }>(

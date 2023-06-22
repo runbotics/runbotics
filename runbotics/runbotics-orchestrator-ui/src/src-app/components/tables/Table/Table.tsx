@@ -14,16 +14,12 @@ import {
 } from '@mui/material';
 import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
-
-
-import { IProcessInstance } from 'runbotics-common';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import If from '../../utils/If';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper, LoadingRow } from './Table.styles';
-import { DataTableProps } from './Table.types';
+import { DataTableProps, ProcessInstanceRow } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
 
 
@@ -128,23 +124,25 @@ const Table = <T extends object>({
     );
 
     const renderTableRows = () => {
-        const dataRows = rows.slice(0, countExpandedRows()).map((row) => {
-            prepareRow(row);
-            const rowKey = row.getRowProps().key;
-            return (
-                <React.Fragment key={rowKey}>
-                    <DataTableRow
-                        isClickable={Boolean(onRowClick)}
-                        isRowSelected={row.isSelected}
-                        isSubRow={row.depth > 0}
-                    >
-                        {renderCells(row)}
-                    </DataTableRow>
-                    {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
-                    {row.isExpanded && (row?.original as IProcessInstance)?.isLoadingSubProcesses ? rowLoader : null}
-                </React.Fragment>
-            );
-        });
+        const dataRows = rows
+            .slice(0, countExpandedRows())
+            .map((row: Row<T>) => {
+                prepareRow(row);
+                const rowKey = row.getRowProps().key;
+                return (
+                    <React.Fragment key={rowKey}>
+                        <DataTableRow
+                            isClickable={Boolean(onRowClick)}
+                            isRowSelected={row.isSelected}
+                            isSubRow={row.depth > 0}
+                        >
+                            {renderCells(row)}
+                        </DataTableRow>
+                        {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
+                        {row.isExpanded && (row as ProcessInstanceRow).original?.isLoadingSubProcesses ? rowLoader : null}
+                    </React.Fragment>
+                );
+            });
         if (autoHeight) return dataRows;
 
         const dummyRows: JSX.Element[] = [];
