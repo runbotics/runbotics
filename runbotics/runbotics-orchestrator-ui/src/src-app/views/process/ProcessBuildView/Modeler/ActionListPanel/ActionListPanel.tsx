@@ -8,6 +8,10 @@ import { Badge, Tab, Tabs, IconButton, Box, Drawer } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
+import { FeatureKey } from 'runbotics-common';
+
+import If from '#src-app/components/utils/If';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useInternalActionsGroups from '#src-app/hooks/useInternalActionsGroups';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import { useTemplatesGroups } from '#src-app/hooks/useTemplatesGroups';
@@ -64,6 +68,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     const internalActionsGroups = useInternalActionsGroups();
     const templatesGroups = useTemplatesGroups();
     const { translate } = useTranslations();
+    const hasActionListAccess = useFeatureKey([
+        FeatureKey.PROCESS_ACTIONS_LIST,
+        FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED,
+    ], { oneOf: true });
+    const hasTemplateListAccess = useFeatureKey([FeatureKey.PROCESS_TEMPLATES_LIST]);
 
     const actionGroups: GroupProperties[] = useMemo(() => {
         const externalActionsGroup = external.map(
@@ -145,7 +154,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         }
     };
 
-    const handleSearchPhrasechange = (value: string) => {
+    const handleSearchPhraseChange = (value: string) => {
         dispatchGroups(
             value.length ? groupActions.openAll() : groupActions.closeAll()
         );
@@ -213,6 +222,18 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         [actionGroups, filters]
     );
 
+    const tabs = [
+        {
+            name: ListPanelTab.ACTIONS,
+            label: translate('Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label'),
+            accessible: hasActionListAccess,
+        }, {
+            name: ListPanelTab.TEMPLATES,
+            label: translate('Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label'),
+            accessible: hasTemplateListAccess,
+        }
+    ].filter(tab => tab.accessible);
+
     return (
         <Root open={openDrawer}>
             <ActionPanelToggler
@@ -238,30 +259,29 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                 <Box
                     height={`calc(100vh - ${props.offsetTop}px)`}
                     display="flex"
-                    flexDirection="column">
-                    <Tabs
-                        scrollButtons="auto"
-                        textColor="secondary"
-                        value={filters.currentTab}
-                        className={clsx(classes.tabs)}
-                        onChange={onTabChange}
-                        variant="fullWidth">
-                        <Tab
-                            label={translate(
-                                'Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label'
-                            )}
-                            value={ListPanelTab.ACTIONS}
-                        />
-                        <Tab
-                            label={translate(
-                                'Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label'
-                            )}
-                            value={ListPanelTab.TEMPLATES}
-                        />
-                    </Tabs>
+                    flexDirection="column"
+                >
+                    <If condition={tabs.length > 1}>
+                        <Tabs
+                            scrollButtons="auto"
+                            textColor="secondary"
+                            value={filters.currentTab}
+                            className={clsx(classes.tabs)}
+                            onChange={onTabChange}
+                            variant="fullWidth"
+                        >
+                            {tabs.map(tab => (
+                                <Tab
+                                    key={tab.name}
+                                    label={tab.label}
+                                    value={tab.name}
+                                />
+                            ))}
+                        </Tabs>
+                    </If>
                     <Box className={classes.filterModalAnchor}>
                         <ActionSearch
-                            onSearchPhraseChange={handleSearchPhrasechange}
+                            onSearchPhraseChange={handleSearchPhraseChange}
                             label={translate(
                                 'Process.Details.Modeler.ActionListPanel.Search.Label'
                             )}

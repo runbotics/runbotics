@@ -11,6 +11,10 @@ export interface SecuredProps {
     children?: ReactNode;
 }
 
+export interface AccessUtility {
+    oneOf?: boolean;
+}
+
 export const hasAuthorities = (user: User, authorities: any[]) => {
     if (!user || !user.authoritiesById) 
     { return false; }
@@ -38,18 +42,14 @@ export const hasRoleAccess = (user: User, roles: Role[]) => {
     return true;
 };
 
-export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[]) => {
-    if (!user || !user.featureKeys || !user.roles) 
-    { return false; }
-    
+export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[], options?: AccessUtility) => {
+    if (!user || !user.featureKeys || !user.roles) {
+        return false;
+    }
 
-    for (const featureKey of featureKeys) 
-    { if (!user.featureKeys.includes(featureKey)) 
-    { return false; } }
-        
-    
-
-    return true;
+    return options && options.oneOf
+        ? featureKeys.some(featureKey => user.featureKeys.includes(featureKey))
+        : featureKeys.every(featureKey => user.featureKeys.includes(featureKey));
 };
 
 const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
