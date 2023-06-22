@@ -38,7 +38,7 @@ const LanguageSwitcher: VFC = () => {
     return (
         <div ref={selectRef} className={styles.selectGroup}>
             <button
-                onClick={() => setToggle(!toggle)}
+                onClick={() => setToggle(prevState => !prevState)}
                 className={styles.languageButton}
             />
             <div className={toggle ? styles.content : styles.hide}>
