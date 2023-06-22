@@ -25,21 +25,19 @@ const MainLayout: FC = ({ children }) => {
     const publicSections = usePublicSections();
     const { user } = useAuth();
 
-    const accessedSections = useMemo(
-        () =>
-            publicSections.map((accessToSection) => {
-                const items = accessToSection.items.filter((item) =>
-                    item.featureKeys
-                        ? hasFeatureKeyAccess(user, item.featureKeys)
-                        : true
-                );
-                return { ...accessToSection, items };
-            }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [user, i18n.language]
-    );
+    const accessedSections = useMemo(() => publicSections
+        .map((publicSection) => {
+            const items = publicSection.items.filter((item) =>
+                item.featureKeys
+                    ? hasFeatureKeyAccess(user, item.featureKeys)
+                    : true
+            );
+            return { ...publicSection, items };
+        }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user, i18n.language]);
 
-    const isNavBarVisible = accessedSections[0].items.length !== 1;
+    const isNavBarVisible = accessedSections[0].items.length > 0;
 
     useAsyncEffect(() => {
         setLoaded(true);
@@ -67,8 +65,9 @@ const MainLayout: FC = ({ children }) => {
             >
                 <ContentContainer>
                     <Content>
-                        {!loaded && <LoadingScreen />}
-                        {loaded && children}
+                        <If condition={loaded} else={<LoadingScreen />}>
+                            {children}
+                        </If>
                     </Content>
                 </ContentContainer>
             </Main>

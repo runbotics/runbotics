@@ -1,25 +1,29 @@
 package com.runbotics.service.impl;
 
+import com.runbotics.domain.Authority;
 import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.ProcessInstance;
 import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
+import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
-import java.time.ZonedDateTime;
-import java.util.Optional;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -163,7 +167,25 @@ public class ProcessServiceImpl implements ProcessService {
     @Transactional(readOnly = true)
     public Optional<ProcessDTO> findOne(Long id) {
         log.debug("Request to get Process : {}", id);
-        return processRepository.findById(id).map(processMapper::toDto);
+        var requester = this.userService.getUserWithAuthorities().get();
+        var processOptional = processRepository.findById(id).map(processMapper::toDto);
+
+        var hasRequesterRoleAdmin = requester.getAuthorities().contains(this.createAdminAuthority());
+        if (processOptional.isEmpty() || hasRequesterRoleAdmin) {
+            return processOptional;
+        }
+
+        var process = processOptional.get();
+        var isGuest = requester.getAuthorities().contains(createGuestAuthority());
+        var isCreator = Objects.equals(process.getCreatedBy().getId(), requester.getId());
+        var isPublic = process.getIsPublic();
+
+        if (!isCreator && (!isPublic || isGuest)) {
+            log.error("User {} have no access to process {}", requester.getId(), process.getId());
+            throw new ProcessAccessDenied();
+        }
+
+        return processOptional;
     }
 
     @Override
@@ -193,5 +215,17 @@ public class ProcessServiceImpl implements ProcessService {
 
     private boolean existsRelationsToUpdate(Set relation) {
         return relation != null && relation.isEmpty();
+    }
+
+    private Authority createAdminAuthority() {
+        Authority adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.ADMIN);
+        return adminAuthority;
+    }
+
+    private Authority createGuestAuthority() {
+        Authority adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.GUEST);
+        return adminAuthority;
     }
 }
