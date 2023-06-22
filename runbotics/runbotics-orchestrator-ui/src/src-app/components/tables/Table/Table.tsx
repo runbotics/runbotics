@@ -15,6 +15,7 @@ import {
 import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
 
+
 import { IProcessInstance } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -128,7 +129,6 @@ const Table = <T extends object>({
 
     const renderTableRows = () => {
         const dataRows = rows.slice(0, countExpandedRows()).map((row) => {
-            const original: IProcessInstance = row.original;
             prepareRow(row);
             const rowKey = row.getRowProps().key;
             return (
@@ -141,7 +141,7 @@ const Table = <T extends object>({
                         {renderCells(row)}
                     </DataTableRow>
                     {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
-                    {row.isExpanded && original?.isLoadingSubProcesses ? rowLoader : null}
+                    {row.isExpanded && (row?.original as IProcessInstance)?.isLoadingSubProcesses ? rowLoader : null}
                 </React.Fragment>
             );
         });
