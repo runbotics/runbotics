@@ -4,12 +4,8 @@ import { BpmnElementType } from 'runbotics-common';
 // @ts-nocheck
 export default class CustomContextPad {
 
-    contextPad: any;
-    popupMenu: any;
-
     constructor(contextPad) {
         contextPad.registerProvider(this);
-        this.contextPad = contextPad;
     }
 
     getContextPadEntries(el) {
