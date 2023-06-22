@@ -9,8 +9,26 @@ export const updateOrchestratorProcessInstanceId = (state: ProcessInstanceState,
     state.active.orchestratorProcessInstanceId = action.payload;
 };
 
-export const updateProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+export const updateActiveProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
     state.active.processInstance = action.payload;
+};
+
+export const updateProcessInstanceProps = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+    const { id, subProcesses, hasSubProcesses, isLoadingSubProcesses } = action.payload;
+    const pageContent = state.all.page?.content;
+    if (!pageContent) return;
+
+    state.all.page.content = pageContent
+        .map((processInstance: IProcessInstance) => 
+            processInstance.id !== id
+                ? processInstance 
+                : ({ 
+                    ...processInstance,
+                    subProcesses: subProcesses !== undefined ? subProcesses : processInstance.subProcesses, 
+                    hasSubProcesses: hasSubProcesses !== undefined ? hasSubProcesses : processInstance.hasSubProcesses,
+                    isLoadingSubProcesses: isLoadingSubProcesses !== undefined ? isLoadingSubProcesses : processInstance.isLoadingSubProcesses,
+                })
+        );
 };
 
 const updateEvent = (state: ProcessInstanceState, event: IProcessInstanceEvent) => {

@@ -106,11 +106,12 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
         dispatch(processInstanceActions.getSubProcesses({ processInstanceId: currRow.original.id }))
             .then(unwrapResult)
-            .catch((error) => {
+            .catch(() => {
                 enqueueSnackbar(
-                    error?.message as string ?? translate('History.Table.Error'),
+                    translate('History.Table.Error.SubProcessesNotFound'),
                     { variant: 'error' },
                 );
+                dispatch(processInstanceActions.updateProcessInstanceProps({ id: currRow.original.id, hasSubProcesses: false }));
             });
     };
 

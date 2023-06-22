@@ -61,7 +61,7 @@ export const DataTableRow = styled(TableRow) <{
 
 export const LoadingRow = styled(LinearProgress)`
     && {
-        width: 90%;
+        width: 40%;
         margin: auto;        
     }
 `;

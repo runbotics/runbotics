@@ -6,7 +6,6 @@ import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
 import { ProcessInstanceRequestCriteria } from './ProcessInstance.state';
-import { sendErrorMessage } from './ProcessInstance.utils';
 
 const processInstancePageURL = (params: PageRequestParams<ProcessInstanceRequestCriteria>) => URLBuilder
     .url('/api/process-instances-page')
@@ -55,11 +54,10 @@ export const getSubProcesses = createAsyncThunk<IProcessInstance[], {
     'processInstances/getSubProcesses',
     ({ processInstanceId }) => 
         Axios.get<IProcessInstance[]>(`/api/process-instances/${processInstanceId}/subprocesses`)
-            .then((response) => 
-                (response.data.length === 0) 
-                    ? sendErrorMessage('Could not found any sub processes')
-                    : response.data
-            ),
+            .then((response) => {
+                if(response.data.length > 0) return response.data;
+                throw new Error('Could not found any sub processes');
+            }),
 );
 
 export const getProcessInstanceAndUpdatePage = createAsyncThunk<IProcessInstance, { processInstanceId?: string }>(
