@@ -4,6 +4,7 @@ import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
 
 import { initialState } from './ProcessInstance.slice';
 import { ProcessInstanceState } from './ProcessInstance.state';
+import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
 export const updateOrchestratorProcessInstanceId = (state: ProcessInstanceState, action: PayloadAction<string>) => {
     state.active.orchestratorProcessInstanceId = action.payload;
@@ -13,22 +14,8 @@ export const updateActiveProcessInstance = (state: ProcessInstanceState, action:
     state.active.processInstance = action.payload;
 };
 
-export const updateProcessInstanceProps = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
-    const { id, subProcesses, hasSubProcesses, isLoadingSubProcesses } = action.payload;
-    const pageContent = state.all.page?.content;
-    if (!pageContent) return;
-
-    state.all.page.content = pageContent
-        .map((processInstance: IProcessInstance) => 
-            processInstance.id !== id
-                ? processInstance 
-                : ({ 
-                    ...processInstance,
-                    subProcesses: subProcesses !== undefined ? subProcesses : processInstance.subProcesses, 
-                    hasSubProcesses: hasSubProcesses !== undefined ? hasSubProcesses : processInstance.hasSubProcesses,
-                    isLoadingSubProcesses: isLoadingSubProcesses !== undefined ? isLoadingSubProcesses : processInstance.isLoadingSubProcesses,
-                })
-        );
+export const updateProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+    updateProcessInstanceProps(state, action.payload);
 };
 
 const updateEvent = (state: ProcessInstanceState, event: IProcessInstanceEvent) => {

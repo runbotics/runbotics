@@ -87,9 +87,9 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             },
         }))
             .then(unwrapResult)
-            .catch((error) => {
+            .catch(() => {
                 enqueueSnackbar(
-                    error?.message as string ?? translate('History.Table.Error'),
+                    translate('History.Table.Error.InstancesNotFound'),
                     { variant: 'error' },
                 );
             });
@@ -111,7 +111,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                     translate('History.Table.Error.SubProcessesNotFound'),
                     { variant: 'error' },
                 );
-                dispatch(processInstanceActions.updateProcessInstanceProps({ id: currRow.original.id, hasSubProcesses: false }));
+                dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubProcesses: false }));
             });
     };
 

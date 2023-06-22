@@ -1,11 +1,9 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import union from 'lodash/union';
 
-import { IProcessInstance } from 'runbotics-common';
 
 import objFromArray from '#src-app/utils/objFromArray';
 
-import { updateProcessInstanceProps } from './ProcessInstance.reducers';
 import { ProcessInstanceState } from './ProcessInstance.state';
 import {
     getAll,
@@ -16,6 +14,7 @@ import {
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
+import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
 const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceState>) => {
     builder
@@ -86,13 +85,33 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
 
         // GET sub processes
         .addCase(getSubProcesses.pending, (state, action) => {
-            updateProcessInstanceProps(state, { payload: { id: action.meta.arg.processInstanceId, isLoadingSubProcesses: true } as IProcessInstance, type: 'none' });
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubProcesses: true 
+                }
+            );
         })
         .addCase(getSubProcesses.fulfilled, (state, action) => {
-            updateProcessInstanceProps(state, { payload: { id: action.meta.arg.processInstanceId, isLoadingSubProcesses: false, subProcesses: action.payload } as IProcessInstance, type: 'none' });
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubProcesses: false, 
+                    subProcesses: action.payload 
+                }
+            );
         })
         .addCase(getSubProcesses.rejected, (state, action) => {
-            updateProcessInstanceProps(state, { payload: { id: action.meta.arg.processInstanceId, isLoadingSubProcesses: false, hasSubProcesses: false } as IProcessInstance, type: 'none' });
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubProcesses: false, 
+                    hasSubProcesses: false 
+                }
+            );
         })
 
         // GET page

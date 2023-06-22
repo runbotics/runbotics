@@ -2,6 +2,6 @@
     "History.Meta.Title": "History",
     "History.Header.Title": "History",
     "History.Table.Expand": "Show sub processes",
-    "History.Table.Error": "Process history cannot be retrieved",
+    "History.Table.Error.InstancesNotFound": "Process run history cannot be retrieved",
     "History.Table.Error.SubProcessesNotFound": "No sub processes found for this process run"
 }
