@@ -20,4 +20,4 @@ export default class CustomContextPad {
 
 }
 
-CustomContextPad.$inject = ['contextPad', 'popupMenu'];
+CustomContextPad.$inject = ['contextPad'];
