@@ -1,8 +1,7 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 
 import { Divider, Grid, Tab, Tabs } from '@mui/material';
 
-import i18n from 'i18next';
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
@@ -32,27 +31,14 @@ const ProcessMainView: FC = () => {
         {
             value: ProcessTab.RUN,
             label: translate('Process.MainView.Tabs.Run.Title'),
-            featureKeys: [FeatureKey.PROCESS_START],
+            featureKeys: [FeatureKey.PROCESS_RUN_VIEW],
         },
         {
             value: ProcessTab.CONFIGURE,
             label: translate('Process.MainView.Tabs.Configure.Title'),
             featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
         },
-    ];
-
-    const accessedTabs = useMemo(
-        () =>
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            processTabs.filter((tab) => {
-                if (tab.featureKeys) return hasFeatureKeyAccess(user, tab.featureKeys);
-
-                return true;
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [user, i18n.language],
-    );
+    ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys));
 
     const handleMainTabsChange = (processTab: ProcessTab) => {
         router.push({ pathname: `/app/processes/${id}/${processTab}` });
@@ -69,10 +55,13 @@ const ProcessMainView: FC = () => {
                         value={tab}
                         variant="scrollable"
                     >
-                        {accessedTabs.length > 1 &&
-                            accessedTabs.map((processTab) => (
-                                <Tab key={processTab.value} label={processTab.label} value={processTab.value} />
-                            ))}
+                        {processTabs.length > 1 && processTabs.map((processTab) => (
+                            <Tab
+                                key={processTab.value}
+                                label={processTab.label}
+                                value={processTab.value}
+                            />
+                        ))}
                     </Tabs>
                 </Grid>
                 <Grid item xs={6} mb={1} mt={1}>

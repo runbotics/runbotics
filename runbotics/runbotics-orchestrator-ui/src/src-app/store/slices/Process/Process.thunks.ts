@@ -36,7 +36,7 @@ export const fetchProcessById = createAsyncThunk<
             if (!error.response) { throw error; }
 
             // We got validation errors, let's return those so we can reference in our component and set form errors
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response);
         });
 });
 

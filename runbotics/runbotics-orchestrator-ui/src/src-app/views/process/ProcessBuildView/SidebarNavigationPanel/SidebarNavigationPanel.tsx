@@ -15,17 +15,29 @@ interface TabInfo {
 }
 
 const SidebarNavigationPanel: FC<SidebarProps> = ({ onTabToggle: onTabChange, selectedTab }) => {
-    const hasReadProcessInfoAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_READ]);
+    const hasVariablesPanelAccess = useFeatureKey([FeatureKey.PROCESS_READ]);
+    const hasRunPanelAccess = useFeatureKey([FeatureKey.PROCESS_START]);
     const { translate, currentLanguage } = useTranslations();
 
     const sidebarTabs = useMemo(() => {
         const tabs: TabInfo[] = [];
-        if (hasReadProcessInfoAccess)
-        { tabs.push({ value: ProcessBuildTab.RUN_INFO, label: translate('Process.MainView.Sidebar.RunInfo') }, {value: ProcessBuildTab.PROCESS_VARIABLES, label: translate('Process.MainView.Sidebar.ProcessVariables')}); }
+        if (hasRunPanelAccess) {
+            tabs.push({
+                value: ProcessBuildTab.RUN_INFO,
+                label: translate('Process.MainView.Sidebar.RunInfo'),
+            });
+        }
+        
+        if (hasVariablesPanelAccess) {
+            tabs.push({
+                value: ProcessBuildTab.PROCESS_VARIABLES,
+                label: translate('Process.MainView.Sidebar.ProcessVariables'),
+            });
+        }
 
         return tabs;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hasReadProcessInfoAccess, currentLanguage]);
+    }, [hasRunPanelAccess, hasVariablesPanelAccess, currentLanguage]);
 
     return (
         <SidebarNavigationWrapper>

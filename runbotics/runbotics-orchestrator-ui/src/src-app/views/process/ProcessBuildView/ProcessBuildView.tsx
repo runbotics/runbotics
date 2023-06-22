@@ -9,8 +9,11 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+import { FeatureKey } from 'runbotics-common';
+
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -38,12 +41,14 @@ const ProcessBuildView: FC = () => {
     const [offSet, setOffSet] = useState<number>(null);
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
+    const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
 
     useEffect(() => {
+        if (!hasAdvancedActionsAccess) return;
         dispatch(getActions());
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+    }, [id, hasAdvancedActionsAccess]);
 
     useEffect(() => {
         if (!process) return;

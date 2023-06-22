@@ -5,19 +5,21 @@ import { FeatureKey } from 'runbotics-common';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
-import { hasFeatureKeyAccess } from '../utils/Secured';
+import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
+
 // eslint-disable-next-line react/display-name
-export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[]) => (props: any) => {
+export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
     const { isAuthenticated: isAuthed, isInitialised, user } = useAuth();
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
-    if (!isAuthenticated){
+    if (!isAuthenticated) {
         router.replace('/');
-    };
+    }
+    
     if (isAuthenticated) {
-        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys)){
-            return <Component {...props} />;
+        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
+            return <Component {...props} />; 
         }
         router.replace('/404');
     }
