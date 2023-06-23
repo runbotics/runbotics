@@ -1,10 +1,11 @@
-import { HTMLProps, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { SxProps, Theme } from '@mui/system';
 import { Column as ReactTableColumn, Row } from 'react-table';
 import { FeatureKey } from 'runbotics-common';
 
-import { ProcessInstanceRequestCriteria, InstanceExtendedWithSubProcesses } from '#src-app/store/slices/ProcessInstance';
+import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
+
 
 export interface DataTableFooterProps {
     pageCount: number;
@@ -36,38 +37,6 @@ export interface TableRowExpanderProps {
     handleClick?: (row: ProcessInstanceRow) => void;
 }
 
-export interface PanelInfoState {
-    show: boolean;
-    processInstanceId?: string;
-}
-
-export interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
-    botId?: ProcessInstanceRequestCriteria['botId'];
-    processId?: ProcessInstanceRequestCriteria['processId'];
-    title?: ReactNode;
-    sx?: SxProps<Theme>;
-    rerunEnabled?: boolean;
-}
-
-export interface ProcessInstanceRow extends Omit<Row, 'subRows' | 'isExpanded'>{
-    original: InstanceExtendedWithSubProcesses;
-    subRows?: ProcessInstanceRow[];
-    isExpanded?: boolean;
-}
-
-
 export type Column<D extends object = {}> = ReactTableColumn<D> & {
     featureKeys?: FeatureKey[];
 };
-
-export interface getSubProcessesResponse { 
-    type: string;
-    payload: InstanceExtendedWithSubProcesses[];
-    meta: {
-        arg: {
-            processInstanceId: string;
-        };
-        requestId: string;
-        requestStatus: 'fulfilled';
-    }
-}

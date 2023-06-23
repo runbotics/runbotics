@@ -3,5 +3,5 @@
     "History.Header.Title": "Historia",
     "History.Table.Expand": "Pokaż podprocesy",
     "History.Table.Error.InstancesNotFound": "Nie można pobrać historii uruchomień procesu",
-    "History.Table.Error.SubProcessesNotFound": "Nie znaleziono podprocesów dla tego uruchomienia"
+    "History.Table.Error.SubprocessesNotFound": "Nie znaleziono podprocesów dla tego uruchomienia"
 }

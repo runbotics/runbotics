@@ -25,9 +25,10 @@ import {
 import { DefaultPageSize } from '../../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 import ResizableDrawer from '../../ResizableDrawer';
 import If from '../../utils/If';
-import Table, { HistoryTableProps, PanelInfoState } from '../Table';
+import Table from '../Table';
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
+import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
 
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
@@ -131,7 +132,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         pageSize={pageSize}
                         setPageSize={setPageSize}
                         loading={loadingPage}
-                        subRowProperty="subProcesses"
+                        subRowProperty="subprocesses"
                         singleSelect={hasProcessInstanceEventReadAccess}
                     />
                 </Box>

@@ -40,7 +40,7 @@ public class ProcessInstanceDTO implements Serializable {
 
     private BotDTO bot;
 
-    private boolean hasSubProcesses;
+    private boolean hasSubprocesses;
 
     private String error;
 
@@ -146,12 +146,12 @@ public class ProcessInstanceDTO implements Serializable {
         this.bot = bot;
     }
 
-    public boolean getHasSubProcesses() {
-        return hasSubProcesses;
+    public boolean getHasSubprocesses() {
+        return hasSubprocesses;
     }
 
-    public void setHasSubProcesses(boolean hasSubProcesses) {
-        this.hasSubProcesses = hasSubProcesses;
+    public void setHasSubprocesses(boolean hasSubprocesses) {
+        this.hasSubprocesses = hasSubprocesses;
     }
 
     public String getError() {
@@ -225,7 +225,7 @@ public class ProcessInstanceDTO implements Serializable {
             ", error=" + getError() +
             ", trigger=" + getTrigger() +
             ", triggerData=" + getTriggerData() +
-            ", hasSubProcesses=" + getHasSubProcesses() +
+            ", hasSubprocesses=" + getHasSubprocesses() +
             "}";
     }
 }

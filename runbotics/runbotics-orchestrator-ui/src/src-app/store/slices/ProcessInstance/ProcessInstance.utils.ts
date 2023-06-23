@@ -1,19 +1,19 @@
-import { ProcessInstanceState, InstanceExtendedWithSubProcesses } from './ProcessInstance.state';
+import { ProcessInstanceState, InstanceExtendedWithSubprocesses } from './ProcessInstance.state';
 
-export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubProcesses) => {
-    const { id, subProcesses, hasSubProcesses, isLoadingSubProcesses } = processInstance;
+export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses) => {
+    const { id, subprocesses, hasSubprocesses, isLoadingSubprocesses } = processInstance;
     const pageContent = state.all.page?.content;
     if (!pageContent) return;
 
     state.all.page.content = pageContent
-        .map((instance: InstanceExtendedWithSubProcesses) => 
+        .map((instance: InstanceExtendedWithSubprocesses) => 
             instance.id !== id
                 ? instance 
                 : ({ 
                     ...instance,
-                    subProcesses: subProcesses !== undefined ? subProcesses : instance.subProcesses, 
-                    hasSubProcesses: hasSubProcesses !== undefined ? hasSubProcesses : instance.hasSubProcesses,
-                    isLoadingSubProcesses: isLoadingSubProcesses !== undefined ? isLoadingSubProcesses : instance.isLoadingSubProcesses,
+                    subprocesses: subprocesses !== undefined ? subprocesses : instance.subprocesses, 
+                    hasSubprocesses: hasSubprocesses !== undefined ? hasSubprocesses : instance.hasSubprocesses,
+                    isLoadingSubprocesses: isLoadingSubprocesses !== undefined ? isLoadingSubprocesses : instance.isLoadingSubprocesses,
                 })
         );
 };

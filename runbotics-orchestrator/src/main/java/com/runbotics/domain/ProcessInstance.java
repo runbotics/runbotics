@@ -73,7 +73,7 @@ public class ProcessInstance implements Serializable {
     private Bot bot;
 
     @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
-    private boolean hasSubProcesses;
+    private boolean hasSubprocesses;
 
     @Column(name = "error")
     private String error;
@@ -235,12 +235,12 @@ public class ProcessInstance implements Serializable {
         this.bot = bot;
     }
 
-    public boolean getHasSubProcesses() {
-        return hasSubProcesses;
+    public boolean getHasSubprocesses() {
+        return hasSubprocesses;
     }
 
-    public void setHasSubProcesses(boolean hasSubProcesses) {
-        this.hasSubProcesses = hasSubProcesses;
+    public void setHasSubprocesses(boolean hasSubprocesses) {
+        this.hasSubprocesses = hasSubprocesses;
     }
 
     public String getError() {
@@ -309,7 +309,7 @@ public class ProcessInstance implements Serializable {
             ", error='" + getError() + "'" +
             ", trigger='" + getTrigger() + "'" +
             ", triggerData='" + getTriggerData() + "'" +
-            ", hasSubProcesses='" + getHasSubProcesses() + "'" +
+            ", hasSubprocesses='" + getHasSubprocesses() + "'" +
             "}";
     }
 }

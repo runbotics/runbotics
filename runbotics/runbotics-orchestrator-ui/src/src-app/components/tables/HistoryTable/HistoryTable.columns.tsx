@@ -4,7 +4,6 @@ import moment from 'moment';
 import { useSnackbar } from 'notistack';
 import { FeatureKey } from 'runbotics-common';
 
-
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
 import useAuth from '#src-app/hooks/useAuth';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
@@ -17,8 +16,8 @@ import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstance
 import Label from '../../Label';
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column } from '../Table';
-import { ProcessInstanceRow, getSubProcessesResponse } from '../Table/Table.types';
 import TableRowExpander from '../Table/TableRowExpander';
+import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
 
 
 const useProcessInstanceColumns = (
@@ -34,21 +33,21 @@ const useProcessInstanceColumns = (
         (state) => state.process.draft
     );
 
-    const handleNoSubProcessesFound = (currRow: ProcessInstanceRow) => {
+    const handleNoSubprocessesFound = (currRow: ProcessInstanceRow) => {
         enqueueSnackbar(
-            translate('History.Table.Error.SubProcessesNotFound'),
+            translate('History.Table.Error.SubprocessesNotFound'),
             { variant: 'error' },
         );
-        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubProcesses: false }));
+        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
     };
     
     const handleRowExpand = (currRow: ProcessInstanceRow) => {
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
-        dispatch(processInstanceActions.getSubProcesses({ processInstanceId: currRow.original.id }))
-            .then((response: getSubProcessesResponse ) => {
-                if(response.payload.length === 0) handleNoSubProcessesFound(currRow);
+        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
+            .then((response: getSubprocessesResponse ) => {
+                if(response.payload.length === 0) handleNoSubprocessesFound(currRow);
             })
-            .catch(() => { handleNoSubProcessesFound(currRow); });
+            .catch(() => { handleNoSubprocessesFound(currRow); });
     };
 
     let columns = [
@@ -56,7 +55,7 @@ const useProcessInstanceColumns = (
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.hasSubProcesses ? (
+                row.original.hasSubprocesses ? (
                     <TableRowExpander row={row} handleClick={handleRowExpand} />
                 ) : null,
         },

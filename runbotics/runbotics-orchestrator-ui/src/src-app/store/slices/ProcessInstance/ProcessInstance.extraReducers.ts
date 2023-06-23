@@ -10,7 +10,7 @@ import {
     getAllByProcessId,
     getBotProcessInstances,
     getProcessInstance,
-    getSubProcesses,
+    getSubprocesses,
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
@@ -84,32 +84,32 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
         })
 
         // GET sub processes
-        .addCase(getSubProcesses.pending, (state, action) => {
+        .addCase(getSubprocesses.pending, (state, action) => {
             updateProcessInstanceProps(
                 state, 
                 { 
                     id: action.meta.arg.processInstanceId, 
-                    isLoadingSubProcesses: true 
+                    isLoadingSubprocesses: true 
                 }
             );
         })
-        .addCase(getSubProcesses.fulfilled, (state, action) => {
+        .addCase(getSubprocesses.fulfilled, (state, action) => {
             updateProcessInstanceProps(
                 state, 
                 { 
                     id: action.meta.arg.processInstanceId, 
-                    isLoadingSubProcesses: false, 
-                    subProcesses: action.payload 
+                    isLoadingSubprocesses: false, 
+                    subprocesses: action.payload 
                 }
             );
         })
-        .addCase(getSubProcesses.rejected, (state, action) => {
+        .addCase(getSubprocesses.rejected, (state, action) => {
             updateProcessInstanceProps(
                 state, 
                 { 
                     id: action.meta.arg.processInstanceId, 
-                    isLoadingSubProcesses: false, 
-                    hasSubProcesses: false 
+                    isLoadingSubprocesses: false, 
+                    hasSubprocesses: false 
                 }
             );
         })

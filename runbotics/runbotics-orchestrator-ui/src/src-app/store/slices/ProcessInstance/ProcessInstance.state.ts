@@ -14,7 +14,7 @@ export interface ProcessInstanceState {
         byId: Record<string, IProcessInstance>;
         byProcessId: Record<number, IProcessInstance[]>;
         ids: string[];
-        page: Page<InstanceExtendedWithSubProcesses> | null;
+        page: Page<InstanceExtendedWithSubprocesses> | null;
     };
 }
 
@@ -23,8 +23,8 @@ export interface ProcessInstanceRequestCriteria extends Omit<IProcessInstance, '
     processId?: number;
 }
 
-export interface InstanceExtendedWithSubProcesses extends IProcessInstance {
-    hasSubProcesses?: boolean;
-    isLoadingSubProcesses?: boolean;
-    subProcesses?: IProcessInstance[];
+export interface InstanceExtendedWithSubprocesses extends IProcessInstance {
+    hasSubprocesses?: boolean;
+    isLoadingSubprocesses?: boolean;
+    subprocesses?: IProcessInstance[];
 }
