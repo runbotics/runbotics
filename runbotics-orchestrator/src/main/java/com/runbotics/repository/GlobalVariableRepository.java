@@ -1,7 +1,9 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.GlobalVariable;
+
 import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 

@@ -1,13 +1,17 @@
 package com.runbotics.security.jwt;
 
+import com.runbotics.domain.Authority;
+import com.runbotics.domain.Guest;
 import com.runbotics.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +38,8 @@ public class TokenProvider {
 
     private final long tokenValidityInMillisecondsForRememberMe;
 
+    private final long guestTokenValidityInMilliseconds = 1000 * 60 * 60;
+
     private final UserRepository ur;
 
     public TokenProvider(JHipsterProperties jHipsterProperties, UserRepository ur) {
@@ -43,7 +49,7 @@ public class TokenProvider {
         if (!ObjectUtils.isEmpty(secret)) {
             log.warn(
                 "Warning: the JWT key used is not Base64-encoded. " +
-                "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security."
+                    "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security."
             );
             keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         } else {
@@ -71,6 +77,23 @@ public class TokenProvider {
         return Jwts
             .builder()
             .setSubject(authentication.getName())
+            .claim(AUTHORITIES_KEY, authorities)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .setExpiration(validity)
+            .compact();
+    }
+
+    public String createGuestToken(com.runbotics.domain.User guestUser) {
+        String authorities = guestUser.getAuthorities()
+            .stream()
+            .map(Authority::getName)
+            .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + this.guestTokenValidityInMilliseconds);
+
+        return Jwts.builder()
+            .setSubject(guestUser.getEmail())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
