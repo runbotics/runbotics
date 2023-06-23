@@ -8,7 +8,7 @@
             </not>
         </preConditions>
         <createTable tableName="guest">
-            <column name="ip" type="varchar(16)">
+            <column name="ip" type="varchar(100)">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="guest_pkey"/>
             </column>
             <column name="user_id" type="bigint">
