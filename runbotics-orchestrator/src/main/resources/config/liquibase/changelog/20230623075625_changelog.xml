@@ -7,7 +7,7 @@
             <and>
                 <tableExists tableName="bot_collection"/>
                 <sqlCheck  expectedResult="0">
-                    SELECT COUNT(*) FROM bot_collection WHERE ID='691c15ee-0230-49c6-b794-9e33790652d3';
+                    SELECT COUNT(*) FROM bot_collection WHERE id ='691c15ee-0230-49c6-b794-9e33790652d3';
                 </sqlCheck>
             </and>
         </preConditions>
@@ -24,7 +24,7 @@
             <and>
                 <tableExists tableName="bot_collection"/>
                 <sqlCheck  expectedResult="0">
-                    SELECT COUNT(*) FROM bot_collection WHERE name='Guest';
+                    SELECT COUNT(*) FROM bot_collection WHERE name ='Guest';
                 </sqlCheck>
             </and>
         </preConditions>
