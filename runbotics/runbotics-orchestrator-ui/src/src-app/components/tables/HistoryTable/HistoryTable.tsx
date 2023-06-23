@@ -1,7 +1,6 @@
-import React, { forwardRef, HTMLProps, ReactNode, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { Box, SxProps } from '@mui/material';
-import { Theme } from '@mui/system';
+import { Box } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -21,7 +20,6 @@ import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstan
 import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
-    ProcessInstanceRequestCriteria,
     processInstanceSelector,
 } from '../../../store/slices/ProcessInstance';
 import { DefaultPageSize } from '../../../views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
@@ -30,21 +28,7 @@ import If from '../../utils/If';
 import Table from '../Table';
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
-
-
-
-interface PanelInfoState {
-    show: boolean;
-    processInstanceId?: string;
-}
-
-interface HistoryTableProps extends Omit<HTMLProps<HTMLDivElement>, 'title'> {
-    botId?: ProcessInstanceRequestCriteria['botId'];
-    processId?: ProcessInstanceRequestCriteria['processId'];
-    title?: ReactNode;
-    sx?: SxProps<Theme>;
-    rerunEnabled?: boolean;
-}
+import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
 
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
@@ -87,9 +71,9 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             },
         }))
             .then(unwrapResult)
-            .catch((error) => {
+            .catch(() => {
                 enqueueSnackbar(
-                    error?.message as string ?? translate('History.Table.Error'),
+                    translate('History.Table.Error.InstancesNotFound'),
                     { variant: 'error' },
                 );
             });
@@ -148,7 +132,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         pageSize={pageSize}
                         setPageSize={setPageSize}
                         loading={loadingPage}
-                        subRowProperty="subProcesses"
+                        subRowProperty="subprocesses"
                         singleSelect={hasProcessInstanceEventReadAccess}
                     />
                 </Box>

@@ -37,7 +37,6 @@ import { isJsonValid } from '#src-app/utils/utils';
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
-
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
 const isProcessActive = (
@@ -102,7 +101,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const { orchestratorProcessInstanceId, processInstance, eventsMap } =
         processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
-    const isProcessAttended = process?.isAttended && Boolean(process?.executionInfo);
+    const isProcessAttended =
+        process?.isAttended && Boolean(process?.executionInfo);
     const processName = process?.name;
     const processId = process?.id;
     const isRunButtonDisabled =
@@ -126,7 +126,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setAnchorEl(null);
     };
 
-    const handleTerminate = async () => {
+    const handleTerminate = () => {
         if (!started) return;
 
         dispatch(
@@ -159,7 +159,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleRun = (executionInfo?: Record<string, any>) => {
         if (started) return;
-        dispatch(processInstanceActions.resetActiveProcessInstaceAndEvents());
+        dispatch(processInstanceActions.resetActiveProcessInstanceAndEvents());
         dispatch(processInstanceEventActions.resetAll());
 
         enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
@@ -211,8 +211,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     }, [rerunProcessInstance?.id]);
 
     const getTooltipTitle = () => {
-        if (!isRunButtonDisabled)
-        { return translate('Process.MainView.Tooltip.Run.Enabled'); }
+        if (!isRunButtonDisabled) {
+            return translate('Process.MainView.Tooltip.Run.Enabled');
+        }
 
         return processInstance?.status === ProcessInstanceStatus.IN_PROGRESS
             ? translate(
@@ -275,24 +276,29 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 open={!!anchorEl}
                 onClose={closeMenu}
             >
-                <MenuItem
-                    onClick={openModal}
-                    disabled={isRerunButtonDisabled}
-                >
+                <MenuItem onClick={openModal} disabled={isRerunButtonDisabled}>
                     {translate('Component.BotProcessRunner.Menu.RerunProcess')}
                 </MenuItem>
             </Menu>
         </>
     );
 
-    if (rerunProcessInstance && (!isProcessAttended || !rerunInput?.variables || Object.keys(rerunInput.variables).length === 0)) {
+    if (
+        rerunProcessInstance &&
+        (!isProcessAttended ||
+            !rerunInput?.variables ||
+            Object.keys(rerunInput.variables).length === 0)
+    ) {
         return null;
     }
 
     const hasEventStarted = eventsMap && Object.keys(eventsMap).length > 0;
 
     return (
-        <If condition={hasRunProcessAccess && (!started || !hasEventStarted) } else={terminateButton}>
+        <If
+            condition={hasRunProcessAccess && (!started || !hasEventStarted)}
+            else={terminateButton}
+        >
             <If condition={Boolean(rerunProcessInstance)} else={runButton}>
                 {rerunMenu}
             </If>

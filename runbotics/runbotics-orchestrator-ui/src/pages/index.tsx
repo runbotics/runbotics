@@ -2,7 +2,6 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { useRouter } from 'next/router';
 
 
 import { getBlogMainCache, recreateCache } from '#contentful/blog-main';

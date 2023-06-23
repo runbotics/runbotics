@@ -16,13 +16,5 @@
         "runbotics-common",
         "runbotics-cli",
     ],
-    "cSpell.words": [
-        "Moddle",
-        "nestjs",
-        "runbotics",
-        "typeorm",
-        "uuidv",
-        "websockets"
-    ],
     "svg.preview.background": "transparent",
 }
