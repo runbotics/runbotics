@@ -41,11 +41,11 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const translationKey = `Process.Details.Modeler.Actions.${
         actionId
             ? capitalizeFirstLetter({
-                  text: actionId,
-                  lowerCaseRest: false,
-                  delimiter: '.',
-                  join: '.',
-              })
+                text: actionId,
+                lowerCaseRest: false,
+                delimiter: '.',
+                join: '.',
+            })
             : ''
     }.Label`;
 
@@ -143,8 +143,8 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                                 { system: selectedAction.system }
                             )}
                         >
-                            <IconButton size="small">
-                                <InfoIcon sx={{ width: '20px', height: '20px' }} />
+                            <IconButton size="small" sx={{ cursor: 'default' }}>
+                                <InfoIcon sx={{ width: '20px', height: '20px' }}/>
                             </IconButton>
                         </Tooltip>
                     </div>
