@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-export const useLoginValidationSchema = () => {
+const useLoginValidationSchema = () => {
     const { translate } = useTranslations();
 
     return Yup.object().shape({
@@ -14,3 +14,5 @@ export const useLoginValidationSchema = () => {
             .required(translate('Login.Form.Password.Required')),
     });
 };
+
+export default useLoginValidationSchema;

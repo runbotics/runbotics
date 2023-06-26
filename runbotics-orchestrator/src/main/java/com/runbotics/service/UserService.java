@@ -11,10 +11,12 @@ import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.AuthorityDTO;
 import com.runbotics.service.dto.UserDTO;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -236,6 +238,10 @@ public class UserService {
         processRepository.deleteUnassignedPrivateProcesses();
     }
 
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
     /**
      * Update basic information (first name, last name, email, language) for the current user.
      *
@@ -325,6 +331,7 @@ public class UserService {
 
     /**
      * Gets a list of all the authorities.
+     *
      * @return a list of all the authorities.
      */
     @Transactional(readOnly = true)

@@ -1,6 +1,9 @@
 {
     "Login.SignIn": "Sign in",
     "Login.SignIn.Success": "Successfully logged in",
+    "Login.Guest.Action": "Login as a guest",
+    "Login.Guest.LimitExceeded": "You have exceeded your daily limit. Contact us via the contact form on the homepage or come back tomorrow",
+    "Login.Guest.UnexpectedError": "Unhandled error has occurred. Contact us via the contact form on the homepage",
     "Login.Form.Action": "Login",
     "Login.Form.Email.Label": "Email Address",
     "Login.Form.Email.Required": "Email is required",
@@ -9,8 +12,7 @@
     "Login.SwitchToRegisterMessage": "Don't have an account? Sign up",
     "Login.Error.NoInternet": "No internet connection",
     "Login.Error.4xx": "Incorrect e-mail and/or password or the user already exists",
-    "Login.Error.500": "A problem with server has occured. If the problem persist - contact us via contact form on the main page",
+    "Login.Error.500": "A problem with server has occurred. If the problem persist - contact us via the contact form on the homepage",
     "Login.Error.503": "The requested service is not available",
-    "Login.Error.UnexpectedError": "Unhandled error has occured. Contact us via contact form on the main page"
-
+    "Login.Error.UnexpectedError": "Unhandled error has occurred. Contact us via the contact form on the homepage"
 }

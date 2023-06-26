@@ -1,6 +1,9 @@
 {
     "Login.SignIn": "Zaloguj się",
     "Login.SignIn.Success": "Zalogowano pomyślnie",
+    "Login.Guest.Action": "Zaloguj jako gość",
+    "Login.Guest.LimitExceeded": "Przekroczyłeś dzienny limit. Wróć jutro lub skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Guest.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej",
     "Login.Form.Action": "Login",
     "Login.Form.Email.Label": "Adres Email",
     "Login.Form.Email.Required": "Adres email jest wymagany",

@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 
 import { User } from '#src-app/types/user';
 
-const setAccessToken = (accessToken: string | null): void => {
+export const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
         localStorage.setItem('access_token', accessToken);
         Axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
@@ -41,6 +41,26 @@ export const login = createAsyncThunk(
             }
 
             return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const createGuestAccount = createAsyncThunk<User, { langKey: string }>(
+    'auth/createGuestAccount',
+    async ({ langKey }, { rejectWithValue }) => {
+        try {
+            const response = await Axios.post<{ id_token: string }>('/api/authenticate/guest', { langKey });
+            const token = response.data.id_token;
+
+            setAccessToken(token);
+            const { data: responseUser } = await Axios.get<User>('/api/account');
+            return { ...responseUser, authoritiesById: responseUser?.roles };
+        } catch (error) {
+            if (!error.response) {
+                throw error;
+            }
+
+            return rejectWithValue(error.response);
         }
     }
 );
