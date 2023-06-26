@@ -8,7 +8,7 @@
     "Action.List.Results.Label": "Etykieta",
     "Action.List.Results.Script": "Skrypt",
     "Action.List.Results.Actions": "Akcje",
-    "Action.List.Item.Disabled.Tooltip": "Działa tylko na bocie z systemem {{ system }}",
+    "Action.List.Item.Disabled.Tooltip": "Działa wyłącznie na bocie z systemem {{ system }}",
     
     "Action.Details.Script": "Skrypt",
     "Action.Details.Label": "Etykieta",

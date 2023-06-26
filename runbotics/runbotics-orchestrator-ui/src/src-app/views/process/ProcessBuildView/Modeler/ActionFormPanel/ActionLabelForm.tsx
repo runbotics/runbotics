@@ -3,6 +3,7 @@ import React, { useEffect, useState, VFC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
 
 import {
     Alert,
@@ -40,11 +41,11 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const translationKey = `Process.Details.Modeler.Actions.${
         actionId
             ? capitalizeFirstLetter({
-                text: actionId,
-                lowerCaseRest: false,
-                delimiter: '.',
-                join: '.',
-            })
+                  text: actionId,
+                  lowerCaseRest: false,
+                  delimiter: '.',
+                  join: '.',
+              })
             : ''
     }.Label`;
 
@@ -123,22 +124,31 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const ActionSystemLabel = () => (
         <>
             {selectedAction && selectedAction.system && (
-                <Tooltip
-                    title={translate(
-                        'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
-                        { system: selectedAction.system }
-                    )}
+                <Alert
+                    severity="warning"
+                    sx={{
+                        mt: (theme) => theme.spacing(1),
+                        alignItems: 'center',
+                        width: 'fit-content'
+                    }}
                 >
-                    <Alert
-                        severity="warning"
-                        sx={{ mt: (theme) => theme.spacing(1) }}
-                    >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
                         {translate(
                             'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
                             { system: selectedAction.system }
                         )}
-                    </Alert>
-                </Tooltip>
+                        <Tooltip
+                            title={translate(
+                                'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
+                                { system: selectedAction.system }
+                            )}
+                        >
+                            <IconButton size="small">
+                                <InfoIcon sx={{ width: '20px', height: '20px' }} />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                </Alert>
             )}
         </>
     );
