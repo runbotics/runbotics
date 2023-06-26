@@ -2,26 +2,19 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-
-
 import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
 import { BlogPost } from '#contentful/common';
 import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
-
 import { Language } from '#src-app/translations/translations';
-
 import MainView from '#src-landing/views/MainView';
 
 interface Props {
     blogPosts: BlogPost[];
 }
 
-
-
 const IndexPage: VFC<Props> = ({ blogPosts }) => <MainView blogPosts={blogPosts} />;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ res, locale }) => {
-
 
     let cache = getBlogMainCache(locale as Language);
 
@@ -32,7 +25,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ res, local
     }
 
     const blogPosts = cache.posts?.slice(0, 3) ?? [];
-
 
     return {
         props: {

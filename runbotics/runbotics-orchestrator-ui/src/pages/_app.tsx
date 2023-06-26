@@ -67,7 +67,7 @@ function App(props: AppProps) {
                                     <InitializeAuth>
                                         <SocketProvider
                                             uri={props.runboticsEntrypointUrl}
-                                            shouldAttach={router.pathname.startsWith('/app/')}
+                                            shouldAttach={router.pathname.includes('/app/')}
                                         >
                                             <Layout>
                                                 <Component {...pageProps} />

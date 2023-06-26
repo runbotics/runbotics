@@ -62,6 +62,7 @@
         <sql>
             INSERT INTO authority_feature_key(authority, feature_key)
             VALUES ('ROLE_GUEST', 'PROCESS_READ'),
+                   ('ROLE_GUEST', 'PROCESS_ADD'),
                    ('ROLE_GUEST', 'PROCESS_BUILD_VIEW'),
                    ('ROLE_GUEST', 'PROCESS_ACTIONS_LIST'),
                    ('ROLE_GUEST', 'PROCESS_EDIT_STRUCTURE'),

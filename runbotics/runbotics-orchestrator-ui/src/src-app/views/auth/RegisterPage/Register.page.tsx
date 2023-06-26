@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { FC } from 'react';
 
 import {
@@ -21,22 +20,24 @@ import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo/Logo';
+
 import useTranslations, {
     checkIfKeyExists,
 } from '#src-app/hooks/useTranslations';
-
 import { useDispatch } from '#src-app/store';
-import { login } from '#src-app/store/slices/Auth/Auth.thunks';
+import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 
-import { useLoginValidationSchema } from './login.schema';
+import { Language } from '#src-app/translations/translations';
 
-const PREFIX = 'LoginPage';
+import useRegisterValidationSchema from './useRegisterValidationSchema';
+
+const PREFIX = 'RegisterView';
 
 const classes = {
     root: `${PREFIX}-root`,
-    container: `${PREFIX}-container`,
-    content: `${PREFIX}-content`,
     logo: `${PREFIX}-logo`,
+    container: `${PREFIX}-container`,
+    card: `${PREFIX}-card`,
 };
 
 const StyledPage = styled(Page)(({ theme }) => ({
@@ -50,60 +51,74 @@ const StyledPage = styled(Page)(({ theme }) => ({
         paddingTop: 80,
     },
 
-    [`& .${classes.content}`]: {
+    [`& .${classes.card}`]: {
+        padding: theme.spacing(3),
         display: 'flex',
         flexDirection: 'column',
-        padding: theme.spacing(3),
         minHeight: 400,
     },
 }));
 
-interface LoginFormState {
+interface RegisterFormState {
     email: string,
+    name: string,
     password: string,
-    submit: null | boolean
+    passwordConfirmation: string,
+    submit: null | boolean,
+    langKey: Language
 }
 
-const initialValues: LoginFormState = {
+const initialValues: RegisterFormState = {
     email: '',
+    name: '',
     password: '',
+    passwordConfirmation: '',
     submit: null,
+    langKey: 'en'
 };
 
-const LoginPage: FC = () => {
+// eslint-disable-next-line max-lines-per-function
+const RegisterPage: FC = () => {
     const { translate } = useTranslations();
-    const dispatch = useDispatch();
+    const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
-    const loginValidationSchema = useLoginValidationSchema();
+    const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
     const handleFormSubmit = async (
-        values: LoginFormState,
+        values: RegisterFormState,
         { setErrors, setStatus, setSubmitting }
     ) => {
         if (!window.navigator.onLine) {
             setStatus({ success: false });
             setSubmitting(false);
-            setErrors({ submit: translate('Login.Error.NoInternet') });
+            setErrors({ submit: translate('Register.Error.NoInternet') });
             return;
         }
-        await dispatch(login(values))
+
+        const registerValues = router.locale ? { ...values, langKey: router.locale } : values;
+
+        await dispatch(register(registerValues))
             .then(unwrapResult)
             .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                router.push({pathname:'/app/processes'}, null, { locale:router.locale });
+                router.push('/app', null, { locale: router.locale });
+                enqueueSnackbar(translate('Register.AccountCreated.ActivationNeededMessage'), {
+                    variant: 'success',
+                    autoHideDuration: 5000,
+                });
             })
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
                 const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
                 
-                const errorKey = `Login.Error.${status}`;
+                const errorKey = `Register.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
                     const customErrorMessage = `${error.message}: ${translate(
-                        'Login.Error.UnexpectedError'
+                        'Register.Error.UnexpectedError'
                     )}`;
                     setErrors({ submit: customErrorMessage });
                     enqueueSnackbar(customErrorMessage, {
@@ -115,7 +130,6 @@ const LoginPage: FC = () => {
 
                 const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
-
                 enqueueSnackbar(customErrorMessage, {
                     variant: 'error',
                     autoHideDuration: 10000,
@@ -136,9 +150,8 @@ const LoginPage: FC = () => {
             <TextField
                 error={Boolean(touched.email && errors.email)}
                 fullWidth
-                autoFocus
                 helperText={touched.email && errors.email}
-                label={translate('Login.Form.Email.Label')}
+                label={translate('Register.Form.Fields.Email.Label')}
                 margin="normal"
                 name="email"
                 onBlur={handleBlur}
@@ -151,13 +164,32 @@ const LoginPage: FC = () => {
                 error={Boolean(touched.password && errors.password)}
                 fullWidth
                 helperText={touched.password && errors.password}
-                label={translate('Login.Form.Password.Label')}
+                label={translate('Register.Form.Fields.Password.Label')}
                 margin="normal"
                 name="password"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 type="password"
                 value={values.password}
+                variant="outlined"
+            />
+            <TextField
+                error={Boolean(
+                    touched.passwordConfirmation && errors.passwordConfirmation
+                )}
+                fullWidth
+                helperText={
+                    touched.passwordConfirmation && errors.passwordConfirmation
+                }
+                label={translate(
+                    'Register.Form.Fields.PasswordConfirmation.Label'
+                )}
+                margin="normal"
+                name="passwordConfirmation"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type="password"
+                value={values.passwordConfirmation}
                 variant="outlined"
             />
             <Box mt={2}>
@@ -169,41 +201,45 @@ const LoginPage: FC = () => {
                     type="submit"
                     variant="contained"
                 >
-                    {translate('Login.Form.Action')}
+                    {translate('Register.Form.Actions.Register')}
                 </Button>
             </Box>
         </form>
     );
 
     return (
-        <StyledPage className={classes.root} title="Login">
+        <StyledPage
+            className={classes.root}
+            title={translate('Register.Meta.Title')}
+        >
             <Container className={classes.container} maxWidth="sm">
                 <Box mb={6} display="flex" justifyContent="center">
                     <RouterLink href="/">
-                        <Logo simple height={100} />
+                        <Logo height={100} />
                     </RouterLink>
                 </Box>
                 <Card>
-                    <CardContent className={classes.content}>
+                    <CardContent className={classes.card}>
                         <Box
                             alignItems="center"
                             display="flex"
                             justifyContent="center"
                             mb={0}
                         >
-                            <Typography
-                                color="textPrimary"
-                                gutterBottom
-                                variant="h2"
-                            >
-                                {translate('Login.SignIn')}
-                            </Typography>
+                            <div>
+                                <Typography
+                                    color="textPrimary"
+                                    gutterBottom
+                                    variant="h2"
+                                >
+                                    {translate('Register.SignUp')}
+                                </Typography>
+                            </div>
                         </Box>
                         <Box flexGrow={1} mt={3}>
                             <Formik
-
                                 initialValues={initialValues}
-                                validationSchema={loginValidationSchema}
+                                validationSchema={registerValidationSchema}
                                 onSubmit={handleFormSubmit}
                             >
                                 {renderForm}
@@ -212,13 +248,13 @@ const LoginPage: FC = () => {
                         <Box my={3}>
                             <Divider />
                         </Box>
-                        <RouterLink href="/register" passHref legacyBehavior>
+                        <RouterLink href="/login" passHref legacyBehavior>
                             <Link
-                                sx={{ textAlign: 'center' }}
                                 variant="body2"
                                 color="textSecondary"
+                                sx={{ textAlign: 'center' }}
                             >
-                                {translate('Login.SwitchToRegisterMessage')}
+                                {translate('Register.SwitchToLoginMessage')}
                             </Link>
                         </RouterLink>
                     </CardContent>
@@ -228,4 +264,4 @@ const LoginPage: FC = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

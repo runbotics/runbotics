@@ -45,7 +45,7 @@ const ProcessMainViewManager: VFC = () => {
         dispatch(processActions.fetchProcessById(processId))
             .then(unwrapResult)
             .catch((response: AxiosResponse) => {
-                if (response.status === 403) {
+                if (response.status >= 400) {
                     router.replace('/404');
                 }
             });

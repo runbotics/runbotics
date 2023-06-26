@@ -1,4 +1,4 @@
 import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
-import RegisterView from '#src-app/views/auth/RegisterView';
+import RegisterPage from '#src-app/views/auth/RegisterPage';
 
-export default withGuestGuard(RegisterView);
+export default withGuestGuard(RegisterPage);

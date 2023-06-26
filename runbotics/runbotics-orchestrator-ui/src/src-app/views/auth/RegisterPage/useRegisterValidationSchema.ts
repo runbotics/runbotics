@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-export const useRegisterValidationSchema = () => {
+const useRegisterValidationSchema = () => {
     const { translate } = useTranslations();
 
     return Yup.object().shape({
@@ -26,3 +26,5 @@ export const useRegisterValidationSchema = () => {
             ),
     });
 };
+
+export default useRegisterValidationSchema;

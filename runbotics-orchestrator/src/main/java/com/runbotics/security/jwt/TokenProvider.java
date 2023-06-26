@@ -1,17 +1,10 @@
 package com.runbotics.security.jwt;
 
 import com.runbotics.domain.Authority;
-import com.runbotics.domain.Guest;
 import com.runbotics.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +16,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import tech.jhipster.config.JHipsterProperties;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 @Component
 public class TokenProvider {
 
-    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
-
     private static final String AUTHORITIES_KEY = "auth";
-
+    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private final Key key;
 
     private final JwtParser jwtParser;
@@ -93,7 +91,7 @@ public class TokenProvider {
         Date validity = new Date(now + this.guestTokenValidityInMilliseconds);
 
         return Jwts.builder()
-            .setSubject(guestUser.getEmail())
+            .setSubject(guestUser.getLogin())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
