@@ -22,6 +22,7 @@ export interface Item {
     id: string;
     label: string;
     name?: string;
+    system?: string;
 }
 
 export interface ListGroupProps {
