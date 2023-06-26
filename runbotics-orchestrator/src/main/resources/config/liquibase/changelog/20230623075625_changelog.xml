@@ -1,0 +1,38 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="pasiecznys" id="20230623075625-1" context="dev">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="bot_collection"/>
+                <sqlCheck  expectedResult="0">
+                    SELECT COUNT(*) FROM bot_collection WHERE id ='691c15ee-0230-49c6-b794-9e33790652d3';
+                </sqlCheck>
+            </and>
+        </preConditions>
+        <insert tableName="bot_collection">
+            <column name="id">691c15ee-0230-49c6-b794-9e33790652d3</column>
+            <column name="name">Guest</column>
+            <column name="public_bots_included">false</column>
+            <column name="created_by">1</column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="pasiecznys" id="20230623075625-2" context="!dev">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="bot_collection"/>
+                <sqlCheck  expectedResult="0">
+                    SELECT COUNT(*) FROM bot_collection WHERE name ='Guest';
+                </sqlCheck>
+            </and>
+        </preConditions>
+        <insert tableName="bot_collection">
+            <column name="name">Guest</column>
+            <column name="public_bots_included">false</column>
+            <column name="created_by">1</column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

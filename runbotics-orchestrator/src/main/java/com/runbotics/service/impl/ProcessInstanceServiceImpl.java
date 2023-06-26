@@ -14,7 +14,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -79,5 +82,12 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     public void delete(UUID id) {
         log.debug("Request to delete ProcessInstance : {}", id);
         processInstanceRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId) {
+        log.debug("Request to get all subprocesses for ProcessInstance : {}", processInstanceId);
+        List<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId);
+        return processInstanceMapper.toDto(subprocesses);
     }
 }

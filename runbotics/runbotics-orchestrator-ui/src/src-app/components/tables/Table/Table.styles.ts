@@ -1,4 +1,4 @@
-import { TableRow } from '@mui/material';
+import { LinearProgress, TableRow } from '@mui/material';
 import styled, { css } from 'styled-components';
 
 import { TABLE_ROW_HEIGHT } from './Table.utils';
@@ -46,15 +46,22 @@ const rowStyles = css<{ isRowSelected?: boolean, isClickable?: boolean }>`
 `;
 
 export const DataTableRow = styled(TableRow) <{
-    isRowSelected?: boolean, isSubRoww: boolean, isClickable?: boolean,
+    isRowSelected?: boolean, isSubRow: boolean, isClickable?: boolean,
 }>`
     && {
         min-height: ${TABLE_ROW_HEIGHT}px;
     }
 
-    ${({ isSubRoww }) => (isSubRoww ? subRowStyles : rowStyles)};
+    ${({ isSubRow }) => (isSubRow ? subRowStyles : rowStyles)};
 
     & > :first-child {
         cursor: default;
+    }
+`;
+
+export const LoadingRow = styled(LinearProgress)`
+    && {
+        width: 40%;
+        margin: auto;        
     }
 `;

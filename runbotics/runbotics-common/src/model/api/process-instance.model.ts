@@ -19,7 +19,6 @@ export interface IProcessInstance {
     error?: string | null;
     trigger?: ITriggerEvent;
     triggerData?: EmailTriggerData | unknown;
-    subProcesses?: IProcess[];
     warning?: boolean;
 }
 

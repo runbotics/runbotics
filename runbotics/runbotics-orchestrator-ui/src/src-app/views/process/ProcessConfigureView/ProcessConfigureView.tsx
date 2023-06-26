@@ -76,7 +76,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendedance({ id: process.id, isAttended })
+            processActions.updateAttendance({ id: process.id, isAttended })
         );
         setAttended(isAttended);
         await fetchProcess();

@@ -1,46 +1,62 @@
 import React from 'react';
 
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 import { FeatureKey } from 'runbotics-common';
 
-
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
-
 import useAuth from '#src-app/hooks/useAuth';
-
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
-
 import useTranslations from '#src-app/hooks/useTranslations';
-
+import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { useSelector } from '../../../store';
-
+import { useDispatch, useSelector } from '../../../store';
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
-
 import Label from '../../Label';
-
 import { hasFeatureKeyAccess } from '../../utils/Secured';
-
 import { Column } from '../Table';
 import TableRowExpander from '../Table/TableRowExpander';
+import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
+
 
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
-    onRerunProcess: () => void
+    onRerunProcess: () => void,
 ): Column[] => {
     const { translate } = useTranslations();
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
-    const { process: currentProcess } = useSelector((state) => state.process.draft);
+    const { process: currentProcess } = useSelector(
+        (state) => state.process.draft
+    );
+
+    const handleNoSubprocessesFound = (currRow: ProcessInstanceRow) => {
+        enqueueSnackbar(
+            translate('History.Table.Error.SubprocessesNotFound'),
+            { variant: 'error' },
+        );
+        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
+    };
+    
+    const handleRowExpand = (currRow: ProcessInstanceRow) => {
+        if (currRow.subRows.length > 0 || currRow.isExpanded) return;
+        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
+            .then((response: getSubprocessesResponse ) => {
+                if(response.payload.length === 0) handleNoSubprocessesFound(currRow);
+            })
+            .catch(() => { handleNoSubprocessesFound(currRow); });
+    };
 
     let columns = [
         {
             Header: ' ',
             id: 'expander',
             Cell: ({ row }) =>
-                row.original.subProcesses?.length > 0 ? (
-                    <TableRowExpander row={row} />
+                row.original.hasSubprocesses ? (
+                    <TableRowExpander row={row} handleClick={handleRowExpand} />
                 ) : null,
         },
         {
@@ -71,13 +87,15 @@ const useProcessInstanceColumns = (
             Header: translate('Component.HistoryTable.Header.Started'),
             accessor: 'created',
             width: '200px',
-            Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
+            Cell: ({ value }) =>
+                value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : '',
         },
         {
             Header: translate('Component.HistoryTable.Header.Finished'),
             accessor: 'updated',
             width: '200px',
-            Cell: ({ value }) => (value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : ''),
+            Cell: ({ value }) =>
+                value ? moment(value).format('DD/MM/yyyy HH:mm:ss') : '',
         },
         {
             Header: translate('Component.HistoryTable.Header.Bot'),
@@ -86,7 +104,8 @@ const useProcessInstanceColumns = (
         },
         {
             Header: translate('Component.HistoryTable.Header.Initiator'),
-            accessor: ({ user, trigger, triggerData }) => mapInitiatorLabel({ user, trigger, triggerData }),
+            accessor: ({ user, trigger, triggerData }) =>
+                mapInitiatorLabel({ user, trigger, triggerData }),
         },
         {
             Header: ' ',
@@ -105,7 +124,7 @@ const useProcessInstanceColumns = (
     ];
 
     if (!rerunEnabled) {
-        columns = columns.filter(column => column.id !== 'rerun-menu');
+        columns = columns.filter((column) => column.id !== 'rerun-menu');
     }
 
     const accessedColumns = columns.filter((column) =>

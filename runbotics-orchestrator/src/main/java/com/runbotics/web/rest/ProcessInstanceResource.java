@@ -6,15 +6,9 @@ import com.runbotics.service.ProcessInstanceQueryService;
 import com.runbotics.service.ProcessInstanceService;
 import com.runbotics.service.criteria.ProcessInstanceCriteria;
 import com.runbotics.service.dto.ProcessInstanceDTO;
-import com.runbotics.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -114,5 +107,22 @@ public class ProcessInstanceResource {
         log.debug("REST request to get ProcessInstance : {}", id);
         Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
         return ResponseUtil.wrapOrNotFound(processInstanceDTO);
+    }
+
+    /**
+     * {@code GET /process-instances/{id}/subprocesses} : get all subprocesses for the processInstance of a particular ID.
+     *
+     * @param id the ID of the processInstance.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of subprocesses in the body,
+     *         or with status {@code 404 (Not Found)} if the processInstance does not exist.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
+    @GetMapping("/process-instances/{id}/subprocesses")
+    public ResponseEntity<List<ProcessInstanceDTO>> getProcessInstanceSubprocesses(@PathVariable UUID id) {
+        log.debug("REST request to get subprocesses for ProcessInstance: {}", id);
+        Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
+        if (!processInstanceDTO.isPresent()) return ResponseEntity.notFound().build();
+        List<ProcessInstanceDTO> subprocesses = processInstanceService.findSubprocesses(id);
+        return ResponseEntity.ok().body(subprocesses);
     }
 }

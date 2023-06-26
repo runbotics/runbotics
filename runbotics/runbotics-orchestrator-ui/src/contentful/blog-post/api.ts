@@ -11,7 +11,7 @@ import { GetPostOptions, GetPostResponse } from './types';
 
 
 
-export async function getPost(locale: Language,options: GetPostOptions) {
+export async function getPost(locale: Language, options: GetPostOptions) {
     const entry = await fetchGraphQL<GetPostResponse>(
         buildPostQuery({
             preview: IS_PREVIEW_MODE,

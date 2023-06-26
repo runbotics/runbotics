@@ -1,6 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import union from 'lodash/union';
 
+
 import objFromArray from '#src-app/utils/objFromArray';
 
 import { ProcessInstanceState } from './ProcessInstance.state';
@@ -9,13 +10,15 @@ import {
     getAllByProcessId,
     getBotProcessInstances,
     getProcessInstance,
+    getSubprocesses,
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
 } from './ProcessInstance.thunks';
+import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
 const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<ProcessInstanceState>) => {
     builder
-        // GET ALL
+        // GET all
         .addCase(getAll.pending, (state) => {
             state.all.loading = true;
         })
@@ -28,7 +31,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.loading = false;
         })
 
-        // GET ALL BY PROCESS
+        // GET all by process id
         .addCase(getAllByProcessId.pending, (state) => {
             state.all.loading = true;
         })
@@ -40,7 +43,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.loading = false;
         })
 
-        // GET BOT PROCESS INSTANCES
+        // GET bot process instances
         .addCase(getBotProcessInstances.pending, (state) => {
             state.all.loading = true;
         })
@@ -80,7 +83,38 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
 
         })
 
-        // GET PAGE
+        // GET sub processes
+        .addCase(getSubprocesses.pending, (state, action) => {
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubprocesses: true 
+                }
+            );
+        })
+        .addCase(getSubprocesses.fulfilled, (state, action) => {
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubprocesses: false, 
+                    subprocesses: action.payload 
+                }
+            );
+        })
+        .addCase(getSubprocesses.rejected, (state, action) => {
+            updateProcessInstanceProps(
+                state, 
+                { 
+                    id: action.meta.arg.processInstanceId, 
+                    isLoadingSubprocesses: false, 
+                    hasSubprocesses: false 
+                }
+            );
+        })
+
+        // GET page
         .addCase(getProcessInstancePage.pending, (state) => {
             state.all.loadingPage = true;
         })
