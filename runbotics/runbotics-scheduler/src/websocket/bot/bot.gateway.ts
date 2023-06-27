@@ -124,33 +124,18 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 
-    private async changeEventStatusOnInstanceTermination(bot: IBot, processInstance: IProcessInstance, retryCount = 0) {
-        if(retryCount === 3) {
-            this.logger.log(`<= No active events of process-instance (${processInstance.id}) were found. Aborting.`);
-            return;
-        }
-
+    private async changeEventStatusOnInstanceTermination(bot: IBot, processInstance: IProcessInstance) {
         const activeEvents: IProcessInstanceEvent[] = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
-        
-        if(activeEvents.length === 0) {
-            this.logger.log(`<= No active events of process-instance (${processInstance.id}) were found. Retrying (${retryCount + 1}/3)`);
-            setTimeout(() => this.changeEventStatusOnInstanceTermination(bot, processInstance, retryCount + 1), 1000);
-            return;
-        }
 
-        await activeEvents.forEach(async (event) => {
+        await activeEvents.forEach((event) => {
             const newProcessInstanceEvent: IProcessInstanceEvent = { 
                 ...event, 
-                status: ProcessInstanceEventStatus.TERMINATED, 
-                processInstance: {
-                    id: processInstance.id,
-                    process: {
-                        id: processInstance.process.id
-                    }
-                }
+                status: ProcessInstanceEventStatus.TERMINATED,
+                finished: processInstance.updated,
+                processInstance,
             };
 
-            await this.updateProcessInstanceEvent(bot, newProcessInstanceEvent);
+            this.updateProcessInstanceEvent(bot, newProcessInstanceEvent);
         });
     }
 }

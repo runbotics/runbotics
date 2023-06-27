@@ -1,4 +1,4 @@
-import { ProcessInstanceStatus } from 'runbotics-common';
+import { ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-common';
 
 const COMMON_PROCESS_INSTANCE_FIELDS = [
     'error', 'root_process_instance_id', 'orchestrator_process_instance_id',
@@ -34,3 +34,7 @@ export const getProcessInstanceUpdateFieldsByStatus = (
         }
     }
 };
+
+export const getIsEventTerminated = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) => 
+    instanceStatus === ProcessInstanceStatus.TERMINATED && 
+    eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;

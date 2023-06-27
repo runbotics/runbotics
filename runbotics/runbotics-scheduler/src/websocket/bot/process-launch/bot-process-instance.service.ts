@@ -29,7 +29,7 @@ export class BotProcessService {
         private readonly notificationService: NotificationService,
     ) {}
 
-    async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
+    async updateProcessInstance(installationId: string, processInstance: IProcessInstance) { 
         const instanceToSave = this.setPropertiesFromProcessInstance(processInstance);
         const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId);
 
@@ -65,7 +65,7 @@ export class BotProcessService {
             if (isProcessInstanceFinished(processInstance.status)) {
                 await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             this.logger.error('Process instance update error: rollback', err);
             await queryRunner.rollbackTransaction();
         } finally {
