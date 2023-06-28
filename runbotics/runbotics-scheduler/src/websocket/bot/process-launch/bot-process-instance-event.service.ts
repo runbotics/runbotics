@@ -16,7 +16,7 @@ import { ProcessInstanceEventEntity } from '#/database/process-instance-event/pr
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 import { Injectable } from '@nestjs/common';
-import { getIsEventTerminated } from './bot-process-instance.service.utils';
+import { getIsEventErrored, getIsEventTerminated } from './bot-process-instance.service.utils';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -65,12 +65,26 @@ export class BotProcessEventService {
                 ProcessInstanceEntity,
                 { where: { id: processInstanceEvent.processInstance.id } }
             );
-            
+
             if(getIsEventTerminated(processInstanceEvent.status, processInstance.status)) {
                 const newProcessInstanceEvent = {
                     ...processInstanceEvent,
                     status: ProcessInstanceEventStatus.TERMINATED,
                     finished: processInstance.updated,
+                };
+
+                this.upsertProcessInstanceEvent(
+                    queryRunner,
+                    newProcessInstanceEvent,
+                    processInstance,
+                    processInstanceEvent.status
+                );
+            } else if (getIsEventErrored(processInstanceEvent.status, processInstance.status)) {
+                const newProcessInstanceEvent = {
+                    ...processInstanceEvent,
+                    status: ProcessInstanceEventStatus.ERRORED,
+                    finished: processInstance?.updated,
+                    error: processInstance.error,
                 };
 
                 this.upsertProcessInstanceEvent(
@@ -100,13 +114,8 @@ export class BotProcessEventService {
                 processInstanceEvent.status ===
                 ProcessInstanceEventStatus.IN_PROGRESS;
             const hasUpdatedStatus =
-                updatedProcessInstanceEvent.status ===
-                    ProcessInstanceEventStatus.COMPLETED ||
-                updatedProcessInstanceEvent.status ===
-                    ProcessInstanceEventStatus.ERRORED;
-            const hasProcessInstanceEventChanged = !(
-                isStatusInProgress && hasUpdatedStatus
-            );
+                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED;
+            const hasProcessInstanceEventChanged = !(isStatusInProgress && hasUpdatedStatus);
 
             if (    
                 updatedProcessInstanceEvent.processInstance

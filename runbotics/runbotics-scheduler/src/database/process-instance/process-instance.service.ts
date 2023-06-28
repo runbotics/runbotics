@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {ProcessInstanceEntity} from './process-instance.entity';
-import {IProcessInstance} from 'runbotics-common';
+import {IProcessInstance, ProcessInstanceStatus} from 'runbotics-common';
 
 const relations = ['bot', 'process', 'user', 'trigger'];
 
@@ -19,6 +19,10 @@ export class ProcessInstanceService {
 
     findAllByBotId(id: number): Promise<IProcessInstance[]> {
         return this.processInstanceRepository.find({ where: { bot: { id } } });
+    }
+
+    findActiveByBotId(id: number): Promise<IProcessInstance> {
+        return this.processInstanceRepository.findOne({ where: { bot: { id }, status: ProcessInstanceStatus.IN_PROGRESS } });
     }
 
     save(process: IProcessInstance) {

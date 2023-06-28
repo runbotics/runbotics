@@ -18,93 +18,64 @@ export class BotLifecycleService {
     private readonly logger = new Logger(BotLifecycleService.name);
 
     async handleProcessInstanceInterruption(bot: IBot): Promise<void> {
-        const disconnectedBotProcessInstances = await this.processInstanceService.findAllByBotId(bot.id);
-        disconnectedBotProcessInstances.forEach(async (processInstance) => {
-            if (
-                processInstance.status !== ProcessInstanceStatus.INITIALIZING &&
-                processInstance.status !== ProcessInstanceStatus.IN_PROGRESS
-            ) return;
+        const disconnectedInstance: IProcessInstance = await this.processInstanceService.findActiveByBotId(bot.id);
 
-            const newProcessInstance: IProcessInstance = {
-                ...processInstance, 
-                status: ProcessInstanceStatus.ERRORED, 
-                error: 'Bot has been shut down'
-            };
+        if(!disconnectedInstance) return;
 
-            await this.updateInterruptedProcessInstance(newProcessInstance, processInstance.id);            
+        if (
+            disconnectedInstance.status !== ProcessInstanceStatus.INITIALIZING &&
+            disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
+        ) return;
+        
+        const completeProcessInstance: IProcessInstance =
+            await this.processInstanceService
+                .findById(disconnectedInstance.id)
+                .then(processInstance => processInstance)
+                .catch(error => {
+                    this.logger.error(`Error getting processInstance: ${error}`);
+                    return null;
+                });
+            
+        const newProcessInstance: IProcessInstance = {
+            ...completeProcessInstance,
+            status: ProcessInstanceStatus.ERRORED, 
+            error: 'Bot has been shut down',
+            updated: new Date().toString(),
+        };
 
-            await this.handleProcessInstanceEventInterruption(processInstance, bot);
-        });
-    }
+        this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);            
+
+        this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
+        }
 
     private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance, bot: IBot): Promise<void> {
-        const activeEvents: IProcessInstanceEvent[] = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
-        const processId: number = await this.processInstanceService.findById(processInstance.id).then(processInstance => processInstance.process.id);
-        
+        const activeEvents: IProcessInstanceEvent[] = 
+            await this.processInstanceEventService
+                .findActiveByProcessInstanceId(processInstance.id);
+                
         if(!activeEvents) return;
-        
-        activeEvents.forEach(async event => {
+
+        await activeEvents.forEach(async event => {
             const newProcessInstanceEvent: IProcessInstanceEvent = {
                 ...event, 
                 status: ProcessInstanceEventStatus.ERRORED, 
                 error: 'Bot has been shut down',
-                processInstance: {
-                    id: processInstance.id,
-                    process: {
-                        id: processId
-                    }
-                }
+                finished: processInstance.updated,
+                processInstance,
             };
-            
             await this.updateInterruptedProcessInstanceEvent(newProcessInstanceEvent, bot);
         });
     }
 
     private async updateInterruptedProcessInstance(processInstance: IProcessInstance, installationId: string) {
-        this.logger.log(
-            `<= Success process-instance (${
-                processInstance.id
-            }) has been updated after bot disconnection | status: ${
-                processInstance.status
-            }, error message: "${
-                processInstance.error
-            }"`
-        );
-
-        this.botProcessService.updateProcessInstance(installationId, processInstance);
-
-        this.logger.log(
-            `=> Updating process-instance (${
-                processInstance.id
-            }) updated after bot disconnection | status: ${
-                processInstance.status
-            }, error message: "${
-                processInstance.error
-            }"`
-        );
+        this.logger.log(`=> Updating process-instance (${processInstance.id}) after bot disconnection | status: ${processInstance.status}`);
+        await this.botProcessService.updateProcessInstance(installationId, processInstance);
+        this.logger.log(`<= Success process-instance (${processInstance.id}) updated | status: ${processInstance.status}`);
     }
-
+    
     private async updateInterruptedProcessInstanceEvent(processInstanceEvent: IProcessInstanceEvent, bot: IBot) {
-        this.logger.log(
-            `=> Updating process-instance (${
-                processInstanceEvent.id
-            }) updated after bot disconnection | status: ${
-                processInstanceEvent.status
-            }, error message: "${
-                processInstanceEvent.error
-            }"`
-        );
-
-        this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
-        
-        this.logger.log(
-            `<= Success process-instance-event (${
-                processInstanceEvent.id
-            }) has been updated after bot disconnection | status: ${
-                processInstanceEvent.status
-            }, error message: "${
-                processInstanceEvent.error
-            }"`
-        );
+        this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.id}) | status: ${processInstanceEvent.status}`);
+        await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
+        this.logger.log(`<= Success process-instance-event (${processInstanceEvent.id}) updated | status: ${processInstanceEvent.status}`);
     }
 }

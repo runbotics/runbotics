@@ -24,6 +24,8 @@ export const getProcessInstanceUpdateFieldsByStatus = (
         }
         case ProcessInstanceStatus.COMPLETED:
         case ProcessInstanceStatus.ERRORED:
+            if(dbStatus === ProcessInstanceStatus.IN_PROGRESS || dbStatus === undefined) return COMPLETED_PROCESS_INSTANCE_FIELDS;
+            return ['input', ...COMMON_PROCESS_INSTANCE_FIELDS];
         case ProcessInstanceStatus.STOPPED:
         case ProcessInstanceStatus.TERMINATED:
             return COMPLETED_PROCESS_INSTANCE_FIELDS;
@@ -37,4 +39,8 @@ export const getProcessInstanceUpdateFieldsByStatus = (
 
 export const getIsEventTerminated = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) => 
     instanceStatus === ProcessInstanceStatus.TERMINATED && 
+    eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;
+
+export const getIsEventErrored = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) =>
+    instanceStatus === ProcessInstanceStatus.ERRORED &&
     eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;

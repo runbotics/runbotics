@@ -97,12 +97,13 @@ export class BotProcessService {
         processInstance: IProcessInstance,
         installationId: string
     ) {
-        const bot = await this.botService.findByInstallationId(installationId);
+        const bot = 
+            await this.botService.findByInstallationId(installationId)
+                .catch(() => {
+                    this.logger.error(`Bot ${installationId} not found`);
+                    throw new NotFoundException(`Bot ${installationId} not found`);
+                });
         const newProcessInstance = { ...processInstance };
-        if (!bot) {
-            this.logger.error(`Bot ${installationId} not found`);
-            throw new NotFoundException(`Bot ${installationId} not found`);
-        }
         newProcessInstance.bot = bot;
 
         return await this.setPropertiesFromDatabase(newProcessInstance);
@@ -124,9 +125,10 @@ export class BotProcessService {
         bot: IBot,
     ) {
         const newProcessInstance = {...instanceToSave};
+
         const newBot = {...bot};
         newBot.status = BotStatus.BUSY;
-        if (ProcessInstanceStatus.IN_PROGRESS === processInstance.status) {
+        if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
             newProcessInstance.input = processInstance.input;
             await this.incrementExecutionCountInStartedProcess(newProcessInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
@@ -145,6 +147,7 @@ export class BotProcessService {
     }
 
     private async incrementExecutionCountInStartedProcess(processInstance: IProcessInstance) {
+        if(!processInstance?.process?.id) return;
         const process = await this.processService.findById(processInstance.process.id);
         if (process) {
             process.executionsCount++;
@@ -153,7 +156,7 @@ export class BotProcessService {
     }
 
     private async incrementExecutionsByProcessStatus(processInstance: IProcessInstance) {
-        const process = await this.processService.findById(processInstance.process.id);
+        const process = await this.processService.findById(processInstance?.process?.id);
         if (process) {
             if (processInstance.status === ProcessInstanceStatus.COMPLETED) {
                 process.successExecutionsCount++;
