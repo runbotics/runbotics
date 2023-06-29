@@ -16,7 +16,7 @@ import { ProcessInstanceEventEntity } from '#/database/process-instance-event/pr
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 import { Injectable } from '@nestjs/common';
-import { getIsEventErrored, getIsEventTerminated } from './bot-process-instance.service.utils';
+import { getIsInstanceInterrupted } from './bot-process-instance.service.utils';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -61,30 +61,31 @@ export class BotProcessEventService {
                 .orIgnore()
                 .execute();
 
-            const processInstance = await queryRunner.manager.findOne(
-                ProcessInstanceEntity,
-                { where: { id: processInstanceEvent.processInstance.id } }
-            );
+            const processInstance = 
+                await queryRunner.manager
+                .findOne(
+                    ProcessInstanceEntity,
+                    { where: { id: processInstanceEvent.processInstance.id } }
+                )
+                .catch(error => {
+                    this.logger.log(`process-instance (${processInstanceEvent.processInstance.id}) not found | Error: ${error});`);
+                    return null;
+                });
 
-            if(getIsEventTerminated(processInstanceEvent.status, processInstance.status)) {
+            if(!processInstance) return;
+
+            if(getIsInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
+                const error = processInstance?.error;
+                const newStatus = 
+                    processInstance.status === ProcessInstanceStatus.TERMINATED
+                        ? ProcessInstanceEventStatus.TERMINATED
+                        : ProcessInstanceEventStatus.ERRORED;
+
                 const newProcessInstanceEvent = {
                     ...processInstanceEvent,
-                    status: ProcessInstanceEventStatus.TERMINATED,
+                    status: newStatus,
                     finished: processInstance.updated,
-                };
-
-                this.upsertProcessInstanceEvent(
-                    queryRunner,
-                    newProcessInstanceEvent,
-                    processInstance,
-                    processInstanceEvent.status
-                );
-            } else if (getIsEventErrored(processInstanceEvent.status, processInstance.status)) {
-                const newProcessInstanceEvent = {
-                    ...processInstanceEvent,
-                    status: ProcessInstanceEventStatus.ERRORED,
-                    finished: processInstance?.updated,
-                    error: processInstance.error,
+                    error,
                 };
 
                 this.upsertProcessInstanceEvent(
@@ -111,13 +112,12 @@ export class BotProcessEventService {
                 );
 
             const isStatusInProgress =
-                processInstanceEvent.status ===
-                ProcessInstanceEventStatus.IN_PROGRESS;
+                processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS;
             const hasUpdatedStatus =
                 updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED;
             const hasProcessInstanceEventChanged = !(isStatusInProgress && hasUpdatedStatus);
 
-            if (    
+            if (
                 updatedProcessInstanceEvent.processInstance
                     .rootProcessInstanceId === null &&
                 hasProcessInstanceEventChanged

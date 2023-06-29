@@ -29,7 +29,7 @@ export class BotProcessService {
         private readonly notificationService: NotificationService,
     ) {}
 
-    async updateProcessInstance(installationId: string, processInstance: IProcessInstance) { 
+    async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
         const instanceToSave = this.setPropertiesFromProcessInstance(processInstance);
         const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId);
 
@@ -97,12 +97,11 @@ export class BotProcessService {
         processInstance: IProcessInstance,
         installationId: string
     ) {
-        const bot = 
-            await this.botService.findByInstallationId(installationId)
-                .catch(() => {
-                    this.logger.error(`Bot ${installationId} not found`);
-                    throw new NotFoundException(`Bot ${installationId} not found`);
-                });
+        const bot = await this.botService.findByInstallationId(installationId)
+            .catch(() => {
+                this.logger.error(`Bot ${installationId} not found`);
+                throw new NotFoundException(`Bot ${installationId} not found`);
+            });
         const newProcessInstance = { ...processInstance };
         newProcessInstance.bot = bot;
 

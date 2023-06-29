@@ -44,9 +44,8 @@ export class BotLifecycleService {
         };
 
         this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);            
-
         this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
-        }
+    }
 
     private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance, bot: IBot): Promise<void> {
         const activeEvents: IProcessInstanceEvent[] = 

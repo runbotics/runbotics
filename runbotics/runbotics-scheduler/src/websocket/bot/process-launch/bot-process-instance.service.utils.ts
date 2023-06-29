@@ -37,10 +37,9 @@ export const getProcessInstanceUpdateFieldsByStatus = (
     }
 };
 
-export const getIsEventTerminated = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) => 
-    instanceStatus === ProcessInstanceStatus.TERMINATED && 
-    eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;
-
-export const getIsEventErrored = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) =>
-    instanceStatus === ProcessInstanceStatus.ERRORED &&
+export const getIsInstanceInterrupted = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) => 
+    (
+        instanceStatus === ProcessInstanceStatus.TERMINATED ||
+        instanceStatus === ProcessInstanceStatus.ERRORED
+    ) && 
     eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;
