@@ -8,10 +8,6 @@ import com.runbotics.service.GuestService;
 import com.runbotics.web.rest.errors.GuestLimitAccessDeniedException;
 import com.runbotics.web.rest.vm.GuestVM;
 import com.runbotics.web.rest.vm.LoginVM;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * Controller to authenticate users.
@@ -64,8 +66,11 @@ public class UserJWTController {
         String remoteAddress = request.getHeader("X-Forwarded-For");
         if (remoteAddress == null || remoteAddress.isEmpty()) {
             remoteAddress = request.getRemoteAddr();
+        } else {
+            var addresses = remoteAddress.split(",");
+            remoteAddress = addresses.length > 0 ? addresses[addresses.length - 1] : remoteAddress;
         }
-        if (!guestService.verifyGuest(remoteAddress)) {
+        if (!guestService.verifyGuestLimit(remoteAddress)) {
             throw new GuestLimitAccessDeniedException();
         }
         User guestUser = guestService.generateGuestAccount(remoteAddress, guestVM.getLangKey());

@@ -129,9 +129,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const handleTerminate = () => {
         if (!started) return;
 
-        dispatch(
-            schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
-        )
+        dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
             .then(() => {
                 setStarted(false);
                 setLoading(false);
@@ -170,14 +168,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
-        dispatch(
-            processActions.startProcess({
-                processId: process.id,
-                ...((isProcessAttended || rerunProcessInstance) && {
-                    executionInfo,
-                }),
-            })
-        )
+        dispatch(processActions.startProcess({
+            processId: process.id,
+            ...((isProcessAttended || rerunProcessInstance) && {
+                executionInfo,
+            }),
+        }))
             .then(unwrapResult)
             .then((response: StartProcessResponse) => {
                 dispatch(

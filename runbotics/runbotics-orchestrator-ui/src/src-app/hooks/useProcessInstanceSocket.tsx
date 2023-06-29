@@ -28,22 +28,24 @@ const useProcessInstanceSocket = ({
     useEffect(() => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
             if (
-                !!orchestratorProcessInstanceId &&
-                processInstance.orchestratorProcessInstanceId === orchestratorProcessInstanceId
-            )
-            { dispatch(processInstanceActions.updateActiveProcessInstance(processInstance)); }
+                !!orchestratorProcessInstanceId
+                && processInstance.orchestratorProcessInstanceId === orchestratorProcessInstanceId
+            ) {
+                dispatch(processInstanceActions.updateActiveProcessInstance(processInstance));
+            }
 
             if (
-                !processInstance.rootProcessInstanceId &&
-                (fullHistoryUpdate || Number(processInstance.process.id) === processState.draft.process.id)
+                !processInstance.rootProcessInstanceId
+                && (fullHistoryUpdate || Number(processInstance.process.id) === processState.draft.process.id)
             ) {
                 dispatch(processInstanceActions.insert(processInstance));
-                if (isProcessInstanceFinished(processInstance))
-                { dispatch(
-                    processInstanceActions.getProcessInstanceAndUpdatePage({
-                        processInstanceId: processInstance.id,
-                    }),
-                ); }
+                if (isProcessInstanceFinished(processInstance)) {
+                    dispatch(
+                        processInstanceActions.getProcessInstanceAndUpdatePage({
+                            processInstanceId: processInstance.id,
+                        }),
+                    );
+                }
             }
         });
 

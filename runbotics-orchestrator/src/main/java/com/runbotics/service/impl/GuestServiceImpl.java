@@ -2,7 +2,6 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.Guest;
-import com.runbotics.domain.GuestConstants;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -36,7 +35,7 @@ public class GuestServiceImpl implements GuestService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean verifyGuest(String guestIp) {
+    public boolean verifyGuestLimit(String guestIp) {
         Optional<Guest> guestOptional = guestRepository.findById(guestIp);
         return guestOptional.isEmpty();
     }

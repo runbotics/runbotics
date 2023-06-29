@@ -97,6 +97,20 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
+    public Optional<ProcessDTO> updateDiagram(ProcessDTO processDTO) {
+        return processRepository
+            .findById(processDTO.getId())
+            .map(
+                existingProcess -> {
+                    processMapper.partialUpdate(existingProcess, processDTO);
+                    return existingProcess;
+                }
+            )
+            .map(processRepository::save)
+            .map(processMapper::toDto);
+    }
+
+    @Override
     public Optional<ProcessDTO> updateIsAttended(ProcessDTO processDTO) {
         return processRepository
             .findById(processDTO.getId())
