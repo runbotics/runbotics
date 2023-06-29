@@ -17,6 +17,7 @@ import { ProcessInstanceEntity } from '#/database/process-instance/process-insta
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 import { Injectable } from '@nestjs/common';
 import { getIsInstanceInterrupted } from './bot-process-instance.service.utils';
+import { BotWebSocketGateway } from '../bot.gateway';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -38,7 +39,7 @@ export class BotProcessEventService {
     constructor(
         private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly connection: Connection,
-        private readonly uiGateway: UiGateway
+        private readonly uiGateway: UiGateway,
     ) {}
 
     async updateProcessInstanceEvent(
@@ -68,7 +69,7 @@ export class BotProcessEventService {
                     { where: { id: processInstanceEvent.processInstance.id } }
                 )
                 .catch(error => {
-                    this.logger.log(`process-instance (${processInstanceEvent.processInstance.id}) not found | Error: ${error});`);
+                    this.logger.error(`process-instance (${processInstanceEvent.processInstance.id}) not found | Error: ${error});`);
                     return null;
                 });
 
@@ -244,5 +245,27 @@ export class BotProcessEventService {
                 .where('id = :id', { id: processInstance.id })
                 .execute();
         }
+    }
+
+    async setEventStatusesAlikeInstance(bot: IBot, processInstance: IProcessInstance) {
+        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+
+        const newStatus = 
+            processInstance.status === ProcessInstanceStatus.TERMINATED
+                ? ProcessInstanceEventStatus.TERMINATED
+                : ProcessInstanceEventStatus.ERRORED;
+
+        await activeEvents.forEach((event) => {
+            const newProcessInstanceEvent: IProcessInstanceEvent = { 
+                ...event, 
+                status: newStatus,
+                finished: processInstance.updated,
+                processInstance,
+            };
+
+            this.logger.log(`Updating process-instance-event (${newProcessInstanceEvent.executionId}) by bot (${bot.installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+            this.updateProcessInstanceEvent(newProcessInstanceEvent, bot);
+            this.logger.log(`Success: process-instance-event (${newProcessInstanceEvent.executionId}) updated by bot (${bot.installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+        });
     }
 }

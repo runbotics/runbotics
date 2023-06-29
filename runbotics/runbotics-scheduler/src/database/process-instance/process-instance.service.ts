@@ -21,8 +21,8 @@ export class ProcessInstanceService {
         return this.processInstanceRepository.find({ where: { bot: { id } } });
     }
 
-    findActiveByBotId(id: number): Promise<IProcessInstance> {
-        return this.processInstanceRepository.findOne({ where: { bot: { id }, status: ProcessInstanceStatus.IN_PROGRESS } });
+    findActiveByBotId(id: number): Promise<IProcessInstance[]> {
+        return this.processInstanceRepository.find({ where: { bot: { id }, status: ProcessInstanceStatus.IN_PROGRESS } });
     }
 
     save(process: IProcessInstance) {
