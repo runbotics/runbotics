@@ -23,6 +23,8 @@
     "Bot.Collection.Dialog.Modify.Form.ErrorMessage.noname":"Nazwa nie może być pusta",
     "Bot.Collection.Dialog.Modify.Form.ErrorMessage.nameexists":"Nazwa już zajęta",
     "Bot.Collection.Dialog.Modify.Form.ErrorMessage.idnotfound": "Nie znaleziono id",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.cantedit":"Nie możesz edytować tej koleckji",
+
     "Bot.Collection.Table.Header.Name": "Nazwa",
     "Bot.Collection.Table.Header.Creator": "Twórca",
     "Bot.Collection.Table.Header.PublicIncluded": "Boty publicznie",

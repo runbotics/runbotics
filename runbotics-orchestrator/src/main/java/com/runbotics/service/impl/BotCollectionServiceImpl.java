@@ -122,13 +122,10 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Transactional(readOnly = true)
     public Page<BotCollectionDTO> findPageForUser(String username, Pageable pageable) {
         log.debug("Request to get page collections for user : {}", username);
-
-        List<BotCollectionDTO> collections = getCollectionsForUser(username,getPublicCollection(),getGuestCollection());
-
-        final int start = (int)pageable.getOffset();
-        final int end = Math.min((start + pageable.getPageSize()), collections.size());
-
-        return new PageImpl<>(collections.subList(start,end),pageable, collections.size());
+        
+        return botCollectionRepository
+            .findDistinctByCreatedByLoginOrUsers_Login(username, username, pageable)
+            .map(botCollectionMapper::toDto);
     }
 
     private List<BotCollectionDTO> getCollectionsForUser(String username, BotCollection publicCollection, BotCollection guestCollection) {
