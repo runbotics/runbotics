@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { Logger } from '../../../utils/logger';
 import { ProcessInstanceEventService } from '../../../database/process-instance-event/process-instance-event.service';
 import {
@@ -16,6 +15,9 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceEventEntity } from '#/database/process-instance-event/process-instance-event.entity';
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
+import { Injectable } from '@nestjs/common';
+import { getIsInstanceInterrupted } from './bot-process-instance.service.utils';
+import { BotWebSocketGateway } from '../bot.gateway';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -37,7 +39,7 @@ export class BotProcessEventService {
     constructor(
         private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly connection: Connection,
-        private readonly uiGateway: UiGateway
+        private readonly uiGateway: UiGateway,
     ) {}
 
     async updateProcessInstanceEvent(
@@ -60,21 +62,47 @@ export class BotProcessEventService {
                 .orIgnore()
                 .execute();
 
-            await queryRunner.manager
-                .createQueryBuilder()
-                .insert()
-                .into(ProcessInstanceEventEntity)
-                .values(processInstanceEvent)
-                .orUpdate(
-                    processInstanceEvent.status ===
-                        ProcessInstanceEventStatus.IN_PROGRESS
-                        ? STARTED_UPDATE_FIELDS
-                        : COMPLETED_UPDATE_FIELDS,
-                    ['execution_id']
+            const processInstance = 
+                await queryRunner.manager
+                .findOne(
+                    ProcessInstanceEntity,
+                    { where: { id: processInstanceEvent.processInstance.id } }
                 )
-                .execute();
+                .catch(error => {
+                    this.logger.error(`process-instance (${processInstanceEvent.processInstance.id}) not found | Error: ${error});`);
+                    return null;
+                });
 
-            await this.updateProcessInstance(queryRunner, processInstanceEvent);
+            if(!processInstance) return;
+
+            if(getIsInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
+                const error = processInstance?.error;
+                const newStatus = 
+                    processInstance.status === ProcessInstanceStatus.TERMINATED
+                        ? ProcessInstanceEventStatus.TERMINATED
+                        : ProcessInstanceEventStatus.ERRORED;
+
+                const newProcessInstanceEvent = {
+                    ...processInstanceEvent,
+                    status: newStatus,
+                    finished: processInstance.updated,
+                    error,
+                };
+
+                this.upsertProcessInstanceEvent(
+                    queryRunner,
+                    newProcessInstanceEvent,
+                    processInstance,
+                    processInstanceEvent.status
+                );
+            } else {
+                this.upsertProcessInstanceEvent(
+                    queryRunner,
+                    processInstanceEvent,
+                    processInstance,
+                    processInstanceEvent.status
+                );
+            }
 
             await queryRunner.commitTransaction();
 
@@ -85,16 +113,10 @@ export class BotProcessEventService {
                 );
 
             const isStatusInProgress =
-                processInstanceEvent.status ===
-                ProcessInstanceEventStatus.IN_PROGRESS;
+                processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS;
             const hasUpdatedStatus =
-                updatedProcessInstanceEvent.status ===
-                    ProcessInstanceEventStatus.COMPLETED ||
-                updatedProcessInstanceEvent.status ===
-                    ProcessInstanceEventStatus.ERRORED;
-            const hasProcessInstanceEventChanged = !(
-                isStatusInProgress && hasUpdatedStatus
-            );
+                updatedProcessInstanceEvent.status === ProcessInstanceEventStatus.COMPLETED;
+            const hasProcessInstanceEventChanged = !(isStatusInProgress && hasUpdatedStatus);
 
             if (
                 updatedProcessInstanceEvent.processInstance
@@ -106,7 +128,7 @@ export class BotProcessEventService {
                     updatedProcessInstanceEvent
                 );
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             this.logger.error(
                 'Process instance event update error: rollback',
                 err
@@ -115,6 +137,28 @@ export class BotProcessEventService {
         } finally {
             await queryRunner.release();
         }
+    }
+
+    private async upsertProcessInstanceEvent(
+        queryRunner: QueryRunner,
+        newProcessInstanceEvent: IProcessInstanceEvent,
+        processInstance: IProcessInstance,
+        originalEventStatus: ProcessInstanceEventStatus
+    ) {
+        await queryRunner.manager
+            .createQueryBuilder()
+            .insert()
+            .into(ProcessInstanceEventEntity)
+            .values(newProcessInstanceEvent)
+            .orUpdate(
+                originalEventStatus === ProcessInstanceEventStatus.IN_PROGRESS
+                    ? STARTED_UPDATE_FIELDS
+                    : COMPLETED_UPDATE_FIELDS,
+                ['execution_id']
+            )
+            .execute();
+            
+        await this.updateProcessInstance(queryRunner, newProcessInstanceEvent, processInstance);
     }
 
     async updateProcessInstanceLoopEvent(
@@ -143,14 +187,19 @@ export class BotProcessEventService {
                 .into(ProcessInstanceLoopEventEntity)
                 .values(processInstanceEvent)
                 .orUpdate(
-                    processInstanceEvent.status ===
-                        ProcessInstanceEventStatus.IN_PROGRESS
+                    processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
                         ? STARTED_UPDATE_FIELDS
                         : COMPLETED_UPDATE_FIELDS,
                     ['execution_id']
                 )
                 .execute();
-            await this.updateProcessInstance(queryRunner, processInstanceEvent);
+
+            const processInstance = await queryRunner.manager.findOne(
+                ProcessInstanceEntity,
+                { where: { id: processInstanceEvent.processInstance.id } }
+            );
+
+            await this.updateProcessInstance(queryRunner, processInstanceEvent, processInstance);
             await queryRunner.commitTransaction();
 
             // const updatedProcessInstanceEvent =
@@ -168,7 +217,7 @@ export class BotProcessEventService {
             //         updatedProcessInstanceEvent
             //     );
             // }
-        } catch (err: any) {
+        } catch (err: unknown) {
             this.logger.error(
                 'Process instance event update error: rollback',
                 err
@@ -181,13 +230,9 @@ export class BotProcessEventService {
 
     async updateProcessInstance(
         queryRunner: QueryRunner,
-        processInstanceEvent: IProcessInstanceEvent
+        processInstanceEvent: IProcessInstanceEvent,
+        processInstance: IProcessInstance
     ) {
-        const processInstance = await queryRunner.manager.findOne(
-            ProcessInstanceEntity,
-            { where: { id: processInstanceEvent.processInstance.id } }
-        );
-
         if (processInstance) {
             await queryRunner.manager
                 .createQueryBuilder()
@@ -200,5 +245,27 @@ export class BotProcessEventService {
                 .where('id = :id', { id: processInstance.id })
                 .execute();
         }
+    }
+
+    async setEventStatusesAlikeInstance(bot: IBot, processInstance: IProcessInstance) {
+        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+
+        const newStatus = 
+            processInstance.status === ProcessInstanceStatus.TERMINATED
+                ? ProcessInstanceEventStatus.TERMINATED
+                : ProcessInstanceEventStatus.ERRORED;
+
+        await activeEvents.forEach((event) => {
+            const newProcessInstanceEvent: IProcessInstanceEvent = { 
+                ...event, 
+                status: newStatus,
+                finished: processInstance.updated,
+                processInstance,
+            };
+
+            this.logger.log(`Updating process-instance-event (${newProcessInstanceEvent.executionId}) by bot (${bot.installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+            this.updateProcessInstanceEvent(newProcessInstanceEvent, bot);
+            this.logger.log(`Success: process-instance-event (${newProcessInstanceEvent.executionId}) updated by bot (${bot.installationId}) | step: ${newProcessInstanceEvent.step}, status: ${newProcessInstanceEvent.status}`);
+        });
     }
 }

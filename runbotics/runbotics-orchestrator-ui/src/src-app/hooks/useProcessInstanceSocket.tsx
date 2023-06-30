@@ -31,7 +31,7 @@ const useProcessInstanceSocket = ({
                 !!orchestratorProcessInstanceId &&
                 processInstance.orchestratorProcessInstanceId === orchestratorProcessInstanceId
             )
-            { dispatch(processInstanceActions.updateProcessInstance(processInstance)); }
+            { dispatch(processInstanceActions.updateActiveProcessInstance(processInstance)); }
 
             if (
                 !processInstance.rootProcessInstanceId &&
