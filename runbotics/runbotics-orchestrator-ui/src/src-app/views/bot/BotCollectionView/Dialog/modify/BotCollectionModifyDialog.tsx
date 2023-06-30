@@ -5,14 +5,15 @@ import moment from 'moment';
 import { IBotCollection, IUser } from 'runbotics-common';
 
 
-import useTranslations from '#src-app/hooks/useTranslations';
 
-import { usersActions } from '#src-app/store/slices/Users';
 
 import { useDispatch, useSelector } from '../../../../../store';
 import { botCollectionActions } from '../../../../../store/slices/BotCollections';
 import { PageRequestParams } from '../../../../../utils/types/page';
 import { Content, Form, Title } from '../../../../utils/FormDialog.styles';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+import { usersActions } from '#src-app/store/slices/Users';
 
 
 interface ModifyBotCollectionDialogProps {
@@ -38,7 +39,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
 
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(null);
 
     const { translate } = useTranslations();
 
@@ -62,7 +63,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         setDescription(collection ? collection.description : '');
         setSelectedUsers(collection ? collection.users : []);
         setPublicBotsIncluded(collection ? collection.publicBotsIncluded : true);
-        setError(false);
+        setError(null);
     };
 
     const updateCollection = (body) => {
@@ -73,11 +74,12 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
 
     const handleSubmit = async () => {
         const body = createCollectionEntityToSend();
-        const { type } = await updateCollection(body);
+        const { type, payload} = await updateCollection(body);
+
         if (type === REJECT_REQUEST_TYPE) {
-            setError(true);
+            setError(payload.response.data.errorKey);
         } else {
-            setError(false);
+            setError(null);
             await dispatch(botCollectionActions.getByPage(pageParams));
             onClose();
             resetFormStates();
@@ -152,8 +154,10 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                             <TextField {...params} label={translate('Bot.Collection.Dialog.Modify.Form.Users.Label')} />
                         )}
                     />
+
                     <Typography sx={{ visibility: `${error ? 'visibily' : 'hidden'}` }} color="red" variant="body2">
-                        {translate('Bot.Collection.Dialog.Modify.Form.ErrorMessage')}
+                        {/* @ts-ignore */}
+                        {translate(`Bot.Collection.Dialog.Modify.Form.ErrorMessage.${error}`)}
                     </Typography>
                 </Form>
             </Content>

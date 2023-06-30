@@ -1,5 +1,7 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.BotCollection;
+import com.runbotics.domain.BotCollectionConstants;
 import com.runbotics.repository.BotCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotCollectionQueryService;
@@ -10,6 +12,8 @@ import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,9 +62,21 @@ public class BotCollectionResource {
     public ResponseEntity<BotCollectionDTO> createBotCollection(@Valid @RequestBody BotCollectionDTO botCollectionDTO)
         throws URISyntaxException {
         log.debug("REST request to save BotCollection : {}", botCollectionDTO);
+
+        if(botCollectionRepository.getBotCollectionByName(botCollectionDTO.getName())!=null){
+            throw new BadRequestAlertException("A new bot collection name already taken", ENTITY_NAME, "nameexists");
+        }
+
+        if(botCollectionDTO.getName().trim().length() == 0){
+            throw new BadRequestAlertException("A new bot collection cannot have blank name", ENTITY_NAME, "noname");
+        }
+
         if (botCollectionDTO.getId() != null) {
             throw new BadRequestAlertException("A new bot collection cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+
+
         BotCollectionDTO result = botCollectionService.save(botCollectionDTO);
         return ResponseEntity
             .created(new URI("/api/bot-collection/" + result.getId()))
@@ -85,6 +102,8 @@ public class BotCollectionResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+
+
         BotCollectionDTO result = botCollectionService.save(botCollectionDTO);
         return ResponseEntity
             .ok()
@@ -99,6 +118,11 @@ public class BotCollectionResource {
         @NotNull @RequestBody BotCollectionDTO botCollectionDTO
     ) {
         log.debug("REST request to partial update BotCollection partially : {}, {}", id, botCollectionDTO);
+
+        if(isPublicOrGuest(id)){
+            throw new BadRequestAlertException("Can not delete this collection", ENTITY_NAME, "cantedit");
+        }
+
         if (botCollectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -154,6 +178,15 @@ public class BotCollectionResource {
     @DeleteMapping("bot-collection/{id}")
     public ResponseEntity<Void> deleteBotCollection(@PathVariable UUID id) {
         log.debug("REST request to delete BotCollection : {}", id);
+
+        if(isPublicOrGuest(id)){
+            log.debug("Can not delete collection with id: {}", id);
+            return ResponseEntity
+                .noContent()
+                .headers(HeaderUtil.createFailureAlert(applicationName, true, ENTITY_NAME, HttpStatus.FORBIDDEN.toString(), "Can't delete collection"))
+                .build();
+        }
+
         botCollectionService.delete(id);
         return ResponseEntity
             .noContent()
@@ -176,4 +209,11 @@ public class BotCollectionResource {
         Page<BotCollectionDTO> botCollectionDTOS = botCollectionQueryService.findByCriteria(criteria, currentUsername, pageable);
         return ResponseEntity.ok().body(botCollectionDTOS);
     }
+
+    boolean isPublicOrGuest(UUID id){
+        return Stream.of(BotCollectionConstants.PUBLIC_COLLECTION,BotCollectionConstants.GUEST_COLLECTION)
+            .map(botCollectionRepository::getBotCollectionByName)
+            .anyMatch(botCollection -> botCollection.getId().equals(id));
+    }
+
 }

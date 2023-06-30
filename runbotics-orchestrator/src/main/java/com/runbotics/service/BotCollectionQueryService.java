@@ -5,8 +5,10 @@ import com.runbotics.repository.BotCollectionRepository;
 import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
+
 import java.util.List;
 import javax.persistence.criteria.JoinType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
+import tech.jhipster.service.filter.StringFilter;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +51,6 @@ public class BotCollectionQueryService extends QueryService<BotCollection> {
     @Transactional(readOnly = true)
     public Page<BotCollectionDTO> findByCriteria(BotCollectionCriteria criteria, String username, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
-        final Specification<BotCollection> specification = createSpecification(criteria);
         if (criteria.getPublicBotsIncluded() != null) {
             return botCollectionRepository
                 .findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsers_Login(
@@ -64,7 +66,15 @@ public class BotCollectionQueryService extends QueryService<BotCollection> {
                 .findDistinctByCreatedByLoginContains(criteria.getCreatedByName().getContains(), page)
                 .map(botCollectionMapper::toDto);
         }
-        return botCollectionRepository.findAll(specification, page).map(botCollectionMapper::toDto);
+        if (criteria.getName() != null) {
+            return botCollectionRepository
+                .findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsersAndCollectionName(true, username, criteria.getName().getContains(), page)
+                .map(botCollectionMapper::toDto);
+        }
+
+        return botCollectionRepository
+            .findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsers(true, username, page)
+            .map(botCollectionMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -73,6 +83,7 @@ public class BotCollectionQueryService extends QueryService<BotCollection> {
         final Specification<BotCollection> specification = createSpecification(criteria);
         return botCollectionRepository.count(specification);
     }
+
 
     protected Specification<BotCollection> createSpecification(BotCollectionCriteria criteria) {
         Specification<BotCollection> specification = Specification.where(null);

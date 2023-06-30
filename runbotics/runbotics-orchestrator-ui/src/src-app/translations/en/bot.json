@@ -20,6 +20,8 @@
     "Bot.Collection.Dialog.Modify.Form.PublicBots.Label": "Public bots included:",
     "Bot.Collection.Dialog.Modify.Form.Users.Label": "Users",
     "Bot.Collection.Dialog.Modify.Form.ErrorMessage": "Something went wrong!",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.noname":"Name cannot be null",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.nameexists":"Collection name already taken",
     "Bot.Collection.Table.Header.Name": "Name",
     "Bot.Collection.Table.Header.Creator": "Creator",
     "Bot.Collection.Table.Header.PublicIncluded": "Public included",
