@@ -4,16 +4,14 @@ import { Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typogra
 import moment from 'moment';
 import { IBotCollection, IUser } from 'runbotics-common';
 
-
-
+import useTranslations from '#src-app/hooks/useTranslations';
+import { usersActions } from '#src-app/store/slices/Users';
 
 import { useDispatch, useSelector } from '../../../../../store';
 import { botCollectionActions } from '../../../../../store/slices/BotCollections';
 import { PageRequestParams } from '../../../../../utils/types/page';
 import { Content, Form, Title } from '../../../../utils/FormDialog.styles';
 
-import useTranslations from '#src-app/hooks/useTranslations';
-import { usersActions } from '#src-app/store/slices/Users';
 
 
 interface ModifyBotCollectionDialogProps {

@@ -4,8 +4,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu } from '@mui/material';
 import { FeatureKey } from 'runbotics-common';
 
-import { BotCollectionTileProps } from './BotCollectionTile.types';
-
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -13,6 +11,8 @@ import BotCollectionDeleteOption from '#src-app/views/bot/BotCollectionView/Dial
 import BotCollectionIdentifierOption from
     '#src-app/views/bot/BotCollectionView/Dialog/identifier/BotCollectionIdentifierOption';
 import BotCollectionModifyOption from '#src-app/views/bot/BotCollectionView/Dialog/modify/BotCollectionModifyOption';
+
+import { BotCollectionTileProps } from './BotCollectionTile.types';
 
 const BotCollectionTileAction: VFC<BotCollectionTileProps> = ({ botCollection, displayMode }) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
