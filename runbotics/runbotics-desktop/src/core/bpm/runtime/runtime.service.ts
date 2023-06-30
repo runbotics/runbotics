@@ -74,6 +74,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 eventType: ProcessInstanceStatus.ERRORED,
                 processInstance: {
                     ...processInstance,
+                    status: ProcessInstanceStatus.ERRORED,
                     error: 'Bot has been shut down',
                 },
             });
