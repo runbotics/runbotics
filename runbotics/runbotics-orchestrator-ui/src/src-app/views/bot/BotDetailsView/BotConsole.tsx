@@ -15,7 +15,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { botActions } from '#src-app/store/slices/Bot';
 
-// const BotConsole: FC = () => {
+const BotConsole = () => {
 //     const router = useRouter();
 //     const { id, search } = router.query;
 //     const dispatch = useDispatch();
@@ -55,6 +55,6 @@ import { botActions } from '#src-app/store/slices/Bot';
 //         // eslint-disable-next-line react-hooks/exhaustive-deps
 //     }, [id, search]);
 //     return <div style={{ backgroundColor: '#242424' }}>{isBrowser && <Console logs={logs} variant="dark" />}</div>;
-// };
+};
 
-// export default BotConsole;
+export default BotConsole;
