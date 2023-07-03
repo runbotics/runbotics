@@ -47,7 +47,8 @@ public class GuestServiceImpl implements GuestService {
         guestRepository.save(createGuest(guestIp, guestUser));
         return guestUser;
     }
-    
+
+    @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
     public void deleteAllGuestAccounts() {
         guestRepository.deleteAllGuest();
