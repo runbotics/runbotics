@@ -6,4 +6,6 @@ public interface GuestService {
     boolean verifyGuest(String guestIp);
 
     User generateGuestAccount(String guestIp, String langKey);
+
+    void deleteAllGuestAccounts();
 }

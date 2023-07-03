@@ -8,6 +8,7 @@ import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.GuestService;
 import com.runbotics.service.UserService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,11 @@ public class GuestServiceImpl implements GuestService {
         User guestUser = userService.saveUser(createGuestUser(langKey));
         guestRepository.save(createGuest(guestIp, guestUser));
         return guestUser;
+    }
+    
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteAllGuestAccounts() {
+        guestRepository.deleteAllGuest();
     }
 
     private Guest createGuest(String guestIp, User user) {
