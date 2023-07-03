@@ -8,6 +8,7 @@ import com.runbotics.service.BotCollectionQueryService;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
+import com.runbotics.service.exception.CollectionAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -181,10 +182,7 @@ public class BotCollectionResource {
 
         if(isPublicOrGuest(id)){
             log.debug("Can not delete collection with id: {}", id);
-            return ResponseEntity
-                .noContent()
-                .headers(HeaderUtil.createFailureAlert(applicationName, true, ENTITY_NAME, HttpStatus.FORBIDDEN.toString(), "Can't delete collection"))
-                .build();
+            throw new CollectionAccessDenied("You can't delete this collection");
         }
 
         botCollectionService.delete(id);

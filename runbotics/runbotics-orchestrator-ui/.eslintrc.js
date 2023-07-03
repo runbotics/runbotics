@@ -71,7 +71,7 @@ module.exports = {
         "quotes": [ 'error', 'single' ],
         "max-lines-per-function": [
             "warn",
-            200
+            150
         ],
         'import/order': [
             'error',
