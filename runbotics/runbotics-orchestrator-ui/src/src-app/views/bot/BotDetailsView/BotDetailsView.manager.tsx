@@ -7,7 +7,7 @@ import If from '#src-app/components/utils/If';
 import { BotTab } from '#src-app/utils/bot-tab';
 
 const BotLog = dynamic(() => import('./BotLog'));
-const BotConsole = dynamic(() => import('./BotConsole'), { ssr: false });
+// const BotConsole = dynamic(() => import('./BotConsole'), { ssr: false });
 
 const BotDetailsViewManager: VFC = () => {
     const router = useRouter();
@@ -18,9 +18,9 @@ const BotDetailsViewManager: VFC = () => {
             <If condition={tab === BotTab.LOGS}>
                 <BotLog />
             </If>
-            <If condition={tab === BotTab.CONSOLE}>
+            {/* <If condition={tab === BotTab.CONSOLE}>
                 <BotConsole />
-            </If>
+            </If> */}
         </>
     );
 };
