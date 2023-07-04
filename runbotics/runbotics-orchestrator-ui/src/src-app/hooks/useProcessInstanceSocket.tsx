@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { IProcessInstance, IProcessInstanceEvent, WsMessage, ProcessInstanceStatus } from 'runbotics-common';
+import { IProcessInstance, IProcessInstanceEvent, WsMessage, isProcessInstanceFinished } from 'runbotics-common';
 
 import { SocketContext } from '#src-app/providers/Socket.provider';
 import { processSelector } from '#src-app/store/slices/Process';
@@ -11,10 +11,6 @@ interface ProcessInstanceSocketHookProps {
     orchestratorProcessInstanceId?: string | null;
     fullHistoryUpdate?: boolean;
 }
-
-const isProcessInstanceFinished = (processInstance: IProcessInstance) =>
-    processInstance.status === ProcessInstanceStatus.COMPLETED ||
-    processInstance.status === ProcessInstanceStatus.ERRORED;
 
 const useProcessInstanceSocket = ({
     orchestratorProcessInstanceId,
@@ -39,7 +35,7 @@ const useProcessInstanceSocket = ({
                 && (fullHistoryUpdate || Number(processInstance.process.id) === processState.draft.process.id)
             ) {
                 dispatch(processInstanceActions.insert(processInstance));
-                if (isProcessInstanceFinished(processInstance)) {
+                if (isProcessInstanceFinished(processInstance.status)) {
                     dispatch(
                         processInstanceActions.getProcessInstanceAndUpdatePage({
                             processInstanceId: processInstance.id,

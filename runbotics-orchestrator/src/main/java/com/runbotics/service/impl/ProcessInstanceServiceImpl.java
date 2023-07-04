@@ -1,23 +1,24 @@
 package com.runbotics.service.impl;
 
+import com.runbotics.domain.Authority;
 import com.runbotics.domain.ProcessInstance;
 import com.runbotics.repository.ProcessInstanceRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.ProcessInstanceService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessInstanceDTO;
-import com.runbotics.service.exception.ProcessInstanceNotFound;
+import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.service.mapper.ProcessInstanceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -32,12 +33,16 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessInstanceMapper processInstanceMapper;
 
+    private final UserService userService;
+
     public ProcessInstanceServiceImpl(
         ProcessInstanceRepository processInstanceRepository,
-        ProcessInstanceMapper processInstanceMapper
+        ProcessInstanceMapper processInstanceMapper,
+        UserService userService
     ) {
         this.processInstanceRepository = processInstanceRepository;
         this.processInstanceMapper = processInstanceMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -75,7 +80,26 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     @Transactional(readOnly = true)
     public Optional<ProcessInstanceDTO> findOne(UUID id) {
         log.debug("Request to get ProcessInstance : {}", id);
-        return processInstanceRepository.findById(id).map(processInstanceMapper::toDto);
+        Optional<ProcessInstance> optionalProcessInstance = processInstanceRepository.findById(id);
+
+        if (optionalProcessInstance.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
+
+        var processInstance = optionalProcessInstance.get();
+        var isProcessPublic = processInstance.getProcess().getIsPublic();
+        var adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.ADMIN);
+        var isAdmin = requester.getAuthorities().contains(adminAuthority);
+        var isCreator = Objects.equals(processInstance.getProcess().getCreatedBy(), requester);
+
+        if (!(isProcessPublic || isAdmin || isCreator)) {
+            throw new ProcessInstanceAccessDenied();
+        }
+
+        return optionalProcessInstance.map(processInstanceMapper::toDto);
     }
 
     @Override
