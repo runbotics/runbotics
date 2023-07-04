@@ -1,3 +1,6 @@
+import React, { FC } from 'react';
+
+
 // import { Console } from 'console-feed';
 // import { Message } from 'console-feed/lib/definitions/Component';
 // import { Methods } from 'console-feed/lib/definitions/Console';
@@ -52,6 +55,3 @@ const BotConsole: FC = () =>
         </div>
     )
 ;
-
-
-export default BotConsole;
