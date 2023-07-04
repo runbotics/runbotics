@@ -16,7 +16,7 @@ const ManageProcessForm: VFC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const { process } = useSelector((state) => state.process.draft);
-    const isScheduled = process.schedules.length > 0;
+    const isScheduled = process?.schedules?.length > 0;
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
