@@ -9,6 +9,7 @@ const ProcessNameSuggestionWidget = dynamic(() => import('./SuggestProcessesName
 const FileDropzoneWidget = dynamic(() => import('./FileDropzone'), { ssr: false });
 const BrowserTargetWidget = dynamic(() => import('./BrowserTargetWidget'), { ssr: false });
 const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: false });
+const DatePickerWidget = dynamic(() => import('./DatePickerWidget'), { ssr: false });
 
 const customWidgets = {
     TextWidget: ElementAwareAutocompleteWidget,
@@ -19,7 +20,8 @@ const customWidgets = {
     GlobalVariableSelectWidget,
     FileDropzoneWidget,
     BrowserTargetWidget,
-    TypographyWidget
+    TypographyWidget,
+    DatePickerWidget
 };
 
 export default customWidgets;
