@@ -10,7 +10,10 @@ import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
+import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
+import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import org.slf4j.Logger;
@@ -97,12 +100,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateDiagram(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
         return processRepository
-            .findById(processDTO.getId())
+            .findById(processDiagramDTO.getId())
             .map(
                 existingProcess -> {
-                    processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setDefinition(processDiagramDTO.getDefinition());
                     return existingProcess;
                 }
             )
@@ -111,12 +114,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateIsAttended(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateIsAttended(ProcessAttendedUpdateDTO processAttendedDTO) {
         return processRepository
-            .findById(processDTO.getId())
+            .findById(processAttendedDTO.getId())
             .map(
                 existingProcess -> {
-                    processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setIsAttended(processAttendedDTO.getAttended());
                     return existingProcess;
                 }
             )
@@ -125,12 +128,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateIsTriggerable(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateIsTriggerable(ProcessTriggerUpdateDTO processTriggerDTO) {
         return processRepository
-            .findById(processDTO.getId())
+            .findById(processTriggerDTO.getId())
             .map(
                 existingProcess -> {
-                    processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setIsTriggerable(processTriggerDTO.getTriggerable());
                     return existingProcess;
                 }
             )

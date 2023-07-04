@@ -6,8 +6,7 @@ import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.criteria.ProcessCriteria;
-import com.runbotics.service.dto.ProcessDTO;
-import com.runbotics.service.dto.ProcessDTOViews;
+import com.runbotics.service.dto.*;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,15 +137,15 @@ public class ProcessResource {
     @PatchMapping(value = "/processes/{id}/diagram")
     public ResponseEntity<ProcessDTO> processSetDiagram(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody ProcessDTO processDTO
+        @NotNull @RequestBody @Valid ProcessDiagramUpdateDTO processDiagramDTO
     ) throws URISyntaxException {
         log.debug("REST request to update diagram in Process: {}", id);
-        checkProcessForEdit(id, processDTO);
-        Optional<ProcessDTO> result = processService.partialUpdate(processDTO);
+        checkProcessForEdit(id, processDiagramDTO);
+        Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDiagramDTO.getId().toString())
         );
     }
 
@@ -154,15 +153,15 @@ public class ProcessResource {
     @PatchMapping(value = "/processes/{id}/is-attended")
     public ResponseEntity<ProcessDTO> processSetIsAttended(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody ProcessDTO processDTO
+        @NotNull @RequestBody @Valid ProcessAttendedUpdateDTO processAttendedDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update is attended used in Process {} to {}", processDTO, processDTO.getIsAttended());
-        checkProcessForEdit(id, processDTO);
-        Optional<ProcessDTO> result = processService.updateIsAttended(processDTO);
+        log.debug("REST request to update is attended used in Process {} to {}", processAttendedDTO, processAttendedDTO.getAttended());
+        checkProcessForEdit(id, processAttendedDTO);
+        Optional<ProcessDTO> result = processService.updateIsAttended(processAttendedDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processAttendedDTO.getId().toString())
         );
     }
 
@@ -170,9 +169,9 @@ public class ProcessResource {
     @PatchMapping(value = "/processes/{id}/is-triggerable")
     public ResponseEntity<ProcessDTO> processSetIsTriggerable(
         @PathVariable(value = "id", required = true) final Long id,
-        @NotNull @RequestBody ProcessDTO processDTO
+        @NotNull @RequestBody @Valid ProcessTriggerUpdateDTO processDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getIsTriggerable());
+        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getTriggerable());
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateIsTriggerable(processDTO);
 
@@ -294,6 +293,45 @@ public class ProcessResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, processDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!processRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+    }
+
+    private void checkProcessForEdit(long id, ProcessDiagramUpdateDTO processDiagramDTO) throws BadRequestAlertException {
+        if (processDiagramDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, processDiagramDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!processRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+    }
+
+    private void checkProcessForEdit(long id, ProcessAttendedUpdateDTO processAttendedDTO) throws BadRequestAlertException {
+        if (processAttendedDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, processAttendedDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!processRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+    }
+
+    private void checkProcessForEdit(long id, ProcessTriggerUpdateDTO processTriggerDTO) throws BadRequestAlertException {
+        if (processTriggerDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, processTriggerDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 

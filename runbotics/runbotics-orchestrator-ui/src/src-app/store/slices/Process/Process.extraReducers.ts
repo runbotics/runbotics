@@ -7,7 +7,7 @@ import { ProcessState } from './Process.state';
 import {
     fetchProcessById,
     getProcesses,
-    saveProcess,
+    updateDiagram,
     setDraft,
     deleteProcess,
     getProcessesPage,
@@ -41,16 +41,16 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
 
-        // SAVE
-        .addCase(saveProcess.pending, (state, action) => {
+        // UPDATE
+        .addCase(updateDiagram.pending, (state, action) => {
             state.draft.loading = LoadingType.PENDING;
             state.draft.currentRequestId = action.meta.requestId;
         })
-        .addCase(saveProcess.fulfilled, (state, action) => {
+        .addCase(updateDiagram.fulfilled, (state, action) => {
             state.draft.process = action.payload;
             state.draft.loading = LoadingType.IDLE;
         })
-        .addCase(saveProcess.rejected, (state, action) => {
+        .addCase(updateDiagram.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
             if (action.payload) { state.draft.error = action.payload; }
             else { state.draft.error = action.error.message; }
@@ -90,7 +90,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
 
-        // UPDATE PROCESS
+        // PARTIAL UPDATE
         .addCase(partialUpdateProcess.fulfilled, (state, action) => {
             state.draft.process = action.payload;
         })

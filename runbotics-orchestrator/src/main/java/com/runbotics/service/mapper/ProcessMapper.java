@@ -14,10 +14,6 @@ public interface ProcessMapper extends EntityMapper<ProcessDTO, Process> {
     @BeanMapping(qualifiedByName = "DTO")
     ProcessDTO toDto(Process s);
 
-    @Named("diagramUpdate")
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, mappingControl = )
-    void diagramUpdate(@MappingTarget Process entity, ProcessDTO dto);
-
     @Named("name")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
