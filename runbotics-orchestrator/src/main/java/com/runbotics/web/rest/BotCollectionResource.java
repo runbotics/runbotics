@@ -1,11 +1,12 @@
 package com.runbotics.web.rest;
 
-import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotCollectionConstants;
+import com.runbotics.domain.User;
 import com.runbotics.repository.BotCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotCollectionQueryService;
 import com.runbotics.service.BotCollectionService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.exception.CollectionAccessDenied;
@@ -13,7 +14,6 @@ import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,15 +43,17 @@ public class BotCollectionResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
     private final BotCollectionService botCollectionService;
     private final BotCollectionRepository botCollectionRepository;
     private final BotCollectionQueryService botCollectionQueryService;
 
     public BotCollectionResource(
-        BotCollectionService botCollectionService,
+        UserService userService, BotCollectionService botCollectionService,
         BotCollectionRepository botCollectionRepository,
         BotCollectionQueryService botCollectionQueryService
     ) {
+        this.userService = userService;
         this.botCollectionService = botCollectionService;
         this.botCollectionRepository = botCollectionRepository;
         this.botCollectionQueryService = botCollectionQueryService;
@@ -202,9 +203,10 @@ public class BotCollectionResource {
 
     @GetMapping("bot-collection-page/current-user")
     public ResponseEntity<Page<BotCollectionDTO>> getBotCollectionsPageForCurrentUser(Pageable pageable, BotCollectionCriteria criteria) {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("REST request to get page collections for user : {}", currentUsername);
-        Page<BotCollectionDTO> botCollectionDTOS = botCollectionQueryService.findByCriteria(criteria, currentUsername, pageable);
+        User currentUser = userService.getUserWithAuthorities().get();
+
+        log.debug("REST request to get page collections for user : {}", currentUser.getLogin());
+        Page<BotCollectionDTO> botCollectionDTOS = botCollectionQueryService.findByCriteria(criteria,currentUser, pageable);
         return ResponseEntity.ok().body(botCollectionDTOS);
     }
 

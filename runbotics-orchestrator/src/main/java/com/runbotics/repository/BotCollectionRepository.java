@@ -29,99 +29,58 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
     );
 
     @Query(value =
-        "SELECT DISTINCT * FROM (" +
-            "SELECT DISTINCT *" +
-            "FROM bot_collection b " +
-            "WHERE b.id = ( " +
-            "SELECT col.id " +
-            "FROM bot_collection col inner join jhi_user u " +
-            "ON col.created_by = u.id " +
-            "WHERE u.login = :login) OR public_bots_included = :publicBotsIncluded " +
-            "UNION " +
-            "SELECT DISTINCT * " +
-            "FROM bot_collection b " +
-            "WHERE b.id = ( " +
-            "SELECT col.bot_collection_id " +
-            "FROM bot_collection_user col inner join jhi_user u " +
-            "ON col.user_id = u.id " +
-            "WHERE u.login = :login) " +
-            "UNION SELECT * FROM bot_collection " +
-            "WHERE name IN ('Public','Guest')) AS b ",
+        "SELECT DISTINCT " +
+            "id, " +
+            "name, " +
+            "description, " +
+            "public_bots_included, " +
+            "created, " +
+            "updated, " +
+            "created_by " +
+            "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
+            "WHERE user_id = :id OR created_by = :id OR name IN ('Public','Guest')",
         countQuery =
-            "SELECT count(*) FROM ( " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection b " +
-                "WHERE b.id = ( " +
-                "SELECT col.id " +
-                "FROM bot_collection col inner join jhi_user u " +
-                "ON col.created_by = u.id " +
-                "WHERE u.login = 'user') OR public_bots_included = true " +
-                "UNION " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection b " +
-                "WHERE b.id = ( " +
-                "SELECT col.bot_collection_id " +
-                "FROM bot_collection_user col inner join jhi_user u " +
-                "ON col.user_id = u.id " +
-                "WHERE u.login = 'user') " +
-                "UNION SELECT * FROM bot_collection " +
-                "WHERE name IN ('Public','Guest')) as b"
+            "SELECT DISTINCT " +
+                "count(*) " +
+                "FROM (bot_collection_user as b RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
+                "WHERE user_id = :id OR created_by = :id OR name IN ('Public','Guest')"
         , nativeQuery = true
     )
-    Page<BotCollection> findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsers(
-        boolean publicBotsIncluded,
-        String login,
+    Page<BotCollection> findAllUserCollections(
+        Long id,
         Pageable pageable
     );
 
     @Query(
         value =
             "SELECT DISTINCT * FROM ( " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection b " +
-                "WHERE b.id = ( " +
-                "SELECT col.id " +
-                "FROM bot_collection col inner join jhi_user u " +
-                "ON col.created_by = u.id " +
-                "WHERE u.login = :login) OR public_bots_included = :publicBotsIncluded " +
-                "UNION " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection " +
-                "b WHERE b.id = ( " +
-                "SELECT col.bot_collection_id " +
-                "FROM bot_collection_user col inner join jhi_user u " +
-                "ON col.user_id = u.id " +
-                "WHERE u.login = :login) " +
-                "UNION " +
-                "SELECT * FROM bot_collection " +
-                "WHERE name IN ('Public','Guest')) " +
-                "as b WHERE name ILIKE %:collectionName%",
+                "SELECT DISTINCT " +
+                "id, " +
+                "name, " +
+                "description, " +
+                "public_bots_included, " +
+                "created, " +
+                "updated, " +
+                "created_by " +
+                "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
+                "WHERE (user_id = :id OR created_by = :id OR name IN ('Public','Guest'))) as collections WHERE name ILIKE %:collectionName%",
         countQuery =
-            "SELECT DISTINCT COUNT(*) FROM ( " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection b " +
-                "WHERE b.id = ( " +
-                "SELECT col.id " +
-                "FROM bot_collection col inner join jhi_user u " +
-                "ON col.created_by = u.id " +
-                "WHERE u.login = :login) OR public_bots_included = :publicBotsIncluded " +
-                "UNION " +
-                "SELECT DISTINCT * " +
-                "FROM bot_collection " +
-                "b WHERE b.id = ( " +
-                "SELECT col.bot_collection_id " +
-                "FROM bot_collection_user col inner join jhi_user u " +
-                "ON col.user_id = u.id " +
-                "WHERE u.login = :login) " +
-                "UNION " +
-                "SELECT * FROM bot_collection " +
-                "WHERE name IN ('Public','Guest')) " +
-                "as b WHERE name ILIKE %:collectionName%",
+            "SELECT DISTINCT count(*) FROM ( " +
+                "SELECT DISTINCT " +
+                "id, " +
+                "name, " +
+                "description, " +
+                "public_bots_included, " +
+                "created, " +
+                "updated, " +
+                "created_by " +
+                "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
+                "WHERE (user_id = :id OR created_by = :id OR name IN ('Public','Guest'))) as collections WHERE name ILIKE %:collectionName%",
+
         nativeQuery = true
     )
-    Page<BotCollection> findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsersAndCollectionName(
-        boolean publicBotsIncluded,
-        String login,
+    Page<BotCollection> findAllUserCollectionsByNames(
+        Long id,
         String collectionName,
         Pageable pageable
     );

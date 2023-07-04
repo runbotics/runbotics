@@ -1,8 +1,4 @@
-enum DefaultCollections {
+export enum DefaultCollections {
     PUBLIC = 'Public',
     GUEST = 'Guest'
 }
-
-
-
-export {DefaultCollections}
