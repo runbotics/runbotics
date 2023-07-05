@@ -1,0 +1,35 @@
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="20230703124951" author="pasiecznys">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT count(event_object_table)
+                FROM information_schema.triggers
+                WHERE trigger_name = 'after_user_delete'
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            <![CDATA[
+                CREATE OR REPLACE FUNCTION delete_guest_process()
+                RETURNS TRIGGER AS
+                'DECLARE
+                    user_role text;
+                BEGIN
+                    IF OLD.id IN (SELECT user_id FROM guest) THEN
+                        DELETE FROM process WHERE created_by_id = OLD.id;
+                    END IF;
+                    RETURN OLD;
+                END;
+                ' LANGUAGE plpgsql;
+                 ]]>
+
+            CREATE TRIGGER before_guest_delete
+            BEFORE DELETE ON jhi_user
+            FOR EACH ROW EXECUTE PROCEDURE delete_guest_process();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
