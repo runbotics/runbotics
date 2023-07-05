@@ -74,41 +74,23 @@ export class SchedulerProcessor {
     ): Promise<IBot> {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
         while (--retry) {
-            const availableBots: IBot | IBot[] =
+            let availableBots: IBot | IBot[] =
                 await this.findAvailableBot(collection.name, system);
 
             if (this.isIBot(availableBots)) {
                 return Promise.resolve(<IBot>availableBots);
             }
 
+           if(collection.name === DefaultCollections.PUBLIC){
+                 const botsGuest = await this.findAvailableBot(DefaultCollections.GUEST,system);
 
-            if (collection.name !== DefaultCollections.GUEST) {
-                if (collection.name !== DefaultCollections.PUBLIC) {
-                    const publicBots: IBot | IBot[] =
-                        await this.findAvailableBot(
-                            DefaultCollections.PUBLIC,
-                            system
-                        );
-
-                    if (this.isIBot(publicBots)) {
-                        return Promise.resolve(<IBot>publicBots);
-                    }
-
-                    (<IBot[]>availableBots).concat(publicBots);
+                if (this.isIBot(botsGuest)) {
+                    this.logger.log(`[Q Process] Bot ${(<IBot>botsGuest).id} is borrowed from Guest Collection`);
+                    return Promise.resolve(<IBot>botsGuest);
                 }
 
-                const guestBots: IBot | IBot[] =
-                    await this.findAvailableBot(
-                        DefaultCollections.GUEST,
-                        system
-                    );
-
-                if (this.isIBot(guestBots)) {
-                    return Promise.resolve(<IBot>guestBots);
-                }
-
-                (<IBot[]>availableBots).concat(guestBots);
-            }
+                availableBots = botsGuest;
+           }
 
             if (!this.isAnyBotConnected(<IBot[]>availableBots)) {
                 const errorMessage = 'All bots are disconnected';
@@ -116,6 +98,7 @@ export class SchedulerProcessor {
                     job,
                     errorMessage
                 );
+
                 return Promise.reject(errorMessage);
             }
 
