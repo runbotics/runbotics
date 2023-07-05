@@ -26,4 +26,8 @@ export class GuestService {
     async incrementExecutionsCount(userId: number): Promise<UpdateResult> {
         return this.guestRepository.increment({ userId }, 'executionCount', 1);
     }
+
+    async decrementExecutionsCount(userId: number): Promise<UpdateResult> {
+        return this.guestRepository.decrement({ userId }, 'executionCount', 1);
+    }
 }

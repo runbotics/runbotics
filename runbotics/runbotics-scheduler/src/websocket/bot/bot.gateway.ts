@@ -20,6 +20,7 @@ import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
+import { GuestService } from '#/database/guest/guest.service';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -34,6 +35,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
         private readonly botLifecycleService: BotLifecycleService,
+        private readonly guestService: GuestService,
     ) { }
 
     async handleConnection(client: Socket) {
@@ -76,6 +78,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             processInstance.status === ProcessInstanceStatus.TERMINATED
         ) {
             await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
+            await this.guestService.decrementExecutionsCount(processInstance.user.id);
+            this.logger.log('Restored user\'s executions-count because of process interruption');
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
