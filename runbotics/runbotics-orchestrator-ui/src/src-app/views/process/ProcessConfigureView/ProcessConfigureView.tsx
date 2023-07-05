@@ -28,7 +28,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { process } = useSelector((state) => state.process.draft);
-    const isScheduled = process?.schedules.length > 0;
+    const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
 

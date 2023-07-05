@@ -44,7 +44,7 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
 
     const handleEdit = async (processToSave: IProcess) => {
         try {
-            await dispatch(processActions.saveProcess(processToSave));
+            await dispatch(processActions.updateProcess(processToSave));
             setShowDialog(false);
             await dispatch(
                 processActions.getProcessesPage({
