@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {Brackets, Repository} from 'typeorm';
 import {BotEntity} from './bot.entity';
 import {BotStatus, BotSystem, IBot, IBotCollection, IBotSystem} from 'runbotics-common';
 
@@ -30,14 +30,38 @@ export class BotService {
         return this.botRepository.findOne({ where: { user: { id } }, relations});
     }
 
+
     async findByCollectionAndSystem(
-        collection: IBotCollection,
+        collection:IBotCollection,
         system: IBotSystem
     ): Promise<IBot[]> {
-        const bots = await this.botRepository.find({relations});
-        return bots
-            .filter((bot) => system.name === BotSystem.ANY || bot.system.name === system.name)
-            .filter((bot) => bot.collection.name === collection.name);
+        return await this.botRepository.createQueryBuilder('bot')
+        .where(`${system.name === BotSystem.ANY?'':'bot.SYSTEM = :system'}`)
+        .andWhere('(bot.status = :connected OR bot.status = :busy)')
+        .andWhere('(bot.collection_id = :collection_id )')
+        .setParameters({
+            system: system.name,
+            collection_id: collection.id,
+            connected: BotStatus.CONNECTED,
+            busy: BotStatus.BUSY
+        }).getMany();
+    }
+
+    async findByCollectionNameAndSystem(
+        collectionName: string,
+        system: IBotSystem
+    ): Promise<IBot[]> {
+        return await this.botRepository.createQueryBuilder('bot')
+        .where(`${system.name === BotSystem.ANY?'':'bot.SYSTEM = :system'}`)
+        .leftJoinAndSelect('bot.collection','bot_collection')
+        .andWhere('(bot.status = :connected OR bot.status = :busy)')
+        .andWhere('(bot_collection.name = :collectionName )')
+        .setParameters({
+            system: system.name,
+            collectionName: collectionName,
+            connected: BotStatus.CONNECTED,
+            busy: BotStatus.BUSY
+        }).getMany();
     }
 
     save(bot: IBot) {
