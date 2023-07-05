@@ -11,6 +11,7 @@ import {
     TextField,
     Box
 } from '@mui/material';
+import { PayloadAction } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
@@ -78,24 +79,30 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             setInputErrorType(InputErrorType.REQUIRED);
             return;
         }
-        
+
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };
-            const result = await dispatch(
+            const result: PayloadAction<IProcess> = await dispatch(
                 processActions.createProcess(processInfo)
             );
-            if(result.payload?.title) throw { message: result.payload.title };
+
+            if ('title' in result.payload && result.payload?.title) throw { message: result.payload.title };
+
             onAdd(result.payload);
         } catch (error) {
+            const message = error?.message ?? translate('Process.Add.Form.Error.General');
             const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
-            console.log('translationKey', translationKey);
             checkIfKeyExists(translationKey) 
-                ? enqueueSnackbar(translate(translationKey), {
-                    variant: 'error'
-                })
-                : enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
-                    variant: 'error'
-                });
+                ? enqueueSnackbar(
+                    translate(translationKey), {
+                        variant: 'error'
+                    }
+                )
+                : enqueueSnackbar(
+                    message, {
+                        variant: 'error'
+                    }
+                );
         }
     };
 
