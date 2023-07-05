@@ -20,6 +20,10 @@
     "Bot.Collection.Dialog.Modify.Form.PublicBots.Label": "Public bots included:",
     "Bot.Collection.Dialog.Modify.Form.Users.Label": "Users",
     "Bot.Collection.Dialog.Modify.Form.ErrorMessage": "Something went wrong!",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.noname":"Name cannot be empty",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.nameexists":"The collection name already taken",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.idnotfound": "Could't find collection",
+    "Bot.Collection.Dialog.Modify.Form.ErrorMessage.cantedit":"You have no access to edit this collection",
     "Bot.Collection.Table.Header.Name": "Name",
     "Bot.Collection.Table.Header.Creator": "Creator",
     "Bot.Collection.Table.Header.PublicIncluded": "Public included",
@@ -52,7 +56,7 @@
     "Bot.Actions.Delete.Confirmation.Question": "Are you sure you want to delete bot {{ name }}?",
     "Bot.Actions.DeletionSuccessMessage": "Bot {{ name }} deleted",
     "Bot.Actions.DeletionFailedMessage": "Bot {{ name }} deletion failed",
-    
+
     "Bot.ListView.Results.Table.Status.Disconnected": "DISCONNECTED",
     "Bot.ListView.Results.Table.Status.Connected": "CONNECTED",
     "Bot.ListView.Results.Table.Status.Busy": "BUSY"

@@ -12,6 +12,7 @@ public interface BotCollectionService {
     BotCollectionDTO save(BotCollectionDTO botCollectionDTO);
     Optional<BotCollectionDTO> partialUpdate(BotCollectionDTO botCollectionDTO);
     BotCollection getPublicCollection();
+    BotCollection getGuestCollection();
     Page<BotCollectionDTO> findAll(Pageable pageable);
     Optional<BotCollectionDTO> findOne(UUID id);
     void delete(UUID id);

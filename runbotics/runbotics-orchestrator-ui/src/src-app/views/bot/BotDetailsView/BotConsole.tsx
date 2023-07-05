@@ -55,5 +55,3 @@ const BotConsole: FC = () =>
         </div>
     )
 ;
-
-export default BotConsole;

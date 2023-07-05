@@ -11,6 +11,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import InfoButtonTooltip from '../components/InfoButtonTooltip';
+
 import {
     useWrapperStyleObject,
     useHoverWrapperStyleObject,
