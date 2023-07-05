@@ -20,6 +20,7 @@ import TableRowExpander from '../Table/TableRowExpander';
 import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
 
 
+
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
     onRerunProcess: () => void,
