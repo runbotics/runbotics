@@ -1,13 +1,11 @@
 import React, { FC, useState } from 'react';
 
 import { TextField } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { WidgetProps } from '@rjsf/core';
-
-
 
 const DatePickerWidget: FC<WidgetProps> = (props) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -17,9 +15,15 @@ const DatePickerWidget: FC<WidgetProps> = (props) => {
 
     const handleDataChange = (date: Date | null) => {
         setSelectedDate(date);
+        props.onChange(date.toISOString());
     };
 
-    const renderInput = (params: any) => <TextField {...params} />;
+    const renderInput = (params: any) => (
+        <TextField
+            {...params}
+            sx={{ button: { marginRight: (theme) => theme.spacing(0.5) } }}
+        />
+    );
 
     switch (format) {
         case 'date':
@@ -36,21 +40,20 @@ const DatePickerWidget: FC<WidgetProps> = (props) => {
             break;
         default:
             inputFormat = format ?? 'yyyy-MM-dd';
-            views = ['year', 'month', 'day'];
+            views = ['year', 'month', 'day', 'hours', 'minutes'];
             break;
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DateTimePicker
-                label={props.label}
+                label={props.required ? `${props.label} *` : props.label}
                 inputFormat={inputFormat}
                 value={selectedDate}
                 onChange={handleDataChange}
                 renderInput={renderInput}
                 views={views}
                 InputProps={{ readOnly: true }}
-                // sx={{ marginRight: 5 }}
             />
         </LocalizationProvider>
     );
