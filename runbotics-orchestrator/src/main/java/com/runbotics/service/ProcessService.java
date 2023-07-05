@@ -1,10 +1,13 @@
 package com.runbotics.service;
 
+import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
-import java.util.Optional;
+import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
+import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * Service Interface for managing {@link com.runbotics.domain.Process}.
@@ -18,6 +21,8 @@ public interface ProcessService {
      */
     ProcessDTO save(ProcessDTO processDTO);
 
+    ProcessDTO createGuestProcess();
+
     /**
      * Partially updates a process.
      *
@@ -26,9 +31,11 @@ public interface ProcessService {
      */
     Optional<ProcessDTO> partialUpdate(ProcessDTO processDTO);
 
-    Optional<ProcessDTO> updateIsAttended(ProcessDTO processDTO);
+    Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO);
 
-    Optional<ProcessDTO> updateIsTriggerable(ProcessDTO processDTO);
+    Optional<ProcessDTO> updateIsAttended(ProcessAttendedUpdateDTO processAttendedDTO);
+
+    Optional<ProcessDTO> updateIsTriggerable(ProcessTriggerUpdateDTO processTriggerDTO);
 
     Optional<ProcessDTO> updateBotCollection(ProcessDTO processDTO);
 

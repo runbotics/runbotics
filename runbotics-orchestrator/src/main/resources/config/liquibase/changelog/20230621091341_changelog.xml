@@ -64,6 +64,7 @@
             VALUES ('ROLE_GUEST', 'PROCESS_READ'),
                    ('ROLE_GUEST', 'PROCESS_ADD'),
                    ('ROLE_GUEST', 'PROCESS_BUILD_VIEW'),
+                   ('ROLE_GUEST', 'PROCESS_INSTANCE_READ'),
                    ('ROLE_GUEST', 'PROCESS_ACTIONS_LIST'),
                    ('ROLE_GUEST', 'PROCESS_EDIT_STRUCTURE'),
                    ('ROLE_GUEST', 'PROCESS_START') ON CONFLICT DO NOTHING;

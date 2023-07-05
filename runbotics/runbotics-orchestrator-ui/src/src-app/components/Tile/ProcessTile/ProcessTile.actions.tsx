@@ -44,7 +44,7 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
 
     const handleEdit = async (processToSave: IProcess) => {
         try {
-            await dispatch(processActions.saveProcess(processToSave));
+            await dispatch(processActions.updateProcess(processToSave));
             setShowDialog(false);
             await dispatch(
                 processActions.getProcessesPage({
@@ -68,7 +68,9 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
                     <If condition={hasEditProcessAccess}>
-                        <MenuItem onClick={() => setShowDialog(true)}>{translate('Common.Edit')}</MenuItem>
+                        <MenuItem onClick={() => setShowDialog(true)}>
+                            {translate('Common.Edit')}
+                        </MenuItem>
                     </If>
                     <If condition={hasDeleteProcessAccess}>
                         <DeleteProcess process={process} />

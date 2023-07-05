@@ -12,6 +12,7 @@ import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
 
+const buildViewRegex = /^\/app\/processes\/[0-9]+\/build$/;
 
 // eslint-disable-next-line react/display-name
 export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
@@ -22,6 +23,7 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
+        console.log('Not authenticated');
         router.replace('/');
     }
     
@@ -29,11 +31,13 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
         if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
             return <Component {...props} />; 
         }
-        if (user.roles.includes(Role.ROLE_GUEST)) {
+        if (!buildViewRegex.test(router.asPath) && user.roles.includes(Role.ROLE_GUEST)) {
+            console.log(`Accessing not build page as a guest ${router.asPath} - logout`);
             dispatch(authActions.logout());
         }
         router.replace('/404');
     }
+
     return <LoadingScreen />;
 };
 
