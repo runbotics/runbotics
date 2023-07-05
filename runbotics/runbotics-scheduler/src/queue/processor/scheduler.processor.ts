@@ -41,12 +41,12 @@ export class SchedulerProcessor {
     private isAnyBotConnected = (availableBots: IBot[]): boolean =>
         availableBots.length !== 0;
 
-    private findAvailableBot = (bots: IBot[]) =>
+    private findConnectedBot = (bots: IBot[]) =>
         bots.find((bot) => bot.status === BotStatus.CONNECTED);
 
     private isIBot = (bot: IBot | IBot[]) => (<IBot>bot).id !== undefined;
 
-    private resolveBotCollection = async (
+    private findAvailableBot = async (
         collectionName: string,
         system: IBotSystem
     ): Promise<IBot[] | IBot> => {
@@ -55,17 +55,16 @@ export class SchedulerProcessor {
                 collectionName,
                 system
             );
-        if(!availableBots.length){
-            return [];
-        }
 
-        const availableBot = this.findAvailableBot(availableBots);
-        if (availableBot) {
+        const availableBot = this.findConnectedBot(availableBots);
+
+        if (availableBot != undefined) {
+            this.logger.warn('test');
             this.logger.log(`[Q Process] Bot ${availableBot.id} is available`);
-            return <IBot> availableBot;
+            return <IBot>availableBot;
         }
 
-        return <IBot[]> availableBot;
+        return availableBots;
     };
 
     private async checkBotAvailability(
@@ -76,16 +75,17 @@ export class SchedulerProcessor {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
         while (--retry) {
             const availableBots: IBot | IBot[] =
-                await this.resolveBotCollection(collection.name, system);
-            this.logger.warn(availableBots);
+                await this.findAvailableBot(collection.name, system);
+
             if (this.isIBot(availableBots)) {
                 return Promise.resolve(<IBot>availableBots);
             }
 
+
             if (collection.name !== DefaultCollections.GUEST) {
                 if (collection.name !== DefaultCollections.PUBLIC) {
                     const publicBots: IBot | IBot[] =
-                        await this.resolveBotCollection(
+                        await this.findAvailableBot(
                             DefaultCollections.PUBLIC,
                             system
                         );
@@ -94,11 +94,11 @@ export class SchedulerProcessor {
                         return Promise.resolve(<IBot>publicBots);
                     }
 
-                    (<IBot[]> availableBots).concat(publicBots);
+                    (<IBot[]>availableBots).concat(publicBots);
                 }
 
                 const guestBots: IBot | IBot[] =
-                    await this.resolveBotCollection(
+                    await this.findAvailableBot(
                         DefaultCollections.GUEST,
                         system
                     );
@@ -109,7 +109,7 @@ export class SchedulerProcessor {
 
                 (<IBot[]>availableBots).concat(guestBots);
             }
-            this.logger.warn(availableBots);
+
             if (!this.isAnyBotConnected(<IBot[]>availableBots)) {
                 const errorMessage = 'All bots are disconnected';
                 await this.processInstanceSchedulerService.saveFailedProcessInstance(

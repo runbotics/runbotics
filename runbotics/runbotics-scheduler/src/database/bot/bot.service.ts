@@ -30,23 +30,6 @@ export class BotService {
         return this.botRepository.findOne({ where: { user: { id } }, relations});
     }
 
-
-    async findByCollectionAndSystem(
-        collection:IBotCollection,
-        system: IBotSystem
-    ): Promise<IBot[]> {
-        return await this.botRepository.createQueryBuilder('bot')
-        .where(`${system.name === BotSystem.ANY?'':'bot.SYSTEM = :system'}`)
-        .andWhere('(bot.status = :connected OR bot.status = :busy)')
-        .andWhere('(bot.collection_id = :collection_id )')
-        .setParameters({
-            system: system.name,
-            collection_id: collection.id,
-            connected: BotStatus.CONNECTED,
-            busy: BotStatus.BUSY
-        }).getMany();
-    }
-
     async findByCollectionNameAndSystem(
         collectionName: string,
         system: IBotSystem
