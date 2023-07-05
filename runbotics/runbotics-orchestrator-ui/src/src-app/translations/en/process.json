@@ -636,7 +636,7 @@
     "Process.List.Table.Header.Scheduled": "Scheduled",
     "Process.List.Table.Header.Actions": "Actions",
     "Process.Details.Modeler.Actions.Event.Start.Label": "Start event",
-    "Process.Details.Modeler.Actions.Event.ErrorBoundary.Label": "Warning",
+    "Process.Details.Modeler.Actions.Event.ErrorBoundary.Label": "Error Boundary Event",
     "Process.Details.Modeler.Actions.Event.End.Label": "End event",
     "Process.Details.Modeler.Actions.Loop.Label": "Loop",
     "Process.Details.Modeler.Actions.Gateway.Label": "Gateway",
