@@ -94,7 +94,7 @@ export const createProcess = createAsyncThunk<IProcess, IProcess>(
     (processInfo) => Axios.post<IProcess>('/api/processes', processInfo)
         .then((response) => response.data)
         .catch((error) => {
-            throw error;
+            throw error.response.data;
         }),
 );
 

@@ -31,6 +31,7 @@
     "Process.Add.Title": "Dodaj nowy proces",
     "Process.Add.Form.Fields.Name": "Nazwa",
     "Process.Add.Form.Error.General": "Podczas tworzenia procesu wystąpił błąd",
+    "Process.Add.Form.Error.GuestLimitExceeded": "Gość może mieć co najwyżej jeden proces",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
     "Process.Schedule.Tooltip.PickBotAndCollection": "Wybierz system botów i kolekcję",

@@ -58,6 +58,13 @@ public interface ProcessService {
     Optional<ProcessDTO> findOne(Long id);
 
     /**
+     * Check if user is a guest without any processes or simply is not a guest.
+     *
+     * @return false if is a guest with any process.
+     */
+    boolean getCanBeCreatedByCurrentUser();
+
+    /**
      * Delete the "id" process.
      *
      * @param id the id of the entity.

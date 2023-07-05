@@ -5,6 +5,7 @@ import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.*;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.runbotics.domain.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,13 +44,15 @@ public class ProcessResource {
     private final ProcessService processService;
     private final ProcessRepository processRepository;
     private final ProcessQueryService processQueryService;
+    private final UserService userService;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public ProcessResource(ProcessService processService, ProcessRepository processRepository, ProcessQueryService processQueryService) {
+    public ProcessResource(ProcessService processService, ProcessRepository processRepository, ProcessQueryService processQueryService, UserService userService) {
         this.processService = processService;
         this.processRepository = processRepository;
         this.processQueryService = processQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -62,10 +66,17 @@ public class ProcessResource {
     @PostMapping("/processes")
     public ResponseEntity<ProcessDTO> createProcess(@Valid @RequestBody ProcessDTO processDTO) throws URISyntaxException {
         log.debug("REST request to save Process : {}", processDTO);
+        boolean canBeCreated = processService.getCanBeCreatedByCurrentUser();
+
+        if(!canBeCreated) {
+            throw new BadRequestAlertException("Guest can create only one process", ENTITY_NAME, "guestprocesslimit");
+        }
+
         if (processDTO.getId() != null) {
             throw new BadRequestAlertException("A new process cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ProcessDTO result = processService.save(processDTO);
+
         return ResponseEntity
             .created(new URI("/api/processes/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

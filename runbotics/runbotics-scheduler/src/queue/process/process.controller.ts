@@ -6,12 +6,18 @@ import { startProcessSchema } from '#/utils/pipes';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
+import { ProcessGuestService } from './process-guest.service';
+import { GuestService } from '#/database/guest/guest.service';
 
 @Controller('scheduler/processes')
 export class ProcessController {
     private readonly logger = new Logger(ProcessController.name);
 
-    constructor(private queueService: QueueService) { }
+    constructor(
+        private readonly queueService: QueueService,
+        private readonly processGuestService: ProcessGuestService,
+        private readonly guestService: GuestService,
+    ) { }
 
     @FeatureKeys(FeatureKey.PROCESS_START)
     @Post(':processId/start')
@@ -21,7 +27,13 @@ export class ProcessController {
         @Body() input: ProcessInput,
         @Request() request: AuthRequest,
     ) {
+        const userId = request.user.id;
+        const isUserGuest = this.processGuestService.getIsGuest(request.user.authorities);
+        const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : null;
         try {
+            this.logger.log(`Checking if user (${userId}) is a guest and can start process ${processId}`);
+            await this.processGuestService.checkCanStartProcess(request.user);
+
             this.logger.log(`=> Starting process ${processId}`);
             const process = await this.queueService.getProcessById(processId);
             await this.queueService.validateProcessAccess({ process: process, user: request.user });
@@ -32,11 +44,28 @@ export class ProcessController {
                 user: request.user,
                 trigger: { name: TriggerEvent.MANUAL },
             });
+
             this.logger.log(`<= Process ${processId} successfully started`);
+
+            if(!isUserGuest) return response;
+
+            await this.guestService.incrementExecutionsCount(userId);
+            this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
+
+            console.log(Math.random());
+            if(Math.random() > 0.5) {
+                throw new Error('test');
+            }
 
             return response;
         } catch (err: any) {
             this.logger.error(`<= Process ${processId} failed to start`);
+            
+            if(isUserGuest) {
+                await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
+                this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
+            }
+
             throw new HttpException({
                 message: err?.message ?? 'Internal server error',
                 statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR

@@ -76,18 +76,25 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             setInputErrorType(InputErrorType.REQUIRED);
             return;
         }
-
-
+        
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };
             const result = await dispatch(
                 processActions.createProcess(processInfo)
             );
+            // @ts-ignore
+            if(result?.error !== undefined) throw result?.error;
             onAdd(result.payload);
-        } catch (e) {
-            enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
-                variant: 'error'
-            });
+        } catch (error) {
+            if(error.message === 'error.guestprocesslimit') {
+                enqueueSnackbar(translate('Process.Add.Form.Error.GuestLimitExceeded'), {
+                    variant: 'error'
+                }); 
+            } else {
+                enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
+                    variant: 'error'
+                }); 
+            }
         }
     };
 
