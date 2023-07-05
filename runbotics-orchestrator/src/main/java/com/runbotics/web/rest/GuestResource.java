@@ -31,7 +31,7 @@ public class GuestResource {
     }
 
     /**
-     * {@code DELETE /api/guest/delete/all} : delete the "login" User.
+     * {@code DELETE /api/guest/delete/all} : delete all guest accounts.
      *
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
@@ -40,7 +40,10 @@ public class GuestResource {
     public ResponseEntity<Void> deleteUser() {
         log.debug("REST request to delete All Guest Accounts");
         guestService.deleteAllGuestAccounts();
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted","All")).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted","All"))
+            .build();
     }
 
 }
