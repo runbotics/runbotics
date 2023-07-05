@@ -21,7 +21,6 @@ import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
-import { ProcessGuestService } from './process/process-guest.service';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
@@ -34,7 +33,6 @@ export class QueueService implements OnModuleInit {
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
         private readonly serverConfigService: ServerConfigService,
-        private readonly processGuestService: ProcessGuestService,
     ) {}
 
     async onModuleInit() {

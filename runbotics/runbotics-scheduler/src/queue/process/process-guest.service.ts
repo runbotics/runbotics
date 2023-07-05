@@ -22,7 +22,15 @@ export class ProcessGuestService {
     getExecutionsCount(userId: number): Promise<number> {
         return this.guestService
             .findById(userId)
-            .then(guest => guest.executionCount);
+            .then(guest => guest.executionCount)
+            .catch(() => {
+                this.logger.error(`Failed to get executions-count for user (${userId})`);
+                
+                throw new HttpException({
+                    message: 'Could not get executions count for guest',
+                    statusCode: HttpStatus.NOT_FOUND,
+                }, HttpStatus.NOT_FOUND);
+            });
     }
 
     async checkCanStartProcess(reqUser: IUser): Promise<void> {
