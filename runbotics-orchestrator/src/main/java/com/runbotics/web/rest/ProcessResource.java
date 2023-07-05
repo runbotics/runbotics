@@ -73,6 +73,23 @@ public class ProcessResource {
     }
 
     /**
+     * {@code POST  /processes/guest} : Create a new guest process.
+     *
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)}
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_ADD + "')")
+    @PostMapping("/processes/guest")
+    public ResponseEntity<ProcessDTO> createGuestProcess() throws URISyntaxException {
+        log.debug("REST request to create Guest Process");
+        ProcessDTO result = processService.createGuestProcess();
+        return ResponseEntity
+            .created(new URI("/api/processes/guest" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+    }
+
+    /**
      * {@code PUT  /processes/:id} : Updates an existing process.
      *
      * @param id         the id of the processDTO to save.

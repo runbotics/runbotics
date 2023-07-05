@@ -21,6 +21,8 @@ public interface ProcessService {
      */
     ProcessDTO save(ProcessDTO processDTO);
 
+    ProcessDTO createGuestProcess();
+
     /**
      * Partially updates a process.
      *

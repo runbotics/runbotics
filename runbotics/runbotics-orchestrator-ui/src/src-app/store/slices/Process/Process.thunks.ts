@@ -98,6 +98,15 @@ export const createProcess = createAsyncThunk<IProcess, IProcess>(
         }),
 );
 
+export const createGuestProcess = createAsyncThunk<IProcess>(
+    'processes/create',
+    () => Axios.post<IProcess>('/api/processes/guest')
+        .then((response) => response.data)
+        .catch((error) => {
+            throw error;
+        }),
+);
+
 export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], executionInfo?: Record<string, any> }>(
     'processes/startProcess',
     ({ processId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { variables: executionInfo })

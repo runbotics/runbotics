@@ -1,9 +1,7 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Authority;
-import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.User;
+import com.runbotics.domain.*;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -80,6 +78,18 @@ public class ProcessServiceImpl implements ProcessService {
         }
         process = processRepository.save(process);
         return processMapper.toDto(process);
+    }
+
+    @Override
+    public ProcessDTO createGuestProcess() {
+        ProcessDTO processDTO = new ProcessDTO();
+        processDTO.setDefinition(ProcessConstants.emptyProcessDefinition);
+        processDTO.setName("Demo");
+        processDTO.setIsPublic(false);
+        BotSystem linuxSystem = new BotSystem(BotSystem.BotSystemName.LINUX.value());
+        processDTO.setSystem(linuxSystem);
+        processDTO.setBotCollection(botCollectionService.getGuestCollection());
+        return save(processDTO);
     }
 
     @Override
