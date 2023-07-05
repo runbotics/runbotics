@@ -86,6 +86,46 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
+  runbotics-desktop-guest:
+    container_name: runbotics-desktop-guest
+    image: runbotics/runbotics-desktop:latest
+    environment:
+      - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
+      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
+      - RUNBOTICS_INSTALLATION_ID=bot_guest
+      - RUNBOTICS_USERNAME=user
+      - RUNBOTICS_PASSWORD=user
+      - RUNBOTICS_HOT_RELOAD=true
+      - RUNBOTICS_BOT_COLLECTION=691c15ee-0230-49c6-b794-9e33790652d3
+      - RUNBOTICS_BOT_SYSTEM=LINUX
+      - RUNBOTICS_LOGGER=winston
+      - RUNBOTICS_EXTENSION_DIR=./extensions
+      - CHROME_ADDRESS=http://chrome-2:4444
+      - SHAREPOINT_TENANT_ID=
+      - SHAREPOINT_CLIENT_ID=
+      - SHAREPOINT_USERNAME=
+      - SHAREPOINT_PASSWORD=
+    restart: on-failure
+    depends_on:
+      - runbotics-scheduler
+      - runbotics-orchestrator
+      - chrome
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  chrome-2:
+    container_name: chrome-2
+    image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+    ports:
+      - 7901:7900
+      - 4445:4444
+    shm_size: 2gb
+    environment:
+      SE_NODE_OVERRIDE_MAX_SESSIONS: 'true'
+      SE_NODE_MAX_SESSIONS: 1
+      JAVA_OPTS=-XX:ActiveProcessorCount: 1
+      # SE_VNC_VIEW_ONLY: 1
+
   chrome:
     container_name: chrome
     image: selenium/standalone-chrome:4.0.0-beta-3-20210426
