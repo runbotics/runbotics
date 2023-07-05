@@ -3,7 +3,7 @@ import { IAuthority, IUser, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { GuestService } from '#/database/guest/guest.service';
 
-const GUEST_EXECUTION_LIMIT = 5;
+const GUEST_EXECUTION_LIMIT = 10;
 
 @Injectable()
 export class ProcessGuestService {
@@ -33,7 +33,7 @@ export class ProcessGuestService {
         
         this.logger.error(`Guest ${reqUser.id} has exceeded the execution limit: ${GUEST_EXECUTION_LIMIT} runs`);
         throw new HttpException({
-            message: `Guests are limited to ${GUEST_EXECUTION_LIMIT} process executions. Register to get unlimited executions.`,
+            message: 'Guest run limit exceeded',
             statusCode: HttpStatus.FORBIDDEN
         }, HttpStatus.FORBIDDEN);
     }

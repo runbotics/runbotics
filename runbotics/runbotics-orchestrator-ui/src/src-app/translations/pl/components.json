@@ -6,6 +6,7 @@
 
     "Component.BotProcessRunner.Warning": "Wyszukiwanie bota",
     "Component.BotProcessRunner.Error": "Wszystkie boty są zajęte",
+    "Component.BotProcessRunner.Error.GuestRunLimitExceeded": "Wykorzystałeś limit uruchomień. Zaloguj się, aby uruchomić proces ponownie.",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Proces jest uruchomiony",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Wyszukiwanie bota",
     "Component.BotProcessRunner.Run": "URUCHOM",

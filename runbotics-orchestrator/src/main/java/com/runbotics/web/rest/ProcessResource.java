@@ -69,7 +69,7 @@ public class ProcessResource {
         boolean canBeCreated = processService.getCanBeCreatedByCurrentUser();
 
         if(!canBeCreated) {
-            throw new BadRequestAlertException("Guest can create only one process", ENTITY_NAME, "guestprocesslimit");
+            throw new BadRequestAlertException("Guest create process limit exceeded", ENTITY_NAME, "guestprocesslimit");
         }
 
         if (processDTO.getId() != null) {

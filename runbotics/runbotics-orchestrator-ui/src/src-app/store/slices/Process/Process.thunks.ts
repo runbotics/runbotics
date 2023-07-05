@@ -91,11 +91,9 @@ export const updateDiagram = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'd
 
 export const createProcess = createAsyncThunk<IProcess, IProcess>(
     'processes/create',
-    (processInfo) => Axios.post<IProcess>('/api/processes', processInfo)
+    (processInfo, { rejectWithValue }) => Axios.post<IProcess>('/api/processes', processInfo)
         .then((response) => response.data)
-        .catch((error) => {
-            throw error.response.data;
-        }),
+        .catch((error) => rejectWithValue(error.response.data)),
 );
 
 export const createGuestProcess = createAsyncThunk<IProcess>(
@@ -113,6 +111,7 @@ export const startProcess = createAsyncThunk<StartProcessResponse, { processId: 
         .then((response) => response.data)
         .catch((error) => {
             const message = error.response.status === 504 ? { message: 'Process start failed' } : error.response.data;
+            
             return thunkAPI.rejectWithValue(message);
         }),
 );

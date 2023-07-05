@@ -16,11 +16,13 @@ import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
 import { IProcess } from 'runbotics-common';
 
-import useTranslations, { translate } from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists, translate } from '#src-app/hooks/useTranslations';
 
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { ProcessTab } from '#src-app/utils/process-tab';
+
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import emptyBpmn from './ProcessBuildView/Modeler/extensions/config/empty.bpmn';
 
@@ -82,19 +84,18 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             const result = await dispatch(
                 processActions.createProcess(processInfo)
             );
-            // @ts-ignore
-            if(result?.error !== undefined) throw result?.error;
+            if(result.payload?.title) throw { message: result.payload.title };
             onAdd(result.payload);
         } catch (error) {
-            if(error.message === 'error.guestprocesslimit') {
-                enqueueSnackbar(translate('Process.Add.Form.Error.GuestLimitExceeded'), {
+            const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
+            console.log('translationKey', translationKey);
+            checkIfKeyExists(translationKey) 
+                ? enqueueSnackbar(translate(translationKey), {
                     variant: 'error'
-                }); 
-            } else {
-                enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
+                })
+                : enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
                     variant: 'error'
-                }); 
-            }
+                });
         }
     };
 

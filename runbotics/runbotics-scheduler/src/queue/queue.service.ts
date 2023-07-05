@@ -63,7 +63,7 @@ export class QueueService implements OnModuleInit {
     }
 
     async createInstantJob(params: StartProcessRequest) {
-        const { process, input, user } = params;
+        const { process, input } = params;
         this.logger.log(`Adding new instant job for process: ${process.name}`);
 
         await this.handleAttendedProcess(process, input)

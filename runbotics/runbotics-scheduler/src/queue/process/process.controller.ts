@@ -52,11 +52,6 @@ export class ProcessController {
             await this.guestService.incrementExecutionsCount(userId);
             this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
 
-            console.log(Math.random());
-            if(Math.random() > 0.5) {
-                throw new Error('test');
-            }
-
             return response;
         } catch (err: any) {
             this.logger.error(`<= Process ${processId} failed to start`);

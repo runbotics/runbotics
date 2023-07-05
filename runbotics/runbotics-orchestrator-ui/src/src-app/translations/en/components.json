@@ -6,6 +6,7 @@
 
     "Component.BotProcessRunner.Warning": "Looking for a bot",
     "Component.BotProcessRunner.Error": "All bots are busy",
+    "Component.BotProcessRunner.Error.GuestRunLimitExceeded": "Guests have limited runs. Register to get unlimited executions.",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
     "Component.BotProcessRunner.Run": "RUN",
