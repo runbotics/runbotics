@@ -68,7 +68,7 @@ public class UserJWTController {
             remoteAddress = request.getRemoteAddr();
         } else {
             var addresses = remoteAddress.split(",");
-            remoteAddress = addresses.length > 0 ? addresses[addresses.length - 1] : remoteAddress;
+            remoteAddress = addresses.length > 0 ? addresses[0] : remoteAddress;
         }
         if (!guestService.verifyGuestLimit(remoteAddress)) {
             throw new GuestLimitAccessDeniedException();
