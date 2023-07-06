@@ -21,8 +21,8 @@ export class ProcessGuestService {
 
     getExecutionsCount(userId: number): Promise<number> {
         return this.guestService
-            .findById(userId)
-            .then(guest => guest.executionCount)
+            .findByUserId(userId)
+            .then(guest => guest.executionsCount)
             .catch(() => {
                 this.logger.error(`Failed to get executions-count for user (${userId})`);
                 
@@ -36,8 +36,8 @@ export class ProcessGuestService {
     async checkCanStartProcess(reqUser: IUser): Promise<void> {
         if(!this.getIsGuest(reqUser.authorities)) return;
 
-        const guest = await this.guestService.findById(reqUser.id);
-        if(guest.executionCount < GUEST_EXECUTION_LIMIT) return;
+        const guest = await this.guestService.findByUserId(reqUser.id);
+        if(guest.executionsCount < GUEST_EXECUTION_LIMIT) return;
         
         this.logger.error(`Guest ${reqUser.id} has exceeded the execution limit: ${GUEST_EXECUTION_LIMIT} runs`);
         throw new HttpException({

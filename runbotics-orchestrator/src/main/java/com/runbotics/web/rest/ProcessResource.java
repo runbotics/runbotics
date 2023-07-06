@@ -18,6 +18,7 @@ import com.runbotics.domain.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -66,10 +67,10 @@ public class ProcessResource {
     @PostMapping("/processes")
     public ResponseEntity<ProcessDTO> createProcess(@Valid @RequestBody ProcessDTO processDTO) throws URISyntaxException {
         log.debug("REST request to save Process : {}", processDTO);
-        boolean canBeCreated = processService.getCanBeCreatedByCurrentUser();
+        boolean canBeCreated = processService.hasRequesterCreateProcessAccess();
 
         if(!canBeCreated) {
-            throw new BadRequestAlertException("Guest can create only one process", ENTITY_NAME, "guestprocesslimit");
+            throw new AccessDeniedException("Guest can create only one process");
         }
 
         if (processDTO.getId() != null) {
@@ -93,7 +94,13 @@ public class ProcessResource {
     @PostMapping("/processes/guest")
     public ResponseEntity<ProcessDTO> createGuestProcess() throws URISyntaxException {
         log.debug("REST request to create Guest Process");
+        boolean canBeCreated = processService.hasRequesterCreateProcessAccess();
+
+        if(!canBeCreated) {
+            throw new AccessDeniedException("Guest can create only one process");
+        }
         ProcessDTO result = processService.createGuestProcess();
+
         return ResponseEntity
             .created(new URI("/api/processes/guest" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

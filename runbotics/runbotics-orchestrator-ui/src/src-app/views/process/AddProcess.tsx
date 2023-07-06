@@ -86,7 +86,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
                 processActions.createProcess(processInfo)
             );
 
-            if ('title' in result.payload && result.payload?.title) throw { message: result.payload.title };
+            if ('detail' in result.payload && result.payload?.detail) throw { message: result.payload.detail };
 
             onAdd(result.payload);
         } catch (error) {

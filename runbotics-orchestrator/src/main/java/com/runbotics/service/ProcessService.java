@@ -62,7 +62,7 @@ public interface ProcessService {
      *
      * @return false if is a guest with any process.
      */
-    boolean getCanBeCreatedByCurrentUser();
+    boolean hasRequesterCreateProcessAccess();
 
     /**
      * Delete the "id" process.

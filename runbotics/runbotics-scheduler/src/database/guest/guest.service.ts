@@ -11,8 +11,8 @@ export class GuestService {
         private guestRepository: Repository<GuestEntity>,
     ) { }
 
-    async findById(userId: number): Promise<Guest> {
-        return this.guestRepository.findOne({ where: { userId }});
+    async findByUserId(userId: number): Promise<Guest> {
+        return this.guestRepository.findOne({ where: { userId } });
     }
 
     async update(newGuest: Guest): Promise<UpdateResult> {
@@ -20,14 +20,14 @@ export class GuestService {
     }
 
     async setExecutionsCount(userId: number, newCount: number): Promise<UpdateResult> {
-        return this.guestRepository.update({ userId }, { executionCount: newCount });
+        return this.guestRepository.update({ userId }, { executionsCount: newCount });
     }
 
     async incrementExecutionsCount(userId: number): Promise<UpdateResult> {
-        return this.guestRepository.increment({ userId }, 'executionCount', 1);
+        return this.guestRepository.increment({ userId }, 'executionsCount', 1);
     }
 
     async decrementExecutionsCount(userId: number): Promise<UpdateResult> {
-        return this.guestRepository.decrement({ userId }, 'executionCount', 1);
+        return this.guestRepository.decrement({ userId }, 'executionsCount', 1);
     }
 }

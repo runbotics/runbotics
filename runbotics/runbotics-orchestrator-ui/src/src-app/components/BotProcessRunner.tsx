@@ -190,7 +190,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 setStarted(false);
                 const message = error?.message ?? translate('Component.BotProcessRunner.Error');
 
-                const translationKey = `Component.BotProcessRunner.Error.${capitalizeFirstLetter({ text: error?.message, delimiter: ' ' })}`;
+                const translationKey = `Component.BotProcessRunner.Error.${capitalizeFirstLetter({ text: message, delimiter: ' ' })}`;
 
                 checkIfKeyExists(translationKey)
                     ? enqueueSnackbar(

@@ -10,5 +10,5 @@ export class GuestEntity implements Guest {
         userId: number;
 
     @Column({ name: 'executions_count', type: 'int' })
-        executionCount: number;
+        executionsCount: number;
 }
