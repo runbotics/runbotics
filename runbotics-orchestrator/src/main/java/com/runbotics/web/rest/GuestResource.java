@@ -31,7 +31,7 @@ public class GuestResource {
     }
 
     /**
-     * {@code DELETE /api/guest/delete/all} : delete all guest accounts.
+     * {@code DELETE /api/guest/all} : delete all guest accounts.
      *
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
