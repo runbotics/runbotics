@@ -10,10 +10,11 @@ import {
 
 import clsx from 'clsx';
 
-import { BotSystem } from 'runbotics-common';
+import { BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
@@ -21,7 +22,11 @@ import { classes } from '../ActionListPanel.styles';
 import ListGroup, { Item } from '../ListGroup';
 import { groupActions } from '../useGroupsReducer';
 
-import { ActionListProps } from './ActionList.types';
+import {
+    ActionListProps,
+    ADVANCED_ACTION_GROUP_IDS,
+    ADVANCED_ACTION_IDS,
+} from './ActionList.types';
 
 interface ListItemProps {
     item: Item;
@@ -37,10 +42,14 @@ const ActionList: FC<ActionListProps> = ({
 }) => {
     const { process } = useSelector((state) => state.process.draft);
     const { translate } = useTranslations();
-    const disabledCondition = (actionSystem: string) =>
+    const hasAdvancedActionsAccess = useFeatureKey([
+        FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED,
+    ]);
+    const actionSystemCheck = (actionSystem: string) =>
         process?.system?.name &&
         process.system.name !== BotSystem.ANY &&
         actionSystem.toUpperCase() !== process.system.name;
+        
 
     const ListItem = ({ item, disabled }: ListItemProps) => (
         <ListItemButton
@@ -81,11 +90,17 @@ const ActionList: FC<ActionListProps> = ({
                         onToggle={(open) => {
                             dispatchGroups(groupActions.updateGroup(key, open));
                         }}
+                        disabled={
+                            !hasAdvancedActionsAccess &&
+                            ADVANCED_ACTION_GROUP_IDS.includes(key)
+                        }
                     >
                         <List component="div" disablePadding>
                             {items.map((item: Item) => {
-                                const isDisabled = item.system && disabledCondition(item.system);
-                                return isDisabled ? (
+                                const isActionIncompatible =
+                                    item.system &&
+                                    actionSystemCheck(item.system);
+                                return isActionIncompatible ? (
                                     <Tooltip
                                         key={item.id}
                                         title={translate(
@@ -94,14 +109,20 @@ const ActionList: FC<ActionListProps> = ({
                                         )}
                                     >
                                         <div>
-                                            <ListItem
-                                                item={item}
-                                                disabled
-                                            />
+                                            <ListItem item={item} disabled />
                                         </div>
                                     </Tooltip>
                                 ) : (
-                                    <ListItem key={item.id} item={item} />
+                                    <ListItem
+                                        key={item.id}
+                                        item={item}
+                                        disabled={
+                                            !hasAdvancedActionsAccess &&
+                                            ADVANCED_ACTION_IDS.includes(
+                                                item.id
+                                            )
+                                        }
+                                    />
                                 );
                             })}
                         </List>
