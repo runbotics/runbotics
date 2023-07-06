@@ -9,10 +9,7 @@ import {
 } from '@nestjs/bull';
 import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
-import {
-    Job,
-    MAX_RETRY_BOT_AVAILABILITY,
-} from '#/utils/process';
+import { Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
 import {
     BotStatus,
@@ -37,36 +34,44 @@ export class SchedulerProcessor {
         private readonly processService: ProcessService,
         private readonly uiGateway: UiGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
-        private readonly schedulerService: SchedulerService,
+        private readonly schedulerService: SchedulerService
     ) {}
 
-    private isEveryBotDisconnected = (availableBots: IBot[]) =>
-        availableBots.length === 0 ||
-        availableBots.every((bot) => bot.status === BotStatus.DISCONNECTED);
+    private isAnyBotConnected = (availableBots: IBot[]): boolean =>
+        availableBots.length !== 0;
+
+    private findConnectedBot = (bots: IBot[]) =>
+        bots.find((bot) => bot.status === BotStatus.CONNECTED);
 
     private async checkBotAvailability(
         collection: IBotCollection,
         system: IBotSystem,
         job: Job
-    ) {
+    ): Promise<IBot> {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
         while (--retry) {
-            const availableBots = await this.botService.findByCollectionAndSystem(
-                collection,
-                system
-            );
-            const availableBot = availableBots?.find(
-                (bot) => bot.status === BotStatus.CONNECTED
-            );
+            const availableBots: IBot[] =
+                await this.botService.findAvailableCollection(
+                    collection,
+                    system
+                );
+
+            const availableBot = this.findConnectedBot(availableBots);
 
             if (availableBot) {
-                this.logger.log(`[Q Process] Bot ${availableBot.id} is available`);
+                this.logger.log(
+                    `[Q Process] Bot ${availableBot.id} is available`
+                );
                 return Promise.resolve(availableBot);
             }
 
-            if (this.isEveryBotDisconnected(availableBots)) {
+            if (!this.isAnyBotConnected(availableBots)) {
                 const errorMessage = 'All bots are disconnected';
-                await this.processInstanceSchedulerService.saveFailedProcessInstance(job, errorMessage);
+                await this.processInstanceSchedulerService.saveFailedProcessInstance(
+                    job,
+                    errorMessage
+                );
+
                 return Promise.reject(errorMessage);
             }
 
@@ -76,11 +81,15 @@ export class SchedulerProcessor {
                     MAX_RETRY_BOT_AVAILABILITY - retry
                 }/${MAX_RETRY_BOT_AVAILABILITY})`
             );
+
             await sleep(SECOND);
         }
 
         const errorMessage = 'Timeout: all bots are busy';
-        await this.processInstanceSchedulerService.saveFailedProcessInstance(job, errorMessage);
+        await this.processInstanceSchedulerService.saveFailedProcessInstance(
+            job,
+            errorMessage
+        );
         return Promise.reject(errorMessage);
     }
 
@@ -104,7 +113,8 @@ export class SchedulerProcessor {
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
 
-        const processInstanceIdentifier = await this.processSchedulerService.startProcess(job.data, bot);
+        const processInstanceIdentifier =
+            await this.processSchedulerService.startProcess(job.data, bot);
 
         const busyBot = await this.botService.setBusy(bot);
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, busyBot);
@@ -119,19 +129,23 @@ export class SchedulerProcessor {
 
     @OnQueueActive()
     async onActive(job: Job) {
-        const process = await this.processService.findById(Number(job.data.process.id));
+        const process = await this.processService.findById(
+            Number(job.data.process.id)
+        );
         const jobWithProcessAndActive = job;
-        jobWithProcessAndActive.data = {...job.data, isActive: true, process};
-        this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, jobWithProcessAndActive);
+        jobWithProcessAndActive.data = { ...job.data, isActive: true, process };
+        this.uiGateway.server.emit(
+            WsMessage.ADD_WAITING_SCHEDULE,
+            jobWithProcessAndActive
+        );
     }
 
     @OnQueueWaiting()
     async onWaiting(jobId: Job['id']) {
-        this.schedulerService.getJobById(jobId)
-            .then((job) =>{
-                this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
-                this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
-            });
+        this.schedulerService.getJobById(jobId).then((job) => {
+            this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
+            this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
+        });
     }
 
     @OnQueueCompleted()
@@ -142,7 +156,10 @@ export class SchedulerProcessor {
     @OnQueueFailed()
     onFailed(job: Job, err: Error) {
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-        this.logger.error(`[Q Fail] Job "${job.data.process.name}" failed`, err);
+        this.logger.error(
+            `[Q Fail] Job "${job.data.process.name}" failed`,
+            err
+        );
     }
 
     @OnQueueError({ name: 'scheduler' })
