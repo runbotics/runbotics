@@ -3,38 +3,41 @@ import type { FC } from 'react';
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
 
-
-import { useDispatch } from '#src-app/store';
-
-import { authActions } from '#src-app/store/slices/Auth';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processSelector } from '#src-app/store/slices/Process';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
 
-const buildViewRegex = /^\/app\/processes\/[0-9]+\/build$/;
+const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
+const homeAppViewRegex = /\/app\/processes$/;
 
 // eslint-disable-next-line react/display-name
 export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
     const { isAuthenticated: isAuthed, isInitialised, user } = useAuth();
     const dispatch = useDispatch();
+    const { draft } = useSelector(processSelector);
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
-        console.log('Not authenticated');
         router.replace('/');
     }
     
     if (isAuthenticated) {
+        if (user.roles.includes(Role.ROLE_GUEST) && !buildViewRegex.test(router.asPath)) {
+            if (draft.process?.id) {
+                router.replace(`/app/processes/${draft.process.id}/build`);
+            }
+            return <LoadingScreen />;
+        }
+
         if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
             return <Component {...props} />; 
         }
-        if (!buildViewRegex.test(router.asPath) && user.roles.includes(Role.ROLE_GUEST)) {
-            console.log(`Accessing not build page as a guest ${router.asPath} - logout`);
-            dispatch(authActions.logout());
-        }
+
         router.replace('/404');
     }
 

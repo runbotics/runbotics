@@ -23,11 +23,11 @@ public class ProcessAttendedUpdateDTO implements Serializable {
         this.id = id;
     }
 
-    public Boolean getAttended() {
+    public Boolean getIsAttended() {
         return isAttended;
     }
 
-    public void setAttended(Boolean attended) {
+    public void setIsAttended(Boolean attended) {
         isAttended = attended;
     }
 

@@ -2,12 +2,10 @@ import React, { FC, useMemo } from 'react';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+import { checkTranslationKey, categoriesTranslationKeys } from '#src-landing/views/sections/TemplatesSection/TemplatesSection.utils';
 
-import { checkTranslationKey, categoriesTranslationKeys } from '../TemplatesSection.utils';
 import styles from './Categories.module.scss';
-
 import { CategoriesProps } from './Categories.types';
-
 
 
 const Categories: FC<CategoriesProps> = ({ 

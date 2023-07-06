@@ -8,8 +8,8 @@ import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import { useDispatch } from '#src-app/store';
-import { processActions } from '#src-app/store/slices/Process';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processActions, processSelector } from '#src-app/store/slices/Process';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
@@ -31,6 +31,7 @@ const isString = (param: unknown): param is string => typeof param === 'string';
 const ProcessMainViewManager: VFC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const { draft } = useSelector(processSelector);
     const { tab, id } = router.query;
     const processId = Number(id);
     const hasViewAccess = useFeatureKey(isString(tab) ? [processViews[tab]] : []);
@@ -42,13 +43,15 @@ const ProcessMainViewManager: VFC = () => {
 
         if (Number.isNaN(processId)) return undefined;
 
-        dispatch(processActions.fetchProcessById(processId))
-            .then(unwrapResult)
-            .catch((response: AxiosResponse) => {
-                if (response.status >= 400) {
-                    router.replace('/404');
-                }
-            });
+        if (draft.process?.id !== processId) {
+            dispatch(processActions.fetchProcessById(processId))
+                .then(unwrapResult)
+                .catch((response: AxiosResponse) => {
+                    if (response.status >= 400) {
+                        router.replace('/404');
+                    }
+                });
+        }
 
         return () => {
             dispatch(processInstanceActions.resetActive());

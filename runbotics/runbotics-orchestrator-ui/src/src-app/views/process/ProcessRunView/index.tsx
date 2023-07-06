@@ -12,7 +12,7 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { currentProcessSelector } from '#src-app/store/slices/Process';
+import { currentProcessSelector, processActions } from '#src-app/store/slices/Process';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -67,6 +67,7 @@ const ProcessRunView: FC = () => {
                 },
             })
         );
+        dispatch(processActions.fetchProcessById(processId));
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 

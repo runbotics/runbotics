@@ -129,7 +129,7 @@ public class ProcessServiceImpl implements ProcessService {
             .findById(processAttendedDTO.getId())
             .map(
                 existingProcess -> {
-                    existingProcess.setIsAttended(processAttendedDTO.getAttended());
+                    existingProcess.setIsAttended(processAttendedDTO.getIsAttended());
                     return existingProcess;
                 }
             )
@@ -143,7 +143,7 @@ public class ProcessServiceImpl implements ProcessService {
             .findById(processTriggerDTO.getId())
             .map(
                 existingProcess -> {
-                    existingProcess.setIsTriggerable(processTriggerDTO.getTriggerable());
+                    existingProcess.setIsTriggerable(processTriggerDTO.getIsTriggerable());
                     return existingProcess;
                 }
             )

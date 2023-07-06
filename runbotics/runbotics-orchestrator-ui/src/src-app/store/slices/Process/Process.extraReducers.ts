@@ -12,6 +12,7 @@ import {
     deleteProcess,
     getProcessesPage,
     partialUpdateProcess,
+    createGuestProcess,
 } from './Process.thunks';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
@@ -75,7 +76,18 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.draft.loading = LoadingType.IDLE;
             if (action.payload) { state.draft.error = action.payload; }
             else { state.draft.error = action.error.message; }
+        })
 
+        // CREATE GUEST PROCESS
+        .addCase(createGuestProcess.pending, (state) => {
+            state.draft.loading = LoadingType.PENDING;
+        })
+        .addCase(createGuestProcess.fulfilled, (state, action) => {
+            state.draft.process = action.payload;
+            state.draft.loading = LoadingType.IDLE;
+        })
+        .addCase(createGuestProcess.rejected, (state) => {
+            state.draft.loading = LoadingType.IDLE;
         })
 
         // DELETE

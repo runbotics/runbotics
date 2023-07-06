@@ -151,9 +151,10 @@ public class ProcessResource {
         );
     }
 
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_STRUCTURE + "')")
     @PatchMapping(value = "/processes/{id}/diagram")
     public ResponseEntity<ProcessDTO> processSetDiagram(
-        @PathVariable(value = "id", required = false) final Long id,
+        @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody @Valid ProcessDiagramUpdateDTO processDiagramDTO
     ) throws URISyntaxException {
         log.debug("REST request to update diagram in Process: {}", id);
@@ -169,10 +170,10 @@ public class ProcessResource {
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_ATTENDED_EDIT + "')")
     @PatchMapping(value = "/processes/{id}/is-attended")
     public ResponseEntity<ProcessDTO> processSetIsAttended(
-        @PathVariable(value = "id", required = false) final Long id,
+        @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody @Valid ProcessAttendedUpdateDTO processAttendedDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update is attended used in Process {} to {}", processAttendedDTO, processAttendedDTO.getAttended());
+        log.debug("REST request to update is attended used in Process {} to {}", processAttendedDTO, processAttendedDTO.getIsAttended());
         checkProcessForEdit(id, processAttendedDTO);
         Optional<ProcessDTO> result = processService.updateIsAttended(processAttendedDTO);
 
@@ -188,7 +189,7 @@ public class ProcessResource {
         @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody @Valid ProcessTriggerUpdateDTO processDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getTriggerable());
+        log.debug("REST request to update is triggerable used in Process {} to {}", processDTO, processDTO.getIsTriggerable());
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateIsTriggerable(processDTO);
 

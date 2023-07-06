@@ -9,7 +9,6 @@ public class ProcessTriggerUpdateDTO implements Serializable {
     @NotNull
     private Long id;
 
-
     @NotNull
     private Boolean isTriggerable;
 
@@ -24,11 +23,11 @@ public class ProcessTriggerUpdateDTO implements Serializable {
         this.id = id;
     }
 
-    public Boolean getTriggerable() {
+    public Boolean getIsTriggerable() {
         return isTriggerable;
     }
 
-    public void setTriggerable(Boolean triggerable) {
+    public void setIsTriggerable(Boolean triggerable) {
         isTriggerable = triggerable;
     }
 

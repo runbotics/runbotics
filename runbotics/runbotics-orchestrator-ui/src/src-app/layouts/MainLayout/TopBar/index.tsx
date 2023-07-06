@@ -56,17 +56,26 @@ interface TopBarProps {
 }
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const hasBotInstallAccess = useFeatureKey([FeatureKey.BOT_READ]);
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+
+    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
 
     return (
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
-                    <RouterLink href="/app/processes">
-                        <Logo white />
-                    </RouterLink>
+                    {isGuest
+                        ? (
+                            <Logo white />
+                        )
+                        : (
+                            <RouterLink href="/app/processes">
+                                <Logo white />
+                            </RouterLink>
+                        )
+                    }
                 </Hidden>
                 <If condition={hasAdminAccess}>
                     <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
