@@ -175,7 +175,7 @@ public class Bot implements Serializable {
             ", created='" + getCreated() + "'" +
             ", lastConnected='" + getLastConnected() + "'" +
             ", status='" + getStatus() + "'" +
-            ", collection='" + getCollection() + "'" +
+            ", collection='" + getCollection().getId() + "'" +
             ", version='" + getVersion() + "'" +
             "}";
     }
