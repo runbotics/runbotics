@@ -17,7 +17,7 @@ import tech.jhipster.web.util.HeaderUtil;
 import javax.validation.constraints.Pattern;
 
 @RestController
-@RequestMapping("/api/guest")
+@RequestMapping("/api/guests")
 public class GuestResource {
 
     private final Logger log = LoggerFactory.getLogger(GuestResource.class);
@@ -31,11 +31,11 @@ public class GuestResource {
     }
 
     /**
-     * {@code DELETE /api/guest/delete/all} : delete all guest accounts.
+     * {@code DELETE /api/guests/all} : delete all guest accounts.
      *
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete/all")
+    @DeleteMapping("/all")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser() {
         log.debug("REST request to delete All Guest Accounts");
