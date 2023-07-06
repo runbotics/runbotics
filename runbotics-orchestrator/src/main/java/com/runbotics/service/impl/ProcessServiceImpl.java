@@ -1,16 +1,17 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Authority;
-import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.User;
+import com.runbotics.domain.*;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
+import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
+import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import org.slf4j.Logger;
@@ -80,6 +81,18 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
+    public ProcessDTO createGuestProcess() {
+        ProcessDTO processDTO = new ProcessDTO();
+        processDTO.setDefinition(ProcessConstants.emptyProcessDefinition);
+        processDTO.setName("Demo");
+        processDTO.setIsPublic(false);
+        BotSystem linuxSystem = new BotSystem(BotSystem.BotSystemName.LINUX.value());
+        processDTO.setSystem(linuxSystem);
+        processDTO.setBotCollection(botCollectionService.getGuestCollection());
+        return save(processDTO);
+    }
+
+    @Override
     public Optional<ProcessDTO> partialUpdate(ProcessDTO processDTO) {
         log.info("Request to partially update Process : {}", processDTO.getBotCollection());
 
@@ -97,12 +110,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateIsAttended(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
         return processRepository
-            .findById(processDTO.getId())
+            .findById(processDiagramDTO.getId())
             .map(
                 existingProcess -> {
-                    processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setDefinition(processDiagramDTO.getDefinition());
                     return existingProcess;
                 }
             )
@@ -111,12 +124,26 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateIsTriggerable(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateIsAttended(ProcessAttendedUpdateDTO processAttendedDTO) {
         return processRepository
-            .findById(processDTO.getId())
+            .findById(processAttendedDTO.getId())
             .map(
                 existingProcess -> {
-                    processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setIsAttended(processAttendedDTO.getIsAttended());
+                    return existingProcess;
+                }
+            )
+            .map(processRepository::save)
+            .map(processMapper::toDto);
+    }
+
+    @Override
+    public Optional<ProcessDTO> updateIsTriggerable(ProcessTriggerUpdateDTO processTriggerDTO) {
+        return processRepository
+            .findById(processTriggerDTO.getId())
+            .map(
+                existingProcess -> {
+                    existingProcess.setIsTriggerable(processTriggerDTO.getIsTriggerable());
                     return existingProcess;
                 }
             )

@@ -103,7 +103,7 @@ const RegisterPage: FC = () => {
             .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                router.push('/app', null, { locale: router.locale });
+                router.push('/', null, { locale: router.locale });
                 enqueueSnackbar(translate('Register.AccountCreated.ActivationNeededMessage'), {
                     variant: 'success',
                     autoHideDuration: 5000,

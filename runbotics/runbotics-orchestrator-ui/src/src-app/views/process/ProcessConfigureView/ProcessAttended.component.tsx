@@ -27,7 +27,7 @@ const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended
     const hasReadProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_READ]);
     const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
     const { process } = useSelector((state) => state.process.draft);
-    const isScheduled = process?.schedules.length > 0;
+    const isScheduled = process?.schedules?.length > 0;
     const { translate } = useTranslations();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

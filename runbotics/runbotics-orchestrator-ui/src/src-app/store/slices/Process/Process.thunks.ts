@@ -47,6 +47,13 @@ export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejec
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
+export const updateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/update',
+    (process, { rejectWithValue }) => Axios.put(`/api/processes/${process.id}`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
 export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/bot-collection',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/bot-collection`, process)
@@ -54,15 +61,15 @@ export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { reject
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateAttendance = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
-    'processes/is-attended',
+export const updateAttendance = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'isAttended'>, { rejectValue: any }>(
+    'processes/updateAttended',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-attended`, process)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateTriggerable = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
-    'processes/is-triggerable',
+export const updateTriggerable = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'isTriggerable'>, { rejectValue: any }>(
+    'processes/updateTriggerable',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-triggerable`, process)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data)),
@@ -75,9 +82,9 @@ export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValu
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const saveProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
-    'processes/save',
-    (process, { rejectWithValue }) => Axios.put<IProcess>(`/api/processes/${process.id}`, process)
+export const updateDiagram = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'definition'>, { rejectValue: any }>(
+    'processes/updateDiagram',
+    (process, { rejectWithValue }) => Axios.patch<IProcess>(`/api/processes/${process.id}/diagram`, process)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data)),
 );
@@ -85,6 +92,15 @@ export const saveProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: a
 export const createProcess = createAsyncThunk<IProcess, IProcess>(
     'processes/create',
     (processInfo) => Axios.post<IProcess>('/api/processes', processInfo)
+        .then((response) => response.data)
+        .catch((error) => {
+            throw error;
+        }),
+);
+
+export const createGuestProcess = createAsyncThunk<IProcess>(
+    'processes/create',
+    () => Axios.post<IProcess>('/api/processes/guest')
         .then((response) => response.data)
         .catch((error) => {
             throw error;

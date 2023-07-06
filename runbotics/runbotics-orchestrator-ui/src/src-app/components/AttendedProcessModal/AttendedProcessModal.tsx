@@ -4,16 +4,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { ISubmitEvent } from '@rjsf/core';
 import { IProcess } from 'runbotics-common';
 
+import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
 import { translate } from '#src-app/hooks/useTranslations';
-
-
 import { isJsonValid } from '#src-app/utils/utils';
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
-import ErrorBoundary from '../utils/ErrorBoundary';
-
 import FormRenderer from './FormRenderer';
-
 
 interface UserModalProps {
     open: boolean;

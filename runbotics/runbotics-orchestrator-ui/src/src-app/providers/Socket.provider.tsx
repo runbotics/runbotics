@@ -13,7 +13,6 @@ interface SocketProviderProps {
 
 const SocketProvider: FC<SocketProviderProps> = ({ children, uri, shouldAttach }) => {
     const { isAuthenticated } = useAuth();
-    const deps = [isAuthenticated, uri, shouldAttach];
     
     const socket = useMemo(() => {
         if (!isAuthenticated || !shouldAttach) return null;
@@ -28,10 +27,12 @@ const SocketProvider: FC<SocketProviderProps> = ({ children, uri, shouldAttach }
             },
             path: '/ws-ui/',
         });
-    }, deps);
+    }, [isAuthenticated, uri, shouldAttach]);
 
+    useEffect(() => () => {
+        socket?.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => () => socket?.disconnect(), [isAuthenticated, shouldAttach]);
+    }, [isAuthenticated, shouldAttach]);
 
     return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };

@@ -77,8 +77,8 @@ const ProcessBuildView: FC = () => {
         try {
             const definition = await BpmnModelerRef.current.export();
             await dispatch(
-                processActions.saveProcess({
-                    ...process,
+                processActions.updateDiagram({
+                    id: process.id,
                     definition,
                 })
             );
