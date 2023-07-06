@@ -13,7 +13,6 @@ import { Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
 import {
     BotStatus,
-    DefaultCollections,
     IBot,
     IBotCollection,
     IBotSystem,
@@ -44,29 +43,6 @@ export class SchedulerProcessor {
     private findConnectedBot = (bots: IBot[]) =>
         bots.find((bot) => bot.status === BotStatus.CONNECTED);
 
-    private isIBot = (bot: IBot | IBot[]) => (<IBot>bot).id !== undefined;
-
-    private findAvailableBot = async (
-        collectionName: string,
-        system: IBotSystem
-    ): Promise<IBot[] | IBot> => {
-        const availableBots =
-            await this.botService.findByCollectionNameAndSystem(
-                collectionName,
-                system
-            );
-
-        const availableBot = this.findConnectedBot(availableBots);
-
-        if (availableBot != undefined) {
-            this.logger.warn('test');
-            this.logger.log(`[Q Process] Bot ${availableBot.id} is available`);
-            return <IBot>availableBot;
-        }
-
-        return availableBots;
-    };
-
     private async checkBotAvailability(
         collection: IBotCollection,
         system: IBotSystem,
@@ -74,25 +50,22 @@ export class SchedulerProcessor {
     ): Promise<IBot> {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
         while (--retry) {
-            let availableBots: IBot | IBot[] =
-                await this.findAvailableBot(collection.name, system);
+            const availableBots: IBot[] =
+                await this.botService.findAvailableCollection(
+                    collection,
+                    system
+                );
 
-            if (this.isIBot(availableBots)) {
-                return Promise.resolve(<IBot>availableBots);
+            const availableBot = this.findConnectedBot(availableBots);
+
+            if (availableBot) {
+                this.logger.log(
+                    `[Q Process] Bot ${availableBot.id} is available`
+                );
+                return Promise.resolve(availableBot);
             }
 
-           if(collection.name === DefaultCollections.PUBLIC){
-                 const botsGuest = await this.findAvailableBot(DefaultCollections.GUEST,system);
-
-                if (this.isIBot(botsGuest)) {
-                    this.logger.log(`[Q Process] Bot ${(<IBot>botsGuest).id} is borrowed from Guest Collection`);
-                    return Promise.resolve(<IBot>botsGuest);
-                }
-
-                availableBots = botsGuest;
-           }
-
-            if (!this.isAnyBotConnected(<IBot[]>availableBots)) {
+            if (!this.isAnyBotConnected(availableBots)) {
                 const errorMessage = 'All bots are disconnected';
                 await this.processInstanceSchedulerService.saveFailedProcessInstance(
                     job,

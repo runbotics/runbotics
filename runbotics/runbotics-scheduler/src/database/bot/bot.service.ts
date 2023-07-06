@@ -1,8 +1,15 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Brackets, Repository} from 'typeorm';
-import {BotEntity} from './bot.entity';
-import {BotStatus, BotSystem, IBot, IBotCollection, IBotSystem} from 'runbotics-common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BotEntity } from './bot.entity';
+import {
+    BotStatus,
+    BotSystem,
+    DefaultCollections,
+    IBot,
+    IBotCollection,
+    IBotSystem,
+} from 'runbotics-common';
 
 const relations = ['user', 'system', 'collection'];
 
@@ -11,40 +18,65 @@ export class BotService {
     constructor(
         @InjectRepository(BotEntity)
         private botRepository: Repository<BotEntity>
-    ) {
-    }
+    ) {}
 
     findAll(): Promise<IBot[]> {
-        return this.botRepository.find({relations});
+        return this.botRepository.find({ relations });
     }
 
     findById(id: number): Promise<IBot> {
-        return this.botRepository.findOne({ where: { id }, relations});
+        return this.botRepository.findOne({ where: { id }, relations });
     }
 
     findByInstallationId(installationId: string): Promise<IBot> {
-        return this.botRepository.findOne({ where: { installationId }, relations});
+        return this.botRepository.findOne({
+            where: { installationId },
+            relations,
+        });
     }
 
     findByUserId(id: number): Promise<IBot> {
-        return this.botRepository.findOne({ where: { user: { id } }, relations});
+        return this.botRepository.findOne({
+            where: { user: { id } },
+            relations,
+        });
     }
 
-    async findByCollectionNameAndSystem(
-        collectionName: string,
-        system: IBotSystem
+    async findAvailableCollection(
+        collection: IBotCollection,
+        system: IBotSystem,
     ): Promise<IBot[]> {
-        return await this.botRepository.createQueryBuilder('bot')
-        .where(`${system.name === BotSystem.ANY?'':'bot.SYSTEM = :system'}`)
-        .leftJoinAndSelect('bot.collection','bot_collection')
-        .andWhere('(bot.status = :connected OR bot.status = :busy)')
-        .andWhere('(bot_collection.name = :collectionName )')
-        .setParameters({
-            system: system.name,
-            collectionName: collectionName,
-            connected: BotStatus.CONNECTED,
-            busy: BotStatus.BUSY
-        }).getMany();
+
+        const systemCondition = `${
+            system.name === BotSystem.ANY ? '' : 'bot.SYSTEM = :system'
+        }`;
+
+        const statusCondition =
+            '(bot.status = :connected OR bot.status = :busy)';
+
+        const collectionCondition = `
+        (bot.collection_id = :collectionId
+        ${
+            collection.publicBotsIncluded
+                ? 'OR bot_collection.name = :public OR bot_collection.name = :guest'
+                : ''
+        } )`;
+
+        return await this.botRepository
+            .createQueryBuilder('bot')
+            .leftJoinAndSelect('bot.collection', 'bot_collection')
+            .where(systemCondition)
+            .andWhere(statusCondition)
+            .andWhere(collectionCondition)
+            .setParameters({
+                collectionId: collection.id,
+                system: system.name,
+                connected: BotStatus.CONNECTED,
+                busy: BotStatus.BUSY,
+                public: DefaultCollections.PUBLIC,
+                guest: DefaultCollections.GUEST,
+            })
+            .getMany();
     }
 
     save(bot: IBot) {
@@ -60,7 +92,7 @@ export class BotService {
     }
 
     setBusy(bot: IBot) {
-        const mappedBot = {...bot, status: BotStatus.BUSY};
+        const mappedBot = { ...bot, status: BotStatus.BUSY };
         return this.save(mappedBot);
     }
 }
