@@ -22,17 +22,13 @@ const inputTypes = {
         format: 'HH:mm',
         views: ['hours', 'minutes'],
     },
-    default: {
-        format: 'YYYY-MM-DD',
-        views: ['year', 'month', 'day'],
-    },
 } as const;
 
-const checkFormat = (format: string) => {
-    if (!format) {
+const checkFormat = (format: any) => {
+    if (!format || typeof format !== 'string') {
         return {
-            inputFormat: inputTypes.default.format,
-            views: inputTypes.default.views,
+            inputFormat: inputTypes.date.format,
+            views: inputTypes.date.views,
         };
     }
 
@@ -51,7 +47,7 @@ const checkFormat = (format: string) => {
 
 const DatePickerWidget: FC<WidgetProps> = (props) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const format: string = props.uiSchema['ui:options']?.format as string;
+    const format = props.uiSchema['ui:options']?.format;
     const { inputFormat, views } = checkFormat(format);
 
     const handleDateChange = (date: Date | null) => {
