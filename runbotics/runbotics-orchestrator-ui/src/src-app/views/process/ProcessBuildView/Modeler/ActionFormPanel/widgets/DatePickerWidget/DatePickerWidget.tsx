@@ -2,15 +2,14 @@ import React, { FC, useState } from 'react';
 
 import { TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { CalendarOrClockPickerView } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { WidgetProps } from '@rjsf/core';
+
 import moment from 'moment';
 
-const inputTypes: {
-    [key: string]: { format: string; views: CalendarOrClockPickerView[] };
-} = {
+import { StyledDateTimePicker } from './DatePickerWidget.styles';
+
+const inputTypes = {
     date: {
         format: 'YYYY-MM-DD',
         views: ['year', 'month', 'day'],
@@ -27,39 +26,38 @@ const inputTypes: {
         format: 'YYYY-MM-DD',
         views: ['year', 'month', 'day'],
     },
+} as const;
+
+const checkFormat = (format: string) => {
+    if (!format) {
+        return {
+            inputFormat: inputTypes.default.format,
+            views: inputTypes.default.views,
+        };
+    }
+
+    const typeFound: string = Object.keys(inputTypes).find(
+        (type) => type === format
+    );
+    if (typeFound) {
+        return {
+            inputFormat: inputTypes[typeFound].format,
+            views: inputTypes[typeFound].views,
+        };
+    }
+
+    return { inputFormat: format, views: inputTypes['date-time'].views };
 };
 
 const DatePickerWidget: FC<WidgetProps> = (props) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const format: string = props.uiSchema['ui:options']?.format as string;
-    const typeFound: string = Object.keys(inputTypes).find(
-        (type) => type === format
-    );
-    let inputFormat: string = '';
-    let views: CalendarOrClockPickerView[] = [];
+    const { inputFormat, views } = checkFormat(format);
 
-    if (typeFound) {
-        inputFormat = inputTypes[typeFound].format;
-        views = inputTypes[typeFound].views;
-    }
-    if (!typeFound && format) {
-        inputFormat = format;
-        views = ['year', 'month', 'day', 'hours', 'minutes'];
-    } else {
-        inputFormat = inputTypes.default.format;
-        views = inputTypes.default.views;
-    }
-
-    const handleDataChange = (date: Date | null) => {
+    const handleDateChange = (date: Date | null) => {
         setSelectedDate(date);
         if (date !== null) {
-            if (typeFound) {
-                props.onChange(
-                    moment(date).format(inputTypes[typeFound].format)
-                );
-            } else {
-                props.onChange(moment(date).format());
-            }
+            props.onChange(moment(date).format(inputFormat));
         }
     };
 
@@ -67,20 +65,24 @@ const DatePickerWidget: FC<WidgetProps> = (props) => {
         <TextField
             {...params}
             label={props.label}
+            required={props.required}
+            color={selectedDate === null ? 'error' : 'primary'}
             sx={{
                 button: { marginRight: (theme) => theme.spacing(0.5) },
                 caretColor: 'transparent',
             }}
-            required={props.required}
+            {...(selectedDate === null && {
+                InputLabelProps: { style: { color: 'error' } },
+            })}
         />
     );
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DateTimePicker
+            <StyledDateTimePicker
                 inputFormat={inputFormat}
                 value={selectedDate}
-                onChange={handleDataChange}
+                onChange={handleDateChange}
                 renderInput={renderInput}
                 views={views}
                 InputProps={{
@@ -88,6 +90,7 @@ const DatePickerWidget: FC<WidgetProps> = (props) => {
                         event.preventDefault();
                     },
                 }}
+                error={selectedDate === null}
             />
         </LocalizationProvider>
     );
