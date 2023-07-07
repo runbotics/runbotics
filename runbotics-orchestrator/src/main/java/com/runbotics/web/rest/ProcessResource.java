@@ -65,7 +65,6 @@ public class ProcessResource {
         this.processRepository = processRepository;
         this.processQueryService = processQueryService;
         this.userService = userService;
-        this.userService = userService;
     }
 
     /**
