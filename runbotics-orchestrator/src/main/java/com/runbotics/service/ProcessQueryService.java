@@ -5,9 +5,12 @@ import com.runbotics.domain.Process_;
 import com.runbotics.domain.User_;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.ScheduleProcessRepository;
+import com.runbotics.repository.UserRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.mapper.ProcessMapper;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,17 +44,20 @@ public class ProcessQueryService extends QueryService<Process> {
     private final ProcessMapper processMapper;
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public ProcessQueryService(
         ProcessRepository processRepository,
         ProcessMapper processMapper,
         ScheduleProcessRepository scheduleProcessRepository,
-        UserService userService
+        UserService userService,
+        UserRepository userRepository
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.scheduleProcessRepository = scheduleProcessRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -116,7 +122,9 @@ public class ProcessQueryService extends QueryService<Process> {
                 .map(processMapper::toDto);
         }
 
-        return processRepository.findAll(specification, page).map(processMapper::toDto);
+        return processRepository
+            .findAll(specification, page)
+            .map(processMapper::toDto);
     }
 
     /**
@@ -191,5 +199,22 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private Specification<Process> isPublic() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(Process_.isPublic));
+    }
+
+    public List<ProcessDTO> filterGuestProcessesByUserRole(List<ProcessDTO> processes, String userRoles) {
+        boolean hasRequesterRoleAdmin = userRoles.contains(AuthoritiesConstants.ADMIN);
+        List<Long> guestIds = this.userService.getAllGuestIds();
+        List<ProcessDTO> filteredProcesses = new ArrayList<>();
+
+        if(!hasRequesterRoleAdmin) {
+            for (ProcessDTO process : processes) {
+                if(!guestIds.contains(process.getCreatedBy().getId())) {
+                    filteredProcesses.add(process);
+                }
+            }
+            return filteredProcesses;
+        }
+
+        return processes;
     }
 }
