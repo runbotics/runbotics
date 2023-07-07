@@ -15,6 +15,7 @@ import { BotSystemModule } from './bot-system/bot-system.module';
 import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
+import { GuestModule } from './guest/guest.module';
 
 @Module({
     imports: [
@@ -47,6 +48,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
         TriggerEventModule,
+        GuestModule,
     ],
     exports: [
         AuthorityModule,
@@ -62,6 +64,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceLoopEventModule,
         ScheduleProcessModule,
         TriggerEventModule,
+        GuestModule,
     ],
 })
 export class DatabaseModule { }

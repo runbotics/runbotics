@@ -15,3 +15,4 @@ export * from './api/feature-key.model'
 export * from './api/websocket.model';
 export * from './api/trigger-event.model';
 export * from './api/queue.model';
+export * from './api/guest.model';

@@ -25,6 +25,7 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -213,6 +214,14 @@ public class ProcessServiceImpl implements ProcessService {
         }
 
         return processOptional;
+    }
+
+    public boolean hasRequesterCreateProcessAccess() {
+        log.debug("Request to check if current user can create process");
+        var currentUser = this.userService.getUserWithAuthorities().get();
+        var isGuest = currentUser.getAuthorities().contains(createGuestAuthority());
+        List<Process> userProcesses = processRepository.findByCreatedByUser(currentUser.getLogin(), currentUser.getLogin());
+        return !isGuest || userProcesses.size() == 0;
     }
 
     @Override

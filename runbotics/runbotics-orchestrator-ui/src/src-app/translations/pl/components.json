@@ -6,6 +6,7 @@
 
     "Component.BotProcessRunner.Warning": "Wyszukiwanie bota",
     "Component.BotProcessRunner.Error": "Wszystkie boty są zajęte",
+    "Component.BotProcessRunner.Error.GuestRunLimitExceeded": "Dzienny limit został wykorzystany. Zaloguj się lub wróć jutro.",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Proces jest uruchomiony",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Wyszukiwanie bota",
     "Component.BotProcessRunner.Run": "URUCHOM",

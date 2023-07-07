@@ -18,7 +18,7 @@ import styled from 'styled-components';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
-import useTranslations from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import {
     processActions,
@@ -32,6 +32,7 @@ import {
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { isJsonValid } from '#src-app/utils/utils';
 
 import { AttendedProcessModal } from './AttendedProcessModal';
@@ -187,11 +188,19 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             })
             .catch((error) => {
                 setStarted(false);
-                enqueueSnackbar(
-                    (error?.message as string) ??
-                        translate('Component.BotProcessRunner.Error'),
-                    { variant: 'error' }
-                );
+                const message = error?.message ?? translate('Component.BotProcessRunner.Error');
+
+                const translationKey = `Component.BotProcessRunner.Error.${capitalizeFirstLetter({ text: message, delimiter: ' ' })}`;
+
+                checkIfKeyExists(translationKey)
+                    ? enqueueSnackbar(
+                        translate(translationKey),
+                        { variant: 'error' }
+                    ) 
+                    : enqueueSnackbar(
+                        message,
+                        { variant: 'error' }
+                    );
             })
             .finally(() => {
                 setSubmitting(false);
