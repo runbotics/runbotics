@@ -6,12 +6,15 @@ import { FeatureKey, Role } from 'runbotics-common';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processSelector } from '#src-app/store/slices/Process';
 
+import StorageManagerService from '#src-app/store/StorageManager.service';
+
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
 
 const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
 const homeAppViewRegex = /\/app\/processes$/;
+const appInURLRegex = /\/app/;
 
 // eslint-disable-next-line react/display-name
 export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
@@ -23,7 +26,8 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
-        router.replace('/');
+        if (appInURLRegex.test(router.asPath)) StorageManagerService.insertDestinationPage(router.asPath);
+        router.replace('/login');
     }
     
     if (isAuthenticated) {

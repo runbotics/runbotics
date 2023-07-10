@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
+import { authActions } from '#src-app/store/slices/Auth/Auth.slice';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
 
 
@@ -60,7 +61,12 @@ const Account: FC = () => {
     const handleLogout = async () => {
         try {
             handleClose();
-            await dispatch(logout());
+            await dispatch(logout()).then(() => {
+                router.replace('/');
+            }).then(() => {
+                dispatch(authActions.updateLogout());
+            });
+
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
                 variant: 'error',

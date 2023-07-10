@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { User } from '#src-app/types/user';
 
 import extraAuthReducers from './Auth.extraReducers';
+import * as reducers from './Auth.reducers';
 import * as authThunks from './Auth.thunks';
 
 interface AuthState {
@@ -11,7 +12,7 @@ interface AuthState {
     isInitialised: boolean;
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
     isAuthenticated: false,
     isInitialised: false,
     user: null,
@@ -20,7 +21,7 @@ const initialState: AuthState = {
 const slice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers,
     extraReducers: extraAuthReducers,
 });
 
