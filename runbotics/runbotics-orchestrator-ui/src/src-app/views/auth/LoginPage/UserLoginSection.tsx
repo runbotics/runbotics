@@ -1,14 +1,80 @@
 import { FC } from 'react';
 
-import { Box, CardContent, Link, Typography } from '@mui/material';
+import { Box, Button, CardContent, Link, TextField, Typography } from '@mui/material';
+import { Formik } from 'formik';
 import RouterLink from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { classes } from './Login.page';
+import { LoginFormState } from '#src-app/views/auth/LoginPage/Login.page';
+import { classes } from '#src-app/views/auth/LoginPage/LoginPage.styles';
 
-const UserLoginSection: FC = ({ children }) => {
+import { UseLoginValidationSchema } from './useLoginValidationSchema';
+
+interface Props {
+    initialValues: LoginFormState;
+    loginValidationSchema: UseLoginValidationSchema;
+    handleFormSubmit: (values: LoginFormState, { setErrors, setStatus, setSubmitting }) => Promise<void>;
+}
+
+const UserLoginSection: FC<Props> = ({
+    initialValues,
+    loginValidationSchema,
+    handleFormSubmit,
+}) => {
     const { translate } = useTranslations();
+
+    const renderForm = ({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        values,
+    }) => (
+        <form noValidate onSubmit={handleSubmit}>
+            <TextField
+                error={Boolean(touched.email && errors.email)}
+                fullWidth
+                autoFocus
+                helperText={touched.email && errors.email}
+                label={translate('Login.Form.Email.Label')}
+                margin="normal"
+                name="email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type="email"
+                value={values.email}
+                variant="outlined"
+            />
+            <TextField
+                error={Boolean(touched.password && errors.password)}
+                fullWidth
+                helperText={touched.password && errors.password}
+                label={translate('Login.Form.Password.Label')}
+                margin="normal"
+                name="password"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type="password"
+                value={values.password}
+                variant="outlined"
+            />
+            <Box mt={2}>
+                <Button
+                    color="secondary"
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                >
+                    {translate('Login.Form.Action')}
+                </Button>
+            </Box>
+        </form>
+    );
 
     return (
         <CardContent className={classes.content}>
@@ -28,7 +94,15 @@ const UserLoginSection: FC = ({ children }) => {
                         {translate('Login.SignIn')}
                     </Typography>
                 </Box>
-                <Box>{children}</Box>
+                <Box>
+                    <Formik
+                        initialValues={initialValues}
+                        validationSchema={loginValidationSchema}
+                        onSubmit={handleFormSubmit}
+                    >
+                        {renderForm}
+                    </Formik>
+                </Box>
             </Box>
             <Box display="flex" justifyContent="center" mt={3}>
                 <RouterLink href="/register" passHref legacyBehavior>

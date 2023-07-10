@@ -15,4 +15,6 @@ const useLoginValidationSchema = () => {
     });
 };
 
+export type UseLoginValidationSchema = ReturnType<typeof useLoginValidationSchema>
+
 export default useLoginValidationSchema;

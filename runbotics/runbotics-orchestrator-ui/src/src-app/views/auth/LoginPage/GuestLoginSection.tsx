@@ -1,15 +1,19 @@
-/* eslint-disable import/order */
-import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
-import useTranslations from '#src-app/hooks/useTranslations';
-import { Box, Button, CardContent, CircularProgress, Typography } from '@mui/material';
-import { classes } from './Login.page';
+import { FC } from 'react';
 
-interface PropsType {
+import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded';
+
+import { Box, Button, CardContent, CircularProgress, Typography } from '@mui/material';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+
+import { classes } from '#src-app/views/auth/LoginPage/LoginPage.styles';
+
+interface Props {
     isGuestSubmitting: boolean;
     handleGuestLogin: () => void;
 }
 
-const GuestLoginSection = ({ isGuestSubmitting, handleGuestLogin }: PropsType) => {
+const GuestLoginSection: FC<Props> = ({ isGuestSubmitting, handleGuestLogin }) => {
     const { translate } = useTranslations();
 
     return (
@@ -72,7 +76,7 @@ const GuestLoginSection = ({ isGuestSubmitting, handleGuestLogin }: PropsType) =
                                 size="large"
                                 type="button"
                                 variant="contained"
-                                onClick={() => handleGuestLogin()}
+                                onClick={handleGuestLogin}
                             >
                                 {translate('Login.Guest.Action')}
                             </Button>

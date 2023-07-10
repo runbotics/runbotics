@@ -2,7 +2,16 @@ import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 
-import { classes } from './Login.page';
+const PREFIX = 'LoginPage';
+
+export const classes = {
+    root: `${PREFIX}-root`,
+    container: `${PREFIX}-container`,
+    card: `${PREFIX}-card`,
+    content: `${PREFIX}-content`,
+    logo: `${PREFIX}-logo`,
+    option: `${PREFIX}-option`,
+};
 
 export const StyledPage = styled(Page)(({ theme }) => ({
     [`&.${classes.root}`]: {

@@ -1,19 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { FC, useState, useMemo } from 'react';
+import { FC, useState } from 'react';
 
 import {
     Box,
     Card,
     Container,
     Divider,
-    Link,
-    Typography,
-    TextField,
-    Button,
     useMediaQuery,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Formik } from 'formik';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -25,23 +20,12 @@ import { useDispatch } from '#src-app/store';
 import { login } from '#src-app/store/slices/Auth/Auth.thunks';
 
 import GuestLoginSection from '#src-app/views/auth/LoginPage/GuestLoginSection';
-import { StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.styles';
+import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.styles';
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
 import useLoginValidationSchema from '#src-app/views/auth/LoginPage/useLoginValidationSchema';
 import UserLoginSection from '#src-app/views/auth/LoginPage/UserLoginSection';
 
-const PREFIX = 'LoginPage';
-
-export const classes = {
-    root: `${PREFIX}-root`,
-    container: `${PREFIX}-container`,
-    card: `${PREFIX}-card`,
-    content: `${PREFIX}-content`,
-    logo: `${PREFIX}-logo`,
-    option: `${PREFIX}-option`,
-};
-
-interface LoginFormState {
+export interface LoginFormState {
     email: string;
     password: string;
     submit: null | boolean;
@@ -62,13 +46,13 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
-    const currentYear = new Date().getFullYear().toLocaleString();
 
     const handleGuestLogin = () => {
         setGuestSubmitting(true);
-        onGuestLogin().catch(() => {
-            setGuestSubmitting(false);
-        });
+        onGuestLogin()
+            .catch(() => {
+                setGuestSubmitting(false);
+            });
     };
 
     const handleFormSubmit = async (
@@ -119,58 +103,6 @@ const LoginPage: FC = () => {
             });
     };
 
-    const renderForm = ({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values,
-    }) => (
-        <form noValidate onSubmit={handleSubmit}>
-            <TextField
-                error={Boolean(touched.email && errors.email)}
-                fullWidth
-                autoFocus
-                helperText={touched.email && errors.email}
-                label={translate('Login.Form.Email.Label')}
-                margin="normal"
-                name="email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                type="email"
-                value={values.email}
-                variant="outlined"
-            />
-            <TextField
-                error={Boolean(touched.password && errors.password)}
-                fullWidth
-                helperText={touched.password && errors.password}
-                label={translate('Login.Form.Password.Label')}
-                margin="normal"
-                name="password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                type="password"
-                value={values.password}
-                variant="outlined"
-            />
-            <Box mt={2}>
-                <Button
-                    color="secondary"
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                >
-                    {translate('Login.Form.Action')}
-                </Button>
-            </Box>
-        </form>
-    );
-
     return (
         <StyledPage className={classes.root} title="Login">
             <Container className={classes.container} maxWidth="lg">
@@ -180,16 +112,12 @@ const LoginPage: FC = () => {
                             <Logo simple height={100} />
                         </RouterLink>
                     </Box>
-                    <Box display={isScreenSM ? 'block' : 'flex'}>
-                        <UserLoginSection>
-                            <Formik
-                                initialValues={initialValues}
-                                validationSchema={loginValidationSchema}
-                                onSubmit={handleFormSubmit}
-                            >
-                                {renderForm}
-                            </Formik>
-                        </UserLoginSection>
+                    <Box mb={5} display={isScreenSM ? 'block' : 'flex'}>
+                        <UserLoginSection 
+                            initialValues={initialValues} 
+                            loginValidationSchema={loginValidationSchema}
+                            handleFormSubmit={handleFormSubmit}
+                        />
                         <Box mx={isScreenSM ? 4 : 0}>
                             <Divider
                                 orientation={isScreenSM ? 'horizontal' : 'vertical'}
@@ -200,20 +128,6 @@ const LoginPage: FC = () => {
                             isGuestSubmitting={isGuestSubmitting}
                             handleGuestLogin={handleGuestLogin}
                         />
-                    </Box>
-                    <Box alignItems="center" display="flex" justifyContent="center" my={4}>
-                        <Typography>
-                            {'©'}&nbsp;
-                            <Link
-                                href="https://www.all-for-one.pl/"
-                                sx={{ textAlign: 'center' }}
-                                variant="body2"
-                                color="textSecondary"
-                            >
-                                {translate('Login.AllRightsReserved.Pt1')}
-                            </Link>
-                            &nbsp;{currentYear}&nbsp;{translate('Login.AllRightsReserved.Pt2')}
-                        </Typography>
                     </Box>
                 </Card>
             </Container>
