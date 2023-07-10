@@ -9,7 +9,6 @@ import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.dto.AdminUserDTO;
-import com.runbotics.service.dto.AuthorityDTO;
 import com.runbotics.service.dto.UserDTO;
 
 import java.time.Instant;
@@ -340,7 +339,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getAllGuestIds() {
-        return this.userRepository.findGuestIds();
+    public List<Long> findAllGuestIds() {
+        return authorityRepository
+            .findAll()
+            .stream()
+            .filter(authority -> authority.getName().equals(AuthoritiesConstants.GUEST))
+            .flatMap(guest -> guest.getUsers().stream().map(User::getId))
+            .collect(Collectors.toList());
     }
 }

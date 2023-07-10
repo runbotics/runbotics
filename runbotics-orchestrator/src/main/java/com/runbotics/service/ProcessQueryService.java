@@ -5,12 +5,10 @@ import com.runbotics.domain.Process_;
 import com.runbotics.domain.User_;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.ScheduleProcessRepository;
-import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.mapper.ProcessMapper;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,20 +42,17 @@ public class ProcessQueryService extends QueryService<Process> {
     private final ProcessMapper processMapper;
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     public ProcessQueryService(
         ProcessRepository processRepository,
         ProcessMapper processMapper,
         ScheduleProcessRepository scheduleProcessRepository,
-        UserService userService,
-        UserRepository userRepository
+        UserService userService
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.scheduleProcessRepository = scheduleProcessRepository;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     /**
@@ -203,18 +198,17 @@ public class ProcessQueryService extends QueryService<Process> {
 
     public List<ProcessDTO> filterGuestProcessesByUserRole(List<ProcessDTO> processes, String userRoles) {
         boolean hasRequesterRoleAdmin = userRoles.contains(AuthoritiesConstants.ADMIN);
-        List<Long> guestIds = this.userService.getAllGuestIds();
-        List<ProcessDTO> filteredProcesses = new ArrayList<>();
+        List<Long> guestIds = this.userService.findAllGuestIds();
 
-        if(!hasRequesterRoleAdmin) {
-            for (ProcessDTO process : processes) {
-                if(!guestIds.contains(process.getCreatedBy().getId())) {
-                    filteredProcesses.add(process);
-                }
-            }
-            return filteredProcesses;
+        if(hasRequesterRoleAdmin){
+            return processes;
         }
 
-        return processes;
+        return processes
+            .stream()
+            .filter(
+                process -> !guestIds.contains(process.getCreatedBy().getId())
+            )
+            .collect(Collectors.toList());
     }
 }

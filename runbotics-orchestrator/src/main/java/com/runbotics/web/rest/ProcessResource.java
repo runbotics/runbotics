@@ -292,7 +292,7 @@ public class ProcessResource {
         log.debug("REST request to get Processes by criteria: {}", criteria);
         var requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
         Page<ProcessDTO> page = processQueryService.findByCriteria(criteria, pageable);
-        List<ProcessDTO> withoutGuestProcesses = this.processQueryService.filterGuestProcessesByUserRole(page.getContent(), requester.getAuthorities().toString().toString());
+        List<ProcessDTO> withoutGuestProcesses = this.processQueryService.filterGuestProcessesByUserRole(page.getContent(), requester.getAuthorities().toString());
         Page<ProcessDTO> filteredPage = new PageImpl<>(withoutGuestProcesses, pageable, page.getTotalElements());
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), filteredPage);
