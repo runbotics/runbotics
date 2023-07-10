@@ -31,6 +31,17 @@ public class Authority implements Serializable {
     )
     public Set<FeatureKey> featureKeys = new HashSet<>();
 
+    @ManyToMany(mappedBy = "authorities")
+    private Set<User> users = new HashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     public String getName() {
         return name;
     }

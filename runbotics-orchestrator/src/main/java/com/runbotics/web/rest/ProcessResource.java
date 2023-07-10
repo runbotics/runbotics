@@ -1,23 +1,29 @@
 package com.runbotics.web.rest;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCriteria;
+import com.runbotics.service.UserService;
 import com.runbotics.service.dto.*;
+import com.runbotics.service.exception.ProcessAccessDenied;
+import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import com.runbotics.domain.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,7 +55,12 @@ public class ProcessResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public ProcessResource(ProcessService processService, ProcessRepository processRepository, ProcessQueryService processQueryService, UserService userService) {
+    public ProcessResource(
+        ProcessService processService,
+        ProcessRepository processRepository,
+        ProcessQueryService processQueryService,
+        UserService userService
+    ) {
         this.processService = processService;
         this.processRepository = processRepository;
         this.processQueryService = processQueryService;
@@ -260,8 +271,12 @@ public class ProcessResource {
     @GetMapping("/processes")
     public ResponseEntity<List<ProcessDTO>> getAllProcesses(ProcessCriteria criteria) {
         log.debug("REST request to get Processes by criteria: {}", criteria);
+        var requester = userService
+            .getUserWithAuthorities()
+            .orElseThrow(() -> new UsernameNotFoundException("Could not found current user with authorities in the database"));
         List<ProcessDTO> processes = processQueryService.findByCriteria(criteria);
-        return ResponseEntity.ok().body(processes);
+        List<ProcessDTO> filteredProcesses = processQueryService.filterGuestProcessesByUserRole(processes, requester.getAuthorities().toString());
+        return ResponseEntity.ok().body(filteredProcesses);
     }
 
     /**
@@ -275,9 +290,13 @@ public class ProcessResource {
     @GetMapping("/processes-page")
     public ResponseEntity<Page<ProcessDTO>> getAllProcessesByPage(ProcessCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Processes by criteria: {}", criteria);
+        var requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
         Page<ProcessDTO> page = processQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page);
+        List<ProcessDTO> withoutGuestProcesses = this.processQueryService.filterGuestProcessesByUserRole(page.getContent(), requester.getAuthorities().toString());
+        Page<ProcessDTO> filteredPage = new PageImpl<>(withoutGuestProcesses, pageable, page.getTotalElements());
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), filteredPage);
+        return ResponseEntity.ok().headers(headers).body(filteredPage);
     }
 
     /**
