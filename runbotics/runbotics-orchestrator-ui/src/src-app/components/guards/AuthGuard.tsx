@@ -30,10 +30,13 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
-        if (appOnlyRegex.test(router.asPath)) StorageManagerService.insertDestinationPage(router.asPath);
-        enqueueSnackbar(translate('Account.SessionExpired'), {
-            variant: 'info'
-        });
+        if (appOnlyRegex.test(router.asPath)) {
+            StorageManagerService.insertDestinationPage(router.asPath);
+            enqueueSnackbar(translate('Account.SessionExpired'), {
+                variant: 'error'
+            });
+        }
+        
         router.replace('/login');
     }
     
