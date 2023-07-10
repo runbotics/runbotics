@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.6.1",
+    "version": "2.6.2",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -8,7 +8,7 @@
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {
-        "prebuild": "rimraf dist",
+        "rebuild": "rimraf dist",
         "build": "nest build",
         "start": "node dist/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
