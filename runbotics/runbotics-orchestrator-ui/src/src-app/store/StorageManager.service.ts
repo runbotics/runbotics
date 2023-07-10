@@ -1,10 +1,9 @@
 export enum StorageKey {
-    DESTINATION_PAGE='destination_page',
-    ACCESS_TOKEN='access_token'
+    DESTINATION_PAGE = 'destination_page',
+    ACCESS_TOKEN = 'access_token'
 }
 
 class StorageManagerService {
-    // --= Private =--
     private static setItem(key: string, value: string): void {
         localStorage.setItem(key, value);
     }
@@ -14,8 +13,6 @@ class StorageManagerService {
             const data = localStorage.getItem(key);
             return data;
         } catch(error) {
-            // eslint-disable-next-line no-console
-            console.log(error);
             return '';
         }
     }
@@ -23,17 +20,13 @@ class StorageManagerService {
     private static removeItem(key: string): void {
         try {
             localStorage.removeItem(key);
-        } catch(error) {
-            // eslint-disable-next-line no-console
-            console.log(error);
-        }
+        } catch(error) {}
     }
 
     private static clearAll(): void {
         localStorage.clear();
     }
 
-    // --= Public =--
     // Access Token
     public static insertAccessToken(token: string): void {
         StorageManagerService.setItem(StorageKey.ACCESS_TOKEN, token);

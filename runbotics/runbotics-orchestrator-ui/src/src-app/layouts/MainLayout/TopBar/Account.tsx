@@ -61,11 +61,13 @@ const Account: FC = () => {
     const handleLogout = async () => {
         try {
             handleClose();
-            await dispatch(logout()).then(() => {
-                router.replace('/');
-            }).then(() => {
-                dispatch(authActions.updateLogout());
-            });
+            await dispatch(logout())
+                .then(() => {
+                    router.replace('/');
+                })
+                .then(() => {
+                    dispatch(authActions.updateLogout());
+                });
 
         } catch (err) {
             enqueueSnackbar(translate('Account.UnableToLogout'), {
