@@ -89,9 +89,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Input'),
                         type: 'object',
                         properties: {
-                            siteName: {
+                            siteRelativePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SiteName',
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SiteRelativePath',
                                 ),
                                 type: 'string',
                             },
@@ -120,7 +120,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['siteName', 'listName', 'fileName'],
+                        required: ['siteRelativePath', 'listName', 'fileName'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Output'),
@@ -140,10 +140,17 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SiteRelativePath.Tooltip'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
-                    siteName: '',
+                    siteRelativePath: '',
                     listName: '',
                     folderPath: '',
                     fileName: '',
@@ -174,9 +181,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Input'),
                         type: 'object',
                         properties: {
-                            siteName: {
+                            siteRelativePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.SiteName',
+                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.SiteRelativePath',
                                 ),
                                 type: 'string',
                             },
@@ -203,7 +210,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['siteName', 'listName', 'fieldName', 'fieldValue', 'storeDirectory'],
+                        required: ['siteRelativePath', 'listName', 'fieldName', 'fieldValue', 'storeDirectory'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Output'),
@@ -225,10 +232,17 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.SiteRelativePath.Tooltip'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
-                    siteName: undefined,
+                    siteRelativePath: undefined,
                     listName: undefined,
                     fieldName: undefined,
                     fieldValue: undefined,
@@ -253,8 +267,8 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.Input'),
                         type: 'object',
                         properties: {
-                            siteName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.SiteName'),
+                            siteRelativePath: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.SiteRelativePath'),
                                 type: 'string',
                             },
                             listName: {
@@ -302,10 +316,17 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.SiteRelativePath.Tooltip'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
-                    siteName: '',
+                    siteRelativePath: '',
                     listName: '',
                     filePath: '',
                     localPath: '',
@@ -327,9 +348,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Input'),
                         type: 'object',
                         properties: {
-                            siteName: {
+                            siteRelativePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.SiteName',
+                                    'Process.Details.Modeler.Actions.SharePointFile.CreateFolder.SiteRelativePath',
                                 ),
                                 type: 'string',
                             },
@@ -386,10 +407,17 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.SiteRelativePath.Tooltip'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
-                    siteName: '',
+                    siteRelativePath: '',
                     listName: '',
                     folderName: '',
                     parentFolder: '',
