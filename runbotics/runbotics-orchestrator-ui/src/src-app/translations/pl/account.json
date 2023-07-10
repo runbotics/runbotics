@@ -2,5 +2,6 @@
     "Account.UnableToLogout": "Nie można się wylogować",
     "Account.SignIn": "Zaloguj się",
     "Account.User": "Użytkownik",
-    "Account.Logout": "Wyloguj się"
+    "Account.Logout": "Wyloguj się",
+    "Account.SessionExpired": "Sesja wygasła, zaloguj się."
 }

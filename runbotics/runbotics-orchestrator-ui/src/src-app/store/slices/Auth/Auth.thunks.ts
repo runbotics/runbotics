@@ -2,14 +2,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
+import StorageManagerService from '#src-app/store/StorageManager.service';
+
 import { User } from '#src-app/types/user';
 
 export const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
-        localStorage.setItem('access_token', accessToken);
+        StorageManagerService.insertAccessToken(accessToken);
         Axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     } else {
-        localStorage.removeItem('access_token');
+        StorageManagerService.removeAccessToken();
         delete Axios.defaults.headers.common.Authorization;
     }
 };

@@ -1,17 +1,23 @@
 import type { FC } from 'react';
 
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { FeatureKey, Role } from 'runbotics-common';
 
+import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processSelector } from '#src-app/store/slices/Process';
+
+import StorageManagerService from '#src-app/store/StorageManager.service';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
 
+
 const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
 const homeAppViewRegex = /\/app\/processes$/;
+const appOnlyRegex = /\/app/;
 
 // eslint-disable-next-line react/display-name
 export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
@@ -19,11 +25,19 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
     const dispatch = useDispatch();
     const { draft } = useSelector(processSelector);
     const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
     const isBrowser = typeof window !== 'undefined';
     const isAuthenticated = isInitialised && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
-        router.replace('/');
+        if (appOnlyRegex.test(router.asPath)) {
+            StorageManagerService.insertDestinationPage(router.asPath);
+            enqueueSnackbar(translate('Account.SessionExpired'), {
+                variant: 'error'
+            });
+        }
+        
+        router.replace('/login');
     }
     
     if (isAuthenticated) {
