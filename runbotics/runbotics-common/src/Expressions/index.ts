@@ -7,7 +7,7 @@ function _interopRequireDefault(obj) {
 
 const isExpressionPattern = /^\${(.+?)}$/;
 const expressionPattern = /\${(.+?)}/;
-const jexlPattern = /#{(.+?)}/;
+const jexlPattern = /#{(.+?)}/g;
 
 export class Expressions {
     public static isInitialized = false;
@@ -67,11 +67,11 @@ export class Expressions {
                 ...context.environment.variables,
             };
 
-            const expressionMatch = templatedString.match(jexlPattern);
-            const innerProperty = expressionMatch[1];
-            const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
             response.jexl = true;
-            response.result = templatedString.replace(jexlPattern, evaluatedProperty);
+            response.result = templatedString.replace(jexlPattern, (expressionMatch, innerProperty) => {
+                const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
+                return evaluatedProperty;
+            })
         }
 
         return response;
