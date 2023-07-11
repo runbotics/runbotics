@@ -52,7 +52,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                     categories={categories}
                     tags={tags}
                 />
-                <If condition={Boolean(posts.length)} else={postsNotFoundInfo}>
+                <If condition={Boolean(posts.length) || Boolean(featuredPost)} else={postsNotFoundInfo}>
                     <CardsSection
                         posts={posts}
                         featuredPost={featuredPost}

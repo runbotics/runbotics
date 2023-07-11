@@ -140,7 +140,7 @@ export class MicrosoftService {
 
     async getSiteIdByPath(token: string, sitePath: string) {
         this.TOKEN = token;
-        const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/all41sonline.sharepoint.com:/${sitePath}:`;
+        const url = `${this.MICROSOFT_GRAPH_API_URL}/sites/all41sonline.sharepoint.com:/${sitePath}`;
 
         const { data } = await MicrosoftService.makeRequest().get<SingleResponse>(url, {
             headers: this.getAuthHeader()
