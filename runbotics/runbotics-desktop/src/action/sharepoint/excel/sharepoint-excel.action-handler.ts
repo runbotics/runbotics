@@ -18,7 +18,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     ): Promise<SharepointTypes.SharepointOpenActionOutput> {
         const cloudPath = CloudPath.SITE;
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
         const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);

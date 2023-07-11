@@ -47,7 +47,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         input: SharepointFileTypes.SharepointDownloadFromSiteActionInput,
     ): Promise<SharepointFileTypes.SharepointDownloadActionOutput> {
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         const sharepointDownloadLink = await this.microsoftService.getDownloadFileLinkFromSite(token.token, input.fileName, input.folderPath);
         const pathToSave = input.localPath ?? path.join('./', 'temp');
@@ -81,7 +81,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         const contentType = allContentTypes.find((t) => t.key === extension).value;
         const token = await this.microsoftSession.getToken();
         if (cloudPath === CloudPath.SITE) {
-            const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+            const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
             const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         }
 
@@ -94,7 +94,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         input: SharepointFileTypes.SharepointSiteConnectionActionInput,
     ): Promise<SharepointFileTypes.SharepointSiteConnectionActionOutput> {
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
         const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         return { siteId: sharepointSiteId, driveId: sharepointDriveId, listId: sharepointListId };
@@ -129,7 +129,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         input: SharepointFileTypes.SharepointDownloadFilesInput
     ): Promise<SharepointFileTypes.SharepointDownloadFilesOutput> {
         const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+        const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
         const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
 
@@ -167,7 +167,7 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         let sharepointParentFolderId = undefined;
         const token = await this.microsoftSession.getToken();
         if (cloudPath === CloudPath.SITE) {
-            const sharepointSiteId = await this.microsoftService.getSiteIdBySearch(token.token, input.siteName);
+            const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
             const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         }
         if (sharepointParentFolder) {

@@ -257,9 +257,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Input'),
                         type: 'object',
                         properties: {
-                            siteName: {
+                            siteRelativePath: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteName',
+                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
                                 ),
                                 type: 'string',
                             },
@@ -288,7 +288,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'boolean',
                             },
                         },
-                        required: ['siteName', 'listName', 'filePath', 'worksheetName'],
+                        required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Output'),
@@ -310,10 +310,17 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath.Tooltip'),
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
-                    siteName: '',
+                    siteRelativePath: '',
                     listName: '',
                     filePath: '',
                     worksheetName: '',

@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.6.1",
+    "version": "2.6.2",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -53,7 +53,6 @@
         "camunda-bpmn-moddle": "^5.1.2",
         "draft-js-export-html": "1.4.1",
         "clsx": "^1.1.1",
-        "console-feed": "^3.4.0",
         "dompurify": "^2.3.9",
         "draft-js": "^0.11.6",
         "file-saver": "^2.0.5",
