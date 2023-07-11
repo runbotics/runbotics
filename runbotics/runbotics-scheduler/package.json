@@ -8,7 +8,7 @@
     "license": "MIT",
     "main": "./dist/main.js",
     "scripts": {
-        "rebuild": "rimraf dist",
+        "prebuild": "rimraf dist",
         "build": "nest build",
         "start": "node dist/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
