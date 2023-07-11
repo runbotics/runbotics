@@ -3,9 +3,7 @@ import React, { FunctionComponent } from 'react';
 const UsersBrowseView: FunctionComponent = () => {
 
     return (
-        <>
-            Registration | Users
-        </>
+        <> Registration | Users </>
     );
 };
 

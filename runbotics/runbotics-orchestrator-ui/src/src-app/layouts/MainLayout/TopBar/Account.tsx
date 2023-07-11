@@ -3,7 +3,6 @@ import React, { useRef, useState, FC } from 'react';
 import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Role } from 'runbotics-common';
 import styled from 'styled-components';
@@ -44,8 +43,12 @@ const Root = styled.div(({ theme }) => ({
     },
 }));
 
+const UsersLink = styled(RouterLink)(({ theme }) => `
+    text-decoration: none;
+    color: ${theme.palette.text.primary};
+`);
+
 const Account: FC = () => {
-    const router = useRouter();
     const ref = useRef<HTMLDivElement>(null);
     const auth = useAuth();
     const theme = useTheme();
@@ -117,9 +120,9 @@ const Account: FC = () => {
             >
                 <If condition={hasAdminAccess}>
                     <MenuItem>
-                        <RouterLink href='/app/users' style={{ textDecoration: 'none', color: theme.palette.text.primary }}>
-                            Users
-                        </RouterLink>
+                        <UsersLink href='/app/users'>
+                            {translate('Account.Users')}
+                        </UsersLink>
                     </MenuItem>
                 </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
