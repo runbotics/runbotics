@@ -16,7 +16,7 @@ export type SharepointOpenFromRootActionInput = {
     persistChanges: boolean;
 };
 export type SharepointOpenFromSiteActionInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
     filePath: string;
     worksheetName: string;

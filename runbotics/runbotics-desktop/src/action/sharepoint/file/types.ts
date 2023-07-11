@@ -13,7 +13,7 @@ export type SharepointDownloadFromRootActionInput = {
     localPath: string;
 };
 export type SharepointDownloadFromSiteActionInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
     folderPath: string;
     fileName: string;
@@ -22,7 +22,7 @@ export type SharepointDownloadFromSiteActionInput = {
 export type SharepointDownloadActionOutput = any;
 
 export type SharepointDownloadFilesInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
     fieldName: string;
     fieldValue: string;
@@ -31,7 +31,7 @@ export type SharepointDownloadFilesInput = {
 export type SharepointDownloadFilesOutput = string[];
 
 export type SharepointUploadActionInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
     filePath: string;
     localPath: string;
@@ -40,7 +40,7 @@ export type SharepointUploadActionInput = {
 export type SharepointUploadActionOutput = any;
 
 export type SharepointCreateFolderActionInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
     folderName: string;
     parentFolder: string;
@@ -50,7 +50,7 @@ export type SharepointCreateFolderActionInput = {
 export type SharepointCreateFolderActionOutput = any;
 
 export type SharepointSiteConnectionActionInput = {
-    siteName: string;
+    siteRelativePath: string;
     listName: string;
 };
 export type SharepointSiteConnectionActionOutput = any;
