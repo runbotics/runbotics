@@ -1,12 +1,16 @@
 import React, { useRef, useState, FC } from 'react';
 
 import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
+import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
+import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
@@ -44,10 +48,12 @@ const Account: FC = () => {
     const router = useRouter();
     const ref = useRef<HTMLDivElement>(null);
     const auth = useAuth();
+    const theme = useTheme();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -89,7 +95,7 @@ const Account: FC = () => {
                 onClick={handleOpen}
                 textTransform="none"
                 ref={ref}
-                sx={{ color: (theme) => theme.palette.primary.contrastText }}
+                sx={{ color: theme.palette.primary.contrastText }}
             >
                 <Hidden lgDown>
                     <Typography variant="h5" sx={{ fontSize: '0.875rem' }}>
@@ -109,6 +115,13 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
+                <If condition={hasAdminAccess}>
+                    <MenuItem>
+                        <RouterLink href='/app/users' style={{ textDecoration: 'none', color: theme.palette.text.primary }}>
+                            Users
+                        </RouterLink>
+                    </MenuItem>
+                </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>
         </Root>

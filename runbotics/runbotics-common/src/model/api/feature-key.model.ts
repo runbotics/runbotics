@@ -157,6 +157,9 @@ export enum FeatureKey {
 
     // ???
     BASIC_USER_READ = 'BASIC_USER_READ',
+
+    // Access to users page, manage users
+    USERS_PAGE_READ = 'USERS_PAGE_READ',
 }
 
 export interface IFeatureKey {
