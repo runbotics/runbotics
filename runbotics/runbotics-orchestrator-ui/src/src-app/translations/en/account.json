@@ -2,5 +2,6 @@
     "Account.UnableToLogout": "Unable to logout",
     "Account.SignIn": "Sign in",
     "Account.User": "User",
+    "Account.Users": "Users",
     "Account.Logout": "Logout"
 }
