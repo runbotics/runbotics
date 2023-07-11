@@ -66,7 +66,7 @@ const Account: FC = () => {
                     router.replace('/');
                 })
                 .then(() => {
-                    dispatch(authActions.updateLogout());
+                    dispatch(authActions.handleLogout());
                 });
 
         } catch (err) {

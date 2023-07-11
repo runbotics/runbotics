@@ -10,8 +10,8 @@ class StorageManagerService {
 
     private static readItem(key: string): string {
         try {
-            const data = localStorage.getItem(key);
-            return data;
+            return localStorage.getItem(key);
+            
         } catch(error) {
             return '';
         }
@@ -42,8 +42,7 @@ class StorageManagerService {
     }
 
     public static readDestinationPage(): string {
-        const page = StorageManagerService.readItem(StorageKey.DESTINATION_PAGE);
-        return page;
+        return StorageManagerService.readItem(StorageKey.DESTINATION_PAGE);
     }
 
     public static removeDestinationPage(): void {

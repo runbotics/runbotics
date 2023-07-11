@@ -7,7 +7,6 @@ import { FeatureKey, Role } from 'runbotics-common';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processSelector } from '#src-app/store/slices/Process';
-
 import StorageManagerService from '#src-app/store/StorageManager.service';
 
 import useAuth from '../../hooks/useAuth';
