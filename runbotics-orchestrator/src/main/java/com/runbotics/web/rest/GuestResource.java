@@ -1,6 +1,7 @@
 package com.runbotics.web.rest;
 
 import com.runbotics.config.Constants;
+import com.runbotics.domain.Guest;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.GuestService;
 import org.slf4j.Logger;
@@ -8,13 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 import javax.validation.constraints.Pattern;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/guests")
@@ -44,6 +44,13 @@ public class GuestResource {
             .noContent()
             .headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted","All"))
             .build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Guest> getGuestById(@PathVariable Long id) {
+        log.debug("REST request to get Guest : {}", id);
+        Optional<Guest> guest = guestService.findGuestById(id);
+        return ResponseUtil.wrapOrNotFound(guest);
     }
 
 }

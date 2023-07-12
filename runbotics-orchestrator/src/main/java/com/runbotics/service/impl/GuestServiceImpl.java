@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import tech.jhipster.security.RandomUtil;
 
 import java.util.HashSet;
@@ -51,6 +52,11 @@ public class GuestServiceImpl implements GuestService {
     @Scheduled(cron = "0 0 0 * * ?")
     public void deleteAllGuestAccounts() {
         guestRepository.deleteAllGuest();
+    }
+
+    public Optional<Guest> findGuestById(Long id) {
+        var guestOptional = guestRepository.findGuestById(id);
+        return guestOptional;
     }
 
     private Guest createGuest(String guestIp, User user) {
