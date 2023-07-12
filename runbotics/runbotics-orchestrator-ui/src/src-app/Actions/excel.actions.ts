@@ -41,14 +41,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input'],
             },
-            formData: {
-                input: {
-                    path: '',
-                    row: '',
-                    column: '',
-                    value: '',
-                },
-            },
+            formData: {},
         },
     },
 });

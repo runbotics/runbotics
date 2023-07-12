@@ -12,10 +12,6 @@ export const runPythonScript = async (args, pythonScriptDirectory, pythonScriptN
 
     return PythonShell
         .run(pythonScriptName, options)
-        .then(messages => messages) // array of messages printed by python script
-        .catch(
-            error => {
-                throw error;
-            }
-        );
+        .then(messages => messages) // array of python script print() messages
+        .catch(error => { throw error; });
 };

@@ -23,24 +23,25 @@ export default class DesktopExcelActionHandler extends StatefulActionHandler {
      *  @example path: C:/myDir/myExcelFile.xlsx row: 1 column: B value: 'myValue'
      */
     async setCellValue(input: ExcelTypes.ExcelSetCellValueActionInput): Promise<ExcelTypes.ExcelSetCellValueActionOutput> {
-        try {
-            const PYTHON_SCRIPT_NAME = 'set_cell_value.py';
-            const args = [
-                input.path,
-                input.row,
-                input.column,
-                input.value
-            ];
+        const PYTHON_SCRIPT_NAME = 'set_cell_value.py';
+        const args = [
+            input.path,
+            input.row,
+            input.column,
+            input.value
+        ];
 
-            await runPythonScript(args, PYTHON_SCRIPT_DIRECTORY, PYTHON_SCRIPT_NAME)
-                .then(() => this.logger.log('Success: python script executed successfully'));
-        } catch (err) {
-            this.logger.error(`Error: ${err}`);
-            throw new Error(err?.description ?? err);
-        }
+        await runPythonScript(args, PYTHON_SCRIPT_DIRECTORY, PYTHON_SCRIPT_NAME)
+            .then(() => this.logger.log('Success: python script executed successfully'))
+            .catch((err: unknown) => {
+                this.logger.error('Error: python script failed to execute');
+                throw err;
+            });
+
+        return {};
     }
 
-    async run(request: any) {
+    async run(request: ExcelTypes.SAPActionRequest) {
         if (process.platform !== 'win32') {
             throw new Error('Excel desktop actions can be run only on Windows bot');
         }

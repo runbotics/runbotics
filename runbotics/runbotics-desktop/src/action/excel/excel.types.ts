@@ -7,7 +7,8 @@ export type SAPActionRequest =
 export type ExcelSetCellValueActionInput = {
     path: string;
     row: number;
-    column: number | string;
+    column: string | number;
     value: string | number;
 };
-export type ExcelSetCellValueActionOutput = any;
+
+export type ExcelSetCellValueActionOutput = Record<string, never>;

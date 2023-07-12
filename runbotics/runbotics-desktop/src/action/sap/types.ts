@@ -46,7 +46,7 @@ export type SAPReadTextActionOutput = any;
 export type SAPSendVKeyActionInput = {
     virtualKey: string;
 };
-export type SAPSendVKeyActionOutput = {};
+export type SAPSendVKeyActionOutput = Record<string, never>;
 
 // --- action
 export type SAPConnectActionInput = {
@@ -55,20 +55,20 @@ export type SAPConnectActionInput = {
     user: string;
     password: string;
 };
-export type SAPConnectActionOutput = {};
+export type SAPConnectActionOutput = Record<string, never>;
 
 // --- action
 export type SAPStartTransactionActionInput = {
     transaction: string;
 };
-export type SAPStartTransactionActionOutput = {};
+export type SAPStartTransactionActionOutput = Record<string, never>;
 
 // --- action
 export type SAPTypeActionInput = {
     target: string;
     value: string;
 };
-export type SAPTypeActionOutput = {};
+export type SAPTypeActionOutput = Record<string, never>;
 
 // --- action
 export type SAPSelectActionInput = {
