@@ -11,15 +11,6 @@ env:
   NODE_VERSION: 14.x
 
 jobs:
-  submodule-checkout:
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
-          
-        - name: Checkout submodules
-          run: git submodule update --init --recursive
 
   changes-detection:
     runs-on: ubuntu-latest
@@ -33,6 +24,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Checkout submodule
+        run: git submodule update --init
 
       - name: Assign paths to scenarios
         uses: dorny/paths-filter@v2
@@ -196,6 +190,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Checkout submodule
+        run: git submodule update --init
 
       - name: Cache Rush
         id: cache-rush
