@@ -5,6 +5,7 @@ import getBeeOfficeActions from '#src-app/Actions/beeOffice.actions';
 import getBrowserActions from '#src-app/Actions/browser.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopOfficeActions from '#src-app/Actions/desktopOffice.actions';
+import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
@@ -134,6 +135,12 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionPanel.ActionsGroup.Application'
             ),
             items: Object.values(getApplicationActions())
+        },
+        excel: {
+            label: translate(
+                'Process.Details.Modeler.ActionPanel.ActionsGroup.Excel'
+            ),
+            items: Object.values(getExcelActions())
         },
         external: {
             label: translate(

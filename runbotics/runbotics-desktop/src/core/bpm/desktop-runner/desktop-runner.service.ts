@@ -31,6 +31,7 @@ import {
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
+import ExcelActionHandler from '#action/excel';
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
@@ -65,6 +66,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
+        private readonly excelActionHandler: ExcelActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -85,7 +87,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('sap', sapActionHandler)
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
-            .set('variables', variableActionHandler);
+            .set('variables', variableActionHandler)
+            .set('excel', excelActionHandler);
     }
 
     async onModuleInit() {

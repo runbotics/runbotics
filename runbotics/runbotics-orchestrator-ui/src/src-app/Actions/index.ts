@@ -7,6 +7,7 @@ import getBeeOfficeActions from './beeOffice.actions';
 import getBrowserActions from './browser.actions';
 import getCsvActions from './csv.actions';
 import getDesktopOfficeActions from './desktopOffice.actions';
+import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
@@ -40,6 +41,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getGoogleSheetsActions(),
     ...getJiraActions(),
     ...getApiActions(),
+    ...getExcelActions(),
 };
 
 export default internalBpmnActions;
