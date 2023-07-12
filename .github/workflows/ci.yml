@@ -11,6 +11,16 @@ env:
   NODE_VERSION: 14.x
 
 jobs:
+  submodule-checkout:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+          
+        - name: Checkout submodules
+          run: git submodule update --init --recursive
+
   changes-detection:
     runs-on: ubuntu-latest
 
