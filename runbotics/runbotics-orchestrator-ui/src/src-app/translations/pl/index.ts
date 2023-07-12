@@ -6,6 +6,7 @@ import actionTranslations from './action.json';
 import botTranslations from './bot.json';
 import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
+import demoTranslations from './demo.json';
 import error404Translations from './error404.json';
 import historyTranslations from './history.json';
 import installTranslations from './install.json';
@@ -35,6 +36,7 @@ const translationResources = {
     ...paletteTranslations,
     ...landingPageTranslations,
     ...blogTranslations,
+    ...demoTranslations,
 };
 
 export default translationResources;

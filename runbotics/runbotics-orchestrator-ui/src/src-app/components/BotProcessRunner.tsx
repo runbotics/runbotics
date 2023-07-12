@@ -8,6 +8,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import {
+    Role,
     FeatureKey,
     IProcess,
     IProcessInstance,
@@ -16,10 +17,12 @@ import {
 } from 'runbotics-common';
 import styled from 'styled-components';
 
+import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
+import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
 import {
     processActions,
     StartProcessResponse,
@@ -97,6 +100,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
+    const { executionsCount } = useSelector(guestsSelector);
+    const { user } = useAuth();
+    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
+    const guestExecutionLimitExceeded = isGuest && executionsCount >= EXECUTION_LIMIT;
 
     const processInstances = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId, processInstance, eventsMap } =
@@ -107,7 +114,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const processName = process?.name;
     const processId = process?.id;
     const isRunButtonDisabled =
-        started || isSubmitting || !process.system || !process.botCollection;
+        started || isSubmitting || !process.system || !process.botCollection || guestExecutionLimitExceeded;
     const isRerunButtonDisabled =
         started || isSubmitting || isProcessActive(processId, processInstance);
 
@@ -182,6 +189,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         response.orchestratorProcessInstanceId
                     )
                 );
+                isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+                
                 onRunClick?.();
                 setStarted(true);
                 closeModal();

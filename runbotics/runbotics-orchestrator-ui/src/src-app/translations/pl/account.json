@@ -1,5 +1,6 @@
 {
     "Account.UnableToLogout": "Nie można się wylogować",
+    "Account.SessionExpired": "Twoja sesja demo wygasła",
     "Account.SignIn": "Zaloguj się",
     "Account.User": "Użytkownik",
     "Account.Users": "Użytkownicy",
