@@ -189,6 +189,25 @@ public class UserResource {
     }
 
     /**
+     * {@code GET /admin/users/not-activated} : get all not activated users with all the details - calling this are only allowed for the administrators.
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
+     */
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @GetMapping("/users/not-activated")
+    public ResponseEntity<List<AdminUserDTO>> getAllNotActiveUsers(Pageable pageable) {
+        log.debug("REST request to get all not activated User for an admin");
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        final Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
      * {@code DELETE /admin/users/:login} : delete the "login" User.
      *
      * @param login the login of the user to delete.
