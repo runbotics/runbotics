@@ -91,6 +91,7 @@ importers:
       nodemailer: ^6.6.0
       prince: ^1.9.7
       puppeteer: ^15.5.0
+      python-shell: ^5.0.0
       qs: ^6.11.1
       reflect-metadata: ^0.1.13
       rimraf: ^3.0.2
@@ -142,6 +143,7 @@ importers:
       nodemailer: 6.6.2
       prince: 1.9.7
       puppeteer: 15.5.0
+      python-shell: 5.0.0
       qs: 6.11.1
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
@@ -15522,6 +15524,11 @@ packages:
 
   /pure-color/1.3.0:
     resolution: {integrity: sha1-H+Bk+wrIUfDeYTIKi/eWg2Qi8z4=}
+    dev: false
+
+  /python-shell/5.0.0:
+    resolution: {integrity: sha512-RUOOOjHLhgR1MIQrCtnEqz/HJ1RMZBIN+REnpSUrfft2bXqXy69fwJASVziWExfFXsR1bCY0TznnHooNsCo0/w==}
+    engines: {node: '>=0.10'}
     dev: false
 
   /q/1.5.1:
