@@ -8,6 +8,7 @@ import { botReducer as bot } from './slices/Bot';
 import { botCollectionReducer as botCollection } from './slices/BotCollections';
 import { botSystemsReducer as botSystem } from './slices/BotSystem';
 import { globalVariableReducer as globalVariable } from './slices/GlobalVariable';
+import { guestsReducer as guests } from './slices/Guests';
 import { processReducer as process } from './slices/Process';
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     botSystem,
     form,
     globalVariable,
+    guests,
     process,
     processInstance,
     processInstanceEvent,
