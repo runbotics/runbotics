@@ -33,8 +33,6 @@ interface ListItemProps {
     disabled?: boolean;
 }
 
-
-
 const ActionList: FC<ActionListProps> = ({
     groups,
     openGroupsState,
@@ -71,7 +69,6 @@ const ActionList: FC<ActionListProps> = ({
         </ListItemButton>
     );
 
-
     return (
         <List className={clsx(classes.list)}>
             <If
@@ -106,41 +103,60 @@ const ActionList: FC<ActionListProps> = ({
                                     label={label}
                                     open={openGroupsState[key]}
                                     onToggle={(open) => {
-                                        dispatchGroups(groupActions.updateGroup(key, open));
+                                        dispatchGroups(
+                                            groupActions.updateGroup(key, open)
+                                        );
                                     }}
                                     disabled={isGroupDisabled}
                                 >
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
                                             const isActionIncompatible =
-                                                item.system && actionSystemCheck(item.system);
+                                                item.system &&
+                                                actionSystemCheck(item.system);
                                             const isActionDisabled =
-                                                    isGroupDisabled ||
-                                                    ADVANCED_ACTION_GROUP_IDS.includes(item.id) ||
-                                                    ADVANCED_ACTION_IDS.includes(item.id);
+                                                isGroupDisabled ||
+                                                ADVANCED_ACTION_GROUP_IDS.includes(
+                                                    item.id
+                                                ) ||
+                                                ADVANCED_ACTION_IDS.includes(
+                                                    item.id
+                                                );
 
                                             let title = '';
 
-                                            if (isActionIncompatible && !isActionDisabled) {
-                                                title = translate('Action.List.Item.Disabled.Tooltip', {
-                                                    system: item.system,
-                                                });
+                                            if (
+                                                isActionIncompatible &&
+                                                !isActionDisabled
+                                            ) {
+                                                title = translate(
+                                                    'Action.List.Item.Disabled.Tooltip',
+                                                    {
+                                                        system: item.system,
+                                                    }
+                                                );
                                             }
 
-                                            if ((isActionDisabled && !isGroupDisabled)) {
+                                            if (
+                                                isActionDisabled &&
+                                                !isGroupDisabled
+                                            ) {
                                                 title = translate(
                                                     'Process.Details.Modeler.ActionListPanel.NotAvailable'
                                                 );
                                             }
 
-
                                             return (
-                                                <Tooltip key={item.id} title={title}>
+                                                <Tooltip
+                                                    key={item.id}
+                                                    title={title}
+                                                >
                                                     <div>
                                                         <ListItem
                                                             item={item}
                                                             disabled={
-                                                                isActionIncompatible || isActionDisabled
+                                                                isActionIncompatible ||
+                                                                isActionDisabled
                                                             }
                                                         />
                                                     </div>
