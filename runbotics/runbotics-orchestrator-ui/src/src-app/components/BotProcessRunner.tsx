@@ -227,6 +227,8 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const getTooltipTitle = () => {
         if (!isRunButtonDisabled) {
             return translate('Process.MainView.Tooltip.Run.Enabled');
+        } else if (guestExecutionLimitExceeded) {
+            return translate('Process.MainView.Tooltip.Run.Disabled.ForGuest');
         }
 
         return processInstance?.status === ProcessInstanceStatus.IN_PROGRESS

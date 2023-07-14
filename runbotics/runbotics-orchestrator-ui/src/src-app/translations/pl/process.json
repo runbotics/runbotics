@@ -63,6 +63,7 @@
     "Process.MainView.Tooltip.Save.Errors.Connections": "Błedy związane z połączeniami: {{ errors }}",
     "Process.MainView.Tooltip.Save.Errors.Canvas": "Błedy związane z kanwą modelera: {{ errors }}",
     "Process.MainView.Tooltip.Run.Enabled": "Uruchom ten proces",
+    "Process.MainView.Tooltip.Run.Disabled.ForGuest": "Wykorzystano limit uruchomień",
     "Process.MainView.Tooltip.Import": "Zaimportuj proces z pliku xml",
     "Process.MainView.Tooltip.Export": "Pobierz ten proces w formacie xml",
     "Process.MainView.Tooltip.Undo": "Cofnij ostatnią zmianę",
