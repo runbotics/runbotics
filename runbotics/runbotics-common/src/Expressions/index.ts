@@ -69,26 +69,31 @@ export class Expressions {
 
             response.jexl = true;
 
-            let isPropertyArray = false;
             const property = templatedString.replace(jexlPattern, (expressionMatch, innerProperty) => {
                     const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
-                    
-                    isPropertyArray = Array.isArray(evaluatedProperty);
+                    const isPropertyArray = Array.isArray(evaluatedProperty);
 
                     return isPropertyArray ? JSON.stringify(evaluatedProperty) : evaluatedProperty;
                 }
             );
 
-            if (isPropertyArray) {
-                response.result = JSON.parse(property);
-            } else if (property === "true") {
+            try {
+                const parsedProperty = JSON.parse(property);
+                if (Array.isArray(parsedProperty)) {
+                    response.result = parsedProperty;
+                } else {
+                    response.result = property;
+                }
+            } catch (error) {
+                response.result = property;
+            }
+
+            if (property === "true") {
                 response.result = true;
             } else if (property === "false") {
                 response.result = false;
             } else if (property === "null") {
                 response.result = null;
-            } else {
-                response.result = property;
             }
         }
 
