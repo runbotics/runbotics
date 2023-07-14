@@ -196,7 +196,7 @@ public class UserResource {
      */
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     @GetMapping("/users/not-activated")
-    public ResponseEntity<List<AdminUserDTO>> getAllNotActiveUsers(Pageable pageable) {
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActiveUsers(Pageable pageable) {
         log.debug("REST request to get all not activated User for an admin");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
@@ -204,7 +204,7 @@ public class UserResource {
 
         final Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
