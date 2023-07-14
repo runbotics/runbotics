@@ -7,12 +7,16 @@ import Image from 'next/image';
 
 import { ContentfulRichText } from '#contentful/common';
 
+import EmbeddedVideo from '../EmbeddedVideo';
 import Typography from '../Typography';
 import styles from './RichTextRenderer.module.scss';
+
 
 interface Props {
     content: ContentfulRichText;
 }
+
+const rex = new RegExp('\\$https:\\/\\/www\\.youtube\\.com\\/watch\\?v=[^$]*\\$', 'g');
 
 /**
  * Customizable contentful rich text renderer
@@ -26,7 +30,16 @@ const RichTextRenderer: VFC<Props> = ({ content }) => {
             [BLOCKS.HEADING_4]: (_, children) => <Typography font="Roboto" className={styles.h4} variant="h4">{children}</Typography>,
             [BLOCKS.HEADING_5]: (_, children) => <Typography font="Roboto" className={styles.p} variant="h5">{children}</Typography>,
             [BLOCKS.HEADING_6]: (_, children) => <Typography font="Roboto" className={styles.p} variant="h6">{children}</Typography>,
-            [BLOCKS.PARAGRAPH]: (_, children) => <Typography font="Roboto" className={styles.p} variant="body3">{children}</Typography>,
+            [BLOCKS.PARAGRAPH]: (_, children) => {
+
+                if( children.toString().match(rex)){
+                    const videoId  = children.toString().replace(/^\$/, '').replace(/\$$/, '').split('v=')[1];
+                    const url = `https://www.youtube.com/embed/${videoId}`;
+                    return (<EmbeddedVideo url={url}/>);
+                }
+
+                return <Typography font="Roboto" className={styles.p} variant="body3">{children}</Typography>;
+            },
             [BLOCKS.HR]: () => <hr className={styles.hr} />,
             [BLOCKS.TABLE_CELL]: (_, children) => <td className={styles.td}>{children}</td>,
             [BLOCKS.UL_LIST]: (_, children) => <ul className={styles.ul}>{children}</ul>,
