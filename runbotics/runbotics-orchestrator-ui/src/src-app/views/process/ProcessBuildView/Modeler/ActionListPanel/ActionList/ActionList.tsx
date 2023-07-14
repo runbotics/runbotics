@@ -49,7 +49,7 @@ const ActionList: FC<ActionListProps> = ({
         process?.system?.name &&
         process.system.name !== BotSystem.ANY &&
         actionSystem.toUpperCase() !== process.system.name;
-        
+
 
     const ListItem = ({ item, disabled }: ListItemProps) => (
         <ListItemButton
@@ -69,6 +69,39 @@ const ActionList: FC<ActionListProps> = ({
             </ListItemText>
         </ListItemButton>
     );
+
+    const ListContent = ({items}) => (
+        <List component="div" disablePadding>
+            {items.map((item: Item) => {
+                const isActionIncompatible =
+            item.system &&
+            actionSystemCheck(item.system);
+                return isActionIncompatible ? (
+                    <Tooltip
+                        key={item.id}
+                        title={translate(
+                            'Action.List.Item.Disabled.Tooltip',
+                            { system: item.system }
+                        )}
+                    >
+                        <div>
+                            <ListItem item={item} disabled />
+                        </div>
+                    </Tooltip>
+                ) : (
+                    <ListItem
+                        key={item.id}
+                        item={item}
+                        disabled={
+                            !hasAdvancedActionsAccess &&
+                    ADVANCED_ACTION_IDS.includes(
+                        item.id
+                    )
+                        }
+                    />
+                );
+            })}
+        </List>);
 
     return (
         <List className={clsx(classes.list)}>
@@ -95,37 +128,9 @@ const ActionList: FC<ActionListProps> = ({
                             ADVANCED_ACTION_GROUP_IDS.includes(key)
                         }
                     >
-                        <List component="div" disablePadding>
-                            {items.map((item: Item) => {
-                                const isActionIncompatible =
-                                    item.system &&
-                                    actionSystemCheck(item.system);
-                                return isActionIncompatible ? (
-                                    <Tooltip
-                                        key={item.id}
-                                        title={translate(
-                                            'Action.List.Item.Disabled.Tooltip',
-                                            { system: item.system }
-                                        )}
-                                    >
-                                        <div>
-                                            <ListItem item={item} disabled />
-                                        </div>
-                                    </Tooltip>
-                                ) : (
-                                    <ListItem
-                                        key={item.id}
-                                        item={item}
-                                        disabled={
-                                            !hasAdvancedActionsAccess &&
-                                            ADVANCED_ACTION_IDS.includes(
-                                                item.id
-                                            )
-                                        }
-                                    />
-                                );
-                            })}
-                        </List>
+
+                        <ListContent items={items}/>
+
                     </ListGroup>
                 ))}
             </If>
