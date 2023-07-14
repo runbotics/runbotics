@@ -240,7 +240,7 @@ export default class SapActionHandler extends StatefulActionHandler {
 
     selectTableRow(input: SapTypes.SAPSelectTableRowActionInput) {
         this.isApplicationOpen();
-        this.session.FindById(input.target).selectedRows(0);
+        this.session.FindById(input.target).selectedRows(input.rowIndex);
         this.session.FindById(input.target).clickCurrentCell();
         return {};
     }
