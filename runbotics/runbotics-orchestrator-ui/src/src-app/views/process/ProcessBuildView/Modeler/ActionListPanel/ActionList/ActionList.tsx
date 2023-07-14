@@ -49,7 +49,6 @@ const ActionList: FC<ActionListProps> = ({
         process?.system?.name &&
         process.system.name !== BotSystem.ANY &&
         actionSystem.toUpperCase() !== process.system.name;
-        
 
     const ListItem = ({ item, disabled }: ListItemProps) => (
         <ListItemButton
@@ -118,9 +117,12 @@ const ActionList: FC<ActionListProps> = ({
                                         item={item}
                                         disabled={
                                             !hasAdvancedActionsAccess &&
-                                            ADVANCED_ACTION_IDS.includes(
+                                            (ADVANCED_ACTION_IDS.includes(
                                                 item.id
-                                            )
+                                            ) ||
+                                                ADVANCED_ACTION_GROUP_IDS.includes(
+                                                    key
+                                                ))
                                         }
                                     />
                                 );
