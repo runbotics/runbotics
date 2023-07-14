@@ -238,6 +238,13 @@ export default class SapActionHandler extends StatefulActionHandler {
         return {};
     }
 
+    selectTableRow(input: SapTypes.SAPSelectTableRowActionInput) {
+        this.isApplicationOpen();
+        this.session.FindById(input.target).selectedRows(0);
+        this.session.FindById(input.target).clickCurrentCell();
+        return {};
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('Use open application action before');
@@ -280,6 +287,8 @@ export default class SapActionHandler extends StatefulActionHandler {
                 return this.selectFromContextMenu(request.input);
             case 'sap.clickToolbarButton':
                 return this.clickToolbarButton(request.input);
+            case 'sap.selectTableRow':
+                return this.selectTableRow(request.input);
             default:
                 throw new Error('Action not found');
         }

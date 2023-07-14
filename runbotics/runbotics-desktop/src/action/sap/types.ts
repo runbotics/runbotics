@@ -15,7 +15,8 @@ export type SAPActionRequest =
 | DesktopRunRequest<'sap.select', SAPSelectActionInput>
 | DesktopRunRequest<'sap.openContextMenu', SAPOpenContextMenuActionInput>
 | DesktopRunRequest<'sap.selectFromContextMenu', SAPSelectFromContextMenuActionInput>
-| DesktopRunRequest<'sap.clickToolbarButton', SAPClickToolbarButtonActionInput>;
+| DesktopRunRequest<'sap.clickToolbarButton', SAPClickToolbarButtonActionInput>
+| DesktopRunRequest<'sap.selectTableRow', SAPSelectTableRowActionInput>;
 
 // --- action
 export type SAPClickActionInput = {
@@ -95,3 +96,8 @@ export type SAPClickToolbarButtonActionInput = {
     toolId: string;
 };
 export type SAPClickToolbarButtonActionOutput = any;
+
+export interface SAPSelectTableRowActionInput {
+    target: string;
+    rowIndex: string;
+}
