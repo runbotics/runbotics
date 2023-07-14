@@ -33,6 +33,8 @@ interface ListItemProps {
     disabled?: boolean;
 }
 
+
+
 const ActionList: FC<ActionListProps> = ({
     groups,
     openGroupsState,
@@ -49,7 +51,6 @@ const ActionList: FC<ActionListProps> = ({
         process?.system?.name &&
         process.system.name !== BotSystem.ANY &&
         actionSystem.toUpperCase() !== process.system.name;
-
 
     const ListItem = ({ item, disabled }: ListItemProps) => (
         <ListItemButton
@@ -70,38 +71,6 @@ const ActionList: FC<ActionListProps> = ({
         </ListItemButton>
     );
 
-    const ListContent = ({items}) => (
-        <List component="div" disablePadding>
-            {items.map((item: Item) => {
-                const isActionIncompatible =
-            item.system &&
-            actionSystemCheck(item.system);
-                return isActionIncompatible ? (
-                    <Tooltip
-                        key={item.id}
-                        title={translate(
-                            'Action.List.Item.Disabled.Tooltip',
-                            { system: item.system }
-                        )}
-                    >
-                        <div>
-                            <ListItem item={item} disabled />
-                        </div>
-                    </Tooltip>
-                ) : (
-                    <ListItem
-                        key={item.id}
-                        item={item}
-                        disabled={
-                            !hasAdvancedActionsAccess &&
-                    ADVANCED_ACTION_IDS.includes(
-                        item.id
-                    )
-                        }
-                    />
-                );
-            })}
-        </List>);
 
     return (
         <List className={clsx(classes.list)}>
@@ -115,24 +84,75 @@ const ActionList: FC<ActionListProps> = ({
                     </Typography>
                 }
             >
-                {groups.map(({ key, label, items }) => (
-                    <ListGroup
-                        key={key}
-                        label={label}
-                        open={openGroupsState[key]}
-                        onToggle={(open) => {
-                            dispatchGroups(groupActions.updateGroup(key, open));
-                        }}
-                        disabled={
-                            !hasAdvancedActionsAccess &&
-                            ADVANCED_ACTION_GROUP_IDS.includes(key)
-                        }
-                    >
+                {groups.map(({ key, label, items }) => {
+                    const isGroupDisabled =
+                        !hasAdvancedActionsAccess &&
+                        ADVANCED_ACTION_GROUP_IDS.includes(key);
 
-                        <ListContent items={items}/>
+                    return (
+                        <Tooltip
+                            key={key}
+                            title={
+                                isGroupDisabled
+                                    ? translate(
+                                        'Process.Details.Modeler.ActionListPanel.NotAvailable'
+                                    )
+                                    : ''
+                            }
+                        >
+                            <div>
+                                <ListGroup
+                                    key={key}
+                                    label={label}
+                                    open={openGroupsState[key]}
+                                    onToggle={(open) => {
+                                        dispatchGroups(groupActions.updateGroup(key, open));
+                                    }}
+                                    disabled={isGroupDisabled}
+                                >
+                                    <List component="div" disablePadding>
+                                        {items.map((item: Item) => {
+                                            const isActionIncompatible =
+                                                item.system && actionSystemCheck(item.system);
+                                            const isActionDisabled =
+                                                    isGroupDisabled ||
+                                                    ADVANCED_ACTION_GROUP_IDS.includes(item.id) ||
+                                                    ADVANCED_ACTION_IDS.includes(item.id);
 
-                    </ListGroup>
-                ))}
+                                            let title = '';
+
+                                            if (isActionIncompatible && !isActionDisabled) {
+                                                title = translate('Action.List.Item.Disabled.Tooltip', {
+                                                    system: item.system,
+                                                });
+                                            }
+
+                                            if ((isActionDisabled && !isGroupDisabled)) {
+                                                title = translate(
+                                                    'Process.Details.Modeler.ActionListPanel.NotAvailable'
+                                                );
+                                            }
+
+
+                                            return (
+                                                <Tooltip key={item.id} title={title}>
+                                                    <div>
+                                                        <ListItem
+                                                            item={item}
+                                                            disabled={
+                                                                isActionIncompatible || isActionDisabled
+                                                            }
+                                                        />
+                                                    </div>
+                                                </Tooltip>
+                                            );
+                                        })}
+                                    </List>
+                                </ListGroup>
+                            </div>
+                        </Tooltip>
+                    );
+                })}
             </If>
         </List>
     );
