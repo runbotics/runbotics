@@ -244,7 +244,7 @@ public class UserResource {
 
         final Page<AdminUserDTO> page = userService.getAllActivatedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
