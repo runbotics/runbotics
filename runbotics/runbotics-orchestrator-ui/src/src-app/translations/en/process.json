@@ -63,6 +63,7 @@
     "Process.MainView.Tooltip.Run.Enabled": "Run this process",
     "Process.MainView.Tooltip.Import": "Import process from rbex file",
     "Process.MainView.Tooltip.Export": "Download this process as rbex file",
+    "Process.MainView.Tooltip.Run.Disabled.ForGuest": "Run limit reached",
     "Process.MainView.Tooltip.Undo": "Undo last change",
     "Process.MainView.Tooltip.Redo": "Redo last change",
     "Process.MainView.Tooltip.Center": "Center modeler view",
