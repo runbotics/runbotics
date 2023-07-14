@@ -2,6 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { IUser } from 'runbotics-common';
 
+import { Page, PageRequestParams } from '#src-app/utils/types/page';
+import URLBuilder from '#src-app/utils/URLBuilder';
+
 export const getAll = createAsyncThunk<IUser[], void>(
     'users/getAll', 
     () =>
@@ -26,4 +29,15 @@ export const partialUpdate = createAsyncThunk(
             .then((response) => response.data)
             .catch((error) => rejectWithValue(error.response.data));
     }
+);
+
+const processPageURL = (params: PageRequestParams) => URLBuilder
+    .url('/api/admin/users/not-activated')
+    .params(params)
+    .build();
+
+export const getByPageAllNotActivated = createAsyncThunk<Page<IUser>, PageRequestParams>(
+    'users/getByPageAllNotActivated',
+    (params) => axios.get<Page<IUser>>(processPageURL(params))
+        .then((response) => response.data),
 );

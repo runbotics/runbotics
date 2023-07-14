@@ -16,6 +16,7 @@ import paletteTranslations from './palette.json';
 import processTranslations from './process';
 import registerTranslations from './register.json';
 import schedulerTranslations from './scheduler.json';
+import usersTranslations from './users.json';
 import variablesTranslations from './variables.json';
 
 const translationResources = {
@@ -37,5 +38,6 @@ const translationResources = {
     ...landingPageTranslations,
     ...blogTranslations,
     ...demoTranslations,
+    ...usersTranslations,
 };
 export default translationResources;
