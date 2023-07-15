@@ -197,9 +197,21 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             })
             .catch((error) => {
                 setStarted(false);
-                const message = error?.message ?? translate('Component.BotProcessRunner.Error');
+                const translationKeyPrefix = 'Component.BotProcessRunner.Error';
+                const guestMessage = 'ServersAreOverloaded';
+                
+                const basicErrorMessage = 
+                    isGuest 
+                        ? translate(`${translationKeyPrefix}.${guestMessage}`) 
+                        : translate(translationKeyPrefix);
 
-                const translationKey = `Component.BotProcessRunner.Error.${capitalizeFirstLetter({ text: message, delimiter: ' ' })}`;
+                const message = error?.message ?? basicErrorMessage;
+                const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+
+                const translationKey = 
+                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected') 
+                        ? `${translationKeyPrefix}.${guestMessage}` 
+                        : `${translationKeyPrefix}.${capitalizeMessage}`;
 
                 checkIfKeyExists(translationKey)
                     ? enqueueSnackbar(
