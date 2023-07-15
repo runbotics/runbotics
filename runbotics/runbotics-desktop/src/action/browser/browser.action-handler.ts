@@ -105,6 +105,10 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
         //
         // let driver = await new Builder().forBrowser('chrome').build();
+        if (!this.session) {
+            throw new Error('The browser is not running');
+        }
+        
         await this.session.get(input.target);
 
         return {};
