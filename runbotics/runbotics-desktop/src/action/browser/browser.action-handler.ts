@@ -104,11 +104,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
         // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
         //
-        // let driver = await new Builder().forBrowser('chrome').build();
-        if (!this.session) {
-            throw new Error('The browser is not running');
-        }
-        
+        // let driver = await new Builder().forBrowser('chrome').build();        
         await this.session.get(input.target);
 
         return {};
@@ -275,37 +271,57 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         return `${fileName}.pdf`;
     }
 
+    private isBrowserOpen() {
+        if (!this.session) {
+            throw new Error('The browser is not running');
+        }
+    }
+
     run(request: BrowserTypes.BrowserActionRequest) {
         switch (request.script) {
             case 'browser.launch':
                 return this.launchBrowser(request.input);
             case 'browser.close':
+                this.isBrowserOpen();
                 return this.closeBrowser();
             case 'browser.selenium.open':
+                this.isBrowserOpen();
                 return this.openSite(request.input);
             case 'browser.selenium.type':
+                this.isBrowserOpen();
                 return this.doType(request.input);
             case 'browser.selenium.click':
+                this.isBrowserOpen();
                 return this.doClick(request.input);
             case 'browser.selenium.wait':
+                this.isBrowserOpen();
                 return this.doWait(request.input);
             case 'browser.selenium.select':
+                this.isBrowserOpen();
                 return this.doSelect(request.input);
             case 'browser.selenium.printToPdf':
+                this.isBrowserOpen();
                 return this.printToPdf(request.input);
             case 'browser.selenium.takeScreenshot':
+                this.isBrowserOpen();
                 return this.takeScreenshot(request.input);
             case 'browser.index':
+                this.isBrowserOpen();
                 return this.doIndex(request.input);
             case 'browser.selenium.elements.count':
+                this.isBrowserOpen();
                 return this.countElements(request.input);
             case 'browser.selenium.element.attribute.change':
+                this.isBrowserOpen();
                 return this.elementAttributeChange(request.input);
             case 'browser.read.attribute':
+                this.isBrowserOpen();
                 return this.readElementAttribute(request.input);
             case 'browser.read.text':
+                this.isBrowserOpen();
                 return this.readElementText(request.input);
             case 'browser.read.input':
+                this.isBrowserOpen();
                 return this.readElementInput(request.input);
             default:
                 throw new Error('Action not found');
