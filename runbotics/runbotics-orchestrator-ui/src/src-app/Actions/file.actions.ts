@@ -66,12 +66,12 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    content: '',
+                    path: null,
+                    content: undefined,
                     separator: '',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -128,11 +128,11 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                     // fileName: "",
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -182,10 +182,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -235,10 +235,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -294,11 +294,11 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    content: '',
+                    path: null,
+                    content: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },

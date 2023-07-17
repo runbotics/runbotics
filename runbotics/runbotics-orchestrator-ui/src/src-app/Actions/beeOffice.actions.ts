@@ -83,17 +83,17 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    employee: '',
-                    activity: '',
+                    employee: null,
+                    activity: null,
                     category: '',
                     specialization: '',
                     localization: '',
-                    date: '',
-                    duration: '',
+                    date: null,
+                    duration: null,
                     description: '',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -147,10 +147,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    email: '',
+                    email: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -202,10 +202,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    id: '',
+                    id: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -263,11 +263,11 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    query: '',
+                    query: null,
                     method: 'Contains',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -327,11 +327,11 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    employee: '',
-                    date: '',
+                    employee: null,
+                    date: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -365,7 +365,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    timeTableActivity: '',
+                    timeTableActivity: null,
                 },
             },
         },
@@ -419,10 +419,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    group: '',
+                    group: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -480,10 +480,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    query: '',
+                    query: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
