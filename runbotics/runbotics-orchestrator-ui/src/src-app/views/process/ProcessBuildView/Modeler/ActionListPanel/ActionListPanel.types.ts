@@ -1,4 +1,3 @@
-import { ACTIONS_GROUPS } from 'runbotics-common';
 
 import { IBpmnAction } from '../../../../../Actions/types';
 import { TemplatesSchema } from '../templates/Template.types';
