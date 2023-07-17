@@ -282,7 +282,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.launch':
                 return this.launchBrowser(request.input);
             case 'browser.close':
-                this.isBrowserOpen();
                 return this.closeBrowser();
             case 'browser.selenium.open':
                 this.isBrowserOpen();
