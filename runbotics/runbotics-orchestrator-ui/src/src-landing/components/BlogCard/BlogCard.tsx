@@ -3,8 +3,6 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useRouter } from 'next/router';
-
 import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -31,7 +29,6 @@ export const cutText = (text: string, length: number) => {
 
 const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
-    const router = useRouter();
 
     return (
         <article className={`${styles.root} ${className}`}>
@@ -43,7 +40,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                             fill
                             alt={post.imageAlt ?? ''}
                             className={styles.img}
-                            sizes='(max-width: 1920px) 20vw'
+                            sizes='(max-width: 1920px) 80vw, 20vw'
                             placeholder='empty'
                         />
                     }
