@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey } from 'runbotics-common';
+import { AllActions, BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -112,7 +112,7 @@ const ActionList: FC<ActionListProps> = ({
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
 
-                                            const itemId = item.id as AllActionIds;
+                                            const itemId = item.id as AllActions;
 
                                             const isActionIncompatible =
                                                 item.system &&
