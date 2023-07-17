@@ -1,4 +1,11 @@
-import { ACTIONS_GROUPS, ApiAction, BrowserAction, GeneralAction, VariableAction } from 'runbotics-common';
+import {
+    ACTIONS_GROUPS,
+    ApiAction,
+    BrowserAction,
+    GeneralAction,
+    VariableAction,
+    AllActions
+} from 'runbotics-common';
 
 import { Filters, GroupProperties } from '../ActionListPanel.types';
 import { Item } from '../ListGroup';
@@ -16,7 +23,7 @@ export const ADVANCED_ACTION_GROUP_IDS = [
     ACTIONS_GROUPS.SHAREPOINT_EXCEL,
     ACTIONS_GROUPS.SHAREPOINT_FILE,
     ACTIONS_GROUPS.APPLICATION,
-];
+] as  ACTIONS_GROUPS[];
 
 export const ADVANCED_ACTION_IDS = [
     VariableAction.ASSIGN_GLOBAL,
@@ -24,8 +31,8 @@ export const ADVANCED_ACTION_IDS = [
     GeneralAction.DELAY,
     BrowserAction.SELENIUM_TAKE_SCREENSHOT,
     BrowserAction.SELENIUM_PRINT_TO_PDF,
-    ApiAction.DOWNLOAD_FILE
-];
+    ApiAction.DOWNLOAD_FILE,
+] as AllActions[];
 
 export interface ActionListProps {
     groups: GroupProperties[];
@@ -34,3 +41,4 @@ export interface ActionListProps {
     handleItemClick: (event: React.MouseEvent<HTMLElement>, item: Item) => void;
     filters: Filters;
 }
+

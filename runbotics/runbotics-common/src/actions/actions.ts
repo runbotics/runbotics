@@ -152,3 +152,24 @@ export enum ACTIONS_GROUPS {
     CLOSE = 'application.close',
   }
 
+  export type AllActions =
+    | VariableAction
+    | GeneralAction
+    | MailAction
+    | BrowserAction
+    | LoopAction
+    | ApiAction
+    | JavascriptAction
+    | AsanaAction
+    | GoogleAction
+    | JiraAction
+    | FileAction
+    | CsvAction
+    | DesktopOfficeAction
+    | SharepointExcelAction
+    | SharepointFileAction
+    | BeeOfficeAction
+    | SapAction
+    | ApplicationAction;
+
+

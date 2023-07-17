@@ -1,3 +1,5 @@
+import { ACTIONS_GROUPS } from 'runbotics-common';
+
 import { IBpmnAction } from '../../../../../Actions/types';
 import { TemplatesSchema } from '../templates/Template.types';
 
@@ -17,7 +19,7 @@ export interface Filters {
 }
 
 export type GroupProperties = {
-    key: string;
+    key: ACTIONS_GROUPS;
     label: string;
     items: IBpmnAction[] | TemplatesSchema[];
     isTemplate: boolean;

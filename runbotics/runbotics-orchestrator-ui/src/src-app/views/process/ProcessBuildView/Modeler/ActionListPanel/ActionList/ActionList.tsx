@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { BotSystem, FeatureKey } from 'runbotics-common';
+import { BotSystem, FeatureKey, ACTIONS_GROUPS, AllActions } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -84,7 +84,6 @@ const ActionList: FC<ActionListProps> = ({
                 {groups.map(({ key, label, items }) => {
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
-                        //@ts-ignore
                         ADVANCED_ACTION_GROUP_IDS.includes(key);
                     return (
                         <Tooltip
@@ -118,12 +117,10 @@ const ActionList: FC<ActionListProps> = ({
                                                 !hasAdvancedActionsAccess &&
                                                 (isGroupDisabled ||
                                                     ADVANCED_ACTION_GROUP_IDS.includes(
-                                                        //@ts-ignore
-                                                        item.id
+                                                        item.id as ACTIONS_GROUPS
                                                     ) ||
                                                     ADVANCED_ACTION_IDS.includes(
-                                                        //@ts-ignore
-                                                        item.id
+                                                        item.id as AllActions
                                                     ));
 
                                             let title = '';
