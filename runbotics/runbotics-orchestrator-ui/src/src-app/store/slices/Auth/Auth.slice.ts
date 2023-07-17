@@ -8,12 +8,12 @@ import * as authThunks from './Auth.thunks';
 interface AuthState {
     isAuthenticated: boolean;
     user: User | null;
-    isInitialised: boolean;
+    isInitialized: boolean;
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
-    isInitialised: false,
+    isInitialized: false,
     user: null,
 };
 

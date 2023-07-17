@@ -99,7 +99,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
 
         // prettier-ignore
         return [
-            ...getGroupList(completeActionsGroups, false), 
+            ...getGroupList(completeActionsGroups, false),
             ...getGroupList(templatesGroups, true)
         ];
         // eslint-disable-next-line react-hooks/exhaustive-deps

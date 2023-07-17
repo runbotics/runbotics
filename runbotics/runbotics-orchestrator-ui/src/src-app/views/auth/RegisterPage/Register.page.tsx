@@ -20,14 +20,15 @@ import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo/Logo';
-
 import useTranslations, {
     checkIfKeyExists,
 } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
-
 import { Language } from '#src-app/translations/translations';
+import { Page as MixpanelPage, TrackLabel, UserType } from '#src-app/utils/Mixpanel/types';
+
+import { mixpanelRecordFailedRegistration, mixpanelRecordSuccessfulRegistration } from '#src-app/utils/Mixpanel/utils';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
 
@@ -100,7 +101,8 @@ const RegisterPage: FC = () => {
 
         await dispatch(register(registerValues))
             .then(unwrapResult)
-            .then(() => {
+            .then((result) => {
+                const userData = JSON.parse(result.config.data);
                 setStatus({ success: true });
                 setSubmitting(false);
                 router.push('/', null, { locale: router.locale });
@@ -108,12 +110,23 @@ const RegisterPage: FC = () => {
                     variant: 'success',
                     autoHideDuration: 5000,
                 });
+
+                if(typeof userData?.email !== 'string') return;
+
+                const userEmail: string = userData?.email as string;
+                mixpanelRecordSuccessfulRegistration({
+                    trackLabel: TrackLabel.SUCCESSFUL_REGISTRATION,
+                    identifyBy: userEmail,
+                    userType: UserType.USER,
+                    page: MixpanelPage.REGISTER,
+                    email: userEmail,
+                });
             })
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
                 const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
-                
+
                 const errorKey = `Register.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
@@ -125,6 +138,14 @@ const RegisterPage: FC = () => {
                         variant: 'error',
                         autoHideDuration: 10000,
                     });
+                    mixpanelRecordFailedRegistration({
+                        trackLabel: TrackLabel.UNSUCCESSFUL_REGISTRATION,
+                        identifyBy: values.email,
+                        userType: UserType.USER,
+                        page: MixpanelPage.REGISTER,
+                        reason: 'unexpected error',
+                    });
+
                     return;
                 }
 
@@ -133,6 +154,14 @@ const RegisterPage: FC = () => {
                 enqueueSnackbar(customErrorMessage, {
                     variant: 'error',
                     autoHideDuration: 10000,
+                });
+
+                mixpanelRecordFailedRegistration({
+                    trackLabel: TrackLabel.UNSUCCESSFUL_REGISTRATION,
+                    identifyBy: values.email,
+                    userType: UserType.USER,
+                    page: MixpanelPage.REGISTER,
+                    reason: customErrorMessage,
                 });
             });
     };
