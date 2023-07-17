@@ -12,18 +12,3 @@
     overflow-x: auto;
     overscroll-behavior-inline: contain;
 }
-
-.snapsInline {
-    scroll-snap-type: inline mandatory;
-    scroll-padding-inline: var(--_spacer);
-}
-  
-.snapsInline > * {
-    scroll-snap-align: start;
-}
-
-@media (hover: none) and (max-width: $breakpoint-sm) {
-    .mediaScroller::-webkit-scrollbar {
-        display: none;
-    }
-}
