@@ -20,6 +20,9 @@ export const ADVANCED_ACTION_IDS = [
     'variables.assignGlobalVariable',
     'general.startProcess',
     'general.delay',
+    'browser.selenium.takeScreenshot',
+    'browser.selenium.printToPdf',
+    'api.downloadFile'
 ];
 
 export interface ActionListProps {
