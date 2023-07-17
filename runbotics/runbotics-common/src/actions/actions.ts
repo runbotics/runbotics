@@ -1,4 +1,4 @@
-export enum ACTIONS_GROUPS {
+export enum ACTION_GROUP {
     VARIABLES = 'variables',
     GENERAL = 'general',
     MAIL = 'mail',
@@ -152,7 +152,7 @@ export enum ACTIONS_GROUPS {
     CLOSE = 'application.close',
   }
 
-  export type AllActions =
+  export type AllActionIds =
     | VariableAction
     | GeneralAction
     | MailAction

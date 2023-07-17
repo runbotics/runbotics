@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { ACTIONS_GROUPS, AllActions, BotSystem, FeatureKey } from 'runbotics-common';
+import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -85,7 +85,7 @@ const ActionList: FC<ActionListProps> = ({
 
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
-                        ADVANCED_ACTION_GROUP_IDS.includes(key as ACTIONS_GROUPS);
+                        ADVANCED_ACTION_GROUP_IDS.includes(key as ACTION_GROUP);
                     return (
                         <Tooltip
                             key={key}
@@ -112,7 +112,7 @@ const ActionList: FC<ActionListProps> = ({
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
 
-                                            const itemId = item.id as AllActions;
+                                            const itemId = item.id as AllActionIds;
 
                                             const isActionIncompatible =
                                                 item.system &&
