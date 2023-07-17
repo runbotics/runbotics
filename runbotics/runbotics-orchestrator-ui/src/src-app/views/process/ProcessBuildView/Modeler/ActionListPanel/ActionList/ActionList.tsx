@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { BotSystem, FeatureKey, ACTIONS_GROUPS, AllActions } from 'runbotics-common';
+import { AllActions, BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -110,18 +110,18 @@ const ActionList: FC<ActionListProps> = ({
                                 >
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
+
+                                            const itemId = item.id as AllActions;
+
                                             const isActionIncompatible =
                                                 item.system &&
                                                 actionSystemCheck(item.system);
                                             const isActionDisabled =
                                                 !hasAdvancedActionsAccess &&
                                                 (isGroupDisabled ||
-                                                    ADVANCED_ACTION_GROUP_IDS.includes(
-                                                        item.id as ACTIONS_GROUPS
-                                                    ) ||
-                                                    ADVANCED_ACTION_IDS.includes(
-                                                        item.id as AllActions
-                                                    ));
+                                                     ADVANCED_ACTION_IDS.includes(
+                                                         itemId
+                                                     ));
 
                                             let title = '';
 
