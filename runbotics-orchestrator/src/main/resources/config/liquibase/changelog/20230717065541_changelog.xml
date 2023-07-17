@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+<changeSet author="pasiecznys"  id="20230717065541">
+    <preConditions onFail="MARK_RAN">
+        <tableExists tableName="authority_feature_key"/>
+    </preConditions>
+    <sql>
+        INSERT INTO authority_feature_key(authority, feature_key) VALUES
+        ('ROLE_GUEST','PROCESS_INSTANCE_TERMINATE')
+        ON CONFLICT DO NOTHING;
+    </sql>
+</changeSet>
+</databaseChangeLog>
