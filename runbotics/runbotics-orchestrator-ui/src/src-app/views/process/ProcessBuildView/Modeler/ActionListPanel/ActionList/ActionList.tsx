@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { AllActions, BotSystem, FeatureKey } from 'runbotics-common';
+import { ACTIONS_GROUPS, AllActions, BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -85,7 +85,7 @@ const ActionList: FC<ActionListProps> = ({
 
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
-                        ADVANCED_ACTION_GROUP_IDS.includes(key as ACTION_GROUP);
+                        ADVANCED_ACTION_GROUP_IDS.includes(key as ACTIONS_GROUPS);
                     return (
                         <Tooltip
                             key={key}
