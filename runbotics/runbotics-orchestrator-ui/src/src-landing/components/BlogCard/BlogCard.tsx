@@ -43,6 +43,8 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                             fill
                             alt={post.imageAlt ?? ''}
                             className={styles.img}
+                            sizes='(max-width: 1920px) 20vw'
+                            placeholder='empty'
                         />
                     }
                     <If condition={checkIsDraft(post.status)}>
