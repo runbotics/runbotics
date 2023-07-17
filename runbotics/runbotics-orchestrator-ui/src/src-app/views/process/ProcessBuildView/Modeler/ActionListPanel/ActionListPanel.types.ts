@@ -19,7 +19,7 @@ export interface Filters {
 }
 
 export type GroupProperties = {
-    key: ACTIONS_GROUPS;
+    key: string;
     label: string;
     items: IBpmnAction[] | TemplatesSchema[];
     isTemplate: boolean;
