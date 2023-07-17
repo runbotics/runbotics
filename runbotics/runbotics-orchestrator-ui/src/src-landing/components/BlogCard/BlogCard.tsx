@@ -65,7 +65,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                         </div>
                         <div>
                             <Typography variant="h4" className={styles.title}>
-                                {post.title}
+                                {cutText(post.title, 65)}
                             </Typography>
                             <Typography variant="body3">
                                 {cutText(post.summary, 130)}
