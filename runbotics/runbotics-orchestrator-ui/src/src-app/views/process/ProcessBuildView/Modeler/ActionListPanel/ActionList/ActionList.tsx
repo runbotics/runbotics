@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { BotSystem, FeatureKey } from 'runbotics-common';
+import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -82,10 +82,10 @@ const ActionList: FC<ActionListProps> = ({
                 }
             >
                 {groups.map(({ key, label, items }) => {
+
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
-                        //@ts-ignore
-                        ADVANCED_ACTION_GROUP_IDS.includes(key);
+                        ADVANCED_ACTION_GROUP_IDS.includes(key as ACTION_GROUP);
                     return (
                         <Tooltip
                             key={key}
@@ -111,19 +111,18 @@ const ActionList: FC<ActionListProps> = ({
                                 >
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
+
+                                            const itemId = item.id as AllActionIds;
+
                                             const isActionIncompatible =
                                                 item.system &&
                                                 actionSystemCheck(item.system);
                                             const isActionDisabled =
-                                                isGroupDisabled ||
-                                                ADVANCED_ACTION_GROUP_IDS.includes(
-                                                    //@ts-ignore
-                                                    item.id
-                                                ) ||
-                                                ADVANCED_ACTION_IDS.includes(
-                                                    //@ts-ignore
-                                                    item.id
-                                                );
+                                                !hasAdvancedActionsAccess &&
+                                                (isGroupDisabled ||
+                                                     ADVANCED_ACTION_IDS.includes(
+                                                         itemId
+                                                     ));
 
                                             let title = '';
 

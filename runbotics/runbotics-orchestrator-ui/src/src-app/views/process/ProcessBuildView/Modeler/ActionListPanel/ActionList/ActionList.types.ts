@@ -1,30 +1,37 @@
-import { ACTIONS_GROUPS, ApiAction, BrowserAction, GeneralAction, VariableAction } from 'runbotics-common';
+import {
+    ACTION_GROUP,
+    ApiAction,
+    BrowserAction,
+    GeneralAction,
+    VariableAction,
+    AllActionIds
+} from 'runbotics-common';
 
 import { Filters, GroupProperties } from '../ActionListPanel.types';
 import { Item } from '../ListGroup';
 import { GroupAction, GroupState } from '../useGroupsReducer';
 
-export const ADVANCED_ACTION_GROUP_IDS = [
-    ACTIONS_GROUPS.SAP,
-    ACTIONS_GROUPS.BEEOFFICE,
-    ACTIONS_GROUPS.JIRA,
-    ACTIONS_GROUPS.ASANA,
-    ACTIONS_GROUPS.MAIL,
-    ACTIONS_GROUPS.LOOP,
-    ACTIONS_GROUPS.GOOGLE,
-    ACTIONS_GROUPS.DESKTOP_OFFICE_ACTIONS,
-    ACTIONS_GROUPS.SHAREPOINT_EXCEL,
-    ACTIONS_GROUPS.SHAREPOINT_FILE,
-    ACTIONS_GROUPS.APPLICATION,
+export const ADVANCED_ACTION_GROUP_IDS: ACTION_GROUP[] = [
+    ACTION_GROUP.SAP,
+    ACTION_GROUP.BEEOFFICE,
+    ACTION_GROUP.JIRA,
+    ACTION_GROUP.ASANA,
+    ACTION_GROUP.MAIL,
+    ACTION_GROUP.LOOP,
+    ACTION_GROUP.GOOGLE,
+    ACTION_GROUP.DESKTOP_OFFICE_ACTIONS,
+    ACTION_GROUP.SHAREPOINT_EXCEL,
+    ACTION_GROUP.SHAREPOINT_FILE,
+    ACTION_GROUP.APPLICATION,
 ];
 
-export const ADVANCED_ACTION_IDS = [
+export const ADVANCED_ACTION_IDS: AllActionIds[] = [
     VariableAction.ASSIGN_GLOBAL,
     GeneralAction.START_PROCESS,
     GeneralAction.DELAY,
     BrowserAction.SELENIUM_TAKE_SCREENSHOT,
     BrowserAction.SELENIUM_PRINT_TO_PDF,
-    ApiAction.DOWNLOAD_FILE
+    ApiAction.DOWNLOAD_FILE,
 ];
 
 export interface ActionListProps {
@@ -34,3 +41,4 @@ export interface ActionListProps {
     handleItemClick: (event: React.MouseEvent<HTMLElement>, item: Item) => void;
     filters: Filters;
 }
+

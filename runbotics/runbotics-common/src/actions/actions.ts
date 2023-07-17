@@ -1,4 +1,4 @@
-export enum ACTIONS_GROUPS {
+export enum ACTION_GROUP {
     VARIABLES = 'variables',
     GENERAL = 'general',
     MAIL = 'mail',
@@ -151,4 +151,25 @@ export enum ACTIONS_GROUPS {
     LAUNCH = 'application.launch',
     CLOSE = 'application.close',
   }
+
+  export type AllActionIds =
+    | VariableAction
+    | GeneralAction
+    | MailAction
+    | BrowserAction
+    | LoopAction
+    | ApiAction
+    | JavascriptAction
+    | AsanaAction
+    | GoogleAction
+    | JiraAction
+    | FileAction
+    | CsvAction
+    | DesktopOfficeAction
+    | SharepointExcelAction
+    | SharepointFileAction
+    | BeeOfficeAction
+    | SapAction
+    | ApplicationAction;
+
 
