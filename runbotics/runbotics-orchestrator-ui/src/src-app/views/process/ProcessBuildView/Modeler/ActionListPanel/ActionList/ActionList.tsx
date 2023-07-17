@@ -84,8 +84,8 @@ const ActionList: FC<ActionListProps> = ({
                 {groups.map(({ key, label, items }) => {
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
+                        //@ts-ignore
                         ADVANCED_ACTION_GROUP_IDS.includes(key);
-
                     return (
                         <Tooltip
                             key={key}
@@ -117,9 +117,11 @@ const ActionList: FC<ActionListProps> = ({
                                             const isActionDisabled =
                                                 isGroupDisabled ||
                                                 ADVANCED_ACTION_GROUP_IDS.includes(
+                                                    //@ts-ignore
                                                     item.id
                                                 ) ||
                                                 ADVANCED_ACTION_IDS.includes(
+                                                    //@ts-ignore
                                                     item.id
                                                 );
 
