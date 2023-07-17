@@ -96,14 +96,14 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    url: undefined,
+                    url: null,
                     method: 'GET',
                     headers: {
                         Authorization: '',
                     },
                 },
                 output: {
-                    variableName: undefined,
+                    variableName: null,
                 },
             },
         },
@@ -155,10 +155,10 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    url: '',
+                    url: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
