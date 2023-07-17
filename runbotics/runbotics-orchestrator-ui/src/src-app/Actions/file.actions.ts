@@ -40,20 +40,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         },
                         required: ['path', 'content'],
                     },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.File.AppendFile.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.AppendFile.Variable'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.File.AppendFile.VariableText',
-                                ),
-                                type: 'string',
-                            },
-                        },
-                        required: ['variableName'],
-                    },
+                    output: {},
                 },
             },
             uiSchema: {
@@ -70,9 +57,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                     content: undefined,
                     separator: '',
                 },
-                output: {
-                    variableName: null,
-                },
+                output: {},
             },
         },
     },
@@ -109,18 +94,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                             // 'fileName',
                         ],
                     },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.File.CreateFile.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.CreateFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.File.CreateFile.VariableText'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['variableName'],
-                    },
+                    output: {},
                 },
             },
             uiSchema: {
@@ -131,9 +105,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                     path: null,
                     // fileName: "",
                 },
-                output: {
-                    variableName: null,
-                },
+                output: {},
             },
         },
     },
@@ -163,18 +135,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         },
                         required: ['path'],
                     },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.File.RemoveFile.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.RemoveFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.File.RemoveFile.VariableText'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['variableName'],
-                    },
+                    output: {},
                 },
             },
             uiSchema: {
@@ -184,9 +145,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 input: {
                     path: null,
                 },
-                output: {
-                    variableName: null,
-                },
+                output: {},
             },
         },
     },
@@ -273,20 +232,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         },
                         required: ['path', 'content'],
                     },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.File.WriteFile.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.WriteFile.Variable'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.File.WriteFile.VariableText',
-                                ),
-                                type: 'string',
-                            },
-                        },
-                        required: ['variableName'],
-                    },
+                    output: {},
                 },
             },
             uiSchema: {
@@ -297,9 +243,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                     path: null,
                     content: null,
                 },
-                output: {
-                    variableName: null,
-                },
+                output: {},
             },
         },
     },
