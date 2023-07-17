@@ -67,7 +67,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             formData: {
                 input: {
                     path: null,
-                    content: null,
+                    content: undefined,
                     separator: '',
                 },
                 output: {
@@ -294,7 +294,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                     content: null,
                 },
                 output: {

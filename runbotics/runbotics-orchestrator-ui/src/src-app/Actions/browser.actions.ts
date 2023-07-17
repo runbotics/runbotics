@@ -483,7 +483,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: '',
+                    target: 'id=',
                     attribute: null,
                 },
                 output: {
@@ -541,7 +541,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: null,
+                    target: 'id=',
                 },
                 output: {
                     variableName: '',
@@ -598,7 +598,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: null,
+                    target: 'id=',
                 },
                 output: {
                     variableName: '',

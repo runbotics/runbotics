@@ -65,7 +65,7 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
                     cc: '',
                     subject: null,
                     attachment: '',
-                    content: '',
+                    content: null,
                 },
             },
         },
