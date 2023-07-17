@@ -6,6 +6,8 @@
 
     "Component.BotProcessRunner.Warning": "Looking for a bot",
     "Component.BotProcessRunner.Error": "All bots are busy",
+    "Component.BotProcessRunner.Error.AllBotsAreDisconnected": "All bots are disconnected",
+    "Component.BotProcessRunner.Error.ServersAreOverloaded": "Our servers are overloaded, please try again later",
     "Component.BotProcessRunner.Error.GuestRunLimitExceeded": "You have reached your daily limit. Create an account or come back tomorrow.",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
