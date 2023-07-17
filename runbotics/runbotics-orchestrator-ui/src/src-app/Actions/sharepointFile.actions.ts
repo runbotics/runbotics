@@ -61,11 +61,11 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    filePath: '',
+                    filePath: null,
                     localPath: '',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 }
             },
         },
@@ -150,14 +150,14 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    siteRelativePath: '',
-                    listName: '',
+                    siteRelativePath: null,
+                    listName: null,
                     folderPath: '',
-                    fileName: '',
+                    fileName: null,
                     localPath: '',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 }
             },
         },
@@ -242,14 +242,14 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    siteRelativePath: undefined,
-                    listName: undefined,
-                    fieldName: undefined,
-                    fieldValue: undefined,
-                    storeDirectory: undefined,
+                    siteRelativePath: null,
+                    listName: null,
+                    fieldName: null,
+                    fieldValue: null,
+                    storeDirectory: null,
                 },
                 output: {
-                    variableName: undefined,
+                    variableName: null,
                 },
             },
         },

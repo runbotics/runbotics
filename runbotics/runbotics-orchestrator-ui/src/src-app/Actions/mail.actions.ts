@@ -61,9 +61,9 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    to: '',
+                    to: null,
                     cc: '',
-                    subject: '',
+                    subject: null,
                     attachment: '',
                     content: '',
                 },

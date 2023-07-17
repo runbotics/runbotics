@@ -73,7 +73,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    delay: undefined,
+                    delay: null,
                     unit: 'Milliseconds',
                 },
             },

@@ -66,12 +66,12 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    content: '',
+                    path: null,
+                    content: null,
                     separator: '',
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -128,11 +128,11 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                     // fileName: "",
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -182,10 +182,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -235,10 +235,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: '',
+                    path: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -295,10 +295,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             formData: {
                 input: {
                     path: '',
-                    content: '',
+                    content: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
