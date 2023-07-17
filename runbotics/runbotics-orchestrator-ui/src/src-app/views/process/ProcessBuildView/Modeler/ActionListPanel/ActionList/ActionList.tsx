@@ -115,15 +115,16 @@ const ActionList: FC<ActionListProps> = ({
                                                 item.system &&
                                                 actionSystemCheck(item.system);
                                             const isActionDisabled =
-                                                isGroupDisabled ||
-                                                ADVANCED_ACTION_GROUP_IDS.includes(
-                                                    //@ts-ignore
-                                                    item.id
-                                                ) ||
-                                                ADVANCED_ACTION_IDS.includes(
-                                                    //@ts-ignore
-                                                    item.id
-                                                );
+                                                !hasAdvancedActionsAccess &&
+                                                (isGroupDisabled ||
+                                                    ADVANCED_ACTION_GROUP_IDS.includes(
+                                                        //@ts-ignore
+                                                        item.id
+                                                    ) ||
+                                                    ADVANCED_ACTION_IDS.includes(
+                                                        //@ts-ignore
+                                                        item.id
+                                                    ));
 
                                             let title = '';
 
