@@ -61,7 +61,7 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
             props.onChange(null);
         } else if (prefix === 'None') {
             props.onChange(value);
-        } else{
+        } else {
             props.onChange(prefix + value);
         }
     };
