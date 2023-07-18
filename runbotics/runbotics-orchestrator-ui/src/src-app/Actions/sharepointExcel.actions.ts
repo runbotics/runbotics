@@ -53,10 +53,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    cell: '',
+                    cell: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -108,10 +108,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    range: '',
+                    range: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -167,11 +167,11 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    content: '',
-                    cell: '',
+                    content: null,
+                    cell: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -229,11 +229,11 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    range: '',
-                    values: '',
+                    range: null,
+                    values: null,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -320,14 +320,14 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    siteRelativePath: '',
-                    listName: '',
-                    filePath: '',
-                    worksheetName: '',
+                    siteRelativePath: null,
+                    listName: null,
+                    filePath: null,
+                    worksheetName: null,
                     persistChanges: true,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -395,12 +395,12 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    filePath: '',
-                    worksheetName: '',
+                    filePath: null,
+                    worksheetName: null,
                     persistChanges: true,
                 },
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },
@@ -443,7 +443,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 output: {
-                    variableName: '',
+                    variableName: null,
                 },
             },
         },

@@ -1,6 +1,7 @@
 @import '#src-landing/scss/main.scss';
 
 $ARROWS_HEIGHT: 176px;
+$BANNER_MIN_HEIGHT: 800px;
 
 
 @mixin gradientBackground($first_breakpoint, $second_breakpoint, $third_breakpoint) {
@@ -12,6 +13,7 @@ $ARROWS_HEIGHT: 176px;
     margin-bottom: -20vh;
     height: 120vh;
     isolation: isolate; 
+    min-height: $BANNER_MIN_HEIGHT;
 }
 
 .heroContent {
@@ -19,6 +21,7 @@ $ARROWS_HEIGHT: 176px;
     align-items: flex-start;
     flex-direction: column;
     justify-content: flex-end;
+    min-height: $BANNER_MIN_HEIGHT;
     height: 100vh;
 }
 
@@ -30,6 +33,7 @@ $ARROWS_HEIGHT: 176px;
     inset: 0;
     margin-right: 0;
     overflow: hidden;
+    min-height: $BANNER_MIN_HEIGHT;
 }
 
 .heroHand {

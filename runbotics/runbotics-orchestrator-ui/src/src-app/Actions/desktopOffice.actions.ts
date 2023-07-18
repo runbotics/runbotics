@@ -44,7 +44,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    filePath: '',
+                    filePath: null,
                 },
                 output: {},
             },
@@ -90,7 +90,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    filePath: '',
+                    filePath: null,
                 },
                 output: {},
             },

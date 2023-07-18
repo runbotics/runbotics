@@ -13,7 +13,7 @@ import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import _ from 'lodash';
 
 import useDebounce from '#src-app/hooks/useDebounce';
-import { translate as t } from '#src-app/hooks/useTranslations';
+import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 
 import { ModelerError, processActions } from '#src-app/store/slices/Process';
@@ -44,7 +44,7 @@ interface FormPropsExtended extends FormProps<any> {
 
 function ErrorListTemplate(props: ErrorListProps) {
     const { errors } = props;
-    const alertMessage = t(
+    const alertMessage = translate(
         'Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList',
         { errors: errors.length }
     );

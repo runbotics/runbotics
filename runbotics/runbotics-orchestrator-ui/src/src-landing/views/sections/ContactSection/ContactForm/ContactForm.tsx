@@ -2,6 +2,7 @@ import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import axios from '#src-app/utils/axios';
+import Typography from '#src-landing/components/Typography';
 
 import styles from './ContactForm.module.scss';
 import {
@@ -20,7 +21,7 @@ export const REQUIRED_FIELDS: (keyof FormState)[] = [
     'email',
     'checkbox',
 ];
-
+// eslint-disable-next-line max-lines-per-function
 const ContactForm: FC = () => {
     const { translate } = useTranslations();
     const [status, setStatus] = useState<Status>();
@@ -89,8 +90,17 @@ const ContactForm: FC = () => {
             });
     };
 
+    const processingDataText = [...Array(7).keys()].map((el) => (
+        <li key={el}>
+            <Typography>
+                {/* @ts-ignore */}
+                {translate(`Landing.Contact.Form.ProcessingData.Point${el + 1}`)}
+            </Typography>
+        </li>
+    ));
+
     const isFormSubmitted = status?.type === FormStatusType.SUCCESS;
-    
+
     return (
         <div className={styles.root}>
             <form
@@ -150,7 +160,6 @@ const ContactForm: FC = () => {
                         )}
                     />
                 </div>
-                <div className={styles.formRow}></div>
                 <div className={styles.submitRow}>
                     <FormCheckbox
                         name="checkbox"
@@ -160,6 +169,9 @@ const ContactForm: FC = () => {
                         disabled={isFormSubmitted}
                         checked={formState.checkbox}
                     />
+                </div>
+                <ol className={formState.checkbox ? styles.processing_data : styles.hidden}>{processingDataText}</ol>
+                <div className={styles.formRow}>
                     <FormButtonGroup status={status} />
                 </div>
             </form>
