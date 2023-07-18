@@ -36,6 +36,37 @@ $FORM-MAX-WIDTH: 800px;
     }
 }
 
+
+@mixin common-styles() {
+    @include font-face-base;
+
+    padding-inline: 10px;
+
+    transition: all 300ms ease-in-out;
+
+    li {
+      margin-top: 5px;
+    }
+  }
+
+.processing_data{
+    @include common-styles;
+
+    height: 100%;
+
+    opacity: 1;
+}
+
+.hidden{
+    @include common-styles;
+
+    height: 0;
+
+    opacity: 0;
+}
+
+
+
 @media (max-width: $breakpoint-sm) {
     .formRow {
         justify-content: center;
