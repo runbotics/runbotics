@@ -2,6 +2,8 @@ import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import axios from '#src-app/utils/axios';
+import Typography from '#src-landing/components/Typography';
+
 
 import styles from './ContactForm.module.scss';
 import {
@@ -89,6 +91,11 @@ const ContactForm: FC = () => {
             });
     };
 
+    const processingData = [...Array(7).keys()].map(el => {
+    return (<li ><Typography>{translate(`Landing.Contact.Form.ProcessingData.${el+1}`)}</Typography></li>)}
+    )
+
+
     const isFormSubmitted = status?.type === FormStatusType.SUCCESS;
     
     return (
@@ -161,6 +168,12 @@ const ContactForm: FC = () => {
                         checked={formState.checkbox}
                     />
                     <FormButtonGroup status={status} />
+                </div>
+                <div className={styles.processing_data}>
+                    <ol start='6'>
+                        {/* @ts-ignore */}
+                        {processingData}
+                    </ol>
                 </div>
             </form>
         </div>
