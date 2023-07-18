@@ -21,7 +21,7 @@ export const REQUIRED_FIELDS: (keyof FormState)[] = [
     'email',
     'checkbox',
 ];
-
+// eslint-disable-next-line max-lines-per-function
 const ContactForm: FC = () => {
     const { translate } = useTranslations();
     const [status, setStatus] = useState<Status>();
@@ -94,7 +94,7 @@ const ContactForm: FC = () => {
         <li key={el}>
             <Typography>
                 {/* @ts-ignore */}
-                {translate(`Landing.Contact.Form.ProcessingData.${el + 1}`)}
+                {translate(`Landing.Contact.Form.ProcessingData.Point${el + 1}`)}
             </Typography>
         </li>
     ));
@@ -170,7 +170,7 @@ const ContactForm: FC = () => {
                         checked={formState.checkbox}
                     />
                 </div>
-                <ol className={formState.checkbox?styles.processing_data:styles.hidden}>{processingDataText}</ol>
+                <ol className={formState.checkbox ? styles.processing_data : styles.hidden}>{processingDataText}</ol>
                 <div className={styles.formRow}>
                     <FormButtonGroup status={status} />
                 </div>
