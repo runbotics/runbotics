@@ -21,7 +21,7 @@ export const REQUIRED_FIELDS: (keyof FormState)[] = [
     'email',
     'checkbox',
 ];
-
+// eslint-disable-next-line max-lines-per-function
 const ContactForm: FC = () => {
     const { translate } = useTranslations();
     const [status, setStatus] = useState<Status>();
@@ -160,7 +160,6 @@ const ContactForm: FC = () => {
                         )}
                     />
                 </div>
-                <div className={styles.formRow}></div>
                 <div className={styles.submitRow}>
                     <FormCheckbox
                         name="checkbox"
@@ -176,8 +175,9 @@ const ContactForm: FC = () => {
                 ) : (
                     ''
                 )}
-
-                <FormButtonGroup status={status} />
+                <div className={styles.formRow}>
+                    <FormButtonGroup status={status} />
+                </div>
             </form>
         </div>
     );
