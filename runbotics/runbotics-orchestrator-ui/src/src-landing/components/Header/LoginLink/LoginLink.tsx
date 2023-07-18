@@ -13,7 +13,7 @@ interface Props {
 
 const LoginLink: VFC<Props> = ({ className }) => {
     const { translate } = useTranslations();
-    
+
     return (
         <Link className={`${styles.link} ${className}`} href={'/login'}>
             <Typography

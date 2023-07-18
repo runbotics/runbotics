@@ -17,8 +17,8 @@ import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { login } from '#src-app/store/slices/Auth/Auth.thunks';
-import { Page, TrackLabel } from '#src-app/utils/Mixpanel/types';
-import { identifyUserType, mixpanelRecordFailedLogin, mixpanelRecordSuccessfulLogin } from '#src-app/utils/Mixpanel/utils';
+import { SOURCE_PAGE, TRACK_LABEL, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
+import { identifyUserType, recordFailedLogin, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 import GuestLoginSection from '#src-app/views/auth/LoginPage/GuestLoginSection';
 import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.styles';
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
@@ -47,6 +47,8 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
+    recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
+
     const handleGuestLogin = () => {
         setGuestSubmitting(true);
         onGuestLogin()
@@ -70,13 +72,12 @@ const LoginPage: FC = () => {
             .then((user) => {
                 setStatus({ success: true });
                 setSubmitting(false);
-                mixpanelRecordSuccessfulLogin({
+                recordSuccessfulAuthentication({
                     identifyBy: user.email,
                     userType: identifyUserType(user.roles),
-                    page: Page.LOGIN,
+                    sourcePage: SOURCE_PAGE.LOGIN,
                     email: user.email,
-                    userName: user.login,
-                    trackLabel: TrackLabel.SUCCESSFUL_LOGIN,
+                    trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
                 });
                 router.push({ pathname: '/app/processes' }, null, {
                     locale: router.locale,
@@ -98,10 +99,10 @@ const LoginPage: FC = () => {
                         variant: 'error',
                         autoHideDuration: 10000,
                     });
-                    mixpanelRecordFailedLogin({
+                    recordFailedLogin({
                         identifyBy: values.email,
-                        trackLabel: TrackLabel.UNSUCCESSFUL_LOGIN,
-                        page: Page.LOGIN,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
                         reason: 'unexpected error',
                     });
                     return;
@@ -110,10 +111,10 @@ const LoginPage: FC = () => {
                 const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
 
-                mixpanelRecordFailedLogin({
+                recordFailedLogin({
                     identifyBy: values.email,
-                    trackLabel: TrackLabel.UNSUCCESSFUL_LOGIN,
-                    page: Page.LOGIN,
+                    trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                    sourcePage: SOURCE_PAGE.LOGIN,
                     reason: customErrorMessage,
                 });
                 enqueueSnackbar(customErrorMessage, {

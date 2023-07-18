@@ -41,8 +41,8 @@ module.exports = {
         domains: ["images.ctfassets.net"]
     },
     // consts declared at: runbotics\runbotics\runbotics-orchestrator-ui\src\src-app\translations\translations.ts
-    i18n:{
-        locales: ['en','pl'],
+    i18n: {
+        locales: ['en', 'pl'],
         defaultLocale: 'en',
         localeDetection: false,
     },
