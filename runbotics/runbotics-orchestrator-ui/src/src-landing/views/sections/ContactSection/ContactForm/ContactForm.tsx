@@ -4,7 +4,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import axios from '#src-app/utils/axios';
 import Typography from '#src-landing/components/Typography';
 
-
 import styles from './ContactForm.module.scss';
 import {
     FormState,
@@ -91,13 +90,17 @@ const ContactForm: FC = () => {
             });
     };
 
-    const processingData = [...Array(7).keys()].map(el => {
-    return (<li ><Typography>{translate(`Landing.Contact.Form.ProcessingData.${el+1}`)}</Typography></li>)}
-    )
-
+    const processingDataText = [...Array(7).keys()].map((el) => (
+        <li key={el}>
+            <Typography>
+                {/* @ts-ignore */}
+                {translate(`Landing.Contact.Form.ProcessingData.${el + 1}`)}
+            </Typography>
+        </li>
+    ));
 
     const isFormSubmitted = status?.type === FormStatusType.SUCCESS;
-    
+
     return (
         <div className={styles.root}>
             <form
@@ -167,14 +170,14 @@ const ContactForm: FC = () => {
                         disabled={isFormSubmitted}
                         checked={formState.checkbox}
                     />
-                    <FormButtonGroup status={status} />
                 </div>
-                <div className={styles.processing_data}>
-                    <ol start='6'>
-                        {/* @ts-ignore */}
-                        {processingData}
-                    </ol>
-                </div>
+                {formState.checkbox ? (
+                    <ol className={styles.processing_data}>{processingDataText}</ol>
+                ) : (
+                    ''
+                )}
+
+                <FormButtonGroup status={status} />
             </form>
         </div>
     );
