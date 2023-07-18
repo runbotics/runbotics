@@ -3,13 +3,9 @@
 $ARROWS_HEIGHT: 176px;
 $BANNER_MIN_HEIGHT: 800px;
 
-
-@mixin gradientBackground($first_breakpoint, $second_breakpoint, $third_breakpoint) {
-    background: transparent linear-gradient(360deg, #FFFEFC $first_breakpoint, #FFE5C0 $second_breakpoint,  #F79D36 $third_breakpoint) 0% 0% no-repeat padding-box;
-}
-
 .root {
-    @include gradientBackground(4vw, 12vw, 35vw);
+    background-color: rgba(255, 254, 252, 1);
+    background-image: linear-gradient(360deg, rgba(255, 254, 252, 1) 0%, rgba(255, 229, 192, 1) 15%, rgba(247, 157, 54, 1) 65%);
     margin-bottom: -20vh;
     height: 120vh;
     isolation: isolate; 
@@ -43,7 +39,7 @@ $BANNER_MIN_HEIGHT: 800px;
     min-width: 600px;
     height: auto;
     right: -5vw;
-    top:26vw;
+    top: 16vw;
 }
 
 .heroRobotHand {
@@ -55,7 +51,6 @@ $BANNER_MIN_HEIGHT: 800px;
     height: auto;
     transform: rotate(6.230rad);
 }
-
 
 .heroFooter {
     position: relative;
@@ -89,15 +84,12 @@ $BANNER_MIN_HEIGHT: 800px;
 
 @media (max-width: 1359px) {
     .root {
-        @include gradientBackground(10vw, 25vw, 70vw);
         margin-bottom: -30vh;
     }
 }
 
-
 @media (max-width: $breakpoint-md) {
     .root {
-        @include gradientBackground(5vw, 20vw, 75vw);
         margin-bottom: -22vh;
     }
     .heroArrows {
@@ -134,7 +126,6 @@ $BANNER_MIN_HEIGHT: 800px;
 
 @media (max-width: $breakpoint-sm) {
     .root {
-        @include gradientBackground(20vw, 50vw, 160vw);
         margin-bottom: -30vw;
     }
 
@@ -164,4 +155,3 @@ $BANNER_MIN_HEIGHT: 800px;
         background-position: center;
     }
 }
-
