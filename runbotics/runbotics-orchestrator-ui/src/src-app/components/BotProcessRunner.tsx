@@ -5,6 +5,7 @@ import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import {
@@ -31,10 +32,10 @@ import {
     processInstanceActions,
     processInstanceSelector,
 } from '#src-app/store/slices/ProcessInstance';
-
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
-
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick, recordProcessRunFail, recordProcessRunSuccess } from '#src-app/utils/Mixpanel/utils';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { isJsonValid } from '#src-app/utils/utils';
 
@@ -104,6 +105,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const { user } = useAuth();
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
     const guestExecutionLimitExceeded = isGuest && executionsCount >= EXECUTION_LIMIT;
+    const { pathname } = useRouter();
 
     const processInstances = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId, processInstance, eventsMap } =
@@ -164,6 +166,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
+        recordItemClick({ itemName: CLICKABLE_ITEM.RUN_BUTTON, sourcePage: identifyPageByUrl(pathname) });
         if (started) return;
         dispatch(processInstanceActions.resetActiveProcessInstanceAndEvents());
         dispatch(processInstanceEventActions.resetAll());
@@ -190,10 +193,11 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                     )
                 );
                 isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
-                
+
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
+                recordProcessRunSuccess({ processName, processId: String(processId), processInstanceId: response?.orchestratorProcessInstanceId });
             })
             .catch((error) => {
                 setStarted(false);
@@ -213,15 +217,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         ? `${translationKeyPrefix}.${guestMessage}` 
                         : `${translationKeyPrefix}.${capitalizeMessage}`;
 
-                checkIfKeyExists(translationKey)
-                    ? enqueueSnackbar(
-                        translate(translationKey),
-                        { variant: 'error' }
-                    ) 
-                    : enqueueSnackbar(
-                        message,
-                        { variant: 'error' }
-                    );
+                const errorMessage = checkIfKeyExists(translationKey) ? translate(translationKey) : message;
+                enqueueSnackbar(
+                    errorMessage,
+                    { variant: 'error' }
+                );
+                recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
             })
             .finally(() => {
                 setSubmitting(false);

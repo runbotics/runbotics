@@ -26,9 +26,9 @@ import useTranslations, {
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 import { Language } from '#src-app/translations/translations';
-import { Page as MixpanelPage, TrackLabel, UserType } from '#src-app/utils/Mixpanel/types';
+import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
 
-import { mixpanelRecordFailedRegistration, mixpanelRecordSuccessfulRegistration } from '#src-app/utils/Mixpanel/utils';
+import { recordFailedRegistration, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
 
@@ -90,6 +90,7 @@ const RegisterPage: FC = () => {
         values: RegisterFormState,
         { setErrors, setStatus, setSubmitting }
     ) => {
+        recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
         if (!window.navigator.onLine) {
             setStatus({ success: false });
             setSubmitting(false);
@@ -114,11 +115,11 @@ const RegisterPage: FC = () => {
                 if(typeof userData?.email !== 'string') return;
 
                 const userEmail: string = userData?.email as string;
-                mixpanelRecordSuccessfulRegistration({
-                    trackLabel: TrackLabel.SUCCESSFUL_REGISTRATION,
+                recordSuccessfulAuthentication({
+                    trackLabel: TRACK_LABEL.SUCCESSFUL_REGISTRATION,
                     identifyBy: userEmail,
-                    userType: UserType.USER,
-                    page: MixpanelPage.REGISTER,
+                    userType: USER_TYPE.USER,
+                    sourcePage: SOURCE_PAGE.REGISTER,
                     email: userEmail,
                 });
             })
@@ -138,11 +139,11 @@ const RegisterPage: FC = () => {
                         variant: 'error',
                         autoHideDuration: 10000,
                     });
-                    mixpanelRecordFailedRegistration({
-                        trackLabel: TrackLabel.UNSUCCESSFUL_REGISTRATION,
+                    recordFailedRegistration({
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_REGISTRATION,
                         identifyBy: values.email,
-                        userType: UserType.USER,
-                        page: MixpanelPage.REGISTER,
+                        userType: USER_TYPE.USER,
+                        sourcePage: SOURCE_PAGE.REGISTER,
                         reason: 'unexpected error',
                     });
 
@@ -156,11 +157,11 @@ const RegisterPage: FC = () => {
                     autoHideDuration: 10000,
                 });
 
-                mixpanelRecordFailedRegistration({
-                    trackLabel: TrackLabel.UNSUCCESSFUL_REGISTRATION,
+                recordFailedRegistration({
+                    trackLabel: TRACK_LABEL.UNSUCCESSFUL_REGISTRATION,
                     identifyBy: values.email,
-                    userType: UserType.USER,
-                    page: MixpanelPage.REGISTER,
+                    userType: USER_TYPE.USER,
+                    sourcePage: SOURCE_PAGE.REGISTER,
                     reason: customErrorMessage,
                 });
             });

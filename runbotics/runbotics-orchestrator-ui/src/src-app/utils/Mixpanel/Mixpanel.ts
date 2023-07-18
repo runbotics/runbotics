@@ -1,22 +1,25 @@
 import mixpanel from 'mixpanel-browser';
-mixpanel.init('d55b45fc7f313edf0d13fc66c6ca0e96');
 
-// const isInProduction = process.env.NODE_ENV === 'production';
-const isInProduction = true;
+// const isInProduction = true;
+const isInProduction = process.env.NODE_ENV === 'production';
+const token = process.env.NEXT_PUBLIC_MIXPANEL_ANALYTICS_TOKEN;
+const isAnalyticsEnabled = token && isInProduction;
+
+if(token) mixpanel.init(token);
 
 const actions = {
     identify: (id) => {
-        if (isInProduction) mixpanel.identify(id);
+        if (isAnalyticsEnabled) mixpanel.identify(id);
     },
     alias: (id) => {
-        if (isInProduction) mixpanel.alias(id);
+        if (isAnalyticsEnabled) mixpanel.alias(id);
     },
     track: (name, props) => {
-        if (isInProduction) mixpanel.track(name, props);
+        if (isAnalyticsEnabled) mixpanel.track(name, props);
     },
     people: {
         set: (props) => {
-            if (isInProduction) mixpanel.people.set(props);
+            if (isAnalyticsEnabled) mixpanel.people.set(props);
         },
     },
 };

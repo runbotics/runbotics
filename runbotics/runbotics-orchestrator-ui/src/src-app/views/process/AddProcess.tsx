@@ -71,7 +71,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         setInputErrorType(null);
         onClose();
     };
-    
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
@@ -92,7 +92,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         } catch (error) {
             const message = error?.message ?? translate('Process.Add.Form.Error.General');
             const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
-            checkIfKeyExists(translationKey) 
+            checkIfKeyExists(translationKey)
                 ? enqueueSnackbar(
                     translate(translationKey), {
                         variant: 'error'
@@ -148,7 +148,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
                 </DialogActions>
             </form>
         </Dialog>
-     
+
     );
 };
 
