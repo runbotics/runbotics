@@ -183,7 +183,13 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 dispatch(processActions.setImported(false));
                 recordProcessSaveSuccess({ processName: String(process.id), processId: process.name });
             } catch (err) {
-                recordProcessSaveFail({ processName: process.name, processId: String(process.id), reason: err.message ? err.message : ERROR_REASON.UNKNOWN });
+                recordProcessSaveFail({
+                    processName: process.name,
+                    processId: String(process.id),
+                    reason: err.message
+                        ? err.message
+                        : ERROR_REASON.UNKNOWN
+                });
             }
         };
 

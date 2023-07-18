@@ -114,7 +114,7 @@ const RegisterPage: FC = () => {
 
                 if(typeof userData?.email !== 'string') return;
 
-                const userEmail: string = userData?.email as string;
+                const userEmail = userData?.email as string;
                 recordSuccessfulAuthentication({
                     trackLabel: TRACK_LABEL.SUCCESSFUL_REGISTRATION,
                     identifyBy: userEmail,

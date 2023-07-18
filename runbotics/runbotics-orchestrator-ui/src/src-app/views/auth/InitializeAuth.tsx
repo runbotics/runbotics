@@ -7,7 +7,7 @@ import BlankPage from '#src-app/utils/BlankPage';
 
 const InitializeAuth = ({ children }) => {
     const dispatch = useDispatch();
-    const { isInitialized: isInitialized } = useAuth();
+    const { isInitialized } = useAuth();
 
     useEffect(() => {
         dispatch(initialize());

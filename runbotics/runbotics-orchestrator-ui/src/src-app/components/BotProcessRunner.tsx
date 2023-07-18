@@ -197,27 +197,33 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
-                recordProcessRunSuccess({ processName, processId: String(processId), processInstanceId: response?.orchestratorProcessInstanceId });
+                recordProcessRunSuccess({
+                    processName,
+                    processId: String(processId),
+                    processInstanceId: response?.orchestratorProcessInstanceId
+                });
             })
             .catch((error) => {
                 setStarted(false);
                 const translationKeyPrefix = 'Component.BotProcessRunner.Error';
                 const guestMessage = 'ServersAreOverloaded';
-                
-                const basicErrorMessage = 
-                    isGuest 
-                        ? translate(`${translationKeyPrefix}.${guestMessage}`) 
+
+                const basicErrorMessage =
+                    isGuest
+                        ? translate(`${translationKeyPrefix}.${guestMessage}`)
                         : translate(translationKeyPrefix);
 
                 const message = error?.message ?? basicErrorMessage;
                 const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
 
-                const translationKey = 
-                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected') 
-                        ? `${translationKeyPrefix}.${guestMessage}` 
+                const translationKey =
+                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
+                        ? `${translationKeyPrefix}.${guestMessage}`
                         : `${translationKeyPrefix}.${capitalizeMessage}`;
 
-                const errorMessage = checkIfKeyExists(translationKey) ? translate(translationKey) : message;
+                const errorMessage = checkIfKeyExists(translationKey)
+                    ? translate(translationKey)
+                    : message;
                 enqueueSnackbar(
                     errorMessage,
                     { variant: 'error' }
