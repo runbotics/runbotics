@@ -2,10 +2,13 @@ import React, { FC } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
@@ -29,10 +32,21 @@ export const cutText = (text: string, length: number) => {
 
 const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
+    const { pathname } = useRouter();
 
     return (
         <article className={`${styles.root} ${className}`}>
-            <Link className={styles.link}  href={`/blog/post/${post.slug}`}>
+            <Link
+                className={styles.link}
+                onClick={() => recordItemClick({
+                    sourcePage: identifyPageByUrl(pathname),
+                    itemName: CLICKABLE_ITEM.BLOG_POST,
+                    extraProperties: {
+                        title: post.slug,
+                        readingTime: post.readingTime,
+                    }
+                })}
+                href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     {post.featuredImage?.url &&
                         <Image

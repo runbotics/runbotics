@@ -1,6 +1,9 @@
 import type { VFC } from 'react';
 
+
 import { BlogPost } from '#contentful/common';
+import { ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
+import { recordPageEntrance } from '#src-app/utils/Mixpanel/utils';
 import Layout from '#src-landing/components/Layout';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import BlogSection from '#src-landing/views/sections/BlogSection';
@@ -16,19 +19,22 @@ interface Props {
     blogPosts: BlogPost[];
 }
 
-const MainView: VFC<Props> = ({ blogPosts }) => (
-    <Layout>
-        <HeroSection />
-        <BenefitsSection />
-        <RPASection />
-        <ProsSection />
-        <OpenSourceSection />
-        {/* <TemplatesSection /> */}
-        <IntegrationSection />
-        <PartnerSection />
-        <BlogSection posts={blogPosts} />
-        <ContactSection />
-    </Layout>
-);
+const MainView: VFC<Props> = ({ blogPosts }) => {
+    recordPageEntrance({ enteredPage: ENTERED_PAGE.LANDING });
+
+    return (
+        <Layout>
+            <HeroSection />
+            <BenefitsSection />
+            <RPASection />
+            <ProsSection />
+            <OpenSourceSection />
+            {/* <TemplatesSection /> */}
+            <IntegrationSection />
+            <PartnerSection />
+            <BlogSection posts={blogPosts} />
+            <ContactSection />
+        </Layout> );
+};
 
 export default MainView;

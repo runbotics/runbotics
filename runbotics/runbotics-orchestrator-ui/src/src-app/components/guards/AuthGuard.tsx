@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
 
-import { useDispatch, useSelector } from '#src-app/store';
+import { useSelector } from '#src-app/store';
 import { processSelector } from '#src-app/store/slices/Process';
 
 import useAuth from '../../hooks/useAuth';
@@ -11,21 +11,19 @@ import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
 
 const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
-const homeAppViewRegex = /\/app\/processes$/;
 
 // eslint-disable-next-line react/display-name
 export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
-    const { isAuthenticated: isAuthed, isInitialised, user } = useAuth();
-    const dispatch = useDispatch();
+    const { isAuthenticated: isAuthed, isInitialized, user } = useAuth();
     const { draft } = useSelector(processSelector);
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
-    const isAuthenticated = isInitialised && isBrowser && isAuthed;
+    const isAuthenticated = isInitialized && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
         router.replace('/');
     }
-    
+
     if (isAuthenticated) {
         if (user.roles.includes(Role.ROLE_GUEST) && !buildViewRegex.test(router.asPath)) {
             if (draft.process?.id) {
@@ -35,7 +33,7 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
         }
 
         if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
-            return <Component {...props} />; 
+            return <Component {...props} />;
         }
 
         router.replace('/404');

@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.7.0-SNAPSHOT.64",
+    "version": "2.7.0-SNAPSHOT.65",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -111,7 +111,8 @@
         "@next/react-refresh-utils": "~13.0.0",
         "@mui/x-date-pickers": "~5.0.7",
         "sharp": "~0.31.2",
-        "ajv": "^6.12.4"
+        "ajv": "^6.12.4",
+        "mixpanel-browser": "^2.47.0"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",

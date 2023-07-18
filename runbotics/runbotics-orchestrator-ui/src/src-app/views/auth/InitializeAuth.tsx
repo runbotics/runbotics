@@ -7,14 +7,14 @@ import BlankPage from '#src-app/utils/BlankPage';
 
 const InitializeAuth = ({ children }) => {
     const dispatch = useDispatch();
-    const { isInitialised } = useAuth();
+    const { isInitialized } = useAuth();
 
     useEffect(() => {
         dispatch(initialize());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (!isInitialised) return <BlankPage />;
+    if (!isInitialized) return <BlankPage />;
 
     return children;
 };

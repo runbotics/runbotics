@@ -35,10 +35,10 @@ const buildAuthExtraReducers = (builder: ActionReducerMapBuilder<AuthState>) => 
         .addCase(initialize.fulfilled, (state, { payload }) => {
             state.isAuthenticated = payload.isAuthenticated;
             state.user = payload.user;
-            state.isInitialised = true;
+            state.isInitialized = true;
         })
         .addCase(initialize.rejected, (state) => {
-            state.isInitialised = false;
+            state.isInitialized = false;
             state.isAuthenticated = false;
             state.user = null;
         });

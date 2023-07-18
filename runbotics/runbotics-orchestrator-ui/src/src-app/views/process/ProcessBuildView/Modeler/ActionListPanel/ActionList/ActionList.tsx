@@ -82,7 +82,6 @@ const ActionList: FC<ActionListProps> = ({
                 }
             >
                 {groups.map(({ key, label, items }) => {
-
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
                         ADVANCED_ACTION_GROUP_IDS.includes(key as ACTION_GROUP);
@@ -111,7 +110,6 @@ const ActionList: FC<ActionListProps> = ({
                                 >
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
-
                                             const itemId = item.id as AllActionIds;
 
                                             const isActionIncompatible =

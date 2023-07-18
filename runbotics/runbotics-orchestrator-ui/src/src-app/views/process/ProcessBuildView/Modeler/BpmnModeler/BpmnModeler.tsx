@@ -5,15 +5,14 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import i18n from 'i18next';
+import { useRouter } from 'next/router';
 import Hotkeys from 'react-hot-keys';
+
 import 'react-resizable/css/styles.css';
-
 import InfoPanel from '#src-app/components/InfoPanel';
-
 import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
-
 import useModelerListener, {
     isModelerSync,
 } from '#src-app/hooks/useModelerListener';
@@ -22,13 +21,13 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
-
 import {
     CommandStackInfo,
     processActions,
 } from '#src-app/store/slices/Process';
-
 import { ProcessBuildTab } from '#src-app/types/sidebar';
+import { CLICKABLE_ITEM, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick, recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
 
 import {
     centerCanvas,
@@ -46,15 +45,13 @@ import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import ActionFormPanel from '../ActionFormPanel';
 import ActionListPanel from '../ActionListPanel';
 import emptyBpmn from '../extensions/config/empty.bpmn';
-
 import { getBpmnModelerConfig } from './BpmnModeler.config';
-
-
 
 const initialCommandStackInfo: CommandStackInfo = {
     commandStackIdx: -1,
     commandStackSize: 0,
 };
+
 
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     // eslint-disable-next-line max-lines-per-function
@@ -70,6 +67,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const { modelerListener, validateUnknownElement } = useModelerListener({
             setCurrentTab,
         });
+        const { pathname } = useRouter();
 
         const {
             isSaveDisabled,
@@ -177,10 +175,22 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [modeler, offsetTop]);
 
         const handleSave = () => {
+            recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
             if (isSaveDisabled) return;
-            onSave();
-            dispatch(processActions.setCommandStack(initialCommandStackInfo));
-            dispatch(processActions.setImported(false));
+            try {
+                onSave();
+                dispatch(processActions.setCommandStack(initialCommandStackInfo));
+                dispatch(processActions.setImported(false));
+                recordProcessSaveSuccess({ processName: String(process.id), processId: process.name });
+            } catch (err) {
+                recordProcessSaveFail({
+                    processName: process.name,
+                    processId: String(process.id),
+                    reason: err.message
+                        ? err.message
+                        : ERROR_REASON.UNKNOWN
+                });
+            }
         };
 
         const onCenter = () => {

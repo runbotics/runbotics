@@ -56,7 +56,7 @@ export const Index = () => {
         const handler = setTimeout(() => {
             setLive({
                 id: uuidv4(),
-                definition: JSON.parse(draft.form) 
+                definition: JSON.parse(draft.form)
             });
             setLoading(false);
         }, 1000);
@@ -111,15 +111,15 @@ export const Index = () => {
                     <Grid container>
                         <Grid item xs={8}>
                             <form onSubmit={handleSubmit}>
-                                <TextField fullWidth label={translate('Action.Details.Script')} 
+                                <TextField fullWidth label={translate('Action.Details.Script')}
                                     name="script"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0`}} 
+                                    sx={{margin: (theme) => `${theme.spacing(1)} 0`}}
                                     value={draft.script}
                                     onChange={handleChange}
                                 />
-                                <TextField fullWidth label={translate('Action.Details.Label')} 
+                                <TextField fullWidth label={translate('Action.Details.Label')}
                                     name="label"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0 ${theme.spacing(2)} 0`}} 
+                                    sx={{margin: (theme) => `${theme.spacing(1)} 0 ${theme.spacing(2)} 0`}}
                                     value={draft.label}
                                     onChange={handleChange}
 

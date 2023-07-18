@@ -3,6 +3,7 @@ import React, { useRef, useState, FC } from 'react';
 import { Avatar, Box, Button, Hidden, Menu, MenuItem, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Role } from 'runbotics-common';
 import styled from 'styled-components';
@@ -13,6 +14,8 @@ import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
 
 
 const PREFIX = 'Account';
@@ -57,6 +60,7 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const { pathname } = useRouter();
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -67,6 +71,7 @@ const Account: FC = () => {
     };
 
     const handleLogout = async () => {
+        recordItemClick({ sourcePage: identifyPageByUrl(pathname), itemName: CLICKABLE_ITEM.LOGOUT_BUTTON });
         try {
             handleClose();
             await dispatch(logout());

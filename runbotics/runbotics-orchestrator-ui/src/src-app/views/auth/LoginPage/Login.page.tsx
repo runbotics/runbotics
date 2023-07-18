@@ -15,15 +15,16 @@ import { useSnackbar } from 'notistack';
 
 import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-
 import { useDispatch } from '#src-app/store';
 import { login } from '#src-app/store/slices/Auth/Auth.thunks';
-
+import { SOURCE_PAGE, TRACK_LABEL, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
+import { identifyUserType, recordFailedLogin, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 import GuestLoginSection from '#src-app/views/auth/LoginPage/GuestLoginSection';
 import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.styles';
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
 import useLoginValidationSchema from '#src-app/views/auth/LoginPage/useLoginValidationSchema';
 import UserLoginSection from '#src-app/views/auth/LoginPage/UserLoginSection';
+
 
 export interface LoginFormState {
     email: string;
@@ -46,6 +47,7 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
+    recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
 
     const handleGuestLogin = () => {
         setGuestSubmitting(true);
@@ -67,9 +69,16 @@ const LoginPage: FC = () => {
         }
         await dispatch(login(values))
             .then(unwrapResult)
-            .then(() => {
+            .then((user) => {
                 setStatus({ success: true });
                 setSubmitting(false);
+                recordSuccessfulAuthentication({
+                    identifyBy: user.email,
+                    userType: identifyUserType(user.roles),
+                    sourcePage: SOURCE_PAGE.LOGIN,
+                    email: user.email,
+                    trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
+                });
                 router.push({ pathname: '/app/processes' }, null, {
                     locale: router.locale,
                 });
@@ -90,12 +99,24 @@ const LoginPage: FC = () => {
                         variant: 'error',
                         autoHideDuration: 10000,
                     });
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: 'unexpected error',
+                    });
                     return;
                 }
 
                 const customErrorMessage = `${translate(errorKey)}`;
                 setErrors({ submit: customErrorMessage });
 
+                recordFailedLogin({
+                    identifyBy: values.email,
+                    trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                    sourcePage: SOURCE_PAGE.LOGIN,
+                    reason: customErrorMessage,
+                });
                 enqueueSnackbar(customErrorMessage, {
                     variant: 'error',
                     autoHideDuration: 10000,
@@ -113,8 +134,8 @@ const LoginPage: FC = () => {
                         </RouterLink>
                     </Box>
                     <Box mb={5} display={isScreenSM ? 'block' : 'flex'}>
-                        <UserLoginSection 
-                            initialValues={initialValues} 
+                        <UserLoginSection
+                            initialValues={initialValues}
                             loginValidationSchema={loginValidationSchema}
                             handleFormSubmit={handleFormSubmit}
                         />
