@@ -1,4 +1,4 @@
-import { ITriggerEvent } from 'runbotics-common';
+import { ITriggerData, ITriggerEvent } from 'runbotics-common';
 
 export interface StartProcessMessageBody {
     orchestratorProcessInstanceId: string;
@@ -6,5 +6,5 @@ export interface StartProcessMessageBody {
     input: any;
     userId?: number;
     trigger: ITriggerEvent;
-    triggerData?: unknown;
+    triggerData?: ITriggerData;
 }
