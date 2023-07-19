@@ -1,9 +1,10 @@
 import mixpanel from 'mixpanel-browser';
+import getConfig from 'next/config';
 
-// const isInProduction = true;
-const isInProduction = process.env.NODE_ENV === 'production';
-const token = process.env.NEXT_PUBLIC_MIXPANEL_ANALYTICS_TOKEN;
-const isAnalyticsEnabled = token && isInProduction;
+const { publicRuntimeConfig } = getConfig();
+const isProduction = process.env.NODE_ENV === 'production';
+const token = publicRuntimeConfig.mixpanelAnalyticsToken;
+const isAnalyticsEnabled = token && isProduction;
 
 if(token) mixpanel.init(token);
 
