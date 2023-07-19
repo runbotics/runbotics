@@ -58,7 +58,7 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
 
     const onChangeWrapper = (prefix: string, value: string) => {
         if (!prefix || !value) {
-            props.onChange(null);
+            props.onChange(undefined);
         } else if (prefix === 'None') {
             props.onChange(value);
         } else {

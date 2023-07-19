@@ -208,7 +208,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: 'xpath=',
                 },
                 output: {
-                    variableName: null,
+                    variableName: undefined,
                 },
             },
         },
@@ -260,7 +260,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'id=',
-                    attribute: null,
+                    attribute: undefined,
                     newValue: '',
                 },
             },
@@ -307,7 +307,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'id=',
-                    value: null,
+                    value: undefined,
                     clear: false,
                 },
             },
@@ -484,7 +484,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'id=',
-                    attribute: null,
+                    attribute: undefined,
                 },
                 output: {
                     variableName: '',

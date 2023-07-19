@@ -88,7 +88,7 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    collection: null,
+                    collection: undefined,
                     elementVariable: undefined,
                     iterations: '1',
                 },
