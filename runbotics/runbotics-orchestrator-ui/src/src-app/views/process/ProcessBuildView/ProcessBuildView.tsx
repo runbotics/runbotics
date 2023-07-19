@@ -22,6 +22,8 @@ import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
 
+import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
+
 import BpmnModeler, {
     AdditionalInfo,
     ModelerImperativeHandle,
@@ -88,10 +90,17 @@ const ProcessBuildView: FC = () => {
                 variant: 'success',
                 autoHideDuration: SNACKBAR_DURATION,
             });
+            recordProcessSaveSuccess({ processName: process.name, processId: String(process.id) });
+
         } catch (error) {
             enqueueSnackbar(translate('Process.MainView.Toast.Save.Failed'), {
                 variant: 'error',
                 autoHideDuration: SNACKBAR_DURATION,
+            });
+            recordProcessSaveFail({
+                processName: process.name,
+                processId: String(process.id),
+                reason: translate('Process.MainView.Toast.Save.Failed')
             });
         }
     };

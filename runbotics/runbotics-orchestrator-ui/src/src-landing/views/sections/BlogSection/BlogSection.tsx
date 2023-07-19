@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import { useEffect, type VFC } from 'react';
 
 import { BlogPost } from '#contentful/common';
 import If from '#src-app/components/utils/If';
@@ -18,8 +18,10 @@ interface Props {
 }
 
 const BlogSection: VFC<Props> = ({ posts }) => {
-    recordPageEntrance({ enteredPage: ENTERED_PAGE.BLOG });
     const { translate } = useTranslations();
+    useEffect(() => {
+        recordPageEntrance({ enteredPage: ENTERED_PAGE.BLOG });
+    },  []);
 
     return (
         <section

@@ -96,5 +96,7 @@ export enum CLICKABLE_ITEM {
 }
 
 export enum ERROR_REASON {
+    UNEXPECTED_ERROR = 'unexpected error',
     UNKNOWN = 'unknown',
+    LIMIT_EXCEEDED = 'limit exceeded',
 }

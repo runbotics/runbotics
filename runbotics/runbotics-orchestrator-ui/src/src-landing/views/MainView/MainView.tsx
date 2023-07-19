@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import { useEffect, type VFC } from 'react';
 
 
 import { BlogPost } from '#contentful/common';
@@ -20,7 +20,9 @@ interface Props {
 }
 
 const MainView: VFC<Props> = ({ blogPosts }) => {
-    recordPageEntrance({ enteredPage: ENTERED_PAGE.LANDING });
+    useEffect(() => {
+        recordPageEntrance({ enteredPage: ENTERED_PAGE.LANDING });
+    },  []);
 
     return (
         <Layout>

@@ -11,6 +11,8 @@ import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE } from '#src-app/utils/Mixpanel/typ
 import { recordFailedLogin, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
+import { ERROR_REASON } from '../../../utils/Mixpanel/types';
+
 const useGuestLogin = () => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -42,7 +44,7 @@ const useGuestLogin = () => {
                     trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                     sourcePage: SOURCE_PAGE.LOGIN,
                     userType: USER_TYPE.GUEST,
-                    reason: 'limit exceeded',
+                    reason: ERROR_REASON.LIMIT_EXCEEDED,
                 });
             } else {
                 enqueueSnackbar(translate('Login.Guest.UnexpectedError'), {
@@ -52,7 +54,7 @@ const useGuestLogin = () => {
                     trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                     sourcePage: SOURCE_PAGE.LOGIN,
                     userType: USER_TYPE.GUEST,
-                    reason: 'unexpected error',
+                    reason: ERROR_REASON.UNEXPECTED_ERROR,
                 });
             }
             return Promise.reject();
