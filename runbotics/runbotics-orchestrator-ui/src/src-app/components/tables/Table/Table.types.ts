@@ -4,6 +4,9 @@ import { SxProps, Theme } from '@mui/system';
 import { Column as ReactTableColumn, Row } from 'react-table';
 import { FeatureKey } from 'runbotics-common';
 
+import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
+
+
 export interface DataTableFooterProps {
     pageCount: number;
     pageSize: number;
@@ -24,13 +27,14 @@ export interface DataTableProps<T extends object> {
     page?: number;
     loading?: boolean;
     subRowProperty?: string;
-    renderSubRow?: (row: Row<T>) => ReactNode;
+    renderSubRow?: (row: Row<T> | ProcessInstanceRow) => ReactNode;
     singleSelect?: boolean;
     autoHeight?: boolean;
 }
 
 export interface TableRowExpanderProps {
     row: Row;
+    handleClick?: (row: ProcessInstanceRow) => void;
 }
 
 export type Column<D extends object = {}> = ReactTableColumn<D> & {

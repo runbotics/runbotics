@@ -1,6 +1,6 @@
 {
     "Register.Meta.Title": "Register",
-    "Register.AccountCreated.ActivationNeededMessage": "Account has beeen created. Administrator's activation is required.",
+    "Register.AccountCreated.ActivationNeededMessage": "Account has been created. Administrator's activation is required.",
     "Register.SignUp": "Sign up",
     "Register.Form.Validation.Email.Valid": "Must be a valid email",
     "Register.Form.Validation.Email.Required": "Email is required",
@@ -12,5 +12,10 @@
     "Register.Form.Fields.Password.Label": "Password",
     "Register.Form.Fields.PasswordConfirmation.Label": "Repeat password",
     "Register.Form.Actions.Register": "Register",
-    "Register.SwitchToLoginMessage": "I already have an account"
+    "Register.SwitchToLoginMessage": "I already have an account",
+    "Register.Error.NoInternet": "No internet connection",
+    "Register.Error.4xx": "Incorrect data or the e-mail already taken",
+    "Register.Error.500": "A problem with server has occurred. Please try again later and if the problem persist - contact us via contact form on the main page",
+    "Register.Error.503": "The requested service is not available",
+    "Register.Error.UnexpectedError": "Unhandled error has occurred. Contact us via contact form on the main page"
 }

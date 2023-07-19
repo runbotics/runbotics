@@ -18,6 +18,7 @@ $BADGE-LEFT: 20px;
 $DRAFT-BADGE-TOP: calc($IMG-MAX-HEIGHT - 120px);
 $BADGE-GAP: 15px;
 $BADGES-BORDER-RADIUS: 25px;
+$CONTENT-MIN-HEIGHT: 245px;
 $CARD-HOVER-TRANSLATE-Y: -3px;
 $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
@@ -86,12 +87,14 @@ $FONT-COLOR: #000;
     flex-direction: column;
     padding: $CONTENT-PADDING;
     gap: 10px;
+    min-height: calc(100% - $IMG-MAX-HEIGHT);
 }
 
 .readMore {
     display: flex;
     justify-content: flex-end;
 
+    margin-top: auto;
     width: 100%;
     color: $READ-MORE-COLOR;
 

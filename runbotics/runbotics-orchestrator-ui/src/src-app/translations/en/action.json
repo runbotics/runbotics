@@ -8,6 +8,7 @@
     "Action.List.Results.Label": "label",
     "Action.List.Results.Script": "script",
     "Action.List.Results.Actions": "Actions",
+    "Action.List.Item.Disabled.Tooltip": "Runs on bots with {{ system }} system only",
     
     "Action.Details.Script": "Script",
     "Action.Details.Label": "Label",

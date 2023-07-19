@@ -14,12 +14,12 @@ import {
 } from '@mui/material';
 import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import If from '../../utils/If';
+import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
 import DataTableFooter from './Table.footer';
-import { DataTableRow, DataTableWrapper } from './Table.styles';
+import { DataTableRow, DataTableWrapper, LoadingRow } from './Table.styles';
 import { DataTableProps } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
 
@@ -116,23 +116,34 @@ const Table = <T extends object>({
         }, 0);
     };
 
+    const rowLoader = (
+        <TableRow>
+            <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
+                <LoadingRow /> 
+            </TableCell>
+        </TableRow>
+    );
+
     const renderTableRows = () => {
-        const dataRows = rows.slice(0, countExpandedRows()).map((row) => {
-            prepareRow(row);
-            const rowKey = row.getRowProps().key;
-            return (
-                <React.Fragment key={rowKey}>
-                    <DataTableRow
-                        isClickable={Boolean(onRowClick)}
-                        isRowSelected={row.isSelected}
-                        isSubRoww={row.depth > 0}
-                    >
-                        {renderCells(row)}
-                    </DataTableRow>
-                    {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
-                </React.Fragment>
-            );
-        });
+        const dataRows = rows
+            .slice(0, countExpandedRows())
+            .map((row: Row<T>) => {
+                prepareRow(row);
+                const rowKey = row.getRowProps().key;
+                return (
+                    <React.Fragment key={rowKey}>
+                        <DataTableRow
+                            isClickable={Boolean(onRowClick)}
+                            isRowSelected={row.isSelected}
+                            isSubRow={row.depth > 0}
+                        >
+                            {renderCells(row)}
+                        </DataTableRow>
+                        {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
+                        {row.isExpanded && (row as ProcessInstanceRow).original?.isLoadingSubprocesses ? rowLoader : null}
+                    </React.Fragment>
+                );
+            });
         if (autoHeight) return dataRows;
 
         const dummyRows: JSX.Element[] = [];
@@ -160,7 +171,7 @@ const Table = <T extends object>({
         </TableRow>
     );
 
-    const loader = (
+    const cellLoader = (
         <TableRow>
             <TableCell colSpan={columns.length ?? 7} sx={{ verticalAlign: 'middle' }}>
                 <Box width="100%" display="flex" justifyContent="center">
@@ -192,7 +203,7 @@ const Table = <T extends object>({
                         ))}
                     </TableHead>
                     <TableBody {...getTableBodyProps()}>
-                        <If condition={!isLoading} else={loader}>
+                        <If condition={!isLoading} else={cellLoader}>
                             <If condition={propData.length > 0} else={emptyDataElement}>
                                 {renderTableRows()}
                             </If>

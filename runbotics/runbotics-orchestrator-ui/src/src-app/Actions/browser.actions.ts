@@ -22,38 +22,6 @@ const exampleJsonConfiguration = {
 };
 // eslint-disable-next-line max-lines-per-function
 const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
-    'browser.selenium.open': {
-        id: 'browser.selenium.open',
-        label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Open.Label'),
-        script: 'browser.selenium.open',
-        runner: Runner.DESKTOP_SCRIPT,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Open.Input'),
-                        type: 'object',
-                        properties: {
-                            target: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Open.Site'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['target'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input']
-            },
-            formData: {
-                input: {
-                    target: 'https://example.com',
-                },
-            },
-        },
-    },
     'browser.launch': {
         id: 'browser.launch',
         label: translate('Process.Details.Modeler.Actions.Browser.Launch.Label'),
@@ -86,6 +54,39 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     headless: true,
+                    target: ''
+                },
+            },
+        },
+    },
+    'browser.selenium.open': {
+        id: 'browser.selenium.open',
+        label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Open.Label'),
+        script: 'browser.selenium.open',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Browser.Open.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Open.Site'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['target'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input']
+            },
+            formData: {
+                input: {
+                    target: 'https://',
                 },
             },
         },
@@ -208,7 +209,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: 'xpath=',
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },
@@ -260,7 +261,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'id=',
-                    attribute: '',
+                    attribute: undefined,
                     newValue: '',
                 },
             },
@@ -307,7 +308,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'id=',
-                    value: '',
+                    value: undefined,
                     clear: false,
                 },
             },
@@ -483,8 +484,8 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: '',
-                    attribute: '',
+                    target: 'id=',
+                    attribute: undefined,
                 },
                 output: {
                     variableName: '',
@@ -541,7 +542,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: '',
+                    target: 'id=',
                 },
                 output: {
                     variableName: '',
@@ -598,7 +599,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: '',
+                    target: 'id=',
                 },
                 output: {
                     variableName: '',

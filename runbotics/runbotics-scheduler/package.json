@@ -1,16 +1,16 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.6.3",
+    "version": "2.7.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
     },
     "license": "MIT",
-    "main": "./dist/main.js",
+    "main": "./dist/src/main.js",
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
-        "start": "node dist/main",
+        "start": "node dist/src/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
         "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
         "lint": "eslint \"{src,test}/**/*.ts\"",
@@ -79,8 +79,8 @@
         "@types/lodash": "^4.14.158",
         "@types/json-schema": "^7.0.7",
         "@types/cron": "^2.0.0",
-        "@typescript-eslint/eslint-plugin": "^5.10.1",
-        "@typescript-eslint/parser": "^5.10.1",
+        "@typescript-eslint/eslint-plugin": "^5.60.1",
+        "@typescript-eslint/parser": "^5.60.1",
         "cross-env": "^7.0.3",
         "eslint": "^8.0.1",
         "vitest": "^0.29.8",

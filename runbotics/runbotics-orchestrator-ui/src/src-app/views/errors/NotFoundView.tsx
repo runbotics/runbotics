@@ -1,14 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import RouterLink from 'next/link';
+import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo';
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { useDispatch } from '#src-app/store';
+import { authActions } from '#src-app/store/slices/Auth';
 
 const PREFIX = 'NotFoundView';
 
@@ -30,8 +34,17 @@ const StyledPage = styled(Page)(({ theme }) => ({
 
 const NotFoundView: FC = () => {
     const theme = useTheme();
+    const { user } = useAuth();
+    const dispatch = useDispatch();
     const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
     const { translate } = useTranslations();
+
+    useEffect(() => {
+        if (user?.roles.includes(Role.ROLE_GUEST)) {
+            dispatch(authActions.logout());
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <StyledPage className={classes.root} title={translate('Error404.Meta.Title')}>

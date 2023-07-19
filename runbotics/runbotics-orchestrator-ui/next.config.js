@@ -1,3 +1,4 @@
+
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
@@ -18,6 +19,7 @@ module.exports = {
     },
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
+        mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN
     },
 
     modularizeImports: {
@@ -38,5 +40,11 @@ module.exports = {
 
     images: {
         domains: ["images.ctfassets.net"]
-    }
+    },
+    // consts declared at: runbotics\runbotics\runbotics-orchestrator-ui\src\src-app\translations\translations.ts
+    i18n: {
+        locales: ['en', 'pl'],
+        defaultLocale: 'en',
+        localeDetection: false,
+    },
 };

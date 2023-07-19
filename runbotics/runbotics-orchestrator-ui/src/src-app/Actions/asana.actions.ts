@@ -46,7 +46,7 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {},
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },

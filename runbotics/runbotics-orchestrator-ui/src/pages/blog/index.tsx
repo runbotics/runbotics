@@ -4,9 +4,15 @@ import { GetServerSideProps } from 'next';
 
 import { getBlogMainCache, recreateCache
 } from '#contentful/blog-main';
+
+
+
 import {
     BlogPost, Category, DEFAULT_PAGE_SIZE, FILTER_QUERY_PARAMS, Tag, filterPosts, extractFilterQueryParams, hasQueryParams, Page, FilterQueryParamsEnum
 } from '#contentful/common';
+
+import { Language } from '#src-app/translations/translations';
+
 import BlogView from '#src-landing/views/BlogView';
 
 interface Props {
@@ -29,11 +35,14 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
 
 export default BlogPage;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res }) => {
-    let cache = getBlogMainCache();
-    
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res, locale }) => {
+
+    let cache = getBlogMainCache(locale as Language);
+
+
     if (!cache) {
-        cache = await recreateCache();
+        cache = await recreateCache(locale as Language);
+
     } else {
         res.setHeader('X-Cache', 'HIT');
     }

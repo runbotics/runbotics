@@ -32,7 +32,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    values: '',
+                    values: undefined,
                 },
             },
         },

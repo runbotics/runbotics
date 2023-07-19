@@ -8,6 +8,8 @@ import {
     IProcessInstanceLoopEvent,
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
+    BpmnElementType,
+    ProcessInstanceStep
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
@@ -46,35 +48,43 @@ export class RuntimeSubscriptionsService {
                     };
 
                 try {
-                    const eventBehaviour = (
+                    const eventBehavior = (
                         event.activity.owner as IActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
-                        case 'bpmn:ServiceTask':
+                        case BpmnElementType.ERROR_EVENT_DEFINITION:
+                            processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
+                            processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
+                            break;
+                        case BpmnElementType.BOUNDARY_EVENT:
+                            // Boundary event doesn't carry any useful information. It's just a wrapper.
+                            // Errors are handled in case: BpmnElementType.ERROR_EVENT_DEFINITION
+                            return;
+                        case BpmnElementType.SERVICE_TASK:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${desktopTask.input?.script} ${event.eventType}`;
                             // eslint-disable-next-line no-case-declarations
-                            const label = eventBehaviour?.label;
+                            const label = eventBehavior?.label;
                             // eslint-disable-next-line no-case-declarations
                             const script = desktopTask.input?.script;
-                            if (eventBehaviour?.label) {
+                            if (eventBehavior?.label) {
                                 processInstanceEvent.step = label;
                             } else {
                                 processInstanceEvent.step = script;
                             }
                             break;
-                        case 'bpmn:EndEvent':
-                            processInstanceEvent.step = 'event.end';
+                        case  BpmnElementType.END_EVENT:
+                            processInstanceEvent.step = ProcessInstanceStep.END;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
-                        case 'bpmn:StartEvent':
+                        case  BpmnElementType.START_EVENT:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = 'event.start';
+                            processInstanceEvent.step = ProcessInstanceStep.START;
                             break;
-                        case 'bpmn:ExclusiveGateway':
+                        case  BpmnElementType.EXCLUSIVE_GATEWAY:
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Gateway';
                             break;
-                        case 'bpmn:SubProcess':
+                        case  BpmnElementType.SUBPROCESS:
                             // @ts-ignore
                             if (event.activity.content.isMultiInstance) {
                                 // @ts-ignore
@@ -83,13 +93,14 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.eventType} `;
                             }
 
-                            if (eventBehaviour?.label) {
+                            if (eventBehavior?.label) {
                                 processInstanceEvent.step =
-                                    eventBehaviour?.label;
+                                    eventBehavior?.label;
                             } else {
                                 processInstanceEvent.step = 'Loop';
                             }
                             break;
+
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Activity';
@@ -97,7 +108,7 @@ export class RuntimeSubscriptionsService {
                     }
 
                     if (
-                        this.loopHandlerService.isLoopEvent(event.activity) 
+                        this.loopHandlerService.isLoopEvent(event.activity)
                     )
                         processInstanceEvent = {
                             ...processInstanceEvent,

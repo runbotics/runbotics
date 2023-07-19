@@ -1,27 +1,32 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.BotCollection;
-import com.runbotics.domain.User;
+import com.runbotics.domain.*;
 import com.runbotics.repository.BotCollectionRepository;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.criteria.JoinType;
 
 @Service
 public class BotCollectionServiceImpl implements BotCollectionService {
 
-    private final String PUBLIC_COLLECTION = "Public";
     private final Logger log = LoggerFactory.getLogger(BotServiceImpl.class);
 
     private final BotCollectionRepository botCollectionRepository;
@@ -76,7 +81,13 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Override
     public BotCollection getPublicCollection() {
         log.debug("Getting Public BotCollection");
-        return botCollectionRepository.getBotCollectionByName(PUBLIC_COLLECTION);
+        return botCollectionRepository.getBotCollectionByName(BotCollectionConstants.PUBLIC_COLLECTION);
+    }
+
+    @Override
+    public BotCollection getGuestCollection() {
+        log.debug("Getting Guest BotCollection");
+        return botCollectionRepository.getBotCollectionByName(BotCollectionConstants.GUEST_COLLECTION);
     }
 
     @Override
@@ -104,28 +115,36 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     public List<BotCollectionDTO> findAllForUser(String username) {
         log.debug("Request to get all collections for current user : {}", username);
         BotCollection publicCollection = getPublicCollection();
-        return getCollectionsForUser(username, publicCollection);
+        BotCollection guestCollection = getGuestCollection();
+
+        return getCollectionsForUser(username, publicCollection, guestCollection);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<BotCollectionDTO> findPageForUser(String username, Pageable pageable) {
         log.debug("Request to get page collections for user : {}", username);
+        
         return botCollectionRepository
             .findDistinctByCreatedByLoginOrUsers_Login(username, username, pageable)
             .map(botCollectionMapper::toDto);
     }
 
-    private List<BotCollectionDTO> getCollectionsForUser(String username, BotCollection publicCollection) {
+    private List<BotCollectionDTO> getCollectionsForUser(String username, BotCollection publicCollection, BotCollection guestCollection) {
         List<BotCollection> collectionsForUser = botCollectionRepository.findDistinctByCreatedByLoginOrUsers_Login(username, username);
 
-        if (!isPublicCollectionInCollectionForUser(publicCollection, collectionsForUser)) {
+        if (isCollectionInCollectionForUser(publicCollection, collectionsForUser)) {
             collectionsForUser.add(publicCollection);
         }
+
+        if (isCollectionInCollectionForUser(guestCollection, collectionsForUser)) {
+            collectionsForUser.add(guestCollection);
+        }
+
         return collectionsForUser.stream().map(botCollectionMapper::toDto).collect(Collectors.toList());
     }
 
-    private boolean isPublicCollectionInCollectionForUser(BotCollection publicCollection, List<BotCollection> collectionsForUser) {
-        return collectionsForUser.stream().map(BotCollection::getId).collect(Collectors.toList()).contains(publicCollection.getId());
+    private boolean isCollectionInCollectionForUser(BotCollection collection, List<BotCollection> collectionsForUser) {
+        return !collectionsForUser.stream().map(BotCollection::getId).collect(Collectors.toList()).contains(collection.getId());
     }
 }

@@ -9,12 +9,13 @@ import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.dto.AdminUserDTO;
-import com.runbotics.service.dto.AuthorityDTO;
 import com.runbotics.service.dto.UserDTO;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -236,6 +237,10 @@ public class UserService {
         processRepository.deleteUnassignedPrivateProcesses();
     }
 
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
     /**
      * Update basic information (first name, last name, email, language) for the current user.
      *
@@ -306,6 +311,11 @@ public class UserService {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
     }
 
+    @Transactional(readOnly = true)
+    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable) {
+        return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+    }
+
     /**
      * Not activated users should be automatically deleted after 3 days.
      * <p>
@@ -325,10 +335,21 @@ public class UserService {
 
     /**
      * Gets a list of all the authorities.
+     *
      * @return a list of all the authorities.
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Long> findAllGuestIds() {
+        return authorityRepository
+            .findAll()
+            .stream()
+            .filter(authority -> authority.getName().equals(AuthoritiesConstants.GUEST))
+            .flatMap(guest -> guest.getUsers().stream().map(User::getId))
+            .collect(Collectors.toList());
     }
 }

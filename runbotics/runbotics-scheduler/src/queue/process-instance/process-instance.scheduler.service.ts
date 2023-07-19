@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { v4 as uuidv4 } from 'uuid';
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
-import { ProcessInstanceEventService } from '#/database/process-instance-event/process-instance-event.service';
-import { BotWsMessage, IProcessInstance, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotWsMessage, IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { WebsocketService } from '#/websocket/websocket.service';
 import { Job } from '#/utils/process';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
@@ -14,7 +13,6 @@ export class ProcessInstanceSchedulerService {
     private readonly logger = new Logger(ProcessInstanceSchedulerService.name);
     constructor(
         private readonly processInstanceService: ProcessInstanceService,
-        private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly websocketService: WebsocketService,
         private readonly uiGateway: UiGateway,
     ) { }

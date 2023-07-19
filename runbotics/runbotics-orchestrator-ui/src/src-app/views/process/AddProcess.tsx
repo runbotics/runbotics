@@ -11,16 +11,19 @@ import {
     TextField,
     Box
 } from '@mui/material';
+import { PayloadAction } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { PlusCircle as PlusIcon } from 'react-feather';
 import { IProcess } from 'runbotics-common';
 
-import useTranslations, { translate } from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists, translate } from '#src-app/hooks/useTranslations';
 
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { ProcessTab } from '#src-app/utils/process-tab';
+
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import emptyBpmn from './ProcessBuildView/Modeler/extensions/config/empty.bpmn';
 
@@ -68,7 +71,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
         setInputErrorType(null);
         onClose();
     };
-    
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
@@ -77,17 +80,29 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
             return;
         }
 
-
         try {
             const processInfo: IProcess = { ...defaultProcessInfo, name };
-            const result = await dispatch(
+            const result: PayloadAction<IProcess> = await dispatch(
                 processActions.createProcess(processInfo)
             );
+
+            if ('detail' in result.payload && result.payload?.detail) throw { message: result.payload.detail };
+
             onAdd(result.payload);
-        } catch (e) {
-            enqueueSnackbar(translate('Process.Add.Form.Error.General'), {
-                variant: 'error'
-            });
+        } catch (error) {
+            const message = error?.message ?? translate('Process.Add.Form.Error.General');
+            const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
+            checkIfKeyExists(translationKey)
+                ? enqueueSnackbar(
+                    translate(translationKey), {
+                        variant: 'error'
+                    }
+                )
+                : enqueueSnackbar(
+                    message, {
+                        variant: 'error'
+                    }
+                );
         }
     };
 
@@ -133,7 +148,7 @@ const AddProcessDialog: FC<AddProcessDialogProps> = ({
                 </DialogActions>
             </form>
         </Dialog>
-     
+
     );
 };
 

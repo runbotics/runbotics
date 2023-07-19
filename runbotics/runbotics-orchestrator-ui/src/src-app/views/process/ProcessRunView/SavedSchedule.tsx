@@ -16,6 +16,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 
+import { processActions } from '#src-app/store/slices/Process';
 import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
 
 
@@ -80,6 +81,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
     const handleDelete = async (id: number) => {
         await dispatch(scheduleProcessActions.removeScheduledProcess({ scheduleProcessId: id }));
         await dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        dispatch(processActions.removeDraftProcessSchedule(id));
     };
 
     const humanReadableCron = (cronExpression: string) => translate('Process.Schedule.Cron.HumanReadable', {

@@ -155,10 +155,10 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    url: '',
+                    url: undefined,
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },

@@ -22,6 +22,7 @@ import { ScheduleProcessController } from './schedule-process/schedule-process.c
 import { SchedulerController } from './scheduler/scheduler.controller';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
+import { ProcessGuestService } from './process/process-guest.service';
 
 @Module({
     imports: [
@@ -54,7 +55,7 @@ import { TriggerController } from './trigger/trigger.controller';
     ],
     providers: [
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
-        ProcessInstanceSchedulerService, BotSchedulerService, QueueService,
+        ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService,
     ],
     exports: [ QueueService, ProcessFileService ],
 })

@@ -6,12 +6,12 @@ import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import com.runbotics.service.impl.ProcessInstanceEntityListener;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -72,12 +72,14 @@ public class ProcessInstance implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "root_process_instance_id", referencedColumnName = "id")
-    private Set<ProcessInstance> subProcesses;
+    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
+    private boolean hasSubprocesses;
 
     @Column(name = "error")
     private String error;
+
+    @Column(name = "warning")
+    private Boolean warning;
 
     @ManyToOne
     @JoinColumn(name = "trigger", referencedColumnName = "name")
@@ -233,12 +235,12 @@ public class ProcessInstance implements Serializable {
         this.bot = bot;
     }
 
-    public Set<ProcessInstance> getSubProcesses() {
-        return subProcesses;
+    public boolean getHasSubprocesses() {
+        return hasSubprocesses;
     }
 
-    public void setSubProcesses(Set<ProcessInstance> subProcesses) {
-        this.subProcesses = subProcesses;
+    public void setHasSubprocesses(boolean hasSubprocesses) {
+        this.hasSubprocesses = hasSubprocesses;
     }
 
     public String getError() {
@@ -263,6 +265,14 @@ public class ProcessInstance implements Serializable {
 
     public void setTriggerData(JsonNode triggerData) {
         this.triggerData = triggerData;
+    }
+
+    public Boolean getWarning(){
+        return this.warning;
+    }
+
+    public void setWarning(Boolean warning){
+        this.warning = warning;
     }
 
     @Override
@@ -299,6 +309,7 @@ public class ProcessInstance implements Serializable {
             ", error='" + getError() + "'" +
             ", trigger='" + getTrigger() + "'" +
             ", triggerData='" + getTriggerData() + "'" +
+            ", hasSubprocesses='" + getHasSubprocesses() + "'" +
             "}";
     }
 }

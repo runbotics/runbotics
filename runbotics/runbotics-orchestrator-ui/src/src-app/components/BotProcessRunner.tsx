@@ -5,9 +5,11 @@ import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import {
+    Role,
     FeatureKey,
     IProcess,
     IProcessInstance,
@@ -16,10 +18,12 @@ import {
 } from 'runbotics-common';
 import styled from 'styled-components';
 
+import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
-import useTranslations from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
+import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
 import {
     processActions,
     StartProcessResponse,
@@ -28,15 +32,15 @@ import {
     processInstanceActions,
     processInstanceSelector,
 } from '#src-app/store/slices/ProcessInstance';
-
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
-
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick, recordProcessRunFail, recordProcessRunSuccess } from '#src-app/utils/Mixpanel/utils';
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 import { isJsonValid } from '#src-app/utils/utils';
 
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
-
 
 const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
 
@@ -97,16 +101,22 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
     const { translate } = useTranslations();
     const hasRunProcessAccess = useFeatureKey([FeatureKey.PROCESS_START]);
+    const { executionsCount } = useSelector(guestsSelector);
+    const { user } = useAuth();
+    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
+    const guestExecutionLimitExceeded = isGuest && executionsCount >= EXECUTION_LIMIT;
+    const { pathname } = useRouter();
 
     const processInstances = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId, processInstance, eventsMap } =
         processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
-    const isProcessAttended = process?.isAttended && Boolean(process?.executionInfo);
+    const isProcessAttended =
+        process?.isAttended && Boolean(process?.executionInfo);
     const processName = process?.name;
     const processId = process?.id;
     const isRunButtonDisabled =
-        started || isSubmitting || !process.system || !process.botCollection;
+        started || isSubmitting || !process.system || !process.botCollection || guestExecutionLimitExceeded;
     const isRerunButtonDisabled =
         started || isSubmitting || isProcessActive(processId, processInstance);
 
@@ -126,12 +136,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setAnchorEl(null);
     };
 
-    const handleTerminate = async () => {
+    const handleTerminate = () => {
         if (!started) return;
 
-        dispatch(
-            schedulerActions.terminateActiveJob({ jobId: processInstance?.id })
-        )
+        dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
             .then(() => {
                 setStarted(false);
                 setLoading(false);
@@ -158,8 +166,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
+        recordItemClick({ itemName: CLICKABLE_ITEM.RUN_BUTTON, sourcePage: identifyPageByUrl(pathname) });
         if (started) return;
-        dispatch(processInstanceActions.resetActiveProcessInstaceAndEvents());
+        dispatch(processInstanceActions.resetActiveProcessInstanceAndEvents());
         dispatch(processInstanceEventActions.resetAll());
 
         enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
@@ -170,14 +179,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
-        dispatch(
-            processActions.startProcess({
-                processId: process.id,
-                ...((isProcessAttended || rerunProcessInstance) && {
-                    executionInfo,
-                }),
-            })
-        )
+        dispatch(processActions.startProcess({
+            processId: process.id,
+            ...((isProcessAttended || rerunProcessInstance) && {
+                executionInfo,
+            }),
+        }))
             .then(unwrapResult)
             .then((response: StartProcessResponse) => {
                 dispatch(
@@ -185,17 +192,43 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         response.orchestratorProcessInstanceId
                     )
                 );
+                isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+
                 onRunClick?.();
                 setStarted(true);
                 closeModal();
+                recordProcessRunSuccess({
+                    processName,
+                    processId: String(processId),
+                    processInstanceId: response?.orchestratorProcessInstanceId
+                });
             })
             .catch((error) => {
                 setStarted(false);
+                const translationKeyPrefix = 'Component.BotProcessRunner.Error';
+                const guestMessage = 'ServersAreOverloaded';
+
+                const basicErrorMessage =
+                    isGuest
+                        ? translate(`${translationKeyPrefix}.${guestMessage}`)
+                        : translate(translationKeyPrefix);
+
+                const message = error?.message ?? basicErrorMessage;
+                const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+
+                const translationKey =
+                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
+                        ? `${translationKeyPrefix}.${guestMessage}`
+                        : `${translationKeyPrefix}.${capitalizeMessage}`;
+
+                const errorMessage = checkIfKeyExists(translationKey)
+                    ? translate(translationKey)
+                    : message;
                 enqueueSnackbar(
-                    (error?.message as string) ??
-                        translate('Component.BotProcessRunner.Error'),
+                    errorMessage,
                     { variant: 'error' }
                 );
+                recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
             })
             .finally(() => {
                 setSubmitting(false);
@@ -211,8 +244,11 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     }, [rerunProcessInstance?.id]);
 
     const getTooltipTitle = () => {
-        if (!isRunButtonDisabled)
-        { return translate('Process.MainView.Tooltip.Run.Enabled'); }
+        if (!isRunButtonDisabled) {
+            return translate('Process.MainView.Tooltip.Run.Enabled');
+        } else if (guestExecutionLimitExceeded) {
+            return translate('Process.MainView.Tooltip.Run.Disabled.ForGuest');
+        }
 
         return processInstance?.status === ProcessInstanceStatus.IN_PROGRESS
             ? translate(
@@ -275,24 +311,29 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 open={!!anchorEl}
                 onClose={closeMenu}
             >
-                <MenuItem
-                    onClick={openModal}
-                    disabled={isRerunButtonDisabled}
-                >
+                <MenuItem onClick={openModal} disabled={isRerunButtonDisabled}>
                     {translate('Component.BotProcessRunner.Menu.RerunProcess')}
                 </MenuItem>
             </Menu>
         </>
     );
 
-    if (rerunProcessInstance && (!isProcessAttended || !rerunInput?.variables || Object.keys(rerunInput.variables).length === 0)) {
+    if (
+        rerunProcessInstance &&
+        (!isProcessAttended ||
+            !rerunInput?.variables ||
+            Object.keys(rerunInput.variables).length === 0)
+    ) {
         return null;
     }
 
     const hasEventStarted = eventsMap && Object.keys(eventsMap).length > 0;
 
     return (
-        <If condition={hasRunProcessAccess && (!started || !hasEventStarted) } else={terminateButton}>
+        <If
+            condition={hasRunProcessAccess && (!started || !hasEventStarted)}
+            else={terminateButton}
+        >
             <If condition={Boolean(rerunProcessInstance)} else={runButton}>
                 {rerunMenu}
             </If>

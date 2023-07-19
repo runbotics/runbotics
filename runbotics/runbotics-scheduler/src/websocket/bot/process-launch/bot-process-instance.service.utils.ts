@@ -1,4 +1,4 @@
-import { ProcessInstanceStatus } from 'runbotics-common';
+import { ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-common';
 
 const COMMON_PROCESS_INSTANCE_FIELDS = [
     'error', 'root_process_instance_id', 'orchestrator_process_instance_id',
@@ -22,7 +22,6 @@ export const getProcessInstanceUpdateFieldsByStatus = (
             if (dbStatus) return STARTING_PROCESS_INSTANCE_FIELDS;
             return ['status', ...STARTING_PROCESS_INSTANCE_FIELDS];
         }
-
         case ProcessInstanceStatus.COMPLETED:
         case ProcessInstanceStatus.ERRORED:
         case ProcessInstanceStatus.STOPPED:
@@ -35,3 +34,10 @@ export const getProcessInstanceUpdateFieldsByStatus = (
         }
     }
 };
+
+export const getIsInstanceInterrupted = (eventStatus: ProcessInstanceEventStatus, instanceStatus: ProcessInstanceStatus) => 
+    (
+        instanceStatus === ProcessInstanceStatus.TERMINATED ||
+        instanceStatus === ProcessInstanceStatus.ERRORED
+    ) && 
+    eventStatus === ProcessInstanceEventStatus.IN_PROGRESS;

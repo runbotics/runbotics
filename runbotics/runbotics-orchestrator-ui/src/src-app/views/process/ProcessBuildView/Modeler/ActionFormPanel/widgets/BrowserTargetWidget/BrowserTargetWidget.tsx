@@ -52,13 +52,16 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
             const prefix = Object.keys(PREFIX_OPTIONS).find((option) => props.value.startsWith(option)) || 'None';
             const value = prefix === 'None' ? props.value : props.value.replace(prefix, ''); 
             setFormState({ prefix: prefix, value: value});
+            onChangeWrapper(prefix, value);
         }
     }, []);
 
     const onChangeWrapper = (prefix: string, value: string) => {
-        if(prefix === 'None') {
+        if (!prefix || !value) {
+            props.onChange(undefined);
+        } else if (prefix === 'None') {
             props.onChange(value);
-        } else{
+        } else {
             props.onChange(prefix + value);
         }
     };

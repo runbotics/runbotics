@@ -20,6 +20,7 @@ import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
+import { GuestService } from '#/database/guest/guest.service';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -34,6 +35,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
         private readonly botLifecycleService: BotLifecycleService,
+        private readonly guestService: GuestService,
     ) { }
 
     async handleConnection(client: Socket) {
@@ -55,7 +57,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        this.botLifecycleService.handleInterruptedProcessInstanceExecution(bot);
+        this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
     }
@@ -67,8 +69,19 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @MessageBody() processInstance: IProcessInstance,
     ) {
         const installationId = socket.bot.installationId;
+
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
+
+        if(
+            processInstance.status === ProcessInstanceStatus.ERRORED ||
+            processInstance.status === ProcessInstanceStatus.TERMINATED
+        ) {
+            await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
+            await this.guestService.decrementExecutionsCount(processInstance.user.id);
+            this.logger.log('Restored user\'s executions-count because of process interruption');
+        }
+
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
     }
 
@@ -81,14 +94,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
-        }
-
-        if (
-            processInstanceEvent.processInstance.status === ProcessInstanceStatus.TERMINATED && 
-            processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
-        ) {
-            const newProcessInstanceEvent = { ...processInstanceEvent, status: ProcessInstanceEventStatus.TERMINATED };
-            this.updateProcessInstanceEvent(socket.bot, newProcessInstanceEvent);
         }
         
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
@@ -118,7 +123,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
     }
 
-    private async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
+    async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
         const installationId = bot.installationId;
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);

@@ -35,16 +35,19 @@ export class ProcessInstanceEntity implements IProcessInstance {
     @Column()
         error: string;
 
+    @Column()
+        warning: boolean;
+
     @Column('jsonb', { nullable: true, name: 'trigger_data' })
         triggerData?: EmailTriggerData | unknown;
-        
+
     @Column({ name: 'root_process_instance_id', type: 'uuid' })
         rootProcessInstanceId: string;
-        
+
     @ManyToOne(() => TriggerEventEntity)
     @JoinColumn({ name: 'trigger', referencedColumnName: 'name' })
         trigger: ITriggerEvent;
-    
+
     @ManyToOne(() => BotEntity)
     @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })
         bot: IBot;

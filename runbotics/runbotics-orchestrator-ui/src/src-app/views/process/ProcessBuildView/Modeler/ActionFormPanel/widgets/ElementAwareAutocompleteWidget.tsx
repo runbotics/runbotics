@@ -5,13 +5,11 @@ import { WidgetProps } from '@rjsf/core';
 
 import styled from 'styled-components';
 
-
-
 import If from '#src-app/components/utils/If';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { ActionVariableObject } from '#src-app/hooks/useProcessVariables.types';
 import useTranslations, {
-    translate as t
+    translate as t,
 } from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
@@ -19,8 +17,7 @@ import { useSelector } from '#src-app/store';
 import AutocompleteWidget from './AutocompleteWidget';
 import InfoButtonTooltip from './components/InfoButtonTooltip';
 
-
-const services = [
+const SERVICES = [
     'environment.services.idt',
     'environment.services.slice',
     'environment.services.merge',
@@ -67,30 +64,38 @@ const services = [
     'environment.services.compareMaps',
     'environment.services.diffMaps',
     'environment.services.objFromArray',
-    'environment.services.readFromStorage'
-].map(service => ({
+    'environment.services.readFromStorage',
+].map((service) => ({
     value: `\${${service}}`,
     label: `\${${service}}`,
     group: t(
         'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services'
-    )
+    ),
 }));
 
-
-const utils = [
+const UTILS = [
     'false',
     'true',
     'content.output',
     'environment',
-    'environment.output'
-].map(util => ({
+    'environment.output',
+].map((util) => ({
     value: `\${${util}}`,
     label: `\${${util}}`,
     group: t(
         'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
-    )
+    ),
 }));
 
+const VARIABLES = [
+    'tempFolder',
+].map(variable => ({
+    label: variable,
+    value: variable,
+    group: t(
+        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+    ),
+}));
 
 const reduceList = (list: any[]) =>
     list.reduce((previousValue, currentValue) => {
@@ -112,43 +117,44 @@ const AutocompleteWrapper = styled.div`
     align-items: center;
 `;
 
-const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> =
-props => {
-    const { selectedElement } = useSelector(
-        state => state.process.modeler
-    );
+const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
+    props
+) => {
+    const { selectedElement } = useSelector((state) => state.process.modeler);
     const { translate } = useTranslations();
-    const { globalVariables, inputActionVariables, outputActionVariables, attendedVariables } = useProcessVariables();
-    
+    const {
+        globalVariables,
+        inputActionVariables,
+        outputActionVariables,
+        attendedVariables,
+    } = useProcessVariables(selectedElement?.parent?.id);
 
-    const attendedProcessVariables = attendedVariables.map(variable => ({
+    const attendedProcessVariables = attendedVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
         group: translate(
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        )
+        ),
     }));
 
     const extractOutputs = (outputVariables: ActionVariableObject[]) => {
-        const outputs = outputVariables.map(
-            outputVariable => ({
-                label: outputVariable.name,
-                value: outputVariable.name,
-                group: translate(
-                    'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'
-                )
-            })
-        );
+        const outputs = outputVariables.map((outputVariable) => ({
+            label: outputVariable.name,
+            value: outputVariable.name,
+            group: translate(
+                'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'
+            ),
+        }));
 
-        const dollarOutputs = outputs.map(option => ({
+        const dollarOutputs = outputs.map((option) => ({
             ...option,
             label: `\${environment.output.${option.label}}`,
-            value: `\${environment.output.${option.value}}`
+            value: `\${environment.output.${option.value}}`,
         }));
-        const hashOutputs = outputs.map(option => ({
+        const hashOutputs = outputs.map((option) => ({
             ...option,
             label: `#{${option.label}}`,
-            value: `#{${option.value}}`
+            value: `#{${option.value}}`,
         }));
 
         return [...dollarOutputs, ...hashOutputs];
@@ -156,54 +162,62 @@ props => {
 
     const outputVariables = extractOutputs(outputActionVariables);
 
-    const groupedLocalVariable = inputActionVariables.map(variable => ({
+    const groupedLocalVariables = inputActionVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
         group: translate(
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        )
-    })); 
-            
-
-    const groupedGlobalVariables = globalVariables.map(variable => ({
-        label: variable.name,
-        value: variable.name,
-        group: translate(
-            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        )
+        ) 
     }));
 
-    const options: Record<
-    string,
-    { label: string; value: any; group: any }
-    > = React.useMemo(() => {
-        let result = [];
-        
-        const defaultOptions = [...services, ...utils];
-        result = [...defaultOptions, ...result];
-        
-        const variables = [...groupedLocalVariable, ...groupedGlobalVariables, ...attendedProcessVariables];
+    const groupedGlobalVariables = globalVariables.map((variable) => ({
+        label: variable.name,
+        value: variable.name,
+        group: translate(
+            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
+        ),
+    }));
 
-        const dollarVariables = variables.map(option => ({
-            ...option,
-            label: `\${environment.variables.${option.value}}`,
-            value: `\${environment.variables.${option.value}}`
-        }));
-        const hashVariables = variables.map(option => ({
-            ...option,
-            label: `#{${option.value}}`,
-            value: `#{${option.value}}`
-        }));
+    const options: Record<string, { label: string; value: any; group: any }> =
+        React.useMemo(() => {
+            let result = [];
 
-        result = [...dollarVariables, ...hashVariables, ...outputVariables, ...result];
+            const defaultOptions = [...SERVICES, ...UTILS];
+            result = [...defaultOptions, ...result];
 
-        return reduceList(result);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedElement]);
+            const variables = [
+                ...groupedLocalVariables,
+                ...groupedGlobalVariables,
+                ...attendedProcessVariables,
+                ...VARIABLES,
+            ];
+
+            const dollarVariables = variables.map((option) => ({
+                ...option,
+                label: `\${environment.variables.${option.value}}`,
+                value: `\${environment.variables.${option.value}}`,
+            }));
+
+            const hashVariables = variables.map((option) => ({
+                ...option,
+                label: `#{${option.value}}`,
+                value: `#{${option.value}}`,
+            }));
+
+            result = [
+                ...dollarVariables,
+                ...hashVariables,
+                ...outputVariables,
+                ...result,
+            ];
+
+            return reduceList(result);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [selectedElement]);
 
     const optionValues = React.useMemo(
         () => ({
-            'ui:options': Object.values(options).map(option => option.value)
+            'ui:options': Object.values(options).map((option) => option.value),
         }),
         [options]
     );
@@ -213,7 +227,7 @@ props => {
             <AutocompleteWidget
                 {...props}
                 value={props.value}
-                groupBy={option => options[option].group}
+                groupBy={(option) => options[option].group}
                 options={optionValues}
             />
             <If condition={Boolean(props.options?.info)}>

@@ -1,6 +1,6 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, ActionSystem } from './types';
 
 
 
@@ -10,6 +10,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.Application.Launch.Label'),
         script: 'application.launch',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         form: {
             schema: {
                 type: 'object',
@@ -32,7 +33,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    location: '',
+                    location: undefined,
                 },
             },
         },
@@ -42,6 +43,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.Application.Close.Label'),
         script: 'application.close',
         runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
         form: {
             schema: {
                 type: 'object',

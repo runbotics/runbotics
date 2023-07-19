@@ -1,5 +1,7 @@
 {
     "History.Meta.Title": "Historia",
     "History.Header.Title": "Historia",
-    "History.Table.Error": "Nie można pobrać historii procesu"
+    "History.Table.Expand": "Pokaż podprocesy",
+    "History.Table.Error.InstancesNotFound": "Nie można pobrać historii uruchomień procesu",
+    "History.Table.Error.SubprocessesNotFound": "Nie znaleziono podprocesów dla tego uruchomienia"
 }

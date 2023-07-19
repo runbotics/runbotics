@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next';
 import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
 import { BlogPost } from '#contentful/common';
 import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
+import { Language } from '#src-app/translations/translations';
 import MainView from '#src-landing/views/MainView';
 
 interface Props {
@@ -13,11 +14,12 @@ interface Props {
 
 const IndexPage: VFC<Props> = ({ blogPosts }) => <MainView blogPosts={blogPosts} />;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ res }) => {
-    let cache = getBlogMainCache();
+export const getServerSideProps: GetServerSideProps<Props> = async ({ res, locale }) => {
+
+    let cache = getBlogMainCache(locale as Language);
 
     if (!cache) {
-        cache = await recreateCache();
+        cache = await recreateCache(locale as Language);
     } else {
         res.setHeader('X-Cache', 'HIT');
     }

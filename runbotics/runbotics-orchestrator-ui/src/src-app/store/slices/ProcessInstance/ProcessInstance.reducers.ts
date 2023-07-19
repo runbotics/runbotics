@@ -4,13 +4,18 @@ import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
 
 import { initialState } from './ProcessInstance.slice';
 import { ProcessInstanceState } from './ProcessInstance.state';
+import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
 export const updateOrchestratorProcessInstanceId = (state: ProcessInstanceState, action: PayloadAction<string>) => {
     state.active.orchestratorProcessInstanceId = action.payload;
 };
 
-export const updateProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+export const updateActiveProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
     state.active.processInstance = action.payload;
+};
+
+export const updateProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+    updateProcessInstanceProps(state, action.payload);
 };
 
 const updateEvent = (state: ProcessInstanceState, event: IProcessInstanceEvent) => {
@@ -25,7 +30,7 @@ export const updateActiveEvents = (state: ProcessInstanceState, action: PayloadA
     action.payload.forEach((event) => updateEvent(state, event));
 };
 
-export const resetActiveProcessInstaceAndEvents = (state: ProcessInstanceState) => {
+export const resetActiveProcessInstanceAndEvents = (state: ProcessInstanceState) => {
     state.active.eventsMap = initialState.active.eventsMap;
     state.active.processInstance = initialState.active.processInstance;
 };

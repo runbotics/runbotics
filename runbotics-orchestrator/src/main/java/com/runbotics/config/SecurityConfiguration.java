@@ -80,6 +80,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/bot-installation/files/**").permitAll()
             .antMatchers("/api/rest/contacts").permitAll()
             .antMatchers("/api/authenticate").permitAll()
+            .antMatchers("/api/authenticate/guest").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()

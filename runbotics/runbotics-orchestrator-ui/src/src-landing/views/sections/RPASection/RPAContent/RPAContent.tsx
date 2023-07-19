@@ -2,8 +2,8 @@ import { FC } from 'react';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+import { RPA_TITLE_ID } from '#src-landing/views/sections/RPASection/RPASection.utils';
 
-import { RPA_TITLE_ID } from '../RPASection.utils';
 import styles from './RPAContent.module.scss';
 
 const RPAContent: FC = () => {

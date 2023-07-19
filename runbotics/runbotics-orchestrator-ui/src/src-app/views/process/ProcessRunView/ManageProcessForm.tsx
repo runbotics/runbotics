@@ -16,6 +16,7 @@ const ManageProcessForm: VFC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const { process } = useSelector((state) => state.process.draft);
+    const isScheduled = process?.schedules?.length > 0;
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -84,7 +85,7 @@ const ManageProcessForm: VFC = () => {
                     onDelete={handleDelete}
                 />
             </If>
-            <Button color="secondary" variant="text" onClick={openModal}>
+            <Button color="secondary" variant="text" onClick={openModal} disabled={isScheduled}>
                 {translate('Process.Run.ManageProcessForm')}
             </Button>
         </>

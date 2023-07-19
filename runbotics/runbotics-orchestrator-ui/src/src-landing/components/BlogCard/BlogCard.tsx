@@ -2,14 +2,18 @@ import React, { FC } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { BlogPost, DRAFT_BADGE_BACKGROUND_COLOR, checkIsDraft } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
 
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
 import styles from './BlogCard.module.scss';
+
 
 interface BlogCardProps {
     post: BlogPost;
@@ -28,16 +32,21 @@ export const cutText = (text: string, length: number) => {
 
 const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
     const { translate } = useTranslations();
-
-    const tags = post.tags?.items.map(({ name }) => <CardBadge
-        key={name}
-        text={name}
-        className={styles.badge}
-    />);
+    const { pathname } = useRouter();
 
     return (
         <article className={`${styles.root} ${className}`}>
-            <Link className={styles.link} href={`/blog/post/${post.slug}`}>
+            <Link
+                className={styles.link}
+                onClick={() => recordItemClick({
+                    sourcePage: identifyPageByUrl(pathname),
+                    itemName: CLICKABLE_ITEM.BLOG_POST,
+                    extraProperties: {
+                        title: post.slug,
+                        readingTime: post.readingTime,
+                    }
+                })}
+                href={`/blog/post/${post.slug}`}>
                 <div className={styles.wrapper}>
                     {post.featuredImage?.url &&
                         <Image
@@ -45,6 +54,8 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                             fill
                             alt={post.imageAlt ?? ''}
                             className={styles.img}
+                            sizes='(max-width: 1920px) 80vw, 20vw'
+                            placeholder='empty'
                         />
                     }
                     <If condition={checkIsDraft(post.status)}>
@@ -54,9 +65,6 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                             text={translate('Blog.Post.DraftBadge')}
                         />
                     </If>
-                    <div className={styles.badges}>
-                        {tags}
-                    </div>
                     <div className={styles.content}>
                         <div className={styles.info}>
                             <Typography variant="body4">
@@ -71,7 +79,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                         </div>
                         <div>
                             <Typography variant="h4" className={styles.title}>
-                                {post.title}
+                                {cutText(post.title, 65)}
                             </Typography>
                             <Typography variant="body3">
                                 {cutText(post.summary, 130)}

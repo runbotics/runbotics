@@ -9,6 +9,8 @@ export enum BpmnElementType {
   COMPLEX_GATEWAY = 'bpmn:ComplexGateway',
   ASSOCIATION = 'bpmn:Association',
   SEQUENCE_FLOW = 'bpmn:SequenceFlow',
-  ITERMEDIATE_THROW_EVENT = 'bpmn:IntermediateThrowEvent',
-  TASK = 'bpmn:Task'
+  INTERMEDIATE_THROW_EVENT = 'bpmn:IntermediateThrowEvent',
+  TASK = 'bpmn:Task',
+  ERROR_EVENT_DEFINITION = 'bpmn:ErrorEventDefinition',
+  BOUNDARY_EVENT = 'bpmn:BoundaryEvent'
 }

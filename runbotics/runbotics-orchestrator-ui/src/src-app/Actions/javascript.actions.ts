@@ -158,7 +158,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                     functionParams: {},
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },

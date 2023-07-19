@@ -1,13 +1,11 @@
 package com.runbotics.service.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.runbotics.domain.ProcessInstance;
 import com.runbotics.domain.TriggerEvent;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Lob;
 
@@ -42,13 +40,15 @@ public class ProcessInstanceDTO implements Serializable {
 
     private BotDTO bot;
 
-    private Set<ProcessInstance> subProcesses;
+    private boolean hasSubprocesses;
 
     private String error;
 
     private TriggerEvent trigger;
 
     private JsonNode triggerData;
+
+    private Boolean warning;
 
     public UUID getId() {
         return id;
@@ -146,12 +146,12 @@ public class ProcessInstanceDTO implements Serializable {
         this.bot = bot;
     }
 
-    public Set<ProcessInstance> getSubProcesses() {
-        return subProcesses;
+    public boolean getHasSubprocesses() {
+        return hasSubprocesses;
     }
 
-    public void setSubProcesses(Set<ProcessInstance> subProcesses) {
-        this.subProcesses = subProcesses;
+    public void setHasSubprocesses(boolean hasSubprocesses) {
+        this.hasSubprocesses = hasSubprocesses;
     }
 
     public String getError() {
@@ -176,6 +176,14 @@ public class ProcessInstanceDTO implements Serializable {
 
     public void setTriggerData(JsonNode triggerData) {
         this.triggerData = triggerData;
+    }
+
+    public Boolean getWarning(){
+        return this.warning;
+    }
+
+    public void setWarning(Boolean warning){
+        this.warning = warning;
     }
 
     @Override
@@ -217,6 +225,7 @@ public class ProcessInstanceDTO implements Serializable {
             ", error=" + getError() +
             ", trigger=" + getTrigger() +
             ", triggerData=" + getTriggerData() +
+            ", hasSubprocesses=" + getHasSubprocesses() +
             "}";
     }
 }

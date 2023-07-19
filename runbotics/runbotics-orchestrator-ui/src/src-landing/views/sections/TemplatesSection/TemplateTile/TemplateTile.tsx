@@ -7,8 +7,8 @@ import { integrationLogos } from '#public/images/logos';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
+import { checkTranslationKey } from '#src-landing/views/sections/TemplatesSection/TemplatesSection.utils';
 
-import { checkTranslationKey } from '../TemplatesSection.utils';
 import HighlightedText from './HighlightedText';
 import styles from './TemplateTile.module.scss';
 import { TemplateTileProps } from './TemplateTile.types';

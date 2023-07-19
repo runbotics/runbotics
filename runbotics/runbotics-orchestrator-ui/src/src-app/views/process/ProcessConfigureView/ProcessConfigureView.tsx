@@ -1,9 +1,11 @@
 import React, { useEffect, useState, VFC } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
 
+import If from '#src-app/components/utils/If';
+import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { botCollectionActions } from '#src-app/store/slices/BotCollections';
@@ -26,6 +28,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { process } = useSelector((state) => state.process.draft);
+    const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
 
@@ -73,7 +76,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendedance({ id: process.id, isAttended })
+            processActions.updateAttendance({ id: process.id, isAttended })
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -86,6 +89,18 @@ const ProcessConfigureView: VFC = () => {
         setTriggerable(isTriggerable);
         await fetchProcess();
     };
+
+    const attendedBox = (
+        <Box width="fit-content">
+            <AttendancePaper>
+                <ProcessAttendedComponent
+                    isProcessAttended={attended}
+                    onAttendedChange={handleAttendanceChange}
+                />
+                <ManageProcessForm />
+            </AttendancePaper>
+        </Box>
+    );
 
     return (
         <Container>
@@ -105,15 +120,11 @@ const ProcessConfigureView: VFC = () => {
                     />
                 </StyledPaper>
             </Box>
-            <Box width="fit-content">
-                <AttendancePaper>
-                    <ProcessAttendedComponent
-                        isProcessAttended={attended}
-                        onAttendedChange={handleAttendanceChange}
-                    />
-                    <ManageProcessForm />
-                </AttendancePaper>
-            </Box>
+            <If condition={isScheduled} else={attendedBox}>
+                <Tooltip title={translate('Process.Configure.Attended.Schedule.Message')} placement="top">
+                    {attendedBox}
+                </Tooltip>
+            </If>
             <Box width="fit-content">
                 <StyledPaper>
                     <ProcessTriggerableComponent

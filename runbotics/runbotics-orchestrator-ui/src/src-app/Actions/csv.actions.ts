@@ -53,7 +53,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {},
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },
@@ -111,12 +111,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    content: '',
-                    separator: '',
+                    path: undefined,
+                    content: undefined,
+                    separator: undefined,
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },
@@ -170,11 +170,11 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    separator: '',
+                    path: undefined,
+                    separator: undefined,
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },
@@ -232,12 +232,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    path: '',
-                    content: '',
-                    separator: '',
+                    path: undefined,
+                    content: undefined,
+                    separator: undefined,
                 },
                 output: {
-                    variableName: '',
+                    variableName: undefined,
                 },
             },
         },

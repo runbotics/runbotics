@@ -1,6 +1,8 @@
 {
     "Account.UnableToLogout": "Unable to logout",
+    "Account.SessionExpired": "Your demo session has expired",
     "Account.SignIn": "Sign in",
     "Account.User": "User",
+    "Account.Users": "Users",
     "Account.Logout": "Logout"
 }

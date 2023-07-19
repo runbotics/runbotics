@@ -9,8 +9,11 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+import { FeatureKey } from 'runbotics-common';
+
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -18,6 +21,8 @@ import { getActions } from '#src-app/store/slices/Action/Action.thunks';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
+
+import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
 
 import BpmnModeler, {
     AdditionalInfo,
@@ -38,12 +43,14 @@ const ProcessBuildView: FC = () => {
     const [offSet, setOffSet] = useState<number>(null);
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
+    const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
 
     useEffect(() => {
+        if (!hasAdvancedActionsAccess) return;
         dispatch(getActions());
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+    }, [id, hasAdvancedActionsAccess]);
 
     useEffect(() => {
         if (!process) return;
@@ -72,8 +79,8 @@ const ProcessBuildView: FC = () => {
         try {
             const definition = await BpmnModelerRef.current.export();
             await dispatch(
-                processActions.saveProcess({
-                    ...process,
+                processActions.updateDiagram({
+                    id: process.id,
                     definition,
                 })
             );
@@ -83,10 +90,17 @@ const ProcessBuildView: FC = () => {
                 variant: 'success',
                 autoHideDuration: SNACKBAR_DURATION,
             });
+            recordProcessSaveSuccess({ processName: process.name, processId: String(process.id) });
+
         } catch (error) {
             enqueueSnackbar(translate('Process.MainView.Toast.Save.Failed'), {
                 variant: 'error',
                 autoHideDuration: SNACKBAR_DURATION,
+            });
+            recordProcessSaveFail({
+                processName: process.name,
+                processId: String(process.id),
+                reason: translate('Process.MainView.Toast.Save.Failed')
             });
         }
     };

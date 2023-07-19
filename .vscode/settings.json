@@ -16,12 +16,5 @@
         "runbotics-common",
         "runbotics-cli",
     ],
-    "cSpell.words": [
-        "nestjs",
-        "runbotics",
-        "typeorm",
-        "uuidv",
-        "websockets"
-    ],
     "svg.preview.background": "transparent",
 }

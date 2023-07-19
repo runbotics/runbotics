@@ -24,7 +24,16 @@ export enum FeatureKey {
     PROCESS_START = 'PROCESS_START', 
 
     // Allow editing process structure in modeler (without it - only viewer mode & no access to panel info actions) [ Processes page -> process -> BUILD tab ]
-    PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE', 
+    PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE',
+
+    // Allow to display basic actions list at process build page [ Processes page -> process -> BUILD tab ]
+    PROCESS_ACTIONS_LIST = 'PROCESS_ACTIONS_LIST',
+
+    // Allow to display advanced actions list at the process build page [ Processes page -> process -> BUILD tab]
+    PROCESS_ACTIONS_LIST_ADVANCED = 'PROCESS_ACTIONS_LIST_ADVANCED',
+
+    // Allow to display templates list at the process build page [ Processes page -> process -> BUILD tab ]
+    PROCESS_TEMPLATES_LIST = 'PROCESS_TEMPLATES_LIST',
     
     // Allow to switch state "attended" to "not attended" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_ATTENDED_EDIT = 'PROCESS_IS_ATTENDED_EDIT',
@@ -73,6 +82,9 @@ export enum FeatureKey {
 
     // Show tab "BUILD" [ Processes page -> process ]
     PROCESS_BUILD_VIEW = 'PROCESS_BUILD_VIEW',
+
+    // Show tab "RUN" [ Processes page -> process]
+    PROCESS_RUN_VIEW = 'PROCESS_RUN_VIEW',
 
     // Show "Schedules" section & GET all scheduled processes & GET single scheduled process by id & GET count all the bots & GET page [ e.g. Processes page -> process -> RUN tab ]
     SCHEDULE_READ = 'SCHEDULE_READ',
@@ -145,6 +157,9 @@ export enum FeatureKey {
 
     // ???
     BASIC_USER_READ = 'BASIC_USER_READ',
+
+    // Access to users page, manage users
+    USERS_PAGE_READ = 'USERS_PAGE_READ',
 }
 
 export interface IFeatureKey {

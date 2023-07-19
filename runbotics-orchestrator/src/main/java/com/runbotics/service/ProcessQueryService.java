@@ -5,6 +5,7 @@ import com.runbotics.domain.Process_;
 import com.runbotics.domain.User_;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.ScheduleProcessRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.mapper.ProcessMapper;
@@ -116,7 +117,9 @@ public class ProcessQueryService extends QueryService<Process> {
                 .map(processMapper::toDto);
         }
 
-        return processRepository.findAll(specification, page).map(processMapper::toDto);
+        return processRepository
+            .findAll(specification, page)
+            .map(processMapper::toDto);
     }
 
     /**
@@ -191,5 +194,21 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private Specification<Process> isPublic() {
         return (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(root.get(Process_.isPublic));
+    }
+
+    public List<ProcessDTO> filterGuestProcessesByUserRole(List<ProcessDTO> processes, String userRoles) {
+        boolean hasRequesterRoleAdmin = userRoles.contains(AuthoritiesConstants.ADMIN);
+        List<Long> guestIds = this.userService.findAllGuestIds();
+
+        if(hasRequesterRoleAdmin){
+            return processes;
+        }
+
+        return processes
+            .stream()
+            .filter(
+                process -> !guestIds.contains(process.getCreatedBy().getId())
+            )
+            .collect(Collectors.toList());
     }
 }

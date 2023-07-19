@@ -74,6 +74,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 eventType: ProcessInstanceStatus.ERRORED,
                 processInstance: {
                     ...processInstance,
+                    status: ProcessInstanceStatus.ERRORED,
                     error: 'Bot has been shut down',
                 },
             });
@@ -88,8 +89,12 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         return this.activityEventBus.expose();
     }
 
+    private getTempDirPath() {
+        return `${process.cwd()}/temp`;
+    }
+
     private createTempDir() {
-        mkdirSync(`${process.cwd()}/temp`, { recursive: true });
+        mkdirSync(this.getTempDirPath(), { recursive: true });
     }
 
     private cleanTempDir = async (processInstanceId: string): Promise<void> => {
@@ -374,7 +379,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
-            variables: request.variables,
+            variables: {
+                ...request.variables,
+                tempFolder: this.getTempDirPath(),
+            },
             listener,
         };
 

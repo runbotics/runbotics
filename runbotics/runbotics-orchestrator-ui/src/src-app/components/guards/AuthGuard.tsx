@@ -1,26 +1,44 @@
 import type { FC } from 'react';
 
 import { useRouter } from 'next/router';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
+
+import { useSelector } from '#src-app/store';
+import { processSelector } from '#src-app/store/slices/Process';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
-import { hasFeatureKeyAccess } from '../utils/Secured';
+import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
+
+const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
+
 // eslint-disable-next-line react/display-name
-export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[]) => (props: any) => {
-    const { isAuthenticated: isAuthed, isInitialised, user } = useAuth();
+export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
+    const { isAuthenticated: isAuthed, isInitialized, user } = useAuth();
+    const { draft } = useSelector(processSelector);
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
-    const isAuthenticated = isInitialised && isBrowser && isAuthed;
-    if (!isAuthenticated){
+    const isAuthenticated = isInitialized && isBrowser && isAuthed;
+
+    if (!isAuthenticated) {
         router.replace('/');
-    };
+    }
+
     if (isAuthenticated) {
-        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys)){
+        if (user.roles.includes(Role.ROLE_GUEST) && !buildViewRegex.test(router.asPath)) {
+            if (draft.process?.id) {
+                router.replace(`/app/processes/${draft.process.id}/build`);
+            }
+            return <LoadingScreen />;
+        }
+
+        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
             return <Component {...props} />;
         }
+
         router.replace('/404');
     }
+
     return <LoadingScreen />;
 };
 

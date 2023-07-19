@@ -60,7 +60,7 @@ export function Camunda(activity) {
         }
         if (activity.behaviour.resultVariable) {
             activity.on('end', (api) => {
-                activity.environment.output[activity.behaviour.resultVariable] = api.content.output;
+                activity.environment.output[ activity.behaviour.resultVariable ] = api.content.output;
             });
         }
     }
@@ -91,9 +91,9 @@ export function Camunda(activity) {
                     fields: {},
                 };
                 formData.fields.forEach((field) => {
-                    form.fields[field.id] = { ...field };
-                    form.fields[field.id].defaultValue = environment.resolveExpression(
-                        form.fields[field.id].defaultValue,
+                    form.fields[ field.id ] = { ...field };
+                    form.fields[ field.id ].defaultValue = environment.resolveExpression(
+                        form.fields[ field.id ].defaultValue,
                         message,
                     );
                 });
@@ -106,7 +106,7 @@ export function Camunda(activity) {
     function resolve(writeTo, data, message) {
         if (data.definition) {
             if (data.definition.$type === 'camunda:Map') {
-                writeTo[data.name] = {};
+                writeTo[ data.name ] = {};
                 if (data.definition.entries) {
                     data.definition.entries.forEach((entry) => {
                         let key = data.name + '.' + entry.key;
@@ -115,14 +115,14 @@ export function Camunda(activity) {
                     });
                 }
             } else if (data.definition.$type === 'camunda:List') {
-                writeTo[data.name] = [];
+                writeTo[ data.name ] = [];
                 data.definition.items &&
                     data.definition.items.forEach((item) => {
-                        writeTo[data.name].push(environment.resolveExpression(item.value, message));
+                        writeTo[ data.name ].push(environment.resolveExpression(item.value, message));
                     });
             }
         } else {
-            writeTo[data.name] = environment.resolveExpression(data.value, message);
+            writeTo[ data.name ] = environment.resolveExpression(data.value, message);
         }
     }
 

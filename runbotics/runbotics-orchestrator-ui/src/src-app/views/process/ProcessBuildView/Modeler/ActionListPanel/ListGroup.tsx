@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Collapse, Divider, ListItem, ListItemText, ListSubheader } from '@mui/material';
+import { Collapse, Divider, ListItemButton, ListItemText, ListSubheader } from '@mui/material';
 import styled from 'styled-components';
 
 
@@ -22,15 +22,17 @@ export interface Item {
     id: string;
     label: string;
     name?: string;
+    system?: string;
 }
 
 export interface ListGroupProps {
     label: string;
     open: boolean;
+    disabled: boolean;
     onToggle: (open: boolean) => void;
 }
 
-const ListGroup: FC<ListGroupProps> = ({ label, open, onToggle, children }) => {
+const ListGroup: FC<ListGroupProps> = ({ label, open, disabled, onToggle, children }) => {
     const handleClick = () => {
         onToggle(!open);
     };
@@ -38,10 +40,10 @@ const ListGroup: FC<ListGroupProps> = ({ label, open, onToggle, children }) => {
     return (
         <Root>
             <ListSubheader key={label} sx={{ padding: '0' }}>
-                <ListItem button onClick={handleClick}>
+                <ListItemButton onClick={handleClick} disabled={disabled}>
                     <ListItemText primary={label} />
                     {open ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
+                </ListItemButton>
                 <Divider />
             </ListSubheader>
             <Collapse in={open} timeout="auto" unmountOnExit>

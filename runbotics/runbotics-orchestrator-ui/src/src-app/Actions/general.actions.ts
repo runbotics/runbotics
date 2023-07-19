@@ -23,7 +23,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                                 additionalProperties: {
                                     mainFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Message'),
                                     subFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Variable'),
-                                    isRequired: true,
+                                    isRequired: false,
                                     type: 'string',
                                 },
                             },
