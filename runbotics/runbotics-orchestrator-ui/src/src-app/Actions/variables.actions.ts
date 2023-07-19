@@ -44,8 +44,8 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    variable: null,
-                    value: null
+                    variable: undefined,
+                    value: undefined
                 }
             }
         }
@@ -92,7 +92,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    variable: null,
+                    variable: undefined,
                     value: ['']
                 }
             }

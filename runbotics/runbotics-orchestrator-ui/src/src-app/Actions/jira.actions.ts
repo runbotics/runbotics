@@ -60,10 +60,10 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    email: null,
+                    email: undefined,
                 },
                 output: {
-                    variableName: null,
+                    variableName: undefined,
                 },
             },
         },

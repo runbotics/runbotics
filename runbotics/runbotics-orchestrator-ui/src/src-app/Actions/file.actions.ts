@@ -53,7 +53,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: null,
+                    path: undefined,
                     content: undefined,
                     separator: '',
                 },
@@ -102,7 +102,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: null,
+                    path: undefined,
                     // fileName: "",
                 },
                 output: {},
@@ -143,7 +143,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: null,
+                    path: undefined,
                 },
                 output: {},
             },
@@ -194,10 +194,10 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: null,
+                    path: undefined,
                 },
                 output: {
-                    variableName: null,
+                    variableName: undefined,
                 },
             },
         },
@@ -240,8 +240,8 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             formData: {
                 input: {
-                    path: null,
-                    content: null,
+                    path: undefined,
+                    content: undefined,
                 },
                 output: {},
             },

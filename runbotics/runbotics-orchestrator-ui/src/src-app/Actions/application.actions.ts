@@ -33,7 +33,7 @@ const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    location: null,
+                    location: undefined,
                 },
             },
         },

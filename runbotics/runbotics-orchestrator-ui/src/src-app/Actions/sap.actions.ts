@@ -46,7 +46,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    connectionName: null,
+                    connectionName: undefined,
                     user: 'SAP_USERNAME',
                     password: 'SAP_PASSWORD'
                 },
@@ -108,7 +108,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    transaction: null,
+                    transaction: undefined,
                 },
             },
         },
@@ -166,7 +166,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'wnd[0]',
-                    value: null,
+                    value: undefined,
                 },
             },
         },
@@ -321,7 +321,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                     target: 'wnd[0]',
                 },
                 output: {
-                    variableName: null,
+                    variableName: undefined,
                 },
             },
         },
@@ -375,7 +375,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                     target: 'wnd[0]',
                 },
                 output: {
-                    variableName: null,
+                    variableName: undefined,
                 },
             },
         },
@@ -545,7 +545,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'wnd[0]',
-                    menuId: null,
+                    menuId: undefined,
                 },
             },
         },
@@ -583,7 +583,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'wnd[0]',
-                    optionId: null,
+                    optionId: undefined,
                 },
             },
         },
@@ -621,7 +621,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     target: 'wnd[0]',
-                    toolId: null,
+                    toolId: undefined,
                 },
             },
         },
