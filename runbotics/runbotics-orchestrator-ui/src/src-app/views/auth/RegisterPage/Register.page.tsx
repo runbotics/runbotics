@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import {
     Box,
@@ -26,7 +26,7 @@ import useTranslations, {
 import { useDispatch } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 import { Language } from '#src-app/translations/translations';
-import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
+import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
 import { recordFailedRegistration, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 
@@ -86,11 +86,14 @@ const RegisterPage: FC = () => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
+    useEffect(() => {
+        recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
+    }, []);
+
     const handleFormSubmit = async (
         values: RegisterFormState,
         { setErrors, setStatus, setSubmitting }
     ) => {
-        recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
         if (!window.navigator.onLine) {
             setStatus({ success: false });
             setSubmitting(false);
@@ -102,8 +105,7 @@ const RegisterPage: FC = () => {
 
         await dispatch(register(registerValues))
             .then(unwrapResult)
-            .then((result) => {
-                const userData = JSON.parse(result.config.data);
+            .then(() => {
                 setStatus({ success: true });
                 setSubmitting(false);
                 router.push('/', null, { locale: router.locale });
@@ -112,15 +114,12 @@ const RegisterPage: FC = () => {
                     autoHideDuration: 5000,
                 });
 
-                if(typeof userData?.email !== 'string') return;
-
-                const userEmail = userData?.email as string;
                 recordSuccessfulAuthentication({
                     trackLabel: TRACK_LABEL.SUCCESSFUL_REGISTRATION,
-                    identifyBy: userEmail,
+                    identifyBy: values?.email,
                     userType: USER_TYPE.USER,
                     sourcePage: SOURCE_PAGE.REGISTER,
-                    email: userEmail,
+                    email: values?.email,
                 });
             })
             .catch((error) => {
@@ -131,28 +130,29 @@ const RegisterPage: FC = () => {
                 const errorKey = `Register.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message}: ${translate(
-                        'Register.Error.UnexpectedError'
-                    )}`;
-                    setErrors({ submit: customErrorMessage });
-                    enqueueSnackbar(customErrorMessage, {
-                        variant: 'error',
-                        autoHideDuration: 10000,
-                    });
+                    const errorMsg = translate('Register.Error.UnexpectedError');
+                    setErrors({ submit: errorMsg });
+                    enqueueSnackbar(
+                        errorMsg,
+                        {
+                            variant: 'error',
+                            autoHideDuration: 10000,
+                        }
+                    );
                     recordFailedRegistration({
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_REGISTRATION,
                         identifyBy: values.email,
                         userType: USER_TYPE.USER,
                         sourcePage: SOURCE_PAGE.REGISTER,
-                        reason: 'unexpected error',
+                        reason: ERROR_REASON.UNEXPECTED_ERROR,
                     });
 
                     return;
                 }
 
-                const customErrorMessage = `${translate(errorKey)}`;
-                setErrors({ submit: customErrorMessage });
-                enqueueSnackbar(customErrorMessage, {
+                const translatedErrorMsg = translate(errorKey);
+                setErrors({ submit: translatedErrorMsg });
+                enqueueSnackbar(translatedErrorMsg, {
                     variant: 'error',
                     autoHideDuration: 10000,
                 });
@@ -162,7 +162,7 @@ const RegisterPage: FC = () => {
                     identifyBy: values.email,
                     userType: USER_TYPE.USER,
                     sourcePage: SOURCE_PAGE.REGISTER,
-                    reason: customErrorMessage,
+                    reason: translate(errorKey, { lng: 'en' }),
                 });
             });
     };

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import {
     Box,
@@ -47,7 +47,10 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
-    recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
+
+    useEffect(() => {
+        recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
+    }, []);
 
     const handleGuestLogin = () => {
         setGuestSubmitting(true);

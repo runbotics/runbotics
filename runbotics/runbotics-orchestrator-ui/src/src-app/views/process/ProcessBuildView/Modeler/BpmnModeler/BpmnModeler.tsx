@@ -26,8 +26,8 @@ import {
     processActions,
 } from '#src-app/store/slices/Process';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
-import { CLICKABLE_ITEM, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
-import { identifyPageByUrl, recordItemClick, recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
+import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
+import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
 
 import {
     centerCanvas,
@@ -177,20 +177,9 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const handleSave = () => {
             recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
             if (isSaveDisabled) return;
-            try {
-                onSave();
-                dispatch(processActions.setCommandStack(initialCommandStackInfo));
-                dispatch(processActions.setImported(false));
-                recordProcessSaveSuccess({ processName: String(process.id), processId: process.name });
-            } catch (err) {
-                recordProcessSaveFail({
-                    processName: process.name,
-                    processId: String(process.id),
-                    reason: err.message
-                        ? err.message
-                        : ERROR_REASON.UNKNOWN
-                });
-            }
+            onSave();
+            dispatch(processActions.setCommandStack(initialCommandStackInfo));
+            dispatch(processActions.setImported(false));
         };
 
         const onCenter = () => {

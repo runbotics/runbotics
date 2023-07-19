@@ -19,6 +19,7 @@ module.exports = {
     },
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
+        mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN
     },
 
     modularizeImports: {
