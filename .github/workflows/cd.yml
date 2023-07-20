@@ -264,7 +264,7 @@ jobs:
     needs: [push-ui, push-scheduler, push-api]
     runs-on: ubuntu-latest
     steps:
-      - name: dispatch
+      - name: dispatch-deploy
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACTION_DISPATCH }}
