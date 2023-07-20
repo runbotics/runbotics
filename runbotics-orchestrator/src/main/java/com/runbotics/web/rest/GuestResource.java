@@ -1,9 +1,9 @@
 package com.runbotics.web.rest;
 
-import com.runbotics.config.Constants;
 import com.runbotics.domain.Guest;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.GuestService;
+import com.runbotics.service.dto.ProcessDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
-import javax.validation.constraints.Pattern;
 import java.util.Optional;
 
 @RestController
@@ -26,6 +25,7 @@ public class GuestResource {
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+
     public GuestResource(GuestService guestService) {
         this.guestService = guestService;
     }
@@ -42,7 +42,7 @@ public class GuestResource {
         guestService.deleteAllGuestAccounts();
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted","All"))
+            .headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted", "All"))
             .build();
     }
 
@@ -53,4 +53,11 @@ public class GuestResource {
         return ResponseUtil.wrapOrNotFound(guest);
     }
 
+    @GetMapping("/process")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.GUEST + "\")")
+    public ResponseEntity<ProcessDTO> getGuestProcess() {
+        log.debug("REST request to get Guest demo process");
+        var process = this.guestService.getGuestDemoProcess();
+        return ResponseEntity.ok(process);
+    }
 }
