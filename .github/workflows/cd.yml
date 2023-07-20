@@ -268,5 +268,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v2.1.1
         with:
           token: ${{ secrets.ACTION_DISPATCH }}
+          repository: runbotics/runbotics-deployment
           event-type: dispatch
   
