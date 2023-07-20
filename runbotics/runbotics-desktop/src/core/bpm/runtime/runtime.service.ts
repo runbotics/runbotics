@@ -376,13 +376,14 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         };
 
         const services = this.createEngineExecutionServices(processInstanceId);
+        const triggerData = request.triggerData;
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
             variables: {
                 ...request.variables,
                 tempFolder: this.getTempDirPath(),
-                userEmail: request.triggerData.userEmail,
+                ...(triggerData && 'userEmail' in triggerData && { userEmail: triggerData.userEmail }),
             },
             listener,
         };
