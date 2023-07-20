@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import {
     Box,
@@ -29,6 +29,8 @@ import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
 import { recordFailedRegistration, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
+
+import { FormCheckbox } from '#src-landing/views/sections/ContactSection/ContactForm/FormFields';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
 
@@ -61,12 +63,12 @@ const StyledPage = styled(Page)(({ theme }) => ({
 }));
 
 interface RegisterFormState {
-    email: string,
-    name: string,
-    password: string,
-    passwordConfirmation: string,
-    submit: null | boolean,
-    langKey: Language
+    email: string;
+    name: string;
+    password: string;
+    passwordConfirmation: string;
+    submit: null | boolean;
+    langKey: Language;
 }
 
 const initialValues: RegisterFormState = {
@@ -80,6 +82,7 @@ const initialValues: RegisterFormState = {
 
 // eslint-disable-next-line max-lines-per-function
 const RegisterPage: FC = () => {
+    const [policyCheckbox, setPolicyCheckbox] = useState(false);
     const { translate } = useTranslations();
     const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
@@ -89,6 +92,10 @@ const RegisterPage: FC = () => {
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
     }, []);
+
+    const handleCheckboxChanged = () => {
+        setPolicyCheckbox((prevCheckbox) => !prevCheckbox);
+    };
 
     const handleFormSubmit = async (
         values: RegisterFormState,
@@ -167,6 +174,15 @@ const RegisterPage: FC = () => {
             });
     };
 
+    const policyCheckboxLabel = useMemo(() =>
+        <>
+            {translate('Landing.Policy.Info.Label')}&nbsp;
+            <RouterLink href="/policy" target="blank">
+                <Link>{translate('Landing.Policy.Info.Link')}</Link>
+            </RouterLink>
+        </> 
+    , []);
+
     const renderForm = ({
         errors,
         handleBlur,
@@ -222,10 +238,20 @@ const RegisterPage: FC = () => {
                 value={values.passwordConfirmation}
                 variant="outlined"
             />
-            <Box mt={2}>
+            <Box my={3}>
+                <FormCheckbox
+                    name="checkbox"
+                    type="checkbox"
+                    labelValue={policyCheckboxLabel}
+                    onChange={handleCheckboxChanged}
+                    disabled={isSubmitting}
+                    checked={policyCheckbox}
+                />
+            </Box>
+            <Box>
                 <Button
                     color="secondary"
-                    disabled={isSubmitting}
+                    disabled={!policyCheckbox || isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"
