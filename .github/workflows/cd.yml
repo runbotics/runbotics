@@ -265,7 +265,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: dispatch
-        uses: peter-evans/repository-dispatch@v2.1.1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.ACTION_DISPATCH }}
           repository: runbotics/runbotics-deployment
