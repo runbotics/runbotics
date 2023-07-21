@@ -43,6 +43,7 @@ export class ProcessController {
                 input,
                 user: request.user,
                 trigger: { name: TriggerEvent.MANUAL },
+                triggerData: { userEmail: request.user.email }
             });
 
             this.logger.log(`<= Process ${processId} successfully started`);

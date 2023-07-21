@@ -89,6 +89,7 @@ const UTILS = [
 
 const VARIABLES = [
     'tempFolder',
+    'userEmail',
 ].map(variable => ({
     label: variable,
     value: variable,

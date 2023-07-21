@@ -18,7 +18,7 @@ export interface IProcessInstance {
     bot?: IBot;
     error?: string | null;
     trigger?: ITriggerEvent;
-    triggerData?: EmailTriggerData | unknown;
+    triggerData?: EmailTriggerData | UserTriggerData | unknown;
     warning?: boolean;
 }
 
@@ -27,6 +27,10 @@ export interface EmailTriggerData {
     sender: string;
     ccRecipients?: string[];
     bccRecipients?: string[];
+}
+
+export interface UserTriggerData {
+    userEmail?: string;
 }
 
 export enum ProcessInstanceStatus {
