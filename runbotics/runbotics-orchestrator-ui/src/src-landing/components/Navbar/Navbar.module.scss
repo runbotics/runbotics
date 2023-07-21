@@ -121,6 +121,10 @@
             text-align: center;
             margin: 0;
 
+            &:first-child {
+                display: none;
+            }
+
             &:nth-child(-n + 4) {
                 grid-column: span 3;
             }
@@ -135,9 +139,7 @@
     .minimized {
         grid-template-columns: repeat(2, 1fr);
         .listItem {
-            &:first-child {
-                display: none;
-            }
+
 
             &:nth-child(-n + 4) {
                 grid-column: span 1;
