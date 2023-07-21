@@ -4,7 +4,7 @@ import styles from './Checkbox.module.scss';
 
 export interface CheckboxProps extends Omit<HTMLAttributes<HTMLInputElement>, 'value'> {
     checked: boolean;
-    label: string;
+    label: string | JSX.Element;
     name?: string;
     disabled?: boolean;
     required?: boolean;
