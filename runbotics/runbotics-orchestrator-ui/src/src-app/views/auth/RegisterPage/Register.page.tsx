@@ -82,7 +82,7 @@ const initialValues: RegisterFormState = {
 
 // eslint-disable-next-line max-lines-per-function
 const RegisterPage: FC = () => {
-    const [policyCheckbox, setPolicyCheckbox] = useState(false);
+    const [isPolicyChecked, setIsPolicyChecked] = useState(false);
     const { translate } = useTranslations();
     const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
@@ -93,8 +93,8 @@ const RegisterPage: FC = () => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
     }, []);
 
-    const handleCheckboxChanged = () => {
-        setPolicyCheckbox((prevCheckbox) => !prevCheckbox);
+    const handleCheckboxChange = () => {
+        setIsPolicyChecked((prevCheckbox) => !prevCheckbox);
     };
 
     const handleFormSubmit = async (
@@ -181,7 +181,7 @@ const RegisterPage: FC = () => {
                 <Link>{translate('Landing.Policy.Info.Link')}</Link>
             </RouterLink>
         </> 
-    , []);
+    , [translate]);
 
     const renderForm = ({
         errors,
@@ -243,15 +243,15 @@ const RegisterPage: FC = () => {
                     name="checkbox"
                     type="checkbox"
                     labelValue={policyCheckboxLabel}
-                    onChange={handleCheckboxChanged}
+                    onChange={handleCheckboxChange}
                     disabled={isSubmitting}
-                    checked={policyCheckbox}
+                    checked={isPolicyChecked}
                 />
             </Box>
             <Box>
                 <Button
                     color="secondary"
-                    disabled={!policyCheckbox || isSubmitting}
+                    disabled={!isPolicyChecked || isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"

@@ -1,39 +1,77 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
-import { Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
+
+import useTranslations from '#src-app/hooks/useTranslations';
 
 import styles from './PrivacyPolicyView.module.scss';
 
-const PrivacyPolicyView: FC = () => (
-    <Container className={styles.container} maxWidth="md">
-        <Typography variant="h1" textAlign="center" marginY={10}>
-            Privacy policy
-        </Typography>
-        {[1, 2, 3, 4].map((el) => (
-            <>
-                <Typography variant="h4" marginTop={3} marginBottom={1}>
-                    {el}. Subtitle
-                </Typography>
+const PrivacyPolicyView: FC = () => {
+    const { translate } = useTranslations();
+
+    const policyMessageStructure = {
+        '1': { paragraph: translate('Landing.Policy.Page.Paragraph.1') },
+        '2': {
+            paragraph: translate('Landing.Policy.Page.Paragraph.2'),
+            subsection: {
+                a: translate('Landing.Policy.Page.Paragraph.2.a'),
+                b: translate('Landing.Policy.Page.Paragraph.2.b'),
+                c: translate('Landing.Policy.Page.Paragraph.2.c'),
+                d: translate('Landing.Policy.Page.Paragraph.2.d'),
+                e: translate('Landing.Policy.Page.Paragraph.2.e'),
+                f: translate('Landing.Policy.Page.Paragraph.2.f'),
+            },
+        },
+        '3': { paragraph: translate('Landing.Policy.Page.Paragraph.3') },
+        '4': {
+            paragraph: translate('Landing.Policy.Page.Paragraph.4'),
+            subsection: {
+                a: translate('Landing.Policy.Page.Paragraph.4.a'),
+                b: translate('Landing.Policy.Page.Paragraph.4.b'),
+            },
+        },
+        '5': { paragraph: translate('Landing.Policy.Page.Paragraph.5') },
+        '6': { paragraph: translate('Landing.Policy.Page.Paragraph.6') },
+        '7': { paragraph: translate('Landing.Policy.Page.Paragraph.7') },
+        '8': { paragraph: translate('Landing.Policy.Page.Paragraph.8') },
+        '9': { paragraph: translate('Landing.Policy.Page.Paragraph.9') },
+        '10': { paragraph: translate('Landing.Policy.Page.Paragraph.10') },
+    };
+
+    const renderSubsections = (subsection) => 
+        Object.keys(subsection).map((key) => (
+            <Box key={key} marginLeft={3} display='flex' gap={1}>
+                <Typography>{key}.</Typography>
+                <Typography>{subsection[key]}</Typography>
+            </Box>
+        ));
+
+    const renderParagraphs = useMemo(() => Object.keys(policyMessageStructure).map((key) => (
+        <Box key={key} mb={1}>
+            <Box display='flex' gap={1}>
+                <Typography>{key}.</Typography>
                 <Typography>
-                    {`Contrary to popular belief, Lorem Ipsum is not simply
-                random text. It has roots in a piece of classical Latin
-                literature from 45 BC, making it over 2000 years old.
-                Richard McClintock, a Latin professor at Hampden-Sydney
-                College in Virginia, looked up one of the more obscure
-                Latin words, consectetur, from a Lorem Ipsum passage,
-                and going through the cites of the word in classical
-                literature, discovered the undoubtable source. Lorem
-                Ipsum comes from sections 1.10.32 and 1.10.33 of "de
-                Finibus Bonorum et Malorum" (The Extremes of Good and
-                Evil) by Cicero, written in 45 BC. This book is a
-                treatise on the theory of ethics, very popular during
-                the Renaissance. The first line of Lorem Ipsum, "Lorem
-                ipsum dolor sit amet.", comes from a line in section
-                1.10.32.`}
+                    {policyMessageStructure[key].paragraph}
                 </Typography>
-            </>
-        ))}
-    </Container>
-);
+            </Box>
+            {policyMessageStructure[key].subsection && renderSubsections(policyMessageStructure[key].subsection)}
+        </Box>
+    )), [translate]);
+
+    return (
+        <Container className={styles.container} maxWidth="md">
+            <Typography variant="h1" textAlign="center" marginY={10}>
+                {translate('Landing.Policy.Page.Title')}
+            </Typography>
+            <Typography mb={2}>
+                {translate('Landing.Policy.Page.Greeting')}
+            </Typography>
+            <Typography mb={1}>
+                {translate('Landing.Policy.Page.Introduction')}
+            </Typography>
+            {renderParagraphs}
+        </Container>
+    );
+};
 
 export default PrivacyPolicyView;
