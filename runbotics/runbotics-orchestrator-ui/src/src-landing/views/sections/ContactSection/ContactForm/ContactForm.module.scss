@@ -59,10 +59,13 @@ $FORM-MAX-WIDTH: 800px;
 
 .hidden{
     @include common-styles;
-
     height: 0;
 
     opacity: 0;
+
+    li{
+        height: 0;
+    }
 }
 
 
