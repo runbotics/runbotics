@@ -165,12 +165,9 @@
 
     .listItem {
         &:first-child {
-            // margin-top: 5vh;
-
             display: flex;
             align-items: center;
             justify-content: center;
-            // height: 20%;
         }
 
         &:last-child {
