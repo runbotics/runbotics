@@ -23,9 +23,6 @@ interface BlogViewProps {
     featuredPost?: BlogPost;
 }
 
-
-
-
 const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPost }) => {
     const [isFilterDisplayed, setFilterDisplayed] = useState(false);
 

@@ -1,13 +1,15 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.Process;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.DoubleStream;
+import com.runbotics.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Spring Data SQL repository for the Process entity.
@@ -42,4 +44,6 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
         "DELETE FROM Process process WHERE process.createdBy IS NULL AND process.isPublic = false"
     )
     void deleteUnassignedPrivateProcesses();
+
+    List<Process> findAllByCreatedBy(User user);
 }
