@@ -316,6 +316,11 @@ public class UserService {
         return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
     }
 
+    @Transactional(readOnly = true)
+    public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable) {
+        return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+    }
+
     /**
      * Not activated users should be automatically deleted after 3 days.
      * <p>
