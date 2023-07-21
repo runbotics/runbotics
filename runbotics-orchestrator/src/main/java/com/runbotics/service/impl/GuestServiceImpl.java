@@ -9,6 +9,7 @@ import com.runbotics.service.GuestService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
+import com.runbotics.service.exception.GuestProcessInternalServerError;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,8 +57,7 @@ public class GuestServiceImpl implements GuestService {
         List<ProcessDTO> processes = this.processService.findUserProcesses(guest);
 
         if (processes.size() > 1) {
-            // TODO
-            throw new RuntimeException();
+            throw new GuestProcessInternalServerError();
         }
 
         return processes.get(0);
