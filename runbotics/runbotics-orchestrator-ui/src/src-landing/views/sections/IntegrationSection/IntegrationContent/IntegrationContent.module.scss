@@ -21,6 +21,7 @@
 .logosGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   grid-gap: $padding-10;
   padding-top: $padding-8;
   padding-bottom: $padding-8;

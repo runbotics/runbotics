@@ -42,8 +42,9 @@ const ProsSection = () => {
                 </Typography>
             </div>
             <div className={styles.grid__head__3}></div>
+
             {tiles}
-            <MediaScroller className={tiles.length > 0 && styles.mediaScroller}>
+            <MediaScroller className={styles.mediaScroller}>
                 {tiles}
             </MediaScroller>
         </section>

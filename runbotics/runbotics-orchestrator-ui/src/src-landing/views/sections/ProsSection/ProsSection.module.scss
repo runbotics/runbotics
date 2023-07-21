@@ -19,7 +19,7 @@ $GRID-GAPS: 27px 23px;
 }
 
 .mediaScroller {
-    display: none;
+    display: none !important;
 }
 
 .grid {
@@ -99,7 +99,7 @@ $GRID-GAPS: 27px 23px;
     }
 
     .mediaScroller {
-        display: grid;
+        display: grid !important;
         grid-auto-columns: minmax(300px, 40%);
         padding: 5px;
     }
