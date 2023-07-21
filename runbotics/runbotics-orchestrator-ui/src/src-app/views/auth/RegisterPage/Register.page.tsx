@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
+
 import {
     Box,
     Card,
@@ -31,6 +32,8 @@ import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from 
 import { recordFailedRegistration, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 
 import { FormCheckbox } from '#src-landing/views/sections/ContactSection/ContactForm/FormFields';
+
+import styles from './Register.module.scss';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
 
@@ -177,7 +180,7 @@ const RegisterPage: FC = () => {
     const policyCheckboxLabel = useMemo(() =>
         <>
             {translate('Landing.Policy.Info.Label')}&nbsp;
-            <RouterLink href="/policy" target="blank">
+            <RouterLink href="/privacy-policy" target="blank">
                 <Link>{translate('Landing.Policy.Info.Link')}</Link>
             </RouterLink>
         </> 
@@ -242,6 +245,7 @@ const RegisterPage: FC = () => {
                 <FormCheckbox
                     name="checkbox"
                     type="checkbox"
+                    className={styles.checkbox}
                     labelValue={policyCheckboxLabel}
                     onChange={handleCheckboxChange}
                     disabled={isSubmitting}
