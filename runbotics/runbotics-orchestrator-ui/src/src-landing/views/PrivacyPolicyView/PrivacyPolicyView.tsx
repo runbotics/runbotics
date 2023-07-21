@@ -6,10 +6,21 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import styles from './PrivacyPolicyView.module.scss';
 
+interface Subsection {
+    [key: string]: string;
+}
+
+interface PolicyMessage {
+    [key: string]: {
+        paragraph: string;
+        subsection?: Subsection;
+    };
+}
+
 const PrivacyPolicyView: FC = () => {
     const { translate } = useTranslations();
 
-    const policyMessageStructure = {
+    const policyMessageStructure: PolicyMessage = {
         '1': { paragraph: translate('Landing.Policy.Page.Paragraph.1') },
         '2': {
             paragraph: translate('Landing.Policy.Page.Paragraph.2'),
@@ -38,21 +49,19 @@ const PrivacyPolicyView: FC = () => {
         '10': { paragraph: translate('Landing.Policy.Page.Paragraph.10') },
     };
 
-    const renderSubsections = (subsection) => 
+    const renderSubsections = (subsection: Subsection) =>
         Object.keys(subsection).map((key) => (
-            <Box key={key} marginLeft={3} display='flex' gap={1}>
+            <Box key={key} marginLeft={3} display="flex" gap={1}>
                 <Typography>{key}.</Typography>
                 <Typography>{subsection[key]}</Typography>
             </Box>
         ));
 
-    const renderParagraphs = useMemo(() => Object.keys(policyMessageStructure).map((key) => (
+    const renderParagraphs = useMemo( () => Object.keys(policyMessageStructure).map((key) => (
         <Box key={key} mb={1}>
-            <Box display='flex' gap={1}>
+            <Box display="flex" gap={1}>
                 <Typography>{key}.</Typography>
-                <Typography>
-                    {policyMessageStructure[key].paragraph}
-                </Typography>
+                <Typography>{policyMessageStructure[key].paragraph}</Typography>
             </Box>
             {policyMessageStructure[key].subsection && renderSubsections(policyMessageStructure[key].subsection)}
         </Box>
