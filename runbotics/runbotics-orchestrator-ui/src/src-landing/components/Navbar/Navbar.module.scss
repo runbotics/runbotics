@@ -140,7 +140,6 @@
         grid-template-columns: repeat(2, 1fr);
         .listItem {
 
-
             &:nth-child(-n + 4) {
                 grid-column: span 1;
             }
