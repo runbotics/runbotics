@@ -33,7 +33,7 @@ const Footer: FC = () => {
             <div className={styles.divider} />
             <div className={styles.copyright}>
                 <Typography>
-                    {currentYear} &copy; RunBotics.com
+                    {currentYear} &copy; RunBotics
                 </Typography>
             </div>
         </div>
