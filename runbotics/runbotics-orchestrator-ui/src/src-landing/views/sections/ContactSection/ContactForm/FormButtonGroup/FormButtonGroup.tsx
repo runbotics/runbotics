@@ -24,7 +24,7 @@ const AdditionalInfo: FC<{ status: Status }> = ({ status }) => {
     if (status?.type === FormStatusType.SUCCESS) {
         return <ResetBox />;
     }
-    return <div />;
+    return null;
 };
 
 const FormButtonGroup: FC<{ status: Status }> = ({ status }) => {

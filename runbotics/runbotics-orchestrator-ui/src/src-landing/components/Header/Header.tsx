@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
-import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
@@ -18,7 +17,7 @@ import LoginLink from './LoginLink';
 
 const Header = () => {
     const { translate } = useTranslations();
-    const { locale, pathname } = useRouter();
+    const { locale } = useRouter();
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
     const toggleNav = () => {
@@ -36,7 +35,6 @@ const Header = () => {
     };
 
     const iconMobileStyle = isNavExpanded ? styles.isActive : '';
-    const shouldDisplayNavbar = pathname === '/';
 
     return (
         <header
@@ -60,13 +58,11 @@ const Header = () => {
                         text={translate('Landing.Header.Button.SkipNav')}
                     />
                 </Link>
-                <If condition={shouldDisplayNavbar}>
-                    <Navbar
-                        isNavExpanded={isNavExpanded}
-                        hideNav={hideNav}
-                        isMobileVisible={false}
-                    />
-                </If>
+                <Navbar
+                    isNavExpanded={isNavExpanded}
+                    hideNav={hideNav}
+                    isMobileVisible={false}
+                />
                 <div className={styles.buttonGroup}>
                     <LanguageSwitcher />
                     <button

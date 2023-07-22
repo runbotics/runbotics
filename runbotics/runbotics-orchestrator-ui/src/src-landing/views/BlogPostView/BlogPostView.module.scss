@@ -14,11 +14,26 @@
     padding-top: calc($x-content-padding + $HEADER_HEIGHT);
 }
 
+@mixin link-styles {
+    color: $palette-accent-primary;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: $landing-link-transition;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
+    }
+}
+
 .contentArticle {
     max-width: $MAX_BLOG_CONTENT_WIDTH;
 
     padding-top: $padding-5;
     padding-bottom: 64px;
+
+    p > a {
+        @include link-styles;
+    }
 }
 
 .breadCrumbsWrapper {
@@ -36,11 +51,14 @@
 
 .tag {
     margin-right: $margin-1;
+    border-bottom: 3px solid transparent;
 }
 
 .tagLink {
     @extend .typography__primary, .typography__Roboto, .typography__h4;
-    composes: tag;
+    @include link-styles;
+    border-bottom-width: 3px;
+    margin-right: $margin-1;
 }
 
 @media (max-width: $breakpoint-md) {
