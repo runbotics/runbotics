@@ -38,4 +38,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 
     Page<User> findAllByActivatedIsFalse(Pageable pageable);
+
+    Page<User> findAllByActivatedIsTrue(Pageable pageable);
+
 }
