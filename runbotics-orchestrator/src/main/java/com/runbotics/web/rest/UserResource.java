@@ -227,7 +227,6 @@ public class UserResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-
     /**
      * {@code DELETE /admin/users/:login} : delete the "login" User.
      *
@@ -241,7 +240,4 @@ public class UserResource {
         userService.deleteUser(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "userManagement.deleted", login)).build();
     }
-
-
-
 }
