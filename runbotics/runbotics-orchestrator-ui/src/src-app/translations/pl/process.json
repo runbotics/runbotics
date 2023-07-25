@@ -604,7 +604,7 @@
     "Process.Details.Modeler.ActionPanel.ActionsGroup.BeeOffice": "BeeOffice",
     "Process.Details.Modeler.ActionPanel.ActionsGroup.SAP": "SAP",
     "Process.Details.Modeler.ActionPanel.ActionsGroup.Application": "Aplikacja",
-    "Process.Details.Modeler.ActionPanel.ActionsGroup.Excel": "Excel Lokalnie",
+    "Process.Details.Modeler.ActionPanel.ActionsGroup.Excel": "Excel",
     "Process.Details.Modeler.ActionPanel.ActionsGroup.External": "Zewnętrzny",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.Login": "Logowanie",
     "Process.Details.Modeler.ActionPanel.TemplatesGroup.API": "API",
