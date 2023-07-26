@@ -182,14 +182,14 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flat();
-
+            
+        if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars, loopVariables: [] };
+        
         const loopIds = allVarsAssigningActions
             .filter((element: ScopedModdleElement) => element.actionId === 'loop.loop')
             .map((element: ScopedModdleElement) => element.id);
-
+        
         const loopIterator = loopIds.includes(selectedElementParentId) ? [{ name: 'iterator', value: 'variable' }] : [];
-
-        if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars, loopVariables: [] };
             
         const parentScopes = getParentScopes(updatedScopeTree, selectedElementParentId);
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [], loopVariables: [] };
