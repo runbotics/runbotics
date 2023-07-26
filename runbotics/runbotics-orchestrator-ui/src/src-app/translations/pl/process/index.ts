@@ -1,9 +1,9 @@
-import commonActionsTranslations from './actions/common';
+import processActionsTranslations from './actions';
 import rest from './process.json';
 
 const processTranslations = {
     ...rest,
-    ...commonActionsTranslations,
+    ...processActionsTranslations,
 };
 
 export default processTranslations;

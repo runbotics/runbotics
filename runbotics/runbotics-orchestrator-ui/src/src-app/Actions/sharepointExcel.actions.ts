@@ -22,7 +22,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             cell: {
@@ -33,13 +33,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['cell'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.GetCell.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -77,7 +77,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             range: {
@@ -88,13 +88,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['range'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.GetRange.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -132,7 +132,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             content: {
@@ -147,13 +147,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['content', 'cell'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.SetCell.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -192,7 +192,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             range: {
@@ -207,15 +207,15 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['range', 'values'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -254,7 +254,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             siteRelativePath: {
@@ -291,15 +291,15 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -348,7 +348,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
@@ -373,15 +373,15 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['filePath', 'worksheetName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -421,15 +421,15 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.CloseSession.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.CloseSession.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

@@ -22,7 +22,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.Import.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             file: {
@@ -34,12 +34,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.Import.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.Import.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.Import.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -74,7 +74,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -93,12 +93,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['path', 'content', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.AppendFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -137,7 +137,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -152,12 +152,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['path', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.ReadFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -195,7 +195,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -214,12 +214,12 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['path', 'content', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.WriteFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },

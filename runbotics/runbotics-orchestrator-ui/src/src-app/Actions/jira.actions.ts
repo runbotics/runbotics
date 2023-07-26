@@ -21,7 +21,7 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWork.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             isAll41JIRA: {
@@ -40,13 +40,13 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['email'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWork.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWork.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Jira.GetLoggedWork.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

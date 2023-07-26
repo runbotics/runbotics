@@ -1,3 +1,4 @@
+import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
@@ -5,7 +6,7 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     'excel.open': {
         id: 'excel.open',
-        label: 'Open',
+        label: translate('Process.Details.Modeler.Actions.Excel.Open.Label'),
         script: 'excel.open',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -14,15 +15,15 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
-                                title: 'Path / Workbook',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Open.Path.Title'),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: 'Worksheet',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title'),
                                 type: 'string',
                             }
                         },
@@ -38,7 +39,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.getCell': {
         id: 'excel.getCell',
-        label: 'getCell',
+        label: translate('Process.Details.Modeler.Actions.Excel.GetCell.Label'),
         script: 'excel.getCell',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -53,26 +54,27 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             row: {
-                                title: 'Row',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
                                 type: 'string',
                             },
                             column: {
-                                title: 'Column',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
                                 type: 'string',
                             },
                         },
                         required: ['row', 'column'],
                     },
                     output: {
-                        title: 'Output',
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: 'Assign variable',
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             }
                         }
@@ -91,7 +93,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.setCell': {
         id: 'excel.setCell',
-        label: 'setCell',
+        label: translate('Process.Details.Modeler.Actions.Excel.SetCell.Label'),
         script: 'excel.setCell',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -100,19 +102,19 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             row: {
-                                title: 'Row',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
                                 type: 'string',
                             },
                             column: {
-                                title: 'Column',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
                                 type: 'string',
                             },
                             value: {
-                                title: 'Value',
+                                title: translate('Process.Details.Modeler.Actions.Common.Value'),
                                 type: 'string'
                             }
                         },
@@ -128,7 +130,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.save': {
         id: 'excel.save',
-        label: 'save',
+        label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
         script: 'excel.save',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -137,11 +139,11 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             fileName: {
-                                title: 'File name / File path',
+                                title: translate('Process.Details.Modeler.Actions.Excel.Save.FileName.Title'),
                                 type: 'string'
                             }
                         }
@@ -156,7 +158,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.close': {
         id: 'excel.close',
-        label: 'close',
+        label: translate('Process.Details.Modeler.Actions.Excel.Close.Label'),
         script: 'excel.close',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,

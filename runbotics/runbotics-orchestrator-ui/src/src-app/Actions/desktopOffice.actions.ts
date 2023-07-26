@@ -21,7 +21,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Open.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
@@ -32,7 +32,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['filePath'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Open.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -65,7 +65,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
@@ -78,7 +78,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['filePath'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -111,13 +111,13 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Save.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Save.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -148,7 +148,7 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.PowerPoint.Close.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],

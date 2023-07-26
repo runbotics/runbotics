@@ -22,7 +22,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             filePath: {
@@ -41,13 +41,13 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['filePath'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromRoot.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -86,7 +86,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             siteRelativePath: {
@@ -123,13 +123,13 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['siteRelativePath', 'listName', 'fileName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -178,7 +178,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             siteRelativePath: {
@@ -213,15 +213,15 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['siteRelativePath', 'listName', 'fieldName', 'fieldValue', 'storeDirectory'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -264,7 +264,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.Upload.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             siteRelativePath: {
@@ -345,7 +345,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharePointFile.CreateFolder.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             siteRelativePath: {
@@ -443,7 +443,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     //             'type': 'object',
     //             'properties': {
     //                 'input': {
-    //                     'title': 'Input',
+    //                     'Process.Details.Modeler.Actions.Common.Input',
     //                     'type': 'object',
     //                     'properties': {
     //                         'siteName': {
@@ -461,7 +461,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     //                     ]
     //                 },
     //                 'output': {
-    //                     'title': 'Output',
+    //                     'Process.Details.Modeler.Actions.Common.Output',
     //                     'type': 'object',
     //                     'properties': {
     //                         'variableName': {

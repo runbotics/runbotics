@@ -22,7 +22,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             employee: {
@@ -65,12 +65,12 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['employee', 'activity', 'date', 'duration'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.BeeOffice.Create.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -114,7 +114,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             email: {
@@ -125,15 +125,15 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['email'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -171,7 +171,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             id: {
@@ -182,13 +182,13 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['id'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
                             },
@@ -226,7 +226,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivity.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             query: {
@@ -243,13 +243,13 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['query'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivity.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivity.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetActivity.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -288,7 +288,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             employee: {
@@ -305,15 +305,15 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['employee', 'date'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Output.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Output.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -346,7 +346,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTable.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             timeTableActivity: {
@@ -386,7 +386,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             group: {
@@ -397,15 +397,15 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['group'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -444,7 +444,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 properties: {
                     input: {
                         title: translate(
-                            'Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Input',
+                            'Process.Details.Modeler.Actions.Common.Input',
                         ),
                         type: 'object',
                         properties: {
@@ -458,15 +458,15 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['query'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.Variable',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
                             },
