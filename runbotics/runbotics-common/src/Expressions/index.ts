@@ -117,6 +117,8 @@ export class Expressions {
                 return false;
             } else if (innerProperty === "null") {
                 return null;
+            } else if (innerProperty === "iterator") {
+                return context.environment.variables.content.index;
             } else {
                 const n = Number(innerProperty);
                 if (!isNaN(n)) return n;
