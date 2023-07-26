@@ -37,8 +37,8 @@ const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
                     defaultValue=''
                     onChange={(e) => handleSelectChange(row.id, e.target.value)}
                 >
-                    {roles.map((role, index) =>
-                        <MenuItem key={index} value={role}>{role.split('_').slice(1).join(' ')}</MenuItem>
+                    {roles.map((role) =>
+                        <MenuItem key={role} value={role}>{role.split('_').slice(1).join(' ')}</MenuItem>
                     )}
                 </Select>
             )
