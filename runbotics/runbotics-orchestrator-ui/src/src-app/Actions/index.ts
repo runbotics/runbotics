@@ -6,7 +6,6 @@ import getAsanaActions from './asana.actions';
 import getBeeOfficeActions from './beeOffice.actions';
 import getBrowserActions from './browser.actions';
 import getCsvActions from './csv.actions';
-import getDesktopOfficeActions from './desktopOffice.actions';
 import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
 import getGeneralActions from './general.actions';
@@ -15,6 +14,7 @@ import getJavascriptActions from './javascript.actions';
 import getJiraActions from './jira.actions';
 import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
+import getPowerPointActions from './powerpoint.actions';
 import getSapActions from './sap.actions';
 import getSharepointExcelActions from './sharepointExcel.actions';
 import getSharepointFileActions from './sharepointFile.actions';
@@ -33,7 +33,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getCsvActions(),
     ...getSharepointExcelActions(),
     ...getSharepointFileActions(),
-    ...getDesktopOfficeActions(),
+    ...getPowerPointActions(),
     ...getBrowserActions(),
     ...getJavascriptActions(),
     ...getMailActions(),

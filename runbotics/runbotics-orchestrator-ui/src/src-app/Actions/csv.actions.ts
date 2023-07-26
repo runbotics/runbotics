@@ -6,7 +6,7 @@ import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getCsvActions: () => Record<string, IBpmnAction> = () => ({
-    'import.csv': {
+    'csv.import': {
         id: 'import.csv',
         label: translate('Process.Details.Modeler.Actions.Import.Csv.Label'),
         script: 'import.csv',
@@ -28,7 +28,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                             file: {
                                 type: 'string',
                                 format: 'data-url',
-                                title: translate('Process.Details.Modeler.Actions.CSV.Import.SingleFile'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.Import.SingleFile'),
                             },
                         },
                         required: [],
@@ -78,15 +78,15 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Path'),
                                 type: 'string',
                             },
                             content: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Content'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Content'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Separator'),
                                 type: 'string',
                             },
                         },
@@ -141,11 +141,11 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Path'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Separator'),
                                 type: 'string',
                             },
                         },
@@ -199,15 +199,15 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Path'),
                                 type: 'string',
                             },
                             content: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Content'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Content'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Separator'),
                                 type: 'string',
                             },
                         },

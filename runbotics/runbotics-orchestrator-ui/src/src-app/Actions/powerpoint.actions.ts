@@ -2,10 +2,8 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
-
-
 // eslint-disable-next-line max-lines-per-function
-const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
+const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
     'powerpoint.open': {
         id: 'powerpoint.open',
         label: translate('Process.Details.Modeler.Actions.Powerpoint.Open.Label'),
@@ -165,4 +163,4 @@ const getDesktopOfficeActions: () => Record<string, IBpmnAction> = () => ({
     },
 });
 
-export default getDesktopOfficeActions;
+export default getPowerPointActions;

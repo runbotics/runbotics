@@ -1,0 +1,24 @@
+const actionsGroupsTranslations = {
+    'Process.Details.Modeler.ActionsGroup.General': 'General',
+    'Process.Details.Modeler.ActionsGroup.Variables': 'Variables',
+    'Process.Details.Modeler.ActionsGroup.Browser': 'Browser',
+    'Process.Details.Modeler.ActionsGroup.Mail': 'Mail',
+    'Process.Details.Modeler.ActionsGroup.Loop.Loop': 'Loop',
+    'Process.Details.Modeler.ActionsGroup.Api': 'API',
+    'Process.Details.Modeler.ActionsGroup.JavaScript': 'JavaScript',
+    'Process.Details.Modeler.ActionsGroup.Asana': 'Asana',
+    'Process.Details.Modeler.ActionsGroup.Google': 'Google',
+    'Process.Details.Modeler.ActionsGroup.Jira': 'JIRA',
+    'Process.Details.Modeler.ActionsGroup.File': 'File',
+    'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
+    'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
+    'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
+    'Process.Details.Modeler.ActionsGroup.SharepointExcel': 'SharePoint Excel',
+    'Process.Details.Modeler.ActionsGroup.SharepointFile': 'SharePoint File',
+    'Process.Details.Modeler.ActionsGroup.BeeOffice': 'BeeOffice',
+    'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
+    'Process.Details.Modeler.ActionsGroup.Application': 'Application',
+    'Process.Details.Modeler.ActionsGroup.External': 'External',
+};
+
+export default actionsGroupsTranslations;

@@ -7,20 +7,27 @@ const getElementLabel = (element: BPMNElement): string => {
     const {
         businessObject: { actionId, label }
     } = element;
+
     if (label) return label;
 
-    const translationKey = `Process.Details.Modeler.Actions.${
-        actionId
-            ? capitalizeFirstLetter({
-                text: actionId,
-                lowerCaseRest: false,
-                delimiter: '.',
-                join: '.'
-            })
-            : ''
-    }.Label`;
+    const partialActionTranslationKey = actionId
+        ? capitalizeFirstLetter({
+            text: actionId,
+            lowerCaseRest: false,
+            delimiter: '.',
+            join: '.'
+        })
+        : '';
+    const translationKey = `Process.Details.Modeler.Actions.${partialActionTranslationKey}.Label`;
+    const actionGroupKey = partialActionTranslationKey.split('.')[0];
+    const actionGroupTranslationKey = `Process.Details.Modeler.ActionsGroup.${actionGroupKey}`;
     
-    if (checkIfKeyExists(translationKey)) return translate(translationKey);
+    if (checkIfKeyExists(translationKey)) {
+        if (checkIfKeyExists(actionGroupTranslationKey)) {
+            return `${translate(actionGroupTranslationKey)}: ${translate(translationKey)}`;
+        }
+        return translate(translationKey);
+    }
     return actionId || '';
 };
 
