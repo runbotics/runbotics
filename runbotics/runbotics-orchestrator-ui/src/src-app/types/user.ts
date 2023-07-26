@@ -10,7 +10,7 @@ export interface User {
     firstName?: string;
     lastName?: string;
     activated?: boolean;
-    langKey?: string;
+    langKey?: 'en' | 'pl';
     authorities?: IAuthority[];
     roles?: string[];
     featureKeys?: FeatureKey[];
