@@ -1,64 +1,48 @@
 import { Select, MenuItem } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import moment from 'moment';
+import { Role } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledButton } from './UsersRegisterTable.styles';
-
-const useUsersRegisterColumns = (): GridColDef[] => {
+const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
+    const roles = Object.keys(Role) as (keyof typeof Role)[];
 
     return [
         {
-            field: 'login',
-            headerName: 'Login',
+            field: 'email',
+            headerName: translate('Users.Register.Table.Columns.Email'),
+            filterable: false,
             flex: 0.6
         },
         {
             field: 'createdDate',
-            headerName: 'Create date',
+            headerName: translate('Users.Register.Table.Columns.CreateDate'),
+            filterable: false,
             flex: 0.3,
             valueFormatter: (params: GridValueFormatterParams) =>
                 moment(params.value as string).format('YYYY-MM-DD HH:mm')
         },
         {
             field: 'role',
-            headerName: 'Role',
+            headerName: translate('Users.Register.Table.Columns.Role'),
             flex: 0.5,
-            renderCell: () => (
+            sortable: false,
+            filterable: false,
+            renderCell: ({ row }) => (
                 <Select
                     fullWidth
                     required
+                    defaultValue=''
+                    onChange={(e) => handleSelectChange(row.id, e.target.value)}
                 >
-                    <MenuItem value='user'>User</MenuItem>
-                    <MenuItem value='admin'>Admin</MenuItem>
+                    {roles.map((role, index) =>
+                        <MenuItem key={index} value={role}>{role.split('_').slice(1).join(' ')}</MenuItem>
+                    )}
                 </Select>
             )
         },
-        {
-            field: 'action',
-            headerName: 'Action',
-            flex: 0.6,
-            renderCell: () => (
-                <>
-                    <StyledButton
-                        type='submit'
-                        variant='contained'
-                        color='primary'
-                    >
-                        Accept
-                    </StyledButton>
-                    <StyledButton
-                        type='submit'
-                        variant='outlined'
-                        color='primary'
-                    >
-                        Deny
-                    </StyledButton>
-                </>
-            )
-        }
     ];
 };
 

@@ -329,8 +329,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable) {
-        return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+    public List<AdminUserDTO> filterAllNotActivatedUsers(List<AdminUserDTO> users) {
+        return users
+            .stream()
+            .filter(
+                user -> !user.isActivated()
+            )
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

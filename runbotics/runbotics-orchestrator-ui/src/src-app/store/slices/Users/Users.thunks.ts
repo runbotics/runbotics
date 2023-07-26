@@ -36,8 +36,14 @@ const processPageURL = (params: PageRequestParams) => URLBuilder
     .params(params)
     .build();
 
-export const getByPageAllNotActivated = createAsyncThunk<Page<IUser>, PageRequestParams>(
-    'users/getByPageAllNotActivated',
+export const getAllNotActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
+    'users/getAllNotActivatedByPage',
     (params) => axios.get<Page<IUser>>(processPageURL(params))
         .then((response) => response.data),
+);
+
+export const updateNotActivated = createAsyncThunk<IUser, IUser>(
+    'users/updateNotActivated',
+    (params) => axios.put<IUser>('/api/admin/users', params)
+        .then((response) => response.data)
 );

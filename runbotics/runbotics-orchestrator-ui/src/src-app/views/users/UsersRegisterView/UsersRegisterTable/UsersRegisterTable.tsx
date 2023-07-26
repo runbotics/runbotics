@@ -1,42 +1,43 @@
 import React, { VFC } from 'react';
 
-import { Card } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Grid, Card } from '@mui/material';
+import { DataGrid, GridInputSelectionModel } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 
 import { usersSelector } from '#src-app/store/slices/Users';
 
-import { StyledGrid } from './UsersRegisterTable.styles';
+import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
+import { DataGridStyle} from './UsersRegisterTable.styles';
 import useUsersRegisterColumns from './useUsersRegisterColumns';
-
-// TEST DATA
-const rows = [
-    { id: 1, username: 'Test1', createDate: 1234},
-    { id: 2, username: 'Test2', createDate: 4321},
-];
-// TEST DATA
 
 interface TableProps {
     page: number;
     onPageChange: (page: number) => void;
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
+    selections: GridInputSelectionModel;
+    handleSelectionChange: (selection: object) => void;
+    handleSelectChange: any;
 }
 
 const UsersRegisterTable: VFC<TableProps> = ({
     page,
     onPageChange,
     pageSize,
-    onPageSizeChange
+    onPageSizeChange,
+    selections,
+    handleSelectionChange,
+    handleSelectChange
 }) => {
-    const userRegisterColumns = useUsersRegisterColumns();
+    const userRegisterColumns = useUsersRegisterColumns(handleSelectChange);
     const { allNotActivatedByPage, loading } = useSelector(usersSelector);
-    
+
     return (
         <Card>
-            <StyledGrid container>
-                <StyledGrid item xs={12} md={12}>
+            <Grid container>
+                <Grid item xs={12} md={12}>
                     <DataGrid
+                        sx={DataGridStyle}
                         autoHeight
                         columns={userRegisterColumns}
                         rows={allNotActivatedByPage?.content ?? []}
@@ -46,10 +47,14 @@ const UsersRegisterTable: VFC<TableProps> = ({
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
-                        disableSelectionOnClick
+                        checkboxSelection={true}
+                        onSelectionModelChange={(e) => handleSelectionChange(e)}
+                        selectionModel={selections}
+                        paginationMode='server'
+                        rowsPerPageOptions={ROWS_PER_PAGE}
                     />
-                </StyledGrid>
-            </StyledGrid>
+                </Grid>
+            </Grid>
         </Card>
     );
 };

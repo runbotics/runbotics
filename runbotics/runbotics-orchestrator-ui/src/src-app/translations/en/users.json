@@ -3,5 +3,13 @@
     "Users.Browse.Tabs.AllUsers.Label": "List of users",
     "Users.Browse.Tabs.AllUsers.Title": "Users",
     "Users.Browse.Tabs.Registration.Label": "Acceptance requests",
-    "Users.Browse.Tabs.Registration.Title": "Users"
+    "Users.Browse.Tabs.Registration.Title": "Users",
+    "Users.Register.View.Events.Success.AcceptingUser": "Success",
+    "Users.Register.View.Events.Error.RolesNotSelected": "Not selected all required roles",
+    "Users.Register.View.SearchBarPlaceholder": "Search",
+    "Users.Register.View.Button.Accept": "Accept",
+    "Users.Register.View.Button.Delete": "Delete",
+    "Users.Register.Table.Columns.Email": "Email",
+    "Users.Register.Table.Columns.CreateDate": "Create date",
+    "Users.Register.Table.Columns.Role": "Role"
 }

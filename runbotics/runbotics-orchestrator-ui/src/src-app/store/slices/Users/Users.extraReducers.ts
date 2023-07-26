@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
-import { getAll, getByPageAllNotActivated, partialUpdate } from './Users.thunks';
+import { getAll, getAllNotActivatedByPage, updateNotActivated, partialUpdate } from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
@@ -29,14 +29,26 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
 
         // GET ALL NOT ACTIVATED
-        .addCase(getByPageAllNotActivated.pending, (state) => {
+        .addCase(getAllNotActivatedByPage.pending, (state) => {
             state.loading = true;
         })
-        .addCase(getByPageAllNotActivated.fulfilled, (state, action) => {
+        .addCase(getAllNotActivatedByPage.fulfilled, (state, action) => {
             state.loading = false;
             state.allNotActivatedByPage = action.payload;
         })
-        .addCase(getByPageAllNotActivated.rejected, (state) => {
+        .addCase(getAllNotActivatedByPage.rejected, (state) => {
+            state.loading = false;
+        })
+
+        // PUT ACTIVATE SELECTED
+        .addCase(updateNotActivated.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(updateNotActivated.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allNotActivatedByPage.content = state.allNotActivatedByPage.content.filter((user) => user.id !== action.payload.id);
+        })
+        .addCase(updateNotActivated.rejected, (state) => {
             state.loading = false;
         });
 };
