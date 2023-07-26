@@ -232,7 +232,9 @@ export class ActionToBPMNElement {
             propertyName: 'outputParameters',
             referencePropertyName: null,
             objectsToAdd: parameters,
-            objectsToRemove: [...camundaInputOutputElement.outputParameters]
+            objectsToRemove: camundaInputOutputElement.outputParameters
+                ? [...camundaInputOutputElement.outputParameters]
+                : []
         };
         this.commandStack.execute(
             'properties-panel.update-businessobject-list',

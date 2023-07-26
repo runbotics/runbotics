@@ -70,8 +70,7 @@
         "ws": "^7.4.5",
         "prince": "^1.9.7",
         "puppeteer": "^15.5.0",
-        "mime-types": "^2.1.35",
-        "python-shell": "^5.0.0"
+        "mime-types": "^2.1.35"
     },
     "build": {
         "productName": "RunBotics",

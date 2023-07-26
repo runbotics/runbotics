@@ -31,7 +31,6 @@ import {
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
-import ExcelActionHandler from '#action/excel';
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
@@ -66,7 +65,6 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
-        private readonly excelActionHandler: ExcelActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -87,8 +85,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('sap', sapActionHandler)
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
-            .set('variables', variableActionHandler)
-            .set('excel', excelActionHandler);
+            .set('variables', variableActionHandler);
     }
 
     async onModuleInit() {
@@ -151,7 +148,7 @@ export class DesktopRunnerService implements OnModuleInit {
             await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
                 .map(handlerInstance => {
                     if(handlerInstance
-                        && handlerInstance instanceof StatefulActionHandler
+                        && 'tearDown' in handlerInstance
                         && handlerInstance.tearDown
                     ) {
                         return handlerInstance.tearDown();
@@ -238,7 +235,7 @@ export class DesktopRunnerService implements OnModuleInit {
             );
             throw e;
         } finally {
-            const isStatefulActionHandler = handlerInstance instanceof StatefulActionHandler;
+            const isStatefulActionHandler = 'tearDown' in handlerInstance;
             if (handlerInstance && !isStatefulActionHandler) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`

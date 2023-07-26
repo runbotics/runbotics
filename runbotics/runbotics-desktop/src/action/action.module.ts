@@ -22,7 +22,6 @@ import SapActionHandler from './sap';
 import SharepointExcelActionHandler from './sharepoint/excel';
 import SharepointFileActionHandler from './sharepoint/file';
 import VariableActionHandler from './variable';
-import DesktopExcelActionHandler from './excel';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -43,7 +42,6 @@ const ALL_ACTION_HANDLERS = [
     SharepointExcelActionHandler,
     SharepointFileActionHandler,
     VariableActionHandler,
-    DesktopExcelActionHandler,
 ];
 
 @Module({
