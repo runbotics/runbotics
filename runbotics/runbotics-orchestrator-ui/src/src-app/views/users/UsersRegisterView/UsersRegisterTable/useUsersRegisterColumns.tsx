@@ -1,13 +1,14 @@
 import { Select, MenuItem } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import moment from 'moment';
-import { Role } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { getKeysFromRoleEnum, formatUserRole } from '../UsersRegisterTable.utils';
+
 const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
-    const roles = Object.keys(Role) as (keyof typeof Role)[];
+    const roles = getKeysFromRoleEnum();
 
     return [
         {
@@ -38,7 +39,7 @@ const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
                     onChange={(e) => handleSelectChange(row.id, e.target.value)}
                 >
                     {roles.map((role) =>
-                        <MenuItem key={role} value={role}>{role.split('_').slice(1).join(' ')}</MenuItem>
+                        <MenuItem key={role} value={role}>{formatUserRole(role)}</MenuItem>
                     )}
                 </Select>
             )

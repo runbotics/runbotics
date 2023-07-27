@@ -17,7 +17,7 @@ interface TableProps {
     onPageSizeChange: (pageSize: number) => void;
     selections: GridInputSelectionModel;
     handleSelectionChange: (selection: object) => void;
-    handleSelectChange: any;
+    handleSelectedRolesChange: (id: number, value: string) => void;
 }
 
 const UsersRegisterTable: VFC<TableProps> = ({
@@ -27,9 +27,9 @@ const UsersRegisterTable: VFC<TableProps> = ({
     onPageSizeChange,
     selections,
     handleSelectionChange,
-    handleSelectChange
+    handleSelectedRolesChange
 }) => {
-    const userRegisterColumns = useUsersRegisterColumns(handleSelectChange);
+    const userRegisterColumns = useUsersRegisterColumns(handleSelectedRolesChange);
     const { allNotActivatedByPage, loading } = useSelector(usersSelector);
 
     return (

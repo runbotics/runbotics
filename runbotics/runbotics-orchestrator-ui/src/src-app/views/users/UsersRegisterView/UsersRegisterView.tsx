@@ -13,7 +13,10 @@ import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 import { DefaultValues, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersRegisterTable from './UsersRegisterTable';
-import { StyledButtonsContainer, StyledButton, StyledActionsContainer, StyledTextField } from './UsersRegisterView.styles';
+import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegisterView.styles';
+
+interface SelectedRoles { [id: number]: string };
+type hasUserRoleType = (userId: number) => boolean;
 
 const UsersRegisterView: VFC = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -34,30 +37,29 @@ const UsersRegisterView: VFC = () => {
 
     const { search, handleSearch, refreshSearch } = useUserSearch(limit, page);
 
-    const [selectedRoles, setSelectedRoles] = useState({});
-    const [selections, setSelections] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
+    const [selections, setSelections] = useState<number[]>([]);
+
+    const handleSelectedRolesChange = (id: number, value: string) =>
+        setSelectedRoles({ ...selectedRoles, [id]: value});
 
     const handleSelectionChange = (selection) => setSelections(selection);
-    const handleSelectChange = (id, value) => setSelectedRoles({ ...selectedRoles, [id]: value});
 
     const handleAccept = () => {
         const payload = [];
-        let status = true;
-        for (const selection of selections) {
-            const role = selectedRoles[selection];
-            if (role) {
-                const dataPayload = makePayload(selection, role);
+
+        const hasEveryUserSelectedRole = selections.every(checkUserRole);
+        if (hasEveryUserSelectedRole) {
+            selections.forEach((userId) => {
+                const role = selectedRoles[userId];
+                const dataPayload = makePayload(userId, role);
                 payload.push(dataPayload);
-            } else {
-                enqueueSnackbar(translate('Users.Register.View.Events.Error.RolesNotSelected'), { variant: 'error' });
-                status = false;
-                break;
-            }
-        }
-        
-        if (status) {
+            });
+
             handleSubmit(payload);
             enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
+        } else {
+            enqueueSnackbar(translate('Users.Register.View.Events.Error.RolesNotSelected'), { variant: 'error' });
         }
     };
     
@@ -72,6 +74,8 @@ const UsersRegisterView: VFC = () => {
     const handleDelete = () => {
 
     };
+
+    const checkUserRole: hasUserRoleType = (userId) => !!selectedRoles[userId];
     
     useEffect(() => {
         const pageNotAvailable = allNotActivatedByPage && page >= allNotActivatedByPage.totalPages;
@@ -109,14 +113,14 @@ const UsersRegisterView: VFC = () => {
                     >
                         {translate('Users.Register.View.Button.Accept')}
                     </StyledButton>
-                    <StyledButton
+                    <DeleteButton
                         type='submit'
-                        color='error'
                         variant='contained'
                         onClick={handleDelete}
+                        disabled={!selections.length}
                     >
                         {translate('Users.Register.View.Button.Delete')}
-                    </StyledButton>
+                    </DeleteButton>
                 </StyledButtonsContainer>
             </StyledActionsContainer>
             <UsersRegisterTable
@@ -126,7 +130,7 @@ const UsersRegisterView: VFC = () => {
                 onPageSizeChange={setLimit}
                 selections={selections}
                 handleSelectionChange={handleSelectionChange}
-                handleSelectChange={handleSelectChange}
+                handleSelectedRolesChange={handleSelectedRolesChange}
             />
         </>
     );

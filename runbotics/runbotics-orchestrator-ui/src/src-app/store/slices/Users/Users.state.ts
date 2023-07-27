@@ -9,5 +9,5 @@ export interface UsersState {
     };
     all: IUser[];
     allNotActivated: IUser[];
-    allNotActivatedByPage: Page<IUser>
+    allNotActivatedByPage: Page<IUser> | null;
 }

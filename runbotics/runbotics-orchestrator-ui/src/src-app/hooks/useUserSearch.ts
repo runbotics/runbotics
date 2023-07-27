@@ -20,26 +20,22 @@ const useUserSearch = (pageSize = 10, page = 0) => {
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
     useEffect(() => {
-        if (search !== '') {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            page = 0;
-        }
+        const newPage = search !== '' ? 0 : page;
 
-        router.replace({ pathname: router.pathname, query: { page, pageSize, search } });
-        try {
-            dispatch(
-                usersActions.getAllNotActivatedByPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(debouncedValue.trim() && { 'email': debouncedValue.trim() }),
-                        },
+        router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
+        dispatch(
+            usersActions.getAllNotActivatedByPage({
+                page: newPage,
+                size: pageSize,
+                filter: {
+                    contains: {
+                        ...(debouncedValue.trim() && { 'email': debouncedValue.trim() }),
                     },
-                })
-            );
-        } catch {};
-
+                },
+            })
+        ).catch((err) => { throw err; });
+    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, page]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

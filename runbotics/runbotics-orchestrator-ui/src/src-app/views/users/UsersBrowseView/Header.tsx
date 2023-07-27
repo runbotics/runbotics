@@ -2,27 +2,10 @@ import React, { FC } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 import clsx from 'clsx';
-import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-const PREFIX = 'Header';
-
-const classes = {
-    root: `${PREFIX}-root`,
-    action: `${PREFIX}-action`,
-};
-
-const StyledGrid = styled(Grid)(({ theme }) => ({
-    [`&.${classes.root}`]: {},
-
-    [`& .${classes.action}`]: {
-        marginBottom: theme.spacing(1),
-        '& + &': {
-            marginLeft: theme.spacing(1),
-        },
-    },
-}));
+import { StyledHeaderGrid, classesHeader } from './UsersBrowseView.styles';
 
 interface HeaderProps {
     className?: string;
@@ -32,11 +15,11 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
 
     return (
-        <StyledGrid
+        <StyledHeaderGrid
             container
             spacing={3}
             justifyContent="space-between"
-            className={clsx(classes.root, className)}
+            className={clsx(classesHeader.root, className)}
             {...rest}
         >
             <Grid item>
@@ -44,7 +27,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                     {translate('Users.Browse.Header.Title')}
                 </Typography>
             </Grid>
-        </StyledGrid>
+        </StyledHeaderGrid>
     );
 };
 

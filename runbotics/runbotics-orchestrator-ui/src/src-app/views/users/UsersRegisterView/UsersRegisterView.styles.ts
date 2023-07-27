@@ -10,8 +10,7 @@ export const StyledActionsContainer = styled.div`
 `;
 
 export const StyledTextField = styled(TextField)`
-    width: 350px;
-    margin: 0 !important;
+    width: 350px; && { margin: 0 }
 `;
 
 export const StyledButtonsContainer = styled.div`
@@ -23,7 +22,17 @@ export const StyledButtonsContainer = styled.div`
 `;
 
 export const StyledButton = styled(Button)`
-    display: flex;
-    width: 250px;
-    margin-left: 20px !important;
+    width: 250px; && { margin-left: 20px }
 `;
+
+export const DeleteButton = styled(Button)(({theme}) => `
+    && {
+        width: 250px; && { margin-left: 20px }
+        background-color: ${theme.palette.grey.A700};
+        color: ${theme.palette.error.contrastText};
+        &:hover {
+            background-color: ${theme.palette.common.black};
+        }
+    }
+`);
+
