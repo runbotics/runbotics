@@ -268,6 +268,24 @@ public class UserService {
             );
     }
 
+    /**
+     * Update langKey information (language) for the current user.
+     *
+     * @param langKey   language key.
+    
+     */
+    public void partialUpdate(String langKey) {
+        SecurityUtils
+            .getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(
+                user -> {
+                    user.setLangKey(langKey);
+                    log.debug("Changed language for User: {}", user);
+                }
+            );
+    };
+
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
