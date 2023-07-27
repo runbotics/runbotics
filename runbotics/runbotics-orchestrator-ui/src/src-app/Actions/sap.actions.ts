@@ -17,7 +17,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Connect.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             connectionName: {
@@ -64,7 +64,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Disconnect.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -91,7 +91,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             transaction: {
@@ -144,7 +144,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Type.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -182,7 +182,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SendVKey.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             virtualKey: {
@@ -289,7 +289,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Index.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -300,12 +300,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Index.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.Index.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Sap.Index.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -343,7 +343,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -354,12 +354,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Sap.ReadText.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -391,7 +391,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Click.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -424,7 +424,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Focus.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -457,7 +457,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -490,7 +490,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Select.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -523,7 +523,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -561,7 +561,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -599,7 +599,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -636,7 +636,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {

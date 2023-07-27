@@ -3,34 +3,31 @@ import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type ExcelActionRequest =
 | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
-| DesktopRunRequest<"excel.getSingleCell", ExcelGetSingleCellActionInput>
-| DesktopRunRequest<"excel.close", ExcelCloseActionInput>
-| DesktopRunRequest<"excel.writeSingleCell", ExcelWriteSingleCellActionInput>;
+| DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
+| DesktopRunRequest<"excel.close">
+| DesktopRunRequest<"excel.save">
+| DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
 
 export type ExcelOpenActionInput = {
-    filePath: string;
-    sheetName?: string;
+    path: string;
+    worksheet?: string;
     mode?: "xlReadOnly" | "xlReadWrite";
 };
 
-export type ExcelCloseActionInput = {
-    save: boolean;
-};
-
-export type ExcelGetSingleCellActionInput = {
+export type ExcelGetCellActionInput = {
     row: number;
-    column: number;
+    column: string;
 };
-export type ExcelGetSingleCellActionOutput = string;
 
-export type ExcelOpenActionOutput = {};
+export interface ExcelSaveActionInput {
+    fileName: string;
+}
 
-export type ExcelWriteSingleCellActionInput = {
+export type ExcelSetCellActionInput = {
     row: number;
     column: number;
     value: any;
 };
-export type ExcelWriteSingleCellActionOutput = void;
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
@@ -40,53 +37,59 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         super();
     }
 
-    async open(input: ExcelOpenActionInput): Promise<ExcelOpenActionOutput> {
+    async open(input: ExcelOpenActionInput): Promise<void> {
         const winax = await import('winax');
         this.session = new winax.Object("Excel.Application", { activate: true });
 
-        this.session.Workbooks.Open(input.filePath);
-        this.session.Application.Visible = true;
-        if (input.sheetName) {
-            this.session.Worksheets(input.sheetName).Activate();
+        this.session.Workbooks.Open(input.path);
+        this.session.Visible = true;
+        if (input.worksheet) {
+            this.session.Worksheets(input.worksheet).Activate();
         }
 
         // if (input.mode) {
         //     excel.ActiveWorkbook.ChangeFileAccess(input.mode);
         // }
-        return {};
     }
 
-    async close(): Promise<any> {
+    /**
+     * @description Closes Excel application ignoring unsaved changes
+     */
+    async close(): Promise<void> {
+        if (this.session?.DisplayAlerts) {
+            this.session.DisplayAlerts = false;
+        }
         this.session?.Quit();
+        if (this.session?.DisplayAlerts) {
+            this.session.DisplayAlerts = true;
+        }
         this.session = null;
     }
 
-    async getSingleCell(
-        input: ExcelGetSingleCellActionInput
-    ): Promise<ExcelGetSingleCellActionOutput> {
-        this.isApplicationOpen();
-        const result = this.session.ActiveSheet.Cells(
-            Number(input.row),
-            Number(input.column)
-        );
-        return result.__value;
+    async save(input: ExcelSaveActionInput) {
+        if (input.fileName) {
+            this.session.ActiveWorkbook.SaveAs(input.fileName);
+        } else {
+            this.session.ActiveWorkbook.Save();
+        }
     }
 
-    async writeSingleCell(
-        input: ExcelWriteSingleCellActionInput
-    ): Promise<ExcelWriteSingleCellActionOutput> {
-        this.isApplicationOpen();
-        const result = this.session.ActiveSheet.Cells(
-            Number(input.row),
-            Number(input.column)
-        );
-        result.Value = input.value;
-        return;
+    async getCell(
+        input: ExcelGetCellActionInput
+    ): Promise<string | number> {
+        return this.session.ActiveSheet.Range(`${input.column}${input.row}`).Value();
+    }
+
+    async setCell(
+        input: ExcelSetCellActionInput
+    ): Promise<void> {
+        const cell = this.session.ActiveSheet.Range(`${input.column}${input.row}`);
+        cell.Value = input.value;
     }
 
     private isApplicationOpen() {
         if (!this.session) {
-            throw new Error('Use open application action before');
+            throw new Error('There is no active Excel session. Open application before');
         }
     }
 
@@ -98,10 +101,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         switch (request.script) {
             case "excel.open":
                 return this.open(request.input);
-            case "excel.getSingleCell":
-                return this.getSingleCell(request.input);
-            case "excel.writeSingleCell":
-                return this.writeSingleCell(request.input);
+            case "excel.getCell":
+                this.isApplicationOpen();
+                return this.getCell(request.input);
+            case "excel.setCell":
+                this.isApplicationOpen();
+                return this.setCell(request.input);
+            case "excel.save":
+                this.isApplicationOpen();
+                return this.save(request.input);
             case "excel.close":
                 return this.close();
             default:

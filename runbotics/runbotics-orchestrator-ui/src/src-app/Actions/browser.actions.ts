@@ -32,7 +32,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Launch.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             headless: {
@@ -69,7 +69,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Open.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -101,7 +101,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Close.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -127,7 +127,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Click.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -170,7 +170,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.CountElements.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -181,13 +181,13 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.CountElements.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.CountElements.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Browser.CountElements.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -224,7 +224,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.ChangeElementAttribute.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -277,7 +277,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Type.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -324,7 +324,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Wait.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -362,7 +362,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.EditContent.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -399,7 +399,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Select.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -447,7 +447,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -462,12 +462,12 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target', 'attribute'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -509,7 +509,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -520,12 +520,12 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -566,7 +566,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -577,12 +577,12 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Read.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Read.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.Read.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -623,7 +623,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Index.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             jsonConfiguration: {
@@ -634,12 +634,12 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['jsonConfiguration'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Browser.Index.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.Index.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Browser.Index.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -694,9 +694,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.TakeScreenshot.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Browser.TakeScreenshot.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -784,9 +784,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Browser.PrintToPdf.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

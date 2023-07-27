@@ -26,6 +26,7 @@ type Props = {
     onSubmit: (label: string) => void;
 };
 
+// eslint-disable-next-line max-lines-per-function
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const { translate } = useTranslations();
     const { selectedElement, selectedAction } = useSelector(
@@ -38,20 +39,27 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     });
     const actionId = selectedElement.businessObject?.actionId;
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    const translationKey = `Process.Details.Modeler.Actions.${
-        actionId
-            ? capitalizeFirstLetter({
-                text: actionId,
-                lowerCaseRest: false,
-                delimiter: '.',
-                join: '.',
-            })
-            : ''
-    }.Label`;
+    const actionPartialTranslationKey = actionId
+        ? capitalizeFirstLetter({
+            text: actionId,
+            lowerCaseRest: false,
+            delimiter: '.',
+            join: '.',
+        })
+        : '';
+    const translationKey = `Process.Details.Modeler.Actions.${actionPartialTranslationKey}.Label`;
 
     useEffect(() => {
         if (checkIfKeyExists(translationKey)) {
-            setTranslatedLabel(translate(translationKey));
+            const mainActionGroup = actionPartialTranslationKey.split('.')[0];
+            const actionGroupPrefixTranslationKey = `Process.Details.Modeler.ActionsGroup.${mainActionGroup}`;
+
+            // @ts-ignore
+            const fullLabel = checkIfKeyExists(actionGroupPrefixTranslationKey)
+                ? `${translate(actionGroupPrefixTranslationKey)}: ${translate(translationKey)}`
+                : translate(translationKey);
+
+            setTranslatedLabel(fullLabel);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, actionId]);

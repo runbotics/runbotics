@@ -22,7 +22,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.AppendFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -77,7 +77,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.CreateFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -125,7 +125,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.RemoveFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -165,7 +165,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.ReadFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -176,12 +176,12 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         required: ['path'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.File.ReadFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.ReadFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.File.ReadFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -218,7 +218,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.WriteFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {

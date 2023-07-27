@@ -13,7 +13,7 @@ import installTranslations from './install.json';
 import loginTranslations from './login.json';
 import navTranslations from './nav.json';
 import paletteTranslations from './palette.json';
-import processTranslations from './process.json';
+import processTranslations from './process';
 import registerTranslations from './register.json';
 import schedulerTranslations from './scheduler.json';
 import variablesTranslations from './variables.json';
