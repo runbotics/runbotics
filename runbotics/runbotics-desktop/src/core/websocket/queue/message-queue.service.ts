@@ -11,7 +11,7 @@ export interface Queue {
 }
 
 @Injectable()
-export class QueueService {
+export class MessageQueueService {
     constructor(@InjectIoClientProvider() private readonly io: IoClient) {}
 
     private queue: Queue[] = [];
