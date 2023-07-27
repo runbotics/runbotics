@@ -1,4 +1,3 @@
-import { RunboticsLogger } from '#logger';
 import { Injectable } from '@nestjs/common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { BotWsMessage } from 'runbotics-common';
