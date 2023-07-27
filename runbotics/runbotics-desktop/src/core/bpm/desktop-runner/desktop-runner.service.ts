@@ -1,6 +1,6 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { DesktopRunRequest, StatefulActionHandler } from 'runbotics-sdk';
+import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from 'runbotics-sdk';
 import { readdirSync } from 'fs';
 import path from 'path';
 
@@ -147,10 +147,7 @@ export class DesktopRunnerService implements OnModuleInit {
             this.logger.log(`Tearing down action handlers sessions [${handlersNames}]`);
             await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
                 .map(handlerInstance => {
-                    if(handlerInstance
-                        && 'tearDown' in handlerInstance
-                        && handlerInstance.tearDown
-                    ) {
+                    if(isStatefulActionHandler(handlerInstance)) {
                         return handlerInstance.tearDown();
                     } else {
                         this.logger.error(`No tear down method in handler ${handlerInstance.constructor.name}`);
@@ -235,8 +232,7 @@ export class DesktopRunnerService implements OnModuleInit {
             );
             throw e;
         } finally {
-            const isStatefulActionHandler = 'tearDown' in handlerInstance;
-            if (handlerInstance && !isStatefulActionHandler) {
+            if (isStatelessActionHandler(handlerInstance)) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`
                 );
