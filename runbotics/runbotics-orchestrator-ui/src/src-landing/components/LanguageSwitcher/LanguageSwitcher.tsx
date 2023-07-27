@@ -1,5 +1,6 @@
 import React, { VFC, useEffect, useState, useRef } from 'react';
 
+import Axios from 'axios';
 import { useRouter } from 'next/router';
 
 import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
@@ -26,6 +27,14 @@ const LanguageSwitcher: VFC = () => {
             locale: language,
         });
         setToggle(!toggle);
+        updateLanguageInDB(language);
+    };
+
+    const updateLanguageInDB = async (language: Language) => {
+        const response = await Axios.patch('/api/account', {langKey: language});
+
+        // console.log(response.data);
+        return response.data;
     };
 
     useEffect(() => {
