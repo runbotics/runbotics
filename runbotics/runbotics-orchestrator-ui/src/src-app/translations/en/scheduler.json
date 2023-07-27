@@ -11,6 +11,9 @@
     "Scheduler.Delete.ScheduledProcess.Success": "Process {{ processName }} schedule deleted",
     "Scheduler.Delete.ScheduledProcess.Failed": "Failed to delete process {{ processName }} schedule",
 
+    "Scheduler.Dialog.NoServerToConnection": "Remote server is currently unreachable",
+    "Scheduler.Dialog.ConnectionRestored": "Connection restored. If something went wrong refresh your tab.",
+
     "Scheduler.ActiveProcess.Table.Header.Id": "ID",
     "Scheduler.ActiveProcess.Table.Header.Process": "Process",
     "Scheduler.ActiveProcess.Table.Header.Bot": "Bot",

@@ -11,6 +11,9 @@
     "Scheduler.Delete.ScheduledProcess.Success": "Usunięto zaplanowany proces{{ processName }}",
     "Scheduler.Delete.ScheduledProcess.Failed": "Usunięcie zaplanowanego procesu nie powiodło się {{ processName }}",
 
+    "Scheduler.Dialog.NoServerToConnection": "Aplikacja nie może nawiązać połączenia z serwerem",
+    "Scheduler.Dialog.ConnectionRestored": "Połączenie z serwerem odzyskane. Jeżeli coś poszło nie tak odświerz karte.",
+
     "Scheduler.ActiveProcess.Table.Header.Id": "ID",
     "Scheduler.ActiveProcess.Table.Header.Process": "Proces",
     "Scheduler.ActiveProcess.Table.Header.Bot": "Bot",

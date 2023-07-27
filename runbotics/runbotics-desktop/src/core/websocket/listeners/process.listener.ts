@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -16,6 +16,7 @@ import { delay, SECOND } from '#utils';
 
 import { AuthService } from '../auth/auth.service';
 import { StartProcessMessageBody } from './process.listener.types';
+import { QueueService } from '../queue/message-queue.service';
 
 @Injectable()
 export class ProcessListener {
@@ -25,11 +26,15 @@ export class ProcessListener {
         @InjectIoClientProvider() private readonly io: IoClient,
         private readonly runtimeService: RuntimeService,
         private readonly authService: AuthService,
+        private readonly queueService: QueueService
     ) {}
 
     @OnConnect()
     connect() {
         this.logger.log(`Connected to Scheduler (id: ${this.io.id})`);
+        this.queueService
+            .getQueue()
+            .forEach((element) => this.queueService.handleEmit(element));
     }
 
     @OnConnectError()
@@ -49,7 +54,9 @@ export class ProcessListener {
 
     @EventListener(BotWsMessage.START_PROCESS)
     async startProcess(data: StartProcessMessageBody) {
-        this.logger.log(`=> Incoming message to start process (id: ${data.processId})`);
+        this.logger.log(
+            `=> Incoming message to start process (id: ${data.processId})`
+        );
 
         const { processId, input, ...rest } = data;
         const process = await orchestratorAxios
@@ -59,7 +66,10 @@ export class ProcessListener {
                 return response.data;
             })
             .catch((error) => {
-                this.logger.error(`<= Error fetching process details (id: ${processId})`, error);
+                this.logger.error(
+                    `<= Error fetching process details (id: ${processId})`,
+                    error
+                );
                 throw error;
             });
 
@@ -74,8 +84,12 @@ export class ProcessListener {
 
     @EventListener(BotWsMessage.TERMINATE)
     async terminateProcessInstance(processInstanceId: string) {
-        this.logger.log(`=> Incoming message to terminate process instance (id: ${processInstanceId})`);
+        this.logger.log(
+            `=> Incoming message to terminate process instance (id: ${processInstanceId})`
+        );
         await this.runtimeService.terminateProcessInstance(processInstanceId);
-        this.logger.log(`<= Process instance successfully terminated (id: ${processInstanceId})`);
+        this.logger.log(
+            `<= Process instance successfully terminated (id: ${processInstanceId})`
+        );
     }
 }

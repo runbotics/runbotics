@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
@@ -9,19 +9,21 @@ import {
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
     BpmnElementType,
-    ProcessInstanceStep
+    ProcessInstanceStep,
 } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
+import { Queue, QueueService } from '../queue/message-queue.service';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
         private readonly runtimeService: RuntimeService,
         @InjectIoClientProvider() private readonly io: IoClient,
-        private readonly loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService,
+        private readonly queue: QueueService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -54,7 +56,8 @@ export class RuntimeSubscriptionsService {
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
+                            processInstanceEvent.step =
+                                ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
                         case BpmnElementType.BOUNDARY_EVENT:
                             // Boundary event doesn't carry any useful information. It's just a wrapper.
@@ -72,21 +75,24 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = script;
                             }
                             break;
-                        case  BpmnElementType.END_EVENT:
+                        case BpmnElementType.END_EVENT:
                             processInstanceEvent.step = ProcessInstanceStep.END;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
-                        case  BpmnElementType.START_EVENT:
+                        case BpmnElementType.START_EVENT:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = ProcessInstanceStep.START;
+                            processInstanceEvent.step =
+                                ProcessInstanceStep.START;
                             break;
-                        case  BpmnElementType.EXCLUSIVE_GATEWAY:
+                        case BpmnElementType.EXCLUSIVE_GATEWAY:
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Gateway';
                             break;
-                        case  BpmnElementType.SUBPROCESS:
+                        case BpmnElementType.SUBPROCESS:
+                            //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             if (event.activity.content.isMultiInstance) {
+                                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
                                 processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.activity.content.input?.script} ${event.eventType} `;
                             } else {
@@ -107,14 +113,21 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    if (
-                        this.loopHandlerService.isLoopEvent(event.activity)
-                    )
+                    if (this.loopHandlerService.isLoopEvent(event.activity))
                         processInstanceEvent = {
                             ...processInstanceEvent,
-                            iterationNumber: this.loopHandlerService.getIterationNumber(event.activity),
-                            iteratorElement: this.loopHandlerService.getIteratorElement(event.activity, event.iteratorName),
-                            loopId: this.loopHandlerService.getLoopId(event.activity),
+                            iterationNumber:
+                                this.loopHandlerService.getIterationNumber(
+                                    event.activity
+                                ),
+                            iteratorElement:
+                                this.loopHandlerService.getIteratorElement(
+                                    event.activity,
+                                    event.iteratorName
+                                ),
+                            loopId: this.loopHandlerService.getLoopId(
+                                event.activity
+                            ),
                         };
 
                     switch (event.eventType) {
@@ -129,12 +142,16 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    this.io.emit(
-                        this.loopHandlerService.isLoopEvent(event.activity)
+                    const queueElement: Queue = {
+                        event: this.loopHandlerService.isLoopEvent(
+                            event.activity
+                        )
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT,
-                        processInstanceEvent
-                    );
+                        payload: processInstanceEvent,
+                    };
+                    this.queue.handleEmit(queueElement);
+                    this.queue.addToQueue(queueElement);
                 } catch (e) {
                     this.logger.error(
                         'Error occurred while sending process instance',
@@ -151,6 +168,7 @@ export class RuntimeSubscriptionsService {
                 id: event.processInstanceId,
                 orchestratorProcessInstanceId:
                     event.processInstance.orchestratorProcessInstanceId,
+                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 status: event.eventType.toString(),
                 updated: dayjs().toISOString(),
@@ -183,6 +201,7 @@ export class RuntimeSubscriptionsService {
                 case ProcessInstanceStatus.COMPLETED:
                 case ProcessInstanceStatus.STOPPED:
                 case ProcessInstanceStatus.ERRORED:
+                    //eslint-disable-next-line no-case-declarations
                     let variables = {};
                     try {
                         variables = { ...event.processInstance.variables };
@@ -212,7 +231,13 @@ export class RuntimeSubscriptionsService {
                     break;
             }
 
-            this.io.emit(BotWsMessage.PROCESS_INSTANCE, processInstance);
+            const queueElement: Queue = {
+                event: BotWsMessage.PROCESS_INSTANCE,
+                payload: processInstance,
+            };
+
+            this.queue.handleEmit(queueElement);
+            this.queue.addToQueue(queueElement);
         });
     }
 }
