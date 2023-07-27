@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
@@ -11,19 +11,17 @@ import {
     BpmnElementType,
     ProcessInstanceStep,
 } from 'runbotics-common';
-import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
-import { Queue, QueueService } from '../queue/message-queue.service';
+import { Queue, MessageQueueService } from '../queue/message-queue.service';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
         private readonly runtimeService: RuntimeService,
-        @InjectIoClientProvider() private readonly io: IoClient,
         private readonly loopHandlerService: LoopHandlerService,
-        private readonly queue: QueueService
+        private readonly queue: MessageQueueService
     ) {}
 
     private readonly logger = new RunboticsLogger(

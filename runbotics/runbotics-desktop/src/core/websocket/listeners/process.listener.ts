@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -16,7 +16,7 @@ import { delay, SECOND } from '#utils';
 
 import { AuthService } from '../auth/auth.service';
 import { StartProcessMessageBody } from './process.listener.types';
-import { QueueService } from '../queue/message-queue.service';
+import { MessageQueueService } from '../queue/message-queue.service';
 
 @Injectable()
 export class ProcessListener {
@@ -26,7 +26,7 @@ export class ProcessListener {
         @InjectIoClientProvider() private readonly io: IoClient,
         private readonly runtimeService: RuntimeService,
         private readonly authService: AuthService,
-        private readonly queueService: QueueService
+        private readonly queueService: MessageQueueService
     ) {}
 
     @OnConnect()

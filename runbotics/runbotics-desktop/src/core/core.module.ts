@@ -7,7 +7,7 @@ import { RuntimeService } from './bpm/runtime';
 import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
-import { QueueService } from './websocket/queue/message-queue.service';
+import { MessageQueueService } from './websocket/queue/message-queue.service';
 
 
 @Module({
@@ -21,13 +21,13 @@ import { QueueService } from './websocket/queue/message-queue.service';
         DesktopRunnerService,
         RuntimeSubscriptionsService,
         LoopHandlerService,
-        QueueService
+        MessageQueueService
     ],
     exports: [
         RuntimeService,
         DesktopRunnerService,
         RuntimeSubscriptionsService,
-        QueueService
+        MessageQueueService
     ],
 })
 export class CoreModule {}
