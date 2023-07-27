@@ -18,11 +18,11 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             loopType: {
-                                title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Input'),
+                                title: translate('Process.Details.Modeler.Actions.Common.Input'),
                                 type: 'string',
                                 enum: ['Collection', 'Repeat'],
                                 default: ['Repeat'],
@@ -37,7 +37,7 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                                                 enum: ['Collection'],
                                             },
                                             collection: {
-                                                title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Variable'),
+                                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                                 type: 'string',
                                                 format: 'variableName',
                                             },

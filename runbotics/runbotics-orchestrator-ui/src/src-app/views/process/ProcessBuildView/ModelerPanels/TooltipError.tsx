@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { Typography } from '@mui/material';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
@@ -7,8 +8,18 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 const TooltipBox = styled.div`
     display: flex;
-    gap: 2px;
     flex-direction: column;
+    gap: 16px;
+`;
+
+const ErrorGroup = styled.div`
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+`;
+
+const ActionRow = styled.span`
+    padding-left: 10px;
 `;
 
 interface TooltipError {
@@ -16,6 +27,8 @@ interface TooltipError {
     formErrorElementsNames: string[];
     canvasErrorElementNames: string[];
 }
+
+/* eslint-disable react/no-array-index-key */
 const TooltipError: FC<TooltipError> = ({
     connectionErrorElementsNames,
     formErrorElementsNames,
@@ -25,30 +38,47 @@ const TooltipError: FC<TooltipError> = ({
 
     return (
         <TooltipBox>
-            <div>{translate('Process.MainView.Tooltip.Save.Errors.Title')}</div>
             <If condition={Boolean(connectionErrorElementsNames.length)}>
-                <div>
-                    {translate(
-                        'Process.MainView.Tooltip.Save.Errors.Connections',
-                        {
-                            errors: connectionErrorElementsNames.join(', '),
-                        }
-                    )}
-                </div>
+                <ErrorGroup>
+                    <Typography variant='body2'>
+                        {translate('Process.MainView.Tooltip.Save.Errors.Connections')}
+                    </Typography>
+                    {connectionErrorElementsNames.map((error, index) => (
+                        <ActionRow key={`${error}-connection-${index}`}>
+                            <Typography variant='caption'>
+                                {error}
+                            </Typography>
+                        </ActionRow>
+                    ))}
+                </ErrorGroup>
             </If>
             <If condition={Boolean(formErrorElementsNames.length)}>
-                <div>
-                    {translate('Process.MainView.Tooltip.Save.Errors.Form', {
-                        errors: formErrorElementsNames.join(', '),
-                    })}
-                </div>
+                <ErrorGroup>
+                    <Typography variant='body2'>
+                        {translate('Process.MainView.Tooltip.Save.Errors.Form')}
+                    </Typography>
+                    {formErrorElementsNames.map((error, index) => (
+                        <ActionRow key={`${error}-form-${index}`}>
+                            <Typography variant='caption'>
+                                {error}
+                            </Typography>
+                        </ActionRow>
+                    ))}
+                </ErrorGroup>
             </If>
             <If condition={Boolean(canvasErrorElementNames.length)}>
-                <div>
-                    {translate('Process.MainView.Tooltip.Save.Errors.Canvas', {
-                        errors: canvasErrorElementNames.join(', '),
-                    })}
-                </div>
+                <ErrorGroup>
+                    <Typography variant='body2'>
+                        {translate('Process.MainView.Tooltip.Save.Errors.Canvas')}
+                    </Typography>
+                    {canvasErrorElementNames.map((error, index) => (
+                        <ActionRow key={`${error}-canvas-${index}`}>
+                            <Typography variant='caption'>
+                                {error}
+                            </Typography>
+                        </ActionRow>
+                    ))}
+                </ErrorGroup>
             </If>
         </TooltipBox>
     );

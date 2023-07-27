@@ -305,7 +305,7 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
                 });
         }
 
-        // we have to add refrence to the connection to the source shape
+        // we have to add reference to the connection to the source shape
         if (defaultEdge) {
             const { shape } = sourceElement;
             shape.businessObject.default = connection;

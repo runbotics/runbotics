@@ -16,13 +16,13 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                 properties: {
                     input: {
                         title: translate(
-                            'Process.Details.Modeler.Actions.Variable.Assign.Input'
+                            'Process.Details.Modeler.Actions.Common.Input'
                         ),
                         type: 'object',
                         properties: {
                             variable: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.Variable.Assign.Variable'
+                                    'Process.Details.Modeler.Actions.Common.VariableName'
                                 ),
                                 type: 'string',
                                 pattern: '^[a-zA-Z0-9_]*$'
@@ -63,13 +63,13 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                 properties: {
                     input: {
                         title: translate(
-                            'Process.Details.Modeler.Actions.Variable.AssignList.Input'
+                            'Process.Details.Modeler.Actions.Common.Input'
                         ),
                         type: 'object',
                         properties: {
                             variable: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.Variable.AssignList.Variable'
+                                    'Process.Details.Modeler.Actions.Common.VariableName'
                                 ),
                                 type: 'string'
                             },
@@ -111,7 +111,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                 properties: {
                     input: {
                         title: translate(
-                            'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Input'
+                            'Process.Details.Modeler.Actions.Common.Input'
                         ),
                         type: 'object',
                         properties: {

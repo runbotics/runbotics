@@ -16,7 +16,7 @@ import { is, getBusinessObject } from "bpmn-js/lib/util/ModelUtil";
 import { CustomActionDescription } from "#src-app/utils/action";
 import store from "../../../../../../store";
 import internalBpmnActions from "../../../../../../Actions";
-import { translate } from "#src-app/hooks/useTranslations";
+import { translate, checkIfKeyExists } from "#src-app/hooks/useTranslations";
 import { capitalizeFirstLetter } from "#src-app/utils/text";
 
 const HIGH_PRIORITY = 1500,
@@ -78,11 +78,20 @@ export default class CustomRenderer extends BaseRenderer {
         const actionId = label.actionId;
 
         if (actionId) {
-            const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter(
-                { text: actionId, lowerCaseRest: false, delimiter: ".", join: "." }
-            )}.Label`;
+            const actionPartialTranslationKey = capitalizeFirstLetter({
+                text: actionId,
+                lowerCaseRest: false,
+                delimiter: ".",
+                join: ".",
+            });
+            const actionTranslationKey = `Process.Details.Modeler.Actions.${actionPartialTranslationKey}.Label`;
 
-            const translatedLabel = translate(translateKey);
+            const actionGroupKey = actionPartialTranslationKey.split('.')[ 0 ];
+            const actionGroupTranslationKey = `Process.Details.Modeler.ActionsGroup.${actionGroupKey}`;
+
+            const translatedLabel = checkIfKeyExists(actionGroupTranslationKey)
+                ? `${translate(actionGroupTranslationKey)}: ${translate(actionTranslationKey)}`
+                : translate(actionTranslationKey);
 
             svgAppend(
                 text,
@@ -214,7 +223,7 @@ export default class CustomRenderer extends BaseRenderer {
                     (value) => value.$type == "camunda:InputOutput"
                 );
                 if (inputOutputs && inputOutputs.length > 0) {
-                    const inputOutput = inputOutputs[0];
+                    const inputOutput = inputOutputs[ 0 ];
                     if (inputOutput && inputOutput.inputParameters) {
                         inputOutput.inputParameters.forEach((inputParameter) => {
                             if (inputParameter.name === "component") {
@@ -232,7 +241,7 @@ export default class CustomRenderer extends BaseRenderer {
         const values = parameters.filter((parameter) => parameter.name === param);
 
         if (values && values.length > 0) {
-            return values[0].value;
+            return values[ 0 ].value;
         }
 
         return null;
@@ -276,15 +285,15 @@ export default class CustomRenderer extends BaseRenderer {
         //   }
         // }
         const externalAction =
-            store.getState().action.bpmnActions.byId[businessObject.actionId];
+            store.getState().action.bpmnActions.byId[ businessObject.actionId ];
         const action = externalAction
             ? externalAction
-            : internalBpmnActions[businessObject.actionId];
+            : internalBpmnActions[ businessObject.actionId ];
 
         const globalVariables = store.getState().globalVariable.globalVariables;
         if (action) {
-            if (CustomActionDescription[businessObject.actionId]) {
-                description = CustomActionDescription[businessObject.actionId](
+            if (CustomActionDescription[ businessObject.actionId ]) {
+                description = CustomActionDescription[ businessObject.actionId ](
                     element,
                     globalVariables
                 );
@@ -316,7 +325,7 @@ export default class CustomRenderer extends BaseRenderer {
     }
 }
 
-CustomRenderer.$inject = ["eventBus", "bpmnRenderer"];
+CustomRenderer.$inject = [ "eventBus", "bpmnRenderer" ];
 
 // helpers //////////
 
