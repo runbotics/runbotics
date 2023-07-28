@@ -1,21 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { StatefulActionHandler } from 'runbotics-sdk';
-import ExcelErrorMessage from './excelErrorMessage';
-import {
-    ExcelActionRequest,
-    ExcelGetCellActionInput,
-    ExcelOpenActionInput,
-    ExcelSaveActionInput,
-    ExcelSetCellActionInput,
-    ExcelSetCellsActionInput,
-    ExcelFindFirstEmptyRowActionInput,
-    CellCoordinates,
-    GetCellCoordinatesParams,
-    ExcelGetCellsActionInput,
-    ExcelClearCellsActionInput,
-    ExcelDeleteColumnsActionInput,
-    ExcelInsertColumnsActionInput,
-} from './excel.types';
+import { Injectable } from "@nestjs/common";
+import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
+
+export type ExcelActionRequest =
+| DesktopRunRequest<"excel.open", ExcelOpenActionInput>
+| DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
+| DesktopRunRequest<"excel.close">
+| DesktopRunRequest<"excel.save">
+| DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
+| DesktopRunRequest<"excel.runMacro", ExcelRunMacroInput>;
+
+export type ExcelOpenActionInput = {
+    path: string;
+    worksheet?: string;
+    mode?: "xlReadOnly" | "xlReadWrite";
+};
+
+export type ExcelGetCellActionInput = {
+    row: number;
+    column: string;
+};
+
+export interface ExcelSaveActionInput {
+    fileName: string;
+}
+
+export type ExcelSetCellActionInput = {
+    row: number;
+    column: number;
+    value: any;
+};
+
+export type ExcelRunMacroInput = {
+    macro: string;
+    functionParams: Array<string>;
+};
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
@@ -113,103 +131,101 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         cell.Value = input.value;
     }
 
-    async setCells(
-        input: ExcelSetCellsActionInput
-    ): Promise<void> {
-        if (!Array.isArray(input.cellValues))
-            throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
-        const { startRow, startColumn } = this.getCellCoordinates({
-            startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1)
-        });
-        let columnCounter = startColumn,
-            rowCounter = startRow;
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-        for (const rowValues of input.cellValues) {
-            for (const cellValue of rowValues) {
-                try {
-                    if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
-                    columnCounter++;
-                } catch (e) {
-                    throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
-                }
-            } 
-            rowCounter++;
-            columnCounter = startColumn;
-        }
-    }
-
-    async findFirstEmptyRow(
-        input: ExcelFindFirstEmptyRowActionInput
-    ): Promise<number> {
-        const { startColumn, startRow } = this.getCellCoordinates({
-            startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1)
-        });
-        let rowCounter = startRow;
-        while (
-            this.session
-                .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-                .Cells(rowCounter, startColumn)
-                .Value()
-        ) rowCounter++;
-        return rowCounter;
-    }
-
-    async deleteColumns(
-        input: ExcelDeleteColumnsActionInput
-    ): Promise<void> {
-        try {
-            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.columnRange)) targetWorksheet.Columns(input.columnRange).Delete();
-            else {
-                const sortedColumns = this.sortColumns(input.columnRange);
-                sortedColumns.forEach((column, idx) => {
-                    const columnCoordinate = this.getColumnCoordinate(column);
-                    targetWorksheet.Columns(columnCoordinate - idx).Delete();
-                });
-            }
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput(e));
-        }
-    }
-
-    async insertColumnsBefore(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-
-        try {
-            const column = this.getColumnCoordinate(input.column);
-            const amount = input.amount;
-
-            targetWorksheet
-                .Range(
-                    targetWorksheet.Columns(column), 
-                    targetWorksheet.Columns(column + amount - 1)
-                )
-                .Insert();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
-        }
-    }
-
-    async insertColumnsAfter(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-
-        try {
-            const column = this.getColumnCoordinate(input.column);
-            const amount = input.amount;
-
-            targetWorksheet
-                .Range(
-                    targetWorksheet.Columns(column + 1),
-                    targetWorksheet.Columns(column + amount))
-                .Insert();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+    async runMacro(input: ExcelRunMacroInput) {
+        if (input.functionParams.length === 0) {
+            return this.session.Run(input.macro);
+        } else if (input.functionParams.length === 1) {
+            return this.session.Run(input.macro, input.functionParams[0]);
+        } else if (input.functionParams.length === 2) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+            );
+        } else if (input.functionParams.length === 3) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+            );
+        } else if (input.functionParams.length === 4) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+            );
+        } else if (input.functionParams.length === 5) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+            );
+        } else if (input.functionParams.length === 6) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+            );
+        } else if (input.functionParams.length === 7) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+            );
+        } else if (input.functionParams.length === 8) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+            );
+        } else if (input.functionParams.length === 9) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+                input.functionParams[8],
+            );
+        } else if (input.functionParams.length === 10) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+                input.functionParams[8],
+                input.functionParams[9],
+            );
         }
     }
 
@@ -238,7 +254,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     run(request: ExcelActionRequest) {
-        if (process.platform !== 'win32') {
+        if (request.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
 

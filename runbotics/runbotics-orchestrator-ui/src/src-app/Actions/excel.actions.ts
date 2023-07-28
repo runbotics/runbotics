@@ -584,6 +584,45 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+
+    'excel.runMacro': {
+        id: 'excel.runMacro',
+        label: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Label'),
+        script: 'excel.runMacro',
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            macro: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title'),
+                                type: 'string'
+                            }
+                            ,
+                            functionParams: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams'),
+                                type: 'array',
+                                items: {
+                                    type: 'string',
+                                },
+
+                            },
+                        },
+
+                        required: ['macro'],
+                    }
+                }
+            },
+            uiSchema: {},
+            formData: {},
+        }
+    },
+
     'excel.save': {
         id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),

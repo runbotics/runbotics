@@ -35,6 +35,11 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Save',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'File name',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Close',
+    'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Macro name',
+    'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Run Macro',
+    'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Macro Parameters',
+
 };
+
 
 export default excelActionsTranslations;
