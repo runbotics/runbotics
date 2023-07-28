@@ -142,27 +142,12 @@ public class AccountResource {
 
     // @RequestMapping(value = "/activate", method = {RequestMethod.PATCH})
     @PatchMapping("/account")
-    public AccountPartialUpdateDTO updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
-        // @PathVariable(value = "id", required = false) final Long id;
-        // String userLogin = SecurityUtils
-        //     .getCurrentUserLogin()
-        //     .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        // Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        // if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
-        //     throw new EmailAlreadyUsedException();
-        // }
-        // Optional<User> user = userRepository.findOneByLogin(userLogin);
-        // if (!user.isPresent()) {
-        //     throw new AccountResourceException("User could not be found");
-        // }
-        userService.partialUpdate(
-            userDTO.getLangKey()
-        );
+    public User updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
+        var user = userService.getUserWithAuthorities().get();
 
-        return userService
-            .getUserWithAuthorities()
-            .map(AccountPartialUpdateDTO::new)
-            .orElseThrow(() -> new AccountResourceException("Couldn't update information"));
+        userService.partialAccountUpdate(user, userDTO);
+
+        return user;
     }
 
     /**
