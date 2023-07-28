@@ -3,6 +3,7 @@ import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from 'runbotics-sdk';
 import { readdirSync } from 'fs';
 import path from 'path';
+import { PowerPointActionHandler } from '@runbotics/runbotics-actions-windows';
 
 import ImportActionHandler from '#action/import';
 import MailActionHandler from '#action/mail';
@@ -65,6 +66,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
+        private readonly officeActionHandler: PowerPointActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -85,7 +87,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('sap', sapActionHandler)
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
-            .set('variables', variableActionHandler);
+            .set('variables', variableActionHandler)
+            .set('desktopOfficeActions', officeActionHandler);
     }
 
     async onModuleInit() {
@@ -95,11 +98,11 @@ export class DesktopRunnerService implements OnModuleInit {
         // } else {
         //     this.logger.warn('Hot reload is on! Remember to turn it off in production env.');
         // }
-        try {
-            await this.loadExternalModule('runbotics-actions-windows');
-        } catch(e) {
-            this.logger.error('Error loading extensions from runbotics-actions-windows', e);
-        }
+        // try {
+        //     await this.loadExternalModule('runbotics-actions-windows');
+        // } catch(e) {
+        //     this.logger.error('Error loading extensions from runbotics-actions-windows', e);
+        // }
 
         await this.loadExtensionsDirModules();
 
