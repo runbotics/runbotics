@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A DTO representing a user, with his authorities.
+ * A DTO representing a user with information which can be updated by the user.
  */
 public class AccountPartialUpdateDTO {
 
@@ -36,43 +36,30 @@ public class AccountPartialUpdateDTO {
     @Size(max = 256)
     private String imageUrl;
 
-    private boolean activated = false;
-
     @Size(min = 2, max = 10)
     private String langKey;
 
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
-
-    private Set<String> roles;
-
-    private Set<String> featureKeys;
+//    public enum UpdatedKeys {
+//        FIRST_NAME,
+//        LAST_NAME,
+//        EMAIL,
+//        LANGUAGE,
+//        IMAGE_URL
+//    }
+//    private Set<UpdatedKeys> updatedKeys;
 
     public AccountPartialUpdateDTO() {
         // Empty constructor needed for Jackson.
     }
 
-    public AccountPartialUpdateDTO(String langKey) {
-        // this.id = user.getId();
-        // this.login = user.getLogin();
+    public AccountPartialUpdateDTO(User user) {
+        this.id = user.getId();
+        this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
-        // this.activated = user.isActivated();
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
-        // this.createdBy = user.getCreatedBy();
-        // this.createdDate = user.getCreatedDate();
-        // this.lastModifiedBy = user.getLastModifiedBy();
-        // this.lastModifiedDate = user.getLastModifiedDate();
-        // this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
-        // this.featureKeys = user.getAuthorities().stream().flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName())).collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -123,14 +110,6 @@ public class AccountPartialUpdateDTO {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
-
     public String getLangKey() {
         return langKey;
     }
@@ -139,53 +118,10 @@ public class AccountPartialUpdateDTO {
         this.langKey = langKey;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public Set<String> getFeatureKeys() {
-        return featureKeys;
-    }
-
-    public void setFeatureKeys(Set<String> featureKeys) {
-        this.featureKeys = featureKeys;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
+//    public void setUpdatedKeys(Set<UpdatedKeys> updatedKeys) {
+//        this.updatedKeys = updatedKeys;
+//    }
 
     // prettier-ignore
     @Override
@@ -196,14 +132,7 @@ public class AccountPartialUpdateDTO {
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
-            ", activated=" + activated +
             ", langKey='" + langKey + '\'' +
-            ", createdBy=" + createdBy +
-            ", createdDate=" + createdDate +
-            ", lastModifiedBy='" + lastModifiedBy + '\'' +
-            ", lastModifiedDate=" + lastModifiedDate +
-            ", roles=" + roles +
-            ", featureKeys=" + featureKeys +
             "}";
     }
 }
