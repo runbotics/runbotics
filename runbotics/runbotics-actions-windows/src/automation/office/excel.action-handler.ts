@@ -7,6 +7,7 @@ export type ExcelActionRequest =
 | DesktopRunRequest<"excel.close">
 | DesktopRunRequest<"excel.save">
 | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
+| DesktopRunRequest<"excel.runMacro", ExcelRunMacroInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -27,6 +28,11 @@ export type ExcelSetCellActionInput = {
     row: number;
     column: number;
     value: any;
+};
+
+export type ExcelRunMacroInput = {
+    macro: string;
+    functionParams: Array<string>;
 };
 
 @Injectable()
@@ -87,6 +93,104 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         cell.Value = input.value;
     }
 
+    async runMacro(input: ExcelRunMacroInput) {
+        if (input.functionParams.length === 0) {
+            return this.session.Run(input.macro);
+        } else if (input.functionParams.length === 1) {
+            return this.session.Run(input.macro, input.functionParams[0]);
+        } else if (input.functionParams.length === 2) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+            );
+        } else if (input.functionParams.length === 3) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+            );
+        } else if (input.functionParams.length === 4) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+            );
+        } else if (input.functionParams.length === 5) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+            );
+        } else if (input.functionParams.length === 6) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+            );
+        } else if (input.functionParams.length === 7) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+            );
+        } else if (input.functionParams.length === 8) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+            );
+        } else if (input.functionParams.length === 9) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+                input.functionParams[8],
+            );
+        } else if (input.functionParams.length === 10) {
+            return this.session.Run(
+                input.macro,
+                input.functionParams[0],
+                input.functionParams[1],
+                input.functionParams[2],
+                input.functionParams[3],
+                input.functionParams[4],
+                input.functionParams[5],
+                input.functionParams[6],
+                input.functionParams[7],
+                input.functionParams[8],
+                input.functionParams[9],
+            );
+        }
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
@@ -94,7 +198,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     run(request: ExcelActionRequest) {
-        if (process.platform !== 'win32') {
+        if (request.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
 
