@@ -5,29 +5,6 @@ importers:
   .:
     specifiers: {}
 
-  ../../runbotics-actions-windows:
-    specifiers:
-      '@nestjs/common': ^8.4.2
-      '@types/node': ^18.11.18
-      microbundle: ^0.13.3
-      reflect-metadata: ^0.1.13
-      runbotics-sdk: workspace:^1.0.0
-      rxjs: ^7.5.5
-      tslib: ^2.3.0
-      typescript: ^4.3.5
-      winax: 3.3.4
-    dependencies:
-      '@nestjs/common': 8.4.2_47vcjb2de6lyibr6g4enoa5lyu
-      reflect-metadata: 0.1.13
-      rxjs: 7.5.5
-      winax: 3.3.4
-    devDependencies:
-      '@types/node': 18.11.18
-      microbundle: 0.13.3
-      runbotics-sdk: link:../runbotics-sdk
-      tslib: 2.3.1
-      typescript: 4.6.2
-
   ../../runbotics-common:
     specifiers:
       '@types/jexl': ^2.2.0
@@ -54,6 +31,7 @@ importers:
       '@nestjs/schedule': ^2.1.0
       '@nestjs/schematics': ^9.0.4
       '@nestjs/testing': ^9.2.1
+      '@runbotics/runbotics-actions-windows': 1.6.0
       '@stomp/stompjs': ^6.1.0
       '@types/asana': ^0.18.1
       '@types/bpmn-moddle': ^5.1.6
@@ -94,7 +72,6 @@ importers:
       qs: ^6.11.1
       reflect-metadata: ^0.1.13
       rimraf: ^3.0.2
-      runbotics-actions-windows: workspace:^1.0.0
       runbotics-common: workspace:^1.0.0
       runbotics-sdk: workspace:^1.0.0
       rxjs: ^7.5.5
@@ -121,6 +98,7 @@ importers:
       '@nestjs/core': 9.2.1_ghc4plyuvt23rkn3ubrgiwhz2y
       '@nestjs/microservices': 9.2.1_qejihtrxyhf7aoi4n3r2752buy
       '@nestjs/schedule': 2.1.0_dntc3uqqknzoduyjojusds5kla
+      '@runbotics/runbotics-actions-windows': 1.6.0
       '@stomp/stompjs': 6.1.0
       asana: 0.18.6
       axios: 0.27.2
@@ -145,7 +123,6 @@ importers:
       qs: 6.11.1
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
-      runbotics-actions-windows: link:../runbotics-actions-windows
       runbotics-common: link:../runbotics-common
       runbotics-sdk: link:../runbotics-sdk
       rxjs: 7.5.5
@@ -4715,8 +4692,8 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nestjs/common/8.4.2_47vcjb2de6lyibr6g4enoa5lyu:
-    resolution: {integrity: sha512-l5CTBvW7PaqZPHRwtLU7G0NK2XBLQZL8jnvH0ArGGduljb5MpgsXwgDt8OYlc5m50IGBL/2j70Cad3CEpKcLUA==}
+  /@nestjs/common/8.4.7_mnr6j2del53muneqly5h4y27ai:
+    resolution: {integrity: sha512-m/YsbcBal+gA5CFrDpqXqsSfylo+DIQrkFY3qhVIltsYRfu8ct8J9pqsTO6OPf3mvqdOpFGrV5sBjoyAzOBvsw==}
     peerDependencies:
       cache-manager: '*'
       class-transformer: '*'
@@ -4731,11 +4708,11 @@ packages:
       class-validator:
         optional: true
     dependencies:
-      axios: 0.26.1
+      axios: 0.27.2
       iterare: 1.2.1
       reflect-metadata: 0.1.13
-      rxjs: 7.5.5
-      tslib: 2.3.1
+      rxjs: 7.8.0
+      tslib: 2.4.0
       uuid: 8.3.2
     transitivePeerDependencies:
       - debug
@@ -5544,6 +5521,21 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
+
+  /@runbotics/runbotics-actions-windows/1.6.0:
+    resolution: {integrity: sha512-JYmWgam+hdhBJICBGANqMQt33oigoxeD2xquuNts3ry8Guv1C2K4scrGFHWb+3L+qylzJEovhmMn9zRtXcSKUQ==, tarball: download/@runbotics/runbotics-actions-windows/1.6.0/569ea38838b7ac8c328a98dfe543ec18711f74ba}
+    requiresBuild: true
+    dependencies:
+      '@nestjs/common': 8.4.7_mnr6j2del53muneqly5h4y27ai
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.0
+      winax: 3.3.4
+    transitivePeerDependencies:
+      - cache-manager
+      - class-transformer
+      - class-validator
+      - debug
+    dev: false
 
   /@rushstack/eslint-patch/1.1.3:
     resolution: {integrity: sha512-WiBSI6JBIhC6LRIsB2Kwh8DsGTlbBU+mLRxJmAe3LjHTdkDpwIbEOZgoXBbZilk/vlfjK8i6nKRAvIRn1XaIMw==}
@@ -7367,14 +7359,6 @@ packages:
     resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
     dependencies:
       follow-redirects: 1.14.9
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /axios/0.26.1:
-    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
-    dependencies:
-      follow-redirects: 1.15.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -17892,6 +17876,7 @@ packages:
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
+    dev: true
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}

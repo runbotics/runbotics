@@ -25,7 +25,8 @@ export type InternalHandlerKey =
 | 'sap'
 | 'sharepointExcel'
 | 'sharepointFile'
-| 'variables';
+| 'variables'
+| 'desktopOfficeActions';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

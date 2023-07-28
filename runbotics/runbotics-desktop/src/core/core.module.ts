@@ -7,6 +7,7 @@ import { RuntimeService } from './bpm/runtime';
 import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
+import { OfficeActionHandlerModule } from '@runbotics/runbotics-actions-windows';
 
 
 @Module({
@@ -14,6 +15,7 @@ import { LoopHandlerService } from './bpm/loop-handler';
         ScheduleModule.forRoot(),
         forwardRef(() => ActionModule),
         forwardRef(() => WebsocketModule),
+        forwardRef(() => OfficeActionHandlerModule)
     ],
     providers: [
         RuntimeService,
