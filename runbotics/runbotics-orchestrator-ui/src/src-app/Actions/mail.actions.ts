@@ -1,3 +1,5 @@
+import { MailAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner } from './types';
 
 const getMailActions: () => Record<string, IBpmnAction> = () => ({
     'mail.send': {
-        id: 'mail.send',
+        id: MailAction.SEND,
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),
-        script: 'mail.send',
+        script: MailAction.SEND,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {

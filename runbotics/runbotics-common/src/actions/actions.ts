@@ -152,6 +152,13 @@ export enum ACTION_GROUP {
     CLOSE = 'application.close',
   }
 
+  export enum ExcelAction {
+    OPEN = 'excel.open',
+    GET_CELL = 'excel.getCell',
+    SET_CELLS = 'excel.setCells',
+    SAVE = 'excel.save',
+  }
+
   export type AllActionIds =
     | VariableAction
     | GeneralAction

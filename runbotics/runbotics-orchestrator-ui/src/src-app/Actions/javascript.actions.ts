@@ -1,3 +1,5 @@
+import { JavascriptAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
-        id: 'typescript.run',
+        id: JavascriptAction.TYPESCRIPT_RUN,
         label: translate('Process.Details.Modeler.Actions.Typescript.Run.Label'),
-        script: 'typescript.run',
+        script: JavascriptAction.TYPESCRIPT_RUN,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -67,8 +69,8 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    code: `export = async function(params: Record<string, any>) {  
-    console.log('params ', params); 
+                    code: `export = async function(params: Record<string, any>) {
+    console.log('params ', params);
     return {
         "test": "test"
     }
@@ -82,9 +84,9 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'javascript.run': {
-        id: 'javascript.run',
+        id: JavascriptAction.JAVASCRIPT_RUN,
         label: translate('Process.Details.Modeler.Actions.Javascript.Run.Label'),
-        script: 'javascript.run',
+        script: JavascriptAction.JAVASCRIPT_RUN,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

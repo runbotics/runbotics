@@ -1,3 +1,5 @@
+import { CsvAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getCsvActions: () => Record<string, IBpmnAction> = () => ({
     'csv.import': {
-        id: 'import.csv',
+        id: CsvAction.IMPORT,
         label: translate('Process.Details.Modeler.Actions.Import.Csv.Label'),
-        script: 'import.csv',
+        script: CsvAction.IMPORT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -59,9 +61,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.appendFile': {
-        id: 'csv.appendFile',
+        id: CsvAction.APPEND_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Label'),
-        script: 'csv.appendFile',
+        script: CsvAction.APPEND_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -122,9 +124,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.readFile': {
-        id: 'csv.readFile',
+        id: CsvAction.READ_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Label'),
-        script: 'csv.readFile',
+        script: CsvAction.READ_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -180,9 +182,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.writeFile': {
-        id: 'csv.writeFile',
+        id: CsvAction.WRITE_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Label'),
-        script: 'csv.writeFile',
+        script: CsvAction.WRITE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

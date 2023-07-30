@@ -1,3 +1,5 @@
+import { LoopAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -5,9 +7,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getLoopActions = (): Record<string, IBpmnAction> => ({
     'loop.loop': {
-        id: 'loop.loop',
+        id: LoopAction.LOOP,
         label: translate('Process.Details.Modeler.Actions.Loop.Loop2.Label'),
-        script: 'loop.loop',
+        script: LoopAction.LOOP,
         runner: Runner.BPMN,
         output: {
             assignVariables: false,
