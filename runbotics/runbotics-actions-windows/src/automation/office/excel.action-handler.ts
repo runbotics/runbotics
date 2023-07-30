@@ -17,6 +17,7 @@ export type ExcelOpenActionInput = {
 export type ExcelGetCellActionInput = {
     row: number;
     column: string;
+    worksheet?: string;
 };
 
 export interface ExcelSaveActionInput {
@@ -77,7 +78,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async getCell(
         input: ExcelGetCellActionInput
     ): Promise<string | number> {
-        return this.session.ActiveSheet.Range(`${input.column}${input.row}`).Value();
+        const optionalWorksheet = input?.worksheet;
+        const openedWorksheet = this.session.ActiveSheet.name;
+        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
+        const cellValue = this.session.ActiveSheet.Range(`${input.column}${input.row}`).Value();
+        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
+        return cellValue;
     }
 
     async setCell(
