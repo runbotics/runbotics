@@ -1,3 +1,5 @@
+import { BeeOfficeAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
-        id: 'beeOffice.createNewTimetableActivity',
+        id: BeeOfficeAction.CREATE_NEW_TIMETABLE_ACTIVITY,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.CreateNewTimetableActivity.Label'),
-        script: 'beeOffice.createNewTimetableActivity',
+        script: BeeOfficeAction.CREATE_NEW_TIMETABLE_ACTIVITY,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -99,9 +101,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getEmployee': {
-        id: 'beeOffice.getEmployee',
+        id: BeeOfficeAction.GET_EMPLOYEE,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployee.Label'),
-        script: 'beeOffice.getEmployee',
+        script: BeeOfficeAction.GET_EMPLOYEE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -156,9 +158,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getEmployeeById': {
-        id: 'beeOffice.getEmployeeById',
+        id: BeeOfficeAction.GET_EMPLOYEE_BY_ID,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Label'),
-        script: 'beeOffice.getEmployeeById',
+        script: BeeOfficeAction.GET_EMPLOYEE_BY_ID,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -211,9 +213,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getActivity': {
-        id: 'beeOffice.getActivity',
+        id: BeeOfficeAction.GET_ACTIVITY,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivity.Label'),
-        script: 'beeOffice.getActivity',
+        script: BeeOfficeAction.GET_ACTIVITY,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -273,9 +275,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getSchedule': {
-        id: 'beeOffice.getSchedule',
+        id: BeeOfficeAction.GET_SCHEDULE,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetSchedule.Label'),
-        script: 'beeOffice.getSchedule',
+        script: BeeOfficeAction.GET_SCHEDULE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -337,9 +339,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.deleteTimeTableActivity': {
-        id: 'beeOffice.deleteTimeTableActivity',
+        id: BeeOfficeAction.DELETE_TIMETABLE_ACTIVITY,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.DeleteTimeTableActivity.Label'),
-        script: 'beeOffice.deleteTimeTableActivity',
+        script: BeeOfficeAction.DELETE_TIMETABLE_ACTIVITY,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -371,9 +373,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getActivityGroups': {
-        id: 'beeOffice.getActivityGroups',
+        id: BeeOfficeAction.GET_ACTIVITY_GROUPS,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Label'),
-        script: 'beeOffice.getActivityGroups',
+        script: BeeOfficeAction.GET_ACTIVITY_GROUPS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -428,9 +430,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'beeOffice.getActivitiesByURLParameters': {
-        id: 'beeOffice.getActivitiesByURLParameters',
+        id: BeeOfficeAction.GET_ACTIVITIES_BY_URL_PARAMETERS,
         label: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByURLParameters.Label'),
-        script: 'beeOffice.getActivitiesByURLParameters',
+        script: BeeOfficeAction.GET_ACTIVITIES_BY_URL_PARAMETERS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

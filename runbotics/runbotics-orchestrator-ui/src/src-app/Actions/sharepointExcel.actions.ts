@@ -1,3 +1,5 @@
+import { SharepointExcelAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointExcel.getCell': {
-        id: 'sharepointExcel.getCell',
+        id: SharepointExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCell.Label'),
-        script: 'sharepointExcel.getCell',
+        script: SharepointExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -62,9 +64,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.getRange': {
-        id: 'sharepointExcel.getRange',
+        id: SharepointExcelAction.GET_RANGE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetRange.Label'),
-        script: 'sharepointExcel.getRange',
+        script: SharepointExcelAction.GET_RANGE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -117,9 +119,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.setCell': {
-        id: 'sharepointExcel.setCell',
+        id: SharepointExcelAction.SET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label'),
-        script: 'sharepointExcel.setCell',
+        script: SharepointExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -177,9 +179,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.updateRange': {
-        id: 'sharepointExcel.updateRange',
+        id: SharepointExcelAction.UPDATE_RANGE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label'),
-        script: 'sharepointExcel.updateRange',
+        script: SharepointExcelAction.UPDATE_RANGE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -239,9 +241,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.openFileFromSite': {
-        id: 'sharepointExcel.openFileFromSite',
+        id: SharepointExcelAction.OPEN_FILE_FROM_SITE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label'),
-        script: 'sharepointExcel.openFileFromSite',
+        script: SharepointExcelAction.OPEN_FILE_FROM_SITE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -333,9 +335,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.openFileFromRoot': {
-        id: 'sharepointExcel.openFileFromRoot',
+        id: SharepointExcelAction.OPEN_FILE_FROM_ROOT,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromRoot.Label'),
-        script: 'sharepointExcel.openFileFromRoot',
+        script: SharepointExcelAction.OPEN_FILE_FROM_ROOT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -406,9 +408,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointExcel.closeSession': {
-        id: 'sharepointExcel.closeSession',
+        id: SharepointExcelAction.CLOSE_SESSION,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
-        script: 'sharepointExcel.closeSession',
+        script: SharepointExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
