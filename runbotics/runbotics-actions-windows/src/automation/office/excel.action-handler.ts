@@ -28,6 +28,7 @@ export type ExcelSetCellActionInput = {
     row: number;
     column: number;
     value: any;
+    worksheet?: string;
 };
 
 @Injectable()
@@ -93,8 +94,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCell(
         input: ExcelSetCellActionInput
     ): Promise<void> {
+        const optionalWorksheet = input?.worksheet;
+        const openedWorksheet = this.session.ActiveSheet.name;
+
+        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
         const cell = this.session.ActiveSheet.Range(`${input.column}${input.row}`);
         cell.Value = input.value;
+        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
     }
 
     private isApplicationOpen() {
