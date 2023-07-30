@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useRef, useReducer, FC } from 
 import If from '../../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from '../converter';
 import { cronReducer } from '../CronReducer/cronReducer';
-import { CRON_ACTIONS } from '../CronReducer/cronReducer.types';
+import { CronActions } from '../CronReducer/cronReducer.types';
 import HoursSelect from '../fields/HoursSelect';
 import MinutesSelect from '../fields/MinutesSelect';
 import MonthDaysSection from '../fields/MonthDaysSection';
@@ -37,9 +37,9 @@ const Cron: FC<CronProps> = ({
     const [period, setPeriod] = useState<PeriodType>();
     const [isError, setIsError] = useState<boolean>(false);
     const localeJSON = JSON.stringify(locale);
-    
+
     useEffect(
-        () => {            
+        () => {
             setValuesFromCronString({
                 cronString: value,
                 setIsError,
@@ -55,11 +55,11 @@ const Cron: FC<CronProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
-    
+
     useEffect(
         () => {
             if (value !== internalValueRef.current)
-            { 
+            {
                 setValuesFromCronString({
                     cronString: value,
                     setIsError,
@@ -99,8 +99,8 @@ const Cron: FC<CronProps> = ({
 
     const handleClear = useCallback(
         () => {
-            cronDispatch({ 
-                type: CRON_ACTIONS.CLEAR_ALL,
+            cronDispatch({
+                type: CronActions.CLEAR_ALL,
             });
 
             period ? setPeriod(period) : setPeriod(defaultPeriodRef.current);
@@ -133,7 +133,7 @@ const Cron: FC<CronProps> = ({
             <If condition={isYearPeriodDisplayed}>
                 <MonthsSelect
                     value={cronState.months}
-                    setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MONTHS, payload: { newValue } })}
+                    setValue={(newValue) => cronDispatch({ type: CronActions.SET_MONTHS, payload: { newValue } })}
                     locale={locale}
                     className={className}
                     humanizeLabels={humanizeLabels}
@@ -152,13 +152,13 @@ const Cron: FC<CronProps> = ({
                     leadingZero={leadingZero}
                     period={periodForRender}
                     monthDays={cronState.monthDays}
-                    setMonthDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MONTH_DAYS, payload: { newValue } })}
+                    setMonthDays={(newValue) => cronDispatch({ type: CronActions.SET_MONTH_DAYS, payload: { newValue } })}
                     nthMonthDays={cronState.nthMonthDays}
-                    setNthMonthDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_NTH_MONTH_DAYS, payload: { newValue } })}
+                    setNthMonthDays={(newValue) => cronDispatch({ type: CronActions.SET_NTH_MONTH_DAYS, payload: { newValue } })}
                 />
             </If>
             <If condition={isWeekPeriodDisplayed}>
-                <WeekDaysSection 
+                <WeekDaysSection
                     locale={locale}
                     humanizeLabels={humanizeLabels}
                     disabled={disabled}
@@ -166,15 +166,15 @@ const Cron: FC<CronProps> = ({
                     periodForRender={periodForRender}
                     isMonthPeriodDisplayed={isMonthPeriodDisplayed}
                     weekDays={cronState.weekDays}
-                    setWeekDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_WEEK_DAYS, payload: { newValue } })}
+                    setWeekDays={(newValue) => cronDispatch({ type: CronActions.SET_WEEK_DAYS, payload: { newValue } })}
                     nthWeekDays={cronState.nthWeekDays}
-                    setNthWeekDays={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_NTH_WEEK_DAYS, payload: { newValue } })}
+                    setNthWeekDays={(newValue) => cronDispatch({ type: CronActions.SET_NTH_WEEK_DAYS, payload: { newValue } })}
                 />
             </If>
             <If condition={isDayPeriodDisplayed}>
                 <HoursSelect
                     value={cronState.hours}
-                    setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_HOURS, payload: { newValue } })}
+                    setValue={(newValue) => cronDispatch({ type: CronActions.SET_HOURS, payload: { newValue } })}
                     locale={locale}
                     className={className}
                     disabled={disabled}
@@ -187,7 +187,7 @@ const Cron: FC<CronProps> = ({
             <If condition={isHourPeriodDisplayed}>
                 <MinutesSelect
                     value={cronState.minutes}
-                    setValue={(newValue) => cronDispatch({ type: CRON_ACTIONS.SET_MINUTES, payload: { newValue } })}
+                    setValue={(newValue) => cronDispatch({ type: CronActions.SET_MINUTES, payload: { newValue } })}
                     locale={locale}
                     period={periodForRender}
                     className={className}

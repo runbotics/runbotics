@@ -1,6 +1,6 @@
 /* eslint-disable max-params */
 import { UNITS, CronOrder as CronOrder } from './constants';
-import { CRON_ACTIONS, CronStateProps } from './CronReducer/cronReducer.types';
+import { CronActions, CronStateProps } from './CronReducer/cronReducer.types';
 import {
     Unit,
     PeriodType,
@@ -35,18 +35,18 @@ export const setValuesFromCronString = ({
         if(firstRender) return;
         isErrorOccurred = true;
     }
-    
+
     if(!isErrorOccurred) {
         try {
             const cronParts = parseCronString(cronString);
             const period = getPeriodFromCronparts(cronParts);
 
             setPeriod(period);
-            
-            cronDispatch({ 
-                type: CRON_ACTIONS.CLEAR_ALL, 
+
+            cronDispatch({
+                type: CronActions.CLEAR_ALL,
             });
-            
+
         } catch (err) {
             // Specific errors are not handled
             isErrorOccurred = true;
@@ -70,7 +70,7 @@ export function getCronStringFromValues(
     humanizeValue?: boolean,
 ) {
     const parsedArray = parseCronArray(
-        { 
+        {
             newMinutes: cronState.minutes,
             newHours: cronState.hours,
             newMonthDays: cronState.monthDays,
@@ -78,7 +78,7 @@ export function getCronStringFromValues(
             newMonths: cronState.months,
             newWeekDays: cronState.weekDays,
             newNthWeekDays: cronState.nthWeekDays,
-        }, 
+        },
         humanizeValue
     );
 
@@ -441,16 +441,16 @@ export function parsePartArray(arr: number[], unit: Unit) {
     const values = sort(dedup(fixSunday(arr, unit)));
 
     if (values.length === 0)
-    { 
-        return values; 
+    {
+        return values;
     }
 
 
     const value = outOfRange(values, unit);
 
     if (typeof value !== 'undefined')
-    { 
-        throw new Error(`Value '${value}' out of range for ${unit.type}`); 
+    {
+        throw new Error(`Value '${value}' out of range for ${unit.type}`);
     }
 
 
@@ -472,8 +472,8 @@ function getStep(values: number[]) {
         const step = values[1] - values[0];
 
         if (step > 1)
-        { 
-            return step; 
+        {
+            return step;
         }
     }
 
@@ -489,8 +489,8 @@ function isInterval(values: number[], step: number) {
         const value = values[i];
 
         if (value - prev !== step)
-        { 
-            return false; 
+        {
+            return false;
         }
     }
 

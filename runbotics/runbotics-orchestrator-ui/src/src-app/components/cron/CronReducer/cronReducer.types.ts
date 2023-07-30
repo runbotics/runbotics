@@ -9,14 +9,14 @@ export interface CronStateProps {
 }
 
 export interface CronActionProps {
-    type: CRON_ACTIONS,
-    payload?: { 
+    type: CronActions,
+    payload?: {
         newValue?: number[],
         newState?: CronStateProps,
     }
 }
 
-export enum CRON_ACTIONS {
+export enum CronActions {
     CLEAR_ALL = 'clear-all',
     SET_ALL = 'set-all',
     SET_EACH = 'set-each',
