@@ -140,7 +140,11 @@ public class AccountResource {
         );
     }
 
-    // @RequestMapping(value = "/activate", method = {RequestMethod.PATCH})
+    /**
+     * {@code PATCH  /account} : partially update user information (by the user).
+     *
+     * @param userDTO new information provided by the user.
+     */
     @PatchMapping("/account")
     public User updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
         var user = userService.getUserWithAuthorities().get();
