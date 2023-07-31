@@ -65,6 +65,10 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Excel.Column'),
                                 type: 'string',
                             },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
                         },
                         required: ['row', 'column'],
                     },
