@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type ExcelActionRequest =
-| DesktopRunRequest<"excel.open", ExcelOpenActionInput>
-| DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
-| DesktopRunRequest<"excel.close">
-| DesktopRunRequest<"excel.save">
-| DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
+    | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
+    | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
+    | DesktopRunRequest<"excel.close">
+    | DesktopRunRequest<"excel.save">
+    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -79,11 +79,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelGetCellActionInput
     ): Promise<string | number> {
         const optionalWorksheet = input?.worksheet;
-        const openedWorksheet = this.session.ActiveSheet.name;
-        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
-        const cellValue = this.session.ActiveSheet.Range(`${input.column}${input.row}`).Value();
-        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
-        return cellValue;
+        return optionalWorksheet
+            ? this.session
+                .Worksheets(optionalWorksheet)
+                .Range(`${input.column}${input.row}`)
+                .Value()
+            : this.session
+                .ActiveSheet
+                .Range(`${input.column}${input.row}`)
+                .Value();
     }
 
     async setCell(
