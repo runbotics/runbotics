@@ -95,12 +95,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelSetCellActionInput
     ): Promise<void> {
         const optionalWorksheet = input?.worksheet;
-        const openedWorksheet = this.session.ActiveSheet.name;
 
-        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
-        const cell = this.session.ActiveSheet.Range(`${input.column}${input.row}`);
+        const cell = optionalWorksheet
+            ? this.session.Worksheets(optionalWorksheet).Range(`${input.column}${input.row}`)
+            : this.session.ActiveSheet.Range(`${input.column}${input.row}`)
+
         cell.Value = input.value;
-        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
     }
 
     private isApplicationOpen() {
