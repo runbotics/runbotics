@@ -277,8 +277,7 @@ public class UserService {
     /**
      * Update information for the current user.
      *
-     * @param accountPartialUpdateDTO includes only fields available for the user to update
-
+     * @param userDTO includes only fields available for the user to update
      */
     public void partialAccountUpdate(User user, AccountPartialUpdateDTO userDTO) {
         accountPartialUpdateMapper.partialUpdate(user, userDTO);
