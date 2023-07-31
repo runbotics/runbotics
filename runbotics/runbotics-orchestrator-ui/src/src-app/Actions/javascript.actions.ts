@@ -1,17 +1,14 @@
-import { JavascriptAction } from 'runbotics-common';
-
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
 
-
 // eslint-disable-next-line max-lines-per-function
 const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
-        id: JavascriptAction.TYPESCRIPT_RUN,
+        id: 'typescript.run',
         label: translate('Process.Details.Modeler.Actions.Typescript.Run.Label'),
-        script: JavascriptAction.TYPESCRIPT_RUN,
+        script: 'typescript.run',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -84,9 +81,9 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'javascript.run': {
-        id: JavascriptAction.JAVASCRIPT_RUN,
+        id: 'javascript.run',
         label: translate('Process.Details.Modeler.Actions.Javascript.Run.Label'),
-        script: JavascriptAction.JAVASCRIPT_RUN,
+        script: 'javascript.run',
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
