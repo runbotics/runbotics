@@ -120,7 +120,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const parsedObject =
             typeof input.cellValues === 'object'
                 ? input.cellValues
-                : this.getParsedObj(input.cellValues)
+                : this.parseObject(input.cellValues)
 
         if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
         for (const [key, value] of Object.entries(parsedObject)) {
@@ -136,7 +136,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private getParsedObj = (stringifiedObj: string): Record<string, any> => {
+    private parseObject = (stringifiedObj: string): Record<string, any> => {
         try {
             return JSON.parse(stringifiedObj)
         } catch (e) {
