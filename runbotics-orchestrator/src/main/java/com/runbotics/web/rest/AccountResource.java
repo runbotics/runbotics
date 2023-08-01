@@ -147,7 +147,7 @@ public class AccountResource {
      */
     @PatchMapping("/account")
     public User updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
-        var user = userService.getUserWithAuthorities().get();
+        User user = userService.getUserWithAuthorities().get();
 
         userService.partialAccountUpdate(user, userDTO);
 

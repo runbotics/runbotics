@@ -39,15 +39,6 @@ public class AccountPartialUpdateDTO {
     @Size(min = 2, max = 10)
     private String langKey;
 
-//    public enum UpdatedKeys {
-//        FIRST_NAME,
-//        LAST_NAME,
-//        EMAIL,
-//        LANGUAGE,
-//        IMAGE_URL
-//    }
-//    private Set<UpdatedKeys> updatedKeys;
-
     public AccountPartialUpdateDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -117,11 +108,6 @@ public class AccountPartialUpdateDTO {
     public void setLangKey(String langKey) {
         this.langKey = langKey;
     }
-
-
-//    public void setUpdatedKeys(Set<UpdatedKeys> updatedKeys) {
-//        this.updatedKeys = updatedKeys;
-//    }
 
     // prettier-ignore
     @Override
