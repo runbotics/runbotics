@@ -1,8 +1,9 @@
-import { Select, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { StyledSelect } from './UsersRegisterTable.styles';
 import { getKeysFromRoleEnum, createDateFormat, formatUserRole } from './UsersRegisterTable.utils';
 
 enum UserField {
@@ -16,16 +17,17 @@ const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const roles = getKeysFromRoleEnum();
 
     const RoleSelect = (row) => (
-        <Select
+        <StyledSelect
             fullWidth
             required
             defaultValue=''
             onChange={(e) => handleSelectChange(row.id, e.target.value)}
+            variant='filled'
         >
             {roles.map((role) =>
                 <MenuItem key={role} value={role}>{formatUserRole(role)}</MenuItem>
             )}
-        </Select>
+        </StyledSelect>
     );
 
     return [
