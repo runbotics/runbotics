@@ -6,7 +6,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledHeaderGrid } from './UsersBrowseView.styles';
 
-const UsersViewHeader: FC = () => {
+const UsersBrowseViewHeader: FC = () => {
     const { translate } = useTranslations();
 
     return (
@@ -24,4 +24,4 @@ const UsersViewHeader: FC = () => {
     );
 };
 
-export default UsersViewHeader;
+export default UsersBrowseViewHeader;

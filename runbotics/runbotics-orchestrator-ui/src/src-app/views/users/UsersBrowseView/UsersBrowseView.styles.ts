@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import styled from 'styled-components';
 
-import UsersViewHeader from './UsersViewHeader';
+import UsersBrowseViewHeader from './UsersBrowseViewHeader';
 
 export const StyledHeaderGrid = styled(Grid)(
     ({ theme }) => `
@@ -11,6 +11,6 @@ export const StyledHeaderGrid = styled(Grid)(
     }
 `);
 
-export const StyledUsersViewHeader = styled(UsersViewHeader)`
+export const StyledUsersViewHeader = styled(UsersBrowseViewHeader)`
     margin-bottom: 20px;
 `;

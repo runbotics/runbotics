@@ -3,7 +3,7 @@ import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { getKeysFromRoleEnum, createDateFormat, formatUserRole } from '../UsersRegisterTable.utils';
+import { getKeysFromRoleEnum, createDateFormat, formatUserRole } from './UsersRegisterTable.utils';
 
 enum UserField {
     EMAIL = 'email',
