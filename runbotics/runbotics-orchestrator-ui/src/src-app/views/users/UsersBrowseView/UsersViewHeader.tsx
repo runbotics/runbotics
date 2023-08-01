@@ -1,17 +1,12 @@
 import React, { FC } from 'react';
 
 import { Grid, Typography } from '@mui/material';
-import clsx from 'clsx';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledHeaderGrid, classesHeader } from './UsersBrowseView.styles';
+import { StyledHeaderGrid } from './UsersBrowseView.styles';
 
-interface HeaderProps {
-    className?: string;
-}
-
-const Header: FC<HeaderProps> = ({ className, ...rest }) => {
+const UsersViewHeader: FC = () => {
     const { translate } = useTranslations();
 
     return (
@@ -19,8 +14,6 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             container
             spacing={3}
             justifyContent="space-between"
-            className={clsx(classesHeader.root, className)}
-            {...rest}
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
@@ -31,4 +24,4 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     );
 };
 
-export default Header;
+export default UsersViewHeader;

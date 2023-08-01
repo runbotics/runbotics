@@ -30,27 +30,27 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
 
         // GET ALL NOT ACTIVATED
         .addCase(getAllNotActivatedByPage.pending, (state) => {
-            state.loading = true;
+            state.notActivated.loading = true;
         })
         .addCase(getAllNotActivatedByPage.fulfilled, (state, action) => {
-            state.loading = false;
-            state.allNotActivatedByPage = action.payload;
+            state.notActivated.loading = false;
+            state.notActivated.allByPage = { ...action.payload };
         })
         .addCase(getAllNotActivatedByPage.rejected, (state) => {
-            state.loading = false;
+            state.notActivated.loading = false;
         })
 
         // PUT ACTIVATE SELECTED
         .addCase(updateNotActivated.pending, (state) => {
-            state.loading = true;
+            state.notActivated.loading = true;
         })
         .addCase(updateNotActivated.fulfilled, (state, action) => {
-            state.loading = false;
-            state.allNotActivatedByPage.content = state.allNotActivatedByPage.content
+            state.notActivated.loading = false;
+            state.notActivated.allByPage.content = state.notActivated.allByPage.content
                 .filter((user) => user.id !== action.payload.id);
         })
         .addCase(updateNotActivated.rejected, (state) => {
-            state.loading = false;
+            state.notActivated.loading = false;
         });
 };
 

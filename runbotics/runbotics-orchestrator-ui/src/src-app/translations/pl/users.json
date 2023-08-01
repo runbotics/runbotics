@@ -6,6 +6,7 @@
     "Users.Browse.Tabs.Registration.Title": "Użytkownicy",
     "Users.Register.View.Events.Success.AcceptingUser": "Sukces",
     "Users.Register.View.Events.Error.RolesNotSelected": "Nie wybrano wszystkich wymaganych roli",
+    "Users.Register.View.Events.Error.Common": "Błąd",
     "Users.Register.View.SearchBarPlaceholder": "Wyszukaj",
     "Users.Register.View.Button.Accept": "Akceptuj",
     "Users.Register.View.Button.Delete": "Usuń",

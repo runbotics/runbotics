@@ -10,7 +10,10 @@ export const StyledActionsContainer = styled.div`
 `;
 
 export const StyledTextField = styled(TextField)`
-    width: 350px; && { margin: 0 }
+    width: 350px;
+    && {
+        margin: 0;
+    }
 `;
 
 export const StyledButtonsContainer = styled.div`
@@ -22,7 +25,10 @@ export const StyledButtonsContainer = styled.div`
 `;
 
 export const StyledButton = styled(Button)`
-    width: 250px; && { margin-left: 20px }
+    width: 250px;
+    && { 
+        margin-left: 20px;
+    }
 `;
 
 export const DeleteButton = styled(Button)(({theme}) => `
@@ -35,4 +41,3 @@ export const DeleteButton = styled(Button)(({theme}) => `
         }
     }
 `);
-

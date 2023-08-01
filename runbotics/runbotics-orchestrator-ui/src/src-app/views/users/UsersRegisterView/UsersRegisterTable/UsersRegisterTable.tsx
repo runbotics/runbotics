@@ -10,7 +10,7 @@ import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 import { DataGridStyle} from './UsersRegisterTable.styles';
 import useUsersRegisterColumns from './useUsersRegisterColumns';
 
-interface TableProps {
+interface UsersRegisterTableProps {
     page: number;
     onPageChange: (page: number) => void;
     pageSize: number;
@@ -20,7 +20,7 @@ interface TableProps {
     handleSelectedRolesChange: (id: number, value: string) => void;
 }
 
-const UsersRegisterTable: VFC<TableProps> = ({
+const UsersRegisterTable: VFC<UsersRegisterTableProps> = ({
     page,
     onPageChange,
     pageSize,
@@ -30,7 +30,7 @@ const UsersRegisterTable: VFC<TableProps> = ({
     handleSelectedRolesChange
 }) => {
     const userRegisterColumns = useUsersRegisterColumns(handleSelectedRolesChange);
-    const { allNotActivatedByPage, loading } = useSelector(usersSelector);
+    const { notActivated, loading } = useSelector(usersSelector);
 
     return (
         <Card>
@@ -40,8 +40,8 @@ const UsersRegisterTable: VFC<TableProps> = ({
                         sx={DataGridStyle}
                         autoHeight
                         columns={userRegisterColumns}
-                        rows={allNotActivatedByPage?.content ?? []}
-                        rowCount={allNotActivatedByPage?.totalElements ?? 0}
+                        rows={notActivated.allByPage?.content ?? []}
+                        rowCount={notActivated.allByPage?.totalElements ?? 0}
                         loading={loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}

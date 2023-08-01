@@ -10,7 +10,7 @@ import useDebounce from './useDebounce';
 
 const DEBOUNCE_TIME = 250;
 
-const useUserSearch = (pageSize = 10, page = 0) => {
+const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const searchFromUrl = searchParams.get('search');
@@ -23,17 +23,19 @@ const useUserSearch = (pageSize = 10, page = 0) => {
         const newPage = search !== '' ? 0 : page;
 
         router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
-        dispatch(
-            usersActions.getAllNotActivatedByPage({
-                page: newPage,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(debouncedValue.trim() && { 'email': debouncedValue.trim() }),
+        if (!forActivatedUsers) {
+            dispatch(
+                usersActions.getAllNotActivatedByPage({
+                    page: newPage,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(debouncedValue.trim() && { 'email': debouncedValue.trim() }),
+                        },
                     },
-                },
-            })
-        ).catch((err) => { throw err; });
+                })
+            ).catch((err) => { throw err; });
+        } else {}
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, page]);

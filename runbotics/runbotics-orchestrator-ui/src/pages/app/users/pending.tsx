@@ -1,6 +1,6 @@
-import { FeatureKey } from 'runbotics-common';
+import { Role } from 'runbotics-common';
 
 import { withAuthGuard } from '#src-app/components/guards/AuthGuard';
 import UsersBrowseView from '#src-app/views/users/UsersBrowseView/UsersBrowseView';
 
-export default withAuthGuard(UsersBrowseView, [FeatureKey.USERS_PAGE_READ]);
+export default withAuthGuard({ Component: UsersBrowseView, userRoles: [Role.ROLE_ADMIN]});

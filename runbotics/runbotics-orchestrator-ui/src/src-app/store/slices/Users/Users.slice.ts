@@ -11,8 +11,11 @@ const initialState: UsersState = {
         loading: false
     },
     all: [],
-    allNotActivated: [],
-    allNotActivatedByPage: null,
+    notActivated: {
+        loading: false,
+        all: [],
+        allByPage: null,
+    }
 };
 
 export const slice = createSlice({

@@ -8,6 +8,9 @@ export interface UsersState {
         loading: boolean
     };
     all: IUser[];
-    allNotActivated: IUser[];
-    allNotActivatedByPage: Page<IUser> | null;
+    notActivated: {
+        loading: boolean;
+        all: IUser[];
+        allByPage: Page<IUser> | null;
+    }
 }
