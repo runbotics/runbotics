@@ -40,9 +40,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'excel.getCell': {
-        id: 'excel.getCell',
+        id: ExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.Excel.GetCell.Label'),
-        script: 'excel.getCell',
+        script: ExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -129,6 +129,39 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             }
                         },
                         required: ['row', 'column', 'value'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
+    'excel.setCells': {
+        id: ExcelAction.SET_CELLS,
+        label: translate('Process.Details.Modeler.Actions.Excel.SetCells.Label'),
+        script: ExcelAction.SET_CELLS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            cellValues: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.InputObject'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['cellValues'],
                     },
                 },
             },

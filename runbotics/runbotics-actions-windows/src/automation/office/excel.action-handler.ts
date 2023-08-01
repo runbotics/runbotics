@@ -6,7 +6,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
     | DesktopRunRequest<"excel.close">
     | DesktopRunRequest<"excel.save">
-    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
+    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
+    | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -28,6 +29,11 @@ export type ExcelSetCellActionInput = {
     row: number;
     column: number;
     value: any;
+    worksheet?: string;
+};
+
+export type ExcelSetCellsActionInput = {
+    cellValues: string | object;
     worksheet?: string;
 };
 
@@ -106,10 +112,36 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         cell.Value = input.value;
     }
 
+    async setCells(
+        input: ExcelSetCellsActionInput
+    ): Promise<void> {
+        const optionalWorksheet = input?.worksheet;
+        const openedWorksheet = this.session.ActiveSheet.name;
+        const parsedObject =
+            typeof input.cellValues === 'object'
+                ? input.cellValues
+                : this.getParsedObj(input.cellValues)
+
+        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
+        for (const [key, value] of Object.entries(parsedObject)) {
+            const cell = this.session.ActiveSheet.Range(key);
+            cell.Value = value;
+        }
+        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
         }
+    }
+
+    private getParsedObj = (stringifiedObj: string): Record<string, any> => {
+        try {
+            return JSON.parse(stringifiedObj)
+        } catch (e) {
+            throw new Error('Input is neither a valid JSON nor an object. Check the Input tab above')
+        };
     }
 
     run(request: ExcelActionRequest) {
@@ -126,6 +158,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCell":
                 this.isApplicationOpen();
                 return this.setCell(request.input);
+            case "excel.setCells":
+                this.isApplicationOpen();
+                return this.setCells(request.input);
             case "excel.save":
                 this.isApplicationOpen();
                 return this.save(request.input);
