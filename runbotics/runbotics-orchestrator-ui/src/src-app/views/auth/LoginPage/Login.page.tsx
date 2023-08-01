@@ -83,7 +83,7 @@ const LoginPage: FC = () => {
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
                 });
                 router.push({ pathname: '/app/processes' }, null, {
-                    locale: router.locale,
+                    locale: user.langKey,
                 });
             })
             .catch((error) => {
