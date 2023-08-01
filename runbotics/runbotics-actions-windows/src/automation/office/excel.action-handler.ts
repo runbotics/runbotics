@@ -28,12 +28,12 @@ export interface ExcelSaveActionInput {
 export type ExcelSetCellActionInput = {
     row: number;
     column: number;
-    value: any;
+    value: unknown;
     worksheet?: string;
 };
 
 export type ExcelSetCellsActionInput = {
-    cellValues: string | object;
+    targetExcelStructure: Record<string, unknown>;
     worksheet?: string;
 };
 
@@ -115,17 +115,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
+        this.checkIsObject(input.targetExcelStructure);
+
         const optionalWorksheet = input?.worksheet;
         const openedWorksheet = this.session.ActiveSheet.name;
-        const parsedObject =
-            typeof input.cellValues === 'object'
-                ? input.cellValues
-                : this.parseObject(input.cellValues)
 
         if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
-        for (const [key, value] of Object.entries(parsedObject)) {
-            const cell = this.session.ActiveSheet.Range(key);
-            cell.Value = value;
+        for (const [coordinate, cellValue] of Object.entries(input.targetExcelStructure)) {
+            const cell = this.session.ActiveSheet.Range(coordinate);
+            cell.Value = cellValue;
         }
         if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
     }
@@ -136,12 +134,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private parseObject = (stringifiedObj: string): Record<string, any> => {
-        try {
-            return JSON.parse(stringifiedObj)
-        } catch (e) {
-            throw new Error('Input is neither a valid JSON nor an object. Check the Input tab above')
-        };
+    private checkIsObject(value: unknown): void {
+        if (typeof value !== 'object') {
+            throw new Error('Target Excel structure must be variable of a JSON object e.g. { "A1": "value", "B3": "another value" }. Check targetExcelStructure in Input tab above.');
+        }
     }
 
     run(request: ExcelActionRequest) {
