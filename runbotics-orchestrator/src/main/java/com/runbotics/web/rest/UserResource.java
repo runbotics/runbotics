@@ -214,17 +214,10 @@ public class UserResource {
             return ResponseEntity.badRequest().build();
         }
 
-        List<AdminUserDTO> allUsersWithCriteria = userQueryService.findByCriteria(criteria);
-        List<AdminUserDTO> filteredNotActivated = userService.filterAllNotActivatedUsers(allUsersWithCriteria);
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable, criteria);
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredNotActivated.size());
-
-        List<AdminUserDTO> pageContent = filteredNotActivated.subList(start, end);
-        Page<AdminUserDTO> filteredPage = new PageImpl<>(pageContent, pageable, filteredNotActivated.size());
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), filteredPage);
-        return new ResponseEntity<>(filteredPage, headers, HttpStatus.OK);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**

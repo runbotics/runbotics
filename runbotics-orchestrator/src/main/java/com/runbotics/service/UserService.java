@@ -3,6 +3,7 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
@@ -329,13 +330,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<AdminUserDTO> filterAllNotActivatedUsers(List<AdminUserDTO> users) {
-        return users
-            .stream()
-            .filter(
-                user -> !user.isActivated()
-            )
-            .collect(Collectors.toList());
+    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
+        if (criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+        }
+            return userRepository
+                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)
