@@ -9,6 +9,8 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title': 'Arkusz',
     'Process.Details.Modeler.Actions.Excel.GetCell.Label': 'Odczytaj komórkę',
     'Process.Details.Modeler.Actions.Excel.SetCell.Label': 'Wpisz do komórki',
+    'Process.Details.Modeler.Actions.Excel.SetCells.Label': 'Wpisz do komórek',
+    'Process.Details.Modeler.Actions.Excel.SetCells.InputObject': 'Obiekt (np. { A1: "wartość", B1: "inna wartość" })',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',
