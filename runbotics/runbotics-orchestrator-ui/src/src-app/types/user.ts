@@ -1,6 +1,8 @@
 import { Dictionary } from '@reduxjs/toolkit';
 import { FeatureKey, IAuthority } from 'runbotics-common';
 
+import { Language } from '#src-app/translations/translations';
+
 export interface User {
     id: string;
     avatar: string;
@@ -10,7 +12,7 @@ export interface User {
     firstName?: string;
     lastName?: string;
     activated?: boolean;
-    langKey?: string;
+    langKey?: Language;
     authorities?: IAuthority[];
     roles?: string[];
     featureKeys?: FeatureKey[];

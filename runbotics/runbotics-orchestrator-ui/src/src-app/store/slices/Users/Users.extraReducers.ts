@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
-import { getAll } from './Users.thunks';
+import { getAll, partialUpdate } from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
@@ -15,6 +15,17 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAll.rejected, (state) => {
             state.loading = false;
+        })
+
+        // PARTIAL ACCOUNT UPDATE
+        .addCase(partialUpdate.pending, (state) => {
+            state.userUpdate.loading = true;
+        })
+        .addCase(partialUpdate.fulfilled, (state) => {
+            state.userUpdate.loading = false;
+        })
+        .addCase(partialUpdate.rejected, (state) => {
+            state.userUpdate.loading = false;
         });
 };
 

@@ -7,6 +7,9 @@ import * as usersThunks from './Users.thunks';
 
 const initialState: UsersState = {
     loading: false,
+    userUpdate: {
+        loading: false
+    },
     all: [],
 };
 

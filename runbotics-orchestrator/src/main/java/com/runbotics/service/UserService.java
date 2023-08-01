@@ -8,6 +8,7 @@ import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
+import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
 
@@ -16,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -43,16 +45,20 @@ public class UserService {
 
     private final ProcessRepository processRepository;
 
+    private final AccountPartialUpdateMapper accountPartialUpdateMapper;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
-        ProcessRepository processRepository
+        ProcessRepository processRepository,
+        AccountPartialUpdateMapper accountPartialUpdateMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.accountPartialUpdateMapper = accountPartialUpdateMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -267,6 +273,17 @@ public class UserService {
                 }
             );
     }
+
+    /**
+     * Update information for the current user.
+     *
+     * @param userDTO includes only fields available for the user to update
+     */
+    public void partialAccountUpdate(User user, AccountPartialUpdateDTO userDTO) {
+        accountPartialUpdateMapper.partialUpdate(user, userDTO);
+
+        userRepository.save(user);
+    };
 
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
