@@ -44,9 +44,10 @@ export const withAuthGuard = ({
             return <LoadingScreen />;
         }
 
-        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options) || userRoles?.length && hasRoleAccess(user, userRoles)) {
-            return <Component {...props} />;
-        }
+        if (
+            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options) 
+            && hasRoleAccess(user, userRoles ? userRoles : [])
+        ) { return <Component {...props} />; }
 
         router.replace('/404');
     }

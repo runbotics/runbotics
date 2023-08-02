@@ -1,22 +1,16 @@
 import { MenuItem } from '@mui/material';
-import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
+import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-data-grid';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledSelect } from './UsersRegisterTable.styles';
-import { getKeysFromRoleEnum, createDateFormat, formatUserRole } from './UsersRegisterTable.utils';
-
-enum UserField {
-    EMAIL = 'email',
-    CREATED_DATE = 'createdDate',
-    ROLE = 'role',
-};
+import { UserField, getKeysFromRoleEnum, createDateFormat, formatUserRole } from './UsersRegisterTable.utils';
 
 const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
     const roles = getKeysFromRoleEnum();
 
-    const RoleSelect = (row) => (
+    const RoleSelect = (row: GridValidRowModel) => (
         <StyledSelect
             fullWidth
             required

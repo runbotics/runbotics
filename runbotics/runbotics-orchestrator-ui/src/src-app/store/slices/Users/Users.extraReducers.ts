@@ -44,10 +44,8 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         .addCase(updateNotActivated.pending, (state) => {
             state.notActivated.loading = true;
         })
-        .addCase(updateNotActivated.fulfilled, (state, action) => {
+        .addCase(updateNotActivated.fulfilled, (state) => {
             state.notActivated.loading = false;
-            state.notActivated.allByPage.content = state.notActivated.allByPage.content
-                .filter((user) => user.id !== action.payload.id);
         })
         .addCase(updateNotActivated.rejected, (state) => {
             state.notActivated.loading = false;

@@ -6,7 +6,7 @@ export const StyledActionsContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0 20px 0;
+    margin: 20px 0;
 `;
 
 export const StyledTextField = styled(TextField)`
@@ -33,9 +33,14 @@ export const StyledButton = styled(Button)`
 
 export const DeleteButton = styled(Button)(({theme}) => `
     && {
-        width: 250px; && { margin-left: 20px }
+        width: 250px;
         background-color: ${theme.palette.grey.A700};
         color: ${theme.palette.error.contrastText};
+
+        && {
+            margin-left: 20px;
+        }
+        
         &:hover {
             background-color: ${theme.palette.common.black};
         }

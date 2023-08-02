@@ -35,7 +35,7 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
                     },
                 })
             ).catch((err) => { throw err; });
-        } else {}
+        }
     
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, page]);

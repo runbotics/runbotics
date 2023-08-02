@@ -1,4 +1,4 @@
-import React, { VFC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation'; 
 import { useRouter } from 'next/router';
@@ -11,7 +11,7 @@ import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
-import { DefaultValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
+import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersRegisterTable from './UsersRegisterTable';
 import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegisterView.styles';
 
@@ -23,7 +23,7 @@ interface MapActivatedUserParams {
     activated: boolean;
 }
 
-const UsersRegisterView: VFC = () => {
+const UsersRegisterView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
@@ -32,11 +32,11 @@ const UsersRegisterView: VFC = () => {
 
     const currentPage = searchParams.get('page');
     const pageSizeFromUrl = searchParams.get('pageSize');
-    const [page, setPage] = useState(currentPage ? parseInt(currentPage, 10) : DefaultValue.PAGE);
+    const [page, setPage] = useState(currentPage ? parseInt(currentPage, 10) : DefaultPageValue.PAGE);
     const [limit, setLimit] = useState(
         pageSizeFromUrl && ROWS_PER_PAGE.includes(parseInt(pageSizeFromUrl, 10)) 
             ? parseInt(pageSizeFromUrl, 10)
-            : DefaultValue.PAGE_SIZE);
+            : DefaultPageValue.PAGE_SIZE);
 
     const { notActivated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
@@ -71,10 +71,13 @@ const UsersRegisterView: VFC = () => {
     const handleSubmit = (params: IUser[]) =>
         Promise.allSettled(
             params.map((param) => dispatch(usersActions.updateNotActivated(param)))
-        ).then(() =>
-            enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' })
+        ).then(() => {
+            enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
+            router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
+            setPage(0);
+        }
         ).catch((err) => { 
-            enqueueSnackbar(translate('Users.Register.View.Events.Error.Common'), { variant: 'error' });
+            enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
             throw err;
         });
 

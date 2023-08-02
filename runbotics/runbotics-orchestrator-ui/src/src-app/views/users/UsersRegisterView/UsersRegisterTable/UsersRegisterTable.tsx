@@ -1,9 +1,10 @@
-import React, { VFC } from 'react';
+import React, { FC } from 'react';
 
 import { Grid, Card } from '@mui/material';
 import { DataGrid, GridInputSelectionModel } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
 import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
@@ -20,7 +21,7 @@ interface UsersRegisterTableProps {
     handleSelectedRolesChange: (id: number, value: string) => void;
 }
 
-const UsersRegisterTable: VFC<UsersRegisterTableProps> = ({
+const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
     page,
     onPageChange,
     pageSize,
@@ -30,7 +31,8 @@ const UsersRegisterTable: VFC<UsersRegisterTableProps> = ({
     handleSelectedRolesChange
 }) => {
     const userRegisterColumns = useUsersRegisterColumns(handleSelectedRolesChange);
-    const { notActivated, loading } = useSelector(usersSelector);
+    const { notActivated } = useSelector(usersSelector);
+    const { translate } = useTranslations();
 
     return (
         <Card>
@@ -42,7 +44,7 @@ const UsersRegisterTable: VFC<UsersRegisterTableProps> = ({
                         columns={userRegisterColumns}
                         rows={notActivated.allByPage?.content ?? []}
                         rowCount={notActivated.allByPage?.totalElements ?? 0}
-                        loading={loading}
+                        loading={notActivated.loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}
@@ -52,6 +54,9 @@ const UsersRegisterTable: VFC<UsersRegisterTableProps> = ({
                         selectionModel={selections}
                         paginationMode='server'
                         rowsPerPageOptions={ROWS_PER_PAGE}
+                        localeText={{
+                            noRowsLabel: translate('Users.Register.Table.Error.Rows')
+                        }}
                     />
                 </Grid>
             </Grid>

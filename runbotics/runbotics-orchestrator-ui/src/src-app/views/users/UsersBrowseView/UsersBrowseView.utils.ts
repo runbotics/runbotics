@@ -1,19 +1,16 @@
 import useTranslations from '#src-app/hooks/useTranslations';
 import { UsersTab } from '#src-app/utils/users-tab';
 
-export enum DefaultValue {
+import { UsersTabsHookProps } from './UsersBrowseView.types';
+
+export enum DefaultPageValue {
     PAGE_SIZE = 10,
     PAGE = 0,
 }
 
 export const ROWS_PER_PAGE = [10, 20, 30];
 
-interface UsersTabsProps {
-    value: string,
-    label: string
-}
-
-export const useUsersTabs = (): UsersTabsProps[]  => {
+export const useUsersTabs = (): UsersTabsHookProps[]  => {
     const { translate } = useTranslations();
 
     return [

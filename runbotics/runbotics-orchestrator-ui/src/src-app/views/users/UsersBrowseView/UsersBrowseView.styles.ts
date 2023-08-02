@@ -6,9 +6,6 @@ import UsersBrowseViewHeader from './UsersBrowseViewHeader';
 export const StyledHeaderGrid = styled(Grid)(
     ({ theme }) => `
     margin-bottom: ${theme.spacing(2)};
-    & + & {
-        margin-left: ${theme.spacing(1)};
-    }
 `);
 
 export const StyledUsersViewHeader = styled(UsersBrowseViewHeader)`

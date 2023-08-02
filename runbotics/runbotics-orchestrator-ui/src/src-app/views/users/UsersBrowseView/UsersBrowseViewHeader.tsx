@@ -13,7 +13,6 @@ const UsersBrowseViewHeader: FC = () => {
         <StyledHeaderGrid
             container
             spacing={3}
-            justifyContent="space-between"
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
