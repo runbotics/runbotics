@@ -1,13 +1,5 @@
 import { Role } from 'runbotics-common';
 
-export const createDateFormat: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-};
-
 export enum UserField {
     EMAIL = 'email',
     CREATED_DATE = 'createdDate',

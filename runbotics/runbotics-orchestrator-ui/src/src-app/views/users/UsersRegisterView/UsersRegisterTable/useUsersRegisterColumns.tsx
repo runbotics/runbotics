@@ -2,9 +2,10 @@ import { MenuItem } from '@mui/material';
 import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-data-grid';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import { dateFormat } from '#src-app/utils/dateFormat';
 
 import { StyledSelect } from './UsersRegisterTable.styles';
-import { UserField, getKeysFromRoleEnum, createDateFormat, formatUserRole } from './UsersRegisterTable.utils';
+import { UserField, getKeysFromRoleEnum, formatUserRole } from './UsersRegisterTable.utils';
 
 const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
@@ -36,8 +37,7 @@ const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
             headerName: translate('Users.Register.Table.Columns.CreateDate'),
             filterable: false,
             flex: 0.3,
-            valueFormatter: (params: GridValueFormatterParams) =>
-                new Intl.DateTimeFormat('en-GB', createDateFormat).format(new Date(params.value))
+            valueFormatter: (params: GridValueFormatterParams) => dateFormat(params.value)
         },
         {
             field: UserField.ROLE,
