@@ -3,6 +3,8 @@ import englishExcelActionsTranslations from '#src-app/translations/en/process/ac
 const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.Row': 'Wiersz',
     'Process.Details.Modeler.Actions.Excel.Column': 'Kolumna',
+    'Process.Details.Modeler.Actions.Excel.StartRow': 'Wiersz początkowy',
+    'Process.Details.Modeler.Actions.Excel.StartColumn': 'Kolumna początkowa',
     'Process.Details.Modeler.Actions.Excel.Worksheet': 'Arkusz',
     'Process.Details.Modeler.Actions.Excel.Open.Label': 'Otwórz',
     'Process.Details.Modeler.Actions.Excel.Open.Path.Title': 'Ścieżka / Skoroszyt',
@@ -10,7 +12,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.GetCell.Label': 'Odczytaj komórkę',
     'Process.Details.Modeler.Actions.Excel.SetCell.Label': 'Wpisz do komórki',
     'Process.Details.Modeler.Actions.Excel.SetCells.Label': 'Wpisz do komórek',
-    'Process.Details.Modeler.Actions.Excel.SetCells.TargetExcelStructure': 'Obiekt (np. { "A1": "wartość", "B1": "inna wartość" })',
+    'Process.Details.Modeler.Actions.Excel.SetCells.TargetExcelStructure': 'Wartości do wstawienia (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',

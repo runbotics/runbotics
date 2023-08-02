@@ -1,5 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
+import { threadId } from "worker_threads";
+import ExcelErrorLogger from "./excelError.logger";
+
+type ExcelObjectStructure = Record<string, unknown>
+type ExcelArrayStructure = unknown[][]
 
 export type ExcelActionRequest =
     | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
@@ -27,19 +32,22 @@ export interface ExcelSaveActionInput {
 
 export type ExcelSetCellActionInput = {
     row: number;
-    column: number;
+    column: string;
     value: unknown;
     worksheet?: string;
 };
 
 export type ExcelSetCellsActionInput = {
-    targetExcelStructure: Record<string, unknown>;
+    startRow: number;
+    startColumn: string;
+    targetExcelStructure: ExcelObjectStructure | ExcelArrayStructure;
     worksheet?: string;
 };
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
+    private readonly excelErrorLogger: ExcelErrorLogger;
 
     constructor() {
         super();
@@ -84,7 +92,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     async getCell(
         input: ExcelGetCellActionInput
-    ): Promise<string | number> {
+    ): Promise<unknown> {
         const optionalWorksheet = input?.worksheet;
 
         return optionalWorksheet
@@ -115,16 +123,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        this.checkIsObject(input.targetExcelStructure);
-
-        const optionalWorksheet = input?.worksheet;
+        const { worksheet: optionalWorksheet, targetExcelStructure } = input;
         const openedWorksheet = this.session.ActiveSheet.name;
+        const isObject = this.checkIsObject(targetExcelStructure), isArray = this.checkIsArray(targetExcelStructure);
 
         if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
-        for (const [coordinate, cellValue] of Object.entries(input.targetExcelStructure)) {
-            const cell = this.session.ActiveSheet.Range(coordinate);
-            cell.Value = cellValue;
-        }
+
+        if (isArray) this.setCellArrayValues(targetExcelStructure as ExcelArrayStructure, input?.startColumn, input?.startRow);
+        else if (isObject) this.setCellObjectValues(targetExcelStructure as ExcelObjectStructure);
+        else this.excelErrorLogger.setCellIncorrectStructure();
+
         if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
     }
 
@@ -134,10 +142,38 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private checkIsObject(value: unknown): void {
-        if (typeof value !== 'object') {
-            throw new Error('Target Excel structure must be variable of a JSON object e.g. { "A1": "value", "B3": "another value" }. Check targetExcelStructure in Input tab above.');
+    private checkIsObject(value: unknown): boolean {
+        return typeof value === 'object';
+    }
+
+    private checkIsArray(value: unknown): boolean {
+        return Array.isArray(value);
+    }
+
+    private setCellObjectValues(targetExcelStructure: ExcelObjectStructure) {
+        for (const [coordinate, cellValue] of Object.entries(targetExcelStructure)) {
+            const cell = this.session.ActiveSheet.Range(coordinate);
+            cell.Value = cellValue;
         }
+    }
+
+    private setCellArrayValues(targetExcelStructure: ExcelArrayStructure, startColumn: string, startRow: number): void {
+        let currentColumn = startColumn, currentRow = startRow;
+        if (Array.isArray(targetExcelStructure)) {
+            for (const row of targetExcelStructure) {
+                for (const cellValue of row) {
+                    const cellToSet = this.session.ActiveSheet.Range(`${currentColumn}${currentRow}`);
+                    cellToSet.Value = cellValue;
+                    currentColumn = this.getNextColumn(currentColumn);
+                }
+                currentRow++;
+                currentColumn = startColumn;
+            }
+        }
+    }
+
+    private getNextColumn(currentColumn: string): string {
+        return String.fromCharCode(currentColumn.charCodeAt(0) + 1)
     }
 
     run(request: ExcelActionRequest) {
