@@ -46,6 +46,7 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                                             elementVariable: {
                                                 title: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable'),
                                                 type: 'string',
+                                                pattern: '^[a-zA-Z0-9_]*$',
                                             },
                                         },
                                         required: ['collection'],

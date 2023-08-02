@@ -3,6 +3,7 @@ export interface ActionVariableObject {
     name: string;
     value: string;
     scopeId?: string;
+    actionId?: string;
 }
 
 export interface LoopVariableObject extends ActionVariableObject {}

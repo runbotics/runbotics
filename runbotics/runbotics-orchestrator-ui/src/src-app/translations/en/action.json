@@ -17,6 +17,7 @@
     "Action.Details.Dialog.SaveAction": "Save action: {{ script }}",
     "Action.Details.Dialog.LiveView": "LIVE VIEW",
 
+    "Process.BuildView.Modeler.Widgets.VariableNameIsTaken": "Variable name is already taken",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Assign the output to variable",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Is a required property",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Illegal characters were used",

@@ -10,7 +10,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
 
 
-const ElementAwareAutocompleteWidget = dynamic(() => import('../ElementAwareAutocompleteWidget'), { ssr: false });
+const CustomTextWidget = dynamic(() => import('../CustomTextWidget'), { ssr: false });
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 const MAIN_FIELD_PREDEFINED_LABEL = 'newKey';
@@ -74,7 +74,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                 />
             </Grid>
             <Grid item xs={12}>
-                <ElementAwareAutocompleteWidget
+                <CustomTextWidget
                     {...formProps}
                     required={isRequired}
                     customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}

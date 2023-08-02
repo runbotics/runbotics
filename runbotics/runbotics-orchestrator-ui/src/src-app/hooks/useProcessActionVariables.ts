@@ -136,12 +136,13 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 const inputVariables = variableInfo
                     .filter(
-                        (item: ActionVariableObject) => item.name === 'variable'
+                        (item: ExtensionElement) => item.name === 'variable'
                     )
-                    .map((item: ActionVariableObject) => ({
+                    .map((item: ExtensionElement) => ({
                         name: item.value,
                         value: item.name,
-                        scopeId: variable.scopeId
+                        scopeId: variable.scopeId,
+                        actionId: variable.id
                     }));
 
                 return inputVariables;
@@ -169,13 +170,14 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 const outputVariables = variableInfo
                     .filter(
-                        (item: ActionVariableObject) =>
+                        (item: ExtensionElement) =>
                             item.name === 'variableName'
                     )
-                    .map((item: ActionVariableObject) => ({
+                    .map((item: ExtensionElement) => ({
                         name: item.value,
                         value: item.name,
-                        scopeId: element.scopeId
+                        scopeId: element.scopeId,
+                        actionId: element.id
                     }));
 
                 return outputVariables;

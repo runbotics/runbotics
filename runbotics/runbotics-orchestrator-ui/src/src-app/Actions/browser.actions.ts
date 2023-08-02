@@ -190,6 +190,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
@@ -476,6 +477,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },
@@ -541,6 +543,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },
@@ -605,6 +608,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },
@@ -669,6 +673,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },
@@ -732,6 +737,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },
@@ -827,6 +833,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                     },

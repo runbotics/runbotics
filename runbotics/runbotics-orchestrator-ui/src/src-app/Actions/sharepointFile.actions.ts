@@ -50,6 +50,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
@@ -137,6 +138,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
@@ -234,6 +236,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],

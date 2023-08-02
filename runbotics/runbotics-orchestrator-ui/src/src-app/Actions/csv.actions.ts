@@ -46,6 +46,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                             },
                         },
                         required: ['variableName'],
+                        pattern: '^[a-zA-Z0-9_]*$',
                     },
                 },
             },
@@ -109,6 +110,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
@@ -175,6 +177,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
@@ -244,6 +247,7 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
+                                pattern: '^[a-zA-Z0-9_]*$',
                             },
                         },
                         required: ['variableName'],
