@@ -34,4 +34,23 @@ export class ExcelUtils {
             ExcelErrorLogger.startCellCoordinates();
         }
     }
+
+    static setCellValues(getSession: () => any, startRow: number, startColumn: number, cellValues: unknown[][]): void {
+        const session = getSession();
+        for (const rowValues of cellValues) {
+            for (const cellValue of rowValues) {
+                try {
+                    const cell =
+                        session.ActiveSheet
+                            .Cells(
+                                startRow + cellValues.indexOf(rowValues),
+                                startColumn + rowValues.indexOf(cellValue)
+                            );
+                    if (cellValue) cell.Value = cellValue;
+                } catch (e) {
+                    ExcelErrorLogger.setCellIncorrectStructure(e);
+                }
+            }
+        }
+    }
 }

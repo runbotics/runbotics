@@ -179,6 +179,47 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    'excel.setFirstEmptyRow': {
+        id: 'excel.setFirstEmptyRow',
+        label: translate('Process.Details.Modeler.Actions.Excel.SetFirstEmptyRow.Label'),
+        script: 'excel.setFirstEmptyRow',
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            startingColumn: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetFirstEmptyRow.StartingColumn'),
+                                type: 'string',
+                            },
+                            startingRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetFirstEmptyRow.StartingRow'),
+                                type: 'number',
+                            },
+                            values: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetFirstEmptyRow.Values'),
+                                type: 'string'
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['values'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
     'excel.save': {
         id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
