@@ -20,7 +20,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info': 'Początkowa kolumna wyszukiwania. Domyślnie A',
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info': 'Początkowy wiersz wyszukiwania. Domyślnie 1',
     'Process.Details.Modeler.Actions.Excel.ClearCells.Label': 'Wyczyść komórki',
-    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Zakres komórek (np. ["A1", "B2", "E5"] lub A1:C3)',
+    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Zakres komórek (np. A1:C3 lub ["A1", "B2", "E5"])',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',
