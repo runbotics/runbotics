@@ -5,11 +5,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
 import { StyledSelect } from './UsersRegisterTable.styles';
-import { UserField, getKeysFromRoleEnum, formatUserRole } from './UsersRegisterTable.utils';
+import { UserField, getAllUserRoles, formatUserRole } from './UsersRegisterTable.utils';
 
 const useUsersRegisterColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
-    const roles = getKeysFromRoleEnum();
+    const roles = getAllUserRoles();
 
     const RoleSelect = (row: GridValidRowModel) => (
         <StyledSelect

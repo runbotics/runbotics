@@ -50,17 +50,19 @@ const UsersRegisterView: FC = () => {
     const handleSelectionChange = (selection) => setSelections(selection);
 
     const handleAccept = () => {
-        const hasEveryUserSelectedRole = selections.every(checkUserRole);
-        if (hasEveryUserSelectedRole) {
-            const payload = selections.map((userId) => {
-                const role = selectedRoles[userId];
-                return mapActivatedUserRequest(userId, role);
-            });
-
-            handleSubmit(payload);
-        } else {
+        const hasEveryUserSelectedRole = selections.every(checkUserHasSelectedRole);
+        if (!hasEveryUserSelectedRole) {
             enqueueSnackbar(translate('Users.Register.View.Events.Error.RolesNotSelected'), { variant: 'error' });
+            return;
         }
+
+        const payload = selections.map((userId) => {
+            const role = selectedRoles[userId];
+            return mapActivatedUserRequest(userId, role);
+        });
+
+        handleSubmit(payload);
+
     };
 
     const mapActivatedUserRequest = (id: number, role: Role): MapActivatedUserParams => {
@@ -68,27 +70,27 @@ const UsersRegisterView: FC = () => {
         return { id, login, roles: [role], activated: true };
     };
 
-    const handleSubmit = (params: IUser[]) =>
-        Promise.allSettled(
-            params.map((param) => dispatch(usersActions.updateNotActivated(param)))
-        ).then(() => {
-            enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
-            refreshSearch();
-        }
-        ).catch((err) => {
-            enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
-            throw err;
-        });
+    const handleSubmit = (userData: IUser[]) =>
+        Promise
+            .allSettled(
+                userData.map((user) => dispatch(usersActions.updateNotActivated(user))))
+            .then(() => {
+                enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
+                refreshSearch();
+            })
+            .catch(() => {
+                enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
+            });
 
     const handleDelete = () => {
         // to be implemented soon
     };
 
-    const checkUserRole = (userId: number): boolean => !!selectedRoles[userId];
+    const checkUserHasSelectedRole = (userId: number): boolean => !!selectedRoles[userId];
 
     useEffect(() => {
-        const pageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
-        if (pageNotAvailable) {
+        const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
+        if (isPageNotAvailable) {
             router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
             setPage(0);
         }

@@ -3,14 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+import { useSnackbar } from 'notistack';
+
 import { useDispatch } from '#src-app/store';
 import { usersActions } from '#src-app/store/slices/Users';
 
 import useDebounce from './useDebounce';
+import useTranslations from './useTranslations';
 
 const DEBOUNCE_TIME = 250;
 
-const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
+const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) => {
+    const { enqueueSnackbar } = useSnackbar();
+    const { translate } = useTranslations();
     const router = useRouter();
     const searchParams = useSearchParams();
     const searchFromUrl = searchParams.get('search');
@@ -24,7 +29,7 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
         const newPage = search !== '' ? 0 : page;
 
         router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
-        if (!forActivatedUsers) {
+        if (!isActivatedUsersOnly) {
             dispatch(
                 usersActions.getAllNotActivatedByPage({
                     page: newPage,
@@ -35,7 +40,11 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
                         },
                     },
                 })
-            ).catch((err) => { throw err; });
+            ).catch(() =>
+                enqueueSnackbar(
+                    translate('Users.Register.View.Events.Error.FindingUsers'),
+                    { variant: 'error' })
+            );
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,14 +58,9 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
         setRefreshTrigger(!refreshTrigger);
     };
 
-    const clearSearch = () => {
-        setSearch('');
-    };
-
     return {
         search,
         handleSearch,
-        clearSearch,
         refreshSearch
     };
 };

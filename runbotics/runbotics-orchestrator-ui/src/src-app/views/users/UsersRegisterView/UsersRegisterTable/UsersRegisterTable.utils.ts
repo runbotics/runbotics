@@ -8,4 +8,4 @@ export enum UserField {
 
 export const formatUserRole = (role: string) => role.split('_').slice(1).join(' ');
 
-export const getKeysFromRoleEnum = () => Object.values(Role) as (keyof typeof Role)[];
+export const getAllUserRoles = (): Role[] => Object.values(Role);
