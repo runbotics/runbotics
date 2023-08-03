@@ -4,6 +4,7 @@ import getAsanaActions from '#src-app/Actions/asana.actions';
 import getBeeOfficeActions from '#src-app/Actions/beeOffice.actions';
 import getBrowserActions from '#src-app/Actions/browser.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
+import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
@@ -69,6 +70,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.JavaScript'
             ),
             items: Object.values(getJavascriptActions())
+        },
+        desktopAutomation: {
+            label: 'Desktop',
+            items: Object.values(getDesktopActions())
         },
         asana: {
             label: translate(
