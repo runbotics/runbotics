@@ -8,7 +8,7 @@ const defaultDateFormatOptions: Intl.DateTimeFormatOptions = {
 
 const DEFAULT_DATE_FORMAT_LOCALE = 'en-US';
 
-export const dateFormat = (
+export const formatDate = (
     date: string,
     locale = DEFAULT_DATE_FORMAT_LOCALE,
     formatOptions = defaultDateFormatOptions

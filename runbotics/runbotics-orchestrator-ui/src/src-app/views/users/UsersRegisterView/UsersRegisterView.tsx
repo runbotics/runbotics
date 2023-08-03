@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import { useSearchParams } from 'next/navigation'; 
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
@@ -34,13 +34,13 @@ const UsersRegisterView: FC = () => {
     const pageSizeFromUrl = searchParams.get('pageSize');
     const [page, setPage] = useState(currentPage ? parseInt(currentPage, 10) : DefaultPageValue.PAGE);
     const [limit, setLimit] = useState(
-        pageSizeFromUrl && ROWS_PER_PAGE.includes(parseInt(pageSizeFromUrl, 10)) 
+        pageSizeFromUrl && ROWS_PER_PAGE.includes(parseInt(pageSizeFromUrl, 10))
             ? parseInt(pageSizeFromUrl, 10)
             : DefaultPageValue.PAGE_SIZE);
 
     const { notActivated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
-            
+
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
     const [selections, setSelections] = useState<number[]>([]);
 
@@ -56,7 +56,7 @@ const UsersRegisterView: FC = () => {
                 const role = selectedRoles[userId];
                 return mapActivatedUserRequest(userId, role);
             });
-            
+
             handleSubmit(payload);
         } else {
             enqueueSnackbar(translate('Users.Register.View.Events.Error.RolesNotSelected'), { variant: 'error' });
@@ -67,16 +67,15 @@ const UsersRegisterView: FC = () => {
         const { login } = notActivated.allByPage.content.find((row) => row.id === id);
         return { id, login, roles: [role], activated: true };
     };
-    
+
     const handleSubmit = (params: IUser[]) =>
         Promise.allSettled(
             params.map((param) => dispatch(usersActions.updateNotActivated(param)))
         ).then(() => {
             enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
-            router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
-            setPage(0);
+            refreshSearch();
         }
-        ).catch((err) => { 
+        ).catch((err) => {
             enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
             throw err;
         });
@@ -86,20 +85,20 @@ const UsersRegisterView: FC = () => {
     };
 
     const checkUserRole = (userId: number): boolean => !!selectedRoles[userId];
-    
+
     useEffect(() => {
         const pageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
         if (pageNotAvailable) {
             router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
             setPage(0);
         }
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [notActivated.allByPage]);
 
     useEffect(() => {
         refreshSearch();
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

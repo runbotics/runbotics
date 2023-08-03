@@ -15,6 +15,7 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
     const searchParams = useSearchParams();
     const searchFromUrl = searchParams.get('search');
     const [search, setSearch] = useState(searchFromUrl || '');
+    const [refreshTrigger, setRefreshTrigger] = useState(true);
 
     const dispatch = useDispatch();
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
@@ -36,16 +37,16 @@ const useUserSearch = (forActivatedUsers: boolean, pageSize = 10, page = 0) => {
                 })
             ).catch((err) => { throw err; });
         }
-    
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue, pageSize, page]);
+    }, [debouncedValue, pageSize, page, refreshTrigger]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (search !== event.target.value) setSearch(event.target.value);
     };
 
     const refreshSearch = () => {
-        setSearch(search);
+        setRefreshTrigger(!refreshTrigger);
     };
 
     const clearSearch = () => {
