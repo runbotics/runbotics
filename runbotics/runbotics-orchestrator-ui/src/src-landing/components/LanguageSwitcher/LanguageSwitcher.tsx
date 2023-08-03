@@ -15,16 +15,13 @@ import styles from './LanguageSwitcher.module.scss';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);
-
     const dispatch = useDispatch();
     const selectRef = useRef();
+    const { isAuthenticated } = useAuth();
 
     useClickOutsideComponent(selectRef, () => setToggle(false));
 
     const { switchLanguage, translate } = useTranslations();
-
-    const { isAuthenticated } = useAuth();
-
     const { push, locale: activeLocale, asPath } = useRouter();
 
     const updateDatabaseLanguage = async (patchPayload: IUser) => {
