@@ -24,6 +24,7 @@ import VariableActionHandler from './variable';
 import { ExcelService } from './microsoft/excel';
 import { MicrosoftGraphService } from './microsoft/microsoft-graph';
 import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
+import DesktopActionHandler from './desktop';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -46,6 +47,7 @@ const ALL_ACTION_HANDLERS = [
     ExcelService,
     MicrosoftGraphService,
     MicrosoftAuthService
+    DesktopActionHandler
 ];
 
 @Module({

@@ -21,6 +21,7 @@ import AsanaActionHandler from '#action/asana';
 import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
+import DesktopActionHandler from '#action/desktop/desktop.action-handler';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
@@ -63,6 +64,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
+        private readonly desktopActionHandler: DesktopActionHandler
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -82,7 +84,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('typescript', javaScriptActionHandler)
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
-            .set('variables', variableActionHandler);
+            .set('variables', variableActionHandler)
+            .set('desktopAutomation', desktopActionHandler)
     }
 
     async onModuleInit() {
