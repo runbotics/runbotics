@@ -6,7 +6,9 @@ import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.MailService;
+import com.runbotics.service.UserQueryService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import com.runbotics.web.rest.errors.EmailAlreadyUsedException;
@@ -21,12 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -72,12 +76,19 @@ public class UserResource {
 
     private final UserService userService;
 
+    private final UserQueryService userQueryService;
+
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(
+        UserService userService,
+        UserQueryService userQueryService,
+        UserRepository userRepository,
+        MailService mailService) {
         this.userService = userService;
+        this.userQueryService = userQueryService;
         this.userRepository = userRepository;
         this.mailService = mailService;
     }
@@ -192,19 +203,21 @@ public class UserResource {
      * {@code GET /admin/users/not-activated} : get all not activated users with all the details - calling this are only allowed for the administrators.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     @GetMapping("/users/not-activated")
-    public ResponseEntity<List<AdminUserDTO>> getAllNotActiveUsers(Pageable pageable) {
-        log.debug("REST request to get all not activated User for an admin");
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsers(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all not activated User by criteria: {}", criteria);
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable);
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable, criteria);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
