@@ -231,9 +231,9 @@ public class UserService {
             .map(AdminUserDTO::new);
     }
 
-    public void deleteUser(String login) {
+    public void deleteUser(Long id) {
         userRepository
-            .findOneByLogin(login)
+            .findOneById(id)
             .ifPresent(
                 user -> {
                     userRepository.delete(user);
@@ -241,7 +241,9 @@ public class UserService {
                 }
             );
 
-        processRepository.deleteUnassignedPrivateProcesses();
+        if (processRepository.countUserProcesses(id) > 0) {
+            processRepository.deleteUnassignedPrivateProcesses();
+        }
     }
 
     public User saveUser(User user) {

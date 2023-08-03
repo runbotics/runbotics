@@ -39,6 +39,12 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
     Page<Process> findByBotCollection(String collectionName, String userLogin, Pageable pageable);
 
     @Query(
+        value = "SELECT COUNT(process.id) FROM process WHERE process.created_by_id = :id",
+        nativeQuery = true
+    )
+    int countUserProcesses(Long id);
+
+    @Query(
         "DELETE FROM Process process WHERE process.createdBy IS NULL AND process.isPublic = false"
     )
     void deleteUnassignedPrivateProcesses();
