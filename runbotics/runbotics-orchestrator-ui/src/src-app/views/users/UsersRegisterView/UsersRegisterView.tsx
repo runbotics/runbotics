@@ -11,6 +11,7 @@ import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
+import DeleteUserDialog from '../DeleteUser';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersRegisterTable from './UsersRegisterTable';
 import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegisterView.styles';
@@ -42,6 +43,7 @@ const UsersRegisterView: FC = () => {
     const { notActivated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
 
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
     const [selections, setSelections] = useState<number[]>([]);
 
@@ -84,9 +86,9 @@ const UsersRegisterView: FC = () => {
                 enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
             });
 
-    const handleDelete = () => {
-        // to be implemented soon
-    };
+    const handleDelete = () => setShowDeleteDialog(true);
+
+    const sendSelectedUsersToDeleteModal = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
         const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
@@ -105,6 +107,11 @@ const UsersRegisterView: FC = () => {
 
     return (
         <>
+            <DeleteUserDialog
+                open={showDeleteDialog}
+                onClose={() => setShowDeleteDialog(false)}
+                getSelectedUsers={sendSelectedUsersToDeleteModal}
+            />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'

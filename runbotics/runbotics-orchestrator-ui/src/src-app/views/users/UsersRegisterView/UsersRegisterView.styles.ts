@@ -26,7 +26,7 @@ export const StyledButtonsContainer = styled.div`
 
 export const StyledButton = styled(Button)`
     width: 250px;
-    && { 
+    && {
         margin-left: 20px;
     }
 `;
@@ -40,7 +40,7 @@ export const DeleteButton = styled(Button)(({theme}) => `
         && {
             margin-left: 20px;
         }
-        
+
         &:hover {
             background-color: ${theme.palette.common.black};
         }
