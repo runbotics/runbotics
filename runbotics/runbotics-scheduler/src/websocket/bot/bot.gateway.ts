@@ -14,7 +14,7 @@ import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
 import { BotLogService } from './bot-log.service';
 import { BotProcessService } from '#/websocket/bot/process-launch/bot-process-instance.service';
-import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotStatus, BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
 import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
@@ -66,11 +66,24 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     }
 
     @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.RUNNING_PROCESS)
+    async runningProcessListener( 
+        @ConnectedSocket() socket: BotAuthSocket,
+        @MessageBody() busyBotStatus: BotStatus.BUSY,
+    ) {
+        this.logger.log('<= Process is already running');
+        this.changeBotStatusToBusy(socket.bot, busyBotStatus);
+        this.uiGateway.server.emit(WsMessage.BOT_STATUS, socket.bot);
+    }
+
+    @UseGuards(WsBotJwtGuard)
     @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE)
     async processListener( 
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
     ) {
+        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+
         const installationId = socket.bot.installationId;
 
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
@@ -96,6 +109,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
+        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
@@ -112,6 +127,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
+        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+        
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
@@ -137,5 +154,13 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+    }
+
+    private async changeBotStatusToBusy(bot: IBot, busyBotStatus: BotStatus.BUSY) {
+        if (bot.status !== busyBotStatus) {
+            this.logger.log(`=> Updating bot status to (${busyBotStatus})`);
+            await this.botService.setBusy(bot);
+            this.logger.log('<= Success: bot status updated');
+        }
     }
 }
