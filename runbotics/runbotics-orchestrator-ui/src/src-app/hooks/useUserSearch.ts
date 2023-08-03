@@ -23,7 +23,7 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
     const [refreshTrigger, setRefreshTrigger] = useState(true);
 
     const dispatch = useDispatch();
-    const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
+    const debouncedValue = useDebounce<string>(search.trim(), DEBOUNCE_TIME);
 
     useEffect(() => {
         const newPage = search !== '' ? 0 : page;
@@ -35,16 +35,15 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
                     page: newPage,
                     size: pageSize,
                     filter: {
-                        contains: {
-                            ...(debouncedValue.trim() && { 'email': debouncedValue.trim() }),
-                        },
+                        contains: { 'email': debouncedValue },
                     },
                 })
-            ).catch(() =>
-                enqueueSnackbar(
-                    translate('Users.Register.View.Events.Error.FindingUsers'),
-                    { variant: 'error' })
-            );
+            )
+                .catch(() =>
+                    enqueueSnackbar(
+                        translate('Users.Register.View.Events.Error.FindingUsers'),
+                        { variant: 'error' })
+                );
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

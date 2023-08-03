@@ -30,13 +30,14 @@ const UsersRegisterView: FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const currentPage = searchParams.get('page');
-    const pageSizeFromUrl = searchParams.get('pageSize');
-    const [page, setPage] = useState(currentPage ? parseInt(currentPage, 10) : DefaultPageValue.PAGE);
+    const currentPage = parseInt(searchParams.get('page'));
+    const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
+    const [page, setPage] = useState(currentPage ? currentPage : DefaultPageValue.PAGE);
     const [limit, setLimit] = useState(
-        pageSizeFromUrl && ROWS_PER_PAGE.includes(parseInt(pageSizeFromUrl, 10))
-            ? parseInt(pageSizeFromUrl, 10)
-            : DefaultPageValue.PAGE_SIZE);
+        pageSizeFromUrl && ROWS_PER_PAGE.includes(pageSizeFromUrl)
+            ? pageSizeFromUrl
+            : DefaultPageValue.PAGE_SIZE
+    );
 
     const { notActivated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
@@ -45,9 +46,11 @@ const UsersRegisterView: FC = () => {
     const [selections, setSelections] = useState<number[]>([]);
 
     const handleSelectedRolesChange = (id: number, value: Role) =>
-        setSelectedRoles({ ...selectedRoles, [id]: value});
+        setSelectedRoles((prevState) => ({ ...prevState, [id]: value }));
 
     const handleSelectionChange = (selection) => setSelections(selection);
+
+    const checkUserHasSelectedRole = (userId: number): boolean => !!selectedRoles[userId];
 
     const handleAccept = () => {
         const hasEveryUserSelectedRole = selections.every(checkUserHasSelectedRole);
@@ -58,22 +61,21 @@ const UsersRegisterView: FC = () => {
 
         const payload = selections.map((userId) => {
             const role = selectedRoles[userId];
-            return mapActivatedUserRequest(userId, role);
+            return mapUserActivateRequest(userId, role);
         });
 
         handleSubmit(payload);
-
     };
 
-    const mapActivatedUserRequest = (id: number, role: Role): MapActivatedUserParams => {
+    const mapUserActivateRequest = (id: number, role: Role): MapActivatedUserParams => {
         const { login } = notActivated.allByPage.content.find((row) => row.id === id);
         return { id, login, roles: [role], activated: true };
     };
 
-    const handleSubmit = (userData: IUser[]) =>
+    const handleSubmit = (usersData: IUser[]) =>
         Promise
             .allSettled(
-                userData.map((user) => dispatch(usersActions.updateNotActivated(user))))
+                usersData.map((user) => dispatch(usersActions.updateNotActivated(user))))
             .then(() => {
                 enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
                 refreshSearch();
@@ -85,8 +87,6 @@ const UsersRegisterView: FC = () => {
     const handleDelete = () => {
         // to be implemented soon
     };
-
-    const checkUserHasSelectedRole = (userId: number): boolean => !!selectedRoles[userId];
 
     useEffect(() => {
         const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
@@ -100,7 +100,6 @@ const UsersRegisterView: FC = () => {
 
     useEffect(() => {
         refreshSearch();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
