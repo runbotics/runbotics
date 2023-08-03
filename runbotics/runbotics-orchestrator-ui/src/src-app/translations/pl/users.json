@@ -1,0 +1,18 @@
+{
+    "Users.Browse.Header.Title": "Użytkownicy",
+    "Users.Browse.Tabs.AllUsers.Label": "Lista użytkowników",
+    "Users.Browse.Tabs.AllUsers.Title": "Użytkownicy",
+    "Users.Browse.Tabs.Registration.Label": "Prośby o akceptację",
+    "Users.Browse.Tabs.Registration.Title": "Użytkownicy",
+    "Users.Register.View.Events.Success.AcceptingUser": "Sukces",
+    "Users.Register.View.Events.Error.RolesNotSelected": "Nie wybrano wszystkich wymaganych roli",
+    "Users.Register.View.Events.Error.AcceptFailed": "Nie można zaakceptować wybranych użytkowników",
+    "Users.Register.View.Events.Error.FindingUsers": "Wystąpił błąd podczas znajdowania nie aktywowanych użytkowników",
+    "Users.Register.View.SearchBarPlaceholder": "Wyszukaj",
+    "Users.Register.View.Button.Accept": "Akceptuj",
+    "Users.Register.View.Button.Delete": "Usuń",
+    "Users.Register.Table.Columns.Email": "Email",
+    "Users.Register.Table.Columns.CreateDate": "Data utworzenia",
+    "Users.Register.Table.Columns.Role": "Rola",
+    "Users.Register.Table.Error.Rows": "Brak próśb o akceptację"
+}
