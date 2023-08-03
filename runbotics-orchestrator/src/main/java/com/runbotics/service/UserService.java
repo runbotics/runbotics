@@ -11,13 +11,11 @@ import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
-
+import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -283,7 +281,8 @@ public class UserService {
         accountPartialUpdateMapper.partialUpdate(user, userDTO);
 
         userRepository.save(user);
-    };
+        log.debug("User information updated", user);
+    }
 
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
