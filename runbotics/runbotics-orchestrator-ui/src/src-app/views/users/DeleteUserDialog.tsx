@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 
+import { LoadingButton } from '@mui/lab';
 import {
     Button,
     Dialog,
     DialogActions,
-    DialogTitle,
     DialogContent,
     Typography,
     List,
@@ -12,13 +12,13 @@ import {
 } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from 'runbotics-common';
 import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
-import { usersActions } from '#src-app/store/slices/Users';
+import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 const StyledList = styled(List)`
     max-height: 200px;
@@ -27,6 +27,11 @@ const StyledList = styled(List)`
         list-style-type: disc;
         list-style-position: inside;
     }
+`;
+
+const StyledButton = styled(Button)`
+    width: 80px;
+    height: 40px;
 `;
 
 interface DeleteUserDialogProps {
@@ -44,6 +49,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
+    const { userDelete } = useSelector(usersSelector);
     const { refreshSearch } = useUserSearch(false);
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
@@ -72,15 +78,13 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
         <Dialog
             open={open}
             onClose={onClose}
+            onClick={(e) => e.stopPropagation()}
             fullWidth
             maxWidth="md"
         >
-            <DialogTitle>
-                {translate('Users.Actions.Modals.DeleteModal.Title')}
-            </DialogTitle>
             <DialogContent>
-                <Typography>
-                    {translate('Users.Actions.Modals.DeleteModal.Content')}
+                <Typography variant='h4'>
+                    {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
                 </Typography>
                 <StyledList>
                     {usersData.map((user) => (
@@ -93,20 +97,20 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                 </StyledList>
             </DialogContent>
             <DialogActions>
-                <Button
+                <StyledButton
                     color='primary'
                     onClick={onClose}
+                    disabled={userDelete.loading}
                 >
                     {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
-                </Button>
-                <Button
-                    type='submit'
+                </StyledButton>
+                <LoadingButton
                     variant='contained'
-                    color='primary'
+                    loading={userDelete.loading}
                     onClick={handleSubmit}
                 >
-                    {translate('Users.Actions.Modals.DeleteModal.Button.Confirm')}
-                </Button>
+                    {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
+                </LoadingButton>
             </DialogActions>
         </Dialog>
     );

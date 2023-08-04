@@ -53,13 +53,13 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
 
         // DELETE USER
         .addCase(deleteUser.pending, (state) => {
-            state.loading = true;
+            state.userDelete.loading = true;
         })
         .addCase(deleteUser.fulfilled, (state) => {
-            state.loading = false;
+            state.userDelete.loading = false;
         })
         .addCase(deleteUser.rejected, (state) => {
-            state.loading = false;
+            state.userDelete.loading = false;
         });
 };
 
