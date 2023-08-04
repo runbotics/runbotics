@@ -3,6 +3,7 @@ import React, { VFC, useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { IUser } from 'runbotics-common';
 
+import useAuth from '#src-app/hooks/useAuth';
 import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -14,14 +15,13 @@ import styles from './LanguageSwitcher.module.scss';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);
-
     const dispatch = useDispatch();
     const selectRef = useRef();
+    const { isAuthenticated } = useAuth();
 
     useClickOutsideComponent(selectRef, () => setToggle(false));
 
     const { switchLanguage, translate } = useTranslations();
-
     const { push, locale: activeLocale, asPath } = useRouter();
 
     const updateDatabaseLanguage = async (patchPayload: IUser) => {
@@ -33,7 +33,9 @@ const LanguageSwitcher: VFC = () => {
             locale: language,
         });
         setToggle(!toggle);
-        updateDatabaseLanguage({ langKey: language });
+        if (isAuthenticated) {
+            updateDatabaseLanguage({ langKey: language });
+        }
     };
 
     useEffect(() => {
