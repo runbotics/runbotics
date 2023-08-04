@@ -11,10 +11,10 @@ import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
-import DeleteUserDialog from '../DeleteUser';
+import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
-import UsersRegisterTable from './UsersRegisterTable';
-import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegisterView.styles';
+import UsersRegistrationTable from './UsersRegistrationTable';
+import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegistrationView.styles';
 
 interface SelectedRoles { [id: number]: Role };
 interface MapActivatedUserParams {
@@ -24,7 +24,7 @@ interface MapActivatedUserParams {
     activated: boolean;
 }
 
-const UsersRegisterView: FC = () => {
+const UsersRegistrationView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const UsersRegisterView: FC = () => {
     const { notActivated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
 
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
     const [selections, setSelections] = useState<number[]>([]);
 
@@ -57,7 +57,7 @@ const UsersRegisterView: FC = () => {
     const handleAccept = () => {
         const hasEveryUserSelectedRole = selections.every(checkUserHasSelectedRole);
         if (!hasEveryUserSelectedRole) {
-            enqueueSnackbar(translate('Users.Register.View.Events.Error.RolesNotSelected'), { variant: 'error' });
+            enqueueSnackbar(translate('Users.Registration.View.Events.Error.RolesNotSelected'), { variant: 'error' });
             return;
         }
 
@@ -79,16 +79,16 @@ const UsersRegisterView: FC = () => {
             .allSettled(
                 usersData.map((user) => dispatch(usersActions.updateNotActivated(user))))
             .then(() => {
-                enqueueSnackbar(translate('Users.Register.View.Events.Success.AcceptingUser'), { variant: 'success' });
+                enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
                 refreshSearch();
             })
             .catch(() => {
-                enqueueSnackbar(translate('Users.Register.View.Events.Error.AcceptFailed'), { variant: 'error' });
+                enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
             });
 
-    const handleDelete = () => setShowDeleteDialog(true);
+    const handleDelete = () => setIsDeleteDialogVisible(true);
 
-    const sendSelectedUsersToDeleteModal = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
+    const getSelectedUsers = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
         const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
@@ -108,14 +108,14 @@ const UsersRegisterView: FC = () => {
     return (
         <>
             <DeleteUserDialog
-                open={showDeleteDialog}
-                onClose={() => setShowDeleteDialog(false)}
-                getSelectedUsers={sendSelectedUsersToDeleteModal}
+                open={isDeleteDialogVisible}
+                onClose={() => setIsDeleteDialogVisible(false)}
+                getSelectedUsers={getSelectedUsers}
             />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
-                    placeholder={translate('Users.Register.View.SearchBarPlaceholder')}
+                    placeholder={translate('Users.Registration.View.SearchBarPlaceholder')}
                     size='small'
                     value={search}
                     onChange={handleSearch}
@@ -128,7 +128,7 @@ const UsersRegisterView: FC = () => {
                         onClick={handleAccept}
                         disabled={!selections.length}
                     >
-                        {translate('Users.Register.View.Button.Accept')}
+                        {translate('Users.Registration.View.Button.Accept')}
                     </StyledButton>
                     <DeleteButton
                         type='submit'
@@ -136,11 +136,11 @@ const UsersRegisterView: FC = () => {
                         onClick={handleDelete}
                         disabled={!selections.length}
                     >
-                        {translate('Users.Register.View.Button.Delete')}
+                        {translate('Users.Registration.View.Button.Delete')}
                     </DeleteButton>
                 </StyledButtonsContainer>
             </StyledActionsContainer>
-            <UsersRegisterTable
+            <UsersRegistrationTable
                 page={page}
                 onPageChange={setPage}
                 pageSize={limit}
@@ -153,4 +153,4 @@ const UsersRegisterView: FC = () => {
     );
 };
 
-export default UsersRegisterView;
+export default UsersRegistrationView;

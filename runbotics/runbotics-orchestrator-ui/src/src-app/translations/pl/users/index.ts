@@ -1,10 +1,10 @@
 import usersActionsTranslations from './actions';
 import usersBrowseTranslations from './browse';
-import usersViewTranslations from './register';
+import usersRegistrationTranslations from './registration';
 
 const usersTranslations = {
     ...usersBrowseTranslations,
-    ...usersViewTranslations,
+    ...usersRegistrationTranslations,
     ...usersActionsTranslations,
 };
 

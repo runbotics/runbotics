@@ -8,10 +8,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
 import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
-import { DataGridStyle} from './UsersRegisterTable.styles';
-import useUsersRegisterColumns from './useUsersRegisterColumns';
+import { DataGridStyle} from './UsersRegistrationTable.styles';
+import useUsersRegistrationColumns from './useUsersRegistrationColumns';
 
-interface UsersRegisterTableProps {
+interface UsersRegistrationTableProps {
     page: number;
     onPageChange: (page: number) => void;
     pageSize: number;
@@ -21,7 +21,7 @@ interface UsersRegisterTableProps {
     handleSelectedRolesChange: (id: number, value: string) => void;
 }
 
-const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
+const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     page,
     onPageChange,
     pageSize,
@@ -30,7 +30,7 @@ const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
     handleSelectionChange,
     handleSelectedRolesChange
 }) => {
-    const userRegisterColumns = useUsersRegisterColumns(handleSelectedRolesChange);
+    const userRegistrationColumns = useUsersRegistrationColumns(handleSelectedRolesChange);
     const { notActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
 
@@ -41,7 +41,7 @@ const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
-                        columns={userRegisterColumns}
+                        columns={userRegistrationColumns}
                         rows={notActivated.allByPage?.content ?? []}
                         rowCount={notActivated.allByPage?.totalElements ?? 0}
                         loading={notActivated.loading}
@@ -55,7 +55,7 @@ const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
                         paginationMode='server'
                         rowsPerPageOptions={ROWS_PER_PAGE}
                         localeText={{
-                            noRowsLabel: translate('Users.Register.Table.Error.Rows')
+                            noRowsLabel: translate('Users.Registration.Table.Error.Rows')
                         }}
                     />
                 </Grid>
@@ -64,4 +64,4 @@ const UsersRegisterTable: FC<UsersRegisterTableProps> = ({
     );
 };
 
-export default UsersRegisterTable;
+export default UsersRegistrationTable;

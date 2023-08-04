@@ -48,7 +48,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.notActivated.loading = false;
         })
         .addCase(updateNotActivated.rejected, (state) => {
-            state.loading = false;
+            state.notActivated.loading = false;
         })
 
         // DELETE USER

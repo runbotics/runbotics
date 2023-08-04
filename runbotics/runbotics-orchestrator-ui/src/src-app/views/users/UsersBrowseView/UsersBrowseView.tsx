@@ -9,7 +9,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { UsersTab } from '#src-app/utils/users-tab';
 
 import UsersListView from '../UsersListView';
-import UsersRegisterView from '../UsersRegisterView';
+import UsersRegistrationView from '../UsersRegistrationView';
 
 import { StyledUsersViewHeader } from './UsersBrowseView.styles';
 import { useUsersTabs } from './UsersBrowseView.utils';
@@ -29,10 +29,10 @@ const UsersBrowseView: VFC = () => {
 
     const pageTitle = tabValue === UsersTab.ALL_USERS
         ? translate('Users.Browse.Tabs.AllUsers.Title')
-        : translate('Users.Browse.Tabs.Registration.Title'); 
+        : translate('Users.Browse.Tabs.Registration.Title');
 
     return (
-        <> 
+        <>
             <InternalPage title={pageTitle}>
                 <StyledUsersViewHeader/>
                 <Box>
@@ -48,9 +48,9 @@ const UsersBrowseView: VFC = () => {
                         ))}
                     </Tabs>
                 </Box>
-                <If 
+                <If
                     condition={tab === UsersTab.ALL_USERS}
-                    else={<UsersRegisterView />}
+                    else={<UsersRegistrationView />}
                 >
                     <UsersListView />
                 </If>
