@@ -1,10 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
-import { threadId } from "worker_threads";
 import ExcelErrorLogger from "./excelError.logger";
-
-type ExcelObjectStructure = Record<string, unknown>
-type ExcelArrayStructure = unknown[][]
 
 export type ExcelActionRequest =
     | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
@@ -38,16 +34,25 @@ export type ExcelSetCellActionInput = {
 };
 
 export type ExcelSetCellsActionInput = {
-    startRow: number;
-    startColumn: string;
-    targetExcelStructure: ExcelObjectStructure | ExcelArrayStructure;
+    cellValues: ExcelArrayStructure;
+    startColumn?: string;
+    startRow?: string;
     worksheet?: string;
 };
+
+type ExcelArrayStructure = unknown[][]
+
+interface StartCellCoordinates {
+    startColumn: number;
+    startRow: number;
+}
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
-    private readonly excelErrorLogger: ExcelErrorLogger;
+    private previousWorksheet = null;
+
+    private readonly excelErrorLogger = new ExcelErrorLogger();
 
     constructor() {
         super();
@@ -123,17 +128,25 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        const { worksheet: optionalWorksheet, targetExcelStructure } = input;
-        const openedWorksheet = this.session.ActiveSheet.name;
-        const isObject = this.checkIsObject(targetExcelStructure), isArray = this.checkIsArray(targetExcelStructure);
-
-        if (optionalWorksheet) this.session.Worksheets(optionalWorksheet).Activate();
-
-        if (isArray) this.setCellArrayValues(targetExcelStructure as ExcelArrayStructure, input?.startColumn, input?.startRow);
-        else if (isObject) this.setCellObjectValues(targetExcelStructure as ExcelObjectStructure);
-        else this.excelErrorLogger.setCellIncorrectStructure();
-
-        if (optionalWorksheet) this.session.Worksheets(openedWorksheet).Activate();
+        this.setNewWorksheet(input?.worksheet);
+        const { startRow, startColumn } = await this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow));
+        for (const row of input.cellValues) {
+            for (const cellValue of row) {
+                try {
+                    if (!cellValue) continue;
+                    const cell =
+                        this.session.ActiveSheet
+                            .Cells(
+                                startRow + input.cellValues.indexOf(row),
+                                startColumn + row.indexOf(cellValue)
+                            );
+                    cell.Value = cellValue;
+                } catch (e) {
+                    this.excelErrorLogger.setCellIncorrectStructure(e);
+                }
+            }
+        }
+        this.setPreviousWorksheet();
     }
 
     private isApplicationOpen() {
@@ -142,38 +155,30 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private checkIsObject(value: unknown): boolean {
-        return typeof value === 'object';
+    private setNewWorksheet(worksheet?: string): void {
+        if (!worksheet || worksheet === this.session.ActiveSheet.Name) return;
+        this.previousWorksheet = this.session.ActiveSheet.Name;
+        this.session.Worksheets(worksheet).Activate();
     }
 
-    private checkIsArray(value: unknown): boolean {
-        return Array.isArray(value);
+    private setPreviousWorksheet(): void {
+        if (!this.previousWorksheet) return;
+        this.session.Worksheets(this.previousWorksheet).Activate();
+        this.previousWorksheet = null;
     }
 
-    private setCellObjectValues(targetExcelStructure: ExcelObjectStructure) {
-        for (const [coordinate, cellValue] of Object.entries(targetExcelStructure)) {
-            const cell = this.session.ActiveSheet.Range(coordinate);
-            cell.Value = cellValue;
+    private getStartCellCoordinates = (startColumn?: string, startRow?: number): StartCellCoordinates => {
+        if (!startColumn && !startRow) return { startColumn: 1, startRow: 1 };
+        if (!startColumn) return { startColumn: 1, startRow: startRow };
+        try {
+            const columnNumber = this.session.ActiveSheet.Range(`${startColumn}1`).Column;
+            return {
+                startColumn: columnNumber,
+                startRow: startRow ?? 1
+            };
+        } catch (e) {
+            this.excelErrorLogger.startCellCoordinates();
         }
-    }
-
-    private setCellArrayValues(targetExcelStructure: ExcelArrayStructure, startColumn: string, startRow: number): void {
-        let currentColumn = startColumn, currentRow = startRow;
-        if (Array.isArray(targetExcelStructure)) {
-            for (const row of targetExcelStructure) {
-                for (const cellValue of row) {
-                    const cellToSet = this.session.ActiveSheet.Range(`${currentColumn}${currentRow}`);
-                    cellToSet.Value = cellValue;
-                    currentColumn = this.getNextColumn(currentColumn);
-                }
-                currentRow++;
-                currentColumn = startColumn;
-            }
-        }
-    }
-
-    private getNextColumn(currentColumn: string): string {
-        return String.fromCharCode(currentColumn.charCodeAt(0) + 1)
     }
 
     run(request: ExcelActionRequest) {

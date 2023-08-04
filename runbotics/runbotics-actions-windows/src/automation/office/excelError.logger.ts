@@ -4,7 +4,21 @@ import { Injectable } from '@nestjs/common';
 export default class ExcelErrorLogger {
     constructor() { }
 
-    setCellIncorrectStructure(): void {
-        throw new Error('Input must be variable of an Array or JSON object (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]], { "A1": "value", "B3": "another value" }). Check targetExcelStructure in Input tab above.');
+    startCellCoordinates(e?: Error): void {
+        throw new Error(`
+            Start row must be a number (e.g. 5).
+            Start column must be a string (e.g. A).
+            Check startRow and startColumn in Input tab above.
+            ${e}
+        `);
+    }
+
+    setCellIncorrectStructure(e?: Error): void {
+        throw new Error(`
+            Input must be an Array (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]].
+            Check targetExcelStructure in Input tab above.
+            Try to pass it as variable (e.g. #{myArray}).
+            ${e}
+        `);
     }
 }
