@@ -1,7 +1,7 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Process;
 import com.runbotics.domain.*;
+import com.runbotics.domain.Process;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -14,18 +14,17 @@ import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
 import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.List;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -103,6 +102,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -117,6 +117,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -131,6 +132,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setIsAttended(processAttendedDTO.getIsAttended());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -145,6 +147,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setIsTriggerable(processTriggerDTO.getIsTriggerable());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -160,6 +163,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     existingProcess.setBotCollection(processDTO.getBotCollection());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -177,6 +181,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     existingProcess.setSystem(processDTO.getSystem());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
