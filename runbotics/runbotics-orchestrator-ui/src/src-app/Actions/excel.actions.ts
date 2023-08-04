@@ -136,6 +136,43 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    'excel.insertColumnsBefore': {
+        id: 'excel.insertColumnsBefore',
+        label: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'),
+        script: 'excel.insertColumnsBefore',
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            column: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                type: 'string',
+                            },
+                            amount: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.ColumnsAmount'),
+                                type: 'number',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['column'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
     'excel.save': {
         id: 'excel.save',
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
