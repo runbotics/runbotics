@@ -148,6 +148,37 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.setPreviousWorksheet();
     }
 
+    run(request: ExcelActionRequest) {
+        if (process.platform !== 'win32') {
+            throw new Error('Excel actions can be run only on Windows bot');
+        }
+
+        switch (request.script) {
+            case "excel.open":
+                return this.open(request.input);
+            case "excel.getCell":
+                this.isApplicationOpen();
+                return this.getCell(request.input);
+            case "excel.setCell":
+                this.isApplicationOpen();
+                return this.setCell(request.input);
+            case "excel.setCells":
+                this.isApplicationOpen();
+                return this.setCells(request.input);
+            case "excel.save":
+                this.isApplicationOpen();
+                return this.save(request.input);
+            case "excel.close":
+                return this.close();
+            default:
+                throw new Error("Action not found");
+        }
+    }
+
+    async tearDown() {
+        await this.close();
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
@@ -178,36 +209,5 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         } catch (e) {
             this.excelErrorLogger.startCellCoordinates();
         }
-    }
-
-    run(request: ExcelActionRequest) {
-        if (process.platform !== 'win32') {
-            throw new Error('Excel actions can be run only on Windows bot');
-        }
-
-        switch (request.script) {
-            case "excel.open":
-                return this.open(request.input);
-            case "excel.getCell":
-                this.isApplicationOpen();
-                return this.getCell(request.input);
-            case "excel.setCell":
-                this.isApplicationOpen();
-                return this.setCell(request.input);
-            case "excel.setCells":
-                this.isApplicationOpen();
-                return this.setCells(request.input);
-            case "excel.save":
-                this.isApplicationOpen();
-                return this.save(request.input);
-            case "excel.close":
-                return this.close();
-            default:
-                throw new Error("Action not found");
-        }
-    }
-
-    async tearDown() {
-        await this.close();
     }
 }
