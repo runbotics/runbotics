@@ -13,6 +13,8 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.SetCell.Label': 'Ustaw wartość komórki',
     'Process.Details.Modeler.Actions.Excel.SetCells.Label': 'Ustaw wartości komórek',
     'Process.Details.Modeler.Actions.Excel.SetCells.CellValues': 'Wartości do ustawienia (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
+    'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Wstaw kolumny przed',
+    'Process.Details.Modeler.Actions.Excel.ColumnsAmount': 'Liczba kolumn do dodania',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',

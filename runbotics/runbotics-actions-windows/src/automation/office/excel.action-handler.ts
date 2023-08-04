@@ -26,8 +26,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async open(input: ExcelOpenActionInput): Promise<void> {
-        const winax = await import('winax');
-        this.session = new winax.Object("Excel.Application", { activate: true });
+        const winax = await import("winax");
+        this.session = new winax.Object("Excel.Application", {
+            activate: true,
+        });
 
         this.session.Workbooks.Open(input.path);
         this.session.Visible = true;
@@ -69,25 +71,22 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
         return optionalWorksheet
             ? this.session
-                .Worksheets(optionalWorksheet)
-                .Range(`${input.column}${input.row}`)
-                .Value()
-            : this.session.ActiveSheet
-                .Range(`${input.column}${input.row}`)
-                .Value();
+                  .Worksheets(optionalWorksheet)
+                  .Range(`${input.column}${input.row}`)
+                  .Value()
+            : this.session.ActiveSheet.Range(
+                  `${input.column}${input.row}`
+              ).Value();
     }
 
-    async setCell(
-        input: ExcelSetCellActionInput
-    ): Promise<void> {
+    async setCell(input: ExcelSetCellActionInput): Promise<void> {
         const optionalWorksheet = input?.worksheet;
 
         const cell = optionalWorksheet
             ? this.session
-                .Worksheets(optionalWorksheet)
-                .Range(`${input.column}${input.row}`)
-            : this.session.ActiveSheet
-                .Range(`${input.column}${input.row}`)
+                  .Worksheets(optionalWorksheet)
+                  .Range(`${input.column}${input.row}`)
+            : this.session.ActiveSheet.Range(`${input.column}${input.row}`);
 
         cell.Value = input.value;
     }
@@ -116,15 +115,46 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.switchPrevWorksheet();
     }
 
+    async insertColumnsBefore(input: ExcelInsertColumnsInput): Promise<void> {
+        const column = input.column;
+        const optionalWorksheet = input?.worksheet;
+        const amount = input?.amount && input?.amount > 1 ? input.amount : 1;
+        let columnLetterName: string = "";
+
+        const isColumnNumeric = isNaN(parseInt(input.column)) ? false : true;
+
+        if (isColumnNumeric) {
+            let reminder = null;
+            let tempColumn: number = parseInt(column);
+            while (tempColumn > 0) {
+                reminder = (tempColumn - 1) % 26;
+                columnLetterName = String.fromCharCode(reminder + 65) + columnLetterName;
+                tempColumn = (tempColumn - reminder - 1) / 26;
+            }
+        } else {
+            columnLetterName = column;
+        }
+
+        const startingPoint = optionalWorksheet
+            ? this.session.Worksheets(optionalWorksheet).Columns(columnLetterName)
+            : this.session.ActiveSheet.Columns(columnLetterName);
+
+        for (let i = 0; i < amount; i++) {
+            await startingPoint.Insert();
+        }
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
-            throw new Error('There is no active Excel session. Open application before');
+            throw new Error(
+                "There is no active Excel session. Open application before"
+            );
         }
     }
 
     run(request: ExcelActionRequest) {
-        if (process.platform !== 'win32') {
-            throw new Error('Excel actions can be run only on Windows bot');
+        if (process.platform !== "win32") {
+            throw new Error("Excel actions can be run only on Windows bot");
         }
 
         switch (request.script) {
@@ -139,6 +169,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCells":
                 this.isApplicationOpen();
                 return this.setCells(request.input);
+            case "excel.insertColumnsBefore":
+                this.isApplicationOpen();
+                return this.insertColumnsBefore(request.input);
             case "excel.save":
                 this.isApplicationOpen();
                 return this.save(request.input);
