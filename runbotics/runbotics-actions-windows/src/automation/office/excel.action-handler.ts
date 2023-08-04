@@ -133,7 +133,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 } catch (e) {
                     throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
-            } 
+            }
             rowCounter++;
             columnCounter = startColumn;
         }
@@ -185,7 +185,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
             targetWorksheet
                 .Range(
-                    targetWorksheet.Columns(column), 
+                    targetWorksheet.Columns(column),
                     targetWorksheet.Columns(column + amount - 1)
                 )
                 .Insert();
