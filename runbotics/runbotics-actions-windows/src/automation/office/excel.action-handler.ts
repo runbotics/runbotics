@@ -1,51 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
+import { StatefulActionHandler } from "runbotics-sdk";
 import ExcelErrorLogger from "./excelError.logger";
-
-export type ExcelActionRequest =
-    | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
-    | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
-    | DesktopRunRequest<"excel.close">
-    | DesktopRunRequest<"excel.save">
-    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
-    | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>;
-
-export type ExcelOpenActionInput = {
-    path: string;
-    worksheet?: string;
-    mode?: "xlReadOnly" | "xlReadWrite";
-};
-
-export type ExcelGetCellActionInput = {
-    row: number;
-    column: string;
-    worksheet?: string;
-};
-
-export interface ExcelSaveActionInput {
-    fileName: string;
-}
-
-export type ExcelSetCellActionInput = {
-    row: number;
-    column: string;
-    value: unknown;
-    worksheet?: string;
-};
-
-export type ExcelSetCellsActionInput = {
-    cellValues: ExcelArrayStructure;
-    startColumn?: string;
-    startRow?: string;
-    worksheet?: string;
-};
-
-type ExcelArrayStructure = unknown[][]
-
-interface StartCellCoordinates {
-    startColumn: number;
-    startRow: number;
-}
+import { ExcelActionRequest, ExcelGetCellActionInput, ExcelOpenActionInput, ExcelSaveActionInput, ExcelSetCellActionInput, ExcelSetCellsActionInput, StartCellCoordinates } from "./excel.types";
+import { ExcelUtils } from "./excel.utils";
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
@@ -128,7 +85,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        this.setNewWorksheet(input?.worksheet);
+        this.switchWorksheet(input?.worksheet);
         const { startRow, startColumn } = await this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow));
         for (const row of input.cellValues) {
             for (const cellValue of row) {
@@ -145,25 +102,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 }
             }
         }
-        this.setPreviousWorksheet();
+        this.switchPrevWorksheet();
     }
 
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
         }
-    }
-
-    private setNewWorksheet(worksheet?: string): void {
-        if (!worksheet || worksheet === this.session.ActiveSheet.Name) return;
-        this.previousWorksheet = this.session.ActiveSheet.Name;
-        this.session.Worksheets(worksheet).Activate();
-    }
-
-    private setPreviousWorksheet(): void {
-        if (!this.previousWorksheet) return;
-        this.session.Worksheets(this.previousWorksheet).Activate();
-        this.previousWorksheet = null;
     }
 
     private getStartCellCoordinates = (startColumn?: string, startRow?: number): StartCellCoordinates => {
@@ -207,7 +152,31 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    private switchWorksheet(worksheet?: string): void {
+        ExcelUtils.switchWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, worksheet);
+    }
+
+    private switchPrevWorksheet(): void {
+        ExcelUtils.switchPrevWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, this.getPrevWorksheet);
+    }
+
     async tearDown() {
         await this.close();
+    }
+
+    getSession() {
+        return this.session;
+    }
+
+    setSession(session) {
+        this.session = session;
+    }
+
+    getPrevWorksheet() {
+        return this.previousWorksheet;
+    }
+
+    setPrevWorksheet(worksheet: string | null = null) {
+        this.previousWorksheet = worksheet;
     }
 }
