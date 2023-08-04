@@ -133,14 +133,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         for (const row of input.cellValues) {
             for (const cellValue of row) {
                 try {
-                    if (!cellValue) continue;
                     const cell =
                         this.session.ActiveSheet
                             .Cells(
                                 startRow + input.cellValues.indexOf(row),
                                 startColumn + row.indexOf(cellValue)
                             );
-                    cell.Value = cellValue;
+                    if (cellValue) cell.Value = cellValue;
                 } catch (e) {
                     this.excelErrorLogger.setCellIncorrectStructure(e);
                 }
