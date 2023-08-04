@@ -16,7 +16,7 @@ import paletteTranslations from './palette.json';
 import processTranslations from './process';
 import registerTranslations from './register.json';
 import schedulerTranslations from './scheduler.json';
-import usersTranslations from './users.json';
+import usersTranslations from './users';
 import variablesTranslations from './variables.json';
 
 const translationResources = {

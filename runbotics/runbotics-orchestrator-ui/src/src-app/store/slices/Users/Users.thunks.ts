@@ -11,7 +11,7 @@ const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .build();
 
 export const getAll = createAsyncThunk<IUser[], void>(
-    'users/getAll', 
+    'users/getAll',
     () =>
         axios
             .get<IUser[]>('/api/admin/users')
@@ -46,4 +46,11 @@ export const updateNotActivated = createAsyncThunk<IUser, IUser>(
     'users/updateNotActivated',
     (params) => axios.put<IUser>('/api/admin/users', params)
         .then((response) => response.data)
+);
+
+export const deleteUser = createAsyncThunk<void, { userId: number }>(
+    'users/delete',
+    async ({ userId }) => {
+        await axios.delete(`/api/admin/users/${userId}`);
+    }
 );

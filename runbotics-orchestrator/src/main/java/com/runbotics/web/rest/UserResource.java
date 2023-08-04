@@ -241,7 +241,7 @@ public class UserResource {
     }
 
     /**
-     * {@code DELETE /admin/users/:login} : delete the User based on id.
+     * {@code DELETE /admin/users/:id} : delete the User based on id.
      *
      * @param id the id of the user to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.

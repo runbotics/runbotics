@@ -41,7 +41,7 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
             )
                 .catch(() =>
                     enqueueSnackbar(
-                        translate('Users.Register.View.Events.Error.FindingUsers'),
+                        translate('Users.Registration.View.Events.Error.FindingUsers'),
                         { variant: 'error' })
                 );
         }
