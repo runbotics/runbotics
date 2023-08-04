@@ -152,8 +152,8 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            targetExcelStructure: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.TargetExcelStructure'),
+                            cellValues: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues'),
                                 type: 'string',
                             },
                             startColumn: {
@@ -169,7 +169,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             }
                         },
-                        required: ['targetExcelStructure'],
+                        required: ['cellValues'],
                     },
                 },
             },

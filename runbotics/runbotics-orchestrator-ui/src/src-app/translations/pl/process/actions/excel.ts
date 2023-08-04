@@ -12,7 +12,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.GetCell.Label': 'Odczytaj komórkę',
     'Process.Details.Modeler.Actions.Excel.SetCell.Label': 'Wpisz do komórki',
     'Process.Details.Modeler.Actions.Excel.SetCells.Label': 'Wpisz do komórek',
-    'Process.Details.Modeler.Actions.Excel.SetCells.TargetExcelStructure': 'Wartości do wstawienia (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
+    'Process.Details.Modeler.Actions.Excel.SetCells.CellValues': 'Wartości do wstawienia (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',
