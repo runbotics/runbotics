@@ -13,7 +13,6 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Macro name',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Run Macro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Macro Parameters',
-
 };
 
 

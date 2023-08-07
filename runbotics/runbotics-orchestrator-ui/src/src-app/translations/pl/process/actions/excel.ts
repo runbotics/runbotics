@@ -15,8 +15,6 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Nazwa makra',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Macro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Parametry Makra',
-
-
 };
 
 export default excelActionsTranslations;
