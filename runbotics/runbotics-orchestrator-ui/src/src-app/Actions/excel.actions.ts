@@ -584,7 +584,6 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-
     'excel.runMacro': {
         id: 'excel.runMacro',
         label: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Label'),
@@ -610,7 +609,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 items: {
                                     type: 'string',
                                 },
-
+                                maxItems: 10
                             },
                         },
 
@@ -622,7 +621,6 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         }
     },
-
     'excel.save': {
         id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
