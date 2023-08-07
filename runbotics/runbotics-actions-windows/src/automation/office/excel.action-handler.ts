@@ -254,7 +254,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     run(request: ExcelActionRequest) {
-        if (request.platform !== 'win32') {
+        if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
 
@@ -290,6 +290,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.save(request.input);
             case 'excel.close':
                 return this.close();
+            case "excel.runMacro":
+                return this.runMacro(request.input)
             default:
                 throw new Error('Action not found');
         }
