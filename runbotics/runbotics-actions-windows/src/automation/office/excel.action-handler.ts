@@ -1,7 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { StatefulActionHandler } from "runbotics-sdk";
 import ExcelErrorLogger from "./excelError.logger";
-import { ExcelActionRequest, ExcelGetCellActionInput, ExcelOpenActionInput, ExcelSaveActionInput, ExcelSetCellActionInput, ExcelSetCellsActionInput, StartCellCoordinates } from "./excel.types";
+import {
+    ExcelActionRequest,
+    ExcelGetCellActionInput,
+    ExcelOpenActionInput,
+    ExcelSaveActionInput,
+    ExcelSetCellActionInput,
+    ExcelSetCellsActionInput,
+    StartCellCoordinates
+} from "./excel.types";
 import { ExcelUtils } from "./excel.utils";
 
 @Injectable()
@@ -9,10 +17,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
     private previousWorksheet = null;
 
-    private readonly excelErrorLogger = new ExcelErrorLogger();
-
     constructor() {
         super();
+        this.getSession = this.getSession.bind(this);
+        this.setSession = this.setSession.bind(this);
+        this.getPrevWorksheet = this.getPrevWorksheet.bind(this);
+        this.setPrevWorksheet = this.setPrevWorksheet.bind(this);
     }
 
     async open(input: ExcelOpenActionInput): Promise<void> {
@@ -85,20 +95,21 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        this.switchWorksheet(input?.worksheet);
+        await this.switchWorksheet(input?.worksheet);
+        const session = this.getSession();
         const { startRow, startColumn } = await this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow));
         for (const row of input.cellValues) {
             for (const cellValue of row) {
                 try {
                     const cell =
-                        this.session.ActiveSheet
+                        session.ActiveSheet
                             .Cells(
                                 startRow + input.cellValues.indexOf(row),
                                 startColumn + row.indexOf(cellValue)
                             );
                     if (cellValue) cell.Value = cellValue;
                 } catch (e) {
-                    this.excelErrorLogger.setCellIncorrectStructure(e);
+                    ExcelErrorLogger.setCellIncorrectStructure(e);
                 }
             }
         }
@@ -108,20 +119,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
-        }
-    }
-
-    private getStartCellCoordinates = (startColumn?: string, startRow?: number): StartCellCoordinates => {
-        if (!startColumn && !startRow) return { startColumn: 1, startRow: 1 };
-        if (!startColumn) return { startColumn: 1, startRow: startRow };
-        try {
-            const columnNumber = this.session.ActiveSheet.Range(`${startColumn}1`).Column;
-            return {
-                startColumn: columnNumber,
-                startRow: startRow ?? 1
-            };
-        } catch (e) {
-            this.excelErrorLogger.startCellCoordinates();
         }
     }
 
@@ -152,14 +149,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private switchWorksheet(worksheet?: string): void {
-        ExcelUtils.switchWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, worksheet);
-    }
-
-    private switchPrevWorksheet(): void {
-        ExcelUtils.switchPrevWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, this.getPrevWorksheet);
-    }
-
     async tearDown() {
         await this.close();
     }
@@ -172,11 +161,23 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = session;
     }
 
-    getPrevWorksheet() {
+    getPrevWorksheet(): string | null {
         return this.previousWorksheet;
     }
 
-    setPrevWorksheet(worksheet: string | null = null) {
+    setPrevWorksheet(worksheet: string | null) {
         this.previousWorksheet = worksheet;
+    }
+
+    private switchWorksheet(worksheet?: string): void {
+        ExcelUtils.switchWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, worksheet);
+    }
+
+    private switchPrevWorksheet(): void {
+        ExcelUtils.switchPrevWorksheet(this.getSession, this.setSession, this.setPrevWorksheet, this.getPrevWorksheet());
+    }
+
+    private getStartCellCoordinates(startColumn?: string, startRow?: number): StartCellCoordinates {
+        return ExcelUtils.getStartCellCoordinates(this.getSession, startColumn, startRow);
     }
 }
