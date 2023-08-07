@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
@@ -14,14 +14,16 @@ import {
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
-import { Queue, MessageQueueService } from '../queue/message-queue.service';
+import { Message } from '../queue/message-queue.service';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
+        @Inject(forwardRef(()=>WebsocketService))
+        private readonly webSocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
         private readonly loopHandlerService: LoopHandlerService,
-        private readonly queue: MessageQueueService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -140,16 +142,19 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    const queueElement: Queue = {
-                        event: this.loopHandlerService.isLoopEvent(
-                            event.activity
-                        )
-                            ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-                            : BotWsMessage.PROCESS_INSTANCE_EVENT,
+                    const processInstanceEventType = this.loopHandlerService.isLoopEvent(
+                        event.activity
+                    )
+                        ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
+                        : BotWsMessage.PROCESS_INSTANCE_EVENT;
+
+                    const message: Message<typeof processInstanceEventType> = {
+                        event: processInstanceEventType,
                         payload: processInstanceEvent,
                     };
-                    this.queue.handleEmit(queueElement);
-                    this.queue.addToQueue(queueElement);
+
+                    this.webSocketService.emitMessage(message);
+
                 } catch (e) {
                     this.logger.error(
                         'Error occurred while sending process instance',
@@ -229,13 +234,12 @@ export class RuntimeSubscriptionsService {
                     break;
             }
 
-            const queueElement: Queue = {
+            const message: Message<BotWsMessage.PROCESS_INSTANCE> = {
                 event: BotWsMessage.PROCESS_INSTANCE,
                 payload: processInstance,
             };
 
-            this.queue.handleEmit(queueElement);
-            this.queue.addToQueue(queueElement);
+            this.webSocketService.emitMessage(message);
         });
     }
 }

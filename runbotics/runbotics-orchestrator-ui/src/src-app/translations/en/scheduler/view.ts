@@ -1,4 +1,4 @@
-const View = {
+const schedulerViewTranslations = {
     'Scheduler.ActiveProcess.Table.Header.Id': 'ID',
     'Scheduler.ActiveProcess.Table.Header.Bot': 'Bot',
     'Scheduler.ActiveProcess.Table.Header.Step': 'Step',
@@ -12,4 +12,4 @@ const View = {
     'Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message': 'Are you sure you want to terminate {{ processName }} process instance?',
 };
 
-export default View;
+export default schedulerViewTranslations;

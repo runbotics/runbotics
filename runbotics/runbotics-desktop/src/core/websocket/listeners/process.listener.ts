@@ -17,6 +17,7 @@ import { delay, SECOND } from '#utils';
 import { AuthService } from '../auth/auth.service';
 import { StartProcessMessageBody } from './process.listener.types';
 import { MessageQueueService } from '../queue/message-queue.service';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable()
 export class ProcessListener {
@@ -26,15 +27,16 @@ export class ProcessListener {
         @InjectIoClientProvider() private readonly io: IoClient,
         private readonly runtimeService: RuntimeService,
         private readonly authService: AuthService,
-        private readonly queueService: MessageQueueService
+        private readonly queueService: MessageQueueService,
+        private readonly webSocketService: WebsocketService
     ) {}
 
     @OnConnect()
     connect() {
         this.logger.log(`Connected to Scheduler (id: ${this.io.id})`);
         this.queueService
-            .getQueue()
-            .forEach((element) => this.queueService.handleEmit(element));
+            .getAll()
+            .forEach((element) => this.webSocketService.emitMessage(element));
     }
 
     @OnConnectError()

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -20,12 +20,11 @@ const SocketProvider: FC<SocketProviderProps> = ({
     shouldAttach,
 }) => {
     const { isAuthenticated } = useAuth();
-
     const { translate } = useTranslations();
-
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
     const { locale } = useRouter();
+
+    const [intervalId, setIntervalId] = useState(null);
 
     const socket = useMemo(() => {
         if (!isAuthenticated || !shouldAttach) return null;
@@ -53,7 +52,11 @@ const SocketProvider: FC<SocketProviderProps> = ({
     useEffect(() => {
         closeSnackbar();
 
-        setInterval(() => {
+        if(intervalId!==null){
+            clearInterval(intervalId);
+        }
+
+        setIntervalId(setInterval(() => {
             if (socket === null || !shouldAttach || !socket.disconnected) {
                 closeSnackbar('warning');
                 return;
@@ -66,19 +69,22 @@ const SocketProvider: FC<SocketProviderProps> = ({
                         key: 'warning',
                         preventDuplicate: true,
                         persist: true,
-                        onExited: () =>
-                            enqueueSnackbar(translate('Scheduler.Dialog.ConnectionRestored'), {
-                                variant: 'success',
-                                preventDuplicate: true,
-                                autoHideDuration: 5000,
-                                key: 'restored',
-                            }),
+                        onExited: () => {
+                            if(socket.connected){
+                                enqueueSnackbar(translate('Scheduler.Dialog.ConnectionRestored'), {
+                                    variant: 'success',
+                                    preventDuplicate: true,
+                                    autoHideDuration: 5000,
+                                    key: 'restored',
+                                });
+                            }
+                        }
                     }
                 );
             }
-        }, 1500);
+        }, 1500));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket, locale]);
+    }, [locale, socket]);
 
     return (
         <SocketContext.Provider value={socket}>

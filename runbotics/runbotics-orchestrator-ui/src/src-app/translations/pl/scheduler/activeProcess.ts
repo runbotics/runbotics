@@ -1,4 +1,6 @@
-const ActiveProcess = {
+import englishActiveProcessTranslations from '#src-app/translations/en/scheduler/activeProcess';
+
+const schedulerActiveProcessTranslations : typeof englishActiveProcessTranslations = {
     'Scheduler.ActiveProcess.Table.Header.Id': 'ID',
     'Scheduler.ActiveProcess.Table.Header.Bot': 'Bot',
     'Scheduler.ActiveProcess.Table.Header.Step': 'Krok',
@@ -12,4 +14,4 @@ const ActiveProcess = {
     'Scheduler.ActiveProcess.Terminate.Dialog.Confirmation.Message': 'Czy na pewno chcesz zakończyć działanie instancji {{ processName }} procesu?',
 };
 
-export default ActiveProcess;
+export default schedulerActiveProcessTranslations;

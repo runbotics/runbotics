@@ -8,6 +8,8 @@ import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
 import { MessageQueueService } from './websocket/queue/message-queue.service';
+import { WebsocketService } from './websocket/websocket.service';
+
 
 
 @Module({
@@ -15,19 +17,22 @@ import { MessageQueueService } from './websocket/queue/message-queue.service';
         ScheduleModule.forRoot(),
         forwardRef(() => ActionModule),
         forwardRef(() => WebsocketModule),
+
     ],
     providers: [
         RuntimeService,
         DesktopRunnerService,
         RuntimeSubscriptionsService,
         LoopHandlerService,
-        MessageQueueService
+        MessageQueueService,
+        WebsocketService
     ],
     exports: [
         RuntimeService,
         DesktopRunnerService,
-        RuntimeSubscriptionsService,
-        MessageQueueService
+        MessageQueueService,
+        WebsocketService,
+
     ],
 })
 export class CoreModule {}

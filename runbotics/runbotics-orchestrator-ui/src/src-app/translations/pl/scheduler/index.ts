@@ -1,19 +1,19 @@
-import ActiveProcess from './activeProcess';
-import Common from './common';
-import Delete from './delete';
-import Dialog from './dialog';
-import ScheduledProcess from './scheduledProcess';
-import View from './view';
-import WaitingProcess from './waitingProcess';
+import activeProcess from './activeProcess';
+import common from './common';
+import schedulerDelete from './delete';
+import dialog from './dialog';
+import scheduleProcess from './scheduledProcess';
+import view from './view';
+import waitingProcess from './waitingProcess';
 
 const schedulerTranslations = {
-    ...ActiveProcess,
-    ...Common,
-    ...Delete,
-    ...Dialog,
-    ...ScheduledProcess,
-    ...View,
-    ...WaitingProcess,
+    ...activeProcess,
+    ...common,
+    ...schedulerDelete,
+    ...dialog,
+    ...scheduleProcess,
+    ...view,
+    ...waitingProcess,
 };
 
 export default schedulerTranslations;

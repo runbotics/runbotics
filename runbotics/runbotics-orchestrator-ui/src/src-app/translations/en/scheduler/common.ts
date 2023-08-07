@@ -1,4 +1,4 @@
-const Common = {
+const common = {
     'Scheduler.Common.Process': 'Process',
     'Scheduler.Common.Title': 'Scheduler',
     'Scheduler.Common.BotSystem': 'Bot System',
@@ -6,4 +6,4 @@ const Common = {
     'Scheduler.Common.BotCollection': 'Bot Collection',
 };
 
-export default Common;
+export default common;

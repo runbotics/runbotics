@@ -1,4 +1,4 @@
-const Delete = {
+const schedulerDeleteTranslations = {
     'Scheduler.Delete.WaitingJobs.Success': 'Process {{ processName }} deleted from waiting',
     'Scheduler.Delete.WaitingJobs.Failed': 'Failed to delete process {{ processName }} from waiting',
     'Scheduler.Delete.Dialog.Title': 'Delete {{ processName }}',
@@ -7,4 +7,4 @@ const Delete = {
     'Scheduler.Delete.ScheduledProcess.Failed': 'Failed to delete process {{ processName }} schedule',
 };
 
-export default Delete;
+export default schedulerDeleteTranslations;
