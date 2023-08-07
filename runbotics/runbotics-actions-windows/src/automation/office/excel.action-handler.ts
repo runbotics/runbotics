@@ -2,12 +2,20 @@ import { Injectable } from "@nestjs/common";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type ExcelActionRequest =
+<<<<<<< HEAD
 | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
 | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
 | DesktopRunRequest<"excel.close">
 | DesktopRunRequest<"excel.save">
 | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
 | DesktopRunRequest<"excel.runMacro", ExcelRunMacroInput>;
+=======
+    | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
+    | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
+    | DesktopRunRequest<"excel.close">
+    | DesktopRunRequest<"excel.save">
+    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
+>>>>>>> e0aba80de9cc467dafeff45bef10d9d9803b73f6
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -18,6 +26,7 @@ export type ExcelOpenActionInput = {
 export type ExcelGetCellActionInput = {
     row: number;
     column: string;
+    worksheet?: string;
 };
 
 export interface ExcelSaveActionInput {
@@ -28,6 +37,7 @@ export type ExcelSetCellActionInput = {
     row: number;
     column: number;
     value: any;
+    worksheet?: string;
 };
 
 export type ExcelRunMacroInput = {
@@ -83,13 +93,30 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async getCell(
         input: ExcelGetCellActionInput
     ): Promise<string | number> {
-        return this.session.ActiveSheet.Range(`${input.column}${input.row}`).Value();
+        const optionalWorksheet = input?.worksheet;
+
+        return optionalWorksheet
+            ? this.session
+                .Worksheets(optionalWorksheet)
+                .Range(`${input.column}${input.row}`)
+                .Value()
+            : this.session.ActiveSheet
+                .Range(`${input.column}${input.row}`)
+                .Value();
     }
 
     async setCell(
         input: ExcelSetCellActionInput
     ): Promise<void> {
-        const cell = this.session.ActiveSheet.Range(`${input.column}${input.row}`);
+        const optionalWorksheet = input?.worksheet;
+
+        const cell = optionalWorksheet
+            ? this.session
+                .Worksheets(optionalWorksheet)
+                .Range(`${input.column}${input.row}`)
+            : this.session.ActiveSheet
+                .Range(`${input.column}${input.row}`)
+
         cell.Value = input.value;
     }
 

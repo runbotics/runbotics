@@ -1,7 +1,7 @@
 const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.Row': 'Row',
     'Process.Details.Modeler.Actions.Excel.Column': 'Column',
-
+    'Process.Details.Modeler.Actions.Excel.Worksheet': 'Worksheet',
     'Process.Details.Modeler.Actions.Excel.Open.Label': 'Open',
     'Process.Details.Modeler.Actions.Excel.Open.Path.Title': 'Path / Workbook',
     'Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title': 'Worksheet',

@@ -3,7 +3,7 @@ import englishExcelActionsTranslations from '#src-app/translations/en/process/ac
 const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.Row': 'Wiersz',
     'Process.Details.Modeler.Actions.Excel.Column': 'Kolumna',
-
+    'Process.Details.Modeler.Actions.Excel.Worksheet': 'Arkusz',
     'Process.Details.Modeler.Actions.Excel.Open.Label': 'Otwórz',
     'Process.Details.Modeler.Actions.Excel.Open.Path.Title': 'Ścieżka / Skoroszyt',
     'Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title': 'Arkusz',
