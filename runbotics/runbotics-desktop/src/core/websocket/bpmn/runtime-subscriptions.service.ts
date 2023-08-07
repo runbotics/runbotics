@@ -20,10 +20,10 @@ import { WebsocketService } from '../websocket.service';
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
-        @Inject(forwardRef(()=>WebsocketService))
+        @Inject(forwardRef(() => WebsocketService))
         private readonly webSocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
-        private readonly loopHandlerService: LoopHandlerService,
+        private readonly loopHandlerService: LoopHandlerService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -56,8 +56,7 @@ export class RuntimeSubscriptionsService {
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step =
-                                ProcessInstanceStep.ERROR_BOUNDARY;
+                            processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
                         case BpmnElementType.BOUNDARY_EVENT:
                             // Boundary event doesn't carry any useful information. It's just a wrapper.
@@ -100,8 +99,7 @@ export class RuntimeSubscriptionsService {
                             }
 
                             if (eventBehavior?.label) {
-                                processInstanceEvent.step =
-                                    eventBehavior?.label;
+                                processInstanceEvent.step = eventBehavior?.label;
                             } else {
                                 processInstanceEvent.step = 'Loop';
                             }
@@ -142,11 +140,10 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    const processInstanceEventType = this.loopHandlerService.isLoopEvent(
-                        event.activity
-                    )
-                        ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-                        : BotWsMessage.PROCESS_INSTANCE_EVENT;
+                    const processInstanceEventType =
+                        this.loopHandlerService.isLoopEvent(event.activity)
+                            ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
+                            : BotWsMessage.PROCESS_INSTANCE_EVENT;
 
                     const message: Message<typeof processInstanceEventType> = {
                         event: processInstanceEventType,
@@ -154,7 +151,6 @@ export class RuntimeSubscriptionsService {
                     };
 
                     this.webSocketService.emitMessage(message);
-
                 } catch (e) {
                     this.logger.error(
                         'Error occurred while sending process instance',
