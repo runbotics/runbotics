@@ -2,20 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
 
 export type ExcelActionRequest =
-<<<<<<< HEAD
 | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
 | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
 | DesktopRunRequest<"excel.close">
 | DesktopRunRequest<"excel.save">
-| DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
+| DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
 | DesktopRunRequest<"excel.runMacro", ExcelRunMacroInput>;
-=======
-    | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
-    | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
-    | DesktopRunRequest<"excel.close">
-    | DesktopRunRequest<"excel.save">
-    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>;
->>>>>>> e0aba80de9cc467dafeff45bef10d9d9803b73f6
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -225,7 +217,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     run(request: ExcelActionRequest) {
-        if (request.platform !== 'win32') {
+        if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
 
@@ -243,6 +235,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.save(request.input);
             case "excel.close":
                 return this.close();
+            case "excel.runMacro":
+                return this.runMacro(request.input)
             default:
                 throw new Error("Action not found");
         }
