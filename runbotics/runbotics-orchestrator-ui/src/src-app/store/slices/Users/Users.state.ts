@@ -1,6 +1,19 @@
 import { IUser } from 'runbotics-common';
 
+import { Page } from '#src-app/utils/types/page';
+
 export interface UsersState {
-    loading: boolean;
     all: IUser[];
+    loading: boolean;
+    userUpdate: {
+        loading: boolean
+    };
+    userDelete: {
+        loading: boolean;
+    };
+    notActivated: {
+        loading: boolean;
+        all: IUser[];
+        allByPage: Page<IUser> | null;
+    }
 }

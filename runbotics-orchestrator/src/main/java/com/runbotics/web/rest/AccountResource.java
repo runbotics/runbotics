@@ -5,6 +5,7 @@ import com.runbotics.repository.UserRepository;
 import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.MailService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.PasswordChangeDTO;
 import com.runbotics.web.rest.errors.*;
@@ -122,10 +123,10 @@ public class AccountResource {
         String userLogin = SecurityUtils
             .getCurrentUserLogin()
             .orElseThrow(() -> new AccountResourceException("Current user login not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
-            throw new EmailAlreadyUsedException();
-        }
+       Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+       if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
+           throw new EmailAlreadyUsedException();
+       }
         Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
@@ -137,6 +138,20 @@ public class AccountResource {
             userDTO.getLangKey(),
             userDTO.getImageUrl()
         );
+    }
+
+    /**
+     * {@code PATCH  /account} : partially update user information (by the user).
+     *
+     * @param userDTO new information provided by the user.
+     */
+    @PatchMapping("/account")
+    public User updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
+        User user = userService.getUserWithAuthorities().get();
+
+        userService.partialAccountUpdate(user, userDTO);
+
+        return user;
     }
 
     /**

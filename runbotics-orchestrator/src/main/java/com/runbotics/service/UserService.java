@@ -3,19 +3,20 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
+import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
-
+import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -43,16 +44,20 @@ public class UserService {
 
     private final ProcessRepository processRepository;
 
+    private final AccountPartialUpdateMapper accountPartialUpdateMapper;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
-        ProcessRepository processRepository
+        ProcessRepository processRepository,
+        AccountPartialUpdateMapper accountPartialUpdateMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.accountPartialUpdateMapper = accountPartialUpdateMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -224,9 +229,9 @@ public class UserService {
             .map(AdminUserDTO::new);
     }
 
-    public void deleteUser(String login) {
+    public void deleteUser(Long id) {
         userRepository
-            .findOneByLogin(login)
+            .findOneById(id)
             .ifPresent(
                 user -> {
                     userRepository.delete(user);
@@ -234,7 +239,9 @@ public class UserService {
                 }
             );
 
-        processRepository.deleteUnassignedPrivateProcesses();
+        if (processRepository.countUserProcesses(id) > 0) {
+            processRepository.deleteUnassignedPrivateProcesses();
+        }
     }
 
     public User saveUser(User user) {
@@ -266,6 +273,18 @@ public class UserService {
                     log.debug("Changed Information for User: {}", user);
                 }
             );
+    }
+
+    /**
+     * Update information for the current user.
+     *
+     * @param userDTO includes only fields available for the user to update
+     */
+    public void partialAccountUpdate(User user, AccountPartialUpdateDTO userDTO) {
+        accountPartialUpdateMapper.partialUpdate(user, userDTO);
+
+        userRepository.save(user);
+        log.debug("User information updated", user);
     }
 
     @Transactional
@@ -312,8 +331,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable) {
-        return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
+        if (criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+        }
+            return userRepository
+                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)

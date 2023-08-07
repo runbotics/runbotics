@@ -6,8 +6,19 @@ import { UsersState } from './Users.state';
 import * as usersThunks from './Users.thunks';
 
 const initialState: UsersState = {
-    loading: false,
     all: [],
+    loading: false,
+    userUpdate: {
+        loading: false
+    },
+    userDelete: {
+        loading: false
+    },
+    notActivated: {
+        loading: false,
+        all: [],
+        allByPage: null,
+    }
 };
 
 export const slice = createSlice({
