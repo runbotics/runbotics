@@ -110,7 +110,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         }
     };
 
-    public checkRuntimeStatus() {
+    public getRuntimeStatus() {
         const processInstancesCount = Object.keys(this.processInstances).length;
         const enginesCount = Object.keys(this.engines).length;
     
@@ -119,7 +119,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private async monitor() {
         setInterval(() => {
-            const { processInstancesCount, enginesCount } = this.checkRuntimeStatus();
+            const { processInstancesCount, enginesCount } = this.getRuntimeStatus();
 
             this.logger.warn(`Process instances: ${processInstancesCount} Engines: ${enginesCount}`);
         }, 100000);

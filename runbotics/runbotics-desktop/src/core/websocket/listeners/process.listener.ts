@@ -7,7 +7,7 @@ import {
     OnDisconnect,
     EventListener,
 } from 'nestjs-io-client';
-import { BotStatus, BotWsMessage, IProcess } from 'runbotics-common';
+import { BotWsMessage, IProcess } from 'runbotics-common';
 
 import { orchestratorAxios } from '#config';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -60,12 +60,11 @@ export class ProcessListener {
             `=> Incoming message to start process (id: ${data.processId})`
         );
 
-        const { processInstancesCount } = this.runtimeService.checkRuntimeStatus();
+        const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
 
         if (processInstancesCount > 0) {
-            this.logger.log('<= Process is already running');
-            this.io.emit(BotWsMessage.RUNNING_PROCESS, BotStatus.BUSY);
-            return;
+            this.io.emit(BotWsMessage.RUNNING_PROCESS);
+            throw new Error('Process is already running');
         }
 
         const { processId, input, ...rest } = data;

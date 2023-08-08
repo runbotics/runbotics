@@ -69,11 +69,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     @SubscribeMessage(BotWsMessage.RUNNING_PROCESS)
     async runningProcessListener( 
         @ConnectedSocket() socket: BotAuthSocket,
-        @MessageBody() busyBotStatus: BotStatus.BUSY,
     ) {
         this.logger.log('<= Process is already running');
-        this.changeBotStatusToBusy(socket.bot, busyBotStatus);
-        this.uiGateway.server.emit(WsMessage.BOT_STATUS, socket.bot);
+        this.setBotStatusBusy(socket.bot);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -82,7 +80,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
     ) {
-        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+        await this.setBotStatusBusy(socket.bot);
 
         const installationId = socket.bot.installationId;
 
@@ -109,7 +107,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+        await this.setBotStatusBusy(socket.bot);
 
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
@@ -127,7 +125,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
-        await this.changeBotStatusToBusy(socket.bot, BotStatus.BUSY);
+        await this.setBotStatusBusy(socket.bot);
         
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
@@ -156,11 +154,13 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 
-    private async changeBotStatusToBusy(bot: IBot, busyBotStatus: BotStatus.BUSY) {
+    private async setBotStatusBusy(bot: IBot) {
+        const busyBotStatus = BotStatus.BUSY;
         if (bot.status !== busyBotStatus) {
-            this.logger.log(`=> Updating bot status to (${busyBotStatus})`);
+            this.logger.log(`Updating bot status to (${busyBotStatus})`);
             await this.botService.setBusy(bot);
-            this.logger.log('<= Success: bot status updated');
+            this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+            this.logger.log('Success: bot status updated');
         }
     }
 }
