@@ -296,15 +296,6 @@ public class UserService {
         log.debug("User information updated", user);
     }
 
-    public void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
-        adminUserDTO.setImageUrl(null);
-        adminUserDTO.setCreatedBy(null);
-        adminUserDTO.setCreatedDate(null);
-        adminUserDTO.setLastModifiedBy(null);
-        adminUserDTO.setRoles(null);
-        adminUserDTO.setFeatureKeys(null);
-    }
-
     /**
      * Partial update information for the current user.
      * @param adminUserDTO additionally ignoring fields:
@@ -426,5 +417,14 @@ public class UserService {
             .filter(authority -> authority.getName().equals(AuthoritiesConstants.GUEST))
             .flatMap(guest -> guest.getUsers().stream().map(User::getId))
             .collect(Collectors.toList());
+    }
+
+    private void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
+        adminUserDTO.setImageUrl(null);
+        adminUserDTO.setCreatedBy(null);
+        adminUserDTO.setCreatedDate(null);
+        adminUserDTO.setLastModifiedBy(null);
+        adminUserDTO.setRoles(null);
+        adminUserDTO.setFeatureKeys(null);
     }
 }
