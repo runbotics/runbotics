@@ -4,6 +4,7 @@ import { ServerConfigService } from '../../../config/server-config.service';
 import { StorageService } from '../../../config/storage.service';
 import { orchestratorAxios } from '../../../config/axios-configuration';
 import { v4 as uuidv4 } from 'uuid';
+import botSystem from '#utils/botSystem';
 
 @Injectable()
 export class AuthService {
@@ -44,7 +45,7 @@ export class AuthService {
         const version = this.serverConfigService.version;
         this.logger.log('Version: ' + version);
 
-        const system = this.serverConfigService.system;
+        const system = botSystem();
         this.logger.log('System: ' + system);
 
         const collection = this.serverConfigService.collection;

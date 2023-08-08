@@ -8,7 +8,7 @@ import { BotService } from '../database/bot/bot.service';
 import { UserService } from '../database/user/user.service';
 import { JWTPayload } from '../types';
 import { Logger } from '../utils/logger';
-import { BotStatus, IBot } from 'runbotics-common';
+import { BotStatus, BotSystem, IBot } from 'runbotics-common';
 import { BotSystemService } from '../database/bot-system/bot-system.service';
 import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
@@ -128,7 +128,10 @@ export class AuthService {
 
         this.validateParameterFromBot(user, 'user does not exist', client);
         this.validateParameterFromBot(installationId, 'missing installationId in bot data', client);
+        
         this.validateParameterFromBot(system, 'missing system in bot data', client);
+        this.validateBotSystem(system, client);
+
         this.validateParameterFromBot(collection, 'missing collection in bot data', client);
 
         const collectionEntity = await this.botCollectionService.findById(collection);
@@ -165,6 +168,18 @@ export class AuthService {
         if (!parameter) {
             client.disconnect();
             throw new WsException(exceptionMessage);
+        }
+    }
+
+    private validateBotSystem(system, client: Socket) {
+        switch (system) {
+            case BotSystem.WINDOWS:
+                break;
+            case BotSystem.LINUX:
+                break;
+            default:
+                client.disconnect();
+                throw new WsException(`Bot system (${system}) is incompatible`);
         }
     }
 

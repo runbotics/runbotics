@@ -482,6 +482,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                             script,
                             input: desktopTask.input,
                             processInstanceId,
+                            rootProcessSystem: this.processInstances[processInstanceId].process.system.name,
                             rootProcessInstanceId:
                             this.processInstances[processInstanceId]
                                 .rootProcessInstanceId,

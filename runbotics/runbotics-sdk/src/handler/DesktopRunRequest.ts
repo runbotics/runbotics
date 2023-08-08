@@ -3,6 +3,7 @@ import { BpmnExecutionEventMessageApi } from "bpmn-engine";
 interface CommonDesktopRunRequest {
     processInstanceId: string;
     rootProcessInstanceId: string;
+    rootProcessSystem: string;
     userId: number;
     executionContext: BpmnExecutionEventMessageApi;
     trigger: { name: string };

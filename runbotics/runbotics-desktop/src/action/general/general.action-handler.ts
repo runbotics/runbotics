@@ -1,11 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
-import { GeneralAction, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
-
+import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
+import botSystem from '#utils/botSystem';
 
 export type GeneralActionRequest =
 | DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
@@ -67,7 +67,16 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 `/api/processes/${request.input.processId}`,
                 { maxRedirects: 0 },
             );
+            
             const process = response.data;
+            const processSystem = process.system.name;
+            const rootProcessSystem = request.rootProcessSystem;
+            const system = botSystem();
+            
+            if (processSystem !== system  && rootProcessSystem !== BotSystem.ANY && processSystem !== BotSystem.ANY) {
+                reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
+            }
+
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: process,
                 variables: request.input.variables,
