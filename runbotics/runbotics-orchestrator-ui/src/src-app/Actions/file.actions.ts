@@ -1,3 +1,5 @@
+import { FileAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getFileActions = (): Record<string, IBpmnAction> => ({
     'file.appendFile': {
-        id: 'file.appendFile',
+        id: FileAction.APPEND_FILE,
         label: translate('Process.Details.Modeler.Actions.File.AppendFile.Label'),
-        script: 'file.appendFile',
+        script: FileAction.APPEND_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -62,9 +64,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.createFile': {
-        id: 'file.createFile',
+        id: FileAction.CREATE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.CreateFile.Label'),
-        script: 'file.createFile',
+        script: FileAction.CREATE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -110,9 +112,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.removeFile': {
-        id: 'file.removeFile',
+        id: FileAction.REMOVE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.RemoveFile.Label'),
-        script: 'file.removeFile',
+        script: FileAction.REMOVE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -150,9 +152,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.readFile': {
-        id: 'file.readFile',
+        id: FileAction.READ_FILE,
         label: translate('Process.Details.Modeler.Actions.File.ReadFile.Label'),
-        script: 'file.readFile',
+        script: FileAction.READ_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -203,9 +205,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.writeFile': {
-        id: 'file.writeFile',
+        id: FileAction.WRITE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.WriteFile.Label'),
-        script: 'file.writeFile',
+        script: FileAction.WRITE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

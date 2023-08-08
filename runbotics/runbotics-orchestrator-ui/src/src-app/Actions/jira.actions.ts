@@ -1,3 +1,5 @@
+import { JiraAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner } from './types';
 
 const getJiraActions: () => Record<string, IBpmnAction> = () => ({
     'jira.getLoggedWorkForUser': {
-        id: 'jira.getLoggedWorkForUser',
+        id: JiraAction.GET_LOGGED_WORK_FOR_USER,
         label: translate('Process.Details.Modeler.Actions.Jira.GetLoggedWorkForUser.Label'),
-        script: 'jira.getLoggedWorkForUser',
+        script: JiraAction.GET_LOGGED_WORK_FOR_USER,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

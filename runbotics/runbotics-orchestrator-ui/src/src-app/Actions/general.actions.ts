@@ -1,3 +1,5 @@
+import { GeneralAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner } from './types';
 
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
-        id: 'general.console.log',
+        id: GeneralAction.CONSOLE_LOG,
         label: translate('Process.Details.Modeler.Actions.General.Console.Log.Label'),
-        script: 'general.console.log',
+        script: GeneralAction.CONSOLE_LOG,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -39,9 +41,9 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'general.delay': {
-        id: 'general.delay',
+        id: GeneralAction.DELAY,
         label: translate('Process.Details.Modeler.Actions.General.Delay.Label'),
-        script: 'general.delay',
+        script: GeneralAction.DELAY,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -80,9 +82,9 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'general.startProcess': {
-        id: 'general.startProcess',
+        id: GeneralAction.START_PROCESS,
         label: translate('Process.Details.Modeler.Actions.General.StartProcess.Label'),
-        script: 'general.startProcess',
+        script: GeneralAction.START_PROCESS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,

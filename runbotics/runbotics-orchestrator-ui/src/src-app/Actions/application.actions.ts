@@ -1,3 +1,5 @@
+import { ApplicationAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, ActionSystem } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 
 const getApplicationActions: () => Record<string, IBpmnAction> = () => ({
     'application.launch': {
-        id: 'application.launch',
+        id: ApplicationAction.LAUNCH,
         label: translate('Process.Details.Modeler.Actions.Application.Launch.Label'),
-        script: 'application.launch',
+        script: ApplicationAction.LAUNCH,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {

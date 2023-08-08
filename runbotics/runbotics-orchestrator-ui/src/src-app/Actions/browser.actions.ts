@@ -1,3 +1,5 @@
+import { BrowserAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { ActionSystem, IBpmnAction, Runner } from './types';
@@ -23,9 +25,9 @@ const exampleJsonConfiguration = {
 // eslint-disable-next-line max-lines-per-function
 const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     'browser.launch': {
-        id: 'browser.launch',
+        id: BrowserAction.LAUNCH,
         label: translate('Process.Details.Modeler.Actions.Browser.Launch.Label'),
-        script: 'browser.launch',
+        script: BrowserAction.LAUNCH,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -60,9 +62,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.open': {
-        id: 'browser.selenium.open',
+        id: BrowserAction.SELENIUM_OPEN,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Open.Label'),
-        script: 'browser.selenium.open',
+        script: BrowserAction.SELENIUM_OPEN,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -92,9 +94,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.close': {
-        id: 'browser.close',
+        id: BrowserAction.CLOSE,
         label: translate('Process.Details.Modeler.Actions.Browser.Close.Label'),
-        script: 'browser.close',
+        script: BrowserAction.CLOSE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -118,9 +120,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.click': {
-        id: 'browser.selenium.click',
+        id: BrowserAction.SELENIUM_CLICK,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Click.Label'),
-        script: 'browser.selenium.click',
+        script: BrowserAction.SELENIUM_CLICK,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -155,9 +157,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.elements.count': {
-        id: 'browser.selenium.elements.count',
+        id: BrowserAction.SELENIUM_ELEMENTS_COUNT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Elements.Count.Label'),
-        script: 'browser.selenium.elements.count',
+        script: BrowserAction.SELENIUM_ELEMENTS_COUNT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -215,9 +217,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.element.attribute.change': {
-        id: 'browser.selenium.element.attribute.change',
+        id: BrowserAction.SELENIUM_ELEMENT_ATTRIBUTE_CHANGE,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Element.Attribute.Change.Label'),
-        script: 'browser.selenium.element.attribute.change',
+        script: BrowserAction.SELENIUM_ELEMENT_ATTRIBUTE_CHANGE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -268,9 +270,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.type': {
-        id: 'browser.selenium.type',
+        id: BrowserAction.SELENIUM_TYPE,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Type.Label'),
-        script: 'browser.selenium.type',
+        script: BrowserAction.SELENIUM_TYPE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -315,9 +317,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.wait': {
-        id: 'browser.selenium.wait',
+        id: BrowserAction.SELENIUM_WAIT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Wait.Label'),
-        script: 'browser.selenium.wait',
+        script: BrowserAction.SELENIUM_WAIT,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -353,9 +355,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.editContent': {
-        id: 'browser.selenium.editContent',
+        id: BrowserAction.SELENIUM_EDIT_CONTENT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.EditContent.Label'),
-        script: 'browser.selenium.editContent',
+        script: BrowserAction.SELENIUM_EDIT_CONTENT,
         runner: Runner.BROWSER_FRONTEND_SCRIPT,
         form: {
             schema: {
@@ -390,9 +392,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.select': {
-        id: 'browser.selenium.select',
+        id: BrowserAction.SELENIUM_SELECT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Select.Label'),
-        script: 'browser.selenium.select',
+        script: BrowserAction.SELENIUM_SELECT,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -432,9 +434,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.read.attribute': {
-        id: 'browser.read.attribute',
+        id: BrowserAction.READ_ATTRIBUTE,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
-        script: 'browser.read.attribute',
+        script: BrowserAction.READ_ATTRIBUTE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -494,9 +496,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.read.text': {
-        id: 'browser.read.text',
+        id: BrowserAction.READ_TEXT,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Text.Label'),
-        script: 'browser.read.text',
+        script: BrowserAction.READ_TEXT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -551,9 +553,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.read.input': {
-        id: 'browser.read.input',
+        id: BrowserAction.READ_INPUT,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Input.Label'),
-        script: 'browser.read.input',
+        script: BrowserAction.READ_INPUT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -608,9 +610,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.index': {
-        id: 'browser.index',
+        id: BrowserAction.INDEX,
         label: translate('Process.Details.Modeler.Actions.Browser.Index.Label'),
-        script: 'browser.index',
+        script: BrowserAction.INDEX,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -665,9 +667,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.takeScreenshot': {
-        id: 'browser.selenium.takeScreenshot',
+        id: BrowserAction.SELENIUM_TAKE_SCREENSHOT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.TakeScreenshot.Label'),
-        script: 'browser.selenium.takeScreenshot',
+        script: BrowserAction.SELENIUM_TAKE_SCREENSHOT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -723,9 +725,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'browser.selenium.printToPdf': {
-        id: 'browser.selenium.printToPdf',
+        id: BrowserAction.SELENIUM_PRINT_TO_PDF,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.PrintToPdf.Label'),
-        script: 'browser.selenium.printToPdf',
+        script: BrowserAction.SELENIUM_PRINT_TO_PDF,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
