@@ -341,8 +341,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable) {
-        return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+    public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable, UserCriteria criteria) {
+        if (criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+        }
+            return userRepository
+                .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
     }
 
     /**
