@@ -17,6 +17,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.runbotics.service.mapper.AdminUserMapper;
+import com.runbotics.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -44,20 +47,27 @@ public class UserService {
 
     private final ProcessRepository processRepository;
 
+    private final UserMapper userMapper;
+
     private final AccountPartialUpdateMapper accountPartialUpdateMapper;
+
+    private final AdminUserMapper adminUserMapper;
 
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         ProcessRepository processRepository,
-        AccountPartialUpdateMapper accountPartialUpdateMapper
-    ) {
+        UserMapper userMapper,
+        AccountPartialUpdateMapper accountPartialUpdateMapper,
+        AdminUserMapper adminUserMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.userMapper = userMapper;
         this.accountPartialUpdateMapper = accountPartialUpdateMapper;
+        this.adminUserMapper = adminUserMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -285,6 +295,38 @@ public class UserService {
 
         userRepository.save(user);
         log.debug("User information updated", user);
+    }
+
+    public void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
+        adminUserDTO.setImageUrl(null);
+        adminUserDTO.setCreatedBy(null);
+        adminUserDTO.setCreatedDate(null);
+        adminUserDTO.setLastModifiedBy(null);
+        adminUserDTO.setRoles(null);
+        adminUserDTO.setFeatureKeys(null);
+    }
+
+    /**
+     * Partial update information for the current user.
+     * @param adminUserDTO additionally ignoring fields:
+     *                     imageUrl, createBy, createdDate,
+     *                     lastModifiedBy, roles, featureKeys
+     * @return updated user
+     */
+    public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
+        log.debug("Request to partially update User : {}", adminUserDTO);
+
+        excludeAdminUserDTOFields(adminUserDTO);
+        return userRepository
+            .findById(adminUserDTO.getId())
+            .map(
+                existingUser -> {
+                    adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                    return existingUser;
+                }
+            )
+            .map(userRepository::save)
+            .map(userMapper::userToAdminUserDTO);
     }
 
     @Transactional
