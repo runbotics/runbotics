@@ -5,9 +5,12 @@ export interface ActionVariableObject {
     scopeId?: string;
 }
 
+export interface LoopVariableObject extends ActionVariableObject {}
+
 export interface ActionVariables {
     inputActionVariables: ActionVariableObject[];
     outputActionVariables: ActionVariableObject[];
+    loopVariables: LoopVariableObject[];
 }
 
 export interface GlobalVariable {

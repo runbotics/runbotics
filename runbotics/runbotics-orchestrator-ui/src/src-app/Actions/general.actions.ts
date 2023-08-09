@@ -1,3 +1,5 @@
+import { GeneralAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner } from './types';
 
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
-        id: 'general.console.log',
+        id: GeneralAction.CONSOLE_LOG,
         label: translate('Process.Details.Modeler.Actions.General.Console.Log.Label'),
-        script: 'general.console.log',
+        script: GeneralAction.CONSOLE_LOG,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -18,11 +20,11 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         title: '',
                         properties: {
                             variables: {
-                                title: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Input'),
+                                title: translate('Process.Details.Modeler.Actions.Common.Input'),
                                 type: 'object',
                                 additionalProperties: {
                                     mainFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Message'),
-                                    subFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Variable'),
+                                    subFieldLabel: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                     isRequired: false,
                                     type: 'string',
                                 },
@@ -39,16 +41,16 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'general.delay': {
-        id: 'general.delay',
+        id: GeneralAction.DELAY,
         label: translate('Process.Details.Modeler.Actions.General.Delay.Label'),
-        script: 'general.delay',
+        script: GeneralAction.DELAY,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.General.Delay.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             delay: {
@@ -80,9 +82,9 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'general.startProcess': {
-        id: 'general.startProcess',
+        id: GeneralAction.START_PROCESS,
         label: translate('Process.Details.Modeler.Actions.General.StartProcess.Label'),
-        script: 'general.startProcess',
+        script: GeneralAction.START_PROCESS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -95,7 +97,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.General.StartProcess.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             processId: {
@@ -115,13 +117,13 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['processId'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.General.StartProcess.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.General.StartProcess.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.General.StartProcess.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

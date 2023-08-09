@@ -3,7 +3,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 
-
 // eslint-disable-next-line max-lines-per-function
 const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
     'typescript.run': {
@@ -22,7 +21,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Javascript.RunTypescript.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             code: {
@@ -42,13 +41,13 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['code'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Javascript.RunTypescript.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Javascript.RunTypescript.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Javascript.RunTypescript.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },
@@ -67,8 +66,8 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    code: `export = async function(params: Record<string, any>) {  
-    console.log('params ', params); 
+                    code: `export = async function(params: Record<string, any>) {
+    console.log('params ', params);
     return {
         "test": "test"
     }
@@ -97,7 +96,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Javascript.RunJavascript.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             code: {
@@ -123,13 +122,13 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['code', 'functionName'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Javascript.RunJavascript.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Javascript.RunJavascript.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Javascript.RunJavascript.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

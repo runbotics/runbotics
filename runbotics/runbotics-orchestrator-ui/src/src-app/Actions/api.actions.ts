@@ -1,4 +1,6 @@
 
+import { ApiAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -8,9 +10,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getApiActions: () => Record<string, IBpmnAction> = () => ({
     'api.request': {
-        id: 'api.request',
+        id: ApiAction.REQUEST,
         label: translate('Process.Details.Modeler.Actions.Api.Request.Label'),
-        script: 'api.request',
+        script: ApiAction.REQUEST,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -23,7 +25,7 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Api.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             url: {
@@ -70,12 +72,12 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                         },
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Api.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Api.Output.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Api.Output.VariableMessage'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -109,9 +111,9 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'api.downloadFile': {
-        id: 'api.downloadFile',
+        id: ApiAction.DOWNLOAD_FILE,
         label: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Label'),
-        script: 'api.downloadFile',
+        script: ApiAction.DOWNLOAD_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -124,7 +126,7 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             url: {
@@ -135,13 +137,13 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['url'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Api.DownloadFile.Variable'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 description: translate(
-                                    'Process.Details.Modeler.Actions.Api.DownloadFile.VariableText',
+                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
                                 ),
                                 type: 'string',
                             },

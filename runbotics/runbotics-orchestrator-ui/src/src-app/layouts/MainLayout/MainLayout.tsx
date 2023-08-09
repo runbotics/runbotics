@@ -75,4 +75,4 @@ const MainLayout: FC = ({ children }) => {
     );
 };
 
-export default withAuthGuard(MainLayout);
+export default withAuthGuard({ Component: MainLayout });

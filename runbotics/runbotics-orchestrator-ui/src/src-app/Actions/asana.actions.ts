@@ -1,3 +1,5 @@
+import { AsanaAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,9 +8,9 @@ import { IBpmnAction, Runner } from './types';
 
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
-        id: 'asana.test',
+        id: AsanaAction.TEST,
         label: translate('Process.Details.Modeler.Actions.Asana.Test.Label'),
-        script: 'asana.test',
+        script: AsanaAction.TEST,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -21,18 +23,18 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Asana.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Asana.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Asana.Output.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Asana.Output.VariableMessage'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },

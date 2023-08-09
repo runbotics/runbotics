@@ -89,6 +89,7 @@ const UTILS = [
 
 const VARIABLES = [
     'tempFolder',
+    'userEmail',
 ].map(variable => ({
     label: variable,
     value: variable,
@@ -127,6 +128,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         inputActionVariables,
         outputActionVariables,
         attendedVariables,
+        loopVariables: scopedLoopVariables,
     } = useProcessVariables(selectedElement?.parent?.id);
 
     const attendedProcessVariables = attendedVariables.map((variable) => ({
@@ -170,6 +172,14 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         ) 
     }));
 
+    const groupedLoopVariables = scopedLoopVariables.map((variable) => ({
+        label: variable.name,
+        value: variable.name,
+        group: translate(
+            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
+        ),
+    }));
+
     const groupedGlobalVariables = globalVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
@@ -204,11 +214,18 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
                 value: `#{${option.value}}`,
             }));
 
+            const loopVariables = groupedLoopVariables.map((option) => ({
+                ...option,
+                label: `\${${option.value}}`,
+                value: `\${${option.value}}`,
+            }));
+
             result = [
                 ...dollarVariables,
                 ...hashVariables,
                 ...outputVariables,
                 ...result,
+                ...loopVariables,
             ];
 
             return reduceList(result);
