@@ -1,3 +1,5 @@
+import { GeneralAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 import {
     ElementType,
@@ -33,7 +35,7 @@ export const ApiTemplate: TemplatesSchema = {
         right: {
             type: ElementType.SERVICE_TASK,
             label: 'consoleLogFail',
-            bpmnAction: 'general.console.log',
+            bpmnAction: GeneralAction.CONSOLE_LOG,
             input: {
                 variables: {
                     status: '#{out.status}'

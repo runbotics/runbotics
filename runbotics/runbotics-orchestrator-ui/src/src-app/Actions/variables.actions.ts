@@ -1,14 +1,16 @@
+import { VariableAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
 const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
     'variables.assign': {
-        id: 'variables.assign',
+        id: VariableAction.ASSIGN,
         label: translate(
             'Process.Details.Modeler.Actions.Variables.Assign.Label'
         ),
-        script: 'variables.assign',
+        script: VariableAction.ASSIGN,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -51,11 +53,11 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
         }
     },
     'variables.assignList': {
-        id: 'variables.assignList',
+        id: VariableAction.ASSIGN_LIST,
         label: translate(
             'Process.Details.Modeler.Actions.Variables.AssignList.Label'
         ),
-        script: 'variables.assignList',
+        script: VariableAction.ASSIGN_LIST,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -99,11 +101,11 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
         }
     },
     'variables.assignGlobalVariable': {
-        id: 'variables.assignGlobalVariable',
+        id: VariableAction.ASSIGN_GLOBAL,
         label: translate(
             'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'
         ),
-        script: 'variables.assignGlobalVariable',
+        script: VariableAction.ASSIGN_LIST,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {

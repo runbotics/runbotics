@@ -1,3 +1,5 @@
+import { SharepointFileAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, CloudPath } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner, CloudPath } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
     'sharepointFile.downloadFileFromRoot': {
-        id: 'sharepointFile.downloadFileFromRoot',
+        id: SharepointFileAction.DOWNLOAD_FILE_FROM_ROOT,
         label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFileFromRoot.Label'),
-        script: 'sharepointFile.downloadFileFromRoot',
+        script: SharepointFileAction.DOWNLOAD_FILE_FROM_ROOT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -71,9 +73,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointFile.downloadFileFromSite': {
-        id: 'sharepointFile.downloadFileFromSite',
+        id: SharepointFileAction.DOWNLOAD_FILE_FROM_SITE,
         label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFileFromSite.Label'),
-        script: 'sharepointFile.downloadFileFromSite',
+        script: SharepointFileAction.DOWNLOAD_FILE_FROM_SITE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -163,9 +165,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointFile.downloadFiles': {
-        id: 'sharepointFile.downloadFiles',
+        id: SharepointFileAction.DOWNLOAD_FILES,
         label: translate('Process.Details.Modeler.Actions.SharepointFile.DownloadFiles.Label'),
-        script: 'sharepointFile.downloadFiles',
+        script: SharepointFileAction.DOWNLOAD_FILES,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -255,9 +257,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointFile.uploadFile': {
-        id: 'sharepointFile.uploadFile',
+        id: SharepointFileAction.UPLOAD_FILE,
         label: translate('Process.Details.Modeler.Actions.SharepointFile.UploadFile.Label'),
-        script: 'sharepointFile.uploadFile',
+        script: SharepointFileAction.UPLOAD_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -336,9 +338,9 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sharepointFile.createFolder': {
-        id: 'sharepointFile.createFolder',
+        id: SharepointFileAction.CREATE_FOLDER,
         label: translate('Process.Details.Modeler.Actions.SharepointFile.CreateFolder.Label'),
-        script: 'sharepointFile.createFolder',
+        script: SharepointFileAction.CREATE_FOLDER,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {

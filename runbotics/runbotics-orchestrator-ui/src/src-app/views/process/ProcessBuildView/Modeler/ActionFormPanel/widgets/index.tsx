@@ -21,7 +21,8 @@ const customWidgets = {
     FileDropzoneWidget,
     BrowserTargetWidget,
     TypographyWidget,
-    DatePickerWidget
+    DatePickerWidget,
+
 };
 
 export default customWidgets;

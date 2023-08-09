@@ -1,3 +1,5 @@
+import { ExcelAction } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, ActionSystem } from './types';
@@ -5,9 +7,9 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     'excel.open': {
-        id: 'excel.open',
+        id: ExcelAction.OPEN,
         label: translate('Process.Details.Modeler.Actions.Excel.Open.Label'),
-        script: 'excel.open',
+        script: ExcelAction.OPEN,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -38,9 +40,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'excel.getCell': {
-        id: 'excel.getCell',
+        id: ExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.Excel.GetCell.Label'),
-        script: 'excel.getCell',
+        script: ExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -96,9 +98,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'excel.setCell': {
-        id: 'excel.setCell',
+        id: ExcelAction.SET_CELL,
         label: translate('Process.Details.Modeler.Actions.Excel.SetCell.Label'),
-        script: 'excel.setCell',
+        script: ExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -136,10 +138,51 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    'excel.setCells': {
+        id: ExcelAction.SET_CELLS,
+        label: translate('Process.Details.Modeler.Actions.Excel.SetCells.Label'),
+        script: ExcelAction.SET_CELLS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            cellValues: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues'),
+                                type: 'string',
+                            },
+                            startColumn: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                type: 'string',
+                            },
+                            startRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['cellValues'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
     'excel.save': {
-        id: 'excel.save',
+        id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
-        script: 'excel.save',
+        script: ExcelAction.SAVE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -165,7 +208,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'excel.close': {
-        id: 'excel.close',
+        id: ExcelAction.CLOSE,
         label: translate('Process.Details.Modeler.Actions.Excel.Close.Label'),
         script: 'excel.close',
         runner: Runner.DESKTOP_SCRIPT,

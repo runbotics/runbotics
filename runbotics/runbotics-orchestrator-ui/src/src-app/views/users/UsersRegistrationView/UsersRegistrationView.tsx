@@ -19,7 +19,7 @@ import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContai
 interface SelectedRoles { [id: number]: Role };
 interface MapActivatedUserParams {
     id: number;
-    login: string;
+    email: string;
     roles: Role[];
     activated: boolean;
 }
@@ -70,8 +70,8 @@ const UsersRegistrationView: FC = () => {
     };
 
     const mapUserActivateRequest = (id: number, role: Role): MapActivatedUserParams => {
-        const { login } = notActivated.allByPage.content.find((row) => row.id === id);
-        return { id, login, roles: [role], activated: true };
+        const { email } = notActivated.allByPage.content.find((row) => row.id === id);
+        return { id, email, roles: [role], activated: true };
     };
 
     const handleSubmit = (usersData: IUser[]) =>
