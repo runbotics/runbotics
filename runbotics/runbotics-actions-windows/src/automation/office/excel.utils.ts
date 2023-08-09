@@ -35,22 +35,23 @@ export class ExcelUtils {
         }
     }
 
-    static setCellValues(getSession: () => any, startRow: number, startColumn: number, cellValues: unknown[][]): void {
+    static setCellValues(getSession: () => any, startColumn: number, startRow: number, cellValues: unknown[][]): void {
         const session = getSession();
+        let columnCounter = startColumn,
+            rowCounter = startRow;
         for (const rowValues of cellValues) {
             for (const cellValue of rowValues) {
                 try {
-                    const cell =
-                        session.ActiveSheet
-                            .Cells(
-                                startRow + cellValues.indexOf(rowValues),
-                                startColumn + rowValues.indexOf(cellValue)
-                            );
+                    const cell = session.ActiveSheet
+                        .Cells(rowCounter, columnCounter);
                     if (cellValue) cell.Value = cellValue;
+                    columnCounter++;
                 } catch (e) {
                     ExcelErrorLogger.setCellIncorrectStructure(e);
                 }
             }
+            rowCounter++;
+            columnCounter = startColumn;
         }
     }
 }

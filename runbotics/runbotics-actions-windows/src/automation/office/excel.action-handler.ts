@@ -97,8 +97,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelSetCellsActionInput
     ): Promise<void> {
         this.switchWorksheet(input?.worksheet);
-        const { startRow, startColumn } = this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow));
-        this.setCellValues(startRow, startColumn, input.cellValues);
+        const { startRow, startColumn } = this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow ?? 1));
+        this.setCellValues(startColumn, startRow, input.cellValues);
         this.switchPrevWorksheet();
     }
 
@@ -106,13 +106,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelSetFirstEmptyRowActionInput
     ): Promise<void> {
         this.switchWorksheet(input?.worksheet);
-        const { startColumn, startRow } = this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow));
-
+        const { startColumn, startRow } = this.getStartCellCoordinates(input?.startColumn, Number(input?.startRow ?? 1));
         let row = startRow;
-        while (this.session.ActiveSheet.Cells(startRow, startColumn).Value()) row++;
-        const emptyCell = this.session.ActiveSheet.Range(`${startColumn}${row}`)
-        emptyCell.Value = 'test'
-
+        while (this.session.ActiveSheet.Cells(row, startColumn).Value()) row++;
+        this.setCellValues(startColumn, row, input.values);
         this.switchPrevWorksheet();
     }
 
@@ -184,7 +181,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return ExcelUtils.getStartCellCoordinates(this.getSession, startColumn, startRow);
     }
 
-    private setCellValues(startRow: number, startColumn: number, cellValues: unknown[][]): void {
-        ExcelUtils.setCellValues(this.getSession, startRow, startColumn, cellValues);
+    private setCellValues(startColumn: number, startRow: number, cellValues: unknown[][]): void {
+        ExcelUtils.setCellValues(this.getSession, startColumn, startRow, cellValues);
     }
 }
