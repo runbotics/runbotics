@@ -21,4 +21,18 @@ export default class ExcelErrorLogger {
             ${e}
         `);
     }
+
+    static incorrectColumnInput(e?: Error): void {
+        throw new Error(`
+            Column must be text (e.g. AZ) or number (e.g. 5).
+            ${e}
+        `);
+    }
+
+    static deleteColumnsIncorrectInput(e?: Error): void {
+        throw new Error(`
+            Input must be range or Array (e.g. "D", "C:E" or ["C", "D", "E"]).
+            ${e}
+            `)
+    }
 }

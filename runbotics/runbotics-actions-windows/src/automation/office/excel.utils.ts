@@ -34,4 +34,15 @@ export class ExcelUtils {
             ExcelErrorLogger.startCellCoordinates();
         }
     }
+
+    static getColumnCoordinate(getSession: () => any, column: string | number): number {
+        if (!column) return null;
+        const columnNumber = Number(column);
+        if (!isNaN(columnNumber)) return columnNumber;
+        try {
+            return getSession().ActiveSheet.Range(`${column}1`).Column;
+        } catch (e) {
+            ExcelErrorLogger.incorrectColumnInput();
+        }
+    }
 }

@@ -8,7 +8,8 @@ import {
     ExcelSaveActionInput,
     ExcelSetCellActionInput,
     ExcelSetCellsActionInput,
-    StartCellCoordinates
+    StartCellCoordinates,
+    ExcelInsertColumnsInput
 } from "./excel.types";
 import { ExcelUtils } from "./excel.utils";
 
@@ -116,32 +117,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async insertColumnsBefore(input: ExcelInsertColumnsInput): Promise<void> {
-        const column = input.column;
-        const optionalWorksheet = input?.worksheet;
+        await this.switchWorksheet(input?.worksheet);
+        const session = this.getSession();
+        const column = await ExcelUtils.getColumnCoordinate(session, input.column);
         const amount = input?.amount && input?.amount > 1 ? input.amount : 1;
-        let columnLetterName: string = "";
-
-        const isColumnNumeric = isNaN(parseInt(input.column)) ? false : true;
-
-        if (isColumnNumeric) {
-            let reminder = null;
-            let tempColumn: number = parseInt(column);
-            while (tempColumn > 0) {
-                reminder = (tempColumn - 1) % 26;
-                columnLetterName = String.fromCharCode(reminder + 65) + columnLetterName;
-                tempColumn = (tempColumn - reminder - 1) / 26;
-            }
-        } else {
-            columnLetterName = column;
-        }
-
-        const startingPoint = optionalWorksheet
-            ? this.session.Worksheets(optionalWorksheet).Columns(columnLetterName)
-            : this.session.ActiveSheet.Columns(columnLetterName);
 
         for (let i = 0; i < amount; i++) {
-            await startingPoint.Insert();
+            session.Columns(column).Insert();
         }
+
+        this.switchPrevWorksheet();
     }
 
     private isApplicationOpen() {

@@ -13,6 +13,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.SetCells.CellValues': 'Values to set (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Insert columns before',
     'Process.Details.Modeler.Actions.Excel.ColumnsAmount': 'Amount of columns to insert',
+    'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.ColumnLabel': 'Column (column name e.g. "AZ" or column number "e.g. "25")',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Save',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'File name',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Close',

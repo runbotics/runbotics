@@ -6,7 +6,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.close">
     | DesktopRunRequest<"excel.save">
     | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
-    | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>;
+    | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
+    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -43,4 +44,10 @@ export interface StartCellCoordinates {
     startRow: number;
 }
 
-export type ExcelArrayStructure = unknown[][]
+export type ExcelArrayStructure = unknown[][];
+
+export type ExcelInsertColumnsInput = {
+    column: string;
+    amount?: number;
+    worksheet?: string;
+};

@@ -15,6 +15,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.SetCells.CellValues': 'Wartości do ustawienia (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]])',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Wstaw kolumny przed',
     'Process.Details.Modeler.Actions.Excel.ColumnsAmount': 'Liczba kolumn do dodania',
+    'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.ColumnLabel': 'Kolumna (nazwa kolumny np "AZ" lub numer kolumny "25")',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Zamknij',

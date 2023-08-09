@@ -194,7 +194,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.ColumnLabel'),
                                 type: 'string',
                             },
                             amount: {
@@ -206,7 +206,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             }
                         },
-                        required: ['column'],
+                        required: ['column', 'amount'],
                     },
                 },
             },
