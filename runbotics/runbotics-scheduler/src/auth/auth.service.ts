@@ -172,15 +172,9 @@ export class AuthService {
     }
 
     private validateBotSystem(system, client: Socket) {
-        switch (system) {
-            case BotSystem.WINDOWS:
-                break;
-            case BotSystem.LINUX:
-                break;
-            default:
-                client.disconnect();
-                throw new WsException(`Bot system (${system}) is incompatible`);
-        }
+        if (Object.values(BotSystem).includes(system)) return;
+        client.disconnect();
+        throw new WsException(`Bot system (${system}) is incompatible`);
     }
 
     private validateBot(installationId: string) {

@@ -210,6 +210,7 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Label": "Start Process",
     "Process.Details.Modeler.Actions.General.StartProcess.Process": "Process",
     "Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess": "Variables passed to process",
+    "Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem": "System of selected process is not compatible",
     "Process.Details.Modeler.Actions.Google.Sheets.Write.Label": "Google Sheets Write",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Values",
     "Process.Details.Modeler.Actions.Loop.Loop.Label": "Loop",

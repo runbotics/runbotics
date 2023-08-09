@@ -1,6 +1,6 @@
 import { BotSystem } from 'runbotics-common';
 
-const botSystem = () => {
+const getBotSystem = () => {
     const system = process.platform;
     switch (system) {
         case 'win32':
@@ -12,4 +12,4 @@ const botSystem = () => {
     }
 };
 
-export default botSystem;
+export default getBotSystem;

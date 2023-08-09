@@ -213,6 +213,7 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Label": "Uruchom proces",
     "Process.Details.Modeler.Actions.General.StartProcess.Process": "Proces",
     "Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess": "Zmienne przekazywane do procesu",
+    "Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem": "System wybranego procesu nie jest kompatybilny",
     "Process.Details.Modeler.Actions.Google.Sheets.Write.Label": "Zapis w arkuszach Google",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Wartości",
     "Process.Details.Modeler.Actions.Loop.Loop.Label": "Pętla",
