@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -23,8 +23,6 @@ const SocketProvider: FC<SocketProviderProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const { locale } = useRouter();
-
-    const [intervalId, setIntervalId] = useState(null);
 
     const socket = useMemo(() => {
         if (!isAuthenticated || !shouldAttach) return null;
@@ -52,11 +50,7 @@ const SocketProvider: FC<SocketProviderProps> = ({
     useEffect(() => {
         closeSnackbar();
 
-        if(intervalId!==null){
-            clearInterval(intervalId);
-        }
-
-        setIntervalId(setInterval(() => {
+        const intervalId = setInterval(() => {
             if (socket === null || !shouldAttach || !socket.disconnected) {
                 closeSnackbar('warning');
                 return;
@@ -82,8 +76,12 @@ const SocketProvider: FC<SocketProviderProps> = ({
                 }
             );
 
-        }, 1500));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, 1500);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+
     }, [locale, socket]);
 
     return (
