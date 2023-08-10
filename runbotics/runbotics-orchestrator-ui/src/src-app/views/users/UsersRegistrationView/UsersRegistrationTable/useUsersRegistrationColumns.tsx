@@ -4,12 +4,13 @@ import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
+import { UserField, getAllUserRoles, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 import { StyledSelect } from './UsersRegistrationTable.styles';
-import { UserField, getAllUserRoles, formatUserRole } from './UsersRegistrationTable.utils';
 
 const useUsersRegistrationColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();
     const roles = getAllUserRoles();
+    const formattedRoles = formatUserRoles(roles);
 
     const RoleSelect = (row: GridValidRowModel) => (
         <StyledSelect
@@ -19,8 +20,8 @@ const useUsersRegistrationColumns = (handleSelectChange): GridColDef[] => {
             onChange={(e) => handleSelectChange(row.id, e.target.value)}
             variant='filled'
         >
-            {roles.map((role) =>
-                <MenuItem key={role} value={role}>{formatUserRole(role)}</MenuItem>
+            {formattedRoles.map((role) =>
+                <MenuItem key={role} value={role}>{role}</MenuItem>
             )}
         </StyledSelect>
     );

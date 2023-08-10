@@ -14,6 +14,11 @@ const initialState: UsersState = {
     userDelete: {
         loading: false
     },
+    activated: {
+        loading: false,
+        all: [],
+        allByPage: null,
+    },
     notActivated: {
         loading: false,
         all: [],

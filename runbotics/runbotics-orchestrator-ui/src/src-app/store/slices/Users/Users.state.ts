@@ -11,6 +11,11 @@ export interface UsersState {
     userDelete: {
         loading: boolean;
     };
+    activated: {
+        loading: boolean;
+        all: IUser[];
+        allByPage: Page<IUser> | null;
+    }
     notActivated: {
         loading: boolean;
         all: IUser[];
