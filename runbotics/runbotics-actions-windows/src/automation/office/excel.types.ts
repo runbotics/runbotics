@@ -7,7 +7,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.save">
     | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
     | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
-    | DesktopRunRequest<"excel.setFirstEmptyRow", ExcelSetFirstEmptyRowActionInput>;
+    | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -39,8 +39,7 @@ export type ExcelSetCellsActionInput = {
     worksheet?: string;
 };
 
-export type ExcelSetFirstEmptyRowActionInput = {
-    values: unknown[][];
+export type ExcelFindFirstEmptyRowActionInput = {
     startColumn?: string;
     startRow?: string;
     worksheet?: string;
@@ -48,6 +47,21 @@ export type ExcelSetFirstEmptyRowActionInput = {
 export interface StartCellCoordinates {
     startColumn: number;
     startRow: number;
+}
+
+export interface GetCellCoordinatesParams {
+    startColumn?: number | string;
+    startRow?: number;
+    endColumn?: number | string;
+    endRow?: number;
+    throwError?: (e: Error) => never;
+}
+
+export interface CellCoordinates {
+    startColumn?: number;
+    startRow?: number;
+    endColumn?: number;
+    endRow?: number;
 }
 
 export type ExcelArrayStructure = unknown[][]
