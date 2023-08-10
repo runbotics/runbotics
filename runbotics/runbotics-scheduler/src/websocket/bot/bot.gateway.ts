@@ -6,8 +6,9 @@ import {
     SubscribeMessage,
     ConnectedSocket,
     WebSocketServer,
+
 } from '@nestjs/websockets';
-import { UseGuards } from '@nestjs/common';
+import { HttpStatus, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
@@ -42,7 +43,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`Bot ${client.id} is trying to establish connection`);
 
         const { bot } = await this.authService.validateBotWebsocketConnection({ client });
+
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
         client.join(bot.installationId);
     }
@@ -83,6 +86,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
+
+        return HttpStatus.OK;
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -97,6 +102,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         }
         
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
+
+       return HttpStatus.OK;
     }
     
     @UseGuards(WsBotJwtGuard)
@@ -109,6 +116,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
         this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+
+        return HttpStatus.OK;
     }
 
     @UseGuards(WsBotJwtGuard)
