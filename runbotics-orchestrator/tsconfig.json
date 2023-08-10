@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react",
     "target": "es6",
     "module": "esnext",
     "moduleResolution": "node",
@@ -11,7 +10,6 @@
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "lib": ["dom", "es2015", "es2016", "es2017"],
-    "types": ["jest", "webpack-env"],
     "allowJs": true,
     "checkJs": false,
     "baseUrl": "./",
@@ -19,6 +17,5 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/test/javascript/spec"],
   "exclude": ["node_modules"]
 }
