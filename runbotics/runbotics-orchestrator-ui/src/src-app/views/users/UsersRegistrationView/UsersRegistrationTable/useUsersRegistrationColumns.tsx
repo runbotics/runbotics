@@ -21,7 +21,7 @@ const useUsersRegistrationColumns = (handleSelectChange): GridColDef[] => {
             variant='filled'
         >
             {formattedRoles.map((role) =>
-                <MenuItem key={role} value={role}>{role}</MenuItem>
+                <MenuItem key={role} value={`ROLE_${role}`}>{role}</MenuItem>
             )}
         </StyledSelect>
     );
