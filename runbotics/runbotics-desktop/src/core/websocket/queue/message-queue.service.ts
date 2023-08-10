@@ -7,57 +7,35 @@ import {
     IProcessInstanceLoopEvent,
 } from 'runbotics-common';
 
-export interface Message<
-    T extends
-        | BotWsMessage.PROCESS_INSTANCE
-        | BotWsMessage.PROCESS_INSTANCE_EVENT
-        | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-> {
-    event: T;
-    payload: T extends BotWsMessage.PROCESS_INSTANCE
-        ? IProcessInstance
-        : T extends BotWsMessage.PROCESS_INSTANCE_EVENT
-        ? IProcessInstanceEvent
-        : T extends BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-        ? IProcessInstanceLoopEvent
-        : never;
-}
+export type Message =
+    | {
+          event: BotWsMessage.PROCESS_INSTANCE;
+          payload: IProcessInstance;
+      }
+    | {
+          event: BotWsMessage.PROCESS_INSTANCE_EVENT;
+          payload: IProcessInstanceEvent;
+      }
+    | {
+          event: BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT;
+          payload: IProcessInstanceLoopEvent;
+      };
 
 @Injectable()
 export class MessageQueueService {
-    private queue: Message<
-        | BotWsMessage.PROCESS_INSTANCE
-        | BotWsMessage.PROCESS_INSTANCE_EVENT
-        | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-    >[] = [];
+    private queue: Message[] = [];
 
     constructor(@InjectIoClientProvider() private readonly io: IoClient) {}
 
-    add(
-        item: Message<
-            | BotWsMessage.PROCESS_INSTANCE
-            | BotWsMessage.PROCESS_INSTANCE_EVENT
-            | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-        >
-    ) {
+    add(item: Message) {
         this.queue.push(item);
     }
 
-    getAll(): Message<
-        | BotWsMessage.PROCESS_INSTANCE
-        | BotWsMessage.PROCESS_INSTANCE_EVENT
-        | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-    >[] {
+    getAll(): Message[] {
         return this.queue;
     }
 
-    remove(
-        item: Message<
-            | BotWsMessage.PROCESS_INSTANCE
-            | BotWsMessage.PROCESS_INSTANCE_EVENT
-            | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-        >
-    ) {
+    remove(item: Message) {
         const number = this.queue.indexOf(item);
         this.queue.splice(number, 1);
     }
@@ -65,5 +43,4 @@ export class MessageQueueService {
     clear() {
         this.queue = [];
     }
-
 }

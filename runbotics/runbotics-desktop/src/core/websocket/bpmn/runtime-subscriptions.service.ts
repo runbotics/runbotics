@@ -21,7 +21,7 @@ import { WebsocketService } from '../websocket.service';
 export class RuntimeSubscriptionsService {
     constructor(
         @Inject(forwardRef(() => WebsocketService))
-        private readonly webSocketService: WebsocketService,
+        private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
         private readonly loopHandlerService: LoopHandlerService
     ) {}
@@ -144,13 +144,14 @@ export class RuntimeSubscriptionsService {
                         this.loopHandlerService.isLoopEvent(event.activity)
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT;
-
-                    const message: Message<typeof processInstanceEventType> = {
+                    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    //@ts-ignore
+                    const message: Message = {
                         event: processInstanceEventType,
                         payload: processInstanceEvent,
                     };
 
-                    this.webSocketService.emitMessage(message);
+                    this.websocketService.emitMessage(message);
                 } catch (e) {
                     this.logger.error(
                         'Error occurred while sending process instance',
@@ -230,12 +231,12 @@ export class RuntimeSubscriptionsService {
                     break;
             }
 
-            const message: Message<BotWsMessage.PROCESS_INSTANCE> = {
+            const message: Message = {
                 event: BotWsMessage.PROCESS_INSTANCE,
                 payload: processInstance,
             };
 
-            this.webSocketService.emitMessage(message);
+            this.websocketService.emitMessage(message);
         });
     }
 }

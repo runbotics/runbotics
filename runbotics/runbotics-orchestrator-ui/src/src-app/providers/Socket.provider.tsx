@@ -61,27 +61,27 @@ const SocketProvider: FC<SocketProviderProps> = ({
                 closeSnackbar('warning');
                 return;
             }
-            if (socket.disconnected) {
-                enqueueSnackbar(
-                    translate('Scheduler.Dialog.NoServerToConnection'),
-                    {
-                        variant: 'warning',
-                        key: 'warning',
-                        preventDuplicate: true,
-                        persist: true,
-                        onExited: () => {
-                            if(socket.connected){
-                                enqueueSnackbar(translate('Scheduler.Dialog.ConnectionRestored'), {
-                                    variant: 'success',
-                                    preventDuplicate: true,
-                                    autoHideDuration: 5000,
-                                    key: 'restored',
-                                });
-                            }
+
+            enqueueSnackbar(
+                translate('Scheduler.Dialog.NoServerToConnection'),
+                {
+                    variant: 'warning',
+                    key: 'warning',
+                    preventDuplicate: true,
+                    persist: true,
+                    onExited: () => {
+                        if(socket.connected){
+                            enqueueSnackbar(translate('Scheduler.Dialog.ConnectionRestored'), {
+                                variant: 'success',
+                                preventDuplicate: true,
+                                autoHideDuration: 5000,
+                                key: 'restored',
+                            });
                         }
                     }
-                );
-            }
+                }
+            );
+
         }, 1500));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [locale, socket]);

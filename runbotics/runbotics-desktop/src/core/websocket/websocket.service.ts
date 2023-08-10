@@ -22,13 +22,8 @@ export class WebsocketService implements OnApplicationBootstrap {
     }
 
     async emitMessage(
-        message: Message<
-            | BotWsMessage.PROCESS_INSTANCE
-            | BotWsMessage.PROCESS_INSTANCE_EVENT
-            | BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-        >
+        message: Message
     ) {
-
         this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, () => {
@@ -39,7 +34,6 @@ export class WebsocketService implements OnApplicationBootstrap {
             this.messageService.remove(message);
 
         });
-
     }
 
 }

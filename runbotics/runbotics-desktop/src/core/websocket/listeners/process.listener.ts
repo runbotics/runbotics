@@ -28,7 +28,7 @@ export class ProcessListener {
         private readonly runtimeService: RuntimeService,
         private readonly authService: AuthService,
         private readonly queueService: MessageQueueService,
-        private readonly webSocketService: WebsocketService
+        private readonly websocketService: WebsocketService
     ) {}
 
     @OnConnect()
@@ -36,7 +36,7 @@ export class ProcessListener {
         this.logger.log(`Connected to Scheduler (id: ${this.io.id})`);
         this.queueService
             .getAll()
-            .forEach((element) => this.webSocketService.emitMessage(element));
+            .forEach((element) => this.websocketService.emitMessage(element));
     }
 
     @OnConnectError()
