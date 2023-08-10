@@ -13,7 +13,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.SetCell.Label': 'Ustaw wartość komórki',
     'Process.Details.Modeler.Actions.Excel.SetCells.Label': 'Ustaw wartości komórek',
     'Process.Details.Modeler.Actions.Excel.SetCells.CellValues': 'Wartości do ustawienia e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]]',
-    'Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info': 'Lista wierszy, a każdy wiersz to lista wartości do ustawienia',
+    'Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info': 'Lista wierszy, a każdy wiersz to lista wartości do ustawienia. Dla wartości null zawartość komórki pozostanie nie zmieniona.',
     'Process.Details.Modeler.Actions.Excel.SetCells.StartColumn.Info': 'Kolumna, od której rozpocznie się wstawianie wartości. Domyślnie A',
     'Process.Details.Modeler.Actions.Excel.SetCells.StartRow.Info': 'Wiersz, od którego rozpocznie się wstawianie wartości. Domyślnie 1',
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label': 'Znajdź pierwszy pusty wiersz',

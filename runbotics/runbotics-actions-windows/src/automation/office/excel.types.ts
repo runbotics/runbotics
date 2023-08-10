@@ -54,7 +54,6 @@ export interface GetCellCoordinatesParams {
     startRow?: number;
     endColumn?: number | string;
     endRow?: number;
-    throwError?: (e: Error) => never;
 }
 
 export interface CellCoordinates {

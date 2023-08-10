@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { StatefulActionHandler } from "runbotics-sdk";
-import ExcelErrorLogger from "./excelError.logger";
+import ExcelError from "./excelError.logger";
 import {
     ExcelActionRequest,
     ExcelGetCellActionInput,
@@ -9,7 +9,6 @@ import {
     ExcelSetCellActionInput,
     ExcelSetCellsActionInput,
     ExcelFindFirstEmptyRowActionInput as ExcelFindFirstEmptyRowActionInput,
-    StartCellCoordinates,
     CellCoordinates,
     GetCellCoordinatesParams
 } from "./excel.types";
@@ -17,7 +16,6 @@ import {
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
-    private prevWorksheet = null;
 
     constructor() {
         super();
@@ -82,23 +80,21 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) ExcelErrorLogger.setCellsIncorrectInput();
+        if (!Array.isArray(input.cellValues)) throw new Error(ExcelError.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1)
         });
         let columnCounter = startColumn,
             rowCounter = startRow;
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         for (const rowValues of input.cellValues) {
             for (const cellValue of rowValues) {
                 try {
-                    const cell = this.session
-                        .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-                        .Cells(rowCounter, columnCounter);
-                    if (cellValue) cell.Value = cellValue;
+                    if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
                     columnCounter++;
                 } catch (e) {
-                    ExcelErrorLogger.setCellsIncorrectInput(e);
+                    throw new Error(ExcelError.setCellsIncorrectInput(e));
                 }
             }
             rowCounter++;
@@ -163,7 +159,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         await this.close();
     }
 
-    private getCellCoordinates({ startColumn, startRow, endColumn, endRow, throwError }: GetCellCoordinatesParams): CellCoordinates {
+    private getCellCoordinates({ startColumn, startRow, endColumn, endRow }: GetCellCoordinatesParams): CellCoordinates {
         try {
             return {
                 startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
@@ -172,18 +168,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 endRow: endRow ?? null
             };
         } catch (e) {
-            throwError ? throwError(e) : ExcelErrorLogger.cellCoordinatesIncorrectInput(e);
+            throw new Error(ExcelError.cellCoordinatesIncorrectInput(e));
         }
     }
 
-    private getColumnCoordinate(column: string | number, throwError?: (e: Error) => never): number {
+    private getColumnCoordinate(column: string | number): number {
         if (!column) return null;
         const columnNumber = Number(column);
         if (!isNaN(columnNumber)) return columnNumber;
-        try {
-            return this.session.ActiveSheet.Range(`${column}1`).Column;
-        } catch (e) {
-            throwError ? throwError(e) : ExcelErrorLogger.columnCoordinateIncorrectInput(e);
-        }
+        return this.session.ActiveSheet.Range(`${column}1`).Column;
     }
 }
