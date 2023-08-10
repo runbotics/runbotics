@@ -35,4 +35,19 @@ export default class ExcelErrorLogger {
             ${e}
             `)
     }
+
+    static columnCoordinateIncorrectInput(e?: Error): void {
+        throw new Error(`
+            ${this.getDisclaimer(e)}
+            Row must be a number (e.g. 5).
+            Check the Input tab above.
+        `);
+    }
+
+    private static getDisclaimer(e?: Error): string {
+        return `
+                ${e ?? ''}
+                Common (related to action, not error) solutions:
+            `
+    }
 }

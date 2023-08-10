@@ -119,12 +119,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async insertColumnsBefore(input: ExcelInsertColumnsInput): Promise<void> {
         await this.switchWorksheet(input?.worksheet);
         const session = this.getSession();
-        const column = await ExcelUtils.getColumnCoordinate(session, input.column);
-        const amount = input?.amount && input?.amount > 1 ? input.amount : 1;
+        const amount = input.amount
+        const column = this.getColumnCoordinate(input.column);
 
-        for (let i = 0; i < amount; i++) {
-            session.Columns(column).Insert();
-        }
+        session.Range(session.Columns(column), session.Columns(column + amount - 1)).Insert(); //insert before
+
+        // session.Range(session.Columns(startColumn + 1), session.Columns(startInsetingAfterColumn + amount -1)).Insert(); //insertAfter
+
+        // for (let i = 0; i < amount; i++) {
+        //     session.Columns(column).Insert();
+        // }
 
         this.switchPrevWorksheet();
     }
@@ -197,5 +201,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     private getStartCellCoordinates(startColumn?: string, startRow?: number): StartCellCoordinates {
         return ExcelUtils.getStartCellCoordinates(this.getSession, startColumn, startRow);
+    }
+
+    private getColumnCoordinate(column: string | number, throwError?: (e: Error) => never): number {
+        if (!column) return null;
+        const columnNumber = Number(column);
+        if (!isNaN(columnNumber)) return columnNumber;
+        try {
+            return this.session.ActiveSheet.Range(`${column}1`).Column;
+        } catch (e) {
+            throwError ? throwError(e) : ExcelErrorLogger.columnCoordinateIncorrectInput(e);
+        }
     }
 }
