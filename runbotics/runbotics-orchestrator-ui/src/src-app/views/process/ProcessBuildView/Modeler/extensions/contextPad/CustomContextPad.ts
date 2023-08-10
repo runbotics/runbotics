@@ -9,12 +9,20 @@ export default class CustomContextPad {
     getContextPadEntries(el) {
         return function (entries) {
             delete entries['append.append-task'];
-            if (
-                el.type !== BpmnElementType.BOUNDARY_EVENT &&
-                el.type !== BpmnElementType.SEQUENCE_FLOW
-            ) {
+
+            if (el.type !== BpmnElementType.BOUNDARY_EVENT) {
                 delete entries.replace;
             }
+
+            if (el.type === BpmnElementType.SEQUENCE_FLOW) {
+                entries.replace = {
+                    group: 'edit',
+                    className: 'bpmn-icon-screw-wrench',
+                    title: 'Change type',
+                    action: {},
+                };
+            }
+
             return entries;
         };
     }
