@@ -17,7 +17,7 @@ export default class ExcelErrorLogger {
             ${this.getDisclaimer(e)}
             Start row must be a number (e.g. 5).
             Start column must be a string (e.g. A).
-            Check startRow and startColumn in Input tab above.
+            Check startRow and startColumn in the Input tab above.
         `);
     }
 
@@ -25,7 +25,7 @@ export default class ExcelErrorLogger {
         throw new Error(`
             ${this.getDisclaimer(e)}
             Input must be an Array (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]]).
-            Check targetExcelStructure in Input tab above.
+            Check the Input tab above.
             Try to pass it as variable (e.g. #{myArray}).
         `);
     }

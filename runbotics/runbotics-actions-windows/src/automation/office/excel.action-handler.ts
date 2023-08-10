@@ -83,7 +83,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelSetCellsActionInput
     ): Promise<void> {
         if (!Array.isArray(input.cellValues)) ExcelErrorLogger.setCellsIncorrectInput();
-        if (input?.worksheet) this.switchWorksheet(input?.worksheet);
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1)
@@ -93,7 +92,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         for (const rowValues of input.cellValues) {
             for (const cellValue of rowValues) {
                 try {
-                    const cell = this.session.ActiveSheet
+                    const cell = this.session
+                        .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
                         .Cells(rowCounter, columnCounter);
                     if (cellValue) cell.Value = cellValue;
                     columnCounter++;
@@ -104,7 +104,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             rowCounter++;
             columnCounter = startColumn;
         }
-        if (input?.worksheet) this.switchWorksheet(this.prevWorksheet ?? ExcelErrorLogger.noPreviousWorksheet());
     }
 
     async findFirstEmptyRow(
@@ -162,12 +161,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     async tearDown() {
         await this.close();
-    }
-
-    private switchWorksheet(worksheet?: string): void {
-        if (!worksheet || worksheet === this.session.ActiveSheet.Name) return;
-        this.prevWorksheet = this.session.ActiveSheet.Name;
-        this.session.Worksheets(worksheet).Activate();
     }
 
     private getCellCoordinates({ startColumn, startRow, endColumn, endRow, throwError }: GetCellCoordinatesParams): CellCoordinates {
