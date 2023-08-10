@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export default class ExcelError {
+export default class ExcelErrorMessage {
     constructor() { }
 
     static columnCoordinateIncorrectInput(e?: Error): string {

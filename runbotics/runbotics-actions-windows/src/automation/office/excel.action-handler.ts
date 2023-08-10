@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { StatefulActionHandler } from "runbotics-sdk";
-import ExcelError from "./excelError.logger";
+import ExcelErrorMessage from "./excelErrorMessage";
 import {
     ExcelActionRequest,
     ExcelGetCellActionInput,
@@ -8,7 +8,7 @@ import {
     ExcelSaveActionInput,
     ExcelSetCellActionInput,
     ExcelSetCellsActionInput,
-    ExcelFindFirstEmptyRowActionInput as ExcelFindFirstEmptyRowActionInput,
+    ExcelFindFirstEmptyRowActionInput,
     CellCoordinates,
     GetCellCoordinatesParams
 } from "./excel.types";
@@ -80,7 +80,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) throw new Error(ExcelError.setCellsIncorrectInput());
+        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1)
@@ -94,7 +94,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                     if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
                     columnCounter++;
                 } catch (e) {
-                    throw new Error(ExcelError.setCellsIncorrectInput(e));
+                    throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
             }
             rowCounter++;
@@ -168,7 +168,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 endRow: endRow ?? null
             };
         } catch (e) {
-            throw new Error(ExcelError.cellCoordinatesIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));
         }
     }
 
