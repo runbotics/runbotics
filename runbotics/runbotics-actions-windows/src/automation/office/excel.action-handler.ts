@@ -129,17 +129,26 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const workingWorksheet = this.session.Worksheets(
             input?.worksheet ?? startingSheet
         );
-        const amount = input.amount;
-        const column = this.getColumnCoordinate(input.column);
 
-        workingWorksheet
-            .Range(
-                workingWorksheet.Columns(column),
-                workingWorksheet.Columns(column + amount - 1)
-            )
-            .Insert();
+        try {
+            const column = this.getColumnCoordinate(input.column);
+            const amount = input.amount;
 
-        this.session.Worksheets(startingSheet)
+            workingWorksheet
+                .Range(
+                    workingWorksheet.Columns(column),
+                    workingWorksheet.Columns(column + amount - 1)
+                )
+                .Insert();
+        } catch (e) {
+            throw new Error(
+                `Column has to be a name of the column, e.g. C or column number, e.g. 3
+                Amount has to be a whole positive number, eg. 5.
+                `
+            );
+        }
+
+        this.session.Worksheets(startingSheet);
     }
 
     private isApplicationOpen() {
@@ -211,6 +220,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         if (!column) return null;
         const columnNumber = Number(column);
         if (!isNaN(columnNumber)) return columnNumber;
-        return this.session.ActiveSheet.Range(`${column}1`).Column;
+        const range = this.session.ActiveSheet.Range(`${column}1`).Column;
+        return range ? range : null;
     }
 }
