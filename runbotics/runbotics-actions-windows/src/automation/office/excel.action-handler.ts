@@ -1,21 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { CellCoordinates, ExcelActionRequest, ExcelClearCellsActionInput, ExcelFindFirstEmptyRowActionInput, ExcelGetCellActionInput, ExcelOpenActionInput, ExcelSaveActionInput, ExcelSetCellActionInput, ExcelSetCellsActionInput, GetCellCoordinatesParams } from "./excel.types";
 import { StatefulActionHandler } from "runbotics-sdk";
 import ExcelErrorMessage from "./excelErrorMessage";
-import {
-    ExcelActionRequest,
-    ExcelGetCellActionInput,
-    ExcelOpenActionInput,
-    ExcelSaveActionInput,
-    ExcelSetCellActionInput,
-    ExcelSetCellsActionInput,
-    ExcelFindFirstEmptyRowActionInput,
-    CellCoordinates,
-    GetCellCoordinatesParams
-} from "./excel.types";
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
+    private previousWorksheet = null;
 
     constructor() {
         super();
@@ -125,6 +116,41 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
+        this.setWorksheet(input?.worksheet);
+        try {
+            if (Array.isArray(input.targetCells)) {
+                for (const cellCoordinate of input.targetCells) {
+                    this.session.ActiveSheet
+                        .Range(cellCoordinate)
+                        .Clear();
+                }
+            } else {
+                this.session.ActiveSheet
+                    .Range(input.targetCells)
+                    .Clear();
+            }
+        } catch (e) {
+            throw new Error(`
+                Target cells has to be string range or an array of strings (e.g. A1:C3 or ["A1", "B2", "E5"]).
+                Check the Input tab above. Try to pass an array as a variable (e.g. #{myArray})`
+            );
+        }
+        this.setPreviousWorksheet();
+    }
+
+    private setPreviousWorksheet(): void {
+        if (!this.previousWorksheet) return;
+        this.session.Worksheets(this.previousWorksheet).Activate();
+        this.previousWorksheet = null;
+    }
+
+    private setWorksheet(worksheet?: string): void {
+        if (!worksheet) return;
+        this.previousWorksheet = this.session.ActiveSheet.Name;
+        this.session.Worksheets(worksheet).Activate();
+    }
+
     run(request: ExcelActionRequest) {
         if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
@@ -145,6 +171,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCells":
                 this.isApplicationOpen();
                 return this.setCells(request.input);
+            case "excel.clearCells":
+                this.isApplicationOpen();
+                return this.clearCells(request.input);
             case "excel.save":
                 this.isApplicationOpen();
                 return this.save(request.input);
