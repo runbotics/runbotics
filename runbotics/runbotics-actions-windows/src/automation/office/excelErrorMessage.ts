@@ -4,6 +4,8 @@ import { Injectable } from '@nestjs/common';
 export default class ExcelErrorMessage {
     constructor() { }
 
+    /* Incorrect input */
+
     static columnCoordinateIncorrectInput(e?: Error): string {
         return `
             ${this.getDisclaimer(e)}
@@ -30,12 +32,25 @@ export default class ExcelErrorMessage {
         `
     }
 
-    static noPreviousWorksheet(e?: Error): string {
+    static deleteColumnsIncorrectInput(e?: Error): string {
         return `
             ${this.getDisclaimer(e)}
-            There is no previous worksheet.
-        `
+            Input must be range or Array (e.g. "D", "C:E" or ["C", "D", "E"]).
+            Check columnRange in Input tab above.
+            Try to pass it as variable (e.g. #{myArray}).
+        `;
     }
+
+    static clearCellsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Input must be range or Array (e.g. "A1:C3" or ["A1", "B2", "E5"]).
+            Check targetCells in Input tab above.
+            Try to pass it as variable (e.g. #{myArray}).
+        `;
+    }
+
+    /* Other */
 
     private static getDisclaimer(e?: Error): string {
         return `

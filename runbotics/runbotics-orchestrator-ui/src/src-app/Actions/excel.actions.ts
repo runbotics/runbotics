@@ -295,6 +295,39 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
+                            columnRange: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['columnRange'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
+    'excel.deleteColumns': {
+        id: ExcelAction.DELETE_COLUMNS,
+        label: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.Label'),
+        script: ExcelAction.DELETE_COLUMNS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
                             targetCells: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
                                 type: 'string'
