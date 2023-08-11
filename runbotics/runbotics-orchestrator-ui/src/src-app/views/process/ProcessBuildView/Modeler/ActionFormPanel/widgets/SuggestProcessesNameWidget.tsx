@@ -22,12 +22,12 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     }, []);
 
     const {
-        process: { id: processId, system: { name: rootProcessSystem } },
+        process: { id: processId, system: { name: parentProcessSystem } },
     } = useSelector((state) => state.process.draft);
 
     const isProcessSystemCompatible = (processSystem: string): boolean => (
-        rootProcessSystem === processSystem ||
-        rootProcessSystem === BotSystem.ANY ||
+        parentProcessSystem === processSystem ||
+        parentProcessSystem === BotSystem.ANY ||
         processSystem === BotSystem.ANY
     );
 

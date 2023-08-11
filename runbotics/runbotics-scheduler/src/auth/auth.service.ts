@@ -171,7 +171,7 @@ export class AuthService {
         }
     }
 
-    private validateBotSystem(system, client: Socket) {
+    private validateBotSystem(system: BotSystem, client: Socket): void {
         if (Object.values(BotSystem).includes(system)) return;
         client.disconnect();
         throw new WsException(`Bot system (${system}) is incompatible`);
