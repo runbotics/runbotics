@@ -24,10 +24,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     async open(input: ExcelOpenActionInput): Promise<void> {
         const winax = await import('winax');
-        this.session = new winax.Object('Excel.Application', {
-            activate: true,
-        });
-
+        this.session = new winax.Object('Excel.Application', { activate: true });
         this.session.Workbooks.Open(input.path);
         this.session.Visible = true;
         if (input.worksheet) {
@@ -65,13 +62,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return this.session
             .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
             .Range(`${input.column}${input.row}`)
-            .Value();
+            .Value()
     }
 
     async setCell(input: ExcelSetCellActionInput): Promise<void> {
         const cell = this.session
             .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-            .Range(`${input.column}${input.row}`);
+            .Range(`${input.column}${input.row}`)
 
         cell.Value = input.value;
     }
@@ -81,27 +78,20 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1),
+            startRow: Number(input?.startRow ?? 1)
         });
         let columnCounter = startColumn,
             rowCounter = startRow;
-        const targetWorksheet = this.session.Worksheets(
-            input?.worksheet ?? this.session.ActiveSheet.Name
-        );
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         for (const rowValues of input.cellValues) {
             for (const cellValue of rowValues) {
                 try {
-                    if (cellValue !== null)
-                        targetWorksheet.Cells(rowCounter, columnCounter).Value =
-                            cellValue;
+                    if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
                     columnCounter++;
                 } catch (e) {
-                    throw new Error(
-                        ExcelErrorMessage.setCellsIncorrectInput(e)
-                    );
+                    throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
-            }
-            rowCounter++;
+            } rowCounter++;
             columnCounter = startColumn;
         }
     }
@@ -111,7 +101,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     ): Promise<number> {
         const { startColumn, startRow } = this.getCellCoordinates({
             startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1),
+            startRow: Number(input?.startRow ?? 1)
         });
         let rowCounter = startRow;
         while (
@@ -119,8 +109,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
                 .Cells(rowCounter, startColumn)
                 .Value()
-        )
-            rowCounter++;
+        ) rowCounter++;
         return rowCounter;
     }
 
@@ -153,9 +142,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     private isApplicationOpen() {
         if (!this.session) {
-            throw new Error(
-                'There is no active Excel session. Open application before'
-            );
+            throw new Error('There is no active Excel session. Open application before');
         }
     }
 
