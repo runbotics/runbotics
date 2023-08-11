@@ -74,7 +74,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName'
                                 ),
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                             value: {
                                 title: translate(

@@ -2,7 +2,7 @@ import { SapAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, ActionSystem } from './types';
+import { IBpmnAction, Runner, ActionSystem, Patterns } from './types';
 
 
 
@@ -309,7 +309,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],
@@ -371,7 +371,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],

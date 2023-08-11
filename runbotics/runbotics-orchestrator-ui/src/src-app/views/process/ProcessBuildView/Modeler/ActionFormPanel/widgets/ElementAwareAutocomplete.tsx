@@ -26,7 +26,7 @@ const AutocompleteWrapper = styled.div`
     align-items: center;
 `;
 
-const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
+const ElementAwareAutocomplete: FC<ElementAwareAutocompleteProps> = (
     props
 ) => (
     <AutocompleteWrapper>
@@ -37,4 +37,4 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
     </AutocompleteWrapper>
 );
 
-export default ElementAwareAutocompleteWidget;
+export default ElementAwareAutocomplete;

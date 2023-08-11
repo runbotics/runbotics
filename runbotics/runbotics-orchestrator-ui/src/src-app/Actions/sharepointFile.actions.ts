@@ -2,7 +2,7 @@ import { SharepointFileAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, CloudPath } from './types';
+import { IBpmnAction, Runner, CloudPath, Patterns } from './types';
 
 
 
@@ -50,7 +50,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],
@@ -138,7 +138,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],
@@ -236,7 +236,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],

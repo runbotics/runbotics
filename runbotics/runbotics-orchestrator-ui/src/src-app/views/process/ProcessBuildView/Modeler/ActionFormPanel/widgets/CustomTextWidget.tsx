@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import useOptions from '#src-app/hooks/useOptions';
 
 import BasicTextField from './components/BasicTextField';
-import ElementAwareAutocompleteWidget from './ElementAwareAutocompleteWidget';
+import ElementAwareAutocomplete from './ElementAwareAutocomplete';
 
 const TestFiledWrapper = styled.div`
     display: flex;
@@ -33,7 +33,7 @@ const CustomTextWidget: FC<WidgetProps> = (props) => {
             {isFieldVariable ? (
                 <BasicTextField {...props} options={options} />
             ) : (
-                <ElementAwareAutocompleteWidget
+                <ElementAwareAutocomplete
                     {...props}
                     autocompleteOptions={options}
                 />

@@ -1,6 +1,6 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, Patterns } from './types';
 
 
 // eslint-disable-next-line max-lines-per-function
@@ -48,7 +48,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],
@@ -135,7 +135,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: '^[a-zA-Z0-9_]*$',
+                                pattern: Patterns.VARIABLE_INPUT,
                             },
                         },
                         required: ['variableName'],
