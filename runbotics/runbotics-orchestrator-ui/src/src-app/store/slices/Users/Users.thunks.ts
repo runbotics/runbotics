@@ -36,6 +36,12 @@ export const partialUpdate = createAsyncThunk(
     }
 );
 
+export const getAllActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
+    'users/getAllActivatedByPage',
+    (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/activated'))
+        .then((response) => response.data),
+);
+
 export const getAllNotActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
     'users/getAllNotActivatedByPage',
     (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/not-activated'))

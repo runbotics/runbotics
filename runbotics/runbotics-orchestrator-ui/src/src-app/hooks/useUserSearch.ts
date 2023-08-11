@@ -44,8 +44,22 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
                         translate('Users.Registration.View.Events.Error.FindingUsers'),
                         { variant: 'error' })
                 );
+        } else {
+            dispatch(
+                usersActions.getAllActivatedByPage({
+                    page: newPage,
+                    size: pageSize,
+                    filter: {
+                        contains: { 'email': debouncedValue },
+                    },
+                })
+            )
+                .catch(() =>
+                    enqueueSnackbar(
+                        translate('Users.List.View.Events.Error.FindingUsers'),
+                        { variant: 'error' })
+                );
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, page, refreshTrigger]);
 
