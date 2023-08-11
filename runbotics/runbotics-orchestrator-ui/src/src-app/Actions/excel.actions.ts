@@ -282,9 +282,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'excel.insertColumnsBefore': {
-        id: 'excel.insertColumnsBefore',
+        id: ExcelAction.INSERT_COLUMNS_BEFORE,
         label: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'),
-        script: 'excel.insertColumnsBefore',
+        script: ExcelAction.INSERT_COLUMNS_BEFORE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -296,7 +296,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.ColumnLabel'),
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
                                 type: 'string',
                             },
                             amount: {
@@ -314,6 +314,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    column: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'),
+                        }
+                    },
+                    amount: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'),
+                        }
+                    },
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Worksheet.Info'),
+                        }
+                    },
+                }
             },
             formData: {},
         },
