@@ -183,17 +183,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         await this.close();
     }
 
-    private getCellCoordinates({
-        startColumn,
-        startRow,
-        endColumn,
-        endRow,
-    }: GetCellCoordinatesParams): CellCoordinates {
+    private getCellCoordinates({ startColumn, startRow, endColumn, endRow }: GetCellCoordinatesParams): CellCoordinates {
         try {
             return {
-                startColumn: startColumn
-                    ? this.getColumnCoordinate(startColumn)
-                    : 1,
+                startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
                 startRow: startRow ?? 1,
                 endColumn: this.getColumnCoordinate(endColumn),
                 endRow: endRow ?? null,
@@ -207,7 +200,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         if (!column) return null;
         const columnNumber = Number(column);
         if (!isNaN(columnNumber)) return columnNumber;
-        const range = this.session.ActiveSheet.Range(`${column}1`).Column;
-        return range ? range : null;
+        return this.session.ActiveSheet.Range(`${column}1`).Column;
     }
 }
