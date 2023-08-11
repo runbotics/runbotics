@@ -35,6 +35,13 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
             },
             formData: {},
         },
@@ -88,6 +95,13 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
                 output: {
                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
                     type: 'object',
@@ -163,6 +177,14 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
+                formData: {},
             },
             formData: {
                 output: {
@@ -208,6 +230,13 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
             },
             formData: {},
         },
@@ -265,191 +294,226 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info'),
                         },
                     },
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
                 },
+                formData: {},
             },
             formData: {},
         },
-    },
-    'excel.findFirstEmptyRow': {
-        id: ExcelAction.FIND_FIRST_EMPTY_ROW,
-        label: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'),
-        script: ExcelAction.FIND_FIRST_EMPTY_ROW,
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
+        'excel.findFirstEmptyRow': {
+            id: ExcelAction.FIND_FIRST_EMPTY_ROW,
+            label: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'),
+            script: ExcelAction.FIND_FIRST_EMPTY_ROW,
+            runner: Runner.DESKTOP_SCRIPT,
+            system: ActionSystem.WINDOWS,
+            output: {
+                assignVariables: true,
+                outputMethods: {
+                    variableName: '${content.output[0]}',
+                },
             },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                startColumn: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                    type: 'string',
+                                },
+                                startRow: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                    type: 'string',
+                                },
+                                worksheet: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                    type: 'string',
+                                },
+                            },
+                            required: [],
+                        },
+                        output: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                            type: 'object',
+                            properties: {
+                                variableName: {
+                                    title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                    type: 'string',
+                                }
+                            }
+                        }
+                    },
+                },
+                uiSchema: {
+                    'ui:order': ['input', 'output'],
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            startColumn: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
-                                type: 'string',
-                            },
-                            startRow: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
-                                type: 'string',
-                            },
-                            worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string',
+                        startColumn: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'),
+                            }
+                        },
+                        startRow: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'),
+                            }
+                        },
+                        worksheet: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
                             },
                         },
-                        required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                type: 'string',
+                        variableName: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                             }
                         }
                     }
                 },
-            },
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                input: {
-                    startColumn: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'),
-                        }
-                    },
-                    startRow: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'),
-                        }
-                    },
-                },
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
-                        }
+                formData: {
+                    output: {
+                        variableName: undefined,
                     }
-                }
-            },
-            formData: {
-                output: {
-                    variableName: undefined,
-                }
+                },
             },
         },
-    },
-    'excel.clearCells': {
-        id: 'excel.clearCells',
-        label: translate('Process.Details.Modeler.Actions.Excel.ClearCells.Label'),
-        script: 'excel.clearCells',
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            targetCells: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
-                                type: 'string',
+        'excel.clearCells': {
+            id: 'excel.clearCells',
+            label: translate('Process.Details.Modeler.Actions.Excel.ClearCells.Label'),
+            script: 'excel.clearCells',
+            runner: Runner.DESKTOP_SCRIPT,
+            system: ActionSystem.WINDOWS,
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                targetCells: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
+                                    type: 'string',
+                                },
+                                worksheet: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                    type: 'string',
+                                }
                             },
-                            worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string',
-                            }
+                            required: ['targetCells'],
                         },
-                        required: ['targetCells'],
                     },
                 },
-            },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {},
-        },
-    },
-    'excel.deleteColumns': {
-        id: ExcelAction.DELETE_COLUMNS,
-        label: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.Label'),
-        script: ExcelAction.DELETE_COLUMNS,
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
+                uiSchema: {
+                    'ui:order': ['input'],
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            targetCells: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
-                                type: 'string'
+                        targetCells: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells.Info'),
                             },
-                            worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string',
-                            }
                         },
-                        required: ['targetCells'],
+                        worksheet: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            },
+                        },
                     },
                 },
+                formData: {},
             },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {},
         },
-    },
-    'excel.save': {
-        id: ExcelAction.SAVE,
-        label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
-        script: ExcelAction.SAVE,
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
+        'excel.deleteColumns': {
+            id: ExcelAction.DELETE_COLUMNS,
+            label: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.Label'),
+            script: ExcelAction.DELETE_COLUMNS,
+            runner: Runner.DESKTOP_SCRIPT,
+            system: ActionSystem.WINDOWS,
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                columnRange: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'),
+                                    type: 'string'
+                                },
+                                worksheet: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                    type: 'string',
+                                }
+                            },
+                            required: ['columnRange'],
+                        },
+                    },
+                },
+                uiSchema: {
+                    'ui:order': ['input'],
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Save.FileName.Title'),
-                                type: 'string'
+                        columnRange: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange.Info'),
+                            },
+                        },
+                        worksheet: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            },
+                        },
+                    },
+                },
+                formData: {},
+            },
+        },
+        'excel.save': {
+            id: ExcelAction.SAVE,
+            label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
+            script: ExcelAction.SAVE,
+            runner: Runner.DESKTOP_SCRIPT,
+            system: ActionSystem.WINDOWS,
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                fileName: {
+                                    title: translate('Process.Details.Modeler.Actions.Excel.Save.FileName.Title'),
+                                    type: 'string'
+                                }
                             }
                         }
                     }
-                }
+                },
+                uiSchema: {
+                    'ui:order': ['input'],
+                },
+                formData: {},
             },
-            uiSchema: {
-                'ui:order': ['input'],
-            },
-            formData: {},
         },
-    },
-    'excel.close': {
-        id: ExcelAction.CLOSE,
-        label: translate('Process.Details.Modeler.Actions.Excel.Close.Label'),
-        script: 'excel.close',
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        form: {
-            schema: {},
-            uiSchema: {},
-            formData: {},
+        'excel.close': {
+            id: ExcelAction.CLOSE,
+            label: translate('Process.Details.Modeler.Actions.Excel.Close.Label'),
+            script: 'excel.close',
+            runner: Runner.DESKTOP_SCRIPT,
+            system: ActionSystem.WINDOWS,
+            form: {
+                schema: {},
+                uiSchema: {},
+                formData: {},
+            },
         },
     },
 });

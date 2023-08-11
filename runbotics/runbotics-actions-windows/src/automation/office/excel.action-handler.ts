@@ -19,7 +19,6 @@ import {
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
-    private previousWorksheet = null;
 
     constructor() {
         super();
