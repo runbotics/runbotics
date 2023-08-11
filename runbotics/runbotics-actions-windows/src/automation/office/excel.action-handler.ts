@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { StatefulActionHandler } from "runbotics-sdk";
-import ExcelErrorMessage from "./excelErrorMessage";
+import { Injectable } from '@nestjs/common';
+import { StatefulActionHandler } from 'runbotics-sdk';
+import ExcelErrorMessage from './excelErrorMessage';
 import {
     ExcelActionRequest,
     ExcelGetCellActionInput,
@@ -12,7 +12,7 @@ import {
     CellCoordinates,
     GetCellCoordinatesParams,
     ExcelInsertColumnsInput,
-} from "./excel.types";
+} from './excel.types';
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
@@ -23,8 +23,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async open(input: ExcelOpenActionInput): Promise<void> {
-        const winax = await import("winax");
-        this.session = new winax.Object("Excel.Application", {
+        const winax = await import('winax');
+        this.session = new winax.Object('Excel.Application', {
             activate: true,
         });
 
@@ -154,41 +154,41 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error(
-                "There is no active Excel session. Open application before"
+                'There is no active Excel session. Open application before'
             );
         }
     }
 
     run(request: ExcelActionRequest) {
-        if (process.platform !== "win32") {
-            throw new Error("Excel actions can be run only on Windows bot");
+        if (process.platform !== 'win32') {
+            throw new Error('Excel actions can be run only on Windows bot');
         }
 
         switch (request.script) {
-            case "excel.open":
+            case 'excel.open':
                 return this.open(request.input);
-            case "excel.getCell":
+            case 'excel.getCell':
                 this.isApplicationOpen();
                 return this.getCell(request.input);
-            case "excel.setCell":
+            case 'excel.setCell':
                 this.isApplicationOpen();
                 return this.setCell(request.input);
-            case "excel.findFirstEmptyRow":
+            case 'excel.findFirstEmptyRow':
                 this.isApplicationOpen();
                 return this.findFirstEmptyRow(request.input);
-            case "excel.setCells":
+            case 'excel.setCells':
                 this.isApplicationOpen();
                 return this.setCells(request.input);
-            case "excel.insertColumnsBefore":
+            case 'excel.insertColumnsBefore':
                 this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);
-            case "excel.save":
+            case 'excel.save':
                 this.isApplicationOpen();
                 return this.save(request.input);
-            case "excel.close":
+            case 'excel.close':
                 return this.close();
             default:
-                throw new Error("Action not found");
+                throw new Error('Action not found');
         }
     }
 
