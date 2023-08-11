@@ -106,6 +106,72 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'excel.getCells': {
+        id: 'excel.getCells',
+        label: translate('Process.Details.Modeler.Actions.Excel.GetCells.Label'),
+        script: 'excel.getCells',
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            startColumn: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                type: 'string',
+                            },
+                            startRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'string',
+                            },
+                            endColumn: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.EndColumn'),
+                                type: 'string',
+                            },
+                            endRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.EndRow'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['endColumn', 'endRow'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+                                type: 'string',
+                            }
+                        }
+                    }
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
+                }
+            },
+        },
+    },
     'excel.setCell': {
         id: ExcelAction.SET_CELL,
         label: translate('Process.Details.Modeler.Actions.Excel.SetCell.Label'),

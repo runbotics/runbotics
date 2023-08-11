@@ -3,6 +3,7 @@ import { DesktopRunRequest } from "runbotics-sdk";
 export type ExcelActionRequest =
     | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
     | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
+    | DesktopRunRequest<"excel.getCells", ExcelGetCellsActionInput>
     | DesktopRunRequest<"excel.close">
     | DesktopRunRequest<"excel.save">
     | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
@@ -20,6 +21,14 @@ export interface ExcelOpenActionInput {
 export interface ExcelGetCellActionInput {
     row: number;
     column: string;
+    worksheet?: string;
+};
+
+export type ExcelGetCellsActionInput = {
+    startColumn?: string;
+    startRow?: string;
+    endColumn: string;
+    endRow: string;
     worksheet?: string;
 };
 
