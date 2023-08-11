@@ -22,7 +22,12 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     }, []);
 
     const {
-        process: { id: processId, system: { name: parentProcessSystem } },
+        process: {
+            id: processId,
+            system: {
+                name: parentProcessSystem,
+            }
+        },
     } = useSelector((state) => state.process.draft);
 
     const isProcessSystemCompatible = (processSystem: string): boolean => (
@@ -34,9 +39,12 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     const options = useMemo(
         () =>
             processes
-                ? Object.values(processes)
-                    .filter((process) => (process.id !== processId && isProcessSystemCompatible(process.system.name)))
-                    .map<number>((process) => process.id)
+                ? Object.values(processes).reduce((acc, process) => {
+                    if (process.id !== processId && isProcessSystemCompatible(process.system.name)) {
+                        return [...acc, process.id];
+                    }
+                    return acc;
+                }, [])
                 : [],
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [processes],
