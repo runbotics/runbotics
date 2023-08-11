@@ -59,6 +59,15 @@ export default class ExcelErrorMessage {
         `;
     }
 
+    static deleteColumnsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Input must be range or Array (e.g. "A", "F:J" or ["A", "B", "C"]).
+            Check columnRange in Input tab above.
+            Try to pass it as variable (e.g. #{myArray}).
+        `;
+    }
+
     /* Other */
 
     private static getDisclaimer(e?: Error): string {

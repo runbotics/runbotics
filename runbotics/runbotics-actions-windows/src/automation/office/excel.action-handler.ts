@@ -12,7 +12,8 @@ import {
     CellCoordinates,
     GetCellCoordinatesParams,
     ExcelGetCellsActionInput,
-    ExcelClearCellsActionInput
+    ExcelClearCellsActionInput,
+    ExcelDeleteColumnsActionInput
 } from "./excel.types";
 
 @Injectable()
