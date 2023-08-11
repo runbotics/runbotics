@@ -73,28 +73,32 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async getCells(
         input: ExcelGetCellsActionInput
     ): Promise<unknown[][]> {
-        const cellValues: unknown[][] = [];
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-        const { startRow, startColumn, endColumn, endRow } = this.getCellCoordinates({
-            startColumn: input?.startColumn,
-            startRow: input?.startRow ? Number(input?.startRow) : 1,
-            endColumn: input.endColumn,
-            endRow: Number(input.endRow)
-        });
+        try {
+            const cellValues: unknown[][] = [];
+            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+            const { startRow, startColumn, endColumn, endRow } = this.getCellCoordinates({
+                startColumn: input?.startColumn,
+                startRow: input?.startRow ? Number(input?.startRow) : 1,
+                endColumn: input.endColumn,
+                endRow: Number(input.endRow)
+            });
 
-        for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
-            const rowValues: unknown[] = [];
-            for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
-                rowValues.push(
-                    targetWorksheet
-                        .Cells(rowIdx, columnIdx)
-                        .Value() ?? ''
-                );
+            for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
+                const rowValues: unknown[] = [];
+                for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
+                    rowValues.push(
+                        targetWorksheet
+                            .Cells(rowIdx, columnIdx)
+                            .Value() ?? ''
+                    );
+                }
+                cellValues.push(rowValues);
             }
-            cellValues.push(rowValues);
-        }
 
-        return cellValues;
+            return cellValues;
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.getCellsIncorrectInput(e));
+        }
     }
 
     async setCell(

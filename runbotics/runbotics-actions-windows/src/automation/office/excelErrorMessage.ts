@@ -18,7 +18,7 @@ export default class ExcelErrorMessage {
         return `
             ${this.getDisclaimer(e)}
             Start row must be a number (e.g. 5).
-            Start column must be a string (e.g. A).
+            Start column must be a string or number (e.g. A or 1).
             Check startRow and startColumn in the Input tab above.
         `
     }
@@ -32,7 +32,16 @@ export default class ExcelErrorMessage {
         `
     }
 
-    static deleteColumnsIncorrectInput(e?: Error): string {
+    static getCellsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Start row and end row must be a number (e.g. 5).
+            Start column and end column must be a string or number (e.g. A or 1).
+            Check the Input tab above.
+        `
+    }
+
+    static noPreviousWorksheet(e?: Error): string {
         return `
             ${this.getDisclaimer(e)}
             Input must be range or Array (e.g. "D", "C:E" or ["C", "D", "E"]).
