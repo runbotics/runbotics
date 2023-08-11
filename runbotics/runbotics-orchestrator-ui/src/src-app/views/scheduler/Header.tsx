@@ -41,7 +41,7 @@ const Header: VoidFunctionComponent<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 <Typography variant="h3" color="textPrimary">
-                    {translate('Scheduler.Header.Title')}
+                    {translate('Scheduler.Common.Title')}
                 </Typography>
             </Grid>
         </StyledGrid>

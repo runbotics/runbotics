@@ -1,17 +1,39 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Inject, Injectable, OnApplicationBootstrap, forwardRef } from '@nestjs/common';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
 import { RunboticsLogger } from '#logger';
+import { Message, MessageQueueService } from './queue/message-queue.service';
+import { BotWsMessage, ProcessInstanceEventStatus } from 'runbotics-common';
+import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 
 @Injectable()
 export class WebsocketService implements OnApplicationBootstrap {
     private readonly logger = new RunboticsLogger(WebsocketService.name);
 
     constructor(
+        @Inject(forwardRef(()=>RuntimeSubscriptionsService))
         private runtimeSubscriptions: RuntimeSubscriptionsService,
+        @InjectIoClientProvider() private io: IoClient,
+        private messageService: MessageQueueService
     ) {}
 
     async onApplicationBootstrap() {
         this.runtimeSubscriptions.subscribeActivityEvents();
         this.runtimeSubscriptions.subscribeProcessEvents();
     }
+
+    async emitMessage(
+        message: Message
+    ) {
+        this.messageService.add(message);
+
+        this.io.emit(message.event, message.payload, () => {
+            if(message.payload.status === ProcessInstanceEventStatus.COMPLETED){
+                this.messageService.clear();
+                return;
+            }
+            this.messageService.remove(message);
+
+        });
+    }
+
 }

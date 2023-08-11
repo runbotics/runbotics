@@ -44,7 +44,7 @@ export const getAllNotActivatedByPage = createAsyncThunk<Page<IUser>, PageReques
 
 export const updateNotActivated = createAsyncThunk<IUser, IUser>(
     'users/updateNotActivated',
-    (params) => axios.put<IUser>('/api/admin/users', params)
+    (user) => axios.patch<IUser>(`/api/admin/users/${user.id}`, user)
         .then((response) => response.data)
 );
 

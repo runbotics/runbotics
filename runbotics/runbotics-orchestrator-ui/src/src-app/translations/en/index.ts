@@ -15,7 +15,7 @@ import navTranslations from './nav.json';
 import paletteTranslations from './palette.json';
 import processTranslations from './process';
 import registerTranslations from './register.json';
-import schedulerTranslations from './scheduler.json';
+import schedulerTranslations from './scheduler';
 import usersTranslations from './users';
 import variablesTranslations from './variables.json';
 

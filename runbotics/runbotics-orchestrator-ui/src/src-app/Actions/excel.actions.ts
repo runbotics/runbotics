@@ -59,12 +59,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            row: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
-                                type: 'string',
-                            },
                             column: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                type: 'string',
+                            },
+                            row: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
                                 type: 'string',
                             },
                             worksheet: {
@@ -80,7 +80,6 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             }
                         }
@@ -89,6 +88,16 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                    type: 'object',
+                    properties: {
+                        variableName: {
+                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                            type: 'string',
+                        }
+                    }
+                }
             },
             formData: {
                 output: {
@@ -111,12 +120,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            row: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
-                                type: 'string',
-                            },
                             column: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                type: 'string',
+                            },
+                            row: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
                                 type: 'string',
                             },
                             value: {
@@ -152,16 +161,16 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            cellValues: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues'),
-                                type: 'string',
-                            },
                             startColumn: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
                                 type: 'string',
                             },
                             startRow: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'string',
+                            },
+                            cellValues: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues'),
                                 type: 'string',
                             },
                             worksheet: {
@@ -175,8 +184,101 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    startColumn: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.StartColumn.Info'),
+                        }
+                    },
+                    startRow: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.StartRow.Info'),
+                        },
+                    },
+                    cellValues: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info'),
+                        },
+                    },
+                },
             },
             formData: {},
+        },
+    },
+    'excel.findFirstEmptyRow': {
+        id: ExcelAction.FIND_FIRST_EMPTY_ROW,
+        label: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'),
+        script: ExcelAction.FIND_FIRST_EMPTY_ROW,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            startColumn: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                type: 'string',
+                            },
+                            startRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: [],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                            }
+                        }
+                    }
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    startColumn: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'),
+                        }
+                    },
+                    startRow: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'),
+                        }
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+                        }
+                    }
+                }
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
+                }
+            },
         },
     },
     'excel.insertColumnsBefore': {

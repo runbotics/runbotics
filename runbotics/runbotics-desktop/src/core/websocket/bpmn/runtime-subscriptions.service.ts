@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
@@ -9,18 +9,20 @@ import {
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
     BpmnElementType,
-    ProcessInstanceStep
+    ProcessInstanceStep,
 } from 'runbotics-common';
-import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 import { IActivityOwner } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
+import { Message } from '../queue/message-queue.service';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
     constructor(
+        @Inject(forwardRef(() => WebsocketService))
+        private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
-        @InjectIoClientProvider() private readonly io: IoClient,
         private readonly loopHandlerService: LoopHandlerService
     ) {}
 
@@ -72,21 +74,24 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = script;
                             }
                             break;
-                        case  BpmnElementType.END_EVENT:
+                        case BpmnElementType.END_EVENT:
                             processInstanceEvent.step = ProcessInstanceStep.END;
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
                             break;
-                        case  BpmnElementType.START_EVENT:
+                        case BpmnElementType.START_EVENT:
                             processInstanceEvent.log = `Activity: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = ProcessInstanceStep.START;
+                            processInstanceEvent.step =
+                                ProcessInstanceStep.START;
                             break;
-                        case  BpmnElementType.EXCLUSIVE_GATEWAY:
+                        case BpmnElementType.EXCLUSIVE_GATEWAY:
                             processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Gateway';
                             break;
-                        case  BpmnElementType.SUBPROCESS:
+                        case BpmnElementType.SUBPROCESS:
+                            //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             if (event.activity.content.isMultiInstance) {
+                                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
                                 processInstanceEvent.log = `Loop: ${event.activity.content.type} ${event.activity.content.input?.script} ${event.eventType} `;
                             } else {
@@ -94,8 +99,7 @@ export class RuntimeSubscriptionsService {
                             }
 
                             if (eventBehavior?.label) {
-                                processInstanceEvent.step =
-                                    eventBehavior?.label;
+                                processInstanceEvent.step = eventBehavior?.label;
                             } else {
                                 processInstanceEvent.step = 'Loop';
                             }
@@ -107,14 +111,21 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    if (
-                        this.loopHandlerService.isLoopEvent(event.activity)
-                    )
+                    if (this.loopHandlerService.isLoopEvent(event.activity))
                         processInstanceEvent = {
                             ...processInstanceEvent,
-                            iterationNumber: this.loopHandlerService.getIterationNumber(event.activity),
-                            iteratorElement: this.loopHandlerService.getIteratorElement(event.activity, event.iteratorName),
-                            loopId: this.loopHandlerService.getLoopId(event.activity),
+                            iterationNumber:
+                                this.loopHandlerService.getIterationNumber(
+                                    event.activity
+                                ),
+                            iteratorElement:
+                                this.loopHandlerService.getIteratorElement(
+                                    event.activity,
+                                    event.iteratorName
+                                ),
+                            loopId: this.loopHandlerService.getLoopId(
+                                event.activity
+                            ),
                         };
 
                     switch (event.eventType) {
@@ -129,12 +140,18 @@ export class RuntimeSubscriptionsService {
                             break;
                     }
 
-                    this.io.emit(
+                    const processInstanceEventType =
                         this.loopHandlerService.isLoopEvent(event.activity)
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
-                            : BotWsMessage.PROCESS_INSTANCE_EVENT,
-                        processInstanceEvent
-                    );
+                            : BotWsMessage.PROCESS_INSTANCE_EVENT;
+                    //eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    //@ts-ignore
+                    const message: Message = {
+                        event: processInstanceEventType,
+                        payload: processInstanceEvent,
+                    };
+
+                    this.websocketService.emitMessage(message);
                 } catch (e) {
                     this.logger.error(
                         'Error occurred while sending process instance',
@@ -151,6 +168,7 @@ export class RuntimeSubscriptionsService {
                 id: event.processInstanceId,
                 orchestratorProcessInstanceId:
                     event.processInstance.orchestratorProcessInstanceId,
+                //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 status: event.eventType.toString(),
                 updated: dayjs().toISOString(),
@@ -183,6 +201,7 @@ export class RuntimeSubscriptionsService {
                 case ProcessInstanceStatus.COMPLETED:
                 case ProcessInstanceStatus.STOPPED:
                 case ProcessInstanceStatus.ERRORED:
+                    //eslint-disable-next-line no-case-declarations
                     let variables = {};
                     try {
                         variables = { ...event.processInstance.variables };
@@ -212,7 +231,12 @@ export class RuntimeSubscriptionsService {
                     break;
             }
 
-            this.io.emit(BotWsMessage.PROCESS_INSTANCE, processInstance);
+            const message: Message = {
+                event: BotWsMessage.PROCESS_INSTANCE,
+                payload: processInstance,
+            };
+
+            this.websocketService.emitMessage(message);
         });
     }
 }

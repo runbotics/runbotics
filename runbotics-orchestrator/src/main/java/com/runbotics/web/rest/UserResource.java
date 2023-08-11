@@ -18,19 +18,18 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Collections;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -71,6 +70,8 @@ public class UserResource {
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
+    private static final String ENTITY_NAME = "user";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -86,7 +87,8 @@ public class UserResource {
         UserService userService,
         UserQueryService userQueryService,
         UserRepository userRepository,
-        MailService mailService) {
+        MailService mailService
+    ) {
         this.userService = userService;
         this.userQueryService = userQueryService;
         this.userRepository = userRepository;
@@ -161,6 +163,28 @@ public class UserResource {
         log.debug("REST request to get logins of all users");
         final List<AdminUserDTO> users = userService.getAllManagedUsersLimited();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    /**
+     * {@code PATCH /admin/users} : Partial updates given fields of an existing user, field will ignore if it is null
+     * @param id the id of the globalVariableDTO to save.
+     * @param adminUserDTO the User to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)}.
+     */
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<AdminUserDTO> partialUpdate(
+        @PathVariable(value = "id", required = true) Long id,
+        @NotNull @RequestBody AdminUserDTO adminUserDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update User partially : {}, {}", id, adminUserDTO);
+
+        Optional<AdminUserDTO> result = userService.partialUpdate(adminUserDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, adminUserDTO.getId().toString())
+        );
     }
 
     /**

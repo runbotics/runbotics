@@ -3,16 +3,18 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
-import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
+import com.runbotics.service.mapper.AdminUserMapper;
+import com.runbotics.service.mapper.UserMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -44,20 +46,28 @@ public class UserService {
 
     private final ProcessRepository processRepository;
 
+    private final UserMapper userMapper;
+
     private final AccountPartialUpdateMapper accountPartialUpdateMapper;
+
+    private final AdminUserMapper adminUserMapper;
 
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         ProcessRepository processRepository,
-        AccountPartialUpdateMapper accountPartialUpdateMapper
+        UserMapper userMapper,
+        AccountPartialUpdateMapper accountPartialUpdateMapper,
+        AdminUserMapper adminUserMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.userMapper = userMapper;
         this.accountPartialUpdateMapper = accountPartialUpdateMapper;
+        this.adminUserMapper = adminUserMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -287,6 +297,29 @@ public class UserService {
         log.debug("User information updated", user);
     }
 
+    /**
+     * Partial update information for the current user.
+     * @param adminUserDTO additionally ignoring fields:
+     *                     imageUrl, createBy, createdDate,
+     *                     lastModifiedBy, roles, featureKeys
+     * @return updated user
+     */
+    public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
+        log.debug("Request to partially update User : {}", adminUserDTO);
+
+        excludeAdminUserDTOFields(adminUserDTO);
+        return userRepository
+            .findById(adminUserDTO.getId())
+            .map(
+                existingUser -> {
+                    adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                    return existingUser;
+                }
+            )
+            .map(userRepository::save)
+            .map(userMapper::userToAdminUserDTO);
+    }
+
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
@@ -335,9 +368,9 @@ public class UserService {
         if (criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
         }
-            return userRepository
-                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-                .map(AdminUserDTO::new);
+        return userRepository
+            .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -345,9 +378,9 @@ public class UserService {
         if (criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
         }
-            return userRepository
-                .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-                .map(AdminUserDTO::new);
+        return userRepository
+            .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
     }
 
     /**
@@ -385,5 +418,14 @@ public class UserService {
             .filter(authority -> authority.getName().equals(AuthoritiesConstants.GUEST))
             .flatMap(guest -> guest.getUsers().stream().map(User::getId))
             .collect(Collectors.toList());
+    }
+
+    private void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
+        adminUserDTO.setImageUrl(null);
+        adminUserDTO.setCreatedBy(null);
+        adminUserDTO.setCreatedDate(null);
+        adminUserDTO.setLastModifiedBy(null);
+        adminUserDTO.setRoles(null);
+        adminUserDTO.setFeatureKeys(null);
     }
 }
