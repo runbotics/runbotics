@@ -125,14 +125,18 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async deleteColumns(
         input: ExcelDeleteColumnsActionInput
     ): Promise<void> {
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-        if (!Array.isArray(input.columnRange)) targetWorksheet.Columns(input.columnRange).Delete();
-        else {
-            const sortedColumns = this.sortColumns(input.columnRange);
-            sortedColumns.forEach((column, idx) => {
-                const columnCoordinate = this.getColumnCoordinate(column);
-                targetWorksheet.Columns(columnCoordinate - idx).Delete();
-            });
+        try {
+            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+            if (!Array.isArray(input.columnRange)) targetWorksheet.Columns(input.columnRange).Delete();
+            else {
+                const sortedColumns = this.sortColumns(input.columnRange);
+                sortedColumns.forEach((column, idx) => {
+                    const columnCoordinate = this.getColumnCoordinate(column);
+                    targetWorksheet.Columns(columnCoordinate - idx).Delete();
+                });
+            }
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput(e));
         }
     }
 
