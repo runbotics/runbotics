@@ -50,7 +50,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
-    async save(input: ExcelSaveActionInput) {
+    async save(
+        input: ExcelSaveActionInput
+    ) {
         if (input.fileName) {
             this.session.ActiveWorkbook.SaveAs(input.fileName);
         } else {
@@ -58,14 +60,18 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async getCell(input: ExcelGetCellActionInput): Promise<unknown> {
+    async getCell(
+        input: ExcelGetCellActionInput
+    ): Promise<unknown> {
         return this.session
             .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
             .Range(`${input.column}${input.row}`)
             .Value()
     }
 
-    async setCell(input: ExcelSetCellActionInput): Promise<void> {
+    async setCell(
+        input: ExcelSetCellActionInput
+    ): Promise<void> {
         const cell = this.session
             .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
             .Range(`${input.column}${input.row}`)
@@ -73,7 +79,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         cell.Value = input.value;
     }
 
-    async setCells(input: ExcelSetCellsActionInput): Promise<void> {
+    async setCells(
+        input: ExcelSetCellsActionInput
+    ): Promise<void> {
         if (!Array.isArray(input.cellValues))
             throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
