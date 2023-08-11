@@ -11,14 +11,14 @@ import {
     ExcelFindFirstEmptyRowActionInput,
     CellCoordinates,
     GetCellCoordinatesParams,
-    ExcelDeleteColumnsActionInput,
-    ExcelClearCellsActionInput
+    ExcelGetCellsActionInput,
+    ExcelClearCellsActionInput,
+    ExcelDeleteColumnsActionInput
 } from "./excel.types";
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
-    private previousWorksheet = null;
 
     constructor() {
         super();
@@ -68,6 +68,37 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
             .Range(`${input.column}${input.row}`)
             .Value()
+    }
+
+    async getCells(
+        input: ExcelGetCellsActionInput
+    ): Promise<unknown[][]> {
+        try {
+            const cellValues: unknown[][] = [];
+            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+            const { startRow, startColumn, endColumn, endRow } = this.getCellCoordinates({
+                startColumn: input?.startColumn,
+                startRow: input?.startRow ? Number(input?.startRow) : 1,
+                endColumn: input.endColumn,
+                endRow: Number(input.endRow)
+            });
+
+            for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
+                const rowValues: unknown[] = [];
+                for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
+                    rowValues.push(
+                        targetWorksheet
+                            .Cells(rowIdx, columnIdx)
+                            .Value() ?? ''
+                    );
+                }
+                cellValues.push(rowValues);
+            }
+
+            return cellValues;
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.getCellsIncorrectInput(e));
+        }
     }
 
     async setCell(
@@ -173,6 +204,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.getCell":
                 this.isApplicationOpen();
                 return this.getCell(request.input);
+            case "excel.getCells":
+                this.isApplicationOpen();
+                return this.getCells(request.input);
             case "excel.setCell":
                 this.isApplicationOpen();
                 return this.setCell(request.input);
