@@ -15,7 +15,7 @@ import { Logger } from '#/utils/logger';
 import { StartProcessRequest, StartProcessResponse } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
-    IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent,
+    IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent, Role,
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
@@ -100,7 +100,7 @@ export class QueueService implements OnModuleInit {
     async deleteQueueJobsBySchedule(id: string) {
         const jobs = await this.processQueue.getJobs(['delayed', 'waiting', 'active', 'paused'])
             .then(jobs => jobs.filter(job => job.data.id === id));
-        
+
         await Promise.all(jobs.map(job => job.remove()));
     }
 
@@ -127,7 +127,7 @@ export class QueueService implements OnModuleInit {
         const hasAccess = process.createdBy?.id === user?.id;
         const isPublic = process.isPublic;
         const isTriggerable = process?.isTriggerable;
-        const isAdmin = user?.authorities.filter(role => role.name === 'ROLE_ADMIN').length > 0;
+        const isAdmin = user?.authorities.filter(role => role.name === Role.ROLE_ADMIN).length > 0;
 
         if (!hasAccess && !isPublic && !isAdmin) {
             this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to the process "${process?.id}"`);
@@ -155,9 +155,9 @@ export class QueueService implements OnModuleInit {
 
     private async clearStaledSchedules() {
         this.logger.log('Clearing staled jobs');
-        
+
         const repeatableJobs = await this.processQueue.getRepeatableJobs();
-        
+
         await Promise.all(repeatableJobs
             .map((job) => job.key)
             .map((key) => this.processQueue.removeRepeatableByKey(key))
@@ -167,10 +167,10 @@ export class QueueService implements OnModuleInit {
 
         this.logger.log('Cleared staled job(s)');
     }
-    
+
     private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
-        
+
         if (!input?.variables || Object.keys(input.variables).length === 0) {
             const err = 'You haven\'t provided variables for attended process';
             this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
@@ -208,7 +208,7 @@ export class QueueService implements OnModuleInit {
             this.logger.warn(`No job with id: ${id} found`);
             return;
         }
-    
+
         await this.deleteQueueJobsBySchedule(id.toString());
 
         await this.processQueue.removeRepeatableByKey(scheduledJob.key);

@@ -160,6 +160,7 @@ export enum ExcelAction {
 	GET_CELL = 'excel.getCell',
 	SET_CELL = 'excel.setCell',
 	SET_CELLS = 'excel.setCells',
+	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
 }

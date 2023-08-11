@@ -29,7 +29,7 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
             accessor: ({ id }) => id,
         },
         {
-            Header: translate('Scheduler.ActiveProcess.Table.Header.Process'),
+            Header: translate('Scheduler.Common.Process'),
             width: '17%',
             accessor: ({ process }) => process.name,
         },
@@ -79,16 +79,16 @@ export const useWaitingProcessColumns = (): Column<QueueJob>[] => {
             accessor: ({ id }) => id.split(':')[1],
         },
         {
-            Header: translate('Scheduler.WaitingProcess.Table.Header.Process'),
+            Header: translate('Scheduler.Common.Process'),
             accessor: ({ data }) => data.process.name,
         },
         {
-            Header: translate('Scheduler.WaitingProcess.Table.Header.BotCollection'),
+            Header: translate('Scheduler.Common.BotCollection'),
             width: '20%',
             accessor: ({ data }) => `${data.process.botCollection.name}`,
         },
         {
-            Header: translate('Scheduler.WaitingProcess.Table.Header.BotSystem'),
+            Header: translate('Scheduler.Common.BotSystem'),
             width: '10%',
             accessor: ({ data }) => `${data.process.system.name}`,
         },
@@ -126,16 +126,16 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
             accessor: ({ id }) => id,
         },
         {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.Process'),
+            Header: translate('Scheduler.Common.Process'),
             accessor: ({ process }) => process.name,
         },
         {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.BotCollection'),
+            Header: translate('Scheduler.Common.BotCollection'),
             width: '20%',
             accessor: ({ process }) => process.botCollection.name,
         },
         {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.BotSystem'),
+            Header: translate('Scheduler.Common.BotSystem'),
             width: '8%',
             accessor: ({ process }) => process.system.name,
         },
