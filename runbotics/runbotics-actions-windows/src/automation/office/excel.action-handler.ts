@@ -153,11 +153,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 targetWorksheet
                     .Range(input.targetCells)
                     .Clear();
-            else
-                for (const cellCoordinate of input.targetCells)
-                    targetWorksheet
-                        .Range(cellCoordinate)
-                        .Clear();
+            else for (const cellCoordinate of input.targetCells)
+                targetWorksheet
+                    .Range(cellCoordinate)
+                    .Clear()
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
@@ -180,6 +179,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.findFirstEmptyRow":
                 this.isApplicationOpen();
                 return this.findFirstEmptyRow(request.input);
+            case "excel.clearCells":
+                this.isApplicationOpen();
+                return this.clearCells(request.input);
             case "excel.setCells":
                 this.isApplicationOpen();
                 return this.setCells(request.input);

@@ -295,8 +295,8 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            columnRange: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'),
+                            targetCells: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
                                 type: 'string',
                             },
                             worksheet: {
@@ -304,7 +304,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             }
                         },
-                        required: ['columnRange'],
+                        required: ['targetCells'],
                     },
                 },
             },

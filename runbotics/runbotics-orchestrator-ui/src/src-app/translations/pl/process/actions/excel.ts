@@ -21,7 +21,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info': 'Początkowa kolumna wyszukiwania. Domyślnie A',
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info': 'Początkowy wiersz wyszukiwania. Domyślnie 1',
     'Process.Details.Modeler.Actions.Excel.ClearCells.Label': 'Wyczyść komórki',
-    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Zakres komórek (np. A1:C3 lub ["A1", "B2", "E5"])',
+    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Zakres komórek (np. F2, A1:C3 lub ["A1", "B2", "E5"])',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.Label': 'Usuń kolumny',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange': 'Kolumna, przedział lub tablica e.g. "G", "C:F" or ["C", "E", "H"]',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',

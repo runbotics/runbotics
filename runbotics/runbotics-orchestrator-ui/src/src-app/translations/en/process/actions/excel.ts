@@ -19,7 +19,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info': 'Starting column for search. Default A',
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info': 'Starting row for search. Default 1',
     'Process.Details.Modeler.Actions.Excel.ClearCells.Label': 'Clear cells',
-    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Cell range (e.g. A1:C3 or ["A1", "B2", "E5"])',
+    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells': 'Cell range (e.g. G8, A1:C3 or ["A1", "B2", "E5"])',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.Label': 'Delete columns',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange': 'Column, column range or array e.g. "G", "C:F" or ["C", "E", "H"]',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Save',
