@@ -128,7 +128,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
             </IconButton>
         </Stack>
     );
-
+    
     const ActionSystemLabel = () => (
         <>
             {selectedAction && selectedAction.system && (
@@ -161,6 +161,25 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         </>
     );
 
+    const ActionHelperTextLabel = () => (
+        <>
+            {selectedAction && selectedAction.helperTextLabel && (
+                <Alert
+                    severity="warning"
+                    sx={{
+                        mt: (theme) => theme.spacing(1),
+                        alignItems: 'center',
+                        width: 'fit-content'
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                        {selectedAction.helperTextLabel}
+                    </div>
+                </Alert>
+            )}
+        </>
+    );
+
     return (
         <>
             <If condition={formState.editing} else={<ActionNameLabel />}>
@@ -180,6 +199,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                 </form>
             </If>
             <ActionSystemLabel />
+            <ActionHelperTextLabel />
         </>
     );
 };

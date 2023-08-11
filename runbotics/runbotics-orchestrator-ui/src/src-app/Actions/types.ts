@@ -53,6 +53,7 @@ export type IBpmnAction = {
     label: string;
     translateKey?: string;
     system?: ActionSystem;
+    helperTextLabel?: string;
     input?: IActionInput;
     output?: IActionOutput;
     form?: IForm;

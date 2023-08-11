@@ -208,6 +208,7 @@
     "Process.Details.Modeler.Actions.General.Delay.Delay": "Delay",
     "Process.Details.Modeler.Actions.General.Delay.Unit": "Unit",
     "Process.Details.Modeler.Actions.General.StartProcess.Label": "Start Process",
+    "Process.Details.Modeler.Actions.General.StartProcess.HelperTextLabel": "Bot system and process system must be compatible",
     "Process.Details.Modeler.Actions.General.StartProcess.Process": "Process",
     "Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess": "Variables passed to process",
     "Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem": "System of selected process is not compatible",
