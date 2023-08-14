@@ -176,8 +176,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     async insertColumnsBefore(
         input: ExcelInsertColumnsActionInput
-        ): Promise<void> {
-            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
 
         try {
             const column = this.getColumnCoordinate(input.column);
@@ -185,9 +185,28 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
             targetWorksheet
                 .Range(
-                    targetWorksheet.Columns(column),
+                    targetWorksheet.Columns(column), 
                     targetWorksheet.Columns(column + amount - 1)
                 )
+                .Insert();
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+        }
+    }
+
+    async insertColumnsAfter(
+        input: ExcelInsertColumnsActionInput
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+        try {
+            const column = this.getColumnCoordinate(input.column);
+            const amount = input.amount;
+
+            targetWorksheet
+                .Range(
+                    targetWorksheet.Columns(column + 1),
+                    targetWorksheet.Columns(column + amount))
                 .Insert();
         } catch (e) {
             throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
@@ -200,7 +219,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
+    async clearCells(
+        input: ExcelClearCellsActionInput
+    ): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             if (!Array.isArray(input.targetCells))
@@ -210,7 +231,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             else for (const cellCoordinate of input.targetCells)
                 targetWorksheet
                     .Range(cellCoordinate)
-                    .Clear()
+                    .Clear();
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
@@ -227,24 +248,27 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.getCell':
                 this.isApplicationOpen();
                 return this.getCell(request.input);
-            case "excel.getCells":
+            case 'excel.getCells':
                 this.isApplicationOpen();
                 return this.getCells(request.input);
-            case "excel.setCell":
+            case 'excel.setCell':
                 this.isApplicationOpen();
                 return this.setCell(request.input);
             case 'excel.findFirstEmptyRow':
                 this.isApplicationOpen();
                 return this.findFirstEmptyRow(request.input);
-            case "excel.clearCells":
+            case 'excel.clearCells':
                 this.isApplicationOpen();
                 return this.clearCells(request.input);
-            case "excel.setCells":
+            case 'excel.setCells':
                 this.isApplicationOpen();
                 return this.setCells(request.input);
             case 'excel.insertColumnsBefore':
                 this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);
+            case 'excel.insertColumnsAfter':
+                this.isApplicationOpen();
+                return this.insertColumnsAfter(request.input);
             case 'excel.save':
                 this.isApplicationOpen();
                 return this.save(request.input);
@@ -265,7 +289,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
                 startRow: startRow ?? 1,
                 endColumn: this.getColumnCoordinate(endColumn),
-                endRow: endRow ?? null,
+                endRow: endRow ?? null
             };
         } catch (e) {
             throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));

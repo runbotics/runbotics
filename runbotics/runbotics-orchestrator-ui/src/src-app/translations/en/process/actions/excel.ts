@@ -28,6 +28,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange': 'Column range',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange.Info': 'Column, column range or array e.g. "G", "C:F" or ["C", "E", "H"].',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Insert columns before',
+    'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label': 'Insert columns after',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Amount of columns',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Column letter or number, e.g. "AZ" or 25.',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Number of columns to insert.',

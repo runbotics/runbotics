@@ -11,7 +11,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>
     | DesktopRunRequest<"excel.clearCells", ExcelClearCellsActionInput>
     | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput> 
-    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>;
+    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;

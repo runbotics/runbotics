@@ -165,6 +165,7 @@ export enum ExcelAction {
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',
 	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
+	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
 }

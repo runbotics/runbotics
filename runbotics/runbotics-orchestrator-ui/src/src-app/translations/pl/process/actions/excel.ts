@@ -30,6 +30,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange': 'Zasięg kolumn',
     'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange.Info': 'Kolumna, przedział lub lista np. "G", "C:F" lub ["C", "E", "H"].',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Wstaw kolumny przed',
+    'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label': 'Wstaw kolumny po',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Liczba kolumn',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Oznaczenie literowe lub numer kolumny, np "AZ" lub 25.',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Liczba kolumn do wstawienia.',
