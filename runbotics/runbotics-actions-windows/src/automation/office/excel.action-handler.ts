@@ -186,7 +186,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             targetWorksheet
                 .Range(
                     targetWorksheet.Columns(column), 
-                    targetWorksheet.Columns(column + amount - 1))
+                    targetWorksheet.Columns(column + amount - 1)
+                )
                 .Insert();
         } catch (e) {
             throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
