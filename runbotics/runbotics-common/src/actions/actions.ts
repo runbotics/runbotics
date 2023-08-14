@@ -158,8 +158,10 @@ export enum ApplicationAction {
 export enum ExcelAction {
 	OPEN = 'excel.open',
 	GET_CELL = 'excel.getCell',
+	GET_CELLS = 'excel.getCells',
 	SET_CELL = 'excel.setCell',
 	SET_CELLS = 'excel.setCells',
+	CLEAR_CELLS = 'excel.clearCells',
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',
 	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
