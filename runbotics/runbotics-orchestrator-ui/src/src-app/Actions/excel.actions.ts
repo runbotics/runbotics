@@ -300,7 +300,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                             amount: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.ColumnsAmount'),
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'),
                                 type: 'number',
                             },
                             worksheet: {
@@ -327,7 +327,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Worksheet.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
                         }
                     },
                 }

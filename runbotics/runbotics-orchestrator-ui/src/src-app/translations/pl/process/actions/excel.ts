@@ -20,7 +20,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info': 'Początkowa kolumna wyszukiwania. Domyślnie A',
     'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info': 'Początkowy wiersz wyszukiwania. Domyślnie 1',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Wstaw kolumny przed',
-    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Liczba kolumn do wstawienia',
+    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Liczba kolumn',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Oznaczenie literowe lub numer kolumny, np "AZ" lub 25.',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Liczba kolumn do wstawienia.',
     'Process.Details.Modeler.Actions.Excel.Worksheet.Info': 'Arkusz. Domyślnie obecnie aktywny arkusz.',
