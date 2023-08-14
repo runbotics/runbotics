@@ -91,8 +91,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                     rowValues.push(
                         targetWorksheet
                             .Cells(rowIdx, columnIdx)
-                            .Value() ?? '')
-                };
+                            .Value() ?? ''
+                    );
+                }
                 cellValues.push(rowValues);
             }
 
@@ -115,7 +116,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) 
+        if (!Array.isArray(input.cellValues))
             throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
