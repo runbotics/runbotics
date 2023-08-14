@@ -17,13 +17,13 @@ export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
     mode?: "xlReadOnly" | "xlReadWrite";
-};
+}
 
 export interface ExcelGetCellActionInput {
     row: number;
     column: string;
     worksheet?: string;
-};
+}
 
 export type ExcelGetCellsActionInput = {
     startColumn?: string;
@@ -35,56 +35,56 @@ export type ExcelGetCellsActionInput = {
 
 export interface ExcelSaveActionInput {
     fileName: string;
-};
+}
 
 export interface ExcelSetCellActionInput {
     row: number;
     column: string;
     value: unknown;
     worksheet?: string;
-};
+}
 
 export interface ExcelSetCellsActionInput {
     cellValues: ExcelArrayStructure;
     startColumn?: string;
     startRow?: string;
     worksheet?: string;
-};
+}
 
 export interface ExcelFindFirstEmptyRowActionInput {
     startColumn?: string;
     startRow?: string;
     worksheet?: string;
-};
+}
 
 export interface StartCellCoordinates {
     startColumn: number;
     startRow: number;
-};
+}
 
 export interface ExcelDeleteColumnsActionInput {
     columnRange: string;
     worksheet?: string;
-};
+}
 
 export interface GetCellCoordinatesParams {
     startColumn?: number | string;
     startRow?: number;
     endColumn?: number | string;
     endRow?: number;
-};
+}
 
 export interface CellCoordinates {
     startColumn?: number;
     startRow?: number;
     endColumn?: number;
     endRow?: number;
-};
+}
 
 export interface ExcelClearCellsActionInput {
     targetCells: string[] | string;
     worksheet?: string;
-};
+}
 
 export type ExcelInsertColumnsActionInput = {
     column: string;
@@ -92,4 +92,4 @@ export type ExcelInsertColumnsActionInput = {
     worksheet?: string;
 };
 
-export type ExcelArrayStructure = unknown[][];
+export type ExcelArrayStructure = (string | number | boolean)[][];
