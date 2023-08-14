@@ -8,7 +8,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
     | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
     | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>
-    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsInput>;
+    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>;
 
 export type ExcelOpenActionInput = {
     path: string;
@@ -64,9 +64,9 @@ export interface CellCoordinates {
     endRow?: number;
 }
 
-export type ExcelInsertColumnsInput = {
+export type ExcelInsertColumnsActionInput = {
     column: string;
-    amount?: number;
+    amount: number;
     worksheet?: string;
 };
 

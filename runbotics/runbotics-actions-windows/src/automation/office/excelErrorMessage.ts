@@ -37,6 +37,15 @@ export default class ExcelErrorMessage {
         `
     }
 
+    static insertColumnsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Column has to be a name of the column, e.g. C or column number, e.g. 3
+            Amount has to be a whole positive number, eg. 5.
+                
+        `
+    }
+
     private static getDisclaimer(e?: Error): string {
         return `
                 ${e ?? ''}

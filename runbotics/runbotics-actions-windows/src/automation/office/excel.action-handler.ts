@@ -11,7 +11,7 @@ import {
     ExcelFindFirstEmptyRowActionInput,
     CellCoordinates,
     GetCellCoordinatesParams,
-    ExcelInsertColumnsInput,
+    ExcelInsertColumnsActionInput,
 } from './excel.types';
 
 @Injectable()
@@ -99,7 +99,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 } catch (e) {
                     throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
-            } rowCounter++;
+            } 
+            rowCounter++;
             columnCounter = startColumn;
         }
     }
@@ -121,31 +122,24 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return rowCounter;
     }
 
-    async insertColumnsBefore(input: ExcelInsertColumnsInput): Promise<void> {
-        const startingSheet = this.session.ActiveSheet.Name;
-        const workingWorksheet = this.session.Worksheets(
-            input?.worksheet ?? startingSheet
-        );
+    async insertColumnsBefore(
+        input: ExcelInsertColumnsActionInput
+        ): Promise<void> {
+            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
 
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
 
-            workingWorksheet
+            targetWorksheet
                 .Range(
-                    workingWorksheet.Columns(column),
-                    workingWorksheet.Columns(column + amount - 1)
+                    targetWorksheet.Columns(column),
+                    targetWorksheet.Columns(column + amount - 1)
                 )
                 .Insert();
         } catch (e) {
-            throw new Error(
-                `Column has to be a name of the column, e.g. C or column number, e.g. 3
-                Amount has to be a whole positive number, eg. 5.
-                `
-            );
+            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
         }
-
-        this.session.Worksheets(startingSheet);
     }
 
     private isApplicationOpen() {
