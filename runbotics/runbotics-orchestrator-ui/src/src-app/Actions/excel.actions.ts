@@ -478,9 +478,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.insertColumnsBefore': {
         id: ExcelAction.INSERT_COLUMNS_BEFORE,
-        label: translate(
-            'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'
-        ),
+        label: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'),
         script: ExcelAction.INSERT_COLUMNS_BEFORE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -489,27 +487,19 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate(
-                            'Process.Details.Modeler.Actions.Common.Input'
-                        ),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
-                                ),
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
                                 type: 'string',
                             },
                             amount: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'
-                                ),
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'),
                                 type: 'number',
                             },
                             worksheet: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
-                                ),
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
                             },
                         },
@@ -522,23 +512,17 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     column: {
                         'ui:options': {
-                            info: translate(
-                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'
-                            ),
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'),
                         },
                     },
                     amount: {
                         'ui:options': {
-                            info: translate(
-                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'
-                            ),
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate(
-                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
-                            ),
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
                         },
                     },
                 },
