@@ -87,7 +87,8 @@ public class UserResource {
         UserService userService,
         UserQueryService userQueryService,
         UserRepository userRepository,
-        MailService mailService) {
+        MailService mailService
+    ) {
         this.userService = userService;
         this.userQueryService = userQueryService;
         this.userRepository = userRepository;

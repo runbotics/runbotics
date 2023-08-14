@@ -3,22 +3,22 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
-import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
+import com.runbotics.service.mapper.AdminUserMapper;
+import com.runbotics.service.mapper.UserMapper;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.runbotics.service.mapper.AdminUserMapper;
-import com.runbotics.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -59,7 +59,8 @@ public class UserService {
         ProcessRepository processRepository,
         UserMapper userMapper,
         AccountPartialUpdateMapper accountPartialUpdateMapper,
-        AdminUserMapper adminUserMapper) {
+        AdminUserMapper adminUserMapper
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
@@ -384,9 +385,9 @@ public class UserService {
         if (criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
         }
-            return userRepository
-                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-                .map(AdminUserDTO::new);
+        return userRepository
+            .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
     }
 
     @Transactional(readOnly = true)
@@ -394,9 +395,9 @@ public class UserService {
         if (criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
         }
-            return userRepository
-                .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-                .map(AdminUserDTO::new);
+        return userRepository
+            .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
     }
 
     /**

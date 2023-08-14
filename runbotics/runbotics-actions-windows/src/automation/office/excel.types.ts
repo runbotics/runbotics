@@ -10,19 +10,20 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
     | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>
     | DesktopRunRequest<"excel.clearCells", ExcelClearCellsActionInput>
-    | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput>;
+    | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput> 
+    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
     mode?: "xlReadOnly" | "xlReadWrite";
-};
+}
 
 export interface ExcelGetCellActionInput {
     row: number;
     column: string;
     worksheet?: string;
-};
+}
 
 export type ExcelGetCellsActionInput = {
     startColumn?: string;
@@ -41,14 +42,14 @@ export interface ExcelSetCellActionInput {
     column: string;
     value: unknown;
     worksheet?: string;
-};
+}
 
 export interface ExcelSetCellsActionInput {
     cellValues: ExcelArrayStructure;
     startColumn?: string;
     startRow?: string;
     worksheet?: string;
-};
+}
 
 export interface ExcelFindFirstEmptyRowActionInput {
     startColumn?: string;
@@ -64,7 +65,7 @@ export interface StartCellCoordinates {
 export interface ExcelDeleteColumnsActionInput {
     columnRange: string;
     worksheet?: string;
-};
+}
 
 export interface GetCellCoordinatesParams {
     startColumn?: number | string;
@@ -83,6 +84,12 @@ export interface CellCoordinates {
 export interface ExcelClearCellsActionInput {
     targetCells: string[] | string;
     worksheet?: string;
+}
+
+export type ExcelInsertColumnsActionInput = {
+    column: string;
+    amount: number;
+    worksheet?: string;
 };
 
-export type ExcelArrayStructure = unknown[][]
+export type ExcelArrayStructure = (string | number | boolean)[][];

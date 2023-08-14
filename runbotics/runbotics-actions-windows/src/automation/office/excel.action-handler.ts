@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { StatefulActionHandler } from "runbotics-sdk";
-import ExcelErrorMessage from "./excelErrorMessage";
+import { Injectable } from '@nestjs/common';
+import { StatefulActionHandler } from 'runbotics-sdk';
+import ExcelErrorMessage from './excelErrorMessage';
 import {
     ExcelActionRequest,
     ExcelGetCellActionInput,
@@ -13,8 +13,9 @@ import {
     GetCellCoordinatesParams,
     ExcelGetCellsActionInput,
     ExcelClearCellsActionInput,
-    ExcelDeleteColumnsActionInput
-} from "./excel.types";
+    ExcelDeleteColumnsActionInput,
+    ExcelInsertColumnsActionInput,
+} from './excel.types';
 
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
@@ -26,8 +27,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     async open(input: ExcelOpenActionInput): Promise<void> {
         const winax = await import('winax');
-        this.session = new winax.Object("Excel.Application", { activate: true });
-
+        this.session = new winax.Object('Excel.Application', { activate: true });
         this.session.Workbooks.Open(input.path);
         this.session.Visible = true;
         if (input.worksheet) {
@@ -53,7 +53,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
-    async save(input: ExcelSaveActionInput) {
+    async save(
+        input: ExcelSaveActionInput
+    ) {
         if (input.fileName) {
             this.session.ActiveWorkbook.SaveAs(input.fileName);
         } else {
@@ -114,7 +116,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
+        if (!Array.isArray(input.cellValues))
+            throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1)
@@ -130,7 +133,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 } catch (e) {
                     throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
-            }
+            } 
             rowCounter++;
             columnCounter = startColumn;
         }
@@ -171,6 +174,26 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async insertColumnsBefore(
+        input: ExcelInsertColumnsActionInput
+        ): Promise<void> {
+            const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+        try {
+            const column = this.getColumnCoordinate(input.column);
+            const amount = input.amount;
+
+            targetWorksheet
+                .Range(
+                    targetWorksheet.Columns(column),
+                    targetWorksheet.Columns(column + amount - 1)
+                )
+                .Insert();
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+        }
+    }
+
     private isApplicationOpen() {
         if (!this.session) {
             throw new Error('There is no active Excel session. Open application before');
@@ -199,9 +222,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
 
         switch (request.script) {
-            case "excel.open":
+            case 'excel.open':
                 return this.open(request.input);
-            case "excel.getCell":
+            case 'excel.getCell':
                 this.isApplicationOpen();
                 return this.getCell(request.input);
             case "excel.getCells":
@@ -210,7 +233,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCell":
                 this.isApplicationOpen();
                 return this.setCell(request.input);
-            case "excel.findFirstEmptyRow":
+            case 'excel.findFirstEmptyRow':
                 this.isApplicationOpen();
                 return this.findFirstEmptyRow(request.input);
             case "excel.clearCells":
@@ -219,13 +242,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCells":
                 this.isApplicationOpen();
                 return this.setCells(request.input);
-            case "excel.save":
+            case 'excel.insertColumnsBefore':
+                this.isApplicationOpen();
+                return this.insertColumnsBefore(request.input);
+            case 'excel.save':
                 this.isApplicationOpen();
                 return this.save(request.input);
-            case "excel.close":
+            case 'excel.close':
                 return this.close();
             default:
-                throw new Error("Action not found");
+                throw new Error('Action not found');
         }
     }
 
@@ -239,7 +265,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
                 startRow: startRow ?? 1,
                 endColumn: this.getColumnCoordinate(endColumn),
-                endRow: endRow ?? null
+                endRow: endRow ?? null,
             };
         } catch (e) {
             throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));
