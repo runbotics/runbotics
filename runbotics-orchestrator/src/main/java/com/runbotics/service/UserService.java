@@ -312,7 +312,24 @@ public class UserService {
             .findById(adminUserDTO.getId())
             .map(
                 existingUser -> {
+                    if (existingUser.isActivated()) {
+                        adminUserDTO.setActivated(existingUser.isActivated());
+                    }
+
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+
+                    if (adminUserDTO.getRoles() != null) {
+                        Set<Authority> managedAuthorities = existingUser.getAuthorities();
+                        managedAuthorities.clear();
+                        adminUserDTO
+                            .getRoles()
+                            .stream()
+                            .map(authorityRepository::findById)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .forEach(managedAuthorities::add);
+                    }
+
                     return existingUser;
                 }
             )
@@ -425,7 +442,6 @@ public class UserService {
         adminUserDTO.setCreatedBy(null);
         adminUserDTO.setCreatedDate(null);
         adminUserDTO.setLastModifiedBy(null);
-        adminUserDTO.setRoles(null);
         adminUserDTO.setFeatureKeys(null);
     }
 }

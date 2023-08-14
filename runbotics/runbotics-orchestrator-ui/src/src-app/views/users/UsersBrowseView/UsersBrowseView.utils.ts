@@ -1,3 +1,5 @@
+import { Role } from 'runbotics-common';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 import { UsersTab } from '#src-app/utils/users-tab';
 
@@ -24,3 +26,16 @@ export const useUsersTabs = (): UsersTabsHookProps[]  => {
         }
     ];
 };
+
+export enum UserField {
+    EMAIL = 'email',
+    ROLE = 'role',
+    CREATED_BY = 'createdBy',
+    CREATED_DATE = 'createdDate',
+    LAST_MODIFIED_BY = 'lastModifiedBy',
+    LAST_MODIFIED_DATE = 'lastModifiedDate',
+};
+
+export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.split('_')[1]);
+
+export const getAllUserRoles = (): Role[] => Object.values(Role);
