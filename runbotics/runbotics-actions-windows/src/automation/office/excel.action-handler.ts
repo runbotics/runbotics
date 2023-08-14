@@ -88,8 +88,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
                 const rowValues: unknown[] = [];
                 for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
-                    rowValues.push(targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? '');
-                }
+                    rowValues.push(
+                        targetWorksheet
+                            .Cells(rowIdx, columnIdx)
+                            .Value() ?? '')
+                };
                 cellValues.push(rowValues);
             }
 
@@ -102,7 +105,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCell(
         input: ExcelSetCellActionInput
     ): Promise<void> {
-        const cell = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name).Range(`${input.column}${input.row}`);
+        const cell = this.session
+            .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
+            .Range(`${input.column}${input.row}`)
 
         cell.Value = input.value;
     }
@@ -110,7 +115,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
+        if (!Array.isArray(input.cellValues)) 
+            throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1)
@@ -126,7 +132,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 } catch (e) {
                     throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
                 }
-            }
+            } 
             rowCounter++;
             columnCounter = startColumn;
         }
@@ -216,21 +222,20 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     ): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.targetCells)) 
+            if (!Array.isArray(input.targetCells))
                 targetWorksheet
                     .Range(input.targetCells)
                     .Clear();
             else for (const cellCoordinate of input.targetCells)
-                targetWorksheet.Range(cellCoordinate)
+                targetWorksheet
+                    .Range(cellCoordinate)
                     .Clear();
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
     }
 
-    run(
-        request: ExcelActionRequest
-    ) {
+    run(request: ExcelActionRequest) {
         if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
