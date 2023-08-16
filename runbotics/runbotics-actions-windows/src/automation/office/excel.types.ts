@@ -10,7 +10,9 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
     | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>
     | DesktopRunRequest<"excel.clearCells", ExcelClearCellsActionInput>
-    | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput> 
+    | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput>
+    | DesktopRunRequest<"excel.createWorksheet", ExcelCreateWorksheetActionInput>
+    | DesktopRunRequest<"excel.renameWorksheet", ExcelRenameWorksheetActionInput>
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
     | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
 
@@ -91,6 +93,17 @@ export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
     worksheet?: string;
+};
+
+export interface ExcelCreateWorksheetActionInput {
+    name?: string;
+};
+
+export type ExcelCreateWorksheetActionOutput = string
+
+export interface ExcelRenameWorksheetActionInput {
+    worksheet?: string;
+    newName: string;
 };
 
 export type ExcelArrayStructure = (string | number | boolean)[][];
