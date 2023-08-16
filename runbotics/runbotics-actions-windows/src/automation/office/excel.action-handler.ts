@@ -184,7 +184,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         let worksheet: string;
 
         if (input?.name) {
-            this.checkWorksheetAndThrowError(input.name, false);
+            this.checkWorksheet(input.name, false);
             worksheet = (this.session.Worksheets
                 .Add(null, this.session.Worksheets(worksheetsCount))
                 .Name = input.name);
@@ -196,6 +196,20 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
         return worksheet;
     }
+
+    async renameWorksheet(
+        input: ExcelRenameWorksheetActionInput
+    ): Promise<void> {
+        this.checkWorksheet(input.newName, false);
+
+        if (input?.worksheet) {
+            this.checkWorksheet(input.worksheet, true);
+            this.session.Worksheets(input.worksheet).Name = input.newName;
+        } else {
+            this.session.ActiveSheet.Name = input.newName;
+        }
+    }
+
     async insertColumnsBefore(
         input: ExcelInsertColumnsActionInput
     ): Promise<void> {
@@ -235,19 +249,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async renameWorksheet(
-        input: ExcelRenameWorksheetActionInput
-    ): Promise<void> {
-        this.checkWorksheetAndThrowError(input.newName, false);
-
-        if (input?.worksheet) {
-            this.checkWorksheetAndThrowError(input.worksheet, true);
-            this.session.Worksheets(input.worksheet).Name = input.newName;
-        } else {
-            this.session.ActiveSheet.Name = input.newName;
-        }
-    }
-
     async clearCells(
         input: ExcelClearCellsActionInput
     ): Promise<void> {
@@ -273,7 +274,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    private checkWorksheetAndThrowError(worksheet: string, shouldExist: boolean): void {
+    /**
+     * @description Function throws an error if the Excel worksheet exists 
+     * and we expect it does not exist, or if it does not exist and we expect it to exist.
+     */
+    private checkWorksheet(worksheet: string, shouldExist: boolean): void {
         if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
             (!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
                 throw new Error(ExcelErrorMessage.existenceOrAbsenceOfWorksheet(shouldExist));
@@ -306,14 +311,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.setCells':
                 this.isApplicationOpen();
                 return this.setCells(request.input);
-            case "excel.createWorksheet":
-            case 'excel.insertColumnsBefore':
+            case 'excel.createWorksheet':
                 this.isApplicationOpen();
                 return this.createWorksheet(request.input);
-            case "excel.renameWorksheet":
+            case 'excel.renameWorksheet':
                 this.isApplicationOpen();
                 return this.renameWorksheet(request.input);
-            case "excel.save":
+            case 'excel.insertColumnsBefore':
+                this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);
             case 'excel.insertColumnsAfter':
                 this.isApplicationOpen();

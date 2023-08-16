@@ -89,13 +89,13 @@ export interface ExcelClearCellsActionInput {
     worksheet?: string;
 }
 
+export type ExcelArrayStructure = unknown[][]
+
 export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
     worksheet?: string;
 };
-
-export type ExcelArrayStructure = unknown[][]
 
 export interface ExcelCreateWorksheetActionInput {
     name?: string;
