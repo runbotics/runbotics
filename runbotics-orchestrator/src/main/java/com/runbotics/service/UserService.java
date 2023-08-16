@@ -15,6 +15,7 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.web.rest.errors.LoginAlreadyUsedException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -316,6 +317,14 @@ public class UserService {
                         adminUserDTO.setActivated(existingUser.isActivated());
                     }
 
+                    userRepository
+                        .findOneByEmailIgnoreCase(adminUserDTO.getEmail())
+                        .ifPresent(user -> {throw new EmailAlreadyUsedException();});
+
+                    userRepository
+                        .findOneByLogin(adminUserDTO.getLogin())
+                        .ifPresent(user -> {throw new LoginAlreadyUsedException();});
+
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
                     if (adminUserDTO.getRoles() != null) {
@@ -442,6 +451,7 @@ public class UserService {
         adminUserDTO.setCreatedBy(null);
         adminUserDTO.setCreatedDate(null);
         adminUserDTO.setLastModifiedBy(null);
+        adminUserDTO.setLastModifiedDate(null);
         adminUserDTO.setFeatureKeys(null);
     }
 }
