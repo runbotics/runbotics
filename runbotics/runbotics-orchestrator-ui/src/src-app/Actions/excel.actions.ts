@@ -17,17 +17,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Open.Path.Title'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Open.Path.Title'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['path'],
                     },
@@ -38,7 +44,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -63,34 +71,46 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Column'
+                                ),
                                 type: 'string',
                             },
                             row: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Row'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['row', 'column'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Output'
+                        ),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.VariableName'
+                                ),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -98,31 +118,39 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
                 output: {
-                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                    title: translate(
+                        'Process.Details.Modeler.Actions.Common.Output'
+                    ),
                     type: 'object',
                     properties: {
                         variableName: {
-                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                            title: translate(
+                                'Process.Details.Modeler.Actions.Common.VariableName'
+                            ),
                             type: 'string',
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             formData: {
                 output: {
                     variableName: undefined,
-                }
+                },
             },
         },
     },
     'excel.getCells': {
         id: ExcelAction.GET_CELLS,
-        label: translate('Process.Details.Modeler.Actions.Excel.GetCells.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.GetCells.Label'
+        ),
         script: ExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -137,42 +165,58 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             startColumn: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
+                                ),
                                 type: 'string',
                             },
                             startRow: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartRow'
+                                ),
                                 type: 'string',
                             },
                             endColumn: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.EndColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.EndColumn'
+                                ),
                                 type: 'string',
                             },
                             endRow: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.EndRow'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.EndRow'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['endColumn', 'endRow'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Output'
+                        ),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.VariableName'
+                                ),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -180,7 +224,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -189,7 +235,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 output: {
                     variableName: undefined,
-                }
+                },
             },
         },
     },
@@ -204,25 +250,35 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Column'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Column'
+                                ),
                                 type: 'string',
                             },
                             row: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Row'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Row'
+                                ),
                                 type: 'string',
                             },
                             value: {
-                                title: translate('Process.Details.Modeler.Actions.Common.Value'),
-                                type: 'string'
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.Value'
+                                ),
+                                type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['row', 'column', 'value'],
                     },
@@ -233,7 +289,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -243,7 +301,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.setCells': {
         id: ExcelAction.SET_CELLS,
-        label: translate('Process.Details.Modeler.Actions.Excel.SetCells.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.SetCells.Label'
+        ),
         script: ExcelAction.SET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -252,25 +312,35 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             startColumn: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
+                                ),
                                 type: 'string',
                             },
                             startRow: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartRow'
+                                ),
                                 type: 'string',
                             },
                             cellValues: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.SetCells.CellValues'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['cellValues'],
                     },
@@ -281,22 +351,30 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     startColumn: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.StartColumn.Info'),
-                        }
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.SetCells.StartColumn.Info'
+                            ),
+                        },
                     },
                     startRow: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.StartRow.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.SetCells.StartRow.Info'
+                            ),
                         },
                     },
                     cellValues: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.SetCells.CellValues.Info'
+                            ),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -307,7 +385,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.findFirstEmptyRow': {
         id: ExcelAction.FIND_FIRST_EMPTY_ROW,
-        label: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'
+        ),
         script: ExcelAction.FIND_FIRST_EMPTY_ROW,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -322,34 +402,46 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             startColumn: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
+                                ),
                                 type: 'string',
                             },
                             startRow: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartRow'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
                             },
                         },
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Output'
+                        ),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.VariableName'
+                                ),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -357,27 +449,35 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     startColumn: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'),
-                        }
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'
+                            ),
+                        },
                     },
                     startRow: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'),
-                        }
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'
+                            ),
+                        },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
-                        }
-                    }
-                }
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Common.VariableMessage'
+                            ),
+                        },
+                    },
+                },
             },
             formData: {
                 output: {
@@ -388,7 +488,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.clearCells': {
         id: ExcelAction.CLEAR_CELLS,
-        label: translate('Process.Details.Modeler.Actions.Excel.ClearCells.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.ClearCells.Label'
+        ),
         script: ExcelAction.CLEAR_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -397,17 +499,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             targetCells: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells'
+                                ),
                                 type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['targetCells'],
                     },
@@ -418,12 +526,16 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     targetCells: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.ClearCells.TargetCells.Info'
+                            ),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -433,7 +545,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.deleteColumns': {
         id: ExcelAction.DELETE_COLUMNS,
-        label: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.DeleteColumns.Label'
+        ),
         script: ExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -442,17 +556,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             columnRange: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'),
-                                type: 'string'
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'
+                                ),
+                                type: 'string',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['columnRange'],
                     },
@@ -463,12 +583,16 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     columnRange: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange.Info'
+                            ),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -478,7 +602,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.insertColumnsBefore': {
         id: ExcelAction.INSERT_COLUMNS_BEFORE,
-        label: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label'
+        ),
         script: ExcelAction.INSERT_COLUMNS_BEFORE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -487,19 +613,27 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
+                                ),
                                 type: 'string',
                             },
                             amount: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'
+                                ),
                                 type: 'number',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
                             },
                         },
@@ -512,17 +646,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     column: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'
+                            ),
                         },
                     },
                     amount: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'
+                            ),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -532,7 +672,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.insertColumnsAfter': {
         id: ExcelAction.INSERT_COLUMNS_AFTER,
-        label: translate('Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label'
+        ),
         script: ExcelAction.INSERT_COLUMNS_AFTER,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -541,19 +683,27 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             column: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.StartColumn'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.StartColumn'
+                                ),
                                 type: 'string',
                             },
                             amount: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount'
+                                ),
                                 type: 'number',
                             },
                             worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Worksheet'
+                                ),
                                 type: 'string',
                             },
                         },
@@ -566,17 +716,23 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     column: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info'
+                            ),
                         },
                     },
                     amount: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info'
+                            ),
                         },
                     },
                     worksheet: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Excel.Worksheet.Info'
+                            ),
                         },
                     },
                 },
@@ -586,7 +742,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     'excel.runMacro': {
         id: 'excel.runMacro',
-        label: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Label'),
+        label: translate(
+            'Process.Details.Modeler.Actions.Excel.RunMacro.Label'
+        ),
         script: 'excel.runMacro',
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -595,31 +753,36 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             macro: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title'),
-                                type: 'string'
-                            }
-                            ,
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title'
+                                ),
+                                type: 'string',
+                            },
                             functionParams: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams'),
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams'
+                                ),
                                 type: 'array',
                                 items: {
                                     type: 'string',
                                 },
-                                maxItems: 10
+                                maxItems: 10,
                             },
                         },
 
                         required: ['macro'],
-                    }
-                }
+                    },
+                },
             },
             uiSchema: {},
             formData: {},
-        }
+        },
     },
     'excel.save': {
         id: ExcelAction.SAVE,
@@ -632,16 +795,20 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Save.FileName.Title'),
-                                type: 'string'
-                            }
-                        }
-                    }
-                }
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Excel.Save.FileName.Title'
+                                ),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
             },
             uiSchema: {
                 'ui:order': ['input'],

@@ -12,7 +12,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.clearCells", ExcelClearCellsActionInput>
     | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput> 
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
-    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
+    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<"excel.runMacro", ExcelRunMacroInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -91,6 +92,11 @@ export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
     worksheet?: string;
+};
+
+export type ExcelRunMacroInput = {
+    macro: string;
+    functionParams?: Array<string>;
 };
 
 export type ExcelArrayStructure = (string | number | boolean)[][];
