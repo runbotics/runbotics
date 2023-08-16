@@ -35,6 +35,11 @@ export type ExcelRunMacroInput = {
     functionParams: Array<string>;
 };
 
+export type ExcelRunMacroInput = {
+    macro: string;
+    functionParams: Array<string>;
+};
+
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
     private session = null;
