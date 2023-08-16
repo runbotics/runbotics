@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import i18n from 'i18next';
 
+import { LabelGroup } from '#src-app/components/Label/Label.styles';
 import If from '#src-app/components/utils/If';
 import useTranslations, {
     checkIfKeyExists,
@@ -128,7 +129,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
             </IconButton>
         </Stack>
     );
-    
+
     const ActionSystemLabel = () => (
         <>
             {selectedAction && selectedAction.system && (
@@ -172,9 +173,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                         width: 'fit-content'
                     }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                        {selectedAction.helperTextLabel}
-                    </div>
+                    <LabelGroup>{selectedAction.helperTextLabel}</LabelGroup>
                 </Alert>
             )}
         </>

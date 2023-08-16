@@ -18,7 +18,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     const dispatch = useDispatch();
     const { byId: processes } = useSelector((state) => state.process.all);
     const [customError, setCustomError] = useState('');
-    const [value, setValue] = useState({id: props.value, disabled: false});
+    const [value, setValue] = useState<ProcessOption>({ id: props.value, disabled: false });
     const { translate } = useTranslations();
 
     useEffect(() => {
