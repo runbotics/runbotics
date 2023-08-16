@@ -684,6 +684,39 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [ExcelAction.SET_ACTIVE_WORKSHEET]: {
+        id: ExcelAction.SET_ACTIVE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.Label'),
+        script: ExcelAction.SET_ACTIVE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string'
+                            },
+                        },
+                        required: ['worksheet']
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    worksheet: undefined,
+                },
+            },
+        },
+    },
     'excel.save': {
         id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),

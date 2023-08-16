@@ -17,6 +17,7 @@ import {
     ExcelCreateWorksheetActionInput,
     ExcelCreateWorksheetActionOutput,
     ExcelRenameWorksheetActionInput,
+    ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
 } from './excel.types';
 
@@ -210,6 +211,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async setActiveWorksheet(
+        input: ExcelSetActiveWorksheetActionInput
+    ): Promise<void> {
+        this.checkWorksheet(input.worksheet, true);
+
+        this.session.Worksheets(input.worksheet).Activate();
+    }
+
     async insertColumnsBefore(
         input: ExcelInsertColumnsActionInput
     ): Promise<void> {
@@ -317,6 +326,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.renameWorksheet':
                 this.isApplicationOpen();
                 return this.renameWorksheet(request.input);
+            case 'excel.setActiveWorksheet':
+                this.isApplicationOpen();
+                return this.setActiveWorksheet(request.input);
             case 'excel.insertColumnsBefore':
                 this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);

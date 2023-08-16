@@ -13,6 +13,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput>
     | DesktopRunRequest<"excel.createWorksheet", ExcelCreateWorksheetActionInput>
     | DesktopRunRequest<"excel.renameWorksheet", ExcelRenameWorksheetActionInput>
+    | DesktopRunRequest<"excel.setActiveWorksheet", ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
     | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
 
@@ -104,6 +105,10 @@ export type ExcelCreateWorksheetActionOutput = string
 export interface ExcelRenameWorksheetActionInput {
     worksheet?: string;
     newName: string;
+};
+
+export interface ExcelSetActiveWorksheetActionInput {
+    worksheet: string;
 };
 
 export type ExcelArrayStructure = (string | number | boolean)[][];
