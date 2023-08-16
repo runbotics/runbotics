@@ -686,7 +686,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [ExcelAction.SET_ACTIVE_WORKSHEET]: {
         id: ExcelAction.SET_ACTIVE_WORKSHEET,
-        label: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.Label'),
+        label: translate('Process.Details.Modeler.Actions.Excel.SetActiveWorksheet.Label'),
         script: ExcelAction.SET_ACTIVE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,

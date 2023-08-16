@@ -214,8 +214,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setActiveWorksheet(
         input: ExcelSetActiveWorksheetActionInput
     ): Promise<void> {
+        if (input.worksheet === this.session.ActiveSheet.Name) return;
+        
         this.checkWorksheet(input.worksheet, true);
-
         this.session.Worksheets(input.worksheet).Activate();
     }
 
@@ -290,7 +291,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     private checkWorksheet(worksheet: string, shouldExist: boolean): void {
         if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
             (!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
-                throw new Error(ExcelErrorMessage.existenceOrAbsenceOfWorksheet(shouldExist));
+                throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
         }
     }
 
