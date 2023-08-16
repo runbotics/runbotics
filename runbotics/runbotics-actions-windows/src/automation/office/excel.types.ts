@@ -89,8 +89,6 @@ export interface ExcelClearCellsActionInput {
     worksheet?: string;
 }
 
-export type ExcelArrayStructure = unknown[][]
-
 export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
@@ -107,3 +105,5 @@ export interface ExcelRenameWorksheetActionInput {
     worksheet?: string;
     newName: string;
 };
+
+export type ExcelArrayStructure = (string | number | boolean)[][];
