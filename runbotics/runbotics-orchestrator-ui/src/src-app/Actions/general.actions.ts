@@ -86,6 +86,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.General.StartProcess.Label'),
         script: GeneralAction.START_PROCESS,
         runner: Runner.DESKTOP_SCRIPT,
+        helperTextLabel: translate('Process.Details.Modeler.Actions.General.StartProcess.HelperTextLabel'),
         output: {
             assignVariables: true,
             outputMethods: {

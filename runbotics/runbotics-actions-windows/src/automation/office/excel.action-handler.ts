@@ -13,6 +13,9 @@ import {
     ExcelGetCellsActionInput,
     ExcelClearCellsActionInput,
     ExcelDeleteColumnsActionInput,
+    ExcelCreateWorksheetActionInput,
+    ExcelCreateWorksheetActionOutput,
+    ExcelRenameWorksheetActionInput,
     ExcelInsertColumnsActionInput,
     ExcelRunMacroInput,
 } from "./excel.types";
@@ -112,9 +115,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         cell.Value = input.value;
     }
 
-    async setCells(input: ExcelSetCellsActionInput): Promise<void> {
-        if (!Array.isArray(input.cellValues))
-            throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
+    async setCells(
+        input: ExcelSetCellsActionInput
+    ): Promise<void> {
+        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { startRow, startColumn } = this.getCellCoordinates({
             startColumn: input?.startColumn,
             startRow: Number(input?.startRow ?? 1),
@@ -179,6 +183,40 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async createWorksheet(
+        input: ExcelCreateWorksheetActionInput
+    ): Promise<ExcelCreateWorksheetActionOutput> {
+        const worksheets = this.session.Worksheets;
+        const worksheetsCount = worksheets.Count;
+        let worksheet: string;
+
+        if (input?.name) {
+            this.checkWorksheet(input.name, false);
+            worksheet = (this.session.Worksheets
+                .Add(null, this.session.Worksheets(worksheetsCount))
+                .Name = input.name);
+        } else {
+            worksheet = this.session.Worksheets
+                .Add(null, this.session.Worksheets(worksheetsCount))
+                .Name;
+        }
+
+        return worksheet;
+    }
+
+    async renameWorksheet(
+        input: ExcelRenameWorksheetActionInput
+    ): Promise<void> {
+        this.checkWorksheet(input.newName, false);
+
+        if (input?.worksheet) {
+            this.checkWorksheet(input.worksheet, true);
+            this.session.Worksheets(input.worksheet).Name = input.newName;
+        } else {
+            this.session.ActiveSheet.Name = input.newName;
+        }
+    }
+
     async insertColumnsBefore(
         input: ExcelInsertColumnsActionInput
     ): Promise<void> {
@@ -223,7 +261,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
+    async clearCells(
+        input: ExcelClearCellsActionInput
+    ): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(
                 input?.worksheet ?? this.session.ActiveSheet.Name
@@ -340,9 +380,18 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     private isApplicationOpen() {
         if (!this.session) {
-            throw new Error(
-                "There is no active Excel session. Open application before"
-            );
+            throw new Error('There is no active Excel session. Open application before');
+        }
+    }
+
+    /**
+     * @description Function throws an error if the Excel worksheet exists 
+     * and we expect it does not exist, or if it does not exist and we expect it to exist.
+     */
+    private checkWorksheet(worksheet: string, shouldExist: boolean): void {
+        if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+            (!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
+                throw new Error(ExcelErrorMessage.existenceOrAbsenceOfWorksheet(shouldExist));
         }
     }
 
@@ -372,7 +421,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case "excel.setCells":
                 this.isApplicationOpen();
                 return this.setCells(request.input);
-            case "excel.insertColumnsBefore":
+            case 'excel.createWorksheet':
+                this.isApplicationOpen();
+                return this.createWorksheet(request.input);
+            case 'excel.renameWorksheet':
+                this.isApplicationOpen();
+                return this.renameWorksheet(request.input);
+            case 'excel.insertColumnsBefore':
                 this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);
             case "excel.insertColumnsAfter":
@@ -428,5 +483,17 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             }
             return a.localeCompare(b);
         });
+    }
+
+    private checkIfWorksheetExist(worksheet: string): boolean {
+        const worksheets = this.session.Worksheets;
+        const worksheetUpper = worksheet.toUpperCase();
+        for (let i = 1; i <= worksheets.Count; i++) {
+            const sheet = worksheets(i);
+            if (sheet.Name.toUpperCase() === worksheetUpper) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -161,6 +161,8 @@ export enum ExcelAction {
 	GET_CELLS = 'excel.getCells',
 	SET_CELL = 'excel.setCell',
 	SET_CELLS = 'excel.setCells',
+	CREATE_WORKSHEET = 'excel.createWorksheet',
+	RENAME_WORKSHEET = 'excel.renameWorksheet',
 	CLEAR_CELLS = 'excel.clearCells',
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',

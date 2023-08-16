@@ -5,7 +5,7 @@ import { Listr } from 'listr2';
 import fs from 'fs-extra';
 
 import { spawn, Emoji } from 'src/utils';
-import { MONOREPO_CONFIGS_RELATIVE_PATHS, RUNBOTICS_CONFIG_RELATIVE_PATH, API_CONFIG_RELATIVE_PATH, LISTR_RENDERER_OPTIONS } from './utils';
+import { MONOREPO_CONFIGS_RELATIVE_PATHS, RUNBOTICS_CONFIG_RELATIVE_PATH, LISTR_RENDERER_OPTIONS } from './utils';
 
 const { readJsonSync, writeFileSync } = fs;
 
@@ -32,13 +32,10 @@ const alterFiles = async (rbRootDir: string, newVersion: string) => {
         {
             title: 'orchestrator',
             task: async () => {
-                const absolutePath = join(rbRootDir, API_CONFIG_RELATIVE_PATH);
                 try {
-                    overrideJsonVersion(absolutePath, newVersion);
                     await spawn('sh', ['gradlew', 'setVersion', `-PnewVersion=${newVersion}`], { cwd: join(rbRootDir, 'runbotics-orchestrator') });
                 } catch (e: any) {
-                    const message = e.code === 'ENOENT' ? ` (No such file like "${absolutePath}")` : undefined;
-                    throw new Error(chalk.red(`${Emoji.error} Error: Could not overwrite orchestrator config version${message ?? ''}`));
+                    throw new Error(chalk.red(`${Emoji.error} Error: Could not overwrite orchestrator config version`));
                 }
             },
         },

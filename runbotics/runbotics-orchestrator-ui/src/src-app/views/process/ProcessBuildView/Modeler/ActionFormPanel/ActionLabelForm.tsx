@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import i18n from 'i18next';
 
+import { LabelGroup } from '#src-app/components/Label/Label.styles';
 import If from '#src-app/components/utils/If';
 import useTranslations, {
     checkIfKeyExists,
@@ -161,6 +162,23 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         </>
     );
 
+    const ActionHelperTextLabel = () => (
+        <>
+            {selectedAction && selectedAction.helperTextLabel && (
+                <Alert
+                    severity="warning"
+                    sx={{
+                        mt: (theme) => theme.spacing(1),
+                        alignItems: 'center',
+                        width: 'fit-content'
+                    }}
+                >
+                    <LabelGroup>{selectedAction.helperTextLabel}</LabelGroup>
+                </Alert>
+            )}
+        </>
+    );
+
     return (
         <>
             <If condition={formState.editing} else={<ActionNameLabel />}>
@@ -180,6 +198,7 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                 </form>
             </If>
             <ActionSystemLabel />
+            <ActionHelperTextLabel />
         </>
     );
 };
