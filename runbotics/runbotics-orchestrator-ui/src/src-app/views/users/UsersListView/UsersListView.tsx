@@ -9,6 +9,7 @@ import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersSelector } from '#src-app/store/slices/Users';
 
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
+import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
 import { StyledActionsContainer, StyledTextField } from './UsersListView.styles';
 
@@ -29,6 +30,14 @@ const UsersListView: FC = () => {
     const { activated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch } = useUserSearch(true, limit, page);
 
+    const [userData, setUserData] = useState({});
+    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+
+    const handleEdit = (rowData) => {
+        setIsEditDialogVisible(true);
+        setUserData(rowData);
+    };
+
     useEffect(() => {
         const isPageNotAvailable = activated.allByPage?.totalPages && page >= activated.allByPage?.totalPages;
         if (isPageNotAvailable) {
@@ -46,6 +55,11 @@ const UsersListView: FC = () => {
 
     return (
         <>
+            <UsersListEditDialog
+                open={isEditDialogVisible}
+                onClose={() => setIsEditDialogVisible(false)}
+                userData={userData}
+            />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
@@ -60,6 +74,7 @@ const UsersListView: FC = () => {
                 onPageChange={setPage}
                 pageSize={limit}
                 onPageSizeChange={setLimit}
+                openUserEditDialog={handleEdit}
             />
         </>
     );

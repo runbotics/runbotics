@@ -1,0 +1,28 @@
+import { IUser } from 'runbotics-common';
+
+import { translate } from '#src-app/hooks/useTranslations';
+
+import { ValidatorType, UserDataValidation } from './UsersListEdit.types';
+
+export const getUserDataWithoutNulls = (userData: IUser) => ({
+    ...userData,
+    firstName: userData.firstName ?? '',
+    lastName: userData.lastName ?? '',
+    langKey: userData.langKey ?? 'en'
+});
+
+export const getUserDataWithoutEmptyStrings = (userData: IUser) => ({
+    ...userData,
+    firstName: (userData.firstName === '' ? null : userData.firstName),
+    lastName: (userData.lastName === '' ? null : userData.lastName)
+});
+
+export const initialValidationState: UserDataValidation = {
+    email: true,
+    login: true
+};
+
+export const requiredFieldValidator: ValidatorType = {
+    error: true,
+    helperText: 'fill it #translate',
+};
