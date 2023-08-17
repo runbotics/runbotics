@@ -68,15 +68,22 @@ export default class ExcelErrorMessage {
         `;
     }
 
+    static worksheetIncorrectInput(shouldExist: boolean): string {
+        return shouldExist
+            ? "Worksheet doesn't exist."
+            : "Worksheet name incorrect or already taken."
+        ;
+    }
+
     static insertColumnsIncorrectInput(e?: Error): string {
         return `
             ${this.getDisclaimer(e)}
             Column has to be a column letter or number, e.g. "C" or 3.
             Amount has to be a whole positive number, eg. 5.
-                
         `
     }
 
+    /* Other */
     private static getDisclaimer(e?: Error): string {
         return `
                 ${e ?? ''}

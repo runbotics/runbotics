@@ -35,7 +35,7 @@ jobs:
             bot:
               - 'runbotics/runbotics-desktop/package.json'
             api:
-              - 'runbotics-orchestrator/package.json'
+              - 'runbotics-orchestrator/build.gradle'
 
   push-ui:
     needs: changes-detection
@@ -252,13 +252,13 @@ jobs:
         run: gradle bootJar -Pprod jibDockerBuild
 
       - name: Assign package version
-        uses: nyaa8/package-version@v1
-        with:
-          path: './runbotics-orchestrator/package.json'
+        run: |
+          version=$(grep -m 1 -o 'version = "[^"]*"' build.gradle | awk -F'"' '{print $2}' | tr -d '\n')
+          echo "API_VERSION=$version" >> $GITHUB_ENV
 
       - name: Push image
         run: |
-          docker tag runbotics/runbotics-orchestrator:latest 'runbotics/runbotics-orchestrator:${{ env.PACKAGE_VERSION }}'
+          docker tag runbotics/runbotics-orchestrator:latest runbotics/runbotics-orchestrator:$API_VERSION
           docker push --all-tags runbotics/runbotics-orchestrator
   dispatch-event:
     needs: [push-ui, push-scheduler, push-api]

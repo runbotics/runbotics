@@ -300,7 +300,6 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         },
                     },
                 },
-                formData: {},
             },
             formData: {},
         },
@@ -584,6 +583,140 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    [ExcelAction.CREATE_WORKSHEET]: {
+        id: ExcelAction.CREATE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),
+        script: ExcelAction.CREATE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name'),
+                                type: 'string'
+                            },
+                        },
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name.Info'),
+                        }
+                    },
+                },
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
+    [ExcelAction.RENAME_WORKSHEET]: {
+        id: ExcelAction.RENAME_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.Label'),
+        script: ExcelAction.RENAME_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string'
+                            },
+                            newName: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.NewName'),
+                                type: 'string'
+                            },
+                        },
+                        required: ['newName']
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.Worksheet.Info'),
+                        }
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    newName: undefined,
+                },
+            },
+        },
+    },
+    [ExcelAction.SET_ACTIVE_WORKSHEET]: {
+        id: ExcelAction.SET_ACTIVE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.Excel.SetActiveWorksheet.Label'),
+        script: ExcelAction.SET_ACTIVE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string'
+                            },
+                        },
+                        required: ['worksheet']
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    worksheet: undefined,
+                },
+            },
+        },
+    },
     'excel.save': {
         id: ExcelAction.SAVE,
         label: translate('Process.Details.Modeler.Actions.Excel.Save.Label'),
@@ -615,7 +748,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     'excel.close': {
         id: ExcelAction.CLOSE,
         label: translate('Process.Details.Modeler.Actions.Excel.Close.Label'),
-        script: 'excel.close',
+        script: ExcelAction.CLOSE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {

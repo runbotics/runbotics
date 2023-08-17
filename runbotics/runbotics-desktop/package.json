@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.8.0-SNAPSHOT.25",
+    "version": "2.8.0-SNAPSHOT.31",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -27,7 +27,7 @@
         "winax": "3.3.4"
     },
     "dependencies": {
-        "@nestjs-modules/mailer": "^1.8.1",
+        "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
         "@nestjs/config": "^2.2.0",
         "@nestjs/core": "^9.2.1",
@@ -99,7 +99,7 @@
             "target": "nsis",
             "icon": "./public/icons/runbotics-512x512.png",
             "certificateFile": "./cert/selfsigncert.pfx",
-            "certificatePassword": "hrG6WZ885VZgbr"
+            "certificatePassword": "&#%TysWeL^^J@S46"
         },
         "nsis": {
             "allowToChangeInstallationDirectory": true,
