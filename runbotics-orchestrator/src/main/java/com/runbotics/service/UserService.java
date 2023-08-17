@@ -15,11 +15,11 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
-import com.runbotics.web.rest.errors.LoginAlreadyUsedException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -52,6 +52,8 @@ public class UserService {
     private final AccountPartialUpdateMapper accountPartialUpdateMapper;
 
     private final AdminUserMapper adminUserMapper;
+
+    private static final String ENTITY_NAME = "user";
 
     public UserService(
         UserRepository userRepository,
@@ -302,7 +304,8 @@ public class UserService {
      * Partial update information for the current user.
      * @param adminUserDTO additionally ignoring fields:
      *                     imageUrl, createBy, createdDate,
-     *                     lastModifiedBy, roles, featureKeys
+     *                     lastModifiedBy, lastModifiedDate,
+     *                     featureKeys
      * @return updated user
      */
     public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
@@ -317,13 +320,17 @@ public class UserService {
                         adminUserDTO.setActivated(existingUser.isActivated());
                     }
 
-                    userRepository
-                        .findOneByEmailIgnoreCase(adminUserDTO.getEmail())
-                        .ifPresent(user -> {throw new EmailAlreadyUsedException();});
-
-                    userRepository
-                        .findOneByLogin(adminUserDTO.getLogin())
-                        .ifPresent(user -> {throw new LoginAlreadyUsedException();});
+                    userRepository.findOneByEmailOrLogin(
+                        adminUserDTO.getEmail(),
+                        adminUserDTO.getLogin()
+                    )
+                    .ifPresent(user -> {
+                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "badEmail");
+                        } else {
+                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "badLogin");
+                        }
+                    });
 
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
@@ -447,11 +454,28 @@ public class UserService {
     }
 
     private void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
-        adminUserDTO.setImageUrl(null);
-        adminUserDTO.setCreatedBy(null);
-        adminUserDTO.setCreatedDate(null);
-        adminUserDTO.setLastModifiedBy(null);
-        adminUserDTO.setLastModifiedDate(null);
-        adminUserDTO.setFeatureKeys(null);
+        if (adminUserDTO.getImageUrl() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "imageUrl");
+        }
+
+        if (adminUserDTO.getCreatedBy() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "createdBy");
+        }
+
+        if (adminUserDTO.getCreatedDate() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "createdDate");
+        }
+
+        if (adminUserDTO.getLastModifiedBy() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "lastModifiedBy");
+        }
+
+        if (adminUserDTO.getLastModifiedDate() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "lastModifiedDate");
+        }
+
+        if (adminUserDTO.getFeatureKeys() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "featureKeys");
+        }
     }
 }
