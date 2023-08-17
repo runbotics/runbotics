@@ -1,0 +1,44 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="pasiecznys"  id="20230817084133-1">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process_instance"/>
+                <not>
+                    <indexExists indexName="process_instance_process_id_idx"/>
+                </not>
+            </and>
+        </preConditions>
+        <sql>
+            CREATE INDEX process_instance_process_id_idx ON process_instance(process_id);
+        </sql>
+    </changeSet>
+
+    <changeSet author="pasiecznys"  id="20230817084133-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process_instance_event"/>
+                <not>
+                    <indexExists indexName="process_instance_event_process_instance_id_idx"/>
+                </not>
+            </and>
+        </preConditions>
+        <sql>
+            CREATE INDEX process_instance_event_process_instance_id_idx ON  process_instance_event(process_instance_id);
+        </sql>
+    </changeSet>
+
+    <changeSet author="pasiecznys"  id="20230817084133-3">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process_instance_loop_event"/>
+                <not>
+                    <indexExists indexName="process_instance_loop_process_instance_id_idx"/>
+                </not>
+            </and>
+        </preConditions>
+        <sql>
+            CREATE INDEX process_instance_loop_process_instance_id_idx ON process_instance_loop_event(process_instance_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
