@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 import Logo from '#src-app/components/utils/Logo/Logo';
@@ -40,6 +41,7 @@ const initialValues: LoginFormState = {
 const LoginPage: FC = () => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
+    const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();
@@ -79,6 +81,9 @@ const LoginPage: FC = () => {
                     sourcePage: SOURCE_PAGE.LOGIN,
                     email: user.email,
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
+                });
+                router.push({ pathname: '/app/processes' }, null, {
+                    locale: user.langKey,
                 });
             })
             .catch((error) => {
