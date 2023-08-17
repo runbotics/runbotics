@@ -255,9 +255,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async runMacro(input: ExcelRunMacroInput) {
+
+        if(input.functionParams == undefined){
+            return this.session.Run(input.macro);
+        }
+
         switch (input.functionParams.length) {
-            case 0:
-                return this.session.Run(input.macro);
             case 1:
                 return this.session.Run(input.macro, input.functionParams[0]);
             case 2:
