@@ -258,7 +258,7 @@ jobs:
 
       - name: Push image
         run: |
-          docker tag runbotics/runbotics-orchestrator:latest 'runbotics/runbotics-orchestrator:$API_VERSION'
+          docker tag runbotics/runbotics-orchestrator:latest runbotics/runbotics-orchestrator:$API_VERSION
           docker push --all-tags runbotics/runbotics-orchestrator
   dispatch-event:
     needs: [push-ui, push-scheduler, push-api]
