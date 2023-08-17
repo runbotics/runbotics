@@ -1,499 +1,428 @@
-import { Injectable } from "@nestjs/common";
-import { DesktopRunRequest, StatefulActionHandler } from "runbotics-sdk";
+import { Injectable } from '@nestjs/common';
+import { StatefulActionHandler } from 'runbotics-sdk';
 import {
-    ExcelActionRequest,
-    ExcelGetCellActionInput,
-    ExcelOpenActionInput,
-    ExcelSaveActionInput,
-    ExcelSetCellActionInput,
-    ExcelSetCellsActionInput,
-    ExcelFindFirstEmptyRowActionInput,
-    CellCoordinates,
-    GetCellCoordinatesParams,
-    ExcelGetCellsActionInput,
-    ExcelClearCellsActionInput,
-    ExcelDeleteColumnsActionInput,
-    ExcelCreateWorksheetActionInput,
-    ExcelCreateWorksheetActionOutput,
-    ExcelRenameWorksheetActionInput,
-    ExcelInsertColumnsActionInput,
-    ExcelRunMacroInput,
-} from "./excel.types";
-import ExcelErrorMessage from "./excelErrorMessage";
+  ExcelActionRequest,
+  ExcelGetCellActionInput,
+  ExcelOpenActionInput,
+  ExcelSaveActionInput,
+  ExcelSetCellActionInput,
+  ExcelSetCellsActionInput,
+  ExcelFindFirstEmptyRowActionInput,
+  CellCoordinates,
+  GetCellCoordinatesParams,
+  ExcelGetCellsActionInput,
+  ExcelClearCellsActionInput,
+  ExcelDeleteColumnsActionInput,
+  ExcelCreateWorksheetActionInput,
+  ExcelCreateWorksheetActionOutput,
+  ExcelRenameWorksheetActionInput,
+  ExcelInsertColumnsActionInput,
+  ExcelRunMacroInput,
+} from './excel.types';
+import ExcelErrorMessage from './excelErrorMessage';
 @Injectable()
 export default class ExcelActionHandler extends StatefulActionHandler {
-    private session = null;
+  private session = null;
 
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  async open(input: ExcelOpenActionInput): Promise<void> {
+    const winax = await import('winax');
+    this.session = new winax.Object('Excel.Application', {
+      activate: true,
+    });
+    this.session.Workbooks.Open(input.path);
+    this.session.Visible = true;
+    if (input.worksheet) {
+      this.session.Worksheets(input.worksheet).Activate();
     }
 
-    async open(input: ExcelOpenActionInput): Promise<void> {
-        const winax = await import("winax");
-        this.session = new winax.Object("Excel.Application", {
-            activate: true,
-        });
-        this.session.Workbooks.Open(input.path);
-        this.session.Visible = true;
-        if (input.worksheet) {
-            this.session.Worksheets(input.worksheet).Activate();
+    // if (input.mode) {
+    //     excel.ActiveWorkbook.ChangeFileAccess(input.mode);
+    // }
+  }
+
+  /**
+   * @description Closes Excel application ignoring unsaved changes
+   */
+  async close(): Promise<void> {
+    if (this.session?.DisplayAlerts) {
+      this.session.DisplayAlerts = false;
+    }
+    this.session?.Quit();
+    if (this.session?.DisplayAlerts) {
+      this.session.DisplayAlerts = true;
+    }
+    this.session = null;
+  }
+
+  async save(input: ExcelSaveActionInput) {
+    if (input.fileName) {
+      this.session.ActiveWorkbook.SaveAs(input.fileName);
+    } else {
+      this.session.ActiveWorkbook.Save();
+    }
+  }
+
+  async getCell(input: ExcelGetCellActionInput): Promise<unknown> {
+    return this.session
+      .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
+      .Range(`${input.column}${input.row}`)
+      .Value();
+  }
+
+  async getCells(input: ExcelGetCellsActionInput): Promise<unknown[][]> {
+    try {
+      const cellValues: unknown[][] = [];
+      const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+      const { startRow, startColumn, endColumn, endRow } = this.getCellCoordinates({
+        startColumn: input?.startColumn,
+        startRow: input?.startRow ? Number(input?.startRow) : 1,
+        endColumn: input.endColumn,
+        endRow: Number(input.endRow),
+      });
+
+      for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
+        const rowValues: unknown[] = [];
+        for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
+          rowValues.push(targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? '');
         }
+        cellValues.push(rowValues);
+      }
 
-        // if (input.mode) {
-        //     excel.ActiveWorkbook.ChangeFileAccess(input.mode);
-        // }
+      return cellValues;
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.getCellsIncorrectInput(e));
     }
+  }
 
-    /**
-     * @description Closes Excel application ignoring unsaved changes
-     */
-    async close(): Promise<void> {
-        if (this.session?.DisplayAlerts) {
-            this.session.DisplayAlerts = false;
-        }
-        this.session?.Quit();
-        if (this.session?.DisplayAlerts) {
-            this.session.DisplayAlerts = true;
-        }
-        this.session = null;
-    }
+  async setCell(input: ExcelSetCellActionInput): Promise<void> {
+    const cell = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name).Range(`${input.column}${input.row}`);
 
-    async save(input: ExcelSaveActionInput) {
-        if (input.fileName) {
-            this.session.ActiveWorkbook.SaveAs(input.fileName);
-        } else {
-            this.session.ActiveWorkbook.Save();
-        }
-    }
+    cell.Value = input.value;
+  }
 
-    async getCell(input: ExcelGetCellActionInput): Promise<unknown> {
-        return this.session
-            .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-            .Range(`${input.column}${input.row}`)
-            .Value();
-    }
-
-    async getCells(input: ExcelGetCellsActionInput): Promise<unknown[][]> {
+  async setCells(input: ExcelSetCellsActionInput): Promise<void> {
+    if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
+    const { startRow, startColumn } = this.getCellCoordinates({
+      startColumn: input?.startColumn,
+      startRow: Number(input?.startRow ?? 1),
+    });
+    let columnCounter = startColumn,
+      rowCounter = startRow;
+    const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+    for (const rowValues of input.cellValues) {
+      for (const cellValue of rowValues) {
         try {
-            const cellValues: unknown[][] = [];
-            const targetWorksheet = this.session.Worksheets(
-                input?.worksheet ?? this.session.ActiveSheet.Name
-            );
-            const { startRow, startColumn, endColumn, endRow } =
-                this.getCellCoordinates({
-                    startColumn: input?.startColumn,
-                    startRow: input?.startRow ? Number(input?.startRow) : 1,
-                    endColumn: input.endColumn,
-                    endRow: Number(input.endRow),
-                });
-
-            for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
-                const rowValues: unknown[] = [];
-                for (
-                    let columnIdx = startColumn;
-                    columnIdx <= endColumn;
-                    columnIdx++
-                ) {
-                    rowValues.push(
-                        targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? ""
-                    );
-                }
-                cellValues.push(rowValues);
-            }
-
-            return cellValues;
+          if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
+          columnCounter++;
         } catch (e) {
-            throw new Error(ExcelErrorMessage.getCellsIncorrectInput(e));
+          throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
         }
+      }
+      rowCounter++;
+      columnCounter = startColumn;
     }
+  }
 
-    async setCell(input: ExcelSetCellActionInput): Promise<void> {
-        const cell = this.session
-            .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-            .Range(`${input.column}${input.row}`);
+  async findFirstEmptyRow(input: ExcelFindFirstEmptyRowActionInput): Promise<number> {
+    const { startColumn, startRow } = this.getCellCoordinates({
+      startColumn: input?.startColumn,
+      startRow: Number(input?.startRow ?? 1),
+    });
+    let rowCounter = startRow;
+    while (
+      this.session
+        .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
+        .Cells(rowCounter, startColumn)
+        .Value()
+    )
+      rowCounter++;
+    return rowCounter;
+  }
 
-        cell.Value = input.value;
-    }
-
-    async setCells(
-        input: ExcelSetCellsActionInput
-    ): Promise<void> {
-        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
-        const { startRow, startColumn } = this.getCellCoordinates({
-            startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1),
+  async deleteColumns(input: ExcelDeleteColumnsActionInput): Promise<void> {
+    try {
+      const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+      if (!Array.isArray(input.columnRange)) targetWorksheet.Columns(input.columnRange).Delete();
+      else {
+        const sortedColumns = this.sortColumns(input.columnRange);
+        sortedColumns.forEach((column, idx) => {
+          const columnCoordinate = this.getColumnCoordinate(column);
+          targetWorksheet.Columns(columnCoordinate - idx).Delete();
         });
-        let columnCounter = startColumn,
-            rowCounter = startRow;
-        const targetWorksheet = this.session.Worksheets(
-            input?.worksheet ?? this.session.ActiveSheet.Name
+      }
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput(e));
+    }
+  }
+
+  async createWorksheet(input: ExcelCreateWorksheetActionInput): Promise<ExcelCreateWorksheetActionOutput> {
+    const worksheets = this.session.Worksheets;
+    const worksheetsCount = worksheets.Count;
+    let worksheet: string;
+
+    if (input?.name) {
+      this.checkWorksheet(input.name, false);
+      worksheet = this.session.Worksheets.Add(null, this.session.Worksheets(worksheetsCount)).Name = input.name;
+    } else {
+      worksheet = this.session.Worksheets.Add(null, this.session.Worksheets(worksheetsCount)).Name;
+    }
+
+    return worksheet;
+  }
+
+  async renameWorksheet(input: ExcelRenameWorksheetActionInput): Promise<void> {
+    this.checkWorksheet(input.newName, false);
+
+    if (input?.worksheet) {
+      this.checkWorksheet(input.worksheet, true);
+      this.session.Worksheets(input.worksheet).Name = input.newName;
+    } else {
+      this.session.ActiveSheet.Name = input.newName;
+    }
+  }
+
+  async insertColumnsBefore(input: ExcelInsertColumnsActionInput): Promise<void> {
+    const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+    try {
+      const column = this.getColumnCoordinate(input.column);
+      const amount = input.amount;
+
+      targetWorksheet.Range(targetWorksheet.Columns(column), targetWorksheet.Columns(column + amount - 1)).Insert();
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+    }
+  }
+
+  async insertColumnsAfter(input: ExcelInsertColumnsActionInput): Promise<void> {
+    const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+    try {
+      const column = this.getColumnCoordinate(input.column);
+      const amount = input.amount;
+
+      targetWorksheet.Range(targetWorksheet.Columns(column + 1), targetWorksheet.Columns(column + amount)).Insert();
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+    }
+  }
+
+  async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
+    try {
+      const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+      if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
+      else for (const cellCoordinate of input.targetCells) targetWorksheet.Range(cellCoordinate).Clear();
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
+    }
+  }
+
+  async runMacro(input: ExcelRunMacroInput) {
+    switch (input.functionParams.length) {
+      case 0:
+        return this.session.Run(input.macro);
+      case 1:
+        return this.session.Run(input.macro, input.functionParams[0]);
+      case 2:
+        return this.session.Run(input.macro, input.functionParams[0], input.functionParams[1]);
+      case 3:
+        return this.session.Run(input.macro, input.functionParams[0], input.functionParams[1], input.functionParams[2]);
+      case 4:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3]
         );
-        for (const rowValues of input.cellValues) {
-            for (const cellValue of rowValues) {
-                try {
-                    if (cellValue !== null)
-                        targetWorksheet.Cells(rowCounter, columnCounter).Value =
-                            cellValue;
-                    columnCounter++;
-                } catch (e) {
-                    throw new Error(
-                        ExcelErrorMessage.setCellsIncorrectInput(e)
-                    );
-                }
-            }
-            rowCounter++;
-            columnCounter = startColumn;
-        }
-    }
-
-    async findFirstEmptyRow(
-        input: ExcelFindFirstEmptyRowActionInput
-    ): Promise<number> {
-        const { startColumn, startRow } = this.getCellCoordinates({
-            startColumn: input?.startColumn,
-            startRow: Number(input?.startRow ?? 1),
-        });
-        let rowCounter = startRow;
-        while (
-            this.session
-                .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-                .Cells(rowCounter, startColumn)
-                .Value()
-        )
-            rowCounter++;
-        return rowCounter;
-    }
-
-    async deleteColumns(input: ExcelDeleteColumnsActionInput): Promise<void> {
-        try {
-            const targetWorksheet = this.session.Worksheets(
-                input?.worksheet ?? this.session.ActiveSheet.Name
-            );
-            if (!Array.isArray(input.columnRange))
-                targetWorksheet.Columns(input.columnRange).Delete();
-            else {
-                const sortedColumns = this.sortColumns(input.columnRange);
-                sortedColumns.forEach((column, idx) => {
-                    const columnCoordinate = this.getColumnCoordinate(column);
-                    targetWorksheet.Columns(columnCoordinate - idx).Delete();
-                });
-            }
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput(e));
-        }
-    }
-
-    async createWorksheet(
-        input: ExcelCreateWorksheetActionInput
-    ): Promise<ExcelCreateWorksheetActionOutput> {
-        const worksheets = this.session.Worksheets;
-        const worksheetsCount = worksheets.Count;
-        let worksheet: string;
-
-        if (input?.name) {
-            this.checkWorksheet(input.name, false);
-            worksheet = (this.session.Worksheets
-                .Add(null, this.session.Worksheets(worksheetsCount))
-                .Name = input.name);
-        } else {
-            worksheet = this.session.Worksheets
-                .Add(null, this.session.Worksheets(worksheetsCount))
-                .Name;
-        }
-
-        return worksheet;
-    }
-
-    async renameWorksheet(
-        input: ExcelRenameWorksheetActionInput
-    ): Promise<void> {
-        this.checkWorksheet(input.newName, false);
-
-        if (input?.worksheet) {
-            this.checkWorksheet(input.worksheet, true);
-            this.session.Worksheets(input.worksheet).Name = input.newName;
-        } else {
-            this.session.ActiveSheet.Name = input.newName;
-        }
-    }
-
-    async insertColumnsBefore(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
-        const targetWorksheet = this.session.Worksheets(
-            input?.worksheet ?? this.session.ActiveSheet.Name
+      case 5:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4]
         );
-
-        try {
-            const column = this.getColumnCoordinate(input.column);
-            const amount = input.amount;
-
-            targetWorksheet
-                .Range(
-                    targetWorksheet.Columns(column),
-                    targetWorksheet.Columns(column + amount - 1)
-                )
-                .Insert();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
-        }
-    }
-
-    async insertColumnsAfter(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
-        const targetWorksheet = this.session.Worksheets(
-            input?.worksheet ?? this.session.ActiveSheet.Name
+      case 6:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4],
+          input.functionParams[5]
         );
-
-        try {
-            const column = this.getColumnCoordinate(input.column);
-            const amount = input.amount;
-
-            targetWorksheet
-                .Range(
-                    targetWorksheet.Columns(column + 1),
-                    targetWorksheet.Columns(column + amount)
-                )
-                .Insert();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
-        }
+      case 7:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4],
+          input.functionParams[5],
+          input.functionParams[6]
+        );
+      case 8:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4],
+          input.functionParams[5],
+          input.functionParams[6],
+          input.functionParams[7]
+        );
+      case 9:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4],
+          input.functionParams[5],
+          input.functionParams[6],
+          input.functionParams[7],
+          input.functionParams[8]
+        );
+      case 10:
+        return this.session.Run(
+          input.macro,
+          input.functionParams[0],
+          input.functionParams[1],
+          input.functionParams[2],
+          input.functionParams[3],
+          input.functionParams[4],
+          input.functionParams[5],
+          input.functionParams[6],
+          input.functionParams[7],
+          input.functionParams[8],
+          input.functionParams[9]
+        );
+      default:
+        throw new Error('Too many function parameters');
     }
+  }
 
-    async clearCells(
-        input: ExcelClearCellsActionInput
-    ): Promise<void> {
-        try {
-            const targetWorksheet = this.session.Worksheets(
-                input?.worksheet ?? this.session.ActiveSheet.Name
-            );
-            if (!Array.isArray(input.targetCells))
-                targetWorksheet.Range(input.targetCells).Clear();
-            else
-                for (const cellCoordinate of input.targetCells)
-                    targetWorksheet.Range(cellCoordinate).Clear();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
-        }
+  private isApplicationOpen() {
+    if (!this.session) {
+      throw new Error('There is no active Excel session. Open application before');
     }
+  }
 
-    async runMacro(input: ExcelRunMacroInput) {
-        if (input.functionParams.length === 0) {
-            return this.session.Run(input.macro);
-        }
-
-        if (input.functionParams.length === 1) {
-            return this.session.Run(input.macro, input.functionParams[0]);
-        } else if (input.functionParams.length === 2) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1]
-            );
-        } else if (input.functionParams.length === 3) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2]
-            );
-        } else if (input.functionParams.length === 4) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3]
-            );
-        } else if (input.functionParams.length === 5) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4]
-            );
-        } else if (input.functionParams.length === 6) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4],
-                input.functionParams[5]
-            );
-        } else if (input.functionParams.length === 7) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4],
-                input.functionParams[5],
-                input.functionParams[6]
-            );
-        } else if (input.functionParams.length === 8) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4],
-                input.functionParams[5],
-                input.functionParams[6],
-                input.functionParams[7]
-            );
-        } else if (input.functionParams.length === 9) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4],
-                input.functionParams[5],
-                input.functionParams[6],
-                input.functionParams[7],
-                input.functionParams[8]
-            );
-        } else if (input.functionParams.length === 10) {
-            return this.session.Run(
-                input.macro,
-                input.functionParams[0],
-                input.functionParams[1],
-                input.functionParams[2],
-                input.functionParams[3],
-                input.functionParams[4],
-                input.functionParams[5],
-                input.functionParams[6],
-                input.functionParams[7],
-                input.functionParams[8],
-                input.functionParams[9]
-            );
-        }
+  /**
+   * @description Function throws an error if the Excel worksheet exists
+   * and we expect it does not exist, or if it does not exist and we expect it to exist.
+   */
+  private checkWorksheet(worksheet: string, shouldExist: boolean): void {
+    if (
+      (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+      (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
+    ) {
+      throw new Error(ExcelErrorMessage.existenceOrAbsenceOfWorksheet(shouldExist));
     }
+  }
 
-    private isApplicationOpen() {
-        if (!this.session) {
-            throw new Error('There is no active Excel session. Open application before');
-        }
+  run(request: ExcelActionRequest) {
+    if (process.platform !== 'win32') {
+      throw new Error('Excel actions can be run only on Windows bot');
     }
-
-    /**
-     * @description Function throws an error if the Excel worksheet exists 
-     * and we expect it does not exist, or if it does not exist and we expect it to exist.
-     */
-    private checkWorksheet(worksheet: string, shouldExist: boolean): void {
-        if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
-            (!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
-                throw new Error(ExcelErrorMessage.existenceOrAbsenceOfWorksheet(shouldExist));
-        }
+    switch (request.script) {
+      case 'excel.open':
+        return this.open(request.input);
+      case 'excel.getCell':
+        this.isApplicationOpen();
+        return this.getCell(request.input);
+      case 'excel.getCells':
+        this.isApplicationOpen();
+        return this.getCells(request.input);
+      case 'excel.setCell':
+        this.isApplicationOpen();
+        return this.setCell(request.input);
+      case 'excel.findFirstEmptyRow':
+        this.isApplicationOpen();
+        return this.findFirstEmptyRow(request.input);
+      case 'excel.clearCells':
+        this.isApplicationOpen();
+        return this.clearCells(request.input);
+      case 'excel.setCells':
+        this.isApplicationOpen();
+        return this.setCells(request.input);
+      case 'excel.createWorksheet':
+        this.isApplicationOpen();
+        return this.createWorksheet(request.input);
+      case 'excel.renameWorksheet':
+        this.isApplicationOpen();
+        return this.renameWorksheet(request.input);
+      case 'excel.insertColumnsBefore':
+        this.isApplicationOpen();
+        return this.insertColumnsBefore(request.input);
+      case 'excel.insertColumnsAfter':
+        this.isApplicationOpen();
+        return this.insertColumnsAfter(request.input);
+      case 'excel.save':
+        this.isApplicationOpen();
+        return this.save(request.input);
+      case 'excel.close':
+        return this.close();
+      case 'excel.runMacro':
+        return this.runMacro(request.input);
+      default:
+        throw new Error('Action not found');
     }
+  }
 
-    run(request: ExcelActionRequest) {
-        if (process.platform !== "win32") {
-            throw new Error("Excel actions can be run only on Windows bot");
-        }
+  async tearDown() {
+    await this.close();
+  }
 
-        switch (request.script) {
-            case "excel.open":
-                return this.open(request.input);
-            case "excel.getCell":
-                this.isApplicationOpen();
-                return this.getCell(request.input);
-            case "excel.getCells":
-                this.isApplicationOpen();
-                return this.getCells(request.input);
-            case "excel.setCell":
-                this.isApplicationOpen();
-                return this.setCell(request.input);
-            case "excel.findFirstEmptyRow":
-                this.isApplicationOpen();
-                return this.findFirstEmptyRow(request.input);
-            case "excel.clearCells":
-                this.isApplicationOpen();
-                return this.clearCells(request.input);
-            case "excel.setCells":
-                this.isApplicationOpen();
-                return this.setCells(request.input);
-            case 'excel.createWorksheet':
-                this.isApplicationOpen();
-                return this.createWorksheet(request.input);
-            case 'excel.renameWorksheet':
-                this.isApplicationOpen();
-                return this.renameWorksheet(request.input);
-            case 'excel.insertColumnsBefore':
-                this.isApplicationOpen();
-                return this.insertColumnsBefore(request.input);
-            case "excel.insertColumnsAfter":
-                this.isApplicationOpen();
-                return this.insertColumnsAfter(request.input);
-            case "excel.save":
-                this.isApplicationOpen();
-                return this.save(request.input);
-            case "excel.close":
-                return this.close();
-            case "excel.runMacro":
-                return this.runMacro(request.input);
-            default:
-                throw new Error("Action not found");
-        }
+  private getCellCoordinates({ startColumn, startRow, endColumn, endRow }: GetCellCoordinatesParams): CellCoordinates {
+    try {
+      return {
+        startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
+        startRow: startRow ?? 1,
+        endColumn: this.getColumnCoordinate(endColumn),
+        endRow: endRow ?? null,
+      };
+    } catch (e) {
+      throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));
     }
+  }
 
-    async tearDown() {
-        await this.close();
-    }
+  private getColumnCoordinate(column: string | number): number {
+    if (!column) return null;
+    const columnNumber = Number(column);
+    if (!isNaN(columnNumber)) return columnNumber;
+    return this.session.ActiveSheet.Range(`${column}1`).Column;
+  }
 
-    private getCellCoordinates({
-        startColumn,
-        startRow,
-        endColumn,
-        endRow,
-    }: GetCellCoordinatesParams): CellCoordinates {
-        try {
-            return {
-                startColumn: startColumn
-                    ? this.getColumnCoordinate(startColumn)
-                    : 1,
-                startRow: startRow ?? 1,
-                endColumn: this.getColumnCoordinate(endColumn),
-                endRow: endRow ?? null,
-            };
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));
-        }
-    }
+  private sortColumns(columns: string[]): string[] {
+    return columns.sort((a, b) => {
+      if (a.length !== b.length) {
+        return a.length - b.length;
+      }
+      return a.localeCompare(b);
+    });
+  }
 
-    private getColumnCoordinate(column: string | number): number {
-        if (!column) return null;
-        const columnNumber = Number(column);
-        if (!isNaN(columnNumber)) return columnNumber;
-        return this.session.ActiveSheet.Range(`${column}1`).Column;
+  private checkIfWorksheetExist(worksheet: string): boolean {
+    const worksheets = this.session.Worksheets;
+    const worksheetUpper = worksheet.toUpperCase();
+    for (let i = 1; i <= worksheets.Count; i++) {
+      const sheet = worksheets(i);
+      if (sheet.Name.toUpperCase() === worksheetUpper) {
+        return true;
+      }
     }
-
-    private sortColumns(columns: string[]): string[] {
-        return columns.sort((a, b) => {
-            if (a.length !== b.length) {
-                return a.length - b.length;
-            }
-            return a.localeCompare(b);
-        });
-    }
-
-    private checkIfWorksheetExist(worksheet: string): boolean {
-        const worksheets = this.session.Worksheets;
-        const worksheetUpper = worksheet.toUpperCase();
-        for (let i = 1; i <= worksheets.Count; i++) {
-            const sheet = worksheets(i);
-            if (sheet.Name.toUpperCase() === worksheetUpper) {
-                return true;
-            }
-        }
-        return false;
-    }
+    return false;
+  }
 }
