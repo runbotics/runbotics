@@ -42,7 +42,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label': 'Insert rows after',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsAmount': 'Amount of rows',
     'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Starting row, e.g. 5',
-    'Process.Details.Modeler.Actions.Excel.InsertRows.Amount.Info': 'Number of rows to insert, np. 3.',
+    'Process.Details.Modeler.Actions.Excel.InsertRows.Amount.Info': 'Number of rows to insert, e.g. 3.',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Save',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'File name',
     'Process.Details.Modeler.Actions.Excel.Close.Label': 'Close',
