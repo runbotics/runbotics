@@ -264,10 +264,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelInsertRowsActionInput
     ): Promise<void> {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-
+        
         try {
             const row = input.row;
-            const amount = input.amount;
+            const amount = input.amount
+
+            if (amount <= 0) throw new Error();
 
             targetWorksheet
                 .Range(
