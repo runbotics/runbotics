@@ -35,7 +35,7 @@ jobs:
             bot:
               - 'runbotics/runbotics-desktop/package.json'
             api:
-              - 'runbotics-orchestrator/package.json'
+              - 'runbotics-orchestrator/build.gradle'
 
   push-ui:
     needs: changes-detection
