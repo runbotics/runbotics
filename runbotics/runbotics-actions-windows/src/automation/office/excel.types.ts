@@ -98,8 +98,8 @@ export type ExcelInsertColumnsActionInput = {
 };
 
 export type ExcelInsertRowsActionInput = {
-    row: number;
-    amount: number;
+    startingRow: number;
+    rowsNumber: number;
     worksheet?: string;
 };
 

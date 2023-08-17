@@ -597,12 +597,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            row: {
+                            startingRow: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
                                 type: 'number',
                             },
-                            amount: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsAmount'),
+                            rowsNumber: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber'),
                                 type: 'number',
                             },
                             worksheet: {
@@ -610,21 +610,21 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['row', 'amount'],
+                        required: ['startingRow', 'rowsNumber'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input'],
                 input: {
-                    row: {
+                    startingRow: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info'),
                         },
                     },
-                    amount: {
+                    rowsNumber: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.Amount.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber.Info'),
                         },
                     },
                     worksheet: {

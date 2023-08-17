@@ -266,15 +266,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         
         try {
-            const row = input.row;
-            const amount = input.amount
+            const startingRow = input.startingRow;
+            const rowsNumber = input.rowsNumber
 
-            if (amount <= 0) throw new Error();
+            if (rowsNumber <= 0) throw new Error();
 
             targetWorksheet
                 .Range(
-                    targetWorksheet.Rows(row + 1),
-                    targetWorksheet.Rows(row + amount))
+                    targetWorksheet.Rows(startingRow + 1),
+                    targetWorksheet.Rows(startingRow + rowsNumber))
                 .Insert();
         } catch (e) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput(e));
