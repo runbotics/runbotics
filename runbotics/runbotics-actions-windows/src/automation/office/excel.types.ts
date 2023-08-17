@@ -15,7 +15,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.renameWorksheet", ExcelRenameWorksheetActionInput>
     | DesktopRunRequest<"excel.setActiveWorksheet", ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
-    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
+    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<"excel.insertRowsAfter", ExcelInsertRowsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -92,6 +93,12 @@ export interface ExcelClearCellsActionInput {
 
 export type ExcelInsertColumnsActionInput = {
     column: string;
+    amount: number;
+    worksheet?: string;
+};
+
+export type ExcelInsertRowsActionInput = {
+    row: number;
     amount: number;
     worksheet?: string;
 };

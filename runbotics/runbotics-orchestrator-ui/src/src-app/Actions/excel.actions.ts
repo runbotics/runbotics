@@ -583,6 +583,60 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    [ExcelAction.INSERT_ROWS_AFTER]: {
+        id: ExcelAction.INSERT_ROWS_AFTER,
+        label: translate('Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label'),
+        script: ExcelAction.INSERT_ROWS_AFTER,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            row: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'number',
+                            },
+                            amount: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsAmount'),
+                                type: 'number',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['row', 'amount'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    row: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info'),
+                        },
+                    },
+                    amount: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.Amount.Info'),
+                        },
+                    },
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {},
+        },
+    },
     [ExcelAction.CREATE_WORKSHEET]: {
         id: ExcelAction.CREATE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),
