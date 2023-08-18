@@ -8,6 +8,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersSelector } from '#src-app/store/slices/Users';
 
+import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
@@ -28,14 +29,26 @@ const UsersListView: FC = () => {
     );
 
     const { activated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch } = useUserSearch(true, limit, page);
+    const { search, handleSearch, refreshSearchActivated } = useUserSearch(true, limit, page);
 
     const [userData, setUserData] = useState({});
-    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+    const [dialogsVisibility, setDialogsVisibility] = useState({ edit: false, delete: false });
 
-    const handleEdit = (rowData) => {
-        setIsEditDialogVisible(true);
+    const handleOpenEditDialog = (rowData) => {
+        setDialogsVisibility((prevState) => ({ ...prevState, edit: true }));
         setUserData(rowData);
+    };
+
+    const handleCloseEditDialog = () => {
+        setDialogsVisibility((prevState) => ({ ...prevState, edit: false }));
+    };
+
+    const handleOpenDeleteDialog = () => {
+        setDialogsVisibility({ edit: false, delete: true });
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setDialogsVisibility((prevState) => ({ ...prevState, delete: false }));
     };
 
     useEffect(() => {
@@ -49,16 +62,22 @@ const UsersListView: FC = () => {
     }, [activated.allByPage]);
 
     useEffect(() => {
-        refreshSearch();
+        refreshSearchActivated();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <>
             <UsersListEditDialog
-                open={isEditDialogVisible}
-                onClose={() => setIsEditDialogVisible(false)}
+                open={dialogsVisibility.edit}
+                openDeleteTab={handleOpenDeleteDialog}
+                onClose={handleCloseEditDialog}
                 userData={userData}
+            />
+            <DeleteUserDialog
+                open={dialogsVisibility.delete}
+                onClose={handleCloseDeleteDialog}
+                getSelectedUsers={() => [userData]}
             />
             <StyledActionsContainer>
                 <StyledTextField
@@ -74,7 +93,7 @@ const UsersListView: FC = () => {
                 onPageChange={setPage}
                 pageSize={limit}
                 onPageSizeChange={setLimit}
-                openUserEditDialog={handleEdit}
+                openUserEditDialog={handleOpenEditDialog}
             />
         </>
     );

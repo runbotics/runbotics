@@ -41,7 +41,7 @@ const UsersRegistrationView: FC = () => {
     );
 
     const { notActivated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch } = useUserSearch(false, limit, page);
+    const { search, handleSearch, refreshSearchNotActivated } = useUserSearch(false, limit, page);
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
@@ -80,7 +80,7 @@ const UsersRegistrationView: FC = () => {
                 usersData.map((user) => dispatch(usersActions.updateNotActivated(user))))
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
-                refreshSearch();
+                refreshSearchNotActivated();
             })
             .catch(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
@@ -101,7 +101,7 @@ const UsersRegistrationView: FC = () => {
     }, [notActivated.allByPage]);
 
     useEffect(() => {
-        refreshSearch();
+        refreshSearchNotActivated();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

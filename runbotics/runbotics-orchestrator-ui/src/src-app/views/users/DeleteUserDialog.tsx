@@ -50,7 +50,8 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const dispatch = useDispatch();
 
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch } = useUserSearch(false);
+    const { refreshSearchNotActivated } = useUserSearch(false);
+    const { refreshSearchActivated } = useUserSearch(true);
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {
@@ -62,12 +63,19 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             )
             .then(() => {
                 onClose();
-                enqueueSnackbar(translate('Users.Actions.Modals.DeleteModal.Success'), { variant: 'success' });
-                refreshSearch();
+                enqueueSnackbar(
+                    translate('Users.Actions.Modals.DeleteModal.Success'),
+                    { variant: 'success' }
+                );
+                refreshSearchNotActivated();
+                refreshSearchActivated();
             })
             .catch(() => {
                 onClose();
-                enqueueSnackbar(translate('Users.Actions.Modals.DeleteModal.Error'), { variant: 'error' });
+                enqueueSnackbar(
+                    translate('Users.Actions.Modals.DeleteModal.Error'),
+                    { variant: 'error' }
+                );
             });
     };
 
@@ -77,8 +85,6 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     return (
         <Dialog
             open={open}
-            onClose={onClose}
-            onClick={(e) => e.stopPropagation()}
             fullWidth
             maxWidth="md"
         >

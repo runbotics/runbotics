@@ -24,5 +24,10 @@ export const initialValidationState: UserDataValidation = {
 
 export const requiredFieldValidator: ValidatorType = {
     error: true,
-    helperText: 'fill it #translate',
+    helperText: translate('Users.List.Edit.Form.Info.FieldRequired')
+};
+
+export const emailFieldValidator: ValidatorType = {
+    error: true,
+    helperText: translate('Users.List.Edit.Form.Info.Email')
 };

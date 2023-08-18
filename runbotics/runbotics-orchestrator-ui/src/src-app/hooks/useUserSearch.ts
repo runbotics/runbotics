@@ -67,14 +67,19 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
         if (search !== event.target.value) setSearch(event.target.value);
     };
 
-    const refreshSearch = () => {
+    const refreshSearchNotActivated = () => {
+        setRefreshTrigger(!refreshTrigger);
+    };
+
+    const refreshSearchActivated = () => {
         setRefreshTrigger(!refreshTrigger);
     };
 
     return {
         search,
         handleSearch,
-        refreshSearch
+        refreshSearchNotActivated,
+        refreshSearchActivated
     };
 };
 

@@ -2,6 +2,7 @@ import { IUser } from 'runbotics-common';
 
 export interface UsersListEditDialogProps {
     open: boolean;
+    openDeleteTab: () => void;
     onClose: () => void;
     userData: IUser;
 };

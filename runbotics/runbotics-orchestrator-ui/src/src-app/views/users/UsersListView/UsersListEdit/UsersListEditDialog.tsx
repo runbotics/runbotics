@@ -1,14 +1,9 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
-import {
-    Button,
-    Dialog,
-    DialogActions,
-} from '@mui/material';
+import { Dialog, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { IUser } from 'runbotics-common';
-import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
@@ -16,18 +11,14 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
+import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
 import { UserDataValidation, UsersListEditDialogProps } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
 import UsersListEditForm from './UsersListEditForm';
 
-
-const StyledButton = styled(Button)`
-    width: 80px;
-    height: 40px;
-`;
-
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
+    openDeleteTab,
     onClose,
     userData
 }) => {
@@ -35,9 +26,9 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
 
-    const { refreshSearch } = useUserSearch(true);
+    const { refreshSearchActivated } = useUserSearch(true);
     const { activated } = useSelector(usersSelector);
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser>(userData);
     const [validation, setValidation] = useState<UserDataValidation>(initialValidationState);
 
     useEffect(() => setUser(getUserDataWithoutNulls(userData)), [userData]);
@@ -48,7 +39,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         return false;
     };
 
-    const handleSubmit = () => {
+    const handleSave = () => {
         if (validateForm()) return;
 
         const payload: IUser = getUserDataWithoutEmptyStrings(user);
@@ -59,7 +50,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                     translate('Users.List.Edit.Form.Event.Success'),
                     { variant: 'success' }
                 );
-                refreshSearch();
+                refreshSearchActivated();
             })
             .catch((response) => {
                 handleClose();
@@ -75,8 +66,6 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     return (
         <Dialog
             open={open}
-            onClose={onClose}
-            onClick={(e) => e.stopPropagation()}
             fullWidth
             maxWidth="md"
         >
@@ -93,21 +82,30 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                     />
                 </Form>
             </Content>
-            <DialogActions>
-                <StyledButton
-                    onClick={handleClose}
-                    disabled={activated.loading}
-                >
-                    {translate('Users.List.Edit.Form.Button.Cancel')}
-                </StyledButton>
-                <LoadingButton
+            <StyledDialogActions>
+                <DeleteButton
+                    onClick={openDeleteTab}
                     variant='contained'
-                    onClick={handleSubmit}
                     loading={activated.loading}
                 >
-                    {translate('Users.List.Edit.Form.Button.Save')}
-                </LoadingButton>
-            </DialogActions>
+                    {translate('Users.List.Edit.Form.Button.Delete')}
+                </DeleteButton>
+                <Box>
+                    <StyledButton
+                        onClick={handleClose}
+                        disabled={activated.loading}
+                    >
+                        {translate('Users.List.Edit.Form.Button.Cancel')}
+                    </StyledButton>
+                    <LoadingButton
+                        variant='contained'
+                        onClick={handleSave}
+                        loading={activated.loading}
+                    >
+                        {translate('Users.List.Edit.Form.Button.Save')}
+                    </LoadingButton>
+                </Box>
+            </StyledDialogActions>
         </Dialog>
     );
 };

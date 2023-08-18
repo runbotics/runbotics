@@ -3,7 +3,7 @@ import React, { FC, ChangeEvent } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
-import { requiredFieldValidator } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
+import { emailFieldValidator, requiredFieldValidator } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
 import { UsersListEditFormProps } from './UsersListEdit.types';
 
@@ -17,7 +17,7 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
 
     const { translate } = useTranslations();
 
-    const getEmailValidator = () => !(validation.email) && requiredFieldValidator; // +add regex pattern with [a-zA-Z0-9.]@[A-Z0-9.].[a-zA-Z]
+    const getEmailValidator = () => !(validation.email) && emailFieldValidator;
 
     const getLoginValidator = () => !(validation.login) && requiredFieldValidator;
 
@@ -52,30 +52,30 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
         <>
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Email')}
-                value={user.email}
+                value={user?.email}
                 onChange={handleEmailChange}
                 {...getEmailValidator()}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Login')}
-                value={user.login}
+                value={user?.login}
                 onChange={handleLoginChange}
                 {...getLoginValidator()}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.FirstName')}
-                value={user.firstName}
+                value={user?.firstName}
                 onChange={handleFirstNameChange}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.LastName')}
-                value={user.lastName}
+                value={user?.lastName}
                 onChange={handleLastNameChange}
             />
             <TextField
                 select
                 label={translate('Users.List.Edit.Form.Label.Language')}
-                value={user.langKey}
+                value={user?.langKey}
                 onChange={handleLanguageChange}
             >
                 <MenuItem value='en'>
