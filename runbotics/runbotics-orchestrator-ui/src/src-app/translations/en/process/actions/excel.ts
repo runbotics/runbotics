@@ -33,6 +33,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RenameWorksheet.Label': 'Rename worksheet',
     'Process.Details.Modeler.Actions.Excel.RenameWorksheet.NewName': 'New name',
     'Process.Details.Modeler.Actions.Excel.RenameWorksheet.Worksheet.Info': 'Leaving the field empty will change the name of active worksheet',
+    'Process.Details.Modeler.Actions.Excel.WorksheetExists.Label': 'Does worksheet exist',
     'Process.Details.Modeler.Actions.Excel.SetActiveWorksheet.Label': 'Set active worksheet',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Insert columns before',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label': 'Insert columns after',

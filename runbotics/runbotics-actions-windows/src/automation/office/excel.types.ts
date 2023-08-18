@@ -15,12 +15,17 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.renameWorksheet", ExcelRenameWorksheetActionInput>
     | DesktopRunRequest<"excel.setActiveWorksheet", ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
-    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>;
+    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<'excel.worksheetExists',ExcelWorksheetExistInput>
 
 export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
     mode?: "xlReadOnly" | "xlReadWrite";
+}
+
+export interface ExcelWorksheetExistInput{
+    worksheet: string;
 }
 
 export interface ExcelGetCellActionInput {

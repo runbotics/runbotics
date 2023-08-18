@@ -165,6 +165,7 @@ export enum ExcelAction {
 	CREATE_WORKSHEET = 'excel.createWorksheet',
 	RENAME_WORKSHEET = 'excel.renameWorksheet',
 	SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
+	WORKSHEET_EXISTS = "excel.worksheetExists",
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',
 	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
