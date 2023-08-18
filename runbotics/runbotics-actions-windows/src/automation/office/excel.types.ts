@@ -17,6 +17,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
     | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.worksheetExists',ExcelWorksheetExistInput>
+    | DesktopRunRequest<"excel.insertRowsAfter", ExcelInsertRowsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -98,6 +99,12 @@ export interface ExcelClearCellsActionInput {
 export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
+    worksheet?: string;
+};
+
+export type ExcelInsertRowsActionInput = {
+    startingRow: number;
+    rowsNumber: number;
     worksheet?: string;
 };
 
