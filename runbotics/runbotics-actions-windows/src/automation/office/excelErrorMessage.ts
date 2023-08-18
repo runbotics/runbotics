@@ -87,7 +87,7 @@ export default class ExcelErrorMessage {
         return `
             ${this.getDisclaimer(e)}
             Row has to be a whole positive number, e.g. 5.
-            Amount has to be a whole positive number, eg. 5.
+            Number has to be a whole positive number, eg. 5.
         `
     }
 

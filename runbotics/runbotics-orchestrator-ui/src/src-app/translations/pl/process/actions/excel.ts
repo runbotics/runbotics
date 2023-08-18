@@ -43,7 +43,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Liczba kolumn do wstawienia.',
     'Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label': 'Wstaw wiersze po',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber': 'Liczba rzędów do wstawienia',
-    'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Początkowy numer rzędu, np. 5',
+    'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Numer początkowego wiersza, np. 5',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber.Info': 'Liczba rzędów do wstawienia, np. 3.',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Zapisz',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'Nazwa pliku',

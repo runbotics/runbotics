@@ -264,21 +264,18 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelInsertRowsActionInput
     ): Promise<void> {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const startingRow = input.startingRow;
+        const rowsNumber = input.rowsNumber
         
-        try {
-            const startingRow = input.startingRow;
-            const rowsNumber = input.rowsNumber
-
-            if (rowsNumber <= 0) throw new Error();
-
-            targetWorksheet
-                .Range(
-                    targetWorksheet.Rows(startingRow + 1),
-                    targetWorksheet.Rows(startingRow + rowsNumber))
-                .Insert();
-        } catch (e) {
-            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput(e));
+        if (startingRow < 0 || rowsNumber < 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
+
+        targetWorksheet
+            .Range(
+                targetWorksheet.Rows(startingRow + 1),
+                targetWorksheet.Rows(startingRow + rowsNumber))
+            .Insert();
     }
 
     async clearCells(

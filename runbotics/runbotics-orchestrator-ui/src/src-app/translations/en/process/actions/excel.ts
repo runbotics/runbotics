@@ -41,7 +41,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Number of columns to insert.',
     'Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label': 'Insert rows after',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber': 'Number of rows',
-    'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Starting row, e.g. 5',
+    'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Starting row number, e.g. 5',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber.Info': 'Number of rows to insert, e.g. 3.',
     'Process.Details.Modeler.Actions.Excel.Save.Label': 'Save',
     'Process.Details.Modeler.Actions.Excel.Save.FileName.Title': 'File name',
