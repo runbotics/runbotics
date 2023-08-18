@@ -6,6 +6,8 @@ export default {
     moddleOptions,
 };
 
+const outputVariables = {};
+
 export function Camunda(activity) {
     const { broker, environment, type, behaviour } = activity;
 
@@ -62,6 +64,9 @@ export function Camunda(activity) {
             activity.on('end', (api) => {
                 activity.environment.output[ activity.behaviour.resultVariable ] = api.content.output;
             });
+        }
+        if (outputVariables.output) {
+            environment.output = { ...outputVariables.output };
         }
     }
 
@@ -150,6 +155,7 @@ export function Camunda(activity) {
                         ioData.outputParameters.forEach((data) => {
                             resolve(environment.output, data, message);
                         });
+                        outputVariables.output = { ...outputVariables.output, ...environment.output };
                     }
                 },
                 { noAck: true, consumerTag: '_camunda_io' },
