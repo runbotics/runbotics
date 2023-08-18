@@ -267,7 +267,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
         
-        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -285,7 +285,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
         
-        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -432,5 +432,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             }
         }
         return false;
+    }
+
+    private isPositiveInteger(number: number): boolean {
+        return (number > 0 && Number.isInteger(number))
     }
 }
