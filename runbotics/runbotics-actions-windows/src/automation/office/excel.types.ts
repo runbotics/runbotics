@@ -113,7 +113,7 @@ export interface ExcelSetActiveWorksheetActionInput {
 }
 
 export interface ExcelDeleteWorksheetActionInput {
-    worksheet?: string;
+    worksheet: string;
 }
 
 export type ExcelArrayStructure = (string | number | boolean)[][];

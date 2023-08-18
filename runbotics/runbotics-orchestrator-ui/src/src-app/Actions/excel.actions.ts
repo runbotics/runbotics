@@ -659,19 +659,11 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
+                        required: ['worksheet'],
                     },
                 },
             },
-            uiSchema: {
-                'ui:order': ['input'],
-                input: {
-                    worksheet: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.DeleteWorksheet.Info'),
-                        },
-                    },
-                },
-            },
+            uiSchema: {},
             formData: {
                 input: {
                     worksheet: undefined,

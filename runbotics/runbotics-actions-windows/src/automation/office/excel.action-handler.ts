@@ -49,20 +49,17 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * @description Closes Excel application ignoring unsaved changes
      */
     async close(): Promise<void> {
-
         this.session?.Quit();
 
         this.session = null;
     }
 
     async save(input: ExcelSaveActionInput) {
-
         if (input.fileName) {
             this.session.ActiveWorkbook.SaveAs(input.fileName);
         } else {
             this.session.ActiveWorkbook.Save();
         }
-
     }
 
     async getCell(input: ExcelGetCellActionInput): Promise<unknown> {
@@ -234,10 +231,17 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async deleteWorksheet(input: ExcelDeleteWorksheetActionInput): Promise<void> {
+        try {
+            if (input.worksheet === undefined) {
+                throw new Error();
+            }
 
-        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+            const targetWorksheet = this.session.Worksheets(input.worksheet);
 
-        return targetWorksheet.Delete();
+            targetWorksheet.Delete();
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.deleteWorksheetIncorrectInput());
+        }
     }
 
     private isApplicationOpen() {
@@ -327,7 +331,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 startColumn: startColumn ? this.getColumnCoordinate(startColumn) : 1,
                 startRow: startRow ?? 1,
                 endColumn: this.getColumnCoordinate(endColumn),
-                endRow: endRow ?? null
+                endRow: endRow ?? null,
             };
         } catch (e) {
             throw new Error(ExcelErrorMessage.cellCoordinatesIncorrectInput(e));
