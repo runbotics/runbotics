@@ -267,7 +267,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
         
-        if (startingRow < 0 || rowsNumber < 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
