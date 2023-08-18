@@ -260,6 +260,24 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async insertRowsBefore(
+        input: ExcelInsertRowsActionInput
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const startingRow = input.startingRow;
+        const rowsNumber = input.rowsNumber
+        
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
+
+        targetWorksheet
+            .Range(
+                targetWorksheet.Rows(startingRow),
+                targetWorksheet.Rows(startingRow + rowsNumber - 1))
+            .Insert();
+    }
+
     async insertRowsAfter(
         input: ExcelInsertRowsActionInput
     ): Promise<void> {
@@ -355,6 +373,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.insertColumnsAfter':
                 this.isApplicationOpen();
                 return this.insertColumnsAfter(request.input);
+            case 'excel.insertRowsBefore':
+                this.isApplicationOpen();
+                return this.insertRowsBefore(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);

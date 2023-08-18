@@ -169,6 +169,7 @@ export enum ExcelAction {
 	DELETE_COLUMNS = 'excel.deleteColumns',
 	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
 	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
+	INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
 	INSERT_ROWS_AFTER = "excel.insertRowsAfter",
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',

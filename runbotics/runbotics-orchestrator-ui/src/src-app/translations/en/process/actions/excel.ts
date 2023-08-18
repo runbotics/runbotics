@@ -39,6 +39,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Amount of columns',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Column letter or number, e.g. "AZ" or 25.',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Number of columns to insert.',
+    'Process.Details.Modeler.Actions.Excel.InsertRowsBefore.Label': 'Insert rows before',
     'Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label': 'Insert rows after',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber': 'Number of rows',
     'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Starting row number, e.g. 5',
