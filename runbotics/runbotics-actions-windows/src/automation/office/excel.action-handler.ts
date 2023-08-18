@@ -260,6 +260,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             return this.session.Run(input.macro);
         }
 
+        if(input.functionParams.length > 10){
+            throw new Error(ExcelErrorMessage.runMacroToManyArguments());
+        }
+
         switch (input.functionParams.length) {
             case 1:
                 return this.session.Run(input.macro, input.functionParams[0]);

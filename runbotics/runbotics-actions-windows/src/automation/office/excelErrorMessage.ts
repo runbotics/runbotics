@@ -83,6 +83,11 @@ export default class ExcelErrorMessage {
         `
     }
 
+
+    static runMacroToManyArguments(){
+        return 'Maximum number of function parameters is 10'
+    }
+
     /* Other */
     private static getDisclaimer(e?: Error): string {
         return `
@@ -90,4 +95,5 @@ export default class ExcelErrorMessage {
                 Common (related to action, not error) solutions:
             `
     }
+
 }
