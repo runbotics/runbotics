@@ -27,7 +27,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Open.Worksheet.Title'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['path'],
                     },
@@ -77,7 +77,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['row', 'column'],
                     },
@@ -88,9 +88,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -109,14 +109,14 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             formData: {
                 output: {
                     variableName: undefined,
-                }
+                },
             },
         },
     },
@@ -159,7 +159,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['endColumn', 'endRow'],
                     },
@@ -170,9 +170,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -189,7 +189,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 output: {
                     variableName: undefined,
-                }
+                },
             },
         },
     },
@@ -217,12 +217,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             value: {
                                 title: translate('Process.Details.Modeler.Actions.Common.Value'),
-                                type: 'string'
+                                type: 'string',
                             },
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['row', 'column', 'value'],
                     },
@@ -270,7 +270,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['cellValues'],
                     },
@@ -282,7 +282,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     startColumn: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.SetCells.StartColumn.Info'),
-                        }
+                        },
                     },
                     startRow: {
                         'ui:options': {
@@ -346,9 +346,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 type: 'string',
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
             },
             uiSchema: {
@@ -357,12 +357,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     startColumn: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartColumn.Info'),
-                        }
+                        },
                     },
                     startRow: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartRow.Info'),
-                        }
+                        },
                     },
                     worksheet: {
                         'ui:options': {
@@ -374,9 +374,9 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     variableName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             formData: {
                 output: {
@@ -406,7 +406,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['targetCells'],
                     },
@@ -436,6 +436,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         script: ExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -446,12 +452,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             columnRange: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.DeleteColumns.ColumnRange'),
-                                type: 'string'
+                                type: 'string',
                             },
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                                 type: 'string',
-                            }
+                            },
                         },
                         required: ['columnRange'],
                     },
@@ -659,7 +665,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             name: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name'),
-                                type: 'string'
+                                type: 'string',
                             },
                         },
                     },
@@ -675,7 +681,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         },
                         required: ['variableName'],
                     },
-                }
+                },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
@@ -683,9 +689,59 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     name: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name.Info'),
-                        }
+                        },
                     },
                 },
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
+    [ExcelAction.WORKSHEET_EXISTS]: {
+        id: ExcelAction.WORKSHEET_EXISTS,
+        label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
+        script: ExcelAction.WORKSHEET_EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['worksheet'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'boolean',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                formData: {},
             },
             formData: {
                 output: {
@@ -710,16 +766,16 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string'
+                                type: 'string',
                             },
                             newName: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.NewName'),
-                                type: 'string'
+                                type: 'string',
                             },
                         },
-                        required: ['newName']
+                        required: ['newName'],
                     },
-                }
+                },
             },
             uiSchema: {
                 'ui:order': ['input'],
@@ -727,7 +783,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                     worksheet: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.Worksheet.Info'),
-                        }
+                        },
                     },
                 },
             },
@@ -754,12 +810,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string'
+                                type: 'string',
                             },
                         },
-                        required: ['worksheet']
+                        required: ['worksheet'],
                     },
-                }
+                },
             },
             uiSchema: {
                 'ui:order': ['input'],
@@ -787,11 +843,11 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             fileName: {
                                 title: translate('Process.Details.Modeler.Actions.Excel.Save.FileName.Title'),
-                                type: 'string'
-                            }
-                        }
-                    }
-                }
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
             },
             uiSchema: {
                 'ui:order': ['input'],
