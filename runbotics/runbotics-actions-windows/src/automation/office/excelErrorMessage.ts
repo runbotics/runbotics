@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export default class ExcelErrorMessage {
-    constructor() { }
+    constructor() {}
 
     /* Incorrect input */
 
@@ -11,7 +11,7 @@ export default class ExcelErrorMessage {
             ${this.getDisclaimer(e)}
             Row must be a number (e.g. 5).
             Check the Input tab above.
-        `
+        `;
     }
 
     static cellCoordinatesIncorrectInput(e?: Error): string {
@@ -20,7 +20,7 @@ export default class ExcelErrorMessage {
             Start row must be a number (e.g. 5).
             Start column must be a string or number (e.g. A or 1).
             Check startRow and startColumn in the Input tab above.
-        `
+        `;
     }
 
     static setCellsIncorrectInput(e?: Error): string {
@@ -29,7 +29,7 @@ export default class ExcelErrorMessage {
             Input must be an Array (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]]).
             Check the Input tab above.
             Try to pass it as variable (e.g. #{myArray}).
-        `
+        `;
     }
 
     static getCellsIncorrectInput(e?: Error): string {
@@ -38,7 +38,7 @@ export default class ExcelErrorMessage {
             Start row and end row must be a number (e.g. 5).
             Start column and end column must be a string or number (e.g. A or 1).
             Check the Input tab above.
-        `
+        `;
     }
 
     static noPreviousWorksheet(e?: Error): string {
@@ -69,10 +69,7 @@ export default class ExcelErrorMessage {
     }
 
     static worksheetIncorrectInput(shouldExist: boolean): string {
-        return shouldExist
-            ? "Worksheet doesn't exist."
-            : "Worksheet name incorrect or already taken."
-        ;
+        return shouldExist ? "Worksheet doesn't exist." : 'Worksheet name incorrect or already taken.';
     }
 
     static insertColumnsIncorrectInput(e?: Error): string {
@@ -80,12 +77,19 @@ export default class ExcelErrorMessage {
             ${this.getDisclaimer(e)}
             Column has to be a column letter or number, e.g. "C" or 3.
             Amount has to be a whole positive number, eg. 5.
-        `
+        `;
     }
 
+    static runMacroToManyArguments() {
+        return 'Maximum number of function parameters is 10';
+    }
 
-    static runMacroToManyArguments(){
-        return 'Maximum number of function parameters is 10'
+    static insertRowsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Row has to be a whole positive number, e.g. 5.
+            Number has to be a whole positive number, eg. 5.
+        `;
     }
 
     /* Other */
@@ -93,7 +97,6 @@ export default class ExcelErrorMessage {
         return `
                 ${e ?? ''}
                 Common (related to action, not error) solutions:
-            `
+            `;
     }
-
 }

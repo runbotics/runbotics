@@ -19,6 +19,7 @@ import {
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
     ExcelRunMacroInput,
+    ExcelInsertRowsActionInput
 } from './excel.types';
 import ExcelErrorMessage from './excelErrorMessage';
 @Injectable()
@@ -225,7 +226,27 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
+    async insertRowsAfter(
+        input: ExcelInsertRowsActionInput
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const startingRow = input.startingRow;
+        const rowsNumber = input.rowsNumber
+
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber)) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
+
+        targetWorksheet
+            .Range(
+                targetWorksheet.Rows(startingRow + 1),
+                targetWorksheet.Rows(startingRow + rowsNumber))
+            .Insert();
+    }
+
+    async clearCells(
+        input: ExcelClearCellsActionInput
+    ): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
@@ -246,13 +267,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * and we expect it does not exist, or if it does not exist and we expect it to exist.
      */
     private checkWorksheet(worksheet: string, shouldExist: boolean): void {
-        if (
-            (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
-            (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
-        ) {
-            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
-        }
+if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+(!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
+throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
     }
+}
 
     async runMacro(input: ExcelRunMacroInput) {
 
@@ -321,7 +340,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                     input.functionParams[5],
                     input.functionParams[6],
                     input.functionParams[7]
-                );
+                )
             case 9:
                 return this.session.Run(
                     input.macro,
@@ -395,8 +414,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.insertColumnsAfter':
                 this.isApplicationOpen();
                 return this.insertColumnsAfter(request.input);
+                this.isApplicationOpen();
             case 'excel.runMacro':
                 return this.runMacro(request.input);
+            case 'excel.deleteColumns':
+                this.isApplicationOpen();
+                return this.deleteColumns(request.input);
+            case 'excel.insertRowsAfter':
+                this.isApplicationOpen();
+                return this.insertRowsAfter(request.input);
             case 'excel.save':
                 this.isApplicationOpen();
                 return this.save(request.input);
