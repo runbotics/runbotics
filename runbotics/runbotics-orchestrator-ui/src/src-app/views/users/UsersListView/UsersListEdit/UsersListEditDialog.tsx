@@ -12,7 +12,7 @@ import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
-import { UserDataValidation, UsersListEditDialogProps } from './UsersListEdit.types';
+import { UserDataValidation, UsersListEditDialogProps, UserUpdateErrorMessageType } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
 import UsersListEditForm from './UsersListEditForm';
 
@@ -28,7 +28,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
 
     const { refreshSearchActivated } = useUserSearch(true);
     const { activated } = useSelector(usersSelector);
-    const [user, setUser] = useState<IUser>(userData);
+    const [user, setUser] = useState<IUser>();
     const [validation, setValidation] = useState<UserDataValidation>(initialValidationState);
 
     useEffect(() => setUser(getUserDataWithoutNulls(userData)), [userData]);
@@ -42,8 +42,8 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const handleSave = () => {
         if (validateForm()) return;
 
-        const payload: IUser = getUserDataWithoutEmptyStrings(user);
-        dispatch(usersActions.updateActivated(payload))
+        const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
+        dispatch(usersActions.updateActivated(dataPayload)).unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(
@@ -52,61 +52,65 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                 );
                 refreshSearchActivated();
             })
-            .catch((response) => {
+            .catch(({ errorKey }) => {
                 handleClose();
-                enqueueSnackbar(response.title, { variant: 'error' });
+                enqueueSnackbar(
+                    translate(`Users.List.Edit.Form.Event.Error.${errorKey}` as UserUpdateErrorMessageType),
+                    { variant: 'error' }
+                );
             });
     };
 
     const handleClose = () => {
-        setValidation(initialValidationState);
         onClose();
+        setValidation(initialValidationState);
+        setUser(getUserDataWithoutNulls(userData));
     };
 
     return (
-        <Dialog
-            open={open}
-            fullWidth
-            maxWidth="md"
-        >
-            <Title>
-                {translate('Users.List.Edit.Form.Title')}
-            </Title>
-            <Content>
-                <Form>
-                    <UsersListEditForm
-                        user={user}
-                        setUser={setUser}
-                        validation={validation}
-                        setValidation={setValidation}
-                    />
-                </Form>
-            </Content>
-            <StyledDialogActions>
-                <DeleteButton
-                    onClick={openDeleteTab}
-                    variant='contained'
-                    loading={activated.loading}
-                >
-                    {translate('Users.List.Edit.Form.Button.Delete')}
-                </DeleteButton>
-                <Box>
-                    <StyledButton
-                        onClick={handleClose}
-                        disabled={activated.loading}
-                    >
-                        {translate('Users.List.Edit.Form.Button.Cancel')}
-                    </StyledButton>
-                    <LoadingButton
-                        variant='contained'
-                        onClick={handleSave}
-                        loading={activated.loading}
-                    >
-                        {translate('Users.List.Edit.Form.Button.Save')}
-                    </LoadingButton>
-                </Box>
-            </StyledDialogActions>
-        </Dialog>
+        <>
+            {open && (
+                <Dialog open={open}>
+                    <Title>
+                        {translate('Users.List.Edit.Form.Title')}
+                    </Title>
+                    <Content>
+                        <Form>
+                            <UsersListEditForm
+                                user={user}
+                                setUser={setUser}
+                                validation={validation}
+                                setValidation={setValidation}
+                            />
+                        </Form>
+                    </Content>
+                    <StyledDialogActions>
+                        <DeleteButton
+                            onClick={openDeleteTab}
+                            variant='contained'
+                            loading={activated.loading}
+                        >
+                            {translate('Users.List.Edit.Form.Button.Delete')}
+                        </DeleteButton>
+                        <Box>
+                            <StyledButton
+                                onClick={handleClose}
+                                disabled={activated.loading}
+                            >
+                                {translate('Users.List.Edit.Form.Button.Cancel')}
+                            </StyledButton>
+                            <LoadingButton
+                                variant='contained'
+                                onClick={handleSave}
+                                loading={activated.loading}
+                            >
+                                {translate('Users.List.Edit.Form.Button.Save')}
+                            </LoadingButton>
+                        </Box>
+                    </StyledDialogActions>
+                </Dialog>
+            )}
+        </>
     );
 };
 

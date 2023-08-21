@@ -6,6 +6,8 @@ const editListTranslations: typeof englishEditListTranslations = {
     'Users.List.Edit.Form.Button.Cancel': 'Anuluj',
     'Users.List.Edit.Form.Button.Save': 'Zapisz',
     'Users.List.Edit.Form.Event.Success': 'Pomyślnie zapisano zmiany',
+    'Users.List.Edit.Form.Event.Error.BadEmail': 'Email jest już w użyciu',
+    'Users.List.Edit.Form.Event.Error.BadLogin': 'Login jest już w użyciu',
     'Users.List.Edit.Form.Label.Email': 'Email',
     'Users.List.Edit.Form.Label.Login': 'Login',
     'Users.List.Edit.Form.Label.FirstName': 'Imię',

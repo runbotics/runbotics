@@ -12,9 +12,12 @@ export const getUserDataWithoutNulls = (userData: IUser) => ({
 });
 
 export const getUserDataWithoutEmptyStrings = (userData: IUser) => ({
-    ...userData,
+    id: userData.id,
+    email: userData.email,
+    login: userData.login,
     firstName: (userData.firstName === '' ? null : userData.firstName),
-    lastName: (userData.lastName === '' ? null : userData.lastName)
+    lastName: (userData.lastName === '' ? null : userData.lastName),
+    langKey: userData.langKey
 });
 
 export const initialValidationState: UserDataValidation = {

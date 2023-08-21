@@ -23,3 +23,7 @@ export interface ValidatorType {
     error: boolean;
     helperText: string;
 };
+
+export type UserUpdateErrorMessageType =
+    'Users.List.Edit.Form.Event.Error.BadEmail'
+    | 'Users.List.Edit.Form.Event.Error.BadLogin';

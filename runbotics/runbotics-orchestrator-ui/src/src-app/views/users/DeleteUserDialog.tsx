@@ -83,42 +83,46 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     useEffect(() => { open && setUsersData(getSelectedUsers); }, [open]);
 
     return (
-        <Dialog
-            open={open}
-            fullWidth
-            maxWidth="md"
-        >
-            <DialogContent>
-                <Typography variant='h4'>
-                    {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
-                </Typography>
-                <StyledList>
-                    {usersData.map((user) => (
-                        <Typography key={user.id}>
-                            <ListItem sx={{ display: 'list-item' }}>
-                                {user.email}
-                            </ListItem>
+        <>
+            {open && (
+                <Dialog
+                    open={open}
+                    fullWidth
+                    maxWidth="md"
+                >
+                    <DialogContent>
+                        <Typography variant='h4'>
+                            {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
                         </Typography>
-                    ))}
-                </StyledList>
-            </DialogContent>
-            <DialogActions>
-                <StyledButton
-                    color='primary'
-                    onClick={onClose}
-                    disabled={userDelete.loading}
-                >
-                    {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
-                </StyledButton>
-                <LoadingButton
-                    variant='contained'
-                    loading={userDelete.loading}
-                    onClick={handleSubmit}
-                >
-                    {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
-                </LoadingButton>
-            </DialogActions>
-        </Dialog>
+                        <StyledList>
+                            {usersData.map((user) => (
+                                <Typography key={user.id}>
+                                    <ListItem sx={{ display: 'list-item' }}>
+                                        {user.email}
+                                    </ListItem>
+                                </Typography>
+                            ))}
+                        </StyledList>
+                    </DialogContent>
+                    <DialogActions>
+                        <StyledButton
+                            color='primary'
+                            onClick={onClose}
+                            disabled={userDelete.loading}
+                        >
+                            {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
+                        </StyledButton>
+                        <LoadingButton
+                            variant='contained'
+                            loading={userDelete.loading}
+                            onClick={handleSubmit}
+                        >
+                            {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
+                        </LoadingButton>
+                    </DialogActions>
+                </Dialog>
+            )}
+        </>
     );
 };
 

@@ -46,5 +46,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
 
-    Optional<User> findOneByEmailOrLogin(String email, String login);
+    Optional<User> findOneByIdNotAndEmailOrIdNotAndLogin(Long id1, String email, Long id2, String login);
 }

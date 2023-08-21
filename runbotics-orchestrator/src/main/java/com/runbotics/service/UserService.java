@@ -320,17 +320,19 @@ public class UserService {
                         adminUserDTO.setActivated(existingUser.isActivated());
                     }
 
-                    userRepository
-                        .findOneByEmailOrLogin(adminUserDTO.getEmail(), adminUserDTO.getLogin())
-                        .ifPresent(
-                            user -> {
-                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "badEmail");
-                                } else {
-                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "badLogin");
-                                }
-                            }
-                        );
+                    userRepository.findOneByIdNotAndEmailOrIdNotAndLogin(
+                        adminUserDTO.getId(),
+                        adminUserDTO.getEmail(),
+                        adminUserDTO.getId(),
+                        adminUserDTO.getLogin()
+                    )
+                    .ifPresent(user -> {
+                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                        } else {
+                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                        }
+                    });
 
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 

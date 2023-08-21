@@ -56,8 +56,9 @@ export const updateNotActivated = createAsyncThunk<IUser, IUser>(
 
 export const updateActivated = createAsyncThunk<IUser, IUser>(
     'users/updateActivated',
-    (user) => axios.patch<IUser>(`/api/admin/users/${user.id}`, user)
+    (user, { rejectWithValue }) => axios.patch<IUser>(`/api/admin/users/${user.id}`, user)
         .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data))
 );
 
 export const deleteUser = createAsyncThunk<void, { userId: number }>(
