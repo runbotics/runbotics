@@ -20,7 +20,7 @@ import {
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
     ExcelWorksheetExistActionInput,
-    ExcelInsertRowsActionInput
+    ExcelInsertRowsActionInput,
 } from './excel.types';
 
 @Injectable()
@@ -59,9 +59,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
-    async save(
-        input: ExcelSaveActionInput
-        ) {
+    async save(input: ExcelSaveActionInput) {
         if (input.fileName) {
             this.session.ActiveWorkbook.SaveAs(input.fileName);
         } else {
@@ -227,39 +225,31 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async insertRowsAfter(
-        input: ExcelInsertRowsActionInput
-    ): Promise<void> {
+    async insertRowsAfter(input: ExcelInsertRowsActionInput): Promise<void> {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
-        const rowsNumber = input.rowsNumber
-        
-        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+        const rowsNumber = input.rowsNumber;
+
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
         targetWorksheet
-            .Range(
-                targetWorksheet.Rows(startingRow + 1),
-                targetWorksheet.Rows(startingRow + rowsNumber))
+            .Range(targetWorksheet.Rows(startingRow + 1), targetWorksheet.Rows(startingRow + rowsNumber))
             .Insert();
     }
 
-    async clearCells(
-        input: ExcelClearCellsActionInput
-    ): Promise<void> {
+    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.targetCells)) targetWorksheet
-                                                        .Range(input.targetCells)
-                                                        .Clear();
+            if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
             else for (const cellCoordinate of input.targetCells) targetWorksheet.Range(cellCoordinate).Clear();
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
     }
 
-    async isWorksheetPresent (input: ExcelWorksheetExistActionInput): Promise<unknown> {
+    async isWorksheetPresent(input: ExcelWorksheetExistActionInput): Promise<unknown> {
         return this.checkIfWorksheetExist(input.worksheet);
     }
 
@@ -318,6 +308,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.insertColumnsAfter(request.input);
             case 'excel.worksheetExists':
                 return this.isWorksheetPresent(request.input);
+            case 'excel.deleteColumns':
+                return this.deleteColumns(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
