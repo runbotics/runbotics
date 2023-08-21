@@ -733,7 +733,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                type: 'string',
+                                type: 'boolean',
                             },
                         },
                     },

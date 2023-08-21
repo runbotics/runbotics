@@ -19,7 +19,7 @@ import {
     ExcelRenameWorksheetActionInput,
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
-    ExcelWorksheetExistInput,
+    ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput
 } from './excel.types';
 
@@ -59,7 +59,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
-    async save(input: ExcelSaveActionInput) {
+    async save(
+        input: ExcelSaveActionInput
+        ) {
         if (input.fileName) {
             this.session.ActiveWorkbook.SaveAs(input.fileName);
         } else {
@@ -248,14 +250,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     ): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
+            if (!Array.isArray(input.targetCells)) targetWorksheet
+                                                        .Range(input.targetCells)
+                                                        .Clear();
             else for (const cellCoordinate of input.targetCells) targetWorksheet.Range(cellCoordinate).Clear();
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
     }
 
-    async worksheetExist(input: ExcelWorksheetExistInput): Promise<unknown> {
+    async isWorksheetPresent (input: ExcelWorksheetExistActionInput): Promise<unknown> {
         return this.checkIfWorksheetExist(input.worksheet);
     }
 
@@ -313,7 +317,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.insertColumnsAfter':
                 return this.insertColumnsAfter(request.input);
             case 'excel.worksheetExists':
-                return this.worksheetExist(request.input);
+                return this.isWorksheetPresent(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
