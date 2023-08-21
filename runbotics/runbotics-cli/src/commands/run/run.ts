@@ -34,7 +34,7 @@ const run = async (packageArg: Package, options?: RunCommandOptions) => {
     switch(packageArg) {
         case 'api':
             log('runbotics-orchestrator');
-            await spawn('sh', ['gradlew', '-x', 'webapp'], { cwd: join(rbRootDir, API_RELATIVE_PATH), shell: true, stdio: 'inherit' });
+            await spawn('sh', ['gradlew'], { cwd: join(rbRootDir, API_RELATIVE_PATH), shell: true, stdio: 'inherit' });
             break;
         case 'bot':
             log('runbotics-desktop');
