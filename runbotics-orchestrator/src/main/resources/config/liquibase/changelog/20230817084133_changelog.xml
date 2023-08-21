@@ -10,6 +10,7 @@
                 <tableExists tableName="process_instance"/>
                 <not>
                     <indexExists indexName="process_instance_process_id_idx"/>
+                    <indexExists indexName="process_instance_root_process_instance_id"/>
                 </not>
             </and>
         </preConditions>
