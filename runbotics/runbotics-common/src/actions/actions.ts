@@ -173,6 +173,14 @@ export enum ExcelAction {
 	CLOSE = 'excel.close',
 }
 
+export enum DesktopAction {
+	CLICK = 'desktop.click',
+	TYPE = 'desktop.type',
+	READ_CURSOR_SELECTION = 'desktop.readCursorSelection',
+	PASTE = 'desktop.paste',
+	MAXIMIZE_WINDOW = 'desktop.maximizeWindow'
+}
+
 export type AllActionIds =
 	| VariableAction
 	| GeneralAction
