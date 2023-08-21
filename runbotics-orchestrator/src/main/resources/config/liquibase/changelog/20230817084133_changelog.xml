@@ -43,8 +43,6 @@
             </and>
         </preConditions>
         <sql>
-            CREATE INDEX process_instance_loop_process_instance_id_idx ON
-            process_instance_loop_event(process_instance_id);
             CREATE INDEX process_instance_loop_execution_id_idx ON process_instance_loop_event(execution_id);
         </sql>
     </changeSet>
