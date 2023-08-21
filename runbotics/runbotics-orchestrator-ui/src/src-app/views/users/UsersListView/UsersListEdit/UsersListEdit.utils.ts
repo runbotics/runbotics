@@ -2,7 +2,7 @@ import { IUser } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ValidatorType, UserDataValidation } from './UsersListEdit.types';
+import { ValidatorType, UserDataValidationType } from './UsersListEdit.types';
 
 export const getUserDataWithoutNulls = (userData: IUser) => ({
     ...userData,
@@ -20,7 +20,7 @@ export const getUserDataWithoutEmptyStrings = (userData: IUser) => ({
     langKey: userData.langKey
 });
 
-export const initialValidationState: UserDataValidation = {
+export const initialValidationState: UserDataValidationType = {
     email: true,
     login: true
 };

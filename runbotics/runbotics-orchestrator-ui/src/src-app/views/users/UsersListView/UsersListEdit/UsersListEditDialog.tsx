@@ -12,7 +12,7 @@ import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
-import { UserDataValidation, UsersListEditDialogProps, UserUpdateErrorMessageType } from './UsersListEdit.types';
+import { UserDataValidationType, UsersListEditDialogProps, UserUpdateErrorMessageType } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
 import UsersListEditForm from './UsersListEditForm';
 
@@ -29,7 +29,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const { refreshSearchActivated } = useUserSearch(true);
     const { activated } = useSelector(usersSelector);
     const [user, setUser] = useState<IUser>();
-    const [validation, setValidation] = useState<UserDataValidation>(initialValidationState);
+    const [validation, setValidation] = useState<UserDataValidationType>(initialValidationState);
 
     useEffect(() => setUser(getUserDataWithoutNulls(userData)), [userData]);
 
@@ -55,7 +55,9 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
             .catch(({ errorKey }) => {
                 handleClose();
                 enqueueSnackbar(
-                    translate(`Users.List.Edit.Form.Event.Error.${errorKey}` as UserUpdateErrorMessageType),
+                    translate(
+                        `Users.List.Edit.Form.Event.Error.${errorKey}` as UserUpdateErrorMessageType
+                    ),
                     { variant: 'error' }
                 );
             });

@@ -7,16 +7,16 @@ export interface UsersListEditDialogProps {
     userData: IUser;
 };
 
+export interface UserDataValidationType {
+    email: boolean;
+    login: boolean;
+};
+
 export interface UsersListEditFormProps {
     user: IUser;
     setUser: (IUser) => void;
-    validation: UserDataValidation;
+    validation: UserDataValidationType;
     setValidation: (UserDataValidation) => void;
-};
-
-export interface UserDataValidation {
-    email: boolean;
-    login: boolean;
 };
 
 export interface ValidatorType {
