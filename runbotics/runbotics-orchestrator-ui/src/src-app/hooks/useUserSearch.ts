@@ -28,7 +28,12 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
     useEffect(() => {
         const newPage = search !== '' ? 0 : page;
 
-        router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
+        if (search === '') {
+            router.replace({ pathname: router.pathname, query: { page: newPage, pageSize } });
+        } else {
+            router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
+        }
+
         if (!isActivatedUsersOnly) {
             dispatch(
                 usersActions.getAllNotActivatedByPage({
@@ -67,6 +72,8 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
         if (search !== event.target.value) setSearch(event.target.value);
     };
 
+    const clearSearch = () => setSearch('');
+
     const refreshSearchNotActivated = () => {
         setRefreshTrigger(!refreshTrigger);
     };
@@ -77,6 +84,7 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
 
     return {
         search,
+        clearSearch,
         handleSearch,
         refreshSearchNotActivated,
         refreshSearchActivated
