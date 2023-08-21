@@ -90,16 +90,6 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
         return 'File uploaded successfully';
     }
 
-    async getSharepointSiteConnection(
-        input: SharepointFileTypes.SharepointSiteConnectionActionInput,
-    ): Promise<SharepointFileTypes.SharepointSiteConnectionActionOutput> {
-        const token = await this.microsoftSession.getToken();
-        const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
-        const sharepointListId = await this.microsoftService.getListId(token.token, sharepointSiteId, input.listName);
-        const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
-        return { siteId: sharepointSiteId, driveId: sharepointDriveId, listId: sharepointListId };
-    }
-
     async downloadFile(fileUrl: string, outputLocationPath: string): Promise<any> {
         const writer = createWriteStream(outputLocationPath);
 
@@ -190,8 +180,6 @@ export default class SharepointFileActionHandler extends StatelessActionHandler 
                 return this.upload(request.input);
             case 'sharepointFile.createFolder':
                 return this.createFolder(request.input);
-            case 'sharepointFile.getSharepointSiteConnection':
-                return this.getSharepointSiteConnection(request.input);
             default:
                 throw new Error('Action not found');
         }
