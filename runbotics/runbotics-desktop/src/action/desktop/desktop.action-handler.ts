@@ -3,58 +3,56 @@ import { RunboticsLogger } from '#logger';
 import {
     mouse,
     keyboard,
+    clipboard,
     straightTo,
+    MouseConfig,
+    KeyboardConfig,
     Point,
     Button,
     Key,
 } from '@nut-tree/nut-js';
-import * as DesktopTypes from './types';
+import { 
+    DesktopClickActionInput, 
+    DesktopTypeActionInput,
+    DesktopReadCursorSelectionActionInput,
+    DesktopReadCursorSelectionActionOutput,
+    DesktopPasteActionInput,
+    DesktopActionRequest
+} from './types';
 
 export default class DesktopActionHandler extends StatelessActionHandler {
-    private readonly logger = new RunboticsLogger(DesktopActionHandler.name);
+    private readonly logger: RunboticsLogger = new RunboticsLogger(DesktopActionHandler.name);
+    private readonly system: string = process.platform;
+    private readonly mouseConfig: MouseConfig = {
+        autoDelayMs: 50,
+        mouseSpeed: 600,
+    };
+    private readonly keyboardConfig: KeyboardConfig = {
+        autoDelayMs: 50,
+    };
+    
 
     constructor() {
         super();
+        mouse.config = this.mouseConfig;
+        keyboard.config = this.keyboardConfig;
     }
 
-    private checkIfNaN(xCoordinate: number, yCoordinate: number) {
-        if (isNaN(xCoordinate) || isNaN(yCoordinate)) {
-            throw new Error('Element coordinates have to be of type number');
-        }
-    }
+    async click(input: DesktopClickActionInput): Promise<void> {
+        this.checkIfNaN(input.x, input.y);
 
-    async click(input: DesktopTypes.DesktopClickActionInput) {
-        //this.checkIfNaN(input.xCoordinate, input.yCoordinate);
-        mouse.config = {
-            autoDelayMs: 20,
-            mouseSpeed: 500,
-        };
-
-        await mouse.move(
-            straightTo(new Point(input.xCoordinate, input.yCoordinate))
-        );
-        if (input.mouseButton === DesktopTypes.MouseButton.RIGHT) {
-            await mouse.click(Button.RIGHT);
-        } else {
+        await this.moveMouse(input.x, input.y);
+        if (input.mouseButton.startsWith('L')) {
             await mouse.click(Button.LEFT);
+        } else {
+            await mouse.click(Button.RIGHT);
         }
     }
 
-    async type(input: DesktopTypes.DesktopTypeActionInput) {
-        // if not of type string then make string
-        // this.checkIfNaN(input.xCoordinate, input.yCoordinate);
-        mouse.config = {
-            autoDelayMs: 50,
-            mouseSpeed: 500,
-        };
-        keyboard.config = {
-            autoDelayMs: 50,
-        };
-
-        await mouse.move(
-            straightTo(new Point(input.xCoordinate, input.yCoordinate))
-        );
-
+    async type(input: DesktopTypeActionInput): Promise<void> {
+        this.checkIfNaN(input.x, input.y);
+        
+        await this.moveMouse(input.x, input.y);
         const optionalKey = input.text.substring(4); 
         if (input.text.startsWith('Key.') && Object.keys(Key).includes(optionalKey)) {
             await keyboard.type(Key[optionalKey]);
@@ -63,59 +61,74 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    async copySelection(input: DesktopTypes.DesktopCopySelectionActionInput) {
-        //this.checkIfNaN(input.startPointFirstCoordinate, input.startPointSecondCoordinate);
-        //this.checkIfNaN(input.endPointFirstCoordinate, input.endPointSecondCoordinate);
+    async readCursorSelection(input: DesktopReadCursorSelectionActionInput): Promise<DesktopReadCursorSelectionActionOutput> {
+        this.checkIfNaN(input.startFirstCoordinate, input.startSecondCoordinate);
+        this.checkIfNaN(input.endFirstCoordinate, input.endSecondCoordinate);
 
-        mouse.config = {
-            autoDelayMs: 50,
-            mouseSpeed: 500,
-        };
-
-        await mouse.move(
-            straightTo(new Point(input.startPointFirstCoordinate, input.startPointSecondCoordinate))
-        );
+        await this.moveMouse(input.startFirstCoordinate, input.startSecondCoordinate);
         await mouse.pressButton(Button.LEFT);
-        await mouse.move(
-            straightTo(new Point(input.endPointFirstCoordinate, input.endPointSecondCoordinate))
-        );
+        await this.moveMouse(input.endFirstCoordinate, input.endSecondCoordinate);
         await mouse.releaseButton(Button.LEFT);
-        await keyboard.pressKey(Key.LeftControl, Key.C);
-        await keyboard.releaseKey(Key.LeftControl, Key.C);
+        if (this.system === 'darwin') {
+            await keyboard.pressKey(Key.LeftCmd, Key.C);
+            await keyboard.releaseKey(Key.LeftCmd, Key.C);
+        } else {
+            await keyboard.pressKey(Key.LeftControl, Key.C);
+            await keyboard.releaseKey(Key.LeftControl, Key.C);
+        }
+        const content = await clipboard.getContent();
+        return content;
     }
 
-    async paste(input: DesktopTypes.DesktopPasteActionInput) {
-        //this.checkIfNaN(input.xCoordinate, input.yCoordinate);
-        mouse.config = {
-            autoDelayMs: 50,
-            mouseSpeed: 500,
-        };
+    async paste(input: DesktopPasteActionInput): Promise<void> {
+        this.checkIfNaN(input.x, input.y);;
 
-        await mouse.move(
-            straightTo(new Point(input.xCoordinate, input.yCoordinate))
-        );
+        await this.moveMouse(input.x, input.y);
         await mouse.click(Button.LEFT);
-        await keyboard.pressKey(Key.LeftControl, Key.V);
-        await keyboard.releaseKey(Key.LeftControl, Key.V);
+        const content = await clipboard.getContent();
+        await keyboard.type(content);
     }
 
     async maximizeWindow() {
-        // for windows:
-        await keyboard.pressKey(Key.LeftWin, Key.Up);
-        await keyboard.releaseKey(Key.LeftWin, Key.Up);
+        if (this.system === 'win32') {
+            // for Windows:
+            await keyboard.pressKey(Key.LeftWin, Key.Up);
+            await keyboard.releaseKey(Key.LeftWin, Key.Up);
+        } else if (this.system === 'darwin') {
+            // for macOS:
+            await keyboard.pressKey(Key.LeftCmd, Key.Up);
+            await keyboard.releaseKey(Key.LeftCmd, Key.Up);
+        } else if (this.system === 'linux') {
+            // for Linux (GNOME):
+            await keyboard.pressKey(Key.LeftAlt, Key.F10);
+            await keyboard.releaseKey(Key.LeftAlt, Key.F10);
+        } else {
+            throw new Error('Unsupported operating system.');
+        }
     }
 
-    run(request: DesktopTypes.DesktopActionRequest) {
+    private async moveMouse(x: string, y: string) {
+        const destination = new Point(Number(x), Number(y));
+        await mouse.move(straightTo(destination));
+    }
+
+    private checkIfNaN(x: any, y: any) {
+        if (isNaN(x) || isNaN(y)) {
+            throw new Error('Destination coordinates must be of number type.');
+        }
+    }
+
+    run(request: DesktopActionRequest) {
         switch (request.script) {
-            case 'desktopAutomation.click':
+            case 'desktop.click':
                 return this.click(request.input);
-            case 'desktopAutomation.type':
+            case 'desktop.type':
                 return this.type(request.input);
-            case 'desktopAutomation.copySelection':
-                return this.copySelection(request.input);
-            case 'desktopAutomation.paste':
+            case 'desktop.readCursorSelection':
+                return this.readCursorSelection(request.input);
+            case 'desktop.paste':
                 return this.paste(request.input);
-            case 'desktopAutomation.maximizeWindow':
+            case 'desktop.maximizeWindow':
                 return this.maximizeWindow();
             default:
                 throw new Error('Action not found');
