@@ -71,8 +71,10 @@ const useInternalActionsGroups = (): Record<
             ),
             items: Object.values(getJavascriptActions())
         },
-        desktopAutomation: {
-            label: 'Desktop',
+        desktop: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.Desktop'
+            ),
             items: Object.values(getDesktopActions())
         },
         asana: {

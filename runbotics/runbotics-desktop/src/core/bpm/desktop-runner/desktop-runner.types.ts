@@ -27,7 +27,7 @@ export type InternalHandlerKey =
 | 'sharepointFile'
 | 'variables'
 | 'excel'
-| 'desktopAutomation';
+| 'desktop';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

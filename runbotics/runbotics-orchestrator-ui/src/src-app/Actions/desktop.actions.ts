@@ -1,38 +1,43 @@
+import { DesktopAction } from 'runbotics-common';
+
+import { translate } from '#src-app/hooks/useTranslations';
+
 import { IBpmnAction, Runner } from './types';
+
 
 // eslint-disable-next-line max-lines-per-function
 const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
-    'desktopAutomation.click': {
-        id: 'desktopAutomation.click',
-        label: 'Click',
-        script: 'desktopAutomation.click',
+    'desktop.click': {
+        id: DesktopAction.CLICK,
+        label: translate('Process.Details.Modeler.Actions.Desktop.Click.Label'),
+        script: DesktopAction.CLICK,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            xCoordinate: {
-                                title: 'Target x-coordinate',
-                                type: 'number',
+                            x: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.X'),
+                                type: 'string',
                             },
-                            yCoordinate: {
-                                title: 'Target y-coordinate',
-                                type: 'number',
+                            y: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.Y'),
+                                type: 'string',
                             },
                             mouseButton: {
-                                title: 'Button',
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Click.MouseButton'),
                                 type:'string',
                                 enum: [
-                                    'Left',
-                                    'Right'
+                                    translate('Process.Details.Modeler.Actions.Desktop.Click.MouseButton.Left'),
+                                    translate('Process.Details.Modeler.Actions.Desktop.Click.MouseButton.Right')
                                 ]
                             }
                         },
-                        required: ['xCoordinate', 'yCoordinate'],
+                        required: ['x', 'y'],
                     },
                 },
             },
@@ -41,40 +46,40 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    xCoordinate: undefined,
-                    yCoordinate: undefined,
-                    mouseButton: 'Left'
+                    x: undefined,
+                    y: undefined,
+                    mouseButton: translate('Process.Details.Modeler.Actions.Desktop.Click.MouseButton.Left')
                 },
             },
         },
     },
-    'desktopAutomation.type': {
-        id: 'desktopAutomation.type',
-        label: 'Type',
-        script: 'desktopAutomation.type',
+    'desktop.type': {
+        id: DesktopAction.TYPE,
+        label: translate('Process.Details.Modeler.Actions.Desktop.Type.Label'),
+        script: DesktopAction.TYPE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            xCoordinate: {
-                                title: 'Target x-coordinate',
-                                type: 'number',
+                            x: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.X'),
+                                type: 'string',
                             },
-                            yCoordinate: {
-                                title: 'Target y-coordinate',
-                                type: 'number',
+                            y: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.Y'),
+                                type: 'string',
                             },
                             text: {
-                                title: 'Text or single key to press (e.g. Key.Enter, Key.Tab)',
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Type.Text'),
                                 type: 'string',
                             }
                         },
-                        required: ['xCoordinate', 'yCoordinate', 'text'],
+                        required: ['x', 'y', 'text'],
                     },
                 },
             },
@@ -83,85 +88,104 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    xCoordinate: undefined,
-                    yCoordinate: undefined,
+                    x: undefined,
+                    y: undefined,
                     text: ''
                 },
             },
         },
     },
-    'desktopAutomation.copySelection': {
-        id: 'desktopAutomation.copySelection',
-        label: 'Copy selection',
-        script: 'desktopAutomation.copySelection',
+    'desktop.readCursorSelection': {
+        id: DesktopAction.READ_CURSOR_SELECTION,
+        label: translate('Process.Details.Modeler.Actions.Desktop.ReadCursorSelection.Label'),
+        script: DesktopAction.READ_CURSOR_SELECTION,
         runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            startPointFirstCoordinate: {
-                                title: 'Selection start point (x-coordinate)',
-                                type: 'number',
+                            startFirstCoordinate: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadCursorSelection.Start.X'),
+                                type: 'string',
                             },
-                            startPointSecondCoordinate: {
-                                title: 'Selection start point (y-coordinate)',
-                                type: 'number',
+                            startSecondCoordinate: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadCursorSelection.Start.Y'),
+                                type: 'string',
                             },
-                            endPointFirstCoordinate: {
-                                title: 'Selection end point (x-coordinate)',
-                                type: 'number',
+                            endFirstCoordinate: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadCursorSelection.End.X'),
+                                type: 'string',
                             },
-                            endPointSecondCoordinate: {
-                                title: 'Selection end point (y-coordinate)',
-                                type: 'number',
+                            endSecondCoordinate: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadCursorSelection.End.Y'),
+                                type: 'string',
                             },
                         },
-                        required: ['startPointFirstCoordinate', 'startPointSecondCoordinate', 'endPointFirstCoordinate', 'endPointSecondCoordinate'],
+                        required: ['startFirstCoordinate', 'startSecondCoordinate', 'endFirstCoordinate', 'endSecondCoordinate'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
                     },
                 },
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input', 'output'],
             },
             formData: {
-                formData: {
-                    input: {
-                        startPointFirstCoordinate: undefined,
-                        startPointSecondCoordinate: undefined,
-                        endPointFirstCoordinate: undefined,
-                        endPointSecondCoordinate: undefined,
-                    },
+                input: {
+                    startFirstCoordinate: undefined,
+                    startSecondCoordinate: undefined,
+                    endFirstCoordinate: undefined,
+                    endSecondCoordinate: undefined,
+                },
+                output: {
+                    variableName: undefined,
                 },
             },
         },
     },
-    'desktopAutomation.paste': {
-        id: 'desktopAutomation.paste',
-        label: 'Paste',
-        script: 'desktopAutomation.paste',
+    'desktop.paste': {
+        id: DesktopAction.PASTE,
+        label: translate('Process.Details.Modeler.Actions.Desktop.Paste.Label'),
+        script: DesktopAction.PASTE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            xCoordinate: {
-                                title: 'Target x-coordinate',
-                                type: 'number',
+                            x: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.X'),
+                                type: 'string',
                             },
-                            yCoordinate: {
-                                title: 'Target y-coordinate',
-                                type: 'number',
+                            y: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.Y'),
+                                type: 'string',
                             },
                         },
-                        required: ['xCoordinate', 'yCoordinate'],
+                        required: ['x', 'y'],
                     },
                 },
             },
@@ -170,16 +194,16 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    xCoordinate: undefined,
-                    yCoordinate: undefined,
+                    x: undefined,
+                    y: undefined,
                 },
             },
         },
     },
-    'desktopAutomation.maximizeWindow': {
-        id: 'desktopAutomation.maximizeWindow',
-        label: 'Maximize window',
-        script: 'desktopAutomation.maximizeWindow',
+    'desktop.maximizeWindow': {
+        id: DesktopAction.MAXIMIZE_WINDOW,
+        label: translate('Process.Details.Modeler.Actions.Desktop.MaximizeWindow.Label'),
+        script: DesktopAction.MAXIMIZE_WINDOW,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {},

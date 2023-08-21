@@ -1,38 +1,36 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
+import { MouseButton } from 'runbotics-common';
 
 export type DesktopActionRequest =
-| DesktopRunRequest<'desktopAutomation.click', DesktopClickActionInput>
-| DesktopRunRequest<'desktopAutomation.type', DesktopTypeActionInput>
-| DesktopRunRequest<'desktopAutomation.copySelection', DesktopCopySelectionActionInput>
-| DesktopRunRequest<'desktopAutomation.paste', DesktopPasteActionInput>
-| DesktopRunRequest<'desktopAutomation.maximizeWindow'>;
-
-export enum MouseButton {
-    LEFT = 'Left',
-    RIGHT = 'Right'
-}
+| DesktopRunRequest<'desktop.click', DesktopClickActionInput>
+| DesktopRunRequest<'desktop.type', DesktopTypeActionInput>
+| DesktopRunRequest<'desktop.readCursorSelection', DesktopReadCursorSelectionActionInput>
+| DesktopRunRequest<'desktop.paste', DesktopPasteActionInput>
+| DesktopRunRequest<'desktop.maximizeWindow'>;
 
 export type DesktopClickActionInput = {
-    xCoordinate: number;
-    yCoordinate: number;
+    x: string;
+    y: string;
     mouseButton: MouseButton;
 };
 
 export type DesktopTypeActionInput = {
-    xCoordinate: number;
-    yCoordinate: number;
+    x: string;
+    y: string;
     text: string;
 }
 
-export type DesktopCopySelectionActionInput = {
-    startPointFirstCoordinate: number;
-    startPointSecondCoordinate: number;
-    endPointFirstCoordinate: number;
-    endPointSecondCoordinate: number;
+export type DesktopReadCursorSelectionActionInput = {
+    startFirstCoordinate: string;
+    startSecondCoordinate: string;
+    endFirstCoordinate: string;
+    endSecondCoordinate: string;
 }
 
+export type DesktopReadCursorSelectionActionOutput = string;
+
 export type DesktopPasteActionInput = {
-    xCoordinate: number;
-    yCoordinate: number;
+    x: string;
+    y: string;
 }
 
