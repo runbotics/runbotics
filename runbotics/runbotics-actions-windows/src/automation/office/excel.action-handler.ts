@@ -19,6 +19,7 @@ import {
     ExcelRenameWorksheetActionInput,
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
+    ExcelInsertRowsActionInput
 } from './excel.types';
 
 @Injectable()
@@ -259,6 +260,24 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async insertRowsAfter(
+        input: ExcelInsertRowsActionInput
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const startingRow = input.startingRow;
+        const rowsNumber = input.rowsNumber
+        
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
+
+        targetWorksheet
+            .Range(
+                targetWorksheet.Rows(startingRow + 1),
+                targetWorksheet.Rows(startingRow + rowsNumber))
+            .Insert();
+    }
+
     async clearCells(
         input: ExcelClearCellsActionInput
     ): Promise<void> {
@@ -336,6 +355,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.insertColumnsAfter':
                 this.isApplicationOpen();
                 return this.insertColumnsAfter(request.input);
+            case 'excel.insertRowsAfter':
+                this.isApplicationOpen();
+                return this.insertRowsAfter(request.input);
             case 'excel.save':
                 this.isApplicationOpen();
                 return this.save(request.input);
