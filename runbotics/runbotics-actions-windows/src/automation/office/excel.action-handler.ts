@@ -216,7 +216,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelSetActiveWorksheetActionInput
     ): Promise<void> {
         if (input.worksheet === this.session.ActiveSheet.Name) return;
-        
+
         this.checkWorksheet(input.worksheet, true);
         this.session.Worksheets(input.worksheet).Activate();
     }
@@ -266,8 +266,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
-        
-        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber) ) {
+
+        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -304,13 +304,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     /**
-     * @description Function throws an error if the Excel worksheet exists 
+     * @description Function throws an error if the Excel worksheet exists
      * and we expect it does not exist, or if it does not exist and we expect it to exist.
      */
     private checkWorksheet(worksheet: string, shouldExist: boolean): void {
         if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
             (!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
-                throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
+            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
         }
     }
 
@@ -355,6 +355,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             case 'excel.insertColumnsAfter':
                 this.isApplicationOpen();
                 return this.insertColumnsAfter(request.input);
+            case 'excel.deleteColumns':
+                this.isApplicationOpen();
+                return this.deleteColumns(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
