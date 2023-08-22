@@ -2,6 +2,7 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import excelAction from './ExcelActions';
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -643,6 +644,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    [ExcelAction.DELETE_ROWS]: excelAction.deleteRows(),
     [ExcelAction.CREATE_WORKSHEET]: {
         id: ExcelAction.CREATE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),

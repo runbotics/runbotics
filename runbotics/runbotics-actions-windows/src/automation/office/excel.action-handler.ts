@@ -21,6 +21,7 @@ import {
     ExcelInsertColumnsActionInput,
     ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput,
+    ExcelDeleteRowsActionInput,
 } from './excel.types';
 
 @Injectable()
@@ -239,6 +240,23 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             .Insert();
     }
 
+    async deleteRows(input: ExcelDeleteRowsActionInput): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+        if (input.rowRange.match(/\d+:\d+/g)) return targetWorksheet.Rows(input.rowRange).Delete();
+
+        try {
+            const rows = JSON.parse(input.rowRange);
+
+            if (!Array.isArray(rows)) return targetWorksheet.Rows(rows).Delete();
+            rows.sort().forEach((row, idx) => {
+                targetWorksheet.Rows(row - idx).Delete();
+            });
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.deleteRowsIncorrectInput());
+        }
+    }
+
     async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
@@ -310,8 +328,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.isWorksheetPresent(request.input);
             case 'excel.deleteColumns':
                 return this.deleteColumns(request.input);
+            case 'excel.deleteRows':
+                return this.deleteRows(request.input);
             case 'excel.insertRowsAfter':
-                this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
             case 'excel.save':
                 return this.save(request.input);
@@ -351,8 +370,24 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return this.session.ActiveSheet.Range(`${column}1`).Column;
     }
 
+    private getRowCoordinate(row: string | number): number {
+        if (!row) return null;
+        const rowNumber = Number(row);
+        if (!isNaN(rowNumber)) return rowNumber;
+        return this.session.ActiveSheet.Range(`${row}1`).Row;
+    }
+
     private sortColumns(columns: string[]): string[] {
         return columns.sort((a, b) => {
+            if (a.length !== b.length) {
+                return a.length - b.length;
+            }
+            return a.localeCompare(b);
+        });
+    }
+
+    private sortRows(rows: string[]): string[] {
+        return rows.sort((a, b) => {
             if (a.length !== b.length) {
                 return a.length - b.length;
             }

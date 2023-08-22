@@ -17,7 +17,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
-    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.deleteRows', ExcelDeleteRowsActionInput>
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -74,6 +75,11 @@ export interface StartCellCoordinates {
 
 export interface ExcelDeleteColumnsActionInput {
     columnRange: string;
+    worksheet?: string;
+}
+
+export interface ExcelDeleteRowsActionInput {
+    rowRange: string;
     worksheet?: string;
 }
 
