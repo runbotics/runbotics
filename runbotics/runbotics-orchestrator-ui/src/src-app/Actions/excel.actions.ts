@@ -436,6 +436,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         script: ExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -583,6 +589,60 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
+    [ExcelAction.INSERT_ROWS_AFTER]: {
+        id: ExcelAction.INSERT_ROWS_AFTER,
+        label: translate('Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label'),
+        script: ExcelAction.INSERT_ROWS_AFTER,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            startingRow: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.StartRow'),
+                                type: 'number',
+                            },
+                            rowsNumber: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber'),
+                                type: 'number',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['startingRow', 'rowsNumber'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    startingRow: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info'),
+                        },
+                    },
+                    rowsNumber: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber.Info'),
+                        },
+                    },
+                    worksheet: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {},
+        },
+    },
     [ExcelAction.CREATE_WORKSHEET]: {
         id: ExcelAction.CREATE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),
@@ -646,6 +706,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         script: ExcelAction.DELETE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
+
         form: {
             schema: {
                 type: 'object',
@@ -667,6 +728,56 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     worksheet: undefined,
+                },
+            },
+        },
+    },
+    [ExcelAction.WORKSHEET_EXISTS]: {
+        id: ExcelAction.WORKSHEET_EXISTS,
+        label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
+        script: ExcelAction.WORKSHEET_EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['worksheet'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'boolean',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                formData: {},
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
                 },
             },
         },

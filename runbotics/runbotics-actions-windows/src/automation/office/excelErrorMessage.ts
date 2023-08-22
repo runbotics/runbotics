@@ -86,6 +86,13 @@ export default class ExcelErrorMessage {
     static deleteWorksheetIncorrectInput(): string {
         return 'You must provide worksheet name';
     }
+    static insertRowsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Row has to be a whole positive number, e.g. 5.
+            Number has to be a whole positive number, eg. 5.
+        `
+    }
 
     /* Other */
     private static getDisclaimer(e?: Error): string {

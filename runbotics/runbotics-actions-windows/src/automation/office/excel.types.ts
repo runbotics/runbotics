@@ -16,12 +16,18 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.setActiveWorksheet', ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
-    | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>;
+    | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
+    | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
     mode?: 'xlReadOnly' | 'xlReadWrite';
+}
+
+export interface ExcelWorksheetExistActionInput {
+    worksheet: string;
 }
 
 export interface ExcelGetCellActionInput {
@@ -94,6 +100,16 @@ export interface ExcelClearCellsActionInput {
 export type ExcelInsertColumnsActionInput = {
     column: string;
     amount: number;
+    worksheet?: string;
+};
+
+export interface ExcelCreateWorksheetActionInput {
+    name?: string;
+}
+
+export type ExcelInsertRowsActionInput = {
+    startingRow: number;
+    rowsNumber: number;
     worksheet?: string;
 };
 
