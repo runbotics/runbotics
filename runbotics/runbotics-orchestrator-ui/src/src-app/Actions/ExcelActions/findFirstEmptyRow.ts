@@ -4,10 +4,10 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { ActionSystem, IBpmnAction, RegexPatterns, Runner } from '../types';
 
-const getActionWorksheetExists = (): IBpmnAction => ({
-    id: ExcelAction.WORKSHEET_EXISTS,
-    label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
-    script: ExcelAction.WORKSHEET_EXISTS,
+const getActionFindFirstEmptyRow = (): IBpmnAction => ({
+    id: ExcelAction.FIND_FIRST_EMPTY_ROW,
+    label: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Label'),
+    script: ExcelAction.FIND_FIRST_EMPTY_ROW,
     runner: Runner.DESKTOP_SCRIPT,
     system: ActionSystem.WINDOWS,
     output: {
@@ -24,13 +24,16 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
                     type: 'object',
                     properties: {
+                        startCell: {
+                            title: translate('Process.Details.Modeler.Actions.Excel.StartCell'),
+                            type: 'string',
+                        },
                         worksheet: {
                             title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                             type: 'string',
-                            pattern: RegexPatterns.EXCEL_WORKSHEET_NAME,
                         },
                     },
-                    required: ['worksheet'],
+                    required: ['startCell'],
                 },
                 output: {
                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -47,18 +50,22 @@ const getActionWorksheetExists = (): IBpmnAction => ({
         },
         uiSchema: {
             'ui:order': ['input', 'output'],
-            formData: {},
             input: {
+                startCell: {
+                    'ui:options': {
+                        info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.StartCell.Info'),
+                    }
+                },
                 worksheet: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Worksheet.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.Worksheet.Info'),
                     },
                 },
             },
             output: {
                 variableName: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Output.VariableName.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Output.VariableName.Info'),
                         pattern: RegexPatterns.VARIABLE_NAME,
                     }
                 }
@@ -72,4 +79,4 @@ const getActionWorksheetExists = (): IBpmnAction => ({
     },
 });
 
-export default getActionWorksheetExists;
+export default getActionFindFirstEmptyRow;

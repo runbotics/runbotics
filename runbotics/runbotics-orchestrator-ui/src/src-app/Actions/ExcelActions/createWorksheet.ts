@@ -4,10 +4,10 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { ActionSystem, IBpmnAction, RegexPatterns, Runner } from '../types';
 
-const getActionWorksheetExists = (): IBpmnAction => ({
-    id: ExcelAction.WORKSHEET_EXISTS,
-    label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
-    script: ExcelAction.WORKSHEET_EXISTS,
+const getActionCreateWorksheet = (): IBpmnAction => ({
+    id: ExcelAction.CREATE_WORKSHEET,
+    label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),
+    script: ExcelAction.CREATE_WORKSHEET,
     runner: Runner.DESKTOP_SCRIPT,
     system: ActionSystem.WINDOWS,
     output: {
@@ -24,13 +24,12 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
                     type: 'object',
                     properties: {
-                        worksheet: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                        name: {
+                            title: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name'),
                             type: 'string',
                             pattern: RegexPatterns.EXCEL_WORKSHEET_NAME,
                         },
                     },
-                    required: ['worksheet'],
                 },
                 output: {
                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -42,27 +41,27 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                             pattern: RegexPatterns.VARIABLE_NAME,
                         },
                     },
+                    required: [],
                 },
             },
         },
         uiSchema: {
             'ui:order': ['input', 'output'],
-            formData: {},
             input: {
-                worksheet: {
+                name: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Worksheet.Info'),
-                    },
+                        info: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name.Info'),
+                    }
                 },
             },
             output: {
                 variableName: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Output.VariableName.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Output.VariableName.Info'),
                         pattern: RegexPatterns.VARIABLE_NAME,
                     }
                 }
-            }
+            },
         },
         formData: {
             output: {
@@ -72,4 +71,4 @@ const getActionWorksheetExists = (): IBpmnAction => ({
     },
 });
 
-export default getActionWorksheetExists;
+export default getActionCreateWorksheet;

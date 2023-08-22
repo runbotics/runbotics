@@ -47,6 +47,8 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RenameWorksheet.Worksheet.Info': 'Pozostawienie pustego pola spowoduje zmianę nazwy aktywnego arkusza',
     'Process.Details.Modeler.Actions.Excel.DeleteWorksheet.Label': 'Usuń arkusz',
     'Process.Details.Modeler.Actions.Excel.WorksheetExists.Label': 'Sprawdź czy arkusz istnieje',
+    'Process.Details.Modeler.Actions.Excel.WorksheetExists.Worksheet.Info': 'Nazwa arkusza do sprawdzenia.',
+    'Process.Details.Modeler.Actions.Excel.WorksheetExists.Output.VariableName.Info': 'Przypisz wynik (true/false) sprawdzenia do zmiennej',
     'Process.Details.Modeler.Actions.Excel.SetActiveWorksheet.Label': 'Ustaw aktywny arkusz',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Wstaw kolumny przed',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label': 'Wstaw kolumny po',

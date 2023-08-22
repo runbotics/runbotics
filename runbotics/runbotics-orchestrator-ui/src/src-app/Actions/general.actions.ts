@@ -4,8 +4,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
         id: GeneralAction.CONSOLE_LOG,

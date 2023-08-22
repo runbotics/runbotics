@@ -338,6 +338,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.clearCells(request.input);
             case 'excel.setCells':
                 return this.setCells(request.input);
+            case 'excel.worksheetExists':
+                return this.isWorksheetPresent(request.input);
             case 'excel.createWorksheet':
                 return this.createWorksheet(request.input);
             case 'excel.renameWorksheet':
