@@ -2,6 +2,7 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import deleteWorksheet from './ExcelActions/deleteWorksheet';
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -700,38 +701,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [ExcelAction.DELETE_WORKSHEET]: {
-        id: ExcelAction.DELETE_WORKSHEET,
-        label: translate('Process.Details.Modeler.Actions.Excel.DeleteWorksheet.Label'),
-        script: ExcelAction.DELETE_WORKSHEET,
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            worksheet: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
-                                type: 'string',
-                            },
-                        },
-                        required: ['worksheet'],
-                    },
-                },
-            },
-            uiSchema: {},
-            formData: {
-                input: {
-                    worksheet: undefined,
-                },
-            },
-        },
-    },
+    [ExcelAction.DELETE_WORKSHEET]: deleteWorksheet(),
     [ExcelAction.WORKSHEET_EXISTS]: {
         id: ExcelAction.WORKSHEET_EXISTS,
         label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
@@ -765,7 +735,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                type: 'boolean',
+                                type: 'string',
                             },
                         },
                     },
