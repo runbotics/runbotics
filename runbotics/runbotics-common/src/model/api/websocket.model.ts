@@ -2,7 +2,6 @@ export enum BotWsMessage {
     TERMINATE = 'terminate',
     CONFIGURATION = 'configuration',
     START_PROCESS = 'start-process',
-    RUNNING_PROCESS = 'running-process',
     PROCESS_INSTANCE_EVENT = 'process-instance-event',
     PROCESS_INSTANCE_LOOP_EVENT = "process-instance-loop-event",
     PROCESS_INSTANCE = 'process-instance',

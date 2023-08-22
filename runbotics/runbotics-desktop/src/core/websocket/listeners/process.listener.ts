@@ -55,17 +55,22 @@ export class ProcessListener {
     }
 
     @EventListener(BotWsMessage.START_PROCESS)
-    async startProcess(data: StartProcessMessageBody) {
-        this.logger.log(
-            `=> Incoming message to start process (id: ${data.processId})`
-        );
+    async startProcess(data: StartProcessMessageBody, ackCallback: (payload?: any) => void) {
+        this.logger.log(`=> Incoming message to start process (id: ${data.processId})`);
 
         const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
 
-        if (processInstancesCount > 0) {
-            this.io.emit(BotWsMessage.RUNNING_PROCESS);
-            throw new Error('Process is already running');
+        if (processInstancesCount === 0) {
+            const errorMessage = 'Process is already running';
+
+            this.logger.warn(`<= ${errorMessage}}`);
+
+            ackCallback({ errorMessage });
+
+            throw new Error(errorMessage);
         }
+
+        ackCallback();
 
         const { processId, input, ...rest } = data;
         const process = await orchestratorAxios
@@ -92,10 +97,10 @@ export class ProcessListener {
     }
 
     @EventListener(BotWsMessage.TERMINATE)
-    async terminateProcessInstance(processInstanceId: string) {
-        this.logger.log(
-            `=> Incoming message to terminate process instance (id: ${processInstanceId})`
-        );
+    async terminateProcessInstance(processInstanceId: string, ackCallback: (payload?: any) => void) {
+        ackCallback();
+
+        this.logger.log(`=> Incoming message to terminate process instance (id: ${processInstanceId})`);
         await this.runtimeService.terminateProcessInstance(processInstanceId);
         this.logger.log(
             `<= Process instance successfully terminated (id: ${processInstanceId})`

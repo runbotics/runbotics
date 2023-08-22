@@ -22,26 +22,44 @@ export class WebsocketService {
             throw new NotFoundException(`Bot ${botId} does not exist`);
         }
 
-        this.send(bot.installationId, message, body);
-    }
-
-    async sendMessageByInstallationId(
-        installationId: string, message: BotWsMessage, body?: any
-    ) {
-        const bot = await this.botService.findByInstallationId(installationId);
-        if (!bot) {
-            this.logger.error(`Bot ${installationId} does not exist`);
-            throw new NotFoundException(`Bot ${installationId} does not exist`);
+        const connectedBots = this.botWebSocketGateway.connectedBots;
+        if (!connectedBots.length) {
+            this.logger.error('There are no connected bots');
+            throw new NotFoundException('There are no connected bots');
         }
 
-        this.send(bot.installationId, message, body);
+        const connectedBot = connectedBots.find((connectedBot) => connectedBot.botId === botId);
+        if (!connectedBot) {
+            this.logger.error(`There is no connection with bot ${botId}`);
+            throw new NotFoundException(`There is no connection with bot ${botId}`);
+        }
+
+        try {
+            await this.send(connectedBot.socketId, message, body);
+        } catch (error) {
+            if (typeof error === 'string') {
+                throw new Error(error);
+            }
+        }
     }
 
-    private send(installationId: string, message: BotWsMessage, body?: any) {
-        if (body) {
-            this.botWebSocketGateway.server.to(installationId).emit(message, body);
-        } else {
-            this.botWebSocketGateway.server.to(installationId).emit(message);
-        }
+    private send(socketId: string, message: BotWsMessage, body?: any) {
+        const socket = this.botWebSocketGateway.server.sockets.sockets.get(socketId);
+
+        return new Promise((resolve, reject) => {
+            if (body) {
+                socket.emit(message, body, (response) => {
+                    response
+                        ? reject(response.errorMessage)
+                        : resolve(message);
+                });
+            } else {
+                socket.emit(message, (response) => {
+                    response
+                        ? reject(response.errorMessage)
+                        : resolve(message);
+                });
+            }
+        });
     }
 }
