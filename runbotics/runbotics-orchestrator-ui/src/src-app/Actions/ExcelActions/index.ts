@@ -1,7 +1,9 @@
 import getActionDeleteWorksheet from './deleteWorksheet';
+import getActionWorksheetExists from './worksheetExists';
 
 const excelActions = {
-    getActionDeleteWorksheet
+    getActionDeleteWorksheet,
+    getActionWorksheetExists
 };
 
 export default excelActions;
