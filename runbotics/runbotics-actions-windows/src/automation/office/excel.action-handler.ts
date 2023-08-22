@@ -19,7 +19,8 @@ import {
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
     ExcelRunMacroInput,
-    ExcelInsertRowsActionInput
+    ExcelWorksheetExistActionInput,
+    ExcelInsertRowsActionInput,
 } from './excel.types';
 import ExcelErrorMessage from './excelErrorMessage';
 @Injectable()
@@ -226,27 +227,21 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async insertRowsAfter(
-        input: ExcelInsertRowsActionInput
-    ): Promise<void> {
+    async insertRowsAfter(input: ExcelInsertRowsActionInput): Promise<void> {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
-        const rowsNumber = input.rowsNumber
+        const rowsNumber = input.rowsNumber;
 
         if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
         targetWorksheet
-            .Range(
-                targetWorksheet.Rows(startingRow + 1),
-                targetWorksheet.Rows(startingRow + rowsNumber))
+            .Range(targetWorksheet.Rows(startingRow + 1), targetWorksheet.Rows(startingRow + rowsNumber))
             .Insert();
     }
 
-    async clearCells(
-        input: ExcelClearCellsActionInput
-    ): Promise<void> {
+    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
@@ -254,6 +249,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
         }
+    }
+
+    async isWorksheetPresent(input: ExcelWorksheetExistActionInput): Promise<unknown> {
+        return this.checkIfWorksheetExist(input.worksheet);
     }
 
     private isApplicationOpen() {
@@ -267,12 +266,15 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * and we expect it does not exist, or if it does not exist and we expect it to exist.
      */
     private checkWorksheet(worksheet: string, shouldExist: boolean): void {
-if ((shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
-(!shouldExist && (worksheet.trim() === "" || this.checkIfWorksheetExist(worksheet)))) {
-throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
-    }
+
+if (
+    (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+    (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
+) {
+    throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
 }
 
+    }
     async runMacro(input: ExcelRunMacroInput) {
 
         if(input.functionParams == undefined){
@@ -370,61 +372,55 @@ throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
                 );
             default:
                 throw new Error(ExcelErrorMessage.runMacroToManyArguments());
+
         }
     }
+
 
     run(request: ExcelActionRequest) {
         if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
         }
 
+        if (request.script !== 'excel.open') {
+            this.isApplicationOpen();
+        }
+
         switch (request.script) {
             case 'excel.open':
                 return this.open(request.input);
             case 'excel.getCell':
-                this.isApplicationOpen();
                 return this.getCell(request.input);
             case 'excel.getCells':
-                this.isApplicationOpen();
                 return this.getCells(request.input);
             case 'excel.setCell':
-                this.isApplicationOpen();
                 return this.setCell(request.input);
             case 'excel.findFirstEmptyRow':
-                this.isApplicationOpen();
                 return this.findFirstEmptyRow(request.input);
             case 'excel.clearCells':
-                this.isApplicationOpen();
                 return this.clearCells(request.input);
             case 'excel.setCells':
-                this.isApplicationOpen();
                 return this.setCells(request.input);
             case 'excel.createWorksheet':
-                this.isApplicationOpen();
                 return this.createWorksheet(request.input);
             case 'excel.renameWorksheet':
-                this.isApplicationOpen();
                 return this.renameWorksheet(request.input);
             case 'excel.setActiveWorksheet':
-                this.isApplicationOpen();
                 return this.setActiveWorksheet(request.input);
             case 'excel.insertColumnsBefore':
-                this.isApplicationOpen();
                 return this.insertColumnsBefore(request.input);
             case 'excel.insertColumnsAfter':
-                this.isApplicationOpen();
                 return this.insertColumnsAfter(request.input);
-                this.isApplicationOpen();
             case 'excel.runMacro':
                 return this.runMacro(request.input);
+            case 'excel.worksheetExists':
+                return this.isWorksheetPresent(request.input);
             case 'excel.deleteColumns':
-                this.isApplicationOpen();
                 return this.deleteColumns(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
             case 'excel.save':
-                this.isApplicationOpen();
                 return this.save(request.input);
             case 'excel.close':
                 return this.close();
@@ -432,6 +428,7 @@ throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
                 throw new Error('Action not found');
         }
     }
+
 
     async tearDown() {
         await this.close();

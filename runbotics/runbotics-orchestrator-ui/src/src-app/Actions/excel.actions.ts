@@ -436,6 +436,12 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
         script: ExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -723,6 +729,56 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         },
                     },
                 },
+            },
+            formData: {
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
+    [ExcelAction.WORKSHEET_EXISTS]: {
+        id: ExcelAction.WORKSHEET_EXISTS,
+        label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
+        script: ExcelAction.WORKSHEET_EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['worksheet'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'boolean',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                formData: {},
             },
             formData: {
                 output: {

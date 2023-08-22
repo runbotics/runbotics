@@ -17,12 +17,17 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.runMacro', ExcelRunMacroInput>
-    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
     mode?: 'xlReadOnly' | 'xlReadWrite';
+}
+
+export interface ExcelWorksheetExistActionInput {
+    worksheet: string;
 }
 
 export interface ExcelGetCellActionInput {
