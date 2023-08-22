@@ -102,7 +102,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
             return cellValues;
         } catch (e) {
-            throw new Error(ExcelErrorMessage.getCellsIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.getCellsIncorrectInput());
         }
     }
 
@@ -117,7 +117,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
             cell.Value = input.value;
         } catch (e) {
-            throw new Error(ExcelErrorMessage.setCellIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.setCellIncorrectInput());
         }
     }
 
@@ -136,7 +136,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                     if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
                     columnCounter++;
                 } catch (e) {
-                    throw new Error(ExcelErrorMessage.setCellsIncorrectInput(e));
+                    throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
                 }
             }
             rowCounter++;
@@ -175,7 +175,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 });
             }
         } catch (e) {
-            throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.deleteColumnsIncorrectInput());
         }
     }
 
@@ -230,7 +230,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 .Range(targetWorksheet.Columns(column), targetWorksheet.Columns(column + amount - 1))
                 .Insert();
         } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput());
         }
     }
 
@@ -248,7 +248,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 .Range(targetWorksheet.Columns(column + 1), targetWorksheet.Columns(column + amount))
                 .Insert();
         } catch (e) {
-            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.insertColumnsIncorrectInput());
         }
     }
 
@@ -295,7 +295,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
             else for (const cellCoordinate of input.targetCells) targetWorksheet.Range(cellCoordinate).Clear();
         } catch (e) {
-            throw new Error(ExcelErrorMessage.clearCellsIncorrectInput(e));
+            throw new Error(ExcelErrorMessage.clearCellsIncorrectInput());
         }
     }
 

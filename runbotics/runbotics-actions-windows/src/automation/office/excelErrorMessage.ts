@@ -6,78 +6,69 @@ export default class ExcelErrorMessage {
 
     /* Incorrect action input */
 
-    static getCellIncorrectInput(e?: Error): string {
+    static getCellIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Target cell must be a string (e.g. "A1").
             Check targetCell in the Input tab above.
         `
     }
 
-    static setCellIncorrectInput(e?: Error): string {
+    static setCellIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Target cell must be a string (e.g. "A1").
             Value must be a number, boolean, string (incl. variable) (e.g. 150, true, "myValue", "#{myVariable}").
             Check Input tab above.
         `
     }
 
-    static getCellsIncorrectInput(e?: Error): string {
+    static getCellsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Start cell and end cell must be a string (e.g. "D5").
             ${this.getTip()}
         `
     }
 
-    static setCellsIncorrectInput(e?: Error): string {
+    static setCellsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Values must be an Array of numbers, booleans or strings (e.g. [["C3", "D3", "E3"], ["C4", "D4", "E4"]]).
             ${this.getTip()}
             Try to pass it as variable (e.g. #{myArray}).
         `
     }
 
-    static clearCellsIncorrectInput(e?: Error): string {
+    static clearCellsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Input must be range or Array (e.g. "A1:C3" or ["A1", "B2", "E5"]).
             ${this.getTip()}
             Try to pass it as variable (e.g. #{myArray}).
         `;
     }
 
-    static deleteColumnsIncorrectInput(e?: Error): string {
+    static deleteColumnsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Input must be range or Array (e.g. "A", "F:J" or ["A", "B", "C"]).
             ${this.getTip()}
             Try to pass it as variable (e.g. #{myArray}).
         `;
     }
 
-    static createWorksheetIncorrectInput(e?: Error): string {
+    static createWorksheetIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Worksheet name is incorrect or already taken.
             ${this.getTip()}
         `
     }
 
-    static insertColumnsIncorrectInput(e?: Error): string {
+    static insertColumnsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Column has to be a column letter or number, e.g. "C".
             Amount has to be a whole positive number, eg. 5.
             ${this.getTip()}
             `
     }
 
-    static insertRowsIncorrectInput(e?: Error): string {
+    static insertRowsIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Row has to be a whole positive number (e.g. 5).
             Number has to be a whole positive number (e.g. 5).
             ${this.getTip()}
@@ -86,9 +77,8 @@ export default class ExcelErrorMessage {
 
     /* Incorrect utils input */
 
-    static divideCellCoordinatesIncorrectInput(e?: Error): string {
+    static divideCellCoordinatesIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
             Start/End cell must be a string (e.g. "A1").
             ${this.getTip()}
         `
@@ -103,23 +93,22 @@ export default class ExcelErrorMessage {
             + this.getTip();
     }
 
-    static getColumnCoordinateIncorrectInput(e?: Error): string {
+    static worksheetNameDoesNotExistIncorrectInput(): string {
         return `
-            ${this.getDisclaimer(e)}
+            Worksheet name doesn't exist.
+            ${this.getTip()}
+        `;
+    }
+
+
+    static getColumnCoordinateIncorrectInput(): string {
+        return `
             Column must be a string (e.g. "A").
             ${this.getTip()}
         `
     }
 
     /* Other */
-
-    private static getDisclaimer(e?: Error): string {
-        return `
-                ${e ?? ''}
-
-                Common solutions:
-        `
-    }
 
     private static getTip(): string {
         return `
