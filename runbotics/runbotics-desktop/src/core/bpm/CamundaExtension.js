@@ -111,7 +111,7 @@ export function Camunda(activity) {
                     data.definition.entries.forEach((entry) => {
                         let key = data.name + '.' + entry.key;
                         let value = environment.resolveExpression(entry.value, message);
-                        lodash.setWith(writeTo, key, value ? value : '');
+                        lodash.setWith(writeTo, key, value ?? '');
                     });
                 }
             } else if (data.definition.$type === 'camunda:List') {
