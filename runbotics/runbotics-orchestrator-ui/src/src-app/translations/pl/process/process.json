@@ -361,6 +361,7 @@
     "Process.Details.Modeler.Actions.Desktop.Click.Region": "Docelowy region [zmienna]",
     "Process.Details.Modeler.Actions.Desktop.Click.Region.Info": "Region obejmuje obszar zdefiniowany przez obiekt z czterema atrybutami - left, top, width, height, dla przykładu: { left: '0', top: '100', width: '335', height: '125' }.",
     "Process.Details.Modeler.Actions.Desktop.Click.MouseButton": "Przycisk myszki",
+    "Process.Details.Modeler.Actions.Desktop.Click.DoubleClick": "Podwójne kliknięcie",
     "Process.Details.Modeler.Actions.Desktop.Type.Label": "Wpisz",
     "Process.Details.Modeler.Actions.Desktop.Type.Text": "Tekst lub pojedynczy klawisz do naciśnięcia (np. Key.Enter, Key.Tab)",
     "Process.Details.Modeler.Actions.Desktop.Copy.Label": "Kopiuj",
