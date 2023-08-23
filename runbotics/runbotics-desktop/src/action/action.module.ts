@@ -22,6 +22,9 @@ import SapActionHandler from './sap';
 import SharepointExcelActionHandler from './sharepoint/excel';
 import SharepointFileActionHandler from './sharepoint/file';
 import VariableActionHandler from './variable';
+import { ExcelService } from './microsoft/excel';
+import { MicrosoftGraphService } from './microsoft/microsoft-graph';
+import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -42,6 +45,9 @@ const ALL_ACTION_HANDLERS = [
     SharepointExcelActionHandler,
     SharepointFileActionHandler,
     VariableActionHandler,
+    ExcelService,
+    MicrosoftGraphService,
+    MicrosoftAuthService
 ];
 
 @Module({
