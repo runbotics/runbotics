@@ -60,68 +60,6 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         keyboard.config = this.keyboardConfig;
     }
 
-    async takeScreenshot(input: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
-        await sleep(2000);
-        const region = input?.region;
-        const fileName = input?.fileName ?? uuidv4();
-        const filePath = input?.filePath ?? path.join(process.cwd(), 'temp');
-        let imagePath: string;
-
-        if (region) {
-            this.checkRegion(region);
-            const newRegion = new Region(+region.left, +region.top, +region.width, +region.height);
-            imagePath = await screen.captureRegion(fileName, newRegion, FileType[input.fileFormat], filePath);
-        } else {
-            imagePath = await screen.capture(fileName, FileType[input.fileFormat], filePath);
-        }
-        return imagePath;
-    }
-
-    async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionObj> {
-        //optional param?
-        const image = input.imagePath;
-        this.checkImageExtension(image);
-
-        try {
-            const resource = await imageResource(image);
-            const region = await screen.find(resource);
-            return this.toRegionObj(region);
-        } catch (error) {
-            throw new Error(error);
-        }
-    }
-
-    async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionObj> {
-        const image = input.imagePath;
-        this.checkImageExtension(image);
-
-        try {
-            const resource = await imageResource(image);
-            const region = await screen.waitFor(resource, 5000);
-            return this.toRegionObj(region);
-        } catch (error) {
-            throw new Error(error);
-        }
-    }
-
-    async readTextFromImage(input: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
-        try {
-            const imageBuffer = fs.readFileSync(input.imagePath);
-
-            const worker = await createWorker();
-            await worker.loadLanguage(input.language);
-            await worker.initialize(input.language);
-    
-            const { data: { text } } = await worker.recognize(imageBuffer);
-            await worker.terminate();
-            console.log('Extracted Data:', JSON.stringify(text));
-            //console.log('Extracted Text:', text);
-            return text;
-        } catch (error) {
-            throw new Error(error);
-        }
-    }
-
     async click(input: DesktopClickActionInput): Promise<void> {
         const button: Button = input.mouseButton === MouseButton.LEFT ? Button.LEFT : Button.RIGHT;
         
@@ -176,6 +114,67 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     async readContentFromClipboard(): Promise<DesktopReadContentFromClipboardActionOutput> {
         const content = await clipboard.getContent();
         return content;
+    }
+
+    async takeScreenshot(input: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
+        // prevents from taking screenshot too fast
+        await sleep(2000);
+        const region = input?.region;
+        const fileName = input?.fileName ?? uuidv4();
+        const filePath = input?.filePath ?? path.join(process.cwd(), 'temp');
+        let imagePath: string;
+
+        if (region) {
+            this.checkRegion(region);
+            const newRegion = new Region(+region.left, +region.top, +region.width, +region.height);
+            imagePath = await screen.captureRegion(fileName, newRegion, FileType[input.fileFormat], filePath);
+        } else {
+            imagePath = await screen.capture(fileName, FileType[input.fileFormat], filePath);
+        }
+        return imagePath;
+    }
+
+    async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionObj> {
+        const image = input.imagePath;
+        this.checkImageExtension(image);
+
+        try {
+            const resource = await imageResource(image);
+            const region = await screen.find(resource); //optional param?
+            return this.toRegionObj(region);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionObj> {
+        const image = input.imagePath;
+        this.checkImageExtension(image);
+
+        try {
+            const resource = await imageResource(image);
+            const region = await screen.waitFor(resource, 5000);
+            return this.toRegionObj(region);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    async readTextFromImage(input: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
+        try {
+            const imageBuffer = fs.readFileSync(input.imagePath);
+
+            const worker = await createWorker();
+            await worker.loadLanguage(input.language);
+            await worker.initialize(input.language);
+    
+            const { data: { text } } = await worker.recognize(imageBuffer);
+            await worker.terminate();
+
+            return text;
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 
     // async readCursorSelection(input: DesktopReadCursorSelectionActionInput): Promise<DesktopReadCursorSelectionActionOutput> {
