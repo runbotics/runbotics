@@ -3,12 +3,8 @@ import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph';
 import {
-    Drive,
-    DriveItem,
-    Platform,
     Session,
     SessionIdentifier,
-    Site,
     WorkbookCellCoordinates,
     WorkbookRange,
     WorkbookRangeUpdateBody,
@@ -16,59 +12,44 @@ import {
     WorksheetIdentifier,
 } from './excel.types';
 
-import { ONE_DRIVE, SHARE_POINT } from 'runbotics-common';
-
 @Injectable()
 export class ExcelService {
     private readonly logger = new RunboticsLogger(ExcelService.name);
 
     session: Session = null;
 
+
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
+
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    public async openFile(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
-        persistChanges: boolean,
-        siteRelativePath?: string,
-        list?: string
-    ): Promise<WorkbookSessionInfo> {
+    public async openFile(sessionIdentifier: SessionIdentifier, worksheetIdentifier: WorksheetIdentifier, token: string): Promise<WorkbookSessionInfo> {
         const request = '/createSession';
 
-        this.session =
-            platform === SHARE_POINT
-                ? await this.createSharePointSession(
-                    platform,
-                    sessionIdentifier,
-                    worksheetIdentifier,
-                    siteRelativePath,
-                    list
-                )
-                : this.createOneDriveSession(platform, sessionIdentifier, worksheetIdentifier);
-
-        const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
-            this.createWorkbookUrl(request),
-            {
-                persistChanges: persistChanges,
-            }
-        );
+        const response: WorkbookSessionInfo =  await this.microsoftGraphService.post(this.createWorkbookUrl(sessionIdentifier, request), {
+            persistChanges: true,
+        }, {
+            headers: this.getAuthHeader(token)
+        });
 
         this.session = {
-            ...this.session,
-            workbookSessionInfo,
+            sessionIdentifier: sessionIdentifier,
+            worksheetIdentifier: worksheetIdentifier,
+            workbookSessionInfo: response,
+            token: token
         };
 
-        return workbookSessionInfo;
+        return response;
     }
     //https://learn.microsoft.com/en-us/graph/api/workbook-closesession?view=graph-rest-1.0&tabs=http
     public async closeSession(): Promise<void> {
         const request = '/closeSession';
 
-        return this.microsoftGraphService.post(
-            this.createWorkbookUrl(request),
-            {},
+        return await this.microsoftGraphService.post(
+            this.createWorkbookUrl(this.session.sessionIdentifier, request),
+            {
+                persistChanges: true,
+            },
             {
                 headers: {
                     'workbook-session-id': this.session.workbookSessionInfo.id,
@@ -77,137 +58,69 @@ export class ExcelService {
         );
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    public async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${
-            Number(cellCoordinates.row) - 1
-        },column=${this.getColumnNumber(cellCoordinates.column) - 1})`;
+    public async getCell(
+        worksheetIdentifier: WorksheetIdentifier,
+        cellCoordinates: WorkbookCellCoordinates
+    ): Promise<WorkbookRange> {
+        const request = `/worksheets/${worksheetIdentifier}/cell(row=${cellCoordinates.row},column=${cellCoordinates.column})`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(request), {
+        return await this.microsoftGraphService.get(this.createWorkbookUrl(this.session.sessionIdentifier, request), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
         });
     }
-
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    public async getRange(address: string): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
+    public async getRange(
+        worksheetIdentifier: WorksheetIdentifier,
+        address: string
+    ): Promise<WorkbookRange> {
+        const request = `/worksheets/${worksheetIdentifier}/range(address=${address})`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(request), {
+        return await this.microsoftGraphService.get(this.createWorkbookUrl(this.session.sessionIdentifier, request), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
         });
     }
-
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public async setCell(address: string, value: string): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
+    public async setCell(
+        worksheetIdentifier: WorksheetIdentifier,
+        address: string,
+        body: WorkbookRangeUpdateBody
+    ): Promise<WorkbookRange> {
+        const request = `/worksheets/${worksheetIdentifier}/range(address=${address})`;
 
-        const newRange: WorkbookRangeUpdateBody = {
-            values: [[value]],
+        return await this.microsoftGraphService.patch(
+            this.createWorkbookUrl(this.session.sessionIdentifier, request),
+            { body },
+            {
+                headers: {
+                    'workbook-session-id': this.session.workbookSessionInfo.id,
+                },
+            }
+        );
+    }
+
+    public async setRange() {
+        //TODO
+    }
+
+    private getAuthHeader(token?: string) {
+        return {
+            Authorization: `Bearer ${token??this.session.token}`
         };
-
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(request), newRange, {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        });
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public async setRange(address: string, values: string | any[][]) {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
-
-        if (!Array.isArray(values)) {
-            values = JSON.parse(values) as any[][];
+    private createWorkbookUrl(sessionIdentifier: SessionIdentifier, request: string) {
+        if (typeof sessionIdentifier === 'number') {
+            request = `/me/drive/items/${sessionIdentifier}/workbook`.concat(request);
         }
 
-        const newRange: WorkbookRangeUpdateBody = {
-            values,
-        };
-
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(request), newRange, {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        });
-    }
-
-    private createWorkbookUrl(request: string) {
-        switch (this.session.platform) {
-            case SHARE_POINT:
-                return `/sites/${this.session.siteId}/drives/${this.session.driveId}/items/${this.session.fileId}/workbook`.concat(
-                    request
-                );
-            case ONE_DRIVE:
-                return `/me/drive/root:/${this.session.sessionIdentifier}:/workbook`.concat(request);
-            default:
-                throw new Error('Invalid platform');
+        if (typeof sessionIdentifier === 'string') {
+            request = `/me/drive/root:/${sessionIdentifier}/workbook`.concat(request);
         }
-    }
 
-    private getColumnNumber(column: string): number {
-        //Calculates the column number based on the column letter
-        // e.g.A = 1  AA = 27, AB = 28, etc.
-        // it uses the ASCII code of the letter to calculate the number
-        // e.g A = 65, B = 66, C = 67, etc.
-        // so we subtract 64 from the ASCII code to get the column number
-        return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
-    }
-
-    private async getSiteIdByName(name: string): Promise<Site> {
-        const url = `/sites?search=${name}`;
-        return (await this.microsoftGraphService.get(url))['value'][0];
-    }
-
-    private async getDriveIdBySiteAndListName(siteId: string, listName: string) {
-        const url = `/sites/${siteId}/drives/`;
-
-        const data = (await this.microsoftGraphService.get(url))['value'] as Drive[];
-
-        return data.filter(drive => drive.name === listName)[0].id;
-    }
-
-    private async getItemId(siteId: string, driveId: string, path: string) {
-        const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
-
-        const data: DriveItem = await this.microsoftGraphService.get(url);
-
-        return data.id;
-    }
-
-    private async createSharePointSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
-        siteRelativePath?: string,
-        list?: string
-    ): Promise<Session> {
-        const siteId = (await this.getSiteIdByName(siteRelativePath)).id;
-        const driveId = await this.getDriveIdBySiteAndListName(siteId, list);
-        const fileId = await this.getItemId(siteId, driveId, sessionIdentifier);
-        return {
-            platform,
-            sessionIdentifier,
-            workbookSessionInfo: null,
-            worksheetIdentifier,
-            siteId,
-            driveId,
-            fileId,
-        };
-    }
-
-    private createOneDriveSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
-    ): Session {
-        return {
-            platform,
-            sessionIdentifier,
-            workbookSessionInfo: null,
-            worksheetIdentifier,
-        };
+        return request;
     }
 }
