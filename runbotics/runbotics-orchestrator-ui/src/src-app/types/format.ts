@@ -1,1 +1,1 @@
-export const VARIABLE_NAME_PATTERN = /(^\$.+)|(^#.+)/;
+export const VARIABLE_NAME_PATTERN = /^(#|\$){1}\{[^}]+\}$/;
