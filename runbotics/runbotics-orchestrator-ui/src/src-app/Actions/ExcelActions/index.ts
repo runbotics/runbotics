@@ -1,6 +1,6 @@
-import deleteRows from './deleteRows';
+import getDeleteRowsAction from './deleteRows';
 
 
-const excelActions = {deleteRows};
+const excelActions = {getDeleteRowsAction};
 
 export default excelActions;

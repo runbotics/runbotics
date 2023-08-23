@@ -644,7 +644,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    [ExcelAction.DELETE_ROWS]: excelAction.deleteRows(),
+    [ExcelAction.DELETE_ROWS]: excelAction.getDeleteRowsAction(),
     [ExcelAction.CREATE_WORKSHEET]: {
         id: ExcelAction.CREATE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),
