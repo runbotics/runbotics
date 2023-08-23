@@ -3,12 +3,14 @@ import { StatelessActionHandler, DesktopRunResponse } from 'runbotics-sdk';
 
 import { MicrosoftService, CloudPath, MicrosoftSession } from '#action/microsoft';
 import * as SharepointTypes from './types';
+import { ExcelService } from '#action/microsoft/excel';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
     constructor(
         private readonly microsoftSession: MicrosoftSession,
         private readonly microsoftService: MicrosoftService,
+        private readonly excelService: ExcelService
     ) {
         super();
     }
@@ -28,11 +30,12 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async openFileFromRoot(
         input: SharepointTypes.SharepointOpenFromRootActionInput
     ): Promise<SharepointTypes.SharepointOpenActionOutput> {
-        const cloudPath = CloudPath.ROOT;
+        // const cloudPath = CloudPath.ROOT;
         const token = await this.microsoftSession.getToken();
-        const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
-        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
-        return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
+        // const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
+        // const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
+        // return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
+        return await this.excelService.openFile(input.filePath, input.worksheetName, token.token);
     }
 
     async closeSession(
