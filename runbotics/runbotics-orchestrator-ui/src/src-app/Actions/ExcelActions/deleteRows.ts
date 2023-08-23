@@ -10,12 +10,6 @@ const deleteRows = (): IBpmnAction => (
         script: ExcelAction.DELETE_ROWS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
         form: {
             schema: {
                 type: 'object',

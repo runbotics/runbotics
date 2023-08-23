@@ -370,24 +370,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return this.session.ActiveSheet.Range(`${column}1`).Column;
     }
 
-    private getRowCoordinate(row: string | number): number {
-        if (!row) return null;
-        const rowNumber = Number(row);
-        if (!isNaN(rowNumber)) return rowNumber;
-        return this.session.ActiveSheet.Range(`${row}1`).Row;
-    }
-
     private sortColumns(columns: string[]): string[] {
         return columns.sort((a, b) => {
-            if (a.length !== b.length) {
-                return a.length - b.length;
-            }
-            return a.localeCompare(b);
-        });
-    }
-
-    private sortRows(rows: string[]): string[] {
-        return rows.sort((a, b) => {
             if (a.length !== b.length) {
                 return a.length - b.length;
             }
