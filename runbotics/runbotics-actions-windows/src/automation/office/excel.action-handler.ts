@@ -251,11 +251,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async deleteWorksheet(input: ExcelDeleteWorksheetActionInput): Promise<void> {
-        if (input.worksheet === undefined) {
-            throw new Error(ExcelErrorMessage.deleteWorksheetIncorrectInput());
-        }
 
-        if (this.checkIfWorksheetExist(input.worksheet)) {
+        if (!this.checkIfWorksheetExist(input.worksheet)) {
             throw new Error(ExcelErrorMessage.worksheetIncorrectInput(true));
         }
 

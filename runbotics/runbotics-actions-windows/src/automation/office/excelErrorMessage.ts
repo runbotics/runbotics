@@ -83,9 +83,6 @@ export default class ExcelErrorMessage {
         `
     }
 
-    static deleteWorksheetIncorrectInput(): string {
-        return 'You must provide worksheet name';
-    }
     static insertRowsIncorrectInput(e?: Error): string {
         return `
             ${this.getDisclaimer(e)}
