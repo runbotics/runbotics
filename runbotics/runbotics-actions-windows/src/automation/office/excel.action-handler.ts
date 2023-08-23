@@ -85,7 +85,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
                 const rowValues: unknown[] = [];
                 for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
-                    rowValues.push(targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? '');
+                    rowValues.push(
+                        targetWorksheet
+                            .Cells(rowIdx, columnIdx)
+                            .Value() ?? ''
+                    );
                 }
                 cellValues.push(rowValues);
             }

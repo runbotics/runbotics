@@ -4,13 +4,12 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { ActionSystem, IBpmnAction, Runner } from '../types';
 
-const deleteWorksheet = (): IBpmnAction => ({
+const getActionDeleteWorksheet = (): IBpmnAction => ({
     id: ExcelAction.DELETE_WORKSHEET,
     label: translate('Process.Details.Modeler.Actions.Excel.DeleteWorksheet.Label'),
     script: ExcelAction.DELETE_WORKSHEET,
     runner: Runner.DESKTOP_SCRIPT,
     system: ActionSystem.WINDOWS,
-
     form: {
         schema: {
             type: 'object',
@@ -37,4 +36,4 @@ const deleteWorksheet = (): IBpmnAction => ({
     },
 });
 
-export default deleteWorksheet;
+export default getActionDeleteWorksheet;
