@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { BpmnElementType } from 'runbotics-common';
 
 import { ModelerErrorType } from '#src-app/store/slices/Process';
+import { VARIABLE_NAME_PATTERN } from '#src-app/types/format';
 import {
     getFormData,
     getFormSchema,
@@ -48,7 +49,7 @@ export const isModelerSync = ({
 
 const ajv = new Ajv({
     formats: {
-        variableName: 'string',
+        variableName: VARIABLE_NAME_PATTERN,
     },
 });
 
