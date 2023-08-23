@@ -15,7 +15,7 @@ export default class ExcelErrorMessage {
     }
 
     static deleteRowsIncorrectInput(): string {
-        return `Row must be a number (e.g 5), range (e.g 1:3) or array (e.g [1,4])`
+        return `Row must be a number (e.g. 5), range (e.g. 1:3) or array (e.g. [1,4])`
     }
 
     static cellCoordinatesIncorrectInput(e?: Error): string {
