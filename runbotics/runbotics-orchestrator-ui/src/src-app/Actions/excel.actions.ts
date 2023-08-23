@@ -2,6 +2,8 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import excelAction from './ExcelActions';
+
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -643,43 +645,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    'excel.runMacro': {
-        id: 'excel.runMacro',
-        label: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Label'),
-        script: 'excel.runMacro',
-
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            macro: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title'),
-                                type: 'string',
-                            },
-                            functionParams: {
-                                title: translate('Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams'),
-                                type: 'array',
-                                items: {
-                                    type: 'string',
-                                },
-                                maxItems: 10,
-                            },
-                        },
-
-                        required: ['macro'],
-                    },
-                },
-            },
-            uiSchema: {},
-            formData: {},
-        },
-    },
+    [ExcelAction.RUN_MACRO]: excelAction.getActionsRunMacro(),
     [ExcelAction.CREATE_WORKSHEET]: {
         id: ExcelAction.CREATE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Label'),

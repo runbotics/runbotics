@@ -171,6 +171,7 @@ export enum ExcelAction {
 	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
 	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
 	INSERT_ROWS_AFTER = "excel.insertRowsAfter",
+	RUN_MACRO = "excel.runMacro",
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
 }
