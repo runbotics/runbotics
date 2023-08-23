@@ -21,7 +21,6 @@ import {
     ExcelDeleteWorksheetActionInput,
     ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput,
-    ExcelArrayStructure,
     ExcelCellContent,
     RegexPatterns,
 } from './excel.types';
@@ -82,7 +81,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     ): Promise<unknown[][]> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         try {
-            const cellValues: ExcelArrayStructure = [];
+            const cellValues: ExcelCellContent[][] = [];
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             const { column: startColumn, row: startRow } = this.getDividedCellCoordinates(input.startCell);
             const { column: endColumn, row: endRow } = this.getDividedCellCoordinates(input.endCell);
@@ -124,13 +123,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
+        const cellValues = this.parseExcelStructureArray(input.cellValues, ExcelErrorMessage.setCellsIncorrectInput());
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
-        if (!Array.isArray(input.cellValues)) throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
         const { row: startRow, column: startColumn } = this.getDividedCellCoordinates(input.startCell);
         let columnCounter = startColumn,
             rowCounter = startRow;
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-        for (const rowValues of input.cellValues) {
+        for (const rowValues of cellValues) {
             for (const cellValue of rowValues) {
                 try {
                     if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
@@ -164,11 +163,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         input: ExcelDeleteColumnsActionInput
     ): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
+        const columnRange = this.parseOneDimensionalArray(input.columnRange);
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.columnRange)) targetWorksheet.Columns(input.columnRange).Delete();
+            if (!Array.isArray(columnRange)) targetWorksheet.Columns(columnRange).Delete();
             else {
-                const sortedColumns = this.sortColumns(input.columnRange);
+                const sortedColumns = this.sortColumns(columnRange);
                 sortedColumns.forEach((column, idx) => {
                     const columnCoordinate = this.getColumnCoordinate(column);
                     targetWorksheet.Columns(columnCoordinate - idx).Delete();
@@ -289,11 +289,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async clearCells(
         input: ExcelClearCellsActionInput
     ): Promise<void> {
+        const targetCells = this.parseOneDimensionalArray(input.targetCells);
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-            if (!Array.isArray(input.targetCells)) targetWorksheet.Range(input.targetCells).Clear();
-            else for (const cellCoordinate of input.targetCells) targetWorksheet.Range(cellCoordinate).Clear();
+            if (!Array.isArray(targetCells)) targetWorksheet.Range(targetCells).Clear();
+            else for (const cellCoordinate of targetCells) targetWorksheet.Range(cellCoordinate).Clear();
         } catch (e) {
             throw new Error(ExcelErrorMessage.clearCellsIncorrectInput());
         }
@@ -467,5 +468,21 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
     private isPositiveInteger(number: number): boolean {
         return (number > 0 && Number.isInteger(number))
+    }
+
+    private parseExcelStructureArray(value: string | ExcelCellContent[][], errorMessage: string): ExcelCellContent[][] {
+        try {
+            return Array.isArray(value) ? value : JSON.parse(value);
+        } catch (e) {
+            throw new Error(errorMessage);
+        }
+    }
+
+    private parseOneDimensionalArray = (value: string | string[]): string | string[] => {
+        try {
+            return Array.isArray(value) ? value : JSON.parse(value);
+        } catch (e) {
+            return value;
+        }
     }
 }

@@ -1,11 +1,8 @@
 import { ExcelAction } from 'runbotics-common';
 
-import { translate } from '#src-app/hooks/useTranslations';
-
 import excelActions from './ExcelActions';
-import { IBpmnAction, Runner, ActionSystem, RegexPatterns } from './types';
+import { IBpmnAction } from './types';
 
-// eslint-disable-next-line max-lines-per-function
 const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.CLEAR_CELLS]: excelActions.getActionClearCells(),
     [ExcelAction.CLOSE]: excelActions.getActionClose(),

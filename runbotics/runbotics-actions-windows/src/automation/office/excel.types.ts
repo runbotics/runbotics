@@ -58,7 +58,7 @@ export interface ExcelSetCellActionInput {
 
 export interface ExcelSetCellsActionInput {
     startCell: string;
-    cellValues: ExcelArrayStructure;
+    cellValues: ExcelCellContent[][];
     worksheet?: string;
 }
 
@@ -102,8 +102,6 @@ export interface ExcelCreateWorksheetActionInput {
     name?: string;
 }
 
-export type ExcelCreateWorksheetActionOutput = string;
-
 export interface ExcelRenameWorksheetActionInput {
     newName: string;
     worksheet?: string;
@@ -117,10 +115,6 @@ export interface ExcelDeleteWorksheetActionInput {
     worksheet: string;
 }
 
-export interface ExcelDeleteWorksheetActionInput {
-    worksheet: string;
-}
+export type ExcelCreateWorksheetActionOutput = string;
 
 export type ExcelCellContent = string | number | boolean;
-
-export type ExcelArrayStructure = ExcelCellContent[][];
