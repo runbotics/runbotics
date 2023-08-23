@@ -2,6 +2,7 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import excelActions from './ExcelActions';
 import { IBpmnAction, Runner, ActionSystem } from './types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -700,6 +701,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [ExcelAction.DELETE_WORKSHEET]: excelActions.getActionDeleteWorksheet(),
     [ExcelAction.WORKSHEET_EXISTS]: {
         id: ExcelAction.WORKSHEET_EXISTS,
         label: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Label'),
@@ -733,7 +735,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                type: 'boolean',
+                                type: 'string',
                             },
                         },
                     },

@@ -19,6 +19,7 @@ import {
     ExcelRenameWorksheetActionInput,
     ExcelSetActiveWorksheetActionInput,
     ExcelInsertColumnsActionInput,
+    ExcelDeleteWorksheetActionInput,
     ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput,
 } from './excel.types';
@@ -36,6 +37,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session = new winax.Object('Excel.Application', { activate: true });
         this.session.Workbooks.Open(input.path);
         this.session.Visible = true;
+        this.session.Application.DisplayAlerts = false;
         if (input.worksheet) {
             this.session.Worksheets(input.worksheet).Activate();
         }
@@ -49,13 +51,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * @description Closes Excel application ignoring unsaved changes
      */
     async close(): Promise<void> {
-        if (this.session?.DisplayAlerts) {
-            this.session.DisplayAlerts = false;
-        }
         this.session?.Quit();
-        if (this.session?.DisplayAlerts) {
-            this.session.DisplayAlerts = true;
-        }
+
         this.session = null;
     }
 
@@ -88,7 +85,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
                 const rowValues: unknown[] = [];
                 for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
-                    rowValues.push(targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? '');
+                    rowValues.push(
+                        targetWorksheet
+                            .Cells(rowIdx, columnIdx)
+                            .Value() ?? ''
+                    );
                 }
                 cellValues.push(rowValues);
             }
@@ -249,6 +250,17 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async deleteWorksheet(input: ExcelDeleteWorksheetActionInput): Promise<void> {
+
+        if (!this.checkIfWorksheetExist(input.worksheet)) {
+            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(true));
+        }
+
+        const targetWorksheet = this.session.Worksheets(input.worksheet);
+
+        targetWorksheet.Delete();
+    }
+
     async isWorksheetPresent(input: ExcelWorksheetExistActionInput): Promise<unknown> {
         return this.checkIfWorksheetExist(input.worksheet);
     }
@@ -306,6 +318,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.insertColumnsBefore(request.input);
             case 'excel.insertColumnsAfter':
                 return this.insertColumnsAfter(request.input);
+            case 'excel.deleteWorksheet':
+                return this.deleteWorksheet(request.input);
             case 'excel.worksheetExists':
                 return this.isWorksheetPresent(request.input);
             case 'excel.deleteColumns':
