@@ -167,7 +167,7 @@ export enum ExcelAction {
 	SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',
-	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
+	INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
 	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
@@ -176,9 +176,15 @@ export enum ExcelAction {
 export enum DesktopAction {
 	CLICK = 'desktop.click',
 	TYPE = 'desktop.type',
-	READ_CURSOR_SELECTION = 'desktop.readCursorSelection',
+	COPY = 'desktop.copy',
 	PASTE = 'desktop.paste',
-	MAXIMIZE_WINDOW = 'desktop.maximizeWindow'
+	SELECT_WITH_CURSOR = 'desktop.selectWithCursor',
+	READ_CONTENT_FROM_CLIPBOARD = 'desktop.readContentFromClipboard',
+	MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
+	FIND_SCREEN_REGION = 'desktop.findScreenRegion',
+	WAIT_FOR_SCREEN_REGION = 'desktop.waitForScreenRegion',
+	TAKE_SCREENSHOT = 'desktop.takeScreenshot',
+	READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
 }
 
 export type AllActionIds =
@@ -200,6 +206,7 @@ export type AllActionIds =
 	| BeeOfficeAction
 	| SapAction
 	| ApplicationAction
-	| ExcelAction;
+	| ExcelAction
+	| DesktopAction;
 
 
