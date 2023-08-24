@@ -27,7 +27,7 @@ const FieldTemplate = ({
 }: FieldTemplateProps) => {
     const [description, setDescription] = useState(rawDescription);
     const [errors, setErrors] = useState(rawErrors);
-    
+
     useEffect(() => {
         if (typeof rawDescription !== 'undefined') {
             const translateKey = 'Process.BuildView.Modeler.Widgets.FieldTemplate.' + capitalizeFirstLetter({ text: rawDescription, delimiter: ' ', lowerCaseRest: true });
@@ -36,13 +36,20 @@ const FieldTemplate = ({
                 setDescription(translate(translateKey));
             }
         };
-        
+
         if (rawErrors.length > 0) {
             const localRawErrors = [];
-            
+
             rawErrors.forEach((rawError) => {
                 const rawErrorNoRegex = rawError.replace(/".*"/g, '');
-                const translateKey = `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizeFirstLetter({ text: rawErrorNoRegex, delimiter: ' ', lowerCaseRest: true })}`;
+                const rawErrorRegex = rawError.match(/"([^"]*)"/);
+
+                const capitalizedRawError = capitalizeFirstLetter({ text: rawErrorNoRegex, delimiter: ' ', lowerCaseRest: true });
+
+                const translateKey = rawErrorRegex && rawErrorRegex[1] === 'variableName'
+                    ? `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizedRawError}VariableName`
+                    : `Process.BuildView.Modeler.Widgets.FieldTemplate.${capitalizedRawError}`;
+
                 if (checkIfKeyExists(translateKey)) {
                     { /*@ts-ignore*/ }
                     localRawErrors.push(translate(translateKey));
