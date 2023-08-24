@@ -66,7 +66,7 @@ export default class ExcelErrorMessage {
 
     static insertRowsIncorrectInput(): string {
         return `
-            Row has to be a whole positive number (e.g. 5).
+            Row has to be a number (e.g. 5).
             Number has to be a number (e.g. 5).
             ${this.getCheckInputTip()}
         `
@@ -103,6 +103,13 @@ export default class ExcelErrorMessage {
             Column must be a string (e.g. "A").
             ${this.getCheckInputTip()}
         `
+    }
+
+    static tableNotFoundIncorrectInput(): string {
+        return `
+            Table of this name not found.
+            ${this.getCheckInputTip()}
+        `;
     }
 
     /* Tips */

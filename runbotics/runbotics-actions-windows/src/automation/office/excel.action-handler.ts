@@ -21,8 +21,9 @@ import {
     ExcelDeleteWorksheetActionInput,
     ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput,
-    ExcelCellContent,
     RegexPatterns,
+    ExcelReadTableActionInput,
+    ExcelCellValue,
 } from './excel.types';
 
 @Injectable()
@@ -81,13 +82,13 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     ): Promise<unknown[][]> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         try {
-            const cellValues: ExcelCellContent[][] = [];
+            const cellValues: ExcelCellValue[][] = [];
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             const { column: startColumn, row: startRow } = this.getDividedCellCoordinates(input.startCell);
             const { column: endColumn, row: endRow } = this.getDividedCellCoordinates(input.endCell);
 
             for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
-                const rowValues: ExcelCellContent[] = [];
+                const rowValues: ExcelCellValue[] = [];
                 for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
                     rowValues.push(
                         targetWorksheet
@@ -132,7 +133,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         for (const rowValues of cellValues) {
             for (const cellValue of rowValues) {
                 try {
-                    if (cellValue !== null) targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue;
+                    if (cellValue !== '') targetWorksheet.Cells(rowCounter, columnCounter).Value = cellValue ?? '';
                     columnCounter++;
                 } catch (e) {
                     throw new Error(ExcelErrorMessage.setCellsIncorrectInput());
@@ -316,6 +317,28 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return this.checkIfWorksheetExist(input.worksheet);
     }
 
+    async readTable(input: ExcelReadTableActionInput): Promise<ExcelCellValue[][]> {
+        if (input?.worksheet) this.checkWorksheet(input.worksheet, true);
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const tables = targetWorksheet.ListObjects;
+        const targetTable = this.getTableByName(input.tableName, tables);
+
+        return input.shouldIncludeHeaders ? targetTable : targetTable.slice(1);
+    }
+
+    /**
+     * @description Function throws an error if the Excel worksheet exists
+     * and we expect it does not exist, or if it does not exist and we expect it to exist.
+     */
+    private checkWorksheet(worksheet: string, shouldExist: boolean): void {
+        if (
+            (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+            (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
+        ) {
+            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
+        }
+    }
+
     run(request: ExcelActionRequest) {
         if (process.platform !== 'win32') {
             throw new Error('Excel actions can be run only on Windows bot');
@@ -368,6 +391,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.save(request.input);
             case 'excel.close':
                 return this.close();
+            case 'excel.readTable':
+                return this.readTable(request.input);
             default:
                 throw new Error('Action not found');
         }
@@ -475,7 +500,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * @throws Error if parsing fails
      * @example parseExcelStructureArray("[["A1", "B1", "C1"], ["A2", "B2", "C2"]]") // [["A1", "B1", "C1"], ["A2", "B2", "C2"]]
      */
-    private parseExcelStructureArray(value: string | ExcelCellContent[][], errorMessage: string): ExcelCellContent[][] {
+    private parseExcelStructureArray(value: string | ExcelCellValue[][], errorMessage: string): ExcelCellValue[][] {
         try {
             return Array.isArray(value) ? value : JSON.parse(value);
         } catch (e) {
@@ -497,5 +522,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         } catch (e) {
             return value;
         }
+    }
+
+    private getTableByName(name: string, tables: any): any {
+        const tablesNum = tables.Count;
+        for (let i = 1; i <= tablesNum; i++) {
+            const table = tables.Item(i);
+            if (table.Name === name) {
+                return table.Range.Value();
+            }
+        }
+        throw new Error(ExcelErrorMessage.tableNotFoundIncorrectInput());
     }
 }
