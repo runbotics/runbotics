@@ -106,6 +106,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                             variant='contained'
                             onClick={handleSave}
                             loading={activated.loading}
+                            disabled={!checkFormFieldsValidation()}
                         >
                             {translate('Users.List.Edit.Form.Button.Save')}
                         </LoadingButton>
