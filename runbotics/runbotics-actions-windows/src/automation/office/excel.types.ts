@@ -1,28 +1,34 @@
-import { DesktopRunRequest } from "runbotics-sdk";
+import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type ExcelActionRequest =
-    | DesktopRunRequest<"excel.open", ExcelOpenActionInput>
-    | DesktopRunRequest<"excel.getCell", ExcelGetCellActionInput>
-    | DesktopRunRequest<"excel.getCells", ExcelGetCellsActionInput>
-    | DesktopRunRequest<"excel.close">
-    | DesktopRunRequest<"excel.save">
-    | DesktopRunRequest<"excel.setCell", ExcelSetCellActionInput>
-    | DesktopRunRequest<"excel.setCells", ExcelSetCellsActionInput>
-    | DesktopRunRequest<"excel.findFirstEmptyRow", ExcelFindFirstEmptyRowActionInput>
-    | DesktopRunRequest<"excel.clearCells", ExcelClearCellsActionInput>
-    | DesktopRunRequest<"excel.deleteColumns", ExcelDeleteColumnsActionInput>
-    | DesktopRunRequest<"excel.createWorksheet", ExcelCreateWorksheetActionInput>
-    | DesktopRunRequest<"excel.renameWorksheet", ExcelRenameWorksheetActionInput>
-    | DesktopRunRequest<"excel.setActiveWorksheet", ExcelSetActiveWorksheetActionInput>
-    | DesktopRunRequest<"excel.insertColumnsBefore", ExcelInsertColumnsActionInput>
-    | DesktopRunRequest<"excel.insertColumnsAfter", ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<'excel.open', ExcelOpenActionInput>
+    | DesktopRunRequest<'excel.getCell', ExcelGetCellActionInput>
+    | DesktopRunRequest<'excel.getCells', ExcelGetCellsActionInput>
+    | DesktopRunRequest<'excel.close'>
+    | DesktopRunRequest<'excel.save'>
+    | DesktopRunRequest<'excel.setCell', ExcelSetCellActionInput>
+    | DesktopRunRequest<'excel.setCells', ExcelSetCellsActionInput>
+    | DesktopRunRequest<'excel.findFirstEmptyRow', ExcelFindFirstEmptyRowActionInput>
+    | DesktopRunRequest<'excel.clearCells', ExcelClearCellsActionInput>
+    | DesktopRunRequest<'excel.deleteColumns', ExcelDeleteColumnsActionInput>
+    | DesktopRunRequest<'excel.createWorksheet', ExcelCreateWorksheetActionInput>
+    | DesktopRunRequest<'excel.renameWorksheet', ExcelRenameWorksheetActionInput>
+    | DesktopRunRequest<'excel.setActiveWorksheet', ExcelSetActiveWorksheetActionInput>
+    | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<"excel.insertRowsBefore", ExcelInsertRowsActionInput>
-    | DesktopRunRequest<"excel.insertRowsAfter", ExcelInsertRowsActionInput>;
+    | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
+    | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
     worksheet?: string;
-    mode?: "xlReadOnly" | "xlReadWrite";
+    mode?: 'xlReadOnly' | 'xlReadWrite';
+}
+
+export interface ExcelWorksheetExistActionInput {
+    worksheet: string;
 }
 
 export interface ExcelGetCellActionInput {
@@ -98,6 +104,10 @@ export type ExcelInsertColumnsActionInput = {
     worksheet?: string;
 };
 
+export interface ExcelCreateWorksheetActionInput {
+    name?: string;
+}
+
 export type ExcelInsertRowsActionInput = {
     startingRow: number;
     rowsNumber: number;
@@ -106,17 +116,21 @@ export type ExcelInsertRowsActionInput = {
 
 export interface ExcelCreateWorksheetActionInput {
     name?: string;
-};
+}
 
-export type ExcelCreateWorksheetActionOutput = string
+export type ExcelCreateWorksheetActionOutput = string;
 
 export interface ExcelRenameWorksheetActionInput {
     worksheet?: string;
     newName: string;
-};
+}
 
 export interface ExcelSetActiveWorksheetActionInput {
     worksheet: string;
-};
+}
+
+export interface ExcelDeleteWorksheetActionInput {
+    worksheet: string;
+}
 
 export type ExcelArrayStructure = (string | number | boolean)[][];
