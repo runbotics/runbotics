@@ -9,8 +9,8 @@ export const StyledButton = styled(Button)`
 
 export const DeleteButton = styled(LoadingButton)(({theme}) => `
     && {
-        background-color: ${theme.palette.grey.A700};
-        color: ${theme.palette.error.contrastText};
+        background-color: ${theme.palette.button.dangerous};
+        color: ${theme.palette.background.default};
 
         &:hover {
             background-color: ${theme.palette.common.black};
@@ -20,5 +20,7 @@ export const DeleteButton = styled(LoadingButton)(({theme}) => `
 
 export const StyledDialogActions = styled(DialogActions)`
     display: flex;
-    justify-content: space-between !important;
+    && {
+        justify-content: space-between;
+    }
 `;

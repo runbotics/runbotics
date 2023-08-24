@@ -3,48 +3,49 @@ import React, { FC, ChangeEvent } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
-import { emailFieldValidator, requiredFieldValidator } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
+import { LanguageType } from '#src-app/translations/translations';
+import { emailFieldValidation, requiredFieldValidation } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
-import { UsersListEditFormProps } from './UsersListEdit.types';
+import { FieldValidation, UsersListEditFormProps } from './UsersListEdit.types';
 
 const UsersListEditForm: FC<UsersListEditFormProps> = ({
     user,
     setUser,
-    validation,
-    setValidation
+    formValidationState,
+    setFormValidationState
 }) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
 
     const { translate } = useTranslations();
 
-    const getEmailValidator = () => !(validation.email) && emailFieldValidator;
+    const getEmailValidator = (): FieldValidation | undefined => !formValidationState.email ? emailFieldValidation : undefined;
 
-    const getLoginValidator = () => !(validation.login) && requiredFieldValidator;
+    const getLoginValidator = (): FieldValidation | undefined => !formValidationState.login && requiredFieldValidation;
 
-    const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleEmailFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         const email = event.target.value;
         setUser((prevState) => ({ ...prevState, email }));
-        setValidation((prevState) => ({
+        setFormValidationState((prevState) => ({
             ...prevState,
             email: (email.trim() !== '') && emailRegex.test(email)
         }));
     };
 
-    const handleLoginChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLoginFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         const login = event.target.value;
         setUser((prevState) => ({ ...prevState, login }));
-        setValidation((prevState) => ({ ...prevState, login: (login.trim() !== '' ) }));
+        setFormValidationState((prevState) => ({ ...prevState, login: (login.trim() !== '' ) }));
     };
 
-    const handleFirstNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFirstNameFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         setUser((prevState) => ({ ...prevState, firstName: event.target.value}));
     };
 
-    const handleLastNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLastNameFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         setUser((prevState) => ({ ...prevState, lastName: event.target.value }));
     };
 
-    const handleLanguageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleLanguageFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         setUser((prevState) => ({ ...prevState, langKey: event.target.value }));
     };
 
@@ -53,35 +54,35 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Email')}
                 value={user?.email}
-                onChange={handleEmailChange}
+                onChange={handleEmailFieldInput}
                 {...getEmailValidator()}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Login')}
                 value={user?.login}
-                onChange={handleLoginChange}
+                onChange={handleLoginFieldInput}
                 {...getLoginValidator()}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.FirstName')}
                 value={user?.firstName}
-                onChange={handleFirstNameChange}
+                onChange={handleFirstNameFieldInput}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.LastName')}
                 value={user?.lastName}
-                onChange={handleLastNameChange}
+                onChange={handleLastNameFieldInput}
             />
             <TextField
                 select
                 label={translate('Users.List.Edit.Form.Label.Language')}
                 value={user?.langKey}
-                onChange={handleLanguageChange}
+                onChange={handleLanguageFieldInput}
             >
-                <MenuItem value='en'>
+                <MenuItem value={LanguageType.EN}>
                     {translate('Users.List.Edit.Form.Select.Language.English')}
                 </MenuItem>
-                <MenuItem value='pl'>
+                <MenuItem value={LanguageType.PL}>
                     {translate('Users.List.Edit.Form.Select.Language.Polish')}
                 </MenuItem>
             </TextField>

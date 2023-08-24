@@ -7,7 +7,7 @@ export interface UsersListEditDialogProps {
     userData: IUser;
 };
 
-export interface UserDataValidationType {
+export interface IFormValidationState {
     email: boolean;
     login: boolean;
 };
@@ -15,15 +15,11 @@ export interface UserDataValidationType {
 export interface UsersListEditFormProps {
     user: IUser;
     setUser: (IUser) => void;
-    validation: UserDataValidationType;
-    setValidation: (UserDataValidation) => void;
+    formValidationState: IFormValidationState;
+    setFormValidationState: (IFormValidationState) => void;
 };
 
-export interface ValidatorType {
-    error: boolean;
-    helperText: string;
+export interface FieldValidation {
+    error?: boolean;
+    helperText?: string;
 };
-
-export type UserUpdateErrorMessageType =
-    'Users.List.Edit.Form.Event.Error.BadEmail'
-    | 'Users.List.Edit.Form.Event.Error.BadLogin';

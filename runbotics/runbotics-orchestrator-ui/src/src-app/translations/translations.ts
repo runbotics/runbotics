@@ -1,6 +1,10 @@
 import englishTranslations from './en';
 import polishTranslations from './pl';
 
+export enum LanguageType {
+    EN = 'en',
+    PL = 'pl'
+};
 
 export const languages = ['en', 'pl'] as const;
 

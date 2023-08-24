@@ -13,10 +13,10 @@ const editListTranslations: typeof englishEditListTranslations = {
     'Users.List.Edit.Form.Label.FirstName': 'Imię',
     'Users.List.Edit.Form.Label.LastName': 'Nazwisko',
     'Users.List.Edit.Form.Label.Language': 'Język',
-    'Users.List.Edit.Form.Select.Language.English': 'English',
+    'Users.List.Edit.Form.Select.Language.English': 'Angielski',
     'Users.List.Edit.Form.Select.Language.Polish': 'Polski',
-    'Users.List.Edit.Form.Info.FieldRequired': 'Pole jest wymagane',
-    'Users.List.Edit.Form.Info.Email': 'Niepoprawny email'
+    'Users.List.Edit.Form.Error.FieldRequired': 'Pole jest wymagane',
+    'Users.List.Edit.Form.Error.Email': 'Niepoprawny email'
 };
 
 export default editListTranslations;

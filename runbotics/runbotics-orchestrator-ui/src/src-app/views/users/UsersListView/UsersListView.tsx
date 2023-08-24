@@ -29,26 +29,29 @@ const UsersListView: FC = () => {
     );
 
     const { activated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearchActivated } = useUserSearch(true, limit, page);
+    const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch(true, limit, page);
 
     const [userData, setUserData] = useState({});
-    const [dialogsVisibility, setDialogsVisibility] = useState({ edit: false, delete: false });
+    const [dialogsVisibility, setDialogsVisibility] = useState({
+        isEditVisible: false,
+        isDeleteVisible: false
+    });
 
     const handleOpenEditDialog = (rowData) => {
-        setDialogsVisibility((prevState) => ({ ...prevState, edit: true }));
+        setDialogsVisibility((prevState) => ({ ...prevState, isEditVisible: true }));
         setUserData(rowData);
     };
 
     const handleCloseEditDialog = () => {
-        setDialogsVisibility((prevState) => ({ ...prevState, edit: false }));
+        setDialogsVisibility((prevState) => ({ ...prevState, isEditVisible: false }));
     };
 
     const handleOpenDeleteDialog = () => {
-        setDialogsVisibility({ edit: false, delete: true });
+        setDialogsVisibility({ isEditVisible: false, isDeleteVisible: true });
     };
 
     const handleCloseDeleteDialog = () => {
-        setDialogsVisibility((prevState) => ({ ...prevState, delete: false }));
+        setDialogsVisibility((prevState) => ({ ...prevState, isDeleteVisible: false }));
     };
 
     useEffect(() => {
@@ -69,13 +72,13 @@ const UsersListView: FC = () => {
     return (
         <>
             <UsersListEditDialog
-                open={dialogsVisibility.edit}
+                open={dialogsVisibility.isEditVisible}
                 openDeleteTab={handleOpenDeleteDialog}
                 onClose={handleCloseEditDialog}
                 userData={userData}
             />
             <DeleteUserDialog
-                open={dialogsVisibility.delete}
+                open={dialogsVisibility.isDeleteVisible}
                 onClose={handleCloseDeleteDialog}
                 getSelectedUsers={() => [userData]}
             />
