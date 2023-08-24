@@ -23,7 +23,8 @@ export type ExcelActionRequest =
     | DesktopRunRequest<"excel.insertRowsBefore", ExcelInsertRowsActionInput>
     | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
-    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.readTable', ExcelReadTableActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -33,6 +34,12 @@ export interface ExcelOpenActionInput {
 
 export interface ExcelWorksheetExistActionInput {
     worksheet: string;
+}
+
+export interface ExcelReadTableActionInput {
+    tableName: string;
+    shouldIncludeHeaders: boolean;
+    worksheet?: string;
 }
 
 export interface ExcelGetCellActionInput {
@@ -52,13 +59,13 @@ export interface ExcelSaveActionInput {
 
 export interface ExcelSetCellActionInput {
     targetCell: string;
-    value: ExcelCellContent;
+    value: ExcelCellValue;
     worksheet?: string;
 }
 
 export interface ExcelSetCellsActionInput {
     startCell: string;
-    cellValues: ExcelCellContent[][];
+    cellValues: ExcelCellValue[][];
     worksheet?: string;
 }
 
@@ -115,6 +122,10 @@ export interface ExcelDeleteWorksheetActionInput {
     worksheet: string;
 }
 
+export interface ExcelDeleteWorksheetActionInput {
+    worksheet: string;
+}
+
 export type ExcelCreateWorksheetActionOutput = string;
 
-export type ExcelCellContent = string | number | boolean;
+export type ExcelCellValue = string | number | boolean;

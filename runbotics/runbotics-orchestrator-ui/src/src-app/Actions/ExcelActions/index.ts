@@ -11,6 +11,7 @@ import getActionInsertColumnsBefore from './insertColumnsBefore';
 import getActionInsertRowAfter from './insertRowAfter';
 import getActionInsertRowBefore from './insertRowBefore';
 import getActionOpen from './open';
+import getActionReadTable from './readTable';
 import getActionRenameWorksheet from './renameWorksheet';
 import getActionSave from './save';
 import getActionSetActiveWorksheet from './setActiveWorksheet';
@@ -32,6 +33,7 @@ const excelActions = {
     getActionInsertRowAfter,
     getActionInsertRowBefore,
     getActionOpen,
+    getActionReadTable,
     getActionRenameWorksheet,
     getActionSave,
     getActionSetActiveWorksheet,

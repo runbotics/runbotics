@@ -17,6 +17,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.INSERT_ROWS_AFTER]: excelActions.getActionInsertRowAfter(),
     [ExcelAction.INSERT_ROWS_BEFORE]: excelActions.getActionInsertRowBefore(),
     [ExcelAction.OPEN]: excelActions.getActionOpen(),
+    [ExcelAction.READ_TABLE]: excelActions.getActionReadTable(),
     [ExcelAction.RENAME_WORKSHEET]: excelActions.getActionRenameWorksheet(),
     [ExcelAction.SAVE]: excelActions.getActionSave(),
     [ExcelAction.SET_ACTIVE_WORKSHEET]: excelActions.getActionSetActiveWorksheet(),
