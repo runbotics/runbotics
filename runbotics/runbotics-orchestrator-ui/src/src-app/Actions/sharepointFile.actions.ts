@@ -48,9 +48,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -60,6 +58,13 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -130,9 +135,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -148,7 +151,14 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFileFromSite.SiteRelativePath.Tooltip'),
                         }
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -222,9 +232,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -240,7 +248,14 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointFile.DownloadFiles.SiteRelativePath.Tooltip'),
                         }
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {

@@ -188,9 +188,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -204,7 +202,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -469,7 +474,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -482,7 +487,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -527,7 +539,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -540,7 +552,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -584,7 +603,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -597,7 +616,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -641,7 +667,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -653,6 +679,13 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     jsonConfiguration: {
                         'ui:widget': 'JsonViewWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
                     },
                 },
             },
@@ -697,9 +730,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -712,7 +743,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -787,9 +825,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -805,6 +841,13 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                             text: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Session.Description'),
                             variant: 'subtitle1',
                             infoIcon: true,
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
                         },
                     },
                 },

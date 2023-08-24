@@ -183,7 +183,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -193,6 +193,13 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
