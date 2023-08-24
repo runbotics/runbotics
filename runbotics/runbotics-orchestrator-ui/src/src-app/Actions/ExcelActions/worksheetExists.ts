@@ -61,7 +61,7 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                         info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Output.VariableName.Info'),
                         pattern: RegexPatterns.VARIABLE_NAME,
                     }
-                }
+                },
             }
         },
         formData: {

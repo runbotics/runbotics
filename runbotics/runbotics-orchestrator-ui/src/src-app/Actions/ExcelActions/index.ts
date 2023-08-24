@@ -9,6 +9,7 @@ import getActionGetCells from './getCells';
 import getActionInsertColumnsAfter from './insertColumnsAfter';
 import getActionInsertColumnsBefore from './insertColumnsBefore';
 import getActionInsertRowAfter from './insertRowAfter';
+import getActionInsertRowBefore from './insertRowBefore';
 import getActionOpen from './open';
 import getActionRenameWorksheet from './renameWorksheet';
 import getActionSave from './save';
@@ -22,12 +23,14 @@ const excelActions = {
     getActionClose,
     getActionCreateWorksheet,
     getActionDeleteColumns,
+    getActionDeleteWorksheet,
     getActionFindFirstEmptyRow,
     getActionGetCell,
     getActionGetCells,
     getActionInsertColumnsAfter,
     getActionInsertColumnsBefore,
     getActionInsertRowAfter,
+    getActionInsertRowBefore,
     getActionOpen,
     getActionRenameWorksheet,
     getActionSave,
@@ -35,8 +38,6 @@ const excelActions = {
     getActionSetCell,
     getActionSetCells,
     getActionWorksheetExists,
-    getActionDeleteWorksheet,
-    getActionWorksheetExists
 };
 
 export default excelActions;

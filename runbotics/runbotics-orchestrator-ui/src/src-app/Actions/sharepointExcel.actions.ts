@@ -53,7 +53,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -113,7 +113,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -177,7 +177,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -244,7 +244,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -340,7 +340,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -420,7 +420,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -473,7 +473,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Excel.GetCells.Output.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },

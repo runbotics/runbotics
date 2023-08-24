@@ -123,8 +123,8 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async setCells(
         input: ExcelSetCellsActionInput
     ): Promise<void> {
-        const cellValues = this.parseExcelStructureArray(input.cellValues, ExcelErrorMessage.setCellsIncorrectInput());
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
+        const cellValues = this.parseExcelStructureArray(input.cellValues, ExcelErrorMessage.setCellsIncorrectInput());
         const { row: startRow, column: startColumn } = this.getDividedCellCoordinates(input.startCell);
         let columnCounter = startColumn,
             rowCounter = startRow;
@@ -255,18 +255,20 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async insertRowsBefore(
         input: ExcelInsertRowsActionInput
     ): Promise<void> {
+        if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
 
-        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber))
+        try {
+            targetWorksheet
+                .Range(
+                    targetWorksheet.Rows(startingRow),
+                    targetWorksheet.Rows(startingRow + rowsNumber - 1))
+                .Insert();
+        } catch (e) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
-
-        targetWorksheet
-            .Range(
-                targetWorksheet.Rows(startingRow),
-                targetWorksheet.Rows(startingRow + rowsNumber - 1))
-            .Insert();
+        }
     }
 
     async insertRowsAfter(
@@ -277,20 +279,20 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber
 
-        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+        try {
+            targetWorksheet
+                .Range(targetWorksheet.Rows(startingRow + 1), targetWorksheet.Rows(startingRow + rowsNumber))
+                .Insert();
+        } catch (e) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
-
-        targetWorksheet
-            .Range(targetWorksheet.Rows(startingRow + 1), targetWorksheet.Rows(startingRow + rowsNumber))
-            .Insert();
     }
 
     async clearCells(
         input: ExcelClearCellsActionInput
     ): Promise<void> {
-        const targetCells = this.parseOneDimensionalArray(input.targetCells);
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
+        const targetCells = this.parseOneDimensionalArray(input.targetCells);
         try {
             const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
             if (!Array.isArray(targetCells)) targetWorksheet.Range(targetCells).Clear();
@@ -301,8 +303,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async deleteWorksheet(input: ExcelDeleteWorksheetActionInput): Promise<void> {
-        if (!this.checkIfWorksheetExist(input.worksheet))
-            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(true));
+        this.checkIsWorksheetNameCorrect(input.worksheet, true)
 
         const targetWorksheet = this.session.Worksheets(input.worksheet);
 
@@ -466,10 +467,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return false;
     }
 
-    private isPositiveInteger(number: number): boolean {
-        return (number > 0 && Number.isInteger(number))
-    }
-
+    /**
+     * @description Parses value to array if it's string
+     * @param value - Raw or stringified Excel list of lists
+     * @param errorMessage - error message to throw if parsing fails
+     * @returns list of lists as Excel structure array
+     * @throws Error if parsing fails
+     * @example parseExcelStructureArray("[["A1", "B1", "C1"], ["A2", "B2", "C2"]]") // [["A1", "B1", "C1"], ["A2", "B2", "C2"]]
+     */
     private parseExcelStructureArray(value: string | ExcelCellContent[][], errorMessage: string): ExcelCellContent[][] {
         try {
             return Array.isArray(value) ? value : JSON.parse(value);
@@ -478,6 +483,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    /**
+     * @description Parses value to array if it's string
+     * @param value - Raw or stringified list of cell coordinates
+     * @returns array of cell coordinates or input value if parsing fails
+     * @example parseOneDimensionalArray("[["A1", "B1", "C1"], ["A2", "B2", "C2"]]") // [["A1", "B1", "C1"], ["A2", "B2", "C2"]]
+     * @example parseOneDimensionalArray("A1") // "A1"
+     * @example parseOneDimensionalArray("A1:C5") // "A1:C5"
+     */
     private parseOneDimensionalArray = (value: string | string[]): string | string[] => {
         try {
             return Array.isArray(value) ? value : JSON.parse(value);
