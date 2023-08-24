@@ -1,5 +1,9 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
 
+export enum RegexPatterns {
+    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
+}
+
 export type ExcelActionRequest =
     | DesktopRunRequest<'excel.open', ExcelOpenActionInput>
     | DesktopRunRequest<'excel.getCell', ExcelGetCellActionInput>
@@ -32,16 +36,13 @@ export interface ExcelWorksheetExistActionInput {
 }
 
 export interface ExcelGetCellActionInput {
-    row: number;
-    column: string;
+    targetCell: string;
     worksheet?: string;
 }
 
 export type ExcelGetCellsActionInput = {
-    startColumn?: string;
-    startRow?: string;
-    endColumn: string;
-    endRow: string;
+    startCell: string;
+    endCell: string;
     worksheet?: string;
 };
 
@@ -50,28 +51,20 @@ export interface ExcelSaveActionInput {
 }
 
 export interface ExcelSetCellActionInput {
-    row: number;
-    column: string;
-    value: unknown;
+    targetCell: string;
+    value: ExcelCellContent;
     worksheet?: string;
 }
 
 export interface ExcelSetCellsActionInput {
-    cellValues: ExcelArrayStructure;
-    startColumn?: string;
-    startRow?: string;
+    startCell: string;
+    cellValues: ExcelCellContent[][];
     worksheet?: string;
 }
 
 export interface ExcelFindFirstEmptyRowActionInput {
-    startColumn?: string;
-    startRow?: string;
+    startCell: string;
     worksheet?: string;
-}
-
-export interface StartCellCoordinates {
-    startColumn: number;
-    startRow: number;
 }
 
 export interface ExcelDeleteColumnsActionInput {
@@ -79,18 +72,9 @@ export interface ExcelDeleteColumnsActionInput {
     worksheet?: string;
 }
 
-export interface GetCellCoordinatesParams {
-    startColumn?: number | string;
-    startRow?: number;
-    endColumn?: number | string;
-    endRow?: number;
-}
-
 export interface CellCoordinates {
-    startColumn?: number;
-    startRow?: number;
-    endColumn?: number;
-    endRow?: number;
+    column: number;
+    row: number;
 }
 
 export interface ExcelClearCellsActionInput {
@@ -118,12 +102,10 @@ export interface ExcelCreateWorksheetActionInput {
     name?: string;
 }
 
-export type ExcelCreateWorksheetActionOutput = string;
-
 export interface ExcelRenameWorksheetActionInput {
-    worksheet?: string;
     newName: string;
-}
+    worksheet?: string;
+};
 
 export interface ExcelSetActiveWorksheetActionInput {
     worksheet: string;
@@ -133,4 +115,6 @@ export interface ExcelDeleteWorksheetActionInput {
     worksheet: string;
 }
 
-export type ExcelArrayStructure = (string | number | boolean)[][];
+export type ExcelCreateWorksheetActionOutput = string;
+
+export type ExcelCellContent = string | number | boolean;

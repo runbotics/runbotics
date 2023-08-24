@@ -77,7 +77,7 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
                             },
                         },
@@ -92,6 +92,13 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:widget': 'EditorWidget',
                         'ui:options': {
                             language: 'json',
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },
@@ -142,9 +149,6 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
                                 type: 'string',
                             },
                         },
@@ -154,6 +158,13 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
