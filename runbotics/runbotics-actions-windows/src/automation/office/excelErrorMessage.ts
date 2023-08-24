@@ -83,6 +83,14 @@ export default class ExcelErrorMessage {
         `
     }
 
+    static insertRowsIncorrectInput(e?: Error): string {
+        return `
+            ${this.getDisclaimer(e)}
+            Row has to be a whole positive number, e.g. 5.
+            Number has to be a whole positive number, eg. 5.
+        `
+    }
+
     /* Other */
     private static getDisclaimer(e?: Error): string {
         return `
