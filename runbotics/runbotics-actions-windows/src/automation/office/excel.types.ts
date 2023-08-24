@@ -16,6 +16,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.setActiveWorksheet', ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<"excel.insertRowsBefore", ExcelInsertRowsActionInput>
     | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
     | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>;

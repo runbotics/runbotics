@@ -43,6 +43,7 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Liczba kolumn',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Oznaczenie literowe lub numer kolumny, np "AZ" lub 25.',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Liczba kolumn do wstawienia.',
+    'Process.Details.Modeler.Actions.Excel.InsertRowsBefore.Label': 'Wstaw wiersze przed',
     'Process.Details.Modeler.Actions.Excel.InsertRowsAfter.Label': 'Wstaw wiersze po',
     'Process.Details.Modeler.Actions.Excel.InsertRows.RowsNumber': 'Liczba wierszy',
     'Process.Details.Modeler.Actions.Excel.InsertRows.Row.Info': 'Numer początkowego wiersza, np. 5',

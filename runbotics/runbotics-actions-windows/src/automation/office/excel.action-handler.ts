@@ -226,12 +226,30 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async insertRowsBefore(
+        input: ExcelInsertRowsActionInput
+    ): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+        const startingRow = input.startingRow;
+        const rowsNumber = input.rowsNumber
+        
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
+
+        targetWorksheet
+            .Range(
+                targetWorksheet.Rows(startingRow),
+                targetWorksheet.Rows(startingRow + rowsNumber - 1))
+            .Insert();
+    }
+
     async insertRowsAfter(input: ExcelInsertRowsActionInput): Promise<void> {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
-        const rowsNumber = input.rowsNumber;
-
-        if (startingRow <= 0 || rowsNumber <= 0 || !Number.isInteger(startingRow) || !Number.isInteger(rowsNumber)) {
+        const rowsNumber = input.rowsNumber
+        
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -324,6 +342,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.isWorksheetPresent(request.input);
             case 'excel.deleteColumns':
                 return this.deleteColumns(request.input);
+            case 'excel.insertRowsBefore':
+                this.isApplicationOpen();
+                return this.insertRowsBefore(request.input);
             case 'excel.insertRowsAfter':
                 this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
@@ -384,5 +405,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             }
         }
         return false;
+    }
+
+    private isPositiveInteger(number: number): boolean {
+        return (number > 0 && Number.isInteger(number))
     }
 }
