@@ -76,10 +76,10 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
 
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
-        setFormState({
-            ...formState,
+        setFormState(prevState => ({
+            ...prevState,
             formData: { ...e.formData, validationError: e.errors?.length > 0 },
-        });
+        }));
         if (!editMode) {
             dispatch(processActions.removeAppliedAction(props.id));
         }
@@ -93,10 +93,11 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [formState, editMode, isFormDirty]);
 
     useEffect(() => {
-        setFormState({
+        setFormState(prevState => ({
+            ...prevState,
             id: props.id,
             formData: props.formData,
-        });
+        }));
     }, [props.formData, props.id]);
 
     useEffect(() => {
