@@ -15,11 +15,11 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -320,17 +320,17 @@ public class UserService {
                         adminUserDTO.setActivated(existingUser.isActivated());
                     }
 
-                    userRepository.findOneByEmailOrLogin(
-                        adminUserDTO.getEmail(),
-                        adminUserDTO.getLogin()
-                    )
-                    .ifPresent(user -> {
-                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "badEmail");
-                        } else {
-                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "badLogin");
-                        }
-                    });
+                    userRepository
+                        .findOneByEmailOrLogin(adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .ifPresent(
+                            user -> {
+                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "badEmail");
+                                } else {
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "badLogin");
+                                }
+                            }
+                        );
 
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 

@@ -46,9 +46,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -61,6 +59,13 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     code: {
                         'ui:widget': 'EditorWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
                     },
                 },
             },
@@ -127,9 +132,7 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -142,6 +145,13 @@ const getJavascriptActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     code: {
                         'ui:widget': 'EditorWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
                     },
                 },
             },
