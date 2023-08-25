@@ -98,12 +98,9 @@ export class ProcessListener {
 
     @EventListener(BotWsMessage.TERMINATE)
     async terminateProcessInstance(processInstanceId: string, ackCallback: (payload?: any) => void) {
-        ackCallback();
-
         this.logger.log(`=> Incoming message to terminate process instance (id: ${processInstanceId})`);
         await this.runtimeService.terminateProcessInstance(processInstanceId);
-        this.logger.log(
-            `<= Process instance successfully terminated (id: ${processInstanceId})`
-        );
+        this.logger.log(`<= Process instance successfully terminated (id: ${processInstanceId})`);
+        ackCallback();
     }
 }

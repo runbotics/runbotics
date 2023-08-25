@@ -23,10 +23,13 @@ import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
 
+type BotId = number;
+type SocketId = string;
+
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
-    private connections = new Map<number, string>();
+    private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
 
     constructor(
