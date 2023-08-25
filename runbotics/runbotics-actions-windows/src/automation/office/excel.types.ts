@@ -24,6 +24,7 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
     | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.deleteRows', ExcelDeleteRowsActionInput>
     | DesktopRunRequest<'excel.readTable', ExcelReadTableActionInput>;
 
 export interface ExcelOpenActionInput {
@@ -77,6 +78,18 @@ export interface ExcelFindFirstEmptyRowActionInput {
 export interface ExcelDeleteColumnsActionInput {
     columnRange: string;
     worksheet?: string;
+}
+
+export interface ExcelDeleteRowsActionInput {
+    rowRange: string;
+    worksheet?: string;
+}
+
+export interface GetCellCoordinatesParams {
+    startColumn?: number | string;
+    startRow?: number;
+    endColumn?: number | string;
+    endRow?: number;
 }
 
 export interface CellCoordinates {

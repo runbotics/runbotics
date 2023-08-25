@@ -21,6 +21,7 @@ import {
     ExcelDeleteWorksheetActionInput,
     ExcelWorksheetExistActionInput,
     ExcelInsertRowsActionInput,
+    ExcelDeleteRowsActionInput,
     RegexPatterns,
     ExcelReadTableActionInput,
     ExcelCellValue,
@@ -272,6 +273,24 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
+    async deleteRows(input: ExcelDeleteRowsActionInput): Promise<void> {
+        const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
+
+        if (input.rowRange.match(/\d+:\d+/g)) return targetWorksheet.Rows(input.rowRange).Delete();
+
+        try {
+            const rows = JSON.parse(input.rowRange);
+
+            if (!Array.isArray(rows)) return targetWorksheet.Rows(rows).Delete();
+            rows.sort().forEach((row, idx) => {
+                targetWorksheet.Rows(row - idx).Delete();
+            });
+        } catch (e) {
+            throw new Error(ExcelErrorMessage.deleteRowsIncorrectInput());
+        }
+    }
+
+
     async insertRowsAfter(
         input: ExcelInsertRowsActionInput
     ): Promise<void> {
@@ -381,11 +400,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
                 return this.isWorksheetPresent(request.input);
             case 'excel.deleteColumns':
                 return this.deleteColumns(request.input);
+            case 'excel.deleteRows':
+                return this.deleteRows(request.input);
             case 'excel.insertRowsBefore':
-                this.isApplicationOpen();
                 return this.insertRowsBefore(request.input);
             case 'excel.insertRowsAfter':
-                this.isApplicationOpen();
                 return this.insertRowsAfter(request.input);
             case 'excel.save':
                 return this.save(request.input);

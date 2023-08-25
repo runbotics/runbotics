@@ -13,7 +13,12 @@ export default class ExcelErrorMessage {
         `
     }
 
+    static deleteRowsIncorrectInput(): string {
+        return `Row must be a number (e.g. 5), range (e.g. 1:3) or array (e.g. [1,4])`
+    }
+
     static setCellIncorrectInput(): string {
+
         return `
             Target cell must be a string (e.g. "A1").
             Value must be a number, boolean or string (e.g. 150, true, "myValue", "#{myVariable}").

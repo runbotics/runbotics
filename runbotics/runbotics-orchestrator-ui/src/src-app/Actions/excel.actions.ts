@@ -16,6 +16,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.INSERT_COLUMNS_BEFORE]: excelActions.getActionInsertColumnsBefore(),
     [ExcelAction.INSERT_ROWS_AFTER]: excelActions.getActionInsertRowAfter(),
     [ExcelAction.INSERT_ROWS_BEFORE]: excelActions.getActionInsertRowBefore(),
+    [ExcelAction.DELETE_ROWS]: excelActions.getActionDeleteRows(),
     [ExcelAction.OPEN]: excelActions.getActionOpen(),
     [ExcelAction.READ_TABLE]: excelActions.getActionReadTable(),
     [ExcelAction.RENAME_WORKSHEET]: excelActions.getActionRenameWorksheet(),
@@ -24,6 +25,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.SET_CELL]: excelActions.getActionSetCell(),
     [ExcelAction.SET_CELLS]: excelActions.getActionSetCells(),
     [ExcelAction.WORKSHEET_EXISTS]: excelActions.getActionWorksheetExists(),
+
 });
 
 export default getExcelActions;
