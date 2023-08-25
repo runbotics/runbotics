@@ -1,5 +1,4 @@
-export const hasErrorMessage = (response: unknown): response is { errorMessage: string } =>
+export const hasErrorMessage = (response: unknown): response is { errorMessage: any } =>
     response &&
     typeof response === 'object' &&
-    'errorMessage' in response &&
-    typeof response.errorMessage === 'string';
+    'errorMessage' in response;

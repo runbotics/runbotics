@@ -37,9 +37,8 @@ export class WebsocketService {
 
         try {
             await this.send(socketId, message, body);
-        } catch (error) {
-            if (typeof error === 'string') throw new Error(error);
-            else throw new Error(`Failed to contact bot ${botId}`);
+        } catch (error: any) {
+            throw new Error(error);
         }
     }
 
