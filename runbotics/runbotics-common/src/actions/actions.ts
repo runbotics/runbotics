@@ -1,3 +1,6 @@
+export const OneDrive = 'OneDrive';
+export const Sharepoint = 'Sharepoint';
+
 export enum ACTION_GROUP {
 	VARIABLES = 'variables',
 	GENERAL = 'general',
@@ -109,6 +112,7 @@ export enum SharepointExcelAction {
 	UPDATE_RANGE = 'sharepointExcel.updateRange',
 	OPEN_FILE_FROM_SITE = 'sharepointExcel.openFileFromSite',
 	OPEN_FILE_FROM_ROOT = 'sharepointExcel.openFileFromRoot',
+	OPEN_FILE='sharepointExcel.openFile',
 	CLOSE_SESSION = 'sharepointExcel.closeSession',
 }
 
