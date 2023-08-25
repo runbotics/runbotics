@@ -12,6 +12,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.FIND_FIRST_EMPTY_ROW]: excelActions.getActionFindFirstEmptyRow(),
     [ExcelAction.GET_CELL]: excelActions.getActionGetCell(),
     [ExcelAction.GET_CELLS]: excelActions.getActionGetCells(),
+    [ExcelAction.RUN_MACRO]: excelActions.getActionRunMacro(),
     [ExcelAction.INSERT_COLUMNS_AFTER]: excelActions.getActionInsertColumnsAfter(),
     [ExcelAction.INSERT_COLUMNS_BEFORE]: excelActions.getActionInsertColumnsBefore(),
     [ExcelAction.INSERT_ROWS_AFTER]: excelActions.getActionInsertRowAfter(),
