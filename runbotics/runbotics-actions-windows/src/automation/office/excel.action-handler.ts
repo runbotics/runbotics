@@ -262,13 +262,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
-        const rowsNumber = input.rowsNumber
+        const rowsNumber = input.rowsNumber;
 
         try {
             targetWorksheet
-                .Range(
-                    targetWorksheet.Rows(startingRow),
-                    targetWorksheet.Rows(startingRow + rowsNumber - 1))
+                .Range(targetWorksheet.Rows(startingRow), targetWorksheet.Rows(startingRow + rowsNumber - 1))
                 .Insert();
         } catch (e) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
@@ -363,7 +361,7 @@ if (
     }
     async runMacro(input: ExcelRunMacroInput) {
 
-        if(input.functionParams == undefined){
+        if(input.functionParams === undefined || input.functionParams.length === 0){
             return this.session.Run(input.macro);
         }
 
