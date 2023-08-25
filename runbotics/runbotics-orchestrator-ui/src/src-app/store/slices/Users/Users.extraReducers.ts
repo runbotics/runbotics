@@ -52,7 +52,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.notActivated.loading = false;
         })
 
-        // PATCH SELECTED NOT ACTIVATED
+        // PATCH UPDATE NOT ACTIVATED USERS
         .addCase(updateNotActivated.pending, (state) => {
             state.notActivated.loading = true;
         })
@@ -63,7 +63,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.notActivated.loading = false;
         })
 
-        // PATCH ACTIVATED USER (EDIT)
+        // PATCH UPDATE ACTIVATED USERS
         .addCase(updateActivated.pending, (state) => {
             state.activated.loading = true;
         })

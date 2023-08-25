@@ -3,8 +3,8 @@ import React, { FC, ChangeEvent } from 'react';
 import { TextField, MenuItem } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
-import { LanguageType } from '#src-app/translations/translations';
-import { emailFieldValidation, requiredFieldValidation } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
+import { languages } from '#src-app/translations/translations';
+import { emailFieldValidation, requiredFieldValidation, emailRegex } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
 import { FieldValidation, UsersListEditFormProps } from './UsersListEdit.types';
 
@@ -14,13 +14,11 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
     formValidationState,
     setFormValidationState
 }) => {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;
-
     const { translate } = useTranslations();
 
-    const getEmailValidator = (): FieldValidation | undefined => !formValidationState.email ? emailFieldValidation : undefined;
+    const getEmailValidator = (): FieldValidation => !formValidationState.email && emailFieldValidation;
 
-    const getLoginValidator = (): FieldValidation | undefined => !formValidationState.login && requiredFieldValidation;
+    const getLoginValidator = (): FieldValidation => !formValidationState.login && requiredFieldValidation;
 
     const handleEmailFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         const email = event.target.value;
@@ -79,10 +77,10 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
                 value={user?.langKey}
                 onChange={handleLanguageFieldInput}
             >
-                <MenuItem value={LanguageType.EN}>
+                <MenuItem value={languages[0]}>
                     {translate('Users.List.Edit.Form.Select.Language.English')}
                 </MenuItem>
-                <MenuItem value={LanguageType.PL}>
+                <MenuItem value={languages[1]}>
                     {translate('Users.List.Edit.Form.Select.Language.Polish')}
                 </MenuItem>
             </TextField>

@@ -4,12 +4,11 @@ import styled from 'styled-components';
 
 export const StyledButton = styled(Button)`
     width: 80px;
-    height: 40px;
 `;
 
 export const DeleteButton = styled(LoadingButton)(({theme}) => `
     && {
-        background-color: ${theme.palette.button.dangerous};
+        background-color: ${theme.palette.button.danger};
         color: ${theme.palette.background.default};
 
         &:hover {

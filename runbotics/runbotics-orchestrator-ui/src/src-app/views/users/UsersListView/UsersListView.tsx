@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import { IUser } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
@@ -31,7 +32,7 @@ const UsersListView: FC = () => {
     const { activated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch(true, limit, page);
 
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState<IUser>();
     const [dialogsVisibility, setDialogsVisibility] = useState({
         isEditVisible: false,
         isDeleteVisible: false
@@ -73,7 +74,7 @@ const UsersListView: FC = () => {
         <>
             <UsersListEditDialog
                 open={dialogsVisibility.isEditVisible}
-                openDeleteTab={handleOpenDeleteDialog}
+                openDeleteDialog={handleOpenDeleteDialog}
                 onClose={handleCloseEditDialog}
                 userData={userData}
             />

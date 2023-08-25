@@ -25,7 +25,7 @@ declare module '@mui/material/styles' {
       };
 
       button: {
-        dangerous: string,
+        danger: string,
       }
     }
 
@@ -40,7 +40,7 @@ declare module '@mui/material/styles' {
         }
 
         button: {
-          dangerous: string,
+          danger: string,
         }
     }
   }

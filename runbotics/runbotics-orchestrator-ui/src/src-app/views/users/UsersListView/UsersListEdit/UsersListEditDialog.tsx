@@ -14,13 +14,13 @@ import englishEditListTranslations from '#src-app/translations/en/users/list/edi
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
-import { IFormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
+import { FormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
 import UsersListEditForm from './UsersListEditForm';
 
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
-    openDeleteTab,
+    openDeleteDialog,
     onClose,
     userData
 }) => {
@@ -31,15 +31,11 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const { refreshSearch: refreshSearchActivated } = useUserSearch(true);
     const { activated } = useSelector(usersSelector);
     const [user, setUser] = useState<IUser>();
-    const [formValidationState, setFormValidationState] = useState<IFormValidationState>(initialValidationState);
+    const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
 
-    useEffect(() => setUser(getUserDataWithoutNulls(userData)), [userData]);
+    useEffect(() => { setUser(getUserDataWithoutNulls(userData)); }, [userData]);
 
-    const checkFormFieldsValidation = () => {
-        if (!formValidationState.email) return false;
-        if (!formValidationState.login) return false;
-        return true;
-    };
+    const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
 
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;
@@ -89,7 +85,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                 </Content>
                 <StyledDialogActions>
                     <DeleteButton
-                        onClick={openDeleteTab}
+                        onClick={openDeleteDialog}
                         variant='contained'
                         loading={activated.loading}
                     >

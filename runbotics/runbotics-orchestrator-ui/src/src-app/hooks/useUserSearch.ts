@@ -28,11 +28,14 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
     useEffect(() => {
         const newPage = search !== '' ? 0 : page;
 
-        if (search === '') {
-            router.replace({ pathname: router.pathname, query: { page: newPage, pageSize } });
-        } else {
-            router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
-        }
+        router.replace({
+            pathname: router.pathname,
+            query: {
+                page: newPage,
+                pageSize,
+                ...(search && { search })
+            }
+        });
 
         if (!isActivatedUsersOnly) {
             dispatch(

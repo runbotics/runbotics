@@ -36,7 +36,7 @@ export const lightTheme: ThemeOptions = {
             default: blueGrey[600],
         },
         button: {
-            dangerous: blueGrey[700],
+            danger: blueGrey[700],
         },
         tag: {
             variable: blueGrey[100],

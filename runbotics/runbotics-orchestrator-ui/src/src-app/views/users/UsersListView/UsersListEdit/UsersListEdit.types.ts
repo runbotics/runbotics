@@ -2,12 +2,12 @@ import { IUser } from 'runbotics-common';
 
 export interface UsersListEditDialogProps {
     open: boolean;
-    openDeleteTab: () => void;
+    openDeleteDialog: () => void;
     onClose: () => void;
     userData: IUser;
 };
 
-export interface IFormValidationState {
+export interface FormValidationState {
     email: boolean;
     login: boolean;
 };
@@ -15,7 +15,7 @@ export interface IFormValidationState {
 export interface UsersListEditFormProps {
     user: IUser;
     setUser: (IUser) => void;
-    formValidationState: IFormValidationState;
+    formValidationState: FormValidationState;
     setFormValidationState: (IFormValidationState) => void;
 };
 
