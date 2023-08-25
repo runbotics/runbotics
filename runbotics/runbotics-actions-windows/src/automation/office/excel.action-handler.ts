@@ -70,9 +70,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async getCell(
-        input: ExcelGetCellActionInput
-    ): Promise<unknown> {
+    async getCell(input: ExcelGetCellActionInput): Promise<unknown> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         return this.session
             .Worksheets(input.worksheet ?? this.session.ActiveSheet.Name)
@@ -80,9 +78,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             .Value();
     }
 
-    async getCells(
-        input: ExcelGetCellsActionInput
-    ): Promise<unknown[][]> {
+    async getCells(input: ExcelGetCellsActionInput): Promise<unknown[][]> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         try {
             const cellValues: ExcelCellValue[][] = [];
@@ -93,12 +89,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             for (let rowIdx = startRow; rowIdx <= endRow; rowIdx++) {
                 const rowValues: ExcelCellValue[] = [];
                 for (let columnIdx = startColumn; columnIdx <= endColumn; columnIdx++) {
-                    rowValues.push(
-                        targetWorksheet
-                            .Cells(rowIdx, columnIdx)
-                            .Value()
-                        ?? ''
-                    );
+                    rowValues.push(targetWorksheet.Cells(rowIdx, columnIdx).Value() ?? '');
                 }
                 cellValues.push(rowValues);
             }
@@ -109,14 +100,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async setCell(
-        input: ExcelSetCellActionInput
-    ): Promise<void> {
+    async setCell(input: ExcelSetCellActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         try {
             const cell = this.session
                 .Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name)
-                .Range(input.targetCell)
+                .Range(input.targetCell);
 
             cell.Value = input.value;
         } catch (e) {
@@ -124,9 +113,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async setCells(
-        input: ExcelSetCellsActionInput
-    ): Promise<void> {
+    async setCells(input: ExcelSetCellsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const cellValues = this.parseExcelStructureArray(input.cellValues, ExcelErrorMessage.setCellsIncorrectInput());
         const { row: startRow, column: startColumn } = this.getDividedCellCoordinates(input.startCell);
@@ -147,9 +134,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async findFirstEmptyRow(
-        input: ExcelFindFirstEmptyRowActionInput
-    ): Promise<number> {
+    async findFirstEmptyRow(input: ExcelFindFirstEmptyRowActionInput): Promise<number> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const { column: startColumn, row: startRow } = this.getDividedCellCoordinates(input.startCell);
         let rowCounter = startRow;
@@ -163,9 +148,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return rowCounter;
     }
 
-    async deleteColumns(
-        input: ExcelDeleteColumnsActionInput
-    ): Promise<void> {
+    async deleteColumns(input: ExcelDeleteColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const columnRange = this.parseOneDimensionalArray(input.columnRange);
         try {
@@ -190,9 +173,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
 
         if (input?.name) {
             this.checkIsWorksheetNameCorrect(input.name, false);
-            worksheet = (this.session.Worksheets
-                .Add(null, this.session.Worksheets(worksheetsCount))
-                .Name = input.name);
+            worksheet = this.session.Worksheets.Add(null, this.session.Worksheets(worksheetsCount)).Name = input.name;
         } else {
             worksheet = this.session.Worksheets.Add(null, this.session.Worksheets(worksheetsCount)).Name;
         }
@@ -200,9 +181,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         return worksheet;
     }
 
-    async renameWorksheet(
-        input: ExcelRenameWorksheetActionInput
-    ): Promise<void> {
+    async renameWorksheet(input: ExcelRenameWorksheetActionInput): Promise<void> {
         this.checkIsWorksheetNameCorrect(input.newName, false);
 
         if (input?.worksheet) {
@@ -220,9 +199,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         this.session.Worksheets(input.worksheet).Activate();
     }
 
-    async insertColumnsBefore(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
+    async insertColumnsBefore(input: ExcelInsertColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
 
@@ -238,9 +215,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async insertColumnsAfter(
-        input: ExcelInsertColumnsActionInput
-    ): Promise<void> {
+    async insertColumnsAfter(input: ExcelInsertColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
 
@@ -256,9 +231,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async insertRowsBefore(
-        input: ExcelInsertRowsActionInput
-    ): Promise<void> {
+    async insertRowsBefore(input: ExcelInsertRowsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
@@ -290,14 +263,11 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-
-    async insertRowsAfter(
-        input: ExcelInsertRowsActionInput
-    ): Promise<void> {
+    async insertRowsAfter(input: ExcelInsertRowsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
-        const rowsNumber = input.rowsNumber
+        const rowsNumber = input.rowsNumber;
 
         try {
             targetWorksheet
@@ -308,9 +278,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    async clearCells(
-        input: ExcelClearCellsActionInput
-    ): Promise<void> {
+    async clearCells(input: ExcelClearCellsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetCells = this.parseOneDimensionalArray(input.targetCells);
         try {
@@ -323,16 +291,14 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     }
 
     async deleteWorksheet(input: ExcelDeleteWorksheetActionInput): Promise<void> {
-        this.checkIsWorksheetNameCorrect(input.worksheet, true)
+        this.checkIsWorksheetNameCorrect(input.worksheet, true);
 
         const targetWorksheet = this.session.Worksheets(input.worksheet);
 
         targetWorksheet.Delete();
     }
 
-    async isWorksheetPresent(
-        input: ExcelWorksheetExistActionInput
-    ): Promise<boolean> {
+    async isWorksheetPresent(input: ExcelWorksheetExistActionInput): Promise<boolean> {
         return this.checkIfWorksheetExist(input.worksheet);
     }
 
@@ -350,18 +316,16 @@ export default class ExcelActionHandler extends StatefulActionHandler {
      * and we expect it does not exist, or if it does not exist and we expect it to exist.
      */
     private checkWorksheet(worksheet: string, shouldExist: boolean): void {
-
-if (
-    (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
-    (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
-) {
-    throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
-}
-
+        if (
+            (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
+            (!shouldExist && (worksheet.trim() === '' || this.checkIfWorksheetExist(worksheet)))
+        ) {
+            throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
+        }
     }
-    async runMacro(input: ExcelRunMacroInput) {
 
-        if(input.functionParams === undefined || input.functionParams.length === 0){
+    async runMacro(input: ExcelRunMacroInput) {
+        if (input.functionParams === undefined || input.functionParams.length === 0) {
             return this.session.Run(input.macro);
         }
 
@@ -426,7 +390,7 @@ if (
                     input.functionParams[5],
                     input.functionParams[6],
                     input.functionParams[7]
-                )
+                );
             case 9:
                 return this.session.Run(
                     input.macro,
@@ -456,10 +420,8 @@ if (
                 );
             default:
                 throw new Error(ExcelErrorMessage.getRunMacroToManyArguments());
-
         }
     }
-
 
     run(request: ExcelActionRequest) {
         if (process.platform !== 'win32') {
@@ -522,7 +484,6 @@ if (
         }
     }
 
-
     async tearDown() {
         await this.close();
     }
@@ -543,14 +504,10 @@ if (
     private checkIsWorksheetNameCorrect(worksheet: string, shouldExist: boolean): void {
         if (
             (shouldExist && !this.checkIfWorksheetExist(worksheet)) ||
-            (
-                !shouldExist &&
-                (
-                    this.checkIfWorksheetExist(worksheet) ||
+            (!shouldExist &&
+                (this.checkIfWorksheetExist(worksheet) ||
                     worksheet.length > 31 ||
-                    !worksheet.match(RegexPatterns.EXCEL_WORKSHEET_NAME)
-                )
-            )
+                    !worksheet.match(RegexPatterns.EXCEL_WORKSHEET_NAME)))
         ) {
             throw new Error(ExcelErrorMessage.worksheetIncorrectInput(shouldExist));
         }
@@ -565,11 +522,12 @@ if (
      */
     private getDividedCellCoordinates(cell: string): CellCoordinates {
         const cellMatch = cell.match(/([A-Z]+)([0-9]+)/);
-        if (!cellMatch || cellMatch.length !== 3) throw new Error(ExcelErrorMessage.divideCellCoordinatesIncorrectInput());
+        if (!cellMatch || cellMatch.length !== 3)
+            throw new Error(ExcelErrorMessage.divideCellCoordinatesIncorrectInput());
 
         return {
             column: this.getColumnCoordinate(cellMatch[1]),
-            row: Number(cellMatch[2])
+            row: Number(cellMatch[2]),
         };
     }
 
@@ -580,7 +538,8 @@ if (
      * @example getColumnCoordinate('C') // 3
      */
     private getColumnCoordinate(column: string): number {
-        if (!column || typeof column === "number") throw new Error(ExcelErrorMessage.getColumnCoordinateIncorrectInput());
+        if (!column || typeof column === 'number')
+            throw new Error(ExcelErrorMessage.getColumnCoordinateIncorrectInput());
         return this.session.ActiveSheet.Range(`${column}1`).Column;
     }
 
@@ -647,7 +606,7 @@ if (
         } catch (e) {
             return value;
         }
-    }
+    };
 
     private getTableByName(name: string, tables: any): any {
         const tablesNum = tables.Count;
