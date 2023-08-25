@@ -2,7 +2,7 @@ import getActionClearCells from './clearCells';
 import getActionClose from './close';
 import getActionCreateWorksheet from './createWorksheet';
 import getActionDeleteColumns from './deleteColumns';
-import getDeleteRowsAction from './deleteRows';
+import getActionDeleteRows from './deleteRows';
 import getActionDeleteWorksheet from './deleteWorksheet';
 import getActionFindFirstEmptyRow from './findFirstEmptyRow';
 import getActionGetCell from './getCell';
@@ -41,7 +41,7 @@ const excelActions = {
     getActionSetCell,
     getActionSetCells,
     getActionWorksheetExists,
-    getDeleteRowsAction
+    getActionDeleteRows,
 };
 
 export default excelActions;
