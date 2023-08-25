@@ -1,5 +1,5 @@
-export const SHARE_POINT = "SharePoint";
-export const ONE_DRIVE = "OneDrive";
+export const OneDrive = 'OneDrive';
+export const Sharepoint = 'Sharepoint';
 
 export enum ACTION_GROUP {
     VARIABLES = 'variables',
@@ -110,6 +110,8 @@ export enum SharepointExcelAction {
 	GET_RANGE = 'sharepointExcel.getRange',
 	SET_CELL = 'sharepointExcel.setCell',
 	UPDATE_RANGE = 'sharepointExcel.updateRange',
+	OPEN_FILE_FROM_SITE = 'sharepointExcel.openFileFromSite',
+	OPEN_FILE_FROM_ROOT = 'sharepointExcel.openFileFromRoot',
 	OPEN_FILE='sharepointExcel.openFile',
 	CLOSE_SESSION = 'sharepointExcel.closeSession',
 }

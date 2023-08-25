@@ -9,7 +9,14 @@ export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
 export interface SharepointExcelOpenFileActionInput {
-    platform: 'SharePoint' | 'OneDrive';
+    platform:string;
+    filePath:string;
+    worksheetName:string;
+    persistChanges: boolean;
+    siteRelativePath: string;
+    listName: string;
+}
+export type SharepointOpenFromRootActionInput = {
     filePath: string;
     worksheetName: string;
     persistChanges: boolean;

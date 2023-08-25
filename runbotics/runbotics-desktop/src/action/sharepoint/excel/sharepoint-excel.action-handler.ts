@@ -3,14 +3,31 @@ import { StatelessActionHandler, DesktopRunResponse } from 'runbotics-sdk';
 
 import { MicrosoftService, CloudPath, MicrosoftSession } from '#action/microsoft';
 import * as SharepointTypes from './types';
+import { ExcelService } from '#action/microsoft/excel';
+import { MicrosoftAuthService } from '#action/microsoft/microsoft-auth.service';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
     constructor(
+        private readonly microsoftAuthService: MicrosoftAuthService,
         private readonly microsoftSession: MicrosoftSession,
         private readonly microsoftService: MicrosoftService,
     ) {
         super();
+    }
+
+    async openFile(
+        input: SharepointTypes.SharepointExcelOpenFileActionInput
+    ): Promise<SharepointTypes.SharepointOpenActionOutput> {
+        return await this.excelService.openFile(
+            //eslint-disable-next-line
+            //@ts-ignore
+            input.platform,
+            input.filePath,
+            input.worksheetName,
+            input.persistChanges,
+            input.siteRelativePath,
+        );
     }
 
     async openFileFromSite(
@@ -21,18 +38,22 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         const sharepointSiteId = await this.microsoftService.getSiteIdByPath(token.token, input.siteRelativePath);
         const sharepointDriveId = await this.microsoftService.getDriveId(token.token, sharepointSiteId, input.listName);
         const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
-        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
+        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(
+            token.token,
+            cloudPath,
+            input.worksheetName
+        );
         return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
     }
 
     async openFileFromRoot(
         input: SharepointTypes.SharepointOpenFromRootActionInput
     ): Promise<SharepointTypes.SharepointOpenActionOutput> {
-        const cloudPath = CloudPath.ROOT;
-        const token = await this.microsoftSession.getToken();
-        const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
-        const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
-        return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
+        // const cloudPath = CloudPath.ROOT;
+        // const sharepointFileId = await this.microsoftService.getFileIdByPath(token.token, cloudPath, input.filePath);
+        // const sharepointWorksheetId = await this.microsoftService.getWorksheetId(token.token, cloudPath, input.worksheetName);
+        // return await this.microsoftService.createSession(token.token, cloudPath, input.persistChanges);
+        // return await this.excelService.openFile(input.filePath, input.worksheetName);
     }
 
     async closeSession(
@@ -81,6 +102,8 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
                 return this.updateRange(request.input);
             case 'sharepointExcel.closeSession':
                 return this.closeSession(request.input);
+            case 'sharepointExcel.openFile':
+                return this.openFile(request.input);
             default:
                 throw new Error('Action not found');
         }
