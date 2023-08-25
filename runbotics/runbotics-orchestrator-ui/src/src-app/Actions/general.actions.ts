@@ -4,8 +4,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
         id: GeneralAction.CONSOLE_LOG,
@@ -123,9 +121,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
                             },
                         },
@@ -138,6 +134,13 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     processId: {
                         'ui:widget': 'ProcessNameSuggestionWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
                     },
                 },
             },

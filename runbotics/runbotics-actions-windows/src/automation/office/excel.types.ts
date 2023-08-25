@@ -1,5 +1,9 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
 
+export enum RegexPatterns {
+    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
+}
+
 export type ExcelActionRequest =
     | DesktopRunRequest<'excel.open', ExcelOpenActionInput>
     | DesktopRunRequest<'excel.getCell', ExcelGetCellActionInput>
@@ -16,9 +20,12 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.setActiveWorksheet', ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<"excel.insertRowsBefore", ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
     | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
     | DesktopRunRequest<'excel.deleteRows', ExcelDeleteRowsActionInput>
+    | DesktopRunRequest<'excel.readTable', ExcelReadTableActionInput>;
 
 export interface ExcelOpenActionInput {
     path: string;
@@ -30,17 +37,20 @@ export interface ExcelWorksheetExistActionInput {
     worksheet: string;
 }
 
+export interface ExcelReadTableActionInput {
+    tableName: string;
+    shouldIncludeHeaders: boolean;
+    worksheet?: string;
+}
+
 export interface ExcelGetCellActionInput {
-    row: number;
-    column: string;
+    targetCell: string;
     worksheet?: string;
 }
 
 export type ExcelGetCellsActionInput = {
-    startColumn?: string;
-    startRow?: string;
-    endColumn: string;
-    endRow: string;
+    startCell: string;
+    endCell: string;
     worksheet?: string;
 };
 
@@ -49,28 +59,20 @@ export interface ExcelSaveActionInput {
 }
 
 export interface ExcelSetCellActionInput {
-    row: number;
-    column: string;
-    value: unknown;
+    targetCell: string;
+    value: ExcelCellValue;
     worksheet?: string;
 }
 
 export interface ExcelSetCellsActionInput {
-    cellValues: ExcelArrayStructure;
-    startColumn?: string;
-    startRow?: string;
+    startCell: string;
+    cellValues: ExcelCellValue[][];
     worksheet?: string;
 }
 
 export interface ExcelFindFirstEmptyRowActionInput {
-    startColumn?: string;
-    startRow?: string;
+    startCell: string;
     worksheet?: string;
-}
-
-export interface StartCellCoordinates {
-    startColumn: number;
-    startRow: number;
 }
 
 export interface ExcelDeleteColumnsActionInput {
@@ -91,10 +93,8 @@ export interface GetCellCoordinatesParams {
 }
 
 export interface CellCoordinates {
-    startColumn?: number;
-    startRow?: number;
-    endColumn?: number;
-    endRow?: number;
+    column: number;
+    row: number;
 }
 
 export interface ExcelClearCellsActionInput {
@@ -108,6 +108,10 @@ export type ExcelInsertColumnsActionInput = {
     worksheet?: string;
 };
 
+export interface ExcelCreateWorksheetActionInput {
+    name?: string;
+}
+
 export type ExcelInsertRowsActionInput = {
     startingRow: number;
     rowsNumber: number;
@@ -118,15 +122,23 @@ export interface ExcelCreateWorksheetActionInput {
     name?: string;
 }
 
-export type ExcelCreateWorksheetActionOutput = string;
-
 export interface ExcelRenameWorksheetActionInput {
-    worksheet?: string;
     newName: string;
-}
+    worksheet?: string;
+};
 
 export interface ExcelSetActiveWorksheetActionInput {
     worksheet: string;
 }
 
-export type ExcelArrayStructure = (string | number | boolean)[][];
+export interface ExcelDeleteWorksheetActionInput {
+    worksheet: string;
+}
+
+export interface ExcelDeleteWorksheetActionInput {
+    worksheet: string;
+}
+
+export type ExcelCreateWorksheetActionOutput = string;
+
+export type ExcelCellValue = string | number | boolean;

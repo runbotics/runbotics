@@ -19,5 +19,6 @@
 
     "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Assign the output to variable",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Is a required property",
-    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Illegal characters were used"
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Illegal characters were used",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchFormatVariableName": "Provided invalid format, please use ${ } or #{ }"
 }

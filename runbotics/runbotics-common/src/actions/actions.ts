@@ -156,24 +156,29 @@ export enum ApplicationAction {
 }
 
 export enum ExcelAction {
-    OPEN = 'excel.open',
-    GET_CELL = 'excel.getCell',
-    GET_CELLS = 'excel.getCells',
-    SET_CELL = 'excel.setCell',
-    SET_CELLS = 'excel.setCells',
-    CLEAR_CELLS = 'excel.clearCells',
-    CREATE_WORKSHEET = 'excel.createWorksheet',
-    RENAME_WORKSHEET = 'excel.renameWorksheet',
-    SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
-    WORKSHEET_EXISTS = 'excel.worksheetExists',
-    FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
-    DELETE_COLUMNS = 'excel.deleteColumns',
-    INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
-    INSERT_COLUMNS_AFTER = 'excel.insertColumnsAfter',
-    INSERT_ROWS_AFTER = 'excel.insertRowsAfter',
+
+	OPEN = 'excel.open',
+	GET_CELL = 'excel.getCell',
+	GET_CELLS = 'excel.getCells',
+	SET_CELL = 'excel.setCell',
+	SET_CELLS = 'excel.setCells',
+	CLEAR_CELLS = 'excel.clearCells',
+	CREATE_WORKSHEET = 'excel.createWorksheet',
+	RENAME_WORKSHEET = 'excel.renameWorksheet',
+    DELETE_WORKSHEET = 'excel.deleteWorksheet',
+	SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
+	WORKSHEET_EXISTS = "excel.worksheetExists",
+	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
+	DELETE_COLUMNS = 'excel.deleteColumns',
+	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
+	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
+	INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
+	INSERT_ROWS_AFTER = "excel.insertRowsAfter",
+	READ_TABLE = 'excel.readTable',
     DELETE_ROWS = 'excel.deleteRows',
-    SAVE = 'excel.save',
-    CLOSE = 'excel.close',
+	SAVE = 'excel.save',
+	CLOSE = 'excel.close',
+
 }
 
 export type AllActionIds =

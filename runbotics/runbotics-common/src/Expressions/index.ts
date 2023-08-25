@@ -132,7 +132,7 @@ export class Expressions {
                 expressionFnContext
             );
             if (expressionMatch.input === expressionMatch[0]) {
-                return contextValue;
+                return contextValue ?? String(contextValue);
             }
 
             result = result.replace(
