@@ -16,7 +16,7 @@
         </preConditions>
         <sql>
             CREATE INDEX process_instance_process_id_idx ON process_instance(process_id);
-            CREATE INDEX process_instance_root_process_instance_id ON process_instance(root_process_instance_id);
+            CREATE INDEX process_instance_root_process_instance_id_idx ON process_instance(root_process_instance_id);
         </sql>
     </changeSet>
 
@@ -45,18 +45,6 @@
         </preConditions>
         <sql>
             CREATE INDEX process_instance_loop_execution_id_idx ON process_instance_loop_event(execution_id);
-        </sql>
-    </changeSet>
-
-    <changeSet id="20230817084133-4" author="pasiecznys">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="process"/>
-            <not>
-                <indexExists indexName="process_id_idx"/>
-            </not>
-        </preConditions>
-        <sql>
-            CREATE INDEX process_id_idx ON process(id);
         </sql>
     </changeSet>
 
