@@ -7,9 +7,17 @@ export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.openFileFromRoot', SharepointOpenFromRootActionInput>
 | DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
-| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>;
+| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>
+| DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
-
+export interface SharepointExcelOpenFileActionInput {
+    platform:string;
+    filePath:string;
+    worksheetName:string;
+    persistChanges: boolean;
+    siteRelativePath: string;
+    listName: string;
+}
 export type SharepointOpenFromRootActionInput = {
     filePath: string;
     worksheetName: string;

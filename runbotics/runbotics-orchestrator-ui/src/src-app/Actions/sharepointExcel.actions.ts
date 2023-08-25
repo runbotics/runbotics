@@ -264,54 +264,24 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'sharepointExcel.openFileFromSite': {
-        id: SharepointExcelAction.OPEN_FILE_FROM_SITE,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label'),
-        script: SharepointExcelAction.OPEN_FILE_FROM_SITE,
+    [SharepointExcelAction.OPEN_FILE]: {
+        id: SharepointExcelAction.OPEN_FILE,
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Label'),
+        script: SharepointExcelAction.OPEN_FILE,
         runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                         type: 'object',
                         properties: {
-                            siteRelativePath: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
-                                ),
+                            platform: {
+                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
-                            },
-                            listName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
-                                ),
-                                type: 'string',
-                            },
-                            filePath: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
-                                ),
-                                type: 'string',
-                            },
-                            worksheetName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
-                                ),
-                                type: 'string',
-                            },
-                            persistChanges: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
-                                ),
-                                type: 'boolean',
+                                enum: ['OneDrive', 'Sharepoint'],
+                                default: ['Repeat'],
                             },
                         },
                         required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
@@ -329,16 +299,33 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
+
+            formData: {
+                input: {
+
+                },
+                output: {},
+            },
+
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    siteRelativePath: {
+                    collection: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath.Tooltip'),
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info'),
+                        }
+                    },
+                    elementVariable: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info'),
+                        }
+                    },
+                    iterations: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
                         }
                     }
                 },
@@ -443,6 +430,173 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    // 'sharepointExcel.openFileFromSite': {
+    //     id: SharepointExcelAction.OPEN_FILE_FROM_SITE,
+    //     label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label'),
+    //     script: SharepointExcelAction.OPEN_FILE_FROM_SITE,
+    //     runner: Runner.DESKTOP_SCRIPT,
+    //     output: {
+    //         assignVariables: true,
+    //         outputMethods: {
+    //             variableName: '${content.output[0]}',
+    //         },
+    //     },
+    //     form: {
+    //         schema: {
+    //             type: 'object',
+    //             properties: {
+    //                 input: {
+    //                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
+    //                     type: 'object',
+    //                     properties: {
+    //                         siteRelativePath: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         listName: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         filePath: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         worksheetName: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         persistChanges: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+    //                             ),
+    //                             type: 'boolean',
+    //                         },
+    //                     },
+    //                     required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
+    //                 },
+    //                 output: {
+    //                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
+    //                     type: 'object',
+    //                     properties: {
+    //                         variableName: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.Common.VariableName',
+    //                             ),
+    //                             description: translate(
+    //                                 'Process.Details.Modeler.Actions.Common.VariableMessage',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                     },
+    //                     required: ['variableName'],
+    //                 },
+    //             },
+    //         },
+    //         uiSchema: {
+    //             'ui:order': ['input', 'output'],
+    //             input: {
+    //                 siteRelativePath: {
+    //                     'ui:options': {
+    //                         info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath.Tooltip'),
+    //                     }
+    //                 }
+    //             }
+    //         },
+    //         formData: {
+    //             input: {
+    //                 siteRelativePath: undefined,
+    //                 listName: undefined,
+    //                 filePath: undefined,
+    //                 worksheetName: undefined,
+    //                 persistChanges: true,
+    //             },
+    //             output: {
+    //                 variableName: undefined,
+    //             },
+    //         },
+    //     },
+    // },
+    // 'sharepointExcel.openFileFromRoot': {
+    //     id: SharepointExcelAction.OPEN_FILE_FROM_ROOT,
+    //     label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromRoot.Label'),
+    //     script: SharepointExcelAction.OPEN_FILE_FROM_ROOT,
+    //     runner: Runner.DESKTOP_SCRIPT,
+    //     output: {
+    //         assignVariables: true,
+    //         outputMethods: {
+    //             variableName: '${content.output[0]}',
+    //         },
+    //     },
+    //     form: {
+    //         schema: {
+    //             type: 'object',
+    //             properties: {
+    //                 input: {
+    //                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
+    //                     type: 'object',
+    //                     properties: {
+    //                         filePath: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         worksheetName: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                         persistChanges: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges',
+    //                             ),
+    //                             type: 'boolean',
+    //                         },
+    //                     },
+    //                     required: ['filePath', 'worksheetName'],
+    //                 },
+    //                 output: {
+    //                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
+    //                     type: 'object',
+    //                     properties: {
+    //                         variableName: {
+    //                             title: translate(
+    //                                 'Process.Details.Modeler.Actions.Common.VariableName',
+    //                             ),
+    //                             description: translate(
+    //                                 'Process.Details.Modeler.Actions.Common.VariableMessage',
+    //                             ),
+    //                             type: 'string',
+    //                         },
+    //                     },
+    //                     required: ['variableName'],
+    //                 },
+    //             },
+    //         },
+    //         uiSchema: {
+    //             'ui:order': ['input', 'output'],
+    //         },
+    //         formData: {
+    //             input: {
+    //                 filePath: undefined,
+    //                 worksheetName: undefined,
+    //                 persistChanges: true,
+    //             },
+    //             output: {
+    //                 variableName: undefined,
+    //             },
+    //         },
+    //     },
+    // },
     'sharepointExcel.closeSession': {
         id: SharepointExcelAction.CLOSE_SESSION,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
