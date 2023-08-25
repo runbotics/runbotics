@@ -1,6 +1,7 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.Tag;
+import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.dto.TagDTO;
 import java.util.*;
 
@@ -17,6 +18,11 @@ public interface TagService {
      */
     TagDTO save(TagDTO tagDTO);
 
+    /**
+     * Removes Tag by id
+     *
+     * @param id
+     */
     void delete(Long id);
 
     /**
@@ -41,4 +47,27 @@ public interface TagService {
      * @return List of TagDTO entities
      */
     List<TagDTO> getAllTags();
+
+    /**
+     * Processing existing and new Tags
+     *
+     * @param tags
+     * @return Set of Tags
+     */
+    Set<Tag> processTags(Set<TagDTO> tags);
+
+    /**
+     * Checks which Tags should be deleted
+     *
+     * @param process
+     * @return List of Tag ids
+     */
+    List<Long> checkTagsToDelete(ProcessDTO process);
+
+    /**
+     * Removes unused Tags
+     *
+     * @param tagIds
+     */
+    void deleteUnusedTags(List<Long> tagIds);
 }

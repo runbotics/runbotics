@@ -7,6 +7,7 @@ import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.ProcessService;
+import com.runbotics.service.TagService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
@@ -15,10 +16,9 @@ import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,11 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProcessServiceImpl implements ProcessService {
 
     private final Logger log = LoggerFactory.getLogger(ProcessServiceImpl.class);
-
+    private static final String ENTITY_NAME = "process";
     private final ProcessRepository processRepository;
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessMapper processMapper;
-
+    private final TagService tagService;
     private final UserService userService;
     private final BotCollectionService botCollectionService;
 
@@ -46,12 +46,14 @@ public class ProcessServiceImpl implements ProcessService {
         ProcessRepository processRepository,
         ProcessInstanceRepository processInstanceRepository,
         ProcessMapper processMapper,
+        TagService tagService,
         UserService userService,
         BotCollectionService botCollectionService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
         this.processMapper = processMapper;
+        this.tagService = tagService;
         this.userService = userService;
         this.botCollectionService = botCollectionService;
     }
@@ -76,7 +78,21 @@ public class ProcessServiceImpl implements ProcessService {
             BotSystem any = new BotSystem(BotSystem.BotSystemName.ANY.value());
             process.setSystem(any);
         }
+
+        if (process.getTags() != null) {
+            if (process.getTags().size() > 15) {
+                throw new BadRequestAlertException("Tag limit of 15 exceeded", ENTITY_NAME, "tooManyTags");
+            }
+
+            Set<Tag> tags = tagService.processTags(processDTO.getTags());
+            process.setTags(tags);
+        }
+
         process = processRepository.save(process);
+        if (processDTO.getId() != null) {
+            List<Long> remainingTags = tagService.checkTagsToDelete(processDTO);
+            tagService.deleteUnusedTags(remainingTags);
+        }
         return processMapper.toDto(process);
     }
 
