@@ -20,6 +20,9 @@ export type ExcelActionRequest =
     | DesktopRunRequest<'excel.setActiveWorksheet', ExcelSetActiveWorksheetActionInput>
     | DesktopRunRequest<'excel.insertColumnsBefore', ExcelInsertColumnsActionInput>
     | DesktopRunRequest<'excel.insertColumnsAfter', ExcelInsertColumnsActionInput>
+    | DesktopRunRequest<'excel.runMacro', ExcelRunMacroInput>
+    | DesktopRunRequest<'excel.insertRowsAfter', ExcelInsertRowsActionInput>
+    | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
     | DesktopRunRequest<"excel.insertRowsBefore", ExcelInsertRowsActionInput>
     | DesktopRunRequest<'excel.deleteWorksheet', ExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<'excel.worksheetExists', ExcelWorksheetExistActionInput>
@@ -108,6 +111,10 @@ export type ExcelInsertColumnsActionInput = {
     worksheet?: string;
 };
 
+export type ExcelRunMacroInput = {
+    macro: string;
+    functionParams?: Array<string>;
+};
 export interface ExcelCreateWorksheetActionInput {
     name?: string;
 }

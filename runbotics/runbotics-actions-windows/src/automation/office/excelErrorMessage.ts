@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export default class ExcelErrorMessage {
-    constructor() { }
+    constructor() {}
 
     /* Incorrect action input */
 
@@ -11,6 +11,10 @@ export default class ExcelErrorMessage {
             Target cell must be a string (e.g. "A1").
             ${this.getCheckInputTip()}
         `
+    }
+
+    static getRunMacroToManyArguments(): string {
+        return 'Macro can have maximum 10 arguments.'
     }
 
     static deleteRowsIncorrectInput(): string {

@@ -14,6 +14,7 @@ import getActionInsertRowBefore from './insertRowBefore';
 import getActionOpen from './open';
 import getActionReadTable from './readTable';
 import getActionRenameWorksheet from './renameWorksheet';
+import getActionRunMacro from './runMacro';
 import getActionSave from './save';
 import getActionSetActiveWorksheet from './setActiveWorksheet';
 import getActionSetCell from './setCell';
@@ -42,6 +43,7 @@ const excelActions = {
     getActionSetCells,
     getActionWorksheetExists,
     getActionDeleteRows,
+    getActionRunMacro
 };
 
 export default excelActions;
