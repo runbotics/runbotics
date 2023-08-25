@@ -13,6 +13,10 @@ export default class ExcelErrorMessage {
         `
     }
 
+    static getRunMacroToManyArguments(): string {
+        return 'Macro can have maximum 10 arguments.'
+    }
+
     static deleteRowsIncorrectInput(): string {
         return `Row must be a number (e.g. 5), range (e.g. 1:3) or array (e.g. [1,4])`
     }
