@@ -60,10 +60,10 @@ export class ProcessListener {
 
         const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
 
-        if (processInstancesCount === 0) {
+        if (processInstancesCount > 0) {
             const errorMessage = 'Process is already running';
 
-            this.logger.warn(`<= ${errorMessage}}`);
+            this.logger.error(`<= ${errorMessage}}`);
 
             ackCallback({ errorMessage });
 

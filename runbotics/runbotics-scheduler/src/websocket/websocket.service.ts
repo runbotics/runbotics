@@ -3,6 +3,7 @@ import { BotWebSocketGateway } from './bot/bot.gateway';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { BotService } from '#/database/bot/bot.service';
 import { BotWsMessage } from 'runbotics-common';
+import { hasErrorMessage } from '#/utils/ws-acknowledgement';
 
 @Injectable()
 export class WebsocketService {
@@ -22,24 +23,23 @@ export class WebsocketService {
             throw new NotFoundException(`Bot ${botId} does not exist`);
         }
 
-        const connectedBots = this.botWebSocketGateway.connectedBots;
-        if (!connectedBots.length) {
+        const connectedBotsCount = this.botWebSocketGateway.connectedBotsCount;
+        if (!connectedBotsCount) {
             this.logger.error('There are no connected bots');
             throw new NotFoundException('There are no connected bots');
         }
 
-        const connectedBot = connectedBots.find((connectedBot) => connectedBot.botId === botId);
-        if (!connectedBot) {
+        const socketId = this.botWebSocketGateway.getConnectedBotSocketId(botId);
+        if (!socketId) {
             this.logger.error(`There is no connection with bot ${botId}`);
             throw new NotFoundException(`There is no connection with bot ${botId}`);
         }
 
         try {
-            await this.send(connectedBot.socketId, message, body);
+            await this.send(socketId, message, body);
         } catch (error) {
-            if (typeof error === 'string') {
-                throw new Error(error);
-            }
+            if (typeof error === 'string') throw new Error(error);
+            else throw new Error(`Failed to contact bot ${botId}`);
         }
     }
 
@@ -47,19 +47,15 @@ export class WebsocketService {
         const socket = this.botWebSocketGateway.server.sockets.sockets.get(socketId);
 
         return new Promise((resolve, reject) => {
-            if (body) {
-                socket.emit(message, body, (response) => {
-                    response
-                        ? reject(response.errorMessage)
-                        : resolve(message);
-                });
-            } else {
-                socket.emit(message, (response) => {
-                    response
-                        ? reject(response.errorMessage)
-                        : resolve(message);
-                });
-            }
+            const handlePromise = (response) => {
+                hasErrorMessage(response)
+                    ? reject(response.errorMessage)
+                    : resolve(message);
+            };
+
+            socket.emit(message, body, (response) => {
+                handlePromise(response);
+            });
         });
     }
 }

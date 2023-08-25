@@ -22,12 +22,11 @@ import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
-import { ConnectedBot } from '#/types/connected-bot';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
-    private connections: ConnectedBot[] = [];
+    private connections = new Map<number, string>();
     @WebSocketServer() server: Server;
 
     constructor(
@@ -41,8 +40,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly guestService: GuestService,
     ) { }
 
-    get connectedBots() {
-        return this.connections;
+    get connectedBotsCount() {
+        return this.connections.size;
+    }
+
+    getConnectedBotSocketId(botId: number) {
+        return this.connections.get(botId);
     }
 
     async handleConnection(client: Socket) {
@@ -54,10 +57,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
 
-        this.connections.push({
-            botId: bot.id,
-            socketId: client.id,
-        });
+        this.connections.set(bot.id, client.id);
     }
 
     async handleDisconnect(client: Socket) {
@@ -74,7 +74,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
-        this.connections = this.connections.filter(connection => connection.botId !== bot.id);
+        this.connections.delete(bot.id);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -157,10 +157,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
     }
 
-    private async setBotStatusBusy(bot: IBot) {
+    async setBotStatusBusy(bot: IBot) {
         const busyBotStatus = BotStatus.BUSY;
         if (bot.status !== busyBotStatus) {
-            this.logger.log(`Updating bot status to (${busyBotStatus})`);
+            this.logger.log(`Updating bot ${bot.installationId} status to (${busyBotStatus})`);
             await this.botService.setBusy(bot);
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
             this.logger.log('Success: bot status updated');
