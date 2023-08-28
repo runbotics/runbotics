@@ -68,7 +68,7 @@ export default class ExcelErrorMessage {
     static insertColumnsIncorrectInput(): string {
         return `
             Column has to be a column letter (e.g. "C").
-            Amount has to be a number (eg. 5).
+            Number has to be a positive number (eg. 5).
             ${this.getCheckInputTip()}
             `
     }
@@ -76,7 +76,7 @@ export default class ExcelErrorMessage {
     static insertRowsIncorrectInput(): string {
         return `
             Row has to be a number (e.g. 5).
-            Number has to be a number (e.g. 5).
+            Number has to be a positive number (e.g. 5).
             ${this.getCheckInputTip()}
         `
     }

@@ -202,10 +202,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async insertColumnsBefore(input: ExcelInsertColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-
+        
+        
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
+            if (!this.isPositiveInteger(amount)) throw new Error();
 
             targetWorksheet
                 .Range(targetWorksheet.Columns(column), targetWorksheet.Columns(column + amount - 1))
@@ -218,10 +220,12 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async insertColumnsAfter(input: ExcelInsertColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-
+        
+        
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
+            if (!this.isPositiveInteger(amount)) throw new Error();
 
             targetWorksheet
                 .Range(targetWorksheet.Columns(column + 1), targetWorksheet.Columns(column + amount))
@@ -236,6 +240,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber;
+
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
 
         try {
             targetWorksheet
@@ -268,6 +276,10 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber;
+
+        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+            throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
+        }
 
         try {
             targetWorksheet
@@ -617,5 +629,9 @@ export default class ExcelActionHandler extends StatefulActionHandler {
             }
         }
         throw new Error(ExcelErrorMessage.tableNotFoundIncorrectInput());
+    }
+
+    private isPositiveInteger(number: number): boolean {
+        return (number > 0 && Number.isInteger(number))
     }
 }
