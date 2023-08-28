@@ -16,13 +16,6 @@ export interface SharepointExcelOpenFileActionInput {
     siteRelativePath: string;
     listName: string;
 }
-export type SharepointOpenFromRootActionInput = {
-    filePath: string;
-    worksheetName: string;
-    persistChanges: boolean;
-    siteRelativePath: string;
-    listName: string;
-}
 
 export type SharepointOpenActionOutput = any;
 
