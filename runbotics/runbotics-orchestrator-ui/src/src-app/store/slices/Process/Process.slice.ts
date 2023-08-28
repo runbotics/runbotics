@@ -18,6 +18,7 @@ export const initialModelerState: ModelerState = {
     customValidationErrors: [],
     appliedActivities: [],
     options: null,
+    variables: [],
     commandStack: {
         commandStackSize: 0,
         commandStackIdx: -1,

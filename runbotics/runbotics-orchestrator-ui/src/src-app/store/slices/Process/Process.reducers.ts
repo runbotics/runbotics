@@ -2,7 +2,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
-import { Options } from '#src-app/hooks/useOptions';
+import { Options, Variable } from '#src-app/hooks/useOptions';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { initialModelerState, initialState } from './Process.slice';
@@ -158,4 +158,8 @@ export const clearModelerState = (state: ProcessState) => {
 
 export const setOptions = (state: ProcessState, action: PayloadAction<Options>) => {
     state.modeler.options = action.payload;
+};
+
+export const setVariables = (state: ProcessState, action: PayloadAction<Variable[]>) => {
+    state.modeler.variables = action.payload;
 };

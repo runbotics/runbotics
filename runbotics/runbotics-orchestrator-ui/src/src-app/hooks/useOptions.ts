@@ -60,7 +60,22 @@ const SERVICES = [
     'environment.services.diffMaps',
     'environment.services.objFromArray',
     'environment.services.readFromStorage',
-].map((service) => ({
+];
+
+const UTILS = [
+    'false',
+    'true',
+    'content.output',
+    'environment',
+    'environment.output',
+];
+
+const VARIABLES = [
+    'tempFolder',
+    'userEmail'
+];
+
+const SERVICES_MAPPED = SERVICES.map((service) => ({
     value: `\${${service}}`,
     label: `\${${service}}`,
     name: service,
@@ -69,13 +84,7 @@ const SERVICES = [
     ),
 }));
 
-const UTILS = [
-    'false',
-    'true',
-    'content.output',
-    'environment',
-    'environment.output',
-].map((util) => ({
+const UTILS_MAPPED = UTILS.map((util) => ({
     value: `\${${util}}`,
     label: `\${${util}}`,
     name: util,
@@ -84,10 +93,7 @@ const UTILS = [
     ),
 }));
 
-const VARIABLES = [
-    'tempFolder', 
-    'userEmail'
-].map((variable) => ({
+const VARIABLES_MAPPED = VARIABLES.map((variable) => ({
     label: variable,
     value: variable,
     group: t(
@@ -112,9 +118,20 @@ export interface Options {
     };
 }
 
+export interface Variable {
+    name: string;
+    actionId?: string;
+}
+
+// eslint-disable-next-line max-lines-per-function
 const useOptions = () => {
     const dispatch = useDispatch();
-    const { selectedElement, customValidationErrors, options: prevOptions } = useSelector((state) => state.process.modeler);
+    const {
+        selectedElement,
+        customValidationErrors,
+        options: prevOptions,
+        variables: prevVariables,
+    } = useSelector((state) => state.process.modeler);
     const { translate } = useTranslations();
     const {
         globalVariables,
@@ -122,6 +139,7 @@ const useOptions = () => {
         outputActionVariables,
         attendedVariables,
         loopVariables: scopedLoopVariables,
+        allActionVariables,
     } = useProcessVariables(selectedElement?.parent?.id);
 
     const attendedProcessVariables = attendedVariables.map((variable) => ({
@@ -168,6 +186,11 @@ const useOptions = () => {
         ),
     }));
 
+    const allLocalVariables = allActionVariables.map((variable) => ({
+        value: variable.name,
+        ...(variable?.actionId && { actionId: variable?.actionId }),
+    }));
+
     const groupedLoopVariables = scopedLoopVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
@@ -187,14 +210,14 @@ const useOptions = () => {
     const options: Options = useMemo(() => {
         let result = [];
 
-        const defaultOptions = [...SERVICES, ...UTILS];
+        const defaultOptions = [...SERVICES_MAPPED, ...UTILS_MAPPED];
         result = [...defaultOptions, ...result];
 
         const variables = [
             ...groupedLocalVariables,
             ...groupedGlobalVariables,
             ...attendedProcessVariables,
-            ...VARIABLES,
+            ...VARIABLES_MAPPED,
         ];
 
         const dollarVariables = variables.map((option) => ({
@@ -230,13 +253,36 @@ const useOptions = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedElement]);
 
+    const variables = useMemo<Variable[]>(() => {
+        const defaultVars = [
+            ...VARIABLES,
+            ...SERVICES,
+            ...UTILS
+        ].map(variable => ({name: variable}));
+
+        const vars = [
+            ...allLocalVariables,
+            ...groupedGlobalVariables,
+            ...attendedProcessVariables,
+        ].map(variable => ({
+            name: variable.value,
+            ...('actionId' in variable && { actionId: variable?.actionId }),
+        }));
+
+        return [...vars, ...defaultVars];
+    }, [selectedElement]);
+
     useEffect(() => {
         if (customValidationErrors.length === 0) {
             dispatch(processActions.setOptions(options));
+            dispatch(processActions.setVariables(variables));
         }
     }, [options]);
 
-    return prevOptions ?? options;
+    return {
+        options: prevOptions ?? options,
+        variables: prevVariables ?? variables,
+    };
 };
 
 export default useOptions;

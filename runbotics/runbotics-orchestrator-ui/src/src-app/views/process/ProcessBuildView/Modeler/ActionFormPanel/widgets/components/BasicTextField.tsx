@@ -5,7 +5,7 @@ import { WidgetProps } from '@rjsf/core';
 
 import useCustomValidation from '#src-app/hooks/useCustomValidation';
 import useDebounce from '#src-app/hooks/useDebounce';
-import { Options } from '#src-app/hooks/useOptions';
+import { Variable } from '#src-app/hooks/useOptions';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -16,7 +16,7 @@ import { BPMNElement } from '../../../helpers/elementParameters';
 interface BasicTextFieldProps extends WidgetProps {
     params?: AutocompleteRenderInputParams;
     customErrors?: string[];
-    options: Options;
+    variables: Variable[];
     formContext: {
         selectedElement: BPMNElement;
     }
@@ -27,7 +27,7 @@ const DEBOUNCE_TIME = 600;
 const BasicTextField: FC<BasicTextFieldProps> = ({
     params = {},
     onChange,
-    options,
+    variables,
     formContext: { selectedElement },
     ...props
 }) => {
@@ -36,7 +36,6 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     const debouncedValue = useDebounce<string>(currentValue, DEBOUNCE_TIME);
     const { validator } = useCustomValidation();
     const [errors, setErrors] = useState(props.customErrors);
-    const variables = useMemo(() => Object.values(options), [options]);
     const { translate } = useTranslations();
 
     const isFieldDisabled = useMemo(() => {

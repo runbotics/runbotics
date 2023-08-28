@@ -1,7 +1,7 @@
 import { IProcess, IProcessInstance } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
-import { Options } from '#src-app/hooks/useOptions';
+import { Options, Variable } from '#src-app/hooks/useOptions';
 import LoadingType from '#src-app/types/loading';
 import { Page } from '#src-app/utils/types/page';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
@@ -29,6 +29,7 @@ export interface ModelerState {
     errors: ModelerError[];
     customValidationErrors: ModelerError[];
     options: Options;
+    variables: Variable[];
     isSaveDisabled: boolean;
     selectedElement?: BPMNElement;
     selectedAction?: IBpmnAction;

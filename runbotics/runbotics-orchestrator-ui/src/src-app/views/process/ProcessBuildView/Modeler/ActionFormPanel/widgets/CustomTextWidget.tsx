@@ -22,7 +22,7 @@ const FORM_INPUTS_ID = [
 ];
 
 const CustomTextWidget: FC<WidgetProps> = (props) => {
-    const options = useOptions();
+    const { options, variables } = useOptions();
 
     const isFieldVariable = Boolean(
         FORM_INPUTS_ID.find((id) => id === props.id)
@@ -31,7 +31,7 @@ const CustomTextWidget: FC<WidgetProps> = (props) => {
     return (
         <TestFiledWrapper>
             {isFieldVariable ? (
-                <BasicTextField {...props} options={options} />
+                <BasicTextField {...props} variables={variables} />
             ) : (
                 <ElementAwareAutocomplete
                     {...props}

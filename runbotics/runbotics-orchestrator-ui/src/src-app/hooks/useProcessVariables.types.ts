@@ -12,6 +12,7 @@ export interface ActionVariables {
     inputActionVariables: ActionVariableObject[];
     outputActionVariables: ActionVariableObject[];
     loopVariables: LoopVariableObject[];
+    allActionVariables: ActionVariableObject[];
 }
 
 export interface GlobalVariable {
