@@ -206,7 +206,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
-            if (!this.isPositiveInteger(amount)) throw new Error();
+            if (this.isNegativeInteger(amount)) throw new Error();
 
             targetWorksheet
                 .Range(targetWorksheet.Columns(column), targetWorksheet.Columns(column + amount - 1))
@@ -223,7 +223,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
-            if (!this.isPositiveInteger(amount)) throw new Error();
+            if (this.isNegativeInteger(amount)) throw new Error();
 
             targetWorksheet
                 .Range(targetWorksheet.Columns(column + 1), targetWorksheet.Columns(column + amount))
@@ -239,7 +239,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber;
 
-        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+        if (this.isNegativeInteger(startingRow) || this.isNegativeInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -275,7 +275,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         const startingRow = input.startingRow;
         const rowsNumber = input.rowsNumber;
 
-        if (!this.isPositiveInteger(startingRow) || !this.isPositiveInteger(rowsNumber)) {
+        if (this.isNegativeInteger(startingRow) || this.isNegativeInteger(rowsNumber)) {
             throw new Error(ExcelErrorMessage.insertRowsIncorrectInput());
         }
 
@@ -629,7 +629,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         throw new Error(ExcelErrorMessage.tableNotFoundIncorrectInput());
     }
 
-    private isPositiveInteger(number: number): boolean {
-        return (number > 0 && Number.isInteger(number))
+    private isNegativeInteger(number: number): boolean {
+        return (Number.isInteger(number) && number < 0)
     }
 }
