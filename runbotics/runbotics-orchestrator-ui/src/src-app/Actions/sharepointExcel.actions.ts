@@ -281,7 +281,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
                                 enum: ['OneDrive', 'Sharepoint'],
-                                default: ['Repeat'],
+                                default: ['OneDrive'],
+
                             },
                         },
                         required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
@@ -298,16 +299,23 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
+
                         },
+
                     },
                 },
             },
 
             formData: {
                 input: {
-
+                    siteRelativePath: undefined,
+                    listName: undefined,
+                    filePath: undefined,
+                    worksheetName: undefined,
+                    persistChanges: true,
                 },
-                output: {},
+                output: {
+                },
             },
 
             uiSchema: {

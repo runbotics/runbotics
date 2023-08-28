@@ -6,23 +6,8 @@ export interface Session {
     sessionIdentifier: SessionIdentifier;
     worksheetIdentifier: WorksheetIdentifier;
     workbookSessionInfo: WorkbookSessionInfo;
-    siteRelativePath?: string;
-}
-
-export interface OneDriveSession {
-    platform: 'OneDrive';
-    sessionIdentifier: SessionIdentifier;
-    workbookSessionInfo: WorkbookSessionInfo;
-    worksheetIdentifier: WorksheetIdentifier;
-}
-
-export interface SharepointSession {
-    platform: 'Sharepoint';
-    sessionIdentifier: SessionIdentifier;
-    worksheetIdentifier: WorksheetIdentifier;
-    workbookSessionInfo: WorkbookSessionInfo;
-    siteId: string;
-    listName: string;
+    siteId?: string;
+    driveId?: string;
 }
 
 export interface WorkbookSessionInfo {
@@ -31,8 +16,8 @@ export interface WorkbookSessionInfo {
 }
 
 export interface WorkbookCellCoordinates {
-    row: number;
-    column: number;
+    row: string;
+    column: string;
 }
 
 //https://graph.microsoft.com/v1.0/$metadata#sites/$entity
@@ -152,5 +137,5 @@ export interface WorkbookRangeUpdateBody {
     formulasR1C1?: string;
     numberFormat?: string;
     rowHidden?: boolean;
-    values?: string;
+    values?: Array<Array<any>>;
 }
