@@ -35,7 +35,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
             formErrorElementsNames,
             connectionErrorElementsNames,
             canvasErrorElementsNames,
-        } = errors.reduce(
+        } = [ ...errors, ...customValidationErrors].reduce(
             (acc, prev) => {
                 if (prev.type === ModelerErrorType.FORM_ERROR) {
                     acc.formErrorElementsNames.push(prev.elementName);
