@@ -257,7 +257,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
                                 enum: ['OneDrive', 'Sharepoint'],
-                                default: ['Repeat'],
+                                default: ['OneDrive'],
+
                             },
                         },
                         dependencies: {
@@ -320,7 +321,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             persistChanges: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
                                                 ),
                                                 type: 'boolean',
                                             },
@@ -329,16 +330,23 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                     },
                                 ],
                             },
+
                         },
+
                     },
                 },
             },
 
             formData: {
                 input: {
-
+                    siteRelativePath: undefined,
+                    listName: undefined,
+                    filePath: undefined,
+                    worksheetName: undefined,
+                    persistChanges: true,
                 },
-                output: {},
+                output: {
+                },
             },
 
             uiSchema: {

@@ -40,7 +40,7 @@ export type SharepointExcelSetCellActionOutput = any;
 
 export type SharepointExcelUpdateRangeActionInput = {
     range: string;
-    values: any[][];
+    values: string | any[][];
 };
 export type SharepointExcelUpdateRangeActionOutput = any;
 
