@@ -2,7 +2,7 @@ import { AsanaAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, VARIABLE_NAME_PATTERN } from './types';
+import { IBpmnAction, Runner, RegexPattern } from './types';
 
 
 
@@ -36,7 +36,7 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: VARIABLE_NAME_PATTERN,
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],

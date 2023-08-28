@@ -2,7 +2,7 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, RegexPatterns, Runner } from '../types';
+import { ActionSystem, IBpmnAction, RegexPattern, Runner } from '../types';
 
 const getActionCreateWorksheet = (): IBpmnAction => ({
     id: ExcelAction.CREATE_WORKSHEET,
@@ -27,7 +27,7 @@ const getActionCreateWorksheet = (): IBpmnAction => ({
                         name: {
                             title: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name'),
                             type: 'string',
-                            pattern: RegexPatterns.EXCEL_WORKSHEET_NAME,
+                            pattern: RegexPattern.EXCEL_WORKSHEET_NAME,
                         },
                     },
                 },
@@ -38,7 +38,7 @@ const getActionCreateWorksheet = (): IBpmnAction => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                            pattern: RegexPatterns.VARIABLE_NAME,
+                            pattern: RegexPattern.VARIABLE_NAME,
                         },
                     },
                     required: [],
@@ -58,7 +58,7 @@ const getActionCreateWorksheet = (): IBpmnAction => ({
                 variableName: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Output.VariableName.Info'),
-                        pattern: RegexPatterns.VARIABLE_NAME,
+                        pattern: RegexPattern.VARIABLE_NAME,
                     }
                 }
             },
