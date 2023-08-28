@@ -46,11 +46,6 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         setUser(getUserDataWithoutNulls(userData));
     }, [userData]);
 
-    useEffect(() => {
-        onClose();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activated]);
-
     const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
 
     const handleSave = (): void => {
@@ -59,6 +54,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
         dispatch(usersActions.updateActivated(dataPayload)).unwrap()
             .then(() => {
+                handleClose();
                 enqueueSnackbar(
                     translate('Users.List.Edit.Form.Event.Success'),
                     { variant: 'success' }
@@ -66,6 +62,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                 refreshSearchActivated();
             })
             .catch(({ errorKey }) => {
+                handleClose();
                 enqueueSnackbar(
                     translate(
                         `Users.List.Edit.Form.Event.Error.${errorKey}` as keyof typeof englishEditListTranslations
@@ -86,6 +83,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
             <DeleteUserDialog
                 open={isDeleteDialogVisible}
                 onClose={handleCloseDeleteDialog}
+                onDelete={handleClose}
                 getSelectedUsers={() => [user]}
             />
             <If condition={open}>

@@ -38,12 +38,14 @@ const StyledButton = styled(Button)`
 interface DeleteUserDialogProps {
     open?: boolean;
     onClose: () => void;
+    onDelete?: () => void;
     getSelectedUsers: () => IUser[];
 }
 
 const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     open,
     onClose,
+    onDelete,
     getSelectedUsers
 }) => {
     const { translate } = useTranslations();
@@ -64,6 +66,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             )
             .then(() => {
                 onClose();
+                onDelete?.();
                 enqueueSnackbar(
                     translate('Users.Actions.Modals.DeleteModal.Success'),
                     { variant: 'success' }
@@ -75,6 +78,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             })
             .catch(() => {
                 onClose();
+                onDelete?.();
                 enqueueSnackbar(
                     translate('Users.Actions.Modals.DeleteModal.Error'),
                     { variant: 'error' }
