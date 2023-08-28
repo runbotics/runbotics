@@ -281,7 +281,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
                                 enum: ['OneDrive', 'Sharepoint'],
-                                default: ['Repeat'],
+                                default: ['OneDrive'],
+
                             },
                         },
                         required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
@@ -296,7 +297,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
 
                             },
+
                         },
+
                     },
                 },
             },
