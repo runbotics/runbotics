@@ -1,6 +1,8 @@
 import { UiSchema } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
+export const VARIABLE_NAME_PATTERN = '^[a-zA-Z0-9_]+$';
+
 export enum Runner {
     BROWSER_BACKGROUND_SCRIPT = '${environment.services.backgroundScript()}',
     BROWSER_FRONTEND_SCRIPT = '${environment.services.run()}',

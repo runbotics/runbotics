@@ -2,7 +2,7 @@ import { GeneralAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, Patterns } from './types';
+import { IBpmnAction, Runner, VARIABLE_NAME_PATTERN } from './types';
 
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
@@ -123,7 +123,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: [],

@@ -2,7 +2,7 @@ import { LoopAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, Patterns } from './types';
+import { IBpmnAction, Runner, VARIABLE_NAME_PATTERN } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getLoopActions = (): Record<string, IBpmnAction> => ({
@@ -46,7 +46,7 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                                             elementVariable: {
                                                 title: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable'),
                                                 type: 'string',
-                                                pattern: Patterns.VARIABLE_INPUT,
+                                                pattern: VARIABLE_NAME_PATTERN,
                                             },
                                         },
                                         required: ['collection'],

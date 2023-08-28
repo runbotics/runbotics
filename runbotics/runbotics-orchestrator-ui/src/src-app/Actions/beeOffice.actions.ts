@@ -2,7 +2,7 @@ import { BeeOfficeAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, Patterns } from './types';
+import { IBpmnAction, Runner, VARIABLE_NAME_PATTERN } from './types';
 
 
 
@@ -74,7 +74,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -143,7 +143,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -206,7 +206,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -265,7 +265,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -334,7 +334,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -431,7 +431,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
@@ -500,7 +500,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
                                 type: 'string',
-                                pattern: Patterns.VARIABLE_INPUT,
+                                pattern: VARIABLE_NAME_PATTERN,
                             },
                         },
                         required: ['variableName'],
