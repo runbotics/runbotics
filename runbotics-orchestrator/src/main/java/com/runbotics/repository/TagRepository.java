@@ -14,8 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long>, JpaSpecificationExecutor<Tag> {
 
-    Optional<Tag> findOneById(Long id);
-
     Optional<Tag> findOneByName(String name);
 
     Optional<Tag> findOneByIdAndName(Long id, String name);

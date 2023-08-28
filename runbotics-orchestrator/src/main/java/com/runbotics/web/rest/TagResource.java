@@ -115,7 +115,7 @@ public class TagResource {
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         log.debug("REST request to delete tag with id : {}", id);
 
-        if (tagRepository.findOneById(id).isEmpty()) {
+        if (tagRepository.findById(id).isEmpty()) {
             throw new BadRequestAlertException("Tag with this id not exist", ENTITY_NAME, "idNotExist");
         }
 

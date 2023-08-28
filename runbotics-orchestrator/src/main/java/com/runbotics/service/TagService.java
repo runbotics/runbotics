@@ -49,12 +49,15 @@ public interface TagService {
     List<TagDTO> getAllTags();
 
     /**
-     * Processing existing and new Tags
+     * Filters existing and new Tags:
+     * - tags with correct id and name are being added to Set
+     * - tags with only name are being created and then added to Set
+     * all happens in order to update the Process
      *
      * @param tags
      * @return Set of Tags
      */
-    Set<Tag> processTags(Set<TagDTO> tags);
+    Set<Tag> filterTags(Set<TagDTO> tags);
 
     /**
      * Checks which Tags should be deleted

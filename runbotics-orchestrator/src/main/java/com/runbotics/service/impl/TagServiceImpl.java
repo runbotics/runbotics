@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService{
 
     @Transactional(readOnly = true)
     public Optional<TagDTO> getOneTagById(Long id) {
-        return tagRepository.findOneById(id).map(tagMapper::toDto);
+        return tagRepository.findById(id).map(tagMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -76,7 +76,7 @@ public class TagServiceImpl implements TagService{
     }
 
     @Transactional(readOnly = true)
-    public Set<Tag> processTags(Set<TagDTO> tags) {
+    public Set<Tag> filterTags(Set<TagDTO> tags) {
         Set<TagDTO> existingTags = new HashSet<>();
         Set<TagDTO> newTags = new HashSet<>();
 
@@ -100,10 +100,10 @@ public class TagServiceImpl implements TagService{
             }
         });
 
-        Set<TagDTO> processedTags = createNewTags(newTags);
-        processedTags.addAll(existingTags);
+        Set<TagDTO> filteredTags = createNewTags(newTags);
+        filteredTags.addAll(existingTags);
 
-        return processedTags.stream().map(tagMapper::toEntity).collect(Collectors.toSet());
+        return filteredTags.stream().map(tagMapper::toEntity).collect(Collectors.toSet());
     }
 
     @Transactional(readOnly = true)
