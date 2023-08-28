@@ -76,6 +76,7 @@ export type BusinessObject = {
     extensionElements?: ExtensionElements;
     runbotics?: string;
     validationError?: boolean;
+    customValidationError?: boolean;
 };
 
 export type ModdleElement = {

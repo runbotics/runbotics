@@ -15,7 +15,9 @@ export const initialModelerState: ModelerState = {
     selectedAction: null,
     isSaveDisabled: true,
     errors: [],
+    customValidationErrors: [],
     appliedActivities: [],
+    options: null,
     commandStack: {
         commandStackSize: 0,
         commandStackIdx: -1,

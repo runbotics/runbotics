@@ -27,7 +27,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
     process,
 }) => {
     const { translate } = useTranslations();
-    const { isSaveDisabled, errors } = useSelector(
+    const { isSaveDisabled, errors, customValidationErrors } = useSelector(
         (state) => state.process.modeler
     );
     const getTooltip = () => {
@@ -83,7 +83,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
                     onRunClick={onRunClick}
                 />
                 <Secured authorities={[Role.ROLE_ADMIN]}>
-                    <Badge badgeContent={errors.length} color="error" max={5}>
+                    <Badge badgeContent={errors.length || customValidationErrors.length} color="error" max={5}>
                         <Tooltip title={getTooltip()}>
                             <span>
                                 <Button

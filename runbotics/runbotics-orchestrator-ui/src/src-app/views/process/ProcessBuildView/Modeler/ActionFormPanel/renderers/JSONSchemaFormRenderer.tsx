@@ -52,7 +52,7 @@ function ErrorListTemplate(props: ErrorListProps) {
     return <Alert severity="error">{alertMessage}</Alert>;
 }
 
-const DEBOUNCE_TIME = 500;
+const DEBOUNCE_TIME = 400;
 const initialFormState = {
     id: null,
     formData: null,

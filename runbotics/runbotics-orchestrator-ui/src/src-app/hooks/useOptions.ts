@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import useTranslations, {
     translate as t,
 } from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
+
+import { processActions } from '#src-app/store/slices/Process';
 
 import useProcessVariables from './useProcessVariables';
 
@@ -111,7 +113,8 @@ export interface Options {
 }
 
 const useOptions = () => {
-    const { selectedElement } = useSelector((state) => state.process.modeler);    
+    const dispatch = useDispatch();
+    const { selectedElement, customValidationErrors, options: prevOptions } = useSelector((state) => state.process.modeler);
     const { translate } = useTranslations();
     const {
         globalVariables,
@@ -120,7 +123,7 @@ const useOptions = () => {
         attendedVariables,
         loopVariables: scopedLoopVariables,
     } = useProcessVariables(selectedElement?.parent?.id);
-    
+
     const attendedProcessVariables = attendedVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
@@ -128,7 +131,7 @@ const useOptions = () => {
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
         ),
     }));
-    
+
     const extractOutputs = (outputVariables: ActionVariableObject[]) => {
         const outputs = outputVariables.map((outputVariable) => ({
             label: outputVariable.name,
@@ -193,7 +196,7 @@ const useOptions = () => {
             ...attendedProcessVariables,
             ...VARIABLES,
         ];
-        
+
         const dollarVariables = variables.map((option) => ({
             ...option,
             label: `\${environment.variables.${option.value}}`,
@@ -222,12 +225,18 @@ const useOptions = () => {
             ...result,
             ...loopVariables,
         ];
-        
+
         return reduceList(result);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedElement]);
 
-    return options;
+    useEffect(() => {
+        if (customValidationErrors.length === 0) {
+            dispatch(processActions.setOptions(options));
+        }
+    }, [options]);
+
+    return prevOptions ?? options;
 };
 
 export default useOptions;
