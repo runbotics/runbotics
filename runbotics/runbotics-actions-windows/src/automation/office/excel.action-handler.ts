@@ -203,7 +203,6 @@ export default class ExcelActionHandler extends StatefulActionHandler {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
         
-        
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
@@ -220,8 +219,7 @@ export default class ExcelActionHandler extends StatefulActionHandler {
     async insertColumnsAfter(input: ExcelInsertColumnsActionInput): Promise<void> {
         if (input.worksheet) this.checkIsWorksheetNameCorrect(input.worksheet, true);
         const targetWorksheet = this.session.Worksheets(input?.worksheet ?? this.session.ActiveSheet.Name);
-        
-        
+         
         try {
             const column = this.getColumnCoordinate(input.column);
             const amount = input.amount;
