@@ -9,7 +9,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersSelector } from '#src-app/store/slices/Users';
 
-import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
@@ -30,29 +29,22 @@ const UsersListView: FC = () => {
     );
 
     const { activated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch(true, limit, page);
-
-    const [userData, setUserData] = useState<IUser>();
-    const [dialogsVisibility, setDialogsVisibility] = useState({
-        isEditVisible: false,
-        isDeleteVisible: false
+    const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch({
+        isActivatedUsersOnly: true,
+        pageSize: limit,
+        page
     });
 
+    const [userData, setUserData] = useState<IUser>();
+    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+
     const handleOpenEditDialog = (rowData) => {
-        setDialogsVisibility((prevState) => ({ ...prevState, isEditVisible: true }));
+        setIsEditDialogVisible(true);
         setUserData(rowData);
     };
 
     const handleCloseEditDialog = () => {
-        setDialogsVisibility((prevState) => ({ ...prevState, isEditVisible: false }));
-    };
-
-    const handleOpenDeleteDialog = () => {
-        setDialogsVisibility({ isEditVisible: false, isDeleteVisible: true });
-    };
-
-    const handleCloseDeleteDialog = () => {
-        setDialogsVisibility((prevState) => ({ ...prevState, isDeleteVisible: false }));
+        setIsEditDialogVisible(false);
     };
 
     useEffect(() => {
@@ -73,15 +65,9 @@ const UsersListView: FC = () => {
     return (
         <>
             <UsersListEditDialog
-                open={dialogsVisibility.isEditVisible}
-                openDeleteDialog={handleOpenDeleteDialog}
+                open={isEditDialogVisible}
                 onClose={handleCloseEditDialog}
                 userData={userData}
-            />
-            <DeleteUserDialog
-                open={dialogsVisibility.isDeleteVisible}
-                onClose={handleCloseDeleteDialog}
-                getSelectedUsers={() => [userData]}
             />
             <StyledActionsContainer>
                 <StyledTextField

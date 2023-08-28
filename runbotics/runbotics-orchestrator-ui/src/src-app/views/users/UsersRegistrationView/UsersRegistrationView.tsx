@@ -41,7 +41,7 @@ const UsersRegistrationView: FC = () => {
     );
 
     const { notActivated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch(false, limit, page);
+    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch({ pageSize: limit, page });
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});

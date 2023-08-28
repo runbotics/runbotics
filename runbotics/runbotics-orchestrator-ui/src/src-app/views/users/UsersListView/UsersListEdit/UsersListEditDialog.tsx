@@ -13,6 +13,7 @@ import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import englishEditListTranslations from '#src-app/translations/en/users/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
+import DeleteUserDialog from '../../DeleteUserDialog';
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
 import { FormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
@@ -20,7 +21,6 @@ import UsersListEditForm from './UsersListEditForm';
 
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
-    openDeleteDialog,
     onClose,
     userData
 }) => {
@@ -28,12 +28,23 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
 
-    const { refreshSearch: refreshSearchActivated } = useUserSearch(true);
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
     const { activated } = useSelector(usersSelector);
     const [user, setUser] = useState<IUser>();
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
+    const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 
-    useEffect(() => { setUser(getUserDataWithoutNulls(userData)); }, [userData]);
+    const handleOpenDeleteDialog = () => {
+        setIsDeleteDialogVisible(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setIsDeleteDialogVisible(false);
+    };
+
+    useEffect(() => {
+        setUser(getUserDataWithoutNulls(userData));
+    }, [userData]);
 
     const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
 
@@ -68,48 +79,56 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     };
 
     return (
-        <If condition={open}>
-            <Dialog open>
-                <Title>
-                    {translate('Users.List.Edit.Form.Title')}
-                </Title>
-                <Content>
-                    <Form>
-                        <UsersListEditForm
-                            user={user}
-                            setUser={setUser}
-                            formValidationState={formValidationState}
-                            setFormValidationState={setFormValidationState}
-                        />
-                    </Form>
-                </Content>
-                <StyledDialogActions>
-                    <DeleteButton
-                        onClick={openDeleteDialog}
-                        variant='contained'
-                        loading={activated.loading}
-                    >
-                        {translate('Users.List.Edit.Form.Button.Delete')}
-                    </DeleteButton>
-                    <Box>
-                        <StyledButton
-                            onClick={handleClose}
-                            disabled={activated.loading}
-                        >
-                            {translate('Users.List.Edit.Form.Button.Cancel')}
-                        </StyledButton>
-                        <LoadingButton
+        <>
+            <DeleteUserDialog
+                open={isDeleteDialogVisible}
+                onClose={handleCloseDeleteDialog}
+                closeEditDialog={handleClose}
+                getSelectedUsers={() => [user]}
+            />
+            <If condition={open}>
+                <Dialog open>
+                    <Title>
+                        {translate('Users.List.Edit.Form.Title')}
+                    </Title>
+                    <Content>
+                        <Form>
+                            <UsersListEditForm
+                                user={user}
+                                setUser={setUser}
+                                formValidationState={formValidationState}
+                                setFormValidationState={setFormValidationState}
+                            />
+                        </Form>
+                    </Content>
+                    <StyledDialogActions>
+                        <DeleteButton
+                            onClick={handleOpenDeleteDialog}
                             variant='contained'
-                            onClick={handleSave}
                             loading={activated.loading}
-                            disabled={!checkFormFieldsValidation()}
                         >
-                            {translate('Users.List.Edit.Form.Button.Save')}
-                        </LoadingButton>
-                    </Box>
-                </StyledDialogActions>
-            </Dialog>
-        </If>
+                            {translate('Users.List.Edit.Form.Button.Delete')}
+                        </DeleteButton>
+                        <Box>
+                            <StyledButton
+                                onClick={handleClose}
+                                disabled={activated.loading}
+                            >
+                                {translate('Users.List.Edit.Form.Button.Cancel')}
+                            </StyledButton>
+                            <LoadingButton
+                                variant='contained'
+                                onClick={handleSave}
+                                loading={activated.loading}
+                                disabled={!checkFormFieldsValidation()}
+                            >
+                                {translate('Users.List.Edit.Form.Button.Save')}
+                            </LoadingButton>
+                        </Box>
+                    </StyledDialogActions>
+                </Dialog>
+            </If>
+        </>
     );
 };
 

@@ -4,9 +4,9 @@ import { TextField, MenuItem } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages } from '#src-app/translations/translations';
-import { emailFieldValidation, requiredFieldValidation, emailRegex } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
+import { emailRegex } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
-import { FieldValidation, UsersListEditFormProps } from './UsersListEdit.types';
+import { UsersListEditFormProps } from './UsersListEdit.types';
 
 const UsersListEditForm: FC<UsersListEditFormProps> = ({
     user,
@@ -15,10 +15,6 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
     setFormValidationState
 }) => {
     const { translate } = useTranslations();
-
-    const getEmailValidator = (): FieldValidation => !formValidationState.email && emailFieldValidation;
-
-    const getLoginValidator = (): FieldValidation => !formValidationState.login && requiredFieldValidation;
 
     const handleEmailFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         const email = event.target.value;
@@ -53,13 +49,15 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
                 label={translate('Users.List.Edit.Form.Label.Email')}
                 value={user?.email}
                 onChange={handleEmailFieldInput}
-                {...getEmailValidator()}
+                error={!formValidationState.email}
+                {...(!formValidationState.email && { helperText: translate('Users.List.Edit.Form.Error.Email') })}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Login')}
                 value={user?.login}
                 onChange={handleLoginFieldInput}
-                {...getLoginValidator()}
+                error={!formValidationState.login}
+                {...(!formValidationState.login && { helperText: translate('Users.List.Edit.Form.Error.FieldRequired') })}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.FirstName')}

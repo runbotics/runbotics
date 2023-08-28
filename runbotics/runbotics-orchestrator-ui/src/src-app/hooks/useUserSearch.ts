@@ -13,7 +13,23 @@ import useTranslations from './useTranslations';
 
 const DEBOUNCE_TIME = 250;
 
-const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) => {
+interface UseUserSearchProps {
+    isActivatedUsersOnly?: boolean;
+    pageSize?: number;
+    page?: number;
+}
+
+const useUserSearchDefault = {
+    isActivatedUsersOnly: false,
+    pageSize: 10,
+    page: 0
+};
+
+const useUserSearch = ({
+    isActivatedUsersOnly,
+    pageSize,
+    page
+}: UseUserSearchProps = { ...useUserSearchDefault }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const router = useRouter();

@@ -320,10 +320,9 @@ public class UserService {
                         adminUserDTO.setActivated(existingUser.isActivated());
                     }
 
-                    userRepository.findOneByIdNotAndEmailOrIdNotAndLogin(
+                    userRepository.findOtherUserByLoginOrEmail(
                         adminUserDTO.getId(),
                         adminUserDTO.getEmail(),
-                        adminUserDTO.getId(),
                         adminUserDTO.getLogin()
                     )
                     .ifPresent(user -> {

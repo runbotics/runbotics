@@ -38,12 +38,14 @@ const StyledButton = styled(Button)`
 interface DeleteUserDialogProps {
     open?: boolean;
     onClose: () => void;
+    closeEditDialog: () => void;
     getSelectedUsers: () => IUser[];
 }
 
 const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     open,
     onClose,
+    closeEditDialog,
     getSelectedUsers
 }) => {
     const { translate } = useTranslations();
@@ -51,8 +53,8 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const dispatch = useDispatch();
 
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch: refreshSearchNotActivated } = useUserSearch(false);
-    const { refreshSearch: refreshSearchActivated } = useUserSearch(true);
+    const { refreshSearch: refreshSearchNotActivated } = useUserSearch();
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {
@@ -64,6 +66,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             )
             .then(() => {
                 onClose();
+                closeEditDialog();
                 enqueueSnackbar(
                     translate('Users.Actions.Modals.DeleteModal.Success'),
                     { variant: 'success' }
@@ -75,6 +78,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             })
             .catch(() => {
                 onClose();
+                closeEditDialog();
                 enqueueSnackbar(
                     translate('Users.Actions.Modals.DeleteModal.Error'),
                     { variant: 'error' }
@@ -90,7 +94,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             <Dialog
                 open
                 fullWidth
-                maxWidth="md"
+                maxWidth="sm"
             >
                 <DialogContent>
                     <Typography variant='h4'>
