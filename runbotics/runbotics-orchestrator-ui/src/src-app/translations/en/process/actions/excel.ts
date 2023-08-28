@@ -58,7 +58,7 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.SetActiveWorksheet.Label': 'Set active worksheet',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsBefore.Label': 'Insert columns before',
     'Process.Details.Modeler.Actions.Excel.InsertColumnsAfter.Label': 'Insert columns after',
-    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Amount of columns',
+    'Process.Details.Modeler.Actions.Excel.InsertColumns.ColumnsAmount': 'Number of columns',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Column.Info': 'Column letter, e.g. "AZ".',
     'Process.Details.Modeler.Actions.Excel.InsertColumns.Amount.Info': 'Number of columns to insert.',
     'Process.Details.Modeler.Actions.Excel.InsertRowsBefore.Label': 'Insert rows before',
