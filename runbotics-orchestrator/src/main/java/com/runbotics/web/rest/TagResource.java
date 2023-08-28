@@ -60,11 +60,15 @@ public class TagResource {
         log.debug("REST request to create new Tag : {}", tagDTO);
 
         if (tagDTO.getId() != null) {
-            throw new BadRequestAlertException("A new tag cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new tag cannot already have an ID", ENTITY_NAME, "idExists");
+        }
+
+        if (tagDTO.getName().equals("")) {
+            throw new BadRequestAlertException("Tag name must contain not empty string", ENTITY_NAME, "emptyString");
         }
 
         if (tagRepository.findOneByName(tagDTO.getName()).isPresent()) {
-            throw new BadRequestAlertException("Name already exists", ENTITY_NAME, "namenotunique");
+            throw new BadRequestAlertException("Name already exists", ENTITY_NAME, "nameNotUnique");
         }
 
         final TagDTO result = tagService.save(tagDTO);
@@ -112,7 +116,7 @@ public class TagResource {
         log.debug("REST request to delete tag with id : {}", id);
 
         if (tagRepository.findOneById(id).isEmpty()) {
-            throw new BadRequestAlertException("Tag with this id not exist", ENTITY_NAME, "idnotexist");
+            throw new BadRequestAlertException("Tag with this id not exist", ENTITY_NAME, "idNotExist");
         }
 
         tagService.delete(id);

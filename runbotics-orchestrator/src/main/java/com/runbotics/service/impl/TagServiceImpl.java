@@ -113,7 +113,7 @@ public class TagServiceImpl implements TagService{
 
         List<Long> existingTagIds = processRepository.findById(processDTO.getId())
             .orElseThrow(
-                () -> new BadRequestAlertException("No tag found with this id", ENTITY_NAME, "tagNotFound")
+                () -> new BadRequestAlertException("Cannot find process with his tags", ENTITY_NAME, "processNotFound")
             )
             .getTags().stream().map(Tag::getId).collect(Collectors.toList());
 
