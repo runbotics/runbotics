@@ -22,7 +22,7 @@ const useCustomValidation = () => {
             }));
         }
         return isValid;
-    }, []);
+    }, [selectedElement]);
 
     return { validator };
 };
