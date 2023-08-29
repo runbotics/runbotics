@@ -6,7 +6,7 @@ export default {
     moddleOptions,
 };
 
-export function Camunda(activity, environmentOutput) {
+export function Camunda(activity, processEnvironment) {
     const { broker, environment, type, behaviour } = activity;
 
     return {
@@ -63,8 +63,9 @@ export function Camunda(activity, environmentOutput) {
                 activity.environment.output[ activity.behaviour.resultVariable ] = api.content.output;
             });
         }
-        if (environmentOutput.output) {
-            environment.output = { ...environmentOutput.output };
+        // store output variables in scope of single process
+        if (processEnvironment.output) {
+            environment.output = { ...processEnvironment.output };
         }
     }
 
@@ -153,7 +154,7 @@ export function Camunda(activity, environmentOutput) {
                         ioData.outputParameters.forEach((data) => {
                             resolve(environment.output, data, message);
                         });
-                        environmentOutput.output = { ...environmentOutput.output, ...environment.output };
+                        processEnvironment.output = { ...processEnvironment.output, ...environment.output };
                     }
                 },
                 { noAck: true, consumerTag: '_camunda_io' },
