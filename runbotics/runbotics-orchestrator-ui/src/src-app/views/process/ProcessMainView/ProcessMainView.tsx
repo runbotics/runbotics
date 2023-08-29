@@ -55,34 +55,30 @@ const ProcessMainView: FC = () => {
     return (
         <ProcessInternalPage title={translate('Process.MainView.Meta.Title')} fullWidth>
             <Grid container>
-                <Grid item xs={3} mb={1} mt={1} ml={1}>
-                    {isGuest
-                        ? (
-                            <TutorialBlogPost ml={2} variant="h5" color="textPrimary">
-                                <TutorialLink href="/blog/post/runbotics-tutorial" target="blank">
-                                    {translate('Process.MainView.Link.RunBoticsTutorial')}
-                                </TutorialLink>
-                            </TutorialBlogPost>
-                        ) : (
-                            <Tabs
-                                onChange={(_, processTab) => handleMainTabsChange(processTab)}
-                                scrollButtons="auto"
-                                textColor="secondary"
-                                value={tab}
-                                variant="scrollable"
-                            >
-                                {processTabs.length > 1 && processTabs.map((processTab) => (
-                                    <Tab
-                                        key={processTab.value}
-                                        label={processTab.label}
-                                        value={processTab.value}
-                                    />
-                                ))}
-                            </Tabs>
-                        )
-                    }
+                <Grid item my={1} ml={1} display={'flex'} gap={2}>
+                    <Tabs
+                        onChange={(_, processTab) => handleMainTabsChange(processTab)}
+                        scrollButtons="auto"
+                        textColor="secondary"
+                        value={tab}
+                        variant="scrollable"
+                    >
+                        {processTabs.length > 1 && processTabs.map((processTab) => (
+                            <Tab
+                                key={processTab.value}
+                                label={processTab.label}
+                                value={processTab.value}
+                            />
+                        ))}
+                    </Tabs>
+                    {isGuest &&
+                        <TutorialBlogPost variant="h5" color="textPrimary">
+                            <TutorialLink href="/blog/post/runbotics-tutorial" target="blank">
+                                {translate('Process.MainView.Link.RunBoticsTutorial')}
+                            </TutorialLink>
+                        </TutorialBlogPost>}
                 </Grid>
-                <Grid item xs={6} mb={1} mt={1}>
+                <Grid item xs={true} mb={1} mt={1}>
                     <ProcessTitle variant="h3" color="textPrimary">
                         {process.name}
                     </ProcessTitle>
