@@ -80,7 +80,7 @@
     "Process.Details.Modeler.ActionListPanel.Search.Label": "Search",
     "Process.Details.Modeler.ActionListPanel.Filter.Label": "Filter by groups",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Clear filters",
-    "Process.Details.Modeler.ActionListPanel.NotAvailable": "This action is not available",
+    "Process.Details.Modeler.ActionListPanel.NotAvailable": "This action is not available for guests",
     "Process.Details.Modeler.Actions.Bpmn.ExclusiveGateway.Label": "Exclusive Gateway",
     "Process.Details.Modeler.Actions.Bpmn.StartEvent.Label": "Start Event",
     "Process.Details.Modeler.Actions.Bpmn.EndEvent.Label": "End Event",

@@ -82,7 +82,7 @@
     "Process.Details.Modeler.ActionListPanel.Error": "Nie można obsłużyć akcji",
     "Process.Details.Modeler.ActionListPanel.Filter.Clear": "Wyczyść filtry",
     "Process.Details.Modeler.ActionListPanel.Filter.Label": "Filtruj według grup",
-    "Process.Details.Modeler.ActionListPanel.NotAvailable": "Ta akcja jest nie dostepna",
+    "Process.Details.Modeler.ActionListPanel.NotAvailable": "Ta akcja jest nie dostepna dla gości",
     "Process.Details.Modeler.Actions.Bpmn.ExclusiveGateway.Label": "Bramka logiczna",
     "Process.Details.Modeler.Actions.Bpmn.StartEvent.Label": "Zdarzenie początkowe",
     "Process.Details.Modeler.Actions.Bpmn.EndEvent.Label": "Zdarzenie końcowe",
