@@ -63,7 +63,7 @@ export function Camunda(activity, processEnvironment) {
                 activity.environment.output[ activity.behaviour.resultVariable ] = api.content.output;
             });
         }
-        // store output variables in scope of single process
+        // stores output variables in the scope of a single process
         if (processEnvironment.output) {
             environment.output = { ...processEnvironment.output };
         }

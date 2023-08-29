@@ -411,7 +411,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             };
         };
 
-        // passed to Camunda, helps to store output variables in scope of single process
+        // passed to Camunda, helps store output variables in the scope of a single process
         const processEnvironment = {};
 
         const engine = Engine({
