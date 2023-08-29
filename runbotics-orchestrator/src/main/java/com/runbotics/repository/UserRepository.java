@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -46,5 +47,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
 
-    Optional<User> findOneByEmailOrLogin(String email, String login);
+    @Query(
+        "SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)"
+    )
+    Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
 }

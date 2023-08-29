@@ -13,7 +13,23 @@ import useTranslations from './useTranslations';
 
 const DEBOUNCE_TIME = 250;
 
-const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) => {
+interface UseUserSearchProps {
+    isActivatedUsersOnly?: boolean;
+    pageSize?: number;
+    page?: number;
+}
+
+const useUserSearchDefault = {
+    isActivatedUsersOnly: false,
+    pageSize: 10,
+    page: 0
+};
+
+const useUserSearch = ({
+    isActivatedUsersOnly,
+    pageSize,
+    page
+}: UseUserSearchProps = { ...useUserSearchDefault }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const router = useRouter();
@@ -28,7 +44,15 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
     useEffect(() => {
         const newPage = search !== '' ? 0 : page;
 
-        router.replace({ pathname: router.pathname, query: { page: newPage, pageSize, search } });
+        router.replace({
+            pathname: router.pathname,
+            query: {
+                page: newPage,
+                pageSize,
+                ...(search && { search })
+            }
+        });
+
         if (!isActivatedUsersOnly) {
             dispatch(
                 usersActions.getAllNotActivatedByPage({
@@ -67,9 +91,8 @@ const useUserSearch = (isActivatedUsersOnly: boolean, pageSize = 10, page = 0) =
         if (search !== event.target.value) setSearch(event.target.value);
     };
 
-    const refreshSearch = () => {
+    const refreshSearch = () =>
         setRefreshTrigger(!refreshTrigger);
-    };
 
     return {
         search,

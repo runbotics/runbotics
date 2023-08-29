@@ -3,12 +3,14 @@ import React, { FC, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import { IUser } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersSelector } from '#src-app/store/slices/Users';
 
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
+import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
 import { StyledActionsContainer, StyledTextField } from './UsersListView.styles';
 
@@ -27,7 +29,23 @@ const UsersListView: FC = () => {
     );
 
     const { activated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch } = useUserSearch(true, limit, page);
+    const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch({
+        isActivatedUsersOnly: true,
+        pageSize: limit,
+        page
+    });
+
+    const [userData, setUserData] = useState<IUser>();
+    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+
+    const handleOpenEditDialog = (rowData) => {
+        setIsEditDialogVisible(true);
+        setUserData(rowData);
+    };
+
+    const handleCloseEditDialog = () => {
+        setIsEditDialogVisible(false);
+    };
 
     useEffect(() => {
         const isPageNotAvailable = activated.allByPage?.totalPages && page >= activated.allByPage?.totalPages;
@@ -40,12 +58,17 @@ const UsersListView: FC = () => {
     }, [activated.allByPage]);
 
     useEffect(() => {
-        refreshSearch();
+        refreshSearchActivated();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <>
+            <UsersListEditDialog
+                open={isEditDialogVisible}
+                onClose={handleCloseEditDialog}
+                userData={userData}
+            />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
@@ -60,6 +83,7 @@ const UsersListView: FC = () => {
                 onPageChange={setPage}
                 pageSize={limit}
                 onPageSizeChange={setLimit}
+                openUserEditDialog={handleOpenEditDialog}
             />
         </>
     );
