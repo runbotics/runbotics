@@ -2,7 +2,7 @@ import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, RegexPatterns, Runner } from '../types';
+import { ActionSystem, IBpmnAction, RegexPattern, Runner } from '../types';
 
 const getActionGetCells = (): IBpmnAction => ({
     id: ExcelAction.GET_CELLS,
@@ -46,7 +46,7 @@ const getActionGetCells = (): IBpmnAction => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                            pattern: RegexPatterns.VARIABLE_NAME,
+                            pattern: RegexPattern.VARIABLE_NAME,
                         }
                     },
                 },

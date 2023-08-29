@@ -39,8 +39,7 @@ const LoopActionRenderer: FC = () => {
     );
 
     const isLoopElement = (element: unknown): element is BpmnSubProcess =>
-        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !==
-        undefined;
+        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !== undefined;
 
     const CUSTOM_FORMATS = { variableName: VARIABLE_NAME_PATTERN };
 
@@ -59,8 +58,7 @@ const LoopActionRenderer: FC = () => {
 
         if (
             parseInt(
-                selectedElement.businessObject.loopCharacteristics
-                    ?.loopCardinality?.body
+                selectedElement.businessObject.loopCharacteristics?.loopCardinality?.body
             )
         ) {
             defaultParameters.input.iterations =

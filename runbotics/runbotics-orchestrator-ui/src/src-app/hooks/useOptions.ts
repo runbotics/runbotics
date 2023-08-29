@@ -1,21 +1,16 @@
-/* eslint-disable max-lines-per-function */
-import React, { FC } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { WidgetProps } from '@rjsf/core';
-
-import styled from 'styled-components';
-
-import If from '#src-app/components/utils/If';
-import useProcessVariables from '#src-app/hooks/useProcessVariables';
-import { ActionVariableObject } from '#src-app/hooks/useProcessVariables.types';
 import useTranslations, {
     translate as t,
 } from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 
-import AutocompleteWidget from './AutocompleteWidget';
-import InfoButtonTooltip from './components/InfoButtonTooltip';
+import { processActions } from '#src-app/store/slices/Process';
+
+import useProcessVariables from './useProcessVariables';
+
+import { ActionVariableObject } from './useProcessVariables.types';
 
 const SERVICES = [
     'environment.services.idt',
@@ -65,13 +60,7 @@ const SERVICES = [
     'environment.services.diffMaps',
     'environment.services.objFromArray',
     'environment.services.readFromStorage',
-].map((service) => ({
-    value: `\${${service}}`,
-    label: `\${${service}}`,
-    group: t(
-        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services'
-    ),
-}));
+];
 
 const UTILS = [
     'false',
@@ -79,18 +68,32 @@ const UTILS = [
     'content.output',
     'environment',
     'environment.output',
-].map((util) => ({
+];
+
+const VARIABLES = [
+    'tempFolder',
+    'userEmail'
+];
+
+const SERVICES_MAPPED = SERVICES.map((service) => ({
+    value: `\${${service}}`,
+    label: `\${${service}}`,
+    name: service,
+    group: t(
+        'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Services'
+    ),
+}));
+
+const UTILS_MAPPED = UTILS.map((util) => ({
     value: `\${${util}}`,
     label: `\${${util}}`,
+    name: util,
     group: t(
         'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
     ),
 }));
 
-const VARIABLES = [
-    'tempFolder',
-    'userEmail',
-].map(variable => ({
+const VARIABLES_MAPPED = VARIABLES.map((variable) => ({
     label: variable,
     value: variable,
     group: t(
@@ -105,23 +108,30 @@ const reduceList = (list: any[]) =>
         return newPrev;
     }, {});
 
-interface ElementAwareAutocompleteProps extends WidgetProps {
-    options: {
-        info?: string;
+export interface Options {
+    [key: string]: {
+        label: string;
+        value: string;
+        group: string;
+        name: string;
+        actionId?: string;
     };
-    customErrors?: string[];
 }
 
-const AutocompleteWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    align-items: center;
-`;
+export interface Variable {
+    name: string;
+    actionId?: string;
+}
 
-const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
-    props
-) => {
-    const { selectedElement } = useSelector((state) => state.process.modeler);
+// eslint-disable-next-line max-lines-per-function
+const useOptions = () => {
+    const dispatch = useDispatch();
+    const {
+        selectedElement,
+        customValidationErrors,
+        options: prevOptions,
+        variables: prevVariables,
+    } = useSelector((state) => state.process.modeler);
     const { translate } = useTranslations();
     const {
         globalVariables,
@@ -129,6 +139,7 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         outputActionVariables,
         attendedVariables,
         loopVariables: scopedLoopVariables,
+        allActionVariables,
     } = useProcessVariables(selectedElement?.parent?.id);
 
     const attendedProcessVariables = attendedVariables.map((variable) => ({
@@ -143,6 +154,8 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         const outputs = outputVariables.map((outputVariable) => ({
             label: outputVariable.name,
             value: outputVariable.name,
+            name: outputVariable.name,
+            ...(outputVariable?.actionId && { actionId: outputVariable?.actionId }),
             group: translate(
                 'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Outputs'
             ),
@@ -167,9 +180,15 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
     const groupedLocalVariables = inputActionVariables.map((variable) => ({
         label: variable.name,
         value: variable.name,
+        ...(variable?.actionId && { actionId: variable?.actionId }),
         group: translate(
             'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
-        ) 
+        ),
+    }));
+
+    const allLocalVariables = allActionVariables.map((variable) => ({
+        value: variable.name,
+        ...(variable?.actionId && { actionId: variable?.actionId }),
     }));
 
     const groupedLoopVariables = scopedLoopVariables.map((variable) => ({
@@ -188,70 +207,82 @@ const ElementAwareAutocompleteWidget: FC<ElementAwareAutocompleteProps> = (
         ),
     }));
 
-    const options: Record<string, { label: string; value: any; group: any }> =
-        React.useMemo(() => {
-            let result = [];
+    const options: Options = useMemo(() => {
+        let result = [];
 
-            const defaultOptions = [...SERVICES, ...UTILS];
-            result = [...defaultOptions, ...result];
+        const defaultOptions = [...SERVICES_MAPPED, ...UTILS_MAPPED];
+        result = [...defaultOptions, ...result];
 
-            const variables = [
-                ...groupedLocalVariables,
-                ...groupedGlobalVariables,
-                ...attendedProcessVariables,
-                ...VARIABLES,
-            ];
+        const variables = [
+            ...groupedLocalVariables,
+            ...groupedGlobalVariables,
+            ...attendedProcessVariables,
+            ...VARIABLES_MAPPED,
+        ];
 
-            const dollarVariables = variables.map((option) => ({
-                ...option,
-                label: `\${environment.variables.${option.value}}`,
-                value: `\${environment.variables.${option.value}}`,
-            }));
+        const dollarVariables = variables.map((option) => ({
+            ...option,
+            label: `\${environment.variables.${option.value}}`,
+            value: `\${environment.variables.${option.value}}`,
+            name: option.value,
+        }));
 
-            const hashVariables = variables.map((option) => ({
-                ...option,
-                label: `#{${option.value}}`,
-                value: `#{${option.value}}`,
-            }));
+        const hashVariables = variables.map((option) => ({
+            ...option,
+            label: `#{${option.value}}`,
+            value: `#{${option.value}}`,
+            name: option.value,
+        }));
 
-            const loopVariables = groupedLoopVariables.map((option) => ({
-                ...option,
-                label: `\${${option.value}}`,
-                value: `\${${option.value}}`,
-            }));
+        const loopVariables = groupedLoopVariables.map((option) => ({
+            ...option,
+            label: `\${${option.value}}`,
+            value: `\${${option.value}}`,
+            name: option.value,
+        }));
 
-            result = [
-                ...dollarVariables,
-                ...hashVariables,
-                ...outputVariables,
-                ...result,
-                ...loopVariables,
-            ];
+        result = [
+            ...dollarVariables,
+            ...hashVariables,
+            ...outputVariables,
+            ...result,
+            ...loopVariables,
+        ];
 
-            return reduceList(result);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectedElement]);
+        return reduceList(result);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedElement]);
 
-    const optionValues = React.useMemo(
-        () => ({
-            'ui:options': Object.values(options).map((option) => option.value),
-        }),
-        [options]
-    );
+    const variables = useMemo<Variable[]>(() => {
+        const defaultVars = [
+            ...VARIABLES,
+            ...SERVICES,
+            ...UTILS
+        ].map(variable => ({name: variable}));
 
-    return (
-        <AutocompleteWrapper>
-            <AutocompleteWidget
-                {...props}
-                value={props.value}
-                groupBy={(option) => options[option].group}
-                options={optionValues}
-            />
-            <If condition={Boolean(props.options?.info)}>
-                <InfoButtonTooltip message={props.options?.info} />
-            </If>
-        </AutocompleteWrapper>
-    );
+        const vars = [
+            ...allLocalVariables,
+            ...groupedGlobalVariables,
+            ...attendedProcessVariables,
+        ].map(variable => ({
+            name: variable.value,
+            ...('actionId' in variable && { actionId: variable?.actionId }),
+        }));
+
+        return [...vars, ...defaultVars];
+    }, [selectedElement]);
+
+    useEffect(() => {
+        if (customValidationErrors.length === 0) {
+            dispatch(processActions.setOptions(options));
+            dispatch(processActions.setVariables(variables));
+        }
+    }, [options]);
+
+    return {
+        options: prevOptions ?? options,
+        variables: prevVariables ?? variables,
+    };
 };
 
-export default ElementAwareAutocompleteWidget;
+export default useOptions;

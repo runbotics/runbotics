@@ -19,7 +19,7 @@ export enum CloudPath {
     SITE = 'site',
 }
 
-export enum RegexPatterns {
+export enum RegexPattern {
     VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
 }

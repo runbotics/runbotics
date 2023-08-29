@@ -29,6 +29,7 @@ export const isModelerSync = ({
     imported,
     commandStack,
     errors,
+    customValidationErrors,
 }: ModelerSyncParams) => {
     if (!modeler) return false;
     const { _elements } = modeler.get('elementRegistry');
@@ -37,13 +38,14 @@ export const isModelerSync = ({
         _.sortBy(modelerActivities),
         _.sortBy(appliedActivities)
     );
-    if (imported && errors.length === 0) {
+    if (imported && errors.length === 0 && customValidationErrors.length === 0) {
         return true;
     }
     return (
         areActivitiesMatched &&
         commandStack.commandStackIdx >= 0 &&
-        errors.length === 0
+        errors.length === 0 &&
+        customValidationErrors.length === 0
     );
 };
 

@@ -76,6 +76,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             appliedActivities,
             errors,
             imported,
+            customValidationErrors,
         } = useSelector((state) => state.process.modeler);
 
         useNavigationLock(
@@ -116,6 +117,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         modeler,
                         commandStack,
                         errors,
+                        customValidationErrors,
                         imported,
                     })
                 )
@@ -128,6 +130,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             commandStack.commandStackSize,
             imported,
             selectedElement,
+            customValidationErrors,
+            errors,
         ]);
 
         useImperativeHandle(

@@ -6,7 +6,7 @@ import { WidgetProps } from '@rjsf/core';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import ElementAwareAutocompleteWidget from '../ElementAwareAutocompleteWidget';
+import CustomTextWidget from '../CustomTextWidget';
 import { FieldsWrapper } from './BrowserTarget.styles';
 import { BrowserTargetState } from './BrowserTarget.types';
 import { initialFormState, PREFIX_WIDTH } from './BrowserTarget.utils';
@@ -90,7 +90,7 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
                 value={formState.prefix}>
                 {prefixOptions}
             </Select>
-            <ElementAwareAutocompleteWidget
+            <CustomTextWidget
                 {...props}
                 sx={{ flexGrow: 1 }}
                 options={{info: PREFIX_OPTIONS[formState.prefix]?.tooltip}}

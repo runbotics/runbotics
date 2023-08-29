@@ -5,17 +5,22 @@ import { TextField, Autocomplete } from '@mui/material';
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
 const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
+    disabled,
+    autocompleteOptions,
+    required,
+    label,
+    value,
     customErrors,
     rawErrors,
-    label,
-    required,
-    value,
-    disabled,
-    options,
-    groupBy,
-    onChange,
+    onChange
 }) => {
     const [open, setOpen] = useState(false);
+    const optionValues = React.useMemo(
+        () => ({
+            'ui:options': Object.values(autocompleteOptions).map((option) => option.value),
+        }),
+        [autocompleteOptions]
+    );
 
     const handleInputChange = (event: any, newInputValue: string) => {
         if (
@@ -49,18 +54,16 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
             onChange={handleChange}
             onClose={handleOnClose}
             disabled={disabled}
-            groupBy={groupBy}
+            groupBy={(option) => autocompleteOptions[option].group}
             onInputChange={handleInputChange}
-            options={options['ui:options'] as any[]}
+            options={optionValues['ui:options'] as any[]}
             renderInput={(params) => (
                 <TextField
                     {...params}
                     variant="outlined"
                     required={required}
                     label={label}
-                    onChange={(event) =>
-                        handleChange(event, event.target.value)
-                    }
+                    onChange={(event) => handleChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
