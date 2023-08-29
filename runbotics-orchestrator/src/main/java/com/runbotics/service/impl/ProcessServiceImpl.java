@@ -84,7 +84,7 @@ public class ProcessServiceImpl implements ProcessService {
                 throw new BadRequestAlertException("Tag limit of 15 exceeded", ENTITY_NAME, "tooManyTags");
             }
 
-            Set<Tag> tags = tagService.filteredTags(processDTO.getTags());
+            Set<Tag> tags = tagService.filterTags(processDTO.getTags());
             process.setTags(tags);
         }
 
