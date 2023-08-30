@@ -2,6 +2,7 @@ require('@nut-tree/template-matcher');
 import fs from 'fs';
 import path from 'path';
 import { StatelessActionHandler } from 'runbotics-sdk';
+import { TEMP_DIRECTORY_NAME } from 'runbotics-common';
 import { RunboticsLogger } from '#logger';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
@@ -27,8 +28,8 @@ import {
     DesktopClickActionInput, 
     DesktopTypeActionInput,
     DesktopCopyActionInput,
-    DesktopSelectWithCursorActionInput,
-    DesktopReadContentFromClipboardActionOutput,
+    DesktopCursorSelectActionInput,
+    DesktopReadClipboardContentActionOutput,
     DesktopFindScreenRegionActionInput,
     DesktopWaitForScreenRegionActionInput,
     DesktopTakeScreenshotActionInput,
@@ -36,10 +37,13 @@ import {
     DesktopReadTextFromImageActionInput,
     DesktopReadTextFromImageActionOutput,
     ClickTarget,
-    Coordinate,
     MouseButton,
-    RegionObj
+    PointObj,
+    RegionObj,
+    KEY_REFERENCE,
+    OCR_CONFIDENCE
 } from './types';
+
 
 
 export default class DesktopActionHandler extends StatelessActionHandler {
@@ -52,24 +56,25 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     private readonly keyboardConfig: KeyboardConfig = {
         autoDelayMs: 50,
     };
-    // screen config -> configure directory for imageResource
     
     constructor() {
         super();
         mouse.config = this.mouseConfig;
         keyboard.config = this.keyboardConfig;
+        screen.config.confidence = OCR_CONFIDENCE;
     }
 
     async click(input: DesktopClickActionInput): Promise<void> {
         const button: Button = input.mouseButton === MouseButton.LEFT ? Button.LEFT : Button.RIGHT;
         
         if (input.clickTarget === ClickTarget.POINT) {
-            this.checkPoint(input.x, input.y);
-            this.moveMouseToPoint(input.x, input.y);
+            const point = input.point;
+            this.checkPoint(point);
+            this.moveMouseToPoint(point);
         } else {
             const region = input.region;
             this.checkRegion(region);
-            await this.moveMouseToRegion(+region.left, +region.top, +region.width, +region.height);
+            await this.moveMouseToRegion(region);
         }
         
         if (input.doubleClick) {
@@ -81,7 +86,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async type(input: DesktopTypeActionInput): Promise<void> {
         const optionalKey = input.text.substring(4); 
-        if (input.text.startsWith('Key.') && Object.keys(Key).includes(optionalKey)) {
+        if (input.text.startsWith(KEY_REFERENCE) && Object.keys(Key).includes(optionalKey)) {
             await keyboard.type(Key[optionalKey]);
         } else {
             await keyboard.type(input.text);
@@ -98,103 +103,98 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     async paste(): Promise<void> {
-        const content = await clipboard.getContent();
-        await keyboard.type(content);
+        const superKey: Key = this.getSuperKey();
+        await this.performKeyboardShortcut([superKey, Key.V]);
     }
 
-    async selectWithCursor(input: DesktopSelectWithCursorActionInput): Promise<void> {
-        this.checkPoint(input.startX, input.startY);
-        this.checkPoint(input.endX, input.endY);
-        await this.moveMouseToPoint(input.startX, input.startY);
+    async cursorSelect(input: DesktopCursorSelectActionInput): Promise<void> {
+        this.checkPoint(input.startPoint);
+        this.checkPoint(input.endPoint);
+        await this.moveMouseToPoint(input.startPoint);
         await mouse.pressButton(Button.LEFT);
-        await this.moveMouseToPoint(input.endX, input.endY);
+        await this.moveMouseToPoint(input.endPoint);
         await mouse.releaseButton(Button.LEFT);
     }
 
-    async readContentFromClipboard(): Promise<DesktopReadContentFromClipboardActionOutput> {
-        const content = await clipboard.getContent();
-        return content;
+    async readClipboardContent(): Promise<DesktopReadClipboardContentActionOutput> {
+        try {
+            const content = await clipboard.getContent();
+            return content;
+        } catch (error) {
+            throw new Error('Non-text clipboard content is not supported')
+        }
+        
     }
 
     async takeScreenshot(input: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
         // prevents from taking screenshot too fast
-        await sleep(2000);
-        const region = input?.region;
-        const fileName = input?.fileName ?? uuidv4();
-        const filePath = input?.filePath ?? path.join(process.cwd(), 'temp');
-        let imagePath: string;
+        await sleep(500);
+
+        const { imagePath, region, imageName, imageFormat } = input;
+        const fileName = imageName ?? uuidv4();
+        let filePath: string;
+
+        if (imagePath) {
+            filePath = path.normalize(imagePath);
+            this.checkIfFilePathExists(filePath);
+        } else {
+            filePath = path.join(process.cwd(), TEMP_DIRECTORY_NAME);
+        }
 
         if (region) {
             this.checkRegion(region);
-            const newRegion = new Region(+region.left, +region.top, +region.width, +region.height);
-            imagePath = await screen.captureRegion(fileName, newRegion, FileType[input.fileFormat], filePath);
+            const newRegion = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
+            return await screen.captureRegion(fileName, newRegion, FileType[imageFormat], filePath);
         } else {
-            imagePath = await screen.capture(fileName, FileType[input.fileFormat], filePath);
+            return await screen.capture(fileName, FileType[input.imageFormat], filePath);
         }
-        return imagePath;
     }
 
     async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionObj> {
-        const image = input.imagePath;
-        this.checkImageExtension(image);
+        const image = path.normalize(input.imageFullPath);
+        this.checkIfFilePathExists(image);
 
-        try {
-            const resource = await imageResource(image);
-            const region = await screen.find(resource); //optional param?
-            return this.toRegionObj(region);
-        } catch (error) {
-            throw new Error(error);
-        }
+        const { filePath, fileName } = this.getFilePathElements(image);
+        screen.config.resourceDirectory = filePath;
+
+        const resource = await imageResource(fileName);
+        const region = await screen.find(resource);
+        return this.toRegionObj(region);
     }
 
     async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionObj> {
-        const image = input.imagePath;
-        this.checkImageExtension(image);
+        const image = path.normalize(input.imageFullPath);
+        this.checkIfFilePathExists(image);
 
-        try {
-            const resource = await imageResource(image);
-            const region = await screen.waitFor(resource, 5000);
-            return this.toRegionObj(region);
-        } catch (error) {
-            throw new Error(error);
-        }
+        const { filePath, fileName } = this.getFilePathElements(image);
+        screen.config.resourceDirectory = filePath;
+
+        const resource = await imageResource(fileName);
+        const region = await screen.waitFor(resource, 5000);
+        return this.toRegionObj(region);
     }
 
     async readTextFromImage(input: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
+        let worker: any;
         try {
-            const imageBuffer = fs.readFileSync(input.imagePath);
+            const { imageFullPath, language } = input;
+            this.checkIfFilePathExists(imageFullPath);
+            const imageBuffer = fs.readFileSync(imageFullPath);
 
-            const worker = await createWorker();
-            await worker.loadLanguage(input.language);
-            await worker.initialize(input.language);
-    
+            worker = await createWorker();
+            await worker.loadLanguage(language);
+            await worker.initialize(language);
             const { data: { text } } = await worker.recognize(imageBuffer);
-            await worker.terminate();
 
             return text;
         } catch (error) {
-            throw new Error(error);
+            throw new Error('An error occurred during the OCR process. ' + error);
+        } finally {
+            if (worker) {
+                await worker.terminate();
+            }
         }
     }
-
-    // async readCursorSelection(input: DesktopReadCursorSelectionActionInput): Promise<DesktopReadCursorSelectionActionOutput> {
-    //     this.checkPoint(input.startFirstCoordinate, input.startSecondCoordinate);
-    //     this.checkPoint(input.endFirstCoordinate, input.endSecondCoordinate);
-
-    //     await this.moveMouse(input.startFirstCoordinate, input.startSecondCoordinate);
-    //     await mouse.pressButton(Button.LEFT);
-    //     await this.moveMouse(input.endFirstCoordinate, input.endSecondCoordinate);
-    //     await mouse.releaseButton(Button.LEFT);
-    //     if (this.system === 'darwin') {
-    //         await keyboard.pressKey(Key.LeftCmd, Key.C);
-    //         await keyboard.releaseKey(Key.LeftCmd, Key.C);
-    //     } else {
-    //         await keyboard.pressKey(Key.LeftControl, Key.C);
-    //         await keyboard.releaseKey(Key.LeftControl, Key.C);
-    //     }
-    //     const content = await clipboard.getContent();
-    //     return content;
-    // }
 
     async maximizeActiveWindow(): Promise<void> {
         if (this.system === 'win32') {
@@ -211,13 +211,13 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private async moveMouseToPoint(x: Coordinate, y: Coordinate) {
-        const destination = new Point(+x, +y);
+    private async moveMouseToPoint(point: PointObj) {
+        const destination = new Point(Number(point.x), Number(point.y));
         await mouse.move(straightTo(destination));
     }
 
-    private async moveMouseToRegion(left: Coordinate, top: Coordinate, width: Coordinate, height: Coordinate) {
-        const destination = new Region(+left, +top, +width, +height);
+    private async moveMouseToRegion(region: RegionObj) {
+        const destination = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
         await mouse.move(straightTo(centerOf(destination)));
     }
 
@@ -230,9 +230,17 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         return this.system === 'darwin' ? Key.LeftCmd : Key.LeftControl;
     }
 
-    private checkPoint(x: Coordinate, y: Coordinate) {
-        if (isNaN(+x) || isNaN(+y)) {
-            throw new Error('Destination coordinates must be of number type');
+    private checkPoint(point: any) {
+        if (typeof point !== 'object') {
+            throw new Error('Point must be of object type and its coordinates (x, y) must be numeric.');
+        }
+
+        const testPoint = new Point(0, 0);
+        const pointKeys = Object.keys(testPoint);
+        for (const key of pointKeys) {
+            if (!(key in point) || isNaN(point[key])) {
+                throw new Error('Point coordinates (x, y) must be numeric.');
+            }
         }
     }
 
@@ -250,11 +258,19 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private checkImageExtension(image: string) {
-        const extension = image.substring(image.length - 4);
-        if (extension !== FileType.JPG && extension !== FileType.PNG) {
-            throw new Error('Unsuporrted image format');
+    private checkIfFilePathExists(filePath: string) {
+        if (!fs.existsSync(filePath)) {
+            throw new Error('Provided path does not exist');
         }
+    }
+
+    private getFilePathElements(filePath: string): { filePath: string; fileName: string, fileExtension: string } {
+        const parsedPath = path.parse(filePath);
+        return {
+            filePath: parsedPath.dir,
+            fileName: parsedPath.name + parsedPath.ext,
+            fileExtension: parsedPath.ext
+        };
     }
 
     private toRegionObj(region: Region): RegionObj {
@@ -271,10 +287,10 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 return this.copy(request.input);
             case 'desktop.paste':
                 return this.paste();
-            case 'desktop.selectWithCursor':
-                return this.selectWithCursor(request.input);
-            case 'desktop.readContentFromClipboard':
-                return this.readContentFromClipboard();
+            case 'desktop.cursorSelect':
+                return this.cursorSelect(request.input);
+            case 'desktop.readClipboardContent':
+                return this.readClipboardContent();
             case 'desktop.maximizeActiveWindow':
                 return this.maximizeActiveWindow();
             case 'desktop.findScreenRegion':
