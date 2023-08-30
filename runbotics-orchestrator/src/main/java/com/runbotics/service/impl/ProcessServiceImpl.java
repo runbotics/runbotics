@@ -88,10 +88,12 @@ public class ProcessServiceImpl implements ProcessService {
             process.setTags(tags);
         }
 
-        process = processRepository.save(process);
         if (processDTO.getId() != null) {
             List<Long> remainingTags = tagService.checkTagsToDelete(processDTO);
+            process = processRepository.save(process);
             tagService.deleteUnusedTags(remainingTags);
+        } else {
+            process = processRepository.save(process);
         }
         return processMapper.toDto(process);
     }
