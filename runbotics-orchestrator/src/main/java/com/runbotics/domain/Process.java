@@ -2,9 +2,12 @@ package com.runbotics.domain;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
 /**
@@ -76,6 +79,15 @@ public class Process implements Serializable {
     @ManyToOne
     @JoinColumn(name = "bot_collection")
     private BotCollection botCollection;
+
+    @ManyToMany
+    @JoinTable(
+        name = "tag_process",
+        joinColumns = { @JoinColumn(name = "process_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "tag_id", referencedColumnName = "id") }
+    )
+    @BatchSize(size = 20)
+    private Set<Tag> tags = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -293,6 +305,14 @@ public class Process implements Serializable {
         this.schedules = schedules;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -334,6 +354,7 @@ public class Process implements Serializable {
             ", system=" + system +
             ", schedules=" + schedules +
             ", botCollection=" + botCollection +
+            ", tags=" + tags +
             '}';
     }
 }

@@ -1,0 +1,78 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <!-- Tables -->
+    <changeSet author="gasiorowskaa" id="1692626274771-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="tag"/>
+            </not>
+        </preConditions>
+        <createTable tableName="tag">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tag_PK"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="tag_un"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="1692626274771-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="tag_process"/>
+            </not>
+        </preConditions>
+        <createTable tableName="tag_process">
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="process_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Foreign keys -->
+    <changeSet author="gasiorowskaa" id="1692626274771-3">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="tag_process" columnName="tag_id"/>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="fk_tag_id"/>
+                </not>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint
+            baseColumnNames="tag_id"
+            baseTableName="tag_process"
+            constraintName="fk_tag_id"
+            deferrable="false"
+            initiallyDeferred="false"
+            referencedColumnNames="id"
+            referencedTableName="tag"
+            validate="true"
+        />
+    </changeSet>
+    <changeSet author="gasiorowskaa" id="1692626274771-4">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="tag_process" columnName="process_id"/>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="fk_process_id"/>
+                </not>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint
+            baseColumnNames="process_id"
+            baseTableName="tag_process"
+            constraintName="fk_process_id"
+            deferrable="false"
+            initiallyDeferred="false"
+            referencedColumnNames="id"
+            referencedTableName="process"
+            validate="true"
+        />
+    </changeSet>
+</databaseChangeLog>
