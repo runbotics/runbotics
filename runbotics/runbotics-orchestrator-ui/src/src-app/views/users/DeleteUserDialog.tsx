@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from 'runbotics-common';
 import styled from 'styled-components';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
@@ -37,12 +38,14 @@ const StyledButton = styled(Button)`
 interface DeleteUserDialogProps {
     open?: boolean;
     onClose: () => void;
+    onDelete?: () => void;
     getSelectedUsers: () => IUser[];
 }
 
 const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     open,
     onClose,
+    onDelete,
     getSelectedUsers
 }) => {
     const { translate } = useTranslations();
@@ -50,7 +53,8 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const dispatch = useDispatch();
 
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch } = useUserSearch(false);
+    const { refreshSearch: refreshSearchNotActivated } = useUserSearch();
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {
@@ -62,12 +66,23 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             )
             .then(() => {
                 onClose();
-                enqueueSnackbar(translate('Users.Actions.Modals.DeleteModal.Success'), { variant: 'success' });
-                refreshSearch();
+                onDelete?.();
+                enqueueSnackbar(
+                    translate('Users.Actions.Modals.DeleteModal.Success'),
+                    { variant: 'success' }
+                );
+
+                usersData[0].activated
+                    ? refreshSearchActivated()
+                    : refreshSearchNotActivated();
             })
             .catch(() => {
                 onClose();
-                enqueueSnackbar(translate('Users.Actions.Modals.DeleteModal.Error'), { variant: 'error' });
+                onDelete?.();
+                enqueueSnackbar(
+                    translate('Users.Actions.Modals.DeleteModal.Error'),
+                    { variant: 'error' }
+                );
             });
     };
 
@@ -75,44 +90,44 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     useEffect(() => { open && setUsersData(getSelectedUsers); }, [open]);
 
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            onClick={(e) => e.stopPropagation()}
-            fullWidth
-            maxWidth="md"
-        >
-            <DialogContent>
-                <Typography variant='h4'>
-                    {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
-                </Typography>
-                <StyledList>
-                    {usersData.map((user) => (
-                        <Typography key={user.id}>
-                            <ListItem sx={{ display: 'list-item' }}>
-                                {user.email}
-                            </ListItem>
-                        </Typography>
-                    ))}
-                </StyledList>
-            </DialogContent>
-            <DialogActions>
-                <StyledButton
-                    color='primary'
-                    onClick={onClose}
-                    disabled={userDelete.loading}
-                >
-                    {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
-                </StyledButton>
-                <LoadingButton
-                    variant='contained'
-                    loading={userDelete.loading}
-                    onClick={handleSubmit}
-                >
-                    {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
-                </LoadingButton>
-            </DialogActions>
-        </Dialog>
+        <If condition={open}>
+            <Dialog
+                open
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogContent>
+                    <Typography variant='h4'>
+                        {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
+                    </Typography>
+                    <StyledList>
+                        {usersData.map((user) => (
+                            <Typography key={user.id}>
+                                <ListItem sx={{ display: 'list-item' }}>
+                                    {user.email}
+                                </ListItem>
+                            </Typography>
+                        ))}
+                    </StyledList>
+                </DialogContent>
+                <DialogActions>
+                    <StyledButton
+                        color='primary'
+                        onClick={onClose}
+                        disabled={userDelete.loading}
+                    >
+                        {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
+                    </StyledButton>
+                    <LoadingButton
+                        variant='contained'
+                        loading={userDelete.loading}
+                        onClick={handleSubmit}
+                    >
+                        {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
+                    </LoadingButton>
+                </DialogActions>
+            </Dialog>
+        </If>
     );
 };
 

@@ -16,6 +16,7 @@ interface UsersListTableProps {
     onPageChange: (page: number) => void;
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
+    openUserEditDialog: (row) => void;
 }
 
 const UsersListTable: FC<UsersListTableProps> = ({
@@ -23,6 +24,7 @@ const UsersListTable: FC<UsersListTableProps> = ({
     onPageChange,
     pageSize,
     onPageSizeChange,
+    openUserEditDialog
 }) => {
     const usersListColumns = useUsersListColumns();
     const { activated } = useSelector(usersSelector);
@@ -44,6 +46,7 @@ const UsersListTable: FC<UsersListTableProps> = ({
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
                         disableSelectionOnClick
+                        onRowClick={({ row }) => openUserEditDialog(row)}
                         paginationMode='server'
                         rowsPerPageOptions={ROWS_PER_PAGE}
                         localeText={{

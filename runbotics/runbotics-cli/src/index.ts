@@ -2,6 +2,7 @@
 
 import chalk from 'chalk';
 import { Argument, program } from 'commander';
+import { version as packageVersion } from '../package.json';
 
 import version from './commands/version';
 import run from './commands/run';
@@ -14,7 +15,7 @@ import firstCharUpperCase from './utils/first-upper';
 program
     .name('rb')
     .usage('[command] [options] <package>')
-    .version('2.1.0');
+    .version(packageVersion);
 
 program
     .description('Runs selected package in development mode')

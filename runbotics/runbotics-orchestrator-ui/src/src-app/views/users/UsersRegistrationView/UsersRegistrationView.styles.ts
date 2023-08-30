@@ -34,8 +34,8 @@ export const StyledButton = styled(Button)`
 export const DeleteButton = styled(Button)(({theme}) => `
     && {
         width: 250px;
-        background-color: ${theme.palette.grey.A700};
-        color: ${theme.palette.error.contrastText};
+        background-color: ${theme.palette.button.danger};
+        color: ${theme.palette.background.default};
 
         && {
             margin-left: 20px;

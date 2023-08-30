@@ -2,7 +2,7 @@ import { SharepointExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner, RegexPattern } from './types';
 
 
 
@@ -40,10 +40,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -52,6 +51,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -95,10 +101,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -107,6 +112,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -154,10 +166,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -166,6 +177,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -216,10 +234,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -228,6 +245,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -300,10 +324,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -318,7 +341,14 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath.Tooltip'),
                         }
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -382,10 +412,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -394,6 +423,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -430,10 +466,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -442,6 +477,13 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 output: {

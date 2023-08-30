@@ -39,3 +39,32 @@ $ npm run build
 # Start CLI
 $ npm run start
 ```
+
+in order to use locally build `/runbotics/runbotics-cli` with `rb` command in development environment, make sure to uninstall `@runbotics/runbotics-cli` and follow these steps
+
+```bash
+# Install yarn globally
+$ npm install --global yarn
+
+# Check that Yarn is installed
+$ yarn --version
+```
+
+check `/Yarn/bin` directory and add the directory to the PATH on your machine
+
+```bash
+# To check directory where global links are saved
+$ yarn global bin
+```
+
+to create a global link, change directory to `/runbotics/runbotics-cli` and run
+
+```bash
+# To create global link
+$ yarn link-cli
+
+# To remove global link
+$ yarn unlink-cli
+```
+
+after these steps you can use `rb` command, please remember to build `/runbotics/runbotics-cli` to see latest local changes

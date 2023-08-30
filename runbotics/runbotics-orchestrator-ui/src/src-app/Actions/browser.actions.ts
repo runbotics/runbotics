@@ -2,7 +2,7 @@ import { BrowserAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, Runner } from './types';
+import { ActionSystem, IBpmnAction, Runner, RegexPattern } from './types';
 
 
 
@@ -188,10 +188,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -204,7 +203,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -469,8 +475,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -482,7 +489,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -527,8 +541,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -540,7 +555,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -584,8 +606,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -597,7 +620,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -641,8 +671,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -653,6 +684,13 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     jsonConfiguration: {
                         'ui:widget': 'JsonViewWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
                     },
                 },
             },
@@ -697,10 +735,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -712,7 +749,14 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:widget': 'BrowserTargetWidget',
                     }
-                }
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -787,10 +831,9 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
+
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                     },
@@ -805,6 +848,13 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                             text: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Session.Description'),
                             variant: 'subtitle1',
                             infoIcon: true,
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
                         },
                     },
                 },

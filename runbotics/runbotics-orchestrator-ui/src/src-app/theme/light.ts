@@ -35,6 +35,9 @@ export const lightTheme: ThemeOptions = {
         infoIcon: {
             default: blueGrey[600],
         },
+        button: {
+            danger: blueGrey[700],
+        },
         tag: {
             variable: blueGrey[100],
             action: blueGrey[50]
