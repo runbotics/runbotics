@@ -304,7 +304,7 @@
     "Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System": "System",
     "Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Label": "Open file",
     "Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label": "Open file from site and create session",
-    "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath": "Server-relative site path",
+    "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath": "Site name",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath.Tooltip": "It follows the hostname in the URL and starts with 'sites/.../'",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName": "List name",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath": "Full path to file",

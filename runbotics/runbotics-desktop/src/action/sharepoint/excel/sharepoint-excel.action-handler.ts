@@ -22,7 +22,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             input.filePath,
             input.worksheetName,
             input.persistChanges,
-            input.siteRelativePath,
+            input.siteName,
             input.listName
         );
     }

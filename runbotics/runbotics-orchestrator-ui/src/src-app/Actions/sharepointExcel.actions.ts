@@ -285,17 +285,74 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
 
                             },
                         },
-                        required: ['siteRelativePath', 'listName', 'filePath', 'worksheetName'],
-                    },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableName',
-                                ),
-
+                        dependencies: {
+                            platform: {
+                                oneOf: [
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: ['SharePoint'],
+                                            },
+                                            siteName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            listName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            filePath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            worksheetName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            persistChanges: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+                                                ),
+                                                type: 'boolean',
+                                            },
+                                        },
+                                        required: ['siteName', 'listName', 'filePath', 'worksheetName'],
+                                    },
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: ['OneDrive'],
+                                            },
+                                            filePath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            worksheetName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            persistChanges: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+                                                ),
+                                                type: 'boolean',
+                                            },
+                                        },
+                                        required: ['filePath', 'worksheetName'],
+                                    },
+                                ],
                             },
 
                         },
@@ -303,7 +360,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                     },
                 },
             },
-
             formData: {
                 input: {
                     siteRelativePath: undefined,
@@ -334,15 +390,9 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
                         }
                     }
-                },
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
+                }
             },
+
         },
     },
     'sharepointExcel.closeSession': {

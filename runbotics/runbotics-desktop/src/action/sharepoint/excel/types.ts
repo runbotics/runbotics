@@ -13,7 +13,7 @@ export interface SharepointExcelOpenFileActionInput {
     filePath: string;
     worksheetName: string;
     persistChanges: boolean;
-    siteRelativePath: string;
+    siteName: string;
     listName: string;
 }
 
