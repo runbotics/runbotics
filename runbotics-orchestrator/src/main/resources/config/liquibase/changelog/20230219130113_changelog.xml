@@ -2,7 +2,12 @@
 
     <changeSet author="szymczakm" id="20230219130113-1">
         <preConditions onFail="MARK_RAN">
-            <tableExists tableName="process_trigger" />
+            <and>
+                <tableExists tableName="process_trigger" />
+                <not>
+                    <tableExists tableName="trigger_event" />
+                </not>
+            </and>
         </preConditions>
 
         <renameTable oldTableName="process_trigger"
@@ -13,7 +18,15 @@
         </sql>
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230219130113-2">
+    <changeSet id="20230219130113-2" author="szymczakm">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="process_trigger"/>
+        </preConditions>
+
+        <dropTable tableName="process_trigger" />
+    </changeSet>
+
+    <changeSet author="szymczakm" id="20230219130113-3">
         <preConditions onFail="MARK_RAN">
             <columnExists tableName="process_instance" columnName="triggered_by" />
         </preConditions>
@@ -21,7 +34,7 @@
         <dropColumn columnName="triggered_by" tableName="process_instance"/>
     </changeSet>
 
-    <changeSet author="szymczakm" id="20230219130113-3">
+    <changeSet author="szymczakm" id="20230219130113-4">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="process_instance" columnName="trigger_data" />

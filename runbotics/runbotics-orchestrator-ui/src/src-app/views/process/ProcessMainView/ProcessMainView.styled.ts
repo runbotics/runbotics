@@ -1,5 +1,7 @@
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Typography } from '@mui/material';
 
+import Link from 'next/link';
 import styled from 'styled-components';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
@@ -20,4 +22,20 @@ export const ProcessInternalPage = styled(InternalPage)`
         padding-left: 0;
         padding-right: 0;
     }
+`;
+
+export const TutorialBlogPost = styled(Typography)`
+    display: flex;
+    align-items: center;
+    height: 100%;
+`;
+
+export const TutorialLink = styled(Link)`
+    display: flex;
+    color: inherit;
+`;
+
+export const OpenInNewIconStyled = styled(OpenInNewIcon)`
+    margin-left: 8px;
+    font-size: 2rem;
 `;
