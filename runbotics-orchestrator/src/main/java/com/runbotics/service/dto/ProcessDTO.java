@@ -2,6 +2,7 @@ package com.runbotics.service.dto;
 
 import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotSystem;
+import com.runbotics.domain.Process;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -9,44 +10,44 @@ import java.util.Set;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonView;  
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
- * A DTO for the {@link com.runbotics.domain.Process} entity.
+ * A DTO for the {@link Process} entity.
  */
 public class ProcessDTO implements Serializable {
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Long id;
 
     @NotNull
     @NotBlank
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private String name;
 
     @Lob
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private String description;
 
-    @Lob 
+    @Lob
     private String definition;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Boolean isPublic;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private ZonedDateTime created;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private ZonedDateTime updated;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Long executionsCount;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Long successExecutionsCount;
 
-    @JsonView(ProcessDTOViews.DefaultView.class)  
+    @JsonView(ProcessDTOViews.DefaultView.class)
     private Long failureExecutionsCount;
 
     private String executionInfo;
@@ -68,6 +69,9 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private Set<TagDTO> tags;
 
     public Long getId() {
         return id;
@@ -205,6 +209,14 @@ public class ProcessDTO implements Serializable {
         this.botCollection = botCollection;
     }
 
+    public Set<TagDTO> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<TagDTO> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -247,6 +259,7 @@ public class ProcessDTO implements Serializable {
             ", createdBy=" + createdBy +
             ", system=" + system +
             ", schedules=" + schedules +
+            ", tags=" + tags +
             '}';
     }
 }
