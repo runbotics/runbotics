@@ -1,5 +1,5 @@
-export const OneDrive = 'OneDrive';
-export const Sharepoint = 'Sharepoint';
+export const SHARE_POINT = "SharePoint";
+export const ONE_DRIVE = "OneDrive";
 
 export enum ACTION_GROUP {
 	VARIABLES = 'variables',
