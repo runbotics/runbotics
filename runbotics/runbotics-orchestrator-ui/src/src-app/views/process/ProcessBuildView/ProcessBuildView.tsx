@@ -45,7 +45,7 @@ const ProcessBuildView: FC = () => {
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
-    const hasActionsAccess = useRole([Role.ROLE_ADMIN]);
+    const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
