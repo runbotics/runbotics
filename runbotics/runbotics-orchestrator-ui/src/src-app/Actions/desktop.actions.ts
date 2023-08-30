@@ -53,16 +53,12 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                                     'Point'
                                                 ]
                                             },
-                                            x: {
-                                                title: translate('Process.Details.Modeler.Actions.Desktop.Click.X'),
-                                                type: 'string',
-                                            },
-                                            y: {
-                                                title: translate('Process.Details.Modeler.Actions.Desktop.Click.Y'),
+                                            point: {
+                                                title: translate('Process.Details.Modeler.Actions.Desktop.Click.Point'),
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['x', 'y']
+                                        required: ['point']
                                     },
                                     {
                                         properties: {
@@ -89,7 +85,12 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     region: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Desktop.Click.Region.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.Region.Info'),
+                        }
+                    },
+                    point: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.Point.Info'),
                         }
                     },
                 },
@@ -180,10 +181,10 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    'desktop.selectWithCursor': {
-        id: DesktopAction.SELECT_WITH_CURSOR,
-        label: translate('Process.Details.Modeler.Actions.Desktop.SelectWithCursor.Label'),
-        script: DesktopAction.SELECT_WITH_CURSOR,
+    'desktop.cursorSelect': {
+        id: DesktopAction.CURSOR_SELECT,
+        label: translate('Process.Details.Modeler.Actions.Desktop.CursorSelect.Label'),
+        script: DesktopAction.CURSOR_SELECT,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -193,44 +194,46 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            startX: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.SelectWithCursor.Start.X'),
+                            startPoint: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.CursorSelect.StartPoint'),
                                 type: 'string',
                             },
-                            startY: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.SelectWithCursor.Start.Y'),
-                                type: 'string',
-                            },
-                            endX: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.SelectWithCursor.End.X'),
-                                type: 'string',
-                            },
-                            endY: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.SelectWithCursor.End.Y'),
+                            endPoint: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.CursorSelect.EndPoint'),
                                 type: 'string',
                             },
                         },
-                        required: ['startX', 'startY', 'endX', 'endY'],
+                        required: ['startPoint', 'endPoint'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    startPoint: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.Point.Info'),
+                        }
+                    },
+                    endPoint: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.Point.Info'),
+                        }
+                    },
+                },
             },
             formData: {
                 input: {
-                    startX: undefined,
-                    startY: undefined,
-                    endX: undefined,
-                    endY: undefined,
+                    startPoint: undefined,
+                    endPoint: undefined,
                 },
             },
         },
     },
     'desktop.readContentFromClipboard': {
-        id: DesktopAction.READ_CONTENT_FROM_CLIPBOARD,
-        label: translate('Process.Details.Modeler.Actions.Desktop.ReadContentFromClipboard.Label'),
-        script: DesktopAction.READ_CONTENT_FROM_CLIPBOARD,
+        id: DesktopAction.READ_CLIPBOARD_CONTENT,
+        label: translate('Process.Details.Modeler.Actions.Desktop.ReadClipboardContent.Label'),
+        script: DesktopAction.READ_CLIPBOARD_CONTENT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -296,12 +299,12 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            imagePath: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImagePath'),
+                            imageFullPath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath'),
                                 type: 'string',
                             }
                         },
-                        required: ['imagePath'],
+                        required: ['imageFullPath'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -322,7 +325,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    imagePath: undefined,
+                    imageFullPath: undefined,
                 },
                 output: {
                     variableName: undefined,
@@ -349,12 +352,12 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            imagePath: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImagePath'),
+                            imageFullPath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath'),
                                 type: 'string',
                             }
                         },
-                        required: ['imagePath'],
+                        required: ['imageFullPath'], //eg
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -375,7 +378,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    imagePath: undefined,
+                    imageFullPath: undefined,
                 },
                 output: {
                     variableName: undefined,
@@ -402,24 +405,24 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.FileName'),
+                            imageName: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.ImageName'),
                                 type: 'string',
                             },
-                            region: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.Region'),
-                                type: 'string',
-                            },
-                            fileFormat: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.FileFormat'),
+                            imageFormat: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.ImageFormat'),
                                 type: 'string',
                                 enum: [
                                     'PNG',
                                     'JPG'
                                 ]
                             },
-                            filePath: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.FilePath'),
+                            imagePath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.ImagePath'),
+                                type: 'string',
+                            },
+                            region: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.Region'),
                                 type: 'string',
                             },
                         },
@@ -450,7 +453,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    fileFormat: 'PNG'
+                    imageFormat: 'PNG'
                 },
                 output: {
                     variableName: undefined,
@@ -477,8 +480,8 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            imagePath: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImagePath'),
+                            imageFullPath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath'),
                                 type: 'string',
                             },
                             language: {
@@ -491,7 +494,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 ]
                             },
                         },
-                        required: ['imagePath'],
+                        required: ['imageFullPath'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -512,7 +515,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    imagePath: undefined,
+                    imageFullPath: undefined,
                     language: 'ENG',
                 },
                 output: {
