@@ -1,6 +1,6 @@
-export type SessionIdentifier = number | string;
+export type SessionIdentifier = string;
 export type WorksheetIdentifier = number | string;
-export type Platform = 'Sharepoint' | 'OneDrive';
+export type Platform = 'SharePoint' | 'OneDrive';
 export interface Session {
     platform: Platform;
     sessionIdentifier: SessionIdentifier;
@@ -8,6 +8,7 @@ export interface Session {
     workbookSessionInfo: WorkbookSessionInfo;
     siteId?: string;
     driveId?: string;
+    fileId?: string;
 }
 
 export interface WorkbookSessionInfo {
@@ -23,85 +24,80 @@ export interface WorkbookCellCoordinates {
 //https://graph.microsoft.com/v1.0/$metadata#sites/$entity
 export interface Site {
     id?: string;
-    root?: object;
-    sharepointIds?: object;
-    siteCollection?: object;
     displayName?: string;
     /* inherited from baseItem */
     name?: string;
     createdDateTime?: string;
-    description?: string;
-    eTag?: string;
     lastModifiedDateTime?: string;
     webUrl?: string;
 }
 //https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
 export interface Drive {
-    createdBy?: object;
+    createdBy?: unknown;
     createdDateTime?: string;
     description?: string;
     driveType?: 'personal' | 'business' | 'documentLibrary';
     following?: Array<DriveItem>;
     id?: string;
     items?: Array<DriveItem>;
-    lastModifiedBy?: object;
+    lastModifiedBy?: unknown;
     lastModifiedDateTime?: string;
     name?: string;
-    owner?: object;
-    quota?: object;
-    root?: object;
-    sharepointIds?: object;
-    special?: object;
-    system?: object;
+    owner?: unknown;
+    quota?: unknown;
+    root?: unknown;
+    sharepointIds?: unknown;
+    special?: unknown;
+    system?: unknown;
     webUrl?: string;
 }
 //https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
 export interface DriveItem {
-    audio?: object;
-    bundle?: object;
-    content?: object;
+    audio?: unknown;
+    bundle?: unknown;
+    content?: unknown;
     cTag?: string;
-    deleted?: object;
+    deleted?: unknown;
     description?: string;
-    file?: object;
-    fileSystemInfo?: object;
-    folder?: object;
-    image?: object;
-    location?: object;
-    malware?: object;
-    package?: object;
-    pendingOperations?: object;
-    photo?: object;
-    publication?: object;
-    remoteItem?: object;
-    root?: object;
-    searchResult?: object;
-    shared?: object;
-    sharepointIds?: object;
+    file?: unknown;
+    fileSystemInfo?: unknown;
+    folder?: unknown;
+    image?: unknown;
+    location?: unknown;
+    malware?: unknown;
+    package?: unknown;
+    pendingOperations?: unknown;
+    photo?: unknown;
+    publication?: unknown;
+    remoteItem?: unknown;
+    root?: unknown;
+    searchResult?: unknown;
+    shared?: unknown;
+    sharepointIds?: unknown;
     size?: 1024;
-    specialFolder?: object;
-    video?: object;
+    specialFolder?: unknown;
+    video?: unknown;
     webDavUrl?: string;
     /*relationships */
-    activities?: Array<object>;
-    analytics?: object;
-    children?: Array<object>;
-    createdByUser?: object;
-    lastModifiedByUser?: object;
-    permissions?: Array<object>;
-    subscriptions?: Array<object>;
-    thumbnails?: Array<object>;
-    versions?: Array<object>;
+    activities?: Array<unknown>;
+    analytics?: unknown;
+    children?: Array<unknown>;
+    createdByUser?: unknown;
+    lastModifiedByUser?: unknown;
+    permissions?: Array<unknown>;
+    subscriptions?: Array<unknown>;
+    thumbnails?: Array<unknown>;
+    versions?: Array<unknown>;
 
     /* inherited from baseItem */
-    createdBy?: object;
+    createdBy?: unknown;
     createdDateTime?: string;
     eTag?: string;
     id?: string;
-    lastModifiedBy?: object;
+    lastModifiedBy?: unknown;
     lastModifiedDateTime?: string;
     name?: string;
-    parentReference?: object;
+    parentReference?: unknown;
     webUrl?: string;
 
     /* instance annotations */

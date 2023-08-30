@@ -280,7 +280,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                             platform: {
                                 title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
-                                enum: ['OneDrive', 'Sharepoint'],
+                                enum: ['OneDrive', 'SharePoint'],
                                 default: ['OneDrive'],
 
                             },
