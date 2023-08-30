@@ -110,16 +110,18 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         }
     };
 
-    private logRuntimeObjects() {
-        const processInstancesLength = Object.keys(this.processInstances).length;
-        const enginesLength = Object.keys(this.engines).length;
-      
-        this.logger.warn(`Process instances: ${processInstancesLength} Engines: ${enginesLength}`);
+    public getRuntimeStatus() {
+        const processInstancesCount = Object.keys(this.processInstances).length;
+        const enginesCount = Object.keys(this.engines).length;
+    
+        return { processInstancesCount, enginesCount };
     }
 
     private async monitor() {
         setInterval(() => {
-            this.logRuntimeObjects();
+            const { processInstancesCount, enginesCount } = this.getRuntimeStatus();
+
+            this.logger.warn(`Process instances: ${processInstancesCount} Engines: ${enginesCount}`);
         }, 100000);
     }
     
@@ -409,12 +411,15 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             };
         };
 
+        // passed to Camunda, helps store output variables in the scope of a single process
+        const processEnvironment = {};
+
         const engine = Engine({
             name: process.name,
             source: process.definition,
             // Logger: Logger as any,
             extensions: {
-                camunda: Camunda,
+                camunda: (activity) => Camunda(activity, processEnvironment),
             },
             // elements: runboticsElements,
             moddleOptions: {

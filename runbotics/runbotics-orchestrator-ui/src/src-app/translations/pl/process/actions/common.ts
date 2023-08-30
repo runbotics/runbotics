@@ -4,7 +4,7 @@ const commonActionsTranslations: typeof englishCommonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.Input': 'Dane wejściowe',
     'Process.Details.Modeler.Actions.Common.Output': 'Dane wyjściowe',
     'Process.Details.Modeler.Actions.Common.VariableName': 'Nazwa zmiennej',
-    'Process.Details.Modeler.Actions.Common.VariableMessage': 'Przypisz daną wyjściową do zmiennej',
+    'Process.Details.Modeler.Actions.Common.VariableName.Info': 'Przypisz daną wyjściową do zmiennej',
     'Process.Details.Modeler.Actions.Common.Value': 'Wartość',
 };
 

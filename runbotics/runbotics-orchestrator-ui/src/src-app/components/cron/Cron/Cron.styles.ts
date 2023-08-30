@@ -13,7 +13,7 @@ export const CronContainer = styled.div<{isError: boolean}>(({ theme, isError })
 export const ClearButton = styled(Button)(({ theme }) => `
     && {
         margin-left: ${theme.spacing(1)};
-        background-color: ${theme.palette.grey.A700};
+        background-color: ${theme.palette.button.danger};
         color: ${theme.palette.error.contrastText};
         height: ${theme.spacing(5)};
         &:hover {

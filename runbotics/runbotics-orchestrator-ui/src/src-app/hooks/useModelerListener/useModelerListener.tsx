@@ -43,7 +43,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
     );
-
+    
     const handleInvalidStartEvent = ({ errorType, nameKey, elementId }) => {
         dispatch(
             processActions.setError({
@@ -230,6 +230,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             setCurrentTab(null);
             dispatch(processActions.removeAppliedAction(event.element.id));
             dispatch(processActions.removeError(event.element.id));
+            dispatch(processActions.removeCustomValidationError(event.element.id));
             const relatedError = store
                 .getState()
                 .process.modeler.errors.find((error) =>

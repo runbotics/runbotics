@@ -9,7 +9,7 @@ import BlankPage from '#src-app/utils/BlankPage';
 
 // eslint-disable-next-line react/display-name
 export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
-    const { isAuthenticated, isInitialized } = useAuth();
+    const { isAuthenticated, isInitialized, user } = useAuth();
     const router = useRouter();
     const isBrowser = typeof window !== 'undefined';
     const { switchLanguage } = useTranslations();
@@ -18,7 +18,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
         switchLanguage(router.locale as Language);
     }, [router.locale]);
 
-    if (isBrowser && isInitialized && isAuthenticated) router.replace('/app/processes');
+    if (isBrowser && isInitialized && isAuthenticated) router.replace('/app/processes', null, { locale: user.langKey });
 
     if (isBrowser && isInitialized && !isAuthenticated) return <Component {...props} />;
 

@@ -1,7 +1,6 @@
 import englishTranslations from './en';
 import polishTranslations from './pl';
 
-
 export const languages = ['en', 'pl'] as const;
 
 export const DEFAULT_LANG = 'en';

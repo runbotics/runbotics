@@ -2,9 +2,7 @@ import { GeneralAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from './types';
-
-
+import { IBpmnAction, Runner, RegexPattern } from './types';
 
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
     'general.console.log': {
@@ -123,10 +121,8 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableMessage',
-                                ),
                                 type: 'string',
+                                pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
                         required: [],
@@ -138,6 +134,13 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     processId: {
                         'ui:widget': 'ProcessNameSuggestionWidget',
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
                     },
                 },
             },

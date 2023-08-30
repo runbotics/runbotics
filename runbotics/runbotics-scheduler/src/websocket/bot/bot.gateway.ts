@@ -14,7 +14,7 @@ import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
 import { BotLogService } from './bot-log.service';
 import { BotProcessService } from '#/websocket/bot/process-launch/bot-process-instance.service';
-import { BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotStatus, BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
 import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
@@ -23,9 +23,13 @@ import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
 
+type BotId = number;
+type SocketId = string;
+
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
+    private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
 
     constructor(
@@ -39,6 +43,14 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly guestService: GuestService,
     ) { }
 
+    get connectedBotsCount() {
+        return this.connections.size;
+    }
+
+    getConnectedBotSocketId(botId: number) {
+        return this.connections.get(botId);
+    }
+
     async handleConnection(client: Socket) {
         this.logger.log(`Bot ${client.id} is trying to establish connection`);
 
@@ -47,7 +59,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
         this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
-        client.join(bot.installationId);
+
+        this.connections.set(bot.id, client.id);
     }
 
     async handleDisconnect(client: Socket) {
@@ -55,22 +68,26 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         const botExists = await !!this.botService.findByInstallationId(installationId);
 
         if (!botExists) return;
-        
+
         const bot = await this.authService.unregisterBot(installationId as string);
-        
+
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
         this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
+
+        this.connections.delete(bot.id);
     }
 
     @UseGuards(WsBotJwtGuard)
     @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE)
-    async processListener( 
+    async processListener(
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
     ) {
+        await this.setBotStatusBusy(socket.bot);
+
         const installationId = socket.bot.installationId;
 
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
@@ -96,22 +113,26 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
+        await this.setBotStatusBusy(socket.bot);
+
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
         }
-        
+
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
 
        return HttpStatus.OK;
     }
-    
+
     @UseGuards(WsBotJwtGuard)
     @SubscribeMessage(BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT)
     async processInstanceLoopEventListener(
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
+        await this.setBotStatusBusy(socket.bot);
+
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
@@ -137,5 +158,15 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
         await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
         this.logger.log(`<= Success: process-instance-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+    }
+
+    async setBotStatusBusy(bot: IBot) {
+        const busyBotStatus = BotStatus.BUSY;
+        if (bot.status !== busyBotStatus) {
+            this.logger.log(`Updating bot ${bot.installationId} status to (${busyBotStatus})`);
+            await this.botService.setBusy(bot);
+            this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+            this.logger.log('Success: bot status updated');
+        }
     }
 }
