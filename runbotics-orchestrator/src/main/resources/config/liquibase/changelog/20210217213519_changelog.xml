@@ -134,12 +134,4 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="extension_id" baseTableName="extension_version" constraintName="FKtjm07hvrgxawhqxrksjppurhg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="extension_instance" validate="true"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1613594125985-12">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <indexExists indexName="ux_process_name"/>
-            </not>
-        </preConditions>
-        <addUniqueConstraint tableName="process" columnNames="name" constraintName="ux_process_name"/>
-    </changeSet>
 </databaseChangeLog>
