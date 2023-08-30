@@ -149,7 +149,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.System')}</TableCell>
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.Version')}</TableCell>
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.LastConnected')}</TableCell>
-                                <TableCell width={20} />
+                                <TableCell width={80} />
                             </TableRow>
                         </TableHead>
                         <TableBody>
