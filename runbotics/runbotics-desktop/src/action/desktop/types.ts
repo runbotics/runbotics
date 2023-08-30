@@ -1,14 +1,15 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
 
-import { FileType } from '@nut-tree/nut-js';
+export const KEY_REFERENCE = 'Key.';
+export const OCR_CONFIDENCE = 0.9;
 
 export type DesktopActionRequest =
 | DesktopRunRequest<'desktop.click', DesktopClickActionInput>
 | DesktopRunRequest<'desktop.type', DesktopTypeActionInput>
 | DesktopRunRequest<'desktop.copy', DesktopCopyActionInput>
 | DesktopRunRequest<'desktop.paste'>
-| DesktopRunRequest<'desktop.selectWithCursor', DesktopSelectWithCursorActionInput>
-| DesktopRunRequest<'desktop.readContentFromClipboard'>
+| DesktopRunRequest<'desktop.cursorSelect', DesktopCursorSelectActionInput>
+| DesktopRunRequest<'desktop.readClipboardContent'>
 | DesktopRunRequest<'desktop.maximizeActiveWindow'>
 | DesktopRunRequest<'desktop.findScreenRegion', DesktopFindScreenRegionActionInput>
 | DesktopRunRequest<'desktop.waitForScreenRegion', DesktopWaitForScreenRegionActionInput>
@@ -25,9 +26,19 @@ export enum ClickTarget {
     REGION = 'Region'
 }
 
-export enum FileFormat {
+export enum ImageResourceFormat {
     PNG = 'PNG',
     JPG = 'JPG'
+}
+
+export enum ImageFileExtension {
+    JPEG = '.jpeg',
+    JPG = '.jpg',
+    PNG = '.png', 
+    TIFF = '.tiff',
+    BMP = '.bmp', 
+    GIF = '.gif',
+    PDF = '.pdf'
 }
 
 export enum Language {
@@ -38,6 +49,11 @@ export enum Language {
 
 export type Coordinate = string | number;
 
+export type PointObj = {
+    x: Coordinate;
+    y: Coordinate;
+}
+
 export type RegionObj = {
     left: Coordinate;
     top: Coordinate;
@@ -47,8 +63,7 @@ export type RegionObj = {
 
 export type DesktopClickActionInput = {
     clickTarget: ClickTarget;
-    x?: Coordinate;
-    y?: Coordinate;
+    point?: any;
     region?: any;
     mouseButton: MouseButton;
     doubleClick: boolean;
@@ -62,34 +77,32 @@ export type DesktopCopyActionInput = {
     text?: string;
 }
 
-export type DesktopSelectWithCursorActionInput = {
-    startX: Coordinate;
-    startY: Coordinate;
-    endX: Coordinate;
-    endY: Coordinate;
+export type DesktopCursorSelectActionInput = {
+    startPoint: any;
+    endPoint: any;
 }
 
-export type DesktopReadContentFromClipboardActionOutput = string;
+export type DesktopReadClipboardContentActionOutput = string;
 
 export type DesktopFindScreenRegionActionInput = {
-    imagePath: string;
+    imageFullPath: string;
 }
 
 export type DesktopWaitForScreenRegionActionInput = {
-    imagePath: string;
+    imageFullPath: string;
 }
 
 export type DesktopTakeScreenshotActionInput = {
-    fileName?: string;
+    imageName?: string;
+    imagePath?: string;
+    imageFormat: ImageResourceFormat;
     region?: any;
-    fileFormat: FileFormat;
-    filePath?: string;
 }
 
 export type DesktopTakeScreenshotActionOutput = string;
 
 export type DesktopReadTextFromImageActionInput = {
-    imagePath: string;
+    imageFullPath: string;
     language: Language;
 }
 
