@@ -45,11 +45,11 @@ const ProcessBuildView: FC = () => {
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
-    const hasActionAccess = useRole([Role.ROLE_ADMIN]);
+    const hasActionsAccess = useRole([Role.ROLE_ADMIN]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
-        hasActionAccess && dispatch(getActions());
+        hasActionsAccess && dispatch(getActions());
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);
