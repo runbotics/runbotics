@@ -72,8 +72,7 @@ interface TopBarProps {
 }
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
-    const { isAuthenticated, user } = useAuth();
-    const hasBotInstallAccess = useFeatureKey([FeatureKey.BOT_READ]);
+    const { user } = useAuth();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
     const { enqueueSnackbar } = useSnackbar();
@@ -136,7 +135,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <Divider className={classes.divider} orientation="vertical" flexItem />
                 </If>
                 <LanguageSwitcher />
-                {isAuthenticated && hasBotInstallAccess && <HowToRun />}
+                {hasAdminAccess && <HowToRun />}
                 <Box ml={2}>
                     <Account />
                 </Box>
