@@ -23,37 +23,38 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             input.worksheetName,
             input.persistChanges,
             input.siteRelativePath,
+            input.listName
         );
     }
 
     async closeSession(
         input: SharepointTypes.SharepointExcelCloseSessionActionInput
     ): Promise<SharepointTypes.SharepointExcelCloseSessionActionOutput> {
-        return await this.excelService.closeSession();
+        return this.excelService.closeSession();
     }
 
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
     ): Promise<SharepointTypes.SharepointExcelGetCellActionOutput> {
-        return await this.excelService.getCell({column: input.cell[0], row: input.cell[1]});
+        return this.excelService.getCell({column: input.cell[0], row: input.cell[1]});
     }
 
     async getRange(
         input: SharepointTypes.SharepointExcelGetRangeActionInput
     ): Promise<SharepointTypes.SharepointExcelGetRangeActionOutput> {
-        return await this.excelService.getRange(input.range);
+        return this.excelService.getRange(input.range);
     }
 
     async setCell(
         input: SharepointTypes.SharepointSetExcelCellActionInput
     ): Promise<SharepointTypes.SharepointExcelSetCellActionOutput> {
-        return await this.excelService.setCell(input.cell, input.content);
+        return this.excelService.setCell(input.cell, input.content);
     }
 
     async updateRange(
         input: SharepointTypes.SharepointExcelUpdateRangeActionInput
     ): Promise<SharepointTypes.SharepointExcelUpdateRangeActionOutput> {
-        return await this.excelService.setRange(input.range, input.values);
+        return this.excelService.setRange(input.range, input.values);
     }
 
     async run(request: SharepointTypes.FileActionRequest) {
