@@ -37,28 +37,16 @@ export class ExcelService {
     ): Promise<WorkbookSessionInfo> {
         const request = '/createSession';
 
-        let siteId = null;
-
-        let driveId = null;
-
-        let fileId = null;
-
-
-        if (platform === SHARE_POINT) {
-            siteId = (await this.getSiteIdByName(siteRelativePath)).id;
-            driveId = await this.getDriveIdBySiteAndListName(siteId, list);
-            fileId = await this.getItemId(siteId,driveId, sessionIdentifier);
-        }
-
-        this.session = {
-            platform,
-            sessionIdentifier,
-            worksheetIdentifier,
-            workbookSessionInfo: null,
-            siteId,
-            driveId,
-            fileId
-        };
+        this.session =
+            platform === SHARE_POINT
+                ? await this.createSharePointSession(
+                    platform,
+                    sessionIdentifier,
+                    worksheetIdentifier,
+                    siteRelativePath,
+                    list
+                )
+                : this.createOneDriveSession(platform, sessionIdentifier, worksheetIdentifier);
 
         const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
             this.createWorkbookUrl(request),
@@ -181,11 +169,45 @@ export class ExcelService {
         return data.filter(drive => drive.name === listName)[0].id;
     }
 
-    private async getItemId(siteId:string, driveId: string ,path: string) {
+    private async getItemId(siteId: string, driveId: string, path: string) {
         const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
 
-        const data: DriveItem = (await this.microsoftGraphService.get(url));
+        const data: DriveItem = await this.microsoftGraphService.get(url);
 
         return data.id;
+    }
+
+    private async createSharePointSession(
+        platform: Platform,
+        sessionIdentifier: SessionIdentifier,
+        worksheetIdentifier: WorksheetIdentifier,
+        siteRelativePath?: string,
+        list?: string
+    ): Promise<Session> {
+        const siteId = (await this.getSiteIdByName(siteRelativePath)).id;
+        const driveId = await this.getDriveIdBySiteAndListName(siteId, list);
+        const fileId = await this.getItemId(siteId, driveId, sessionIdentifier);
+        return {
+            platform,
+            sessionIdentifier,
+            workbookSessionInfo: null,
+            worksheetIdentifier,
+            siteId,
+            driveId,
+            fileId,
+        };
+    }
+
+    private createOneDriveSession(
+        platform: Platform,
+        sessionIdentifier: SessionIdentifier,
+        worksheetIdentifier: WorksheetIdentifier,
+    ): Session {
+        return {
+            platform,
+            sessionIdentifier,
+            workbookSessionInfo: null,
+            worksheetIdentifier,
+        };
     }
 }
