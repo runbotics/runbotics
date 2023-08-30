@@ -46,7 +46,7 @@
     "Process.Run.ManageProcessForm": "ATTENDANCE FORM",
     "Process.Run.ScheduleAttended.Message": "Scheduler is available only for unattended processes",
     "Process.Configure.Attended.Schedule.Message": "Scheduled bot cannot be attended",
-    "Process.MainView.Link.RunBoticsTutorial": "RunBotics - Tutorial",
+    "Process.MainView.Link.RunBoticsTutorial": "RunBotics Tutorial",
     "Process.MainView.Tabs.Build.Title": "Build",
     "Process.MainView.Tabs.Run.Title": "Run",
     "Process.MainView.Tabs.Configure.Title": "Configure",

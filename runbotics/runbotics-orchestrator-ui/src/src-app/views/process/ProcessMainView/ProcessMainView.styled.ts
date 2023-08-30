@@ -1,3 +1,4 @@
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Typography } from '@mui/material';
 
 import Link from 'next/link';
@@ -30,10 +31,11 @@ export const TutorialBlogPost = styled(Typography)`
 `;
 
 export const TutorialLink = styled(Link)`
-    text-decoration: none;
+    display: flex;
     color: inherit;
+`;
 
-    &:hover {
-        text-decoration: underline;
-    }
+export const OpenInNewIconStyled = styled(OpenInNewIcon)`
+    margin-left: 8px;
+    font-size: 2rem;
 `;

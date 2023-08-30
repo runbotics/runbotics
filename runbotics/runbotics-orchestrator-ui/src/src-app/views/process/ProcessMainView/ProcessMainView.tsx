@@ -15,7 +15,13 @@ import { processActions } from '#src-app/store/slices/Process';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessMainViewManager from './ProcessMainView.manager';
-import { ProcessInternalPage, ProcessTitle, TutorialBlogPost, TutorialLink } from './ProcessMainView.styled';
+import {
+    OpenInNewIconStyled,
+    ProcessInternalPage,
+    ProcessTitle,
+    TutorialBlogPost,
+    TutorialLink
+} from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
     const router = useRouter();
@@ -75,6 +81,7 @@ const ProcessMainView: FC = () => {
                         <TutorialBlogPost variant="h5" color="textPrimary">
                             <TutorialLink href="/blog/post/runbotics-tutorial" target="blank">
                                 {translate('Process.MainView.Link.RunBoticsTutorial')}
+                                <OpenInNewIconStyled fontSize='small' />
                             </TutorialLink>
                         </TutorialBlogPost>}
                 </Grid>
