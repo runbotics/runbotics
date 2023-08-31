@@ -6,25 +6,21 @@ import { ExcelService } from '../../microsoft/excel/excel.service';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
-    constructor(
-        private readonly excelService: ExcelService
-    ) {
+    constructor(private readonly excelService: ExcelService) {
         super();
     }
 
     async openFile(
         input: SharepointTypes.SharepointExcelOpenFileActionInput
     ): Promise<SharepointTypes.SharepointOpenActionOutput> {
-        return await this.excelService.openFile(
-            //eslint-disable-next-line
-            //@ts-ignore
-            input.platform,
-            input.filePath,
-            input.worksheetName,
-            input.persistChanges,
-            input.siteName,
-            input.listName
-        );
+        return await this.excelService.openFile({
+            platform: input.platform,
+            sessionIdentifier: input.filePath,
+            worksheetIdentifier: input.worksheetName,
+            persistChanges: input.persistChanges,
+            siteRelativePath: input.siteName,
+            list: input.listName,
+        });
     }
 
     async closeSession(
@@ -36,7 +32,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
     ): Promise<SharepointTypes.SharepointExcelGetCellActionOutput> {
-        return this.excelService.getCell({column: input.cell[0], row: input.cell[1]});
+        return this.excelService.getCell({ column: input.cell[0], row: input.cell[1] });
     }
 
     async getRange(

@@ -11,6 +11,23 @@ export interface Session {
     fileId?: string;
 }
 
+export interface SessionInput {
+    platform: Platform,
+    sessionIdentifier: SessionIdentifier,
+    worksheetIdentifier: WorksheetIdentifier,
+    persistChanges: boolean,
+    siteRelativePath?: string,
+    list?: string
+}
+
+export interface SharePointSessionInput {
+    platform: Platform,
+    sessionIdentifier: SessionIdentifier,
+    worksheetIdentifier: WorksheetIdentifier,
+    siteRelativePath?: string,
+    list?: string
+}
+
 export interface WorkbookSessionInfo {
     id: string;
     persistChanges: boolean;

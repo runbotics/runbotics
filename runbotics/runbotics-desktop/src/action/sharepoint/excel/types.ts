@@ -1,3 +1,4 @@
+import { Platform } from '#action/microsoft/excel/excel.types';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type FileActionRequest =
@@ -9,7 +10,7 @@ export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
 export interface SharepointExcelOpenFileActionInput {
-    platform: 'SharePoint' | 'OneDrive';
+    platform: Platform;
     filePath: string;
     worksheetName: string;
     persistChanges: boolean;
@@ -27,7 +28,7 @@ export type SharepointExcelSetCellActionOutput = any;
 
 export type SharepointExcelUpdateRangeActionInput = {
     range: string;
-    values: string | any[][];
+    values: string | (string | number | boolean)[][];
 };
 export type SharepointExcelUpdateRangeActionOutput = any;
 

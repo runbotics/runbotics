@@ -8,6 +8,8 @@ import {
     Platform,
     Session,
     SessionIdentifier,
+    SessionInput,
+    SharePointSessionInput,
     Site,
     WorkbookCellCoordinates,
     WorkbookRange,
@@ -27,31 +29,18 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    public async openFile(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
-        persistChanges: boolean,
-        siteRelativePath?: string,
-        list?: string
-    ): Promise<WorkbookSessionInfo> {
-        const request = '/createSession';
+    public async openFile(input: SessionInput): Promise<WorkbookSessionInfo> {
+        const url = '/createSession';
 
         this.session =
-            platform === SHARE_POINT
-                ? await this.createSharePointSession(
-                    platform,
-                    sessionIdentifier,
-                    worksheetIdentifier,
-                    siteRelativePath,
-                    list
-                )
-                : this.createOneDriveSession(platform, sessionIdentifier, worksheetIdentifier);
+            input.platform === SHARE_POINT
+                ? await this.createSharePointSession(input)
+                : this.createOneDriveSession(input.platform, input.sessionIdentifier, input.worksheetIdentifier);
 
         const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
-            this.createWorkbookUrl(request),
+            this.createWorkbookUrl(url),
             {
-                persistChanges: persistChanges,
+                persistChanges: input.persistChanges,
             }
         );
 
@@ -63,11 +52,11 @@ export class ExcelService {
         return workbookSessionInfo;
     }
     //https://learn.microsoft.com/en-us/graph/api/workbook-closesession?view=graph-rest-1.0&tabs=http
-    public async closeSession(): Promise<void> {
-        const request = '/closeSession';
+    public closeSession(): Promise<void> {
+        const url = '/closeSession';
 
         return this.microsoftGraphService.post(
-            this.createWorkbookUrl(request),
+            this.createWorkbookUrl(url),
             {},
             {
                 headers: {
@@ -77,12 +66,12 @@ export class ExcelService {
         );
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    public async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${
+    public getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookRange> {
+        const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${
             Number(cellCoordinates.row) - 1
         },column=${this.getColumnNumber(cellCoordinates.column) - 1})`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(request), {
+        return this.microsoftGraphService.get(this.createWorkbookUrl(url), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
@@ -90,10 +79,10 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    public async getRange(address: string): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
+    public getRange(address: string): Promise<WorkbookRange> {
+        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(request), {
+        return this.microsoftGraphService.get(this.createWorkbookUrl(url), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
@@ -101,14 +90,14 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public async setCell(address: string, value: string): Promise<WorkbookRange> {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
+    public setCell(address: string, value: string): Promise<WorkbookRange> {
+        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],
         };
 
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(request), newRange, {
+        return this.microsoftGraphService.patch(this.createWorkbookUrl(url), newRange, {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
@@ -117,31 +106,31 @@ export class ExcelService {
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
     public async setRange(address: string, values: string | any[][]) {
-        const request = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
+        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         if (!Array.isArray(values)) {
-            values = JSON.parse(values) as any[][];
+            values = JSON.parse(values) as (string | number | boolean)[][];
         }
 
         const newRange: WorkbookRangeUpdateBody = {
             values,
         };
 
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(request), newRange, {
+        return this.microsoftGraphService.patch(this.createWorkbookUrl(url), newRange, {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
         });
     }
 
-    private createWorkbookUrl(request: string) {
+    private createWorkbookUrl(url: string) {
         switch (this.session.platform) {
             case SHARE_POINT:
                 return `/sites/${this.session.siteId}/drives/${this.session.driveId}/items/${this.session.fileId}/workbook`.concat(
-                    request
+                    url
                 );
             case ONE_DRIVE:
-                return `/me/drive/root:/${this.session.sessionIdentifier}:/workbook`.concat(request);
+                return `/me/drive/root:/${this.session.sessionIdentifier}:/workbook`.concat(url);
             default:
                 throw new Error('Invalid platform');
         }
@@ -177,21 +166,21 @@ export class ExcelService {
         return data.id;
     }
 
-    private async createSharePointSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
-        siteRelativePath?: string,
-        list?: string
-    ): Promise<Session> {
-        const siteId = (await this.getSiteIdByName(siteRelativePath)).id;
-        const driveId = await this.getDriveIdBySiteAndListName(siteId, list);
-        const fileId = await this.getItemId(siteId, driveId, sessionIdentifier);
+    private async createSharePointSession(input: SharePointSessionInput): Promise<Session> {
+        const site = await this.getSiteIdByName(input.siteRelativePath);
+        if (site === undefined) {
+            throw new Error(`Site ${input.siteRelativePath} not found`);
+        }
+
+        const siteId = site.id;
+
+        const driveId = await this.getDriveIdBySiteAndListName(siteId, input.list);
+        const fileId = await this.getItemId(siteId, driveId, input.sessionIdentifier);
         return {
-            platform,
-            sessionIdentifier,
+            platform: input.platform,
+            sessionIdentifier: input.sessionIdentifier,
             workbookSessionInfo: null,
-            worksheetIdentifier,
+            worksheetIdentifier: input.worksheetIdentifier,
             siteId,
             driveId,
             fileId,
@@ -201,7 +190,7 @@ export class ExcelService {
     private createOneDriveSession(
         platform: Platform,
         sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier,
+        worksheetIdentifier: WorksheetIdentifier
     ): Session {
         return {
             platform,
