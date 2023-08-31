@@ -31,16 +31,6 @@ export enum ImageResourceFormat {
     JPG = 'JPG'
 }
 
-export enum ImageFileExtension {
-    JPEG = '.jpeg',
-    JPG = '.jpg',
-    PNG = '.png', 
-    TIFF = '.tiff',
-    BMP = '.bmp', 
-    GIF = '.gif',
-    PDF = '.pdf'
-}
-
 export enum Language {
     EN = 'ENG',
     PL = 'POL',
@@ -49,12 +39,12 @@ export enum Language {
 
 export type Coordinate = string | number;
 
-export type PointObj = {
+export interface PointObj {
     x: Coordinate;
     y: Coordinate;
 }
 
-export type RegionObj = {
+export interface RegionObj {
     left: Coordinate;
     top: Coordinate;
     width: Coordinate;

@@ -230,7 +230,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.readContentFromClipboard': {
+    'desktop.readClipboardContent': {
         id: DesktopAction.READ_CLIPBOARD_CONTENT,
         label: translate('Process.Details.Modeler.Actions.Desktop.ReadClipboardContent.Label'),
         script: DesktopAction.READ_CLIPBOARD_CONTENT,
@@ -251,7 +251,6 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -312,7 +311,6 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -322,6 +320,13 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    imageFullPath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info'),
+                        }
+                    },
+                },
             },
             formData: {
                 input: {
@@ -357,7 +362,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             }
                         },
-                        required: ['imageFullPath'], //eg
+                        required: ['imageFullPath'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -365,7 +370,6 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -375,6 +379,13 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    imageFullPath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info'),
+                        }
+                    },
+                },
             },
             formData: {
                 input: {
@@ -433,7 +444,6 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -502,7 +512,6 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                description: translate('Process.Details.Modeler.Actions.Common.VariableMessage'),
                                 type: 'string',
                             },
                         },
@@ -512,6 +521,13 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    imageFullPath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info'),
+                        }
+                    },
+                },
             },
             formData: {
                 input: {

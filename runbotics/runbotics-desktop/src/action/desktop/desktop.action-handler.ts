@@ -94,7 +94,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     async copy(input: DesktopCopyActionInput): Promise<void> {
-        if (input?.text) {
+        if (input.text) {
             await clipboard.setContent(input.text);
         } else {
             const superKey: Key = this.getSuperKey();
@@ -136,7 +136,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
         if (imagePath) {
             filePath = path.normalize(imagePath);
-            this.checkIfFilePathExists(filePath);
+            this.checkFileExist(filePath);
         } else {
             filePath = path.join(process.cwd(), TEMP_DIRECTORY_NAME);
         }
@@ -152,7 +152,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionObj> {
         const image = path.normalize(input.imageFullPath);
-        this.checkIfFilePathExists(image);
+        this.checkFileExist(image);
 
         const { filePath, fileName } = this.getFilePathElements(image);
         screen.config.resourceDirectory = filePath;
@@ -164,7 +164,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionObj> {
         const image = path.normalize(input.imageFullPath);
-        this.checkIfFilePathExists(image);
+        this.checkFileExist(image);
 
         const { filePath, fileName } = this.getFilePathElements(image);
         screen.config.resourceDirectory = filePath;
@@ -178,10 +178,10 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         let worker: any;
         try {
             const { imageFullPath, language } = input;
-            this.checkIfFilePathExists(imageFullPath);
+            this.checkFileExist(imageFullPath);
             const imageBuffer = fs.readFileSync(imageFullPath);
 
-            worker = await createWorker();
+            worker = await createWorker({ langPath: '.\\trained_data' });
             await worker.loadLanguage(language);
             await worker.initialize(language);
             const { data: { text } } = await worker.recognize(imageBuffer);
@@ -202,7 +202,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             await this.performKeyboardShortcut([Key.LeftWin, Key.Up]);
         } else if (this.system === 'darwin') {
             // for macOS:
-            await this.performKeyboardShortcut([Key.LeftCmd, Key.Up]);
+            await this.performKeyboardShortcut([Key.Fn, Key.F]);
         } else if (this.system === 'linux') {
             // for Linux (GNOME):
             await this.performKeyboardShortcut([Key.LeftAlt, Key.F10]);
@@ -258,7 +258,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private checkIfFilePathExists(filePath: string) {
+    private checkFileExist(filePath: string) {
         if (!fs.existsSync(filePath)) {
             throw new Error('Provided path does not exist');
         }
@@ -274,7 +274,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     private toRegionObj(region: Region): RegionObj {
-        return { left: region.left, top: region.top, width: region.width, height: region.height };
+        return { 
+            left: region.left, 
+            top: region.top, 
+            width: region.width, 
+            height: region.height 
+        };
     }
 
     run(request: DesktopActionRequest) {
