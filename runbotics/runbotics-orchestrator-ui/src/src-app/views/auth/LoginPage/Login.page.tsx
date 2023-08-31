@@ -24,6 +24,7 @@ import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.sty
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
 import useLoginValidationSchema from '#src-app/views/auth/LoginPage/useLoginValidationSchema';
 import UserLoginSection from '#src-app/views/auth/LoginPage/UserLoginSection';
+import { getHttpStatusKeyword } from '#src-app/views/utils/authUtils';
 
 
 export interface LoginFormState {
@@ -89,24 +90,22 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
+                const status = getHttpStatusKeyword(error.status);;
 
                 const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message}: ${translate(
-                        'Login.Error.UnexpectedError'
-                    )}`;
+                    const customErrorMessage = `${error.message ? error.message : error.status}: ${translate('Login.Error.UnexpectedError')}`;
                     setErrors({ submit: customErrorMessage });
                     enqueueSnackbar(customErrorMessage, {
                         variant: 'error',
-                        autoHideDuration: 10000,
+                        autoHideDuration: 10000
                     });
                     recordFailedLogin({
                         identifyBy: values.email,
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                         sourcePage: SOURCE_PAGE.LOGIN,
-                        reason: 'unexpected error',
+                        reason: 'unexpected error'
                     });
                     return;
                 }
@@ -118,11 +117,11 @@ const LoginPage: FC = () => {
                     identifyBy: values.email,
                     trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                     sourcePage: SOURCE_PAGE.LOGIN,
-                    reason: customErrorMessage,
+                    reason: customErrorMessage
                 });
                 enqueueSnackbar(customErrorMessage, {
                     variant: 'error',
-                    autoHideDuration: 10000,
+                    autoHideDuration: 10000
                 });
             });
     };

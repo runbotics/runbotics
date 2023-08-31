@@ -29,6 +29,7 @@ import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
 import { recordFailedRegistration, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
+import { getHttpStatusKeyword } from '#src-app/views/utils/authUtils';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
 
@@ -125,7 +126,7 @@ const RegisterPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
+                const status = getHttpStatusKeyword(error.status);
 
                 const errorKey = `Register.Error.${status}`;
 
