@@ -18,12 +18,13 @@ import { botSystemsSelector } from '../../../store/slices/BotSystem';
 
 
 interface BotSystemProps {
+    disabled?: boolean;
     selectedBotSystem: IBotSystem;
     onSelectBotSystem?: (botSystem: IBotSystem) => void;
 }
 
 const BotSystemComponent: VFC<BotSystemProps> = ({
-    selectedBotSystem, onSelectBotSystem,
+    selectedBotSystem, onSelectBotSystem, disabled = false
 }) => {
     const { botSystems } = useSelector(botSystemsSelector);
     const { translate } = useTranslations();
@@ -58,7 +59,7 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
                     value={selectedBotSystem?.name ?? ''}
                     variant="standard"
                     onChange={handleBotSystemChange}
-                    disabled={!hasEditBotSystemAccess}
+                    disabled={!hasEditBotSystemAccess || disabled}
                 >
                     {getBotSystemOptions()}
                 </Select>
