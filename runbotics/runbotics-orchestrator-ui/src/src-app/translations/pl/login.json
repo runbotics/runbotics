@@ -26,5 +26,10 @@
     "Login.Error.NoInternet": "Brak połączenia z internetem",
     "Login.Error.4xx": "Błędny email i/lub hasło lub użytkownik nie istnieje",
     "Login.Error.5xx": "Wystąpił problem z serwerem. Gdyby problem się powielał skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.500": "Wystąpił niespodziewany problem z serwerem. Gdyby problem się powielał skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.501": "Błędne zapytanie serwera",
+    "Login.Error.502": "Błędna odpowiedź serwera",
+    "Login.Error.503": "Żadanie w tej chwili nie może zostać wykonane",
+    "Login.Error.504": "Przekroczony został limit czasu oczekiania na odpowiedź serwera. Spróbuj odświeżyć stronę",
     "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }

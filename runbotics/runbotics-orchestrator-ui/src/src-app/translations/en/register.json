@@ -16,5 +16,10 @@
     "Register.Error.NoInternet": "No internet connection",
     "Register.Error.4xx": "Incorrect data or the e-mail already taken",
     "Register.Error.5xx": "A problem with server has occurred. Please try again later and if the problem persist - contact us via contact form on the main page",
+    "Register.Error.500": "A problem with server has occurred. If the problem persist - contact us via the contact form on the homepage",
+    "Register.Error.501": "Server method not recognized",
+    "Register.Error.502": "Incorrect server response",
+    "Register.Error.503": "The requested service is not available",
+    "Register.Error.504": "Server timeout. Try to refresh the page",
     "Register.Error.UnexpectedError": "Unhandled error has occurred. Contact us via contact form on the main page"
 }

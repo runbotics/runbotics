@@ -90,7 +90,8 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = getHttpStatusKeyword(error.status);;
+                const status = getHttpStatusKeyword(error.status);
+                console.log(error);
 
                 const errorKey = `Login.Error.${status}`;
 
