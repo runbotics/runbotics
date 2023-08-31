@@ -21,7 +21,6 @@ import AsanaActionHandler from '#action/asana';
 import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
-import SapActionHandler from '#action/sap';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
@@ -61,7 +60,6 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
-        private readonly sapActionHandler: SapActionHandler,
         private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
@@ -82,7 +80,6 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
             .set('typescript', javaScriptActionHandler)
-            .set('sap', sapActionHandler)
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
             .set('variables', variableActionHandler);
@@ -95,11 +92,11 @@ export class DesktopRunnerService implements OnModuleInit {
         // } else {
         //     this.logger.warn('Hot reload is on! Remember to turn it off in production env.');
         // }
-        try {
-            await this.loadExternalModule('runbotics-actions-windows');
-        } catch(e) {
-            this.logger.error('Error loading extensions from runbotics-actions-windows', e);
-        }
+        // try {
+        //     await this.loadExternalModule('runbotics-actions-windows');
+        // } catch(e) {
+        //     this.logger.error('Error loading extensions from runbotics-actions-windows', e);
+        // }
 
         await this.loadExtensionsDirModules();
 
