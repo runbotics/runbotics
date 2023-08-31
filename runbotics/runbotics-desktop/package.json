@@ -103,9 +103,6 @@
             "runAfterFinish": false
         }
     },
-    "optionalDependencies": {
-        "winax": "3.3.4"
-    },
     "devDependencies": {
         "@nestjs/cli": "^9.1.8",
         "@nestjs/schematics": "^9.0.4",
