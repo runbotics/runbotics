@@ -1,8 +1,8 @@
-export const getHttpStatusKeyword = (httpCode: number): string | number => {
+export const getHttpStatusKeyword = (httpCode: number): string => {
     if (httpCode >= 400 && httpCode < 500) {
         return '4xx';
     } else if (httpCode > 504 && httpCode < 600) {
         return '5xx';
     }
-    return httpCode;
+    return httpCode.toString();
 };
