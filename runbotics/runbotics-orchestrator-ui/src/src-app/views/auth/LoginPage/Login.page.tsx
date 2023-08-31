@@ -91,8 +91,6 @@ const LoginPage: FC = () => {
                 setStatus({ success: false });
                 setSubmitting(false);
                 const status = getHttpStatusKeyword(error.status);
-                console.log(error);
-
                 const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
