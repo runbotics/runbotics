@@ -86,7 +86,6 @@ importers:
       typescript: ^4.9.4
       uuid: ^8.3.2
       vm2: ^3.9.16
-      winax: 3.3.4
       winston: ^3.4.0
       winston-daily-rotate-file: ^4.6.0
       ws: ^7.4.5
@@ -134,8 +133,6 @@ importers:
       winston: 3.6.0
       winston-daily-rotate-file: 4.6.1_winston@3.6.0
       ws: 7.4.6
-    optionalDependencies:
-      winax: 3.3.4
     devDependencies:
       '@nestjs/cli': 9.1.8
       '@nestjs/schematics': 9.0.4_typescript@4.9.4
@@ -18774,15 +18771,6 @@ packages:
       siginfo: 2.0.0
       stackback: 0.0.2
     dev: true
-
-  /winax/3.3.4:
-    resolution: {integrity: sha512-hwh/tFGGCZgrvoxgd8xqSYgnWYUHvqLUMTtKgV/qSEwy4MC31JUukhBlKbBlqpnuDkzMGpxavyI4YCyrdtagyA==}
-    engines: {node: '>= 10.0.0'}
-    os: [win32]
-    hasBin: true
-    requiresBuild: true
-    dev: false
-    optional: true
 
   /windows-release/4.0.0:
     resolution: {integrity: sha512-OxmV4wzDKB1x7AZaZgXMVsdJ1qER1ed83ZrTYd5Bwq2HfJVg3DJS8nqlAG4sMoJ7mu8cuRmLEYyU13BKwctRAg==}
