@@ -1,66 +1,54 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="gontareka (generated)" id="1626522853929-2">
+    <changeSet author="gontareka (generated)" id="1626522853929-1">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FK2ewrthftnnc1dlufvy9jji8ai"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="rel_extension_instance__users" constraintName="FK2ewrthftnnc1dlufvy9jji8ai"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-3">
+    <changeSet author="gontareka (generated)" id="1626522853929-2">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKdcjrvmj7buivwrq8p6djfduil"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="process_publication" constraintName="FKdcjrvmj7buivwrq8p6djfduil"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-4">
+    <changeSet author="gontareka (generated)" id="1626522853929-3">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKhxltiedh6m8yhdsv3d6olmgv7"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="rel_extension_instance__users" constraintName="FKhxltiedh6m8yhdsv3d6olmgv7"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-5">
+    <changeSet author="gontareka (generated)" id="1626522853929-4">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKogdbk7k7p425ain6m8ipy9bf7"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="process_publication" constraintName="FKogdbk7k7p425ain6m8ipy9bf7"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-6">
+    <changeSet author="gontareka (generated)" id="1626522853929-5">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKtjm07hvrgxawhqxrksjppurhg"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="extension_version" constraintName="FKtjm07hvrgxawhqxrksjppurhg"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-7">
+    <changeSet author="gontareka (generated)" id="1626522853929-6">
         <preConditions onFail="MARK_RAN">
             <indexExists indexName="uc_extension_versionname_col"/>
         </preConditions>
         <dropUniqueConstraint constraintName="uc_extension_versionname_col" tableName="extension_version"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-8">
-        <preConditions onFail="MARK_RAN">
-            <indexExists indexName="ux_extension_instance_name"/>
-        </preConditions>
-        <dropUniqueConstraint constraintName="ux_extension_instance_name" tableName="extension_instance"/>
-    </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-9">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="extension_instance"/>
-        </preConditions>
-        <dropTable tableName="extension_instance"/>
-    </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-10">
+    <changeSet author="gontareka (generated)" id="1626522853929-7">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="extension_version"/>
         </preConditions>
         <dropTable tableName="extension_version"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-11">
+    <changeSet author="gontareka (generated)" id="1626522853929-8">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="process_publication"/>
         </preConditions>
         <dropTable tableName="process_publication"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1626522853929-12">
+    <changeSet author="gontareka (generated)" id="1626522853929-9">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="rel_extension_instance__users"/>
         </preConditions>
