@@ -3,10 +3,18 @@ import { Injectable } from '@nestjs/common';
 // @ts-ignore
 import { version } from '../../package.json';
 
-export type ICredentials = {
+export interface MicrosoftAuth {
+    tenantId: string | undefined;
+    clientId: string | undefined;
+    clientSecret: string | undefined;
+    username: string | undefined;
+    password: string | undefined;
+}
+
+export interface Credentials {
     username: string;
     password: string;
-};
+}
 
 @Injectable()
 export class ServerConfigService {
@@ -28,7 +36,7 @@ export class ServerConfigService {
         return this.configService.get('RUNBOTICS_INSTALLATION_ID');
     }
 
-    get credentials(): ICredentials {
+    get credentials(): Credentials {
         return {
             username: this.configService.get('RUNBOTICS_USERNAME'),
             password: this.configService.get('RUNBOTICS_PASSWORD'),
@@ -49,5 +57,15 @@ export class ServerConfigService {
 
     get logger(): string {
         return this.configService.get('RUNBOTICS_LOGGER');
+    }
+
+    get microsoftAuth(): MicrosoftAuth {
+        return {
+            tenantId: this.configService.get('MS_TENANT_ID'),
+            clientId: this.configService.get('MS_CLIENT_ID'),
+            clientSecret: this.configService.get('MS_CLIENT_SECRET'),
+            username: this.configService.get('MS_USERNAME'),
+            password: this.configService.get('MS_PASSWORD'),
+        };
     }
 }

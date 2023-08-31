@@ -56,7 +56,7 @@ export class ServerConfigService {
             }
         };
     }
-    
+
     get writeEmailTriggerConfig(): EmailConfig {
         return {
             host: this.configService.get('BASIC_EMAIL_TRIGGER_WRITE_HOST'),

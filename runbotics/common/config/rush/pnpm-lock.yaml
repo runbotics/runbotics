@@ -45,6 +45,8 @@ importers:
 
   ../../runbotics-desktop:
     specifiers:
+      '@azure/msal-node': ^1.15.0
+      '@microsoft/microsoft-graph-client': ^3.0.5
       '@nestjs-modules/mailer': 1.8.1
       '@nestjs/cli': ^9.1.8
       '@nestjs/common': ^9.2.1
@@ -115,6 +117,8 @@ importers:
       winston-daily-rotate-file: ^4.6.0
       ws: ^7.4.5
     dependencies:
+      '@azure/msal-node': 1.15.0
+      '@microsoft/microsoft-graph-client': 3.0.5
       '@nestjs-modules/mailer': 1.8.1_coavdaaduwmldvhzciyrwynkfa
       '@nestjs/common': 9.2.1_47vcjb2de6lyibr6g4enoa5lyu
       '@nestjs/config': 2.2.0_mfkzh5ukguftbui36dhl5aryku

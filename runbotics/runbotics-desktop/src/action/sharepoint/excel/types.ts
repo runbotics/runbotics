@@ -1,27 +1,23 @@
+import { Platform } from '#action/microsoft/excel/excel.types';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.setCell', SharepointSetExcelCellActionInput>
 | DesktopRunRequest<'sharepointExcel.getCell', SharepointGetExcelCellActionInput>
-| DesktopRunRequest<'sharepointExcel.openFileFromSite', SharepointOpenFromSiteActionInput>
-| DesktopRunRequest<'sharepointExcel.openFileFromRoot', SharepointOpenFromRootActionInput>
 | DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
-| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>;
+| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>
+| DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
-
-export type SharepointOpenFromRootActionInput = {
+export interface SharepointExcelOpenFileActionInput {
+    platform: Platform;
     filePath: string;
     worksheetName: string;
     persistChanges: boolean;
-};
-export type SharepointOpenFromSiteActionInput = {
-    siteRelativePath: string;
+    siteName: string;
     listName: string;
-    filePath: string;
-    worksheetName: string;
-    persistChanges: boolean;
-};
+}
+
 export type SharepointOpenActionOutput = any;
 
 export type SharepointSetExcelCellActionInput = {
@@ -32,7 +28,7 @@ export type SharepointExcelSetCellActionOutput = any;
 
 export type SharepointExcelUpdateRangeActionInput = {
     range: string;
-    values: any[][];
+    values: string | (string | number | boolean)[][];
 };
 export type SharepointExcelUpdateRangeActionOutput = any;
 

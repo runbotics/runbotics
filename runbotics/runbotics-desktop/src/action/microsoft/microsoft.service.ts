@@ -1,4 +1,4 @@
-import Axios, { Method, AxiosError, AxiosResponse } from 'axios';
+import Axios, { Method, AxiosResponse } from 'axios';
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
 
 export class MicrosoftService {
