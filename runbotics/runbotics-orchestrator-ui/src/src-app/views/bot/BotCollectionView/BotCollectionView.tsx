@@ -27,9 +27,9 @@ const BotCollectionView: VFC = () => {
 
     const router = useRouter();
     const query = useQuery();
-    const currentPage = parseInt(query.get('page'), 10);
+    const pageFromUrl = query.get('page');
     const pageSizeFromUrl = query.get('pageSize');
-    const [page, setPage] = useState(currentPage);
+    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const [limit, setLimit] = useState(
         pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : getLimitByDisplayMode(displayMode),
     );
@@ -48,7 +48,7 @@ const BotCollectionView: VFC = () => {
 
     useEffect(() => {
         const params = getBotCollectionPageParams(page, limit, debouncedSearch, searchField);
-        router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit, search, searchField } });
+        router.replace({ pathname: router.pathname, query: { page, pageSize: limit, search, searchField } });
 
         dispatch(botCollectionActions.getByPage(params));
         // eslint-disable-next-line react-hooks/exhaustive-deps
