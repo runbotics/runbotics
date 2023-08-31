@@ -1,3 +1,6 @@
+export const SHARE_POINT = "SharePoint";
+export const ONE_DRIVE = "OneDrive";
+
 export enum ACTION_GROUP {
     VARIABLES = 'variables',
     GENERAL = 'general',
@@ -103,13 +106,12 @@ export enum DesktopOfficeAction {
 }
 
 export enum SharepointExcelAction {
-    GET_CELL = 'sharepointExcel.getCell',
-    GET_RANGE = 'sharepointExcel.getRange',
-    SET_CELL = 'sharepointExcel.setCell',
-    UPDATE_RANGE = 'sharepointExcel.updateRange',
-    OPEN_FILE_FROM_SITE = 'sharepointExcel.openFileFromSite',
-    OPEN_FILE_FROM_ROOT = 'sharepointExcel.openFileFromRoot',
-    CLOSE_SESSION = 'sharepointExcel.closeSession',
+	GET_CELL = 'sharepointExcel.getCell',
+	GET_RANGE = 'sharepointExcel.getRange',
+	SET_CELL = 'sharepointExcel.setCell',
+	UPDATE_RANGE = 'sharepointExcel.updateRange',
+	OPEN_FILE='sharepointExcel.openFile',
+	CLOSE_SESSION = 'sharepointExcel.closeSession',
 }
 
 export enum SharepointFileAction {
