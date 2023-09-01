@@ -19,7 +19,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             worksheetIdentifier: input.worksheetName,
             persistChanges: input.persistChanges,
             siteName: input.siteName,
-            list: input.listName,
+            listName: input.listName,
         });
     }
 
