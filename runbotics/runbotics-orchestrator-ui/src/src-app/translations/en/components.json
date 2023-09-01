@@ -18,6 +18,8 @@
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",
     "Component.Tile.Process.Settings.AriaLabel": "settings",
+    "Component.Tile.Process.Tags.ExpandLabel": "expand",
+    "Component.Tile.Process.Tags.CollapseLabel": "collapse",
     "Component.Tile.Process.Content.Created": "Created:",
     "Component.Tile.Process.Content.Creator": "Creator:",
     "Component.Tile.Process.Content.Updated": "Updated:",

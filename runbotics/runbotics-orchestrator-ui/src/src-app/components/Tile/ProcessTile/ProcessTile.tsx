@@ -1,6 +1,6 @@
 import type { VFC } from 'react';
 
-import { Box, Divider, CardHeader } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
@@ -11,13 +11,10 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 
 import { ProcessTab } from '#src-app/utils/process-tab';
 
-import { Description, ProcessTileContent, ProcessTileFooter, ProcessTileProps, StyledCardActionArea } from '.';
+import { Description, ProcessTileTags, ProcessTileContent, ProcessTileFooter, ProcessTileProps, StyledCardHeader, StyledCardActionArea } from '.';
 
 import { buildProcessUrl } from './ProcessTile.utils';
 import Tile, { TileAvatar } from '..';
-
-
-
 
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
@@ -32,13 +29,15 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
 
     return (
         <Tile>
+            <StyledCardHeader
+                avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
+                title={process.name}
+                titleTypographyProps={{ variant: 'h5' }}
+                sx={{ width: '100%' }}
+                onClick={handleRedirect}
+            />
+            <ProcessTileTags tags={process.tags} />
             <StyledCardActionArea onClick={handleRedirect}>
-                <CardHeader
-                    avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
-                    title={process.name}
-                    titleTypographyProps={{ variant: 'h5' }}
-                    sx={{ width: '100%' }}
-                />
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent process={process} />
                 </If>
