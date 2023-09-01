@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '#logger';
 
-import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
+import { MicrosoftGraphService } from '../../../microsoft-graph/microsoft-graph.service';
 import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
 import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';
+import { bufferFromBase64 } from '../../utils';
 
 @Injectable()
 export class OneDriveService {
@@ -39,7 +40,7 @@ export class OneDriveService {
         return this.microsoftGraphService
             .put<UploadFileResponse>(
                 `/me/drive/root:/${fullFilePath}:/content`,
-                this.bufferFromBase64(content),
+                bufferFromBase64(content),
                 {
                     headers: {
                         'Content-Type': contentType,
@@ -75,12 +76,5 @@ export class OneDriveService {
                 folder: {},
                 '@microsoft.graph.conflictBehavior': 'fail', // fail, replace, rename
             });
-    }
-
-    private bufferFromBase64(base64File: string) {
-        if (base64File.includes('base64,')) {
-            return Buffer.from(base64File.split(';base64,').pop(), 'base64');
-        }
-        return Buffer.from(base64File, 'base64');
     }
 }
