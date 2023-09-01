@@ -252,7 +252,7 @@ jobs:
           docker tag runbotics/runbotics-orchestrator:latest runbotics/runbotics-orchestrator:$API_VERSION
           docker push --all-tags runbotics/runbotics-orchestrator
   dispatch-event:
-    needs: [push-ui, push-scheduler, push-api]
+    needs: [push-ui, push-scheduler, push-api, push-bot]
     runs-on: ubuntu-latest
     steps:
       - name: dispatch-deploy
