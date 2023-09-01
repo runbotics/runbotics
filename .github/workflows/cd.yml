@@ -141,13 +141,13 @@ jobs:
             runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
 
   push-bot:
-    # needs: changes-detection
-    # if: |
-    #   (github.ref == 'refs/heads/develop'
-    #   || github.ref == 'refs/heads/master'
-    #   || startsWith(github.ref, 'refs/heads/release/')
-    #   || startsWith(github.ref, 'refs/heads/hotfix/'))
-    #   && needs.changes-detection.outputs.bot == 'true'
+    needs: changes-detection
+    if: |
+      (github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || startsWith(github.ref, 'refs/heads/release/')
+      || startsWith(github.ref, 'refs/heads/hotfix/'))
+      && needs.changes-detection.outputs.bot == 'true'
 
     runs-on: ubuntu-latest
 
