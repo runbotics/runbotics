@@ -24,8 +24,6 @@ import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.sty
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
 import useLoginValidationSchema from '#src-app/views/auth/LoginPage/useLoginValidationSchema';
 import UserLoginSection from '#src-app/views/auth/LoginPage/UserLoginSection';
-import { getHttpStatusKeyword } from '#src-app/views/utils/authUtils';
-
 
 export interface LoginFormState {
     email: string;
@@ -90,7 +88,7 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = getHttpStatusKeyword(error.status);
+                const status = error.status >= 400 && error.status < 500 ? '4xx' : '5xx';
                 const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
