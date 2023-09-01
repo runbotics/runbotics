@@ -3,22 +3,18 @@ import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph';
 import {
-    Drive,
-    DriveItem,
-    Platform,
+    OneDriveSession,
     Session,
-    SessionIdentifier,
-    SessionInput,
-    SharePointSessionInput,
-    Site,
+    OpenFileInput,
+    SharePointSession,
     WorkbookCellCoordinates,
     WorkbookRange,
     WorkbookRangeUpdateBody,
     WorkbookSessionInfo,
-    WorksheetIdentifier,
 } from './excel.types';
 
-import { ONE_DRIVE, SHARE_POINT } from 'runbotics-common';
+import { MicrosoftCloudPlatform } from 'runbotics-common';
+import { SharePointService } from '../file/service/share-point';
 
 @Injectable()
 export class ExcelService {
@@ -26,16 +22,16 @@ export class ExcelService {
 
     session: Session = null;
 
-    constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
+    constructor(private readonly microsoftGraphService: MicrosoftGraphService, private readonly sharePointService: SharePointService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    public async openFile(input: SessionInput): Promise<WorkbookSessionInfo> {
+    public async openFile(input: OpenFileInput): Promise<WorkbookSessionInfo> {
         const url = '/createSession';
 
         this.session =
-            input.platform === SHARE_POINT
+            input.platform === MicrosoftCloudPlatform.SHARE_POINT
                 ? await this.createSharePointSession(input)
-                : this.createOneDriveSession(input.platform, input.sessionIdentifier, input.worksheetIdentifier);
+                : this.createOneDriveSession(input);
 
         const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
             this.createWorkbookUrl(url),
@@ -125,11 +121,11 @@ export class ExcelService {
 
     private createWorkbookUrl(url: string) {
         switch (this.session.platform) {
-            case SHARE_POINT:
+            case MicrosoftCloudPlatform.SHARE_POINT:
                 return `/sites/${this.session.siteId}/drives/${this.session.driveId}/items/${this.session.fileId}/workbook`.concat(
                     url
                 );
-            case ONE_DRIVE:
+            case MicrosoftCloudPlatform.ONE_DRIVE:
                 return `/me/drive/root:/${this.session.sessionIdentifier}:/workbook`.concat(url);
             default:
                 throw new Error('Invalid platform');
@@ -145,37 +141,11 @@ export class ExcelService {
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
     }
 
-    private async getSiteIdByName(name: string): Promise<Site> {
-        const url = `/sites?search=${name}`;
-        return (await this.microsoftGraphService.get(url))['value'][0];
-    }
+    private async createSharePointSession(input: SharePointSession): Promise<Session> {
+        const siteId = await this.sharePointService.getSiteIdByName(input.siteName);
+        const driveId = await this.sharePointService.getDriveIdBySiteAndListName(siteId, input.listName);
+        const fileId = await this.sharePointService.getItemId(siteId, driveId, input.sessionIdentifier);
 
-    private async getDriveIdBySiteAndListName(siteId: string, listName: string) {
-        const url = `/sites/${siteId}/drives/`;
-
-        const data = (await this.microsoftGraphService.get(url))['value'] as Drive[];
-
-        return data.filter(drive => drive.name === listName)[0].id;
-    }
-
-    private async getItemId(siteId: string, driveId: string, path: string) {
-        const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
-
-        const data: DriveItem = await this.microsoftGraphService.get(url);
-
-        return data.id;
-    }
-
-    private async createSharePointSession(input: SharePointSessionInput): Promise<Session> {
-        const site = await this.getSiteIdByName(input.siteRelativePath);
-        if (site === undefined) {
-            throw new Error(`Site ${input.siteRelativePath} not found`);
-        }
-
-        const siteId = site.id;
-
-        const driveId = await this.getDriveIdBySiteAndListName(siteId, input.list);
-        const fileId = await this.getItemId(siteId, driveId, input.sessionIdentifier);
         return {
             platform: input.platform,
             sessionIdentifier: input.sessionIdentifier,
@@ -188,15 +158,13 @@ export class ExcelService {
     }
 
     private createOneDriveSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier
+        input: OneDriveSession
     ): Session {
         return {
-            platform,
-            sessionIdentifier,
+            platform: input.platform,
+            sessionIdentifier: input.sessionIdentifier,
             workbookSessionInfo: null,
-            worksheetIdentifier,
+            worksheetIdentifier: input.worksheetIdentifier,
         };
     }
 }
