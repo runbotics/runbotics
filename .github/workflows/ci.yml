@@ -8,7 +8,7 @@ on:
 env:
   RUSH: node ../common/scripts/install-run-rush.js
   RUSHX: node ../common/scripts/install-run-rushx.js
-  NODE_VERSION: 14.x
+  NODE_VERSION: 18.x
 
 jobs:
   changes-detection:
