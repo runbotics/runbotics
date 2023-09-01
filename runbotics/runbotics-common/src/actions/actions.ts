@@ -1,5 +1,7 @@
-export const SHARE_POINT = "SharePoint";
-export const ONE_DRIVE = "OneDrive";
+export enum MicrosoftCloudPlatform {
+    SHARE_POINT = 'SharePoint',
+    ONE_DRIVE = 'OneDrive',
+}
 
 export enum ACTION_GROUP {
     VARIABLES = 'variables',
@@ -110,7 +112,7 @@ export enum SharepointExcelAction {
 	GET_RANGE = 'sharepointExcel.getRange',
 	SET_CELL = 'sharepointExcel.setCell',
 	UPDATE_RANGE = 'sharepointExcel.updateRange',
-	OPEN_FILE='sharepointExcel.openFile',
+	OPEN_FILE=  'sharepointExcel.openFile',
 	CLOSE_SESSION = 'sharepointExcel.closeSession',
 }
 
@@ -158,7 +160,6 @@ export enum ApplicationAction {
 }
 
 export enum ExcelAction {
-
 	OPEN = 'excel.open',
 	GET_CELL = 'excel.getCell',
 	GET_CELLS = 'excel.getCells',
@@ -181,7 +182,6 @@ export enum ExcelAction {
     DELETE_ROWS = 'excel.deleteRows',
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
-
 }
 
 export type AllActionIds =

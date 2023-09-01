@@ -14,8 +14,8 @@ export interface SharepointExcelOpenFileActionInput {
     filePath: string;
     worksheetName: string;
     persistChanges: boolean;
-    siteName: string;
-    listName: string;
+    siteName?: string;
+    listName?: string;
 }
 
 export type SharepointOpenActionOutput = any;
