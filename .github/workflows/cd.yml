@@ -141,15 +141,15 @@ jobs:
             runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
 
   push-bot:
-    needs: changes-detection
-    if: |
-      (github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || startsWith(github.ref, 'refs/heads/release/')
-      || startsWith(github.ref, 'refs/heads/hotfix/'))
-      && needs.changes-detection.outputs.bot == 'true'
+    # needs: changes-detection
+    # if: |
+    #   (github.ref == 'refs/heads/develop'
+    #   || github.ref == 'refs/heads/master'
+    #   || startsWith(github.ref, 'refs/heads/release/')
+    #   || startsWith(github.ref, 'refs/heads/hotfix/'))
+    #   && needs.changes-detection.outputs.bot == 'true'
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -170,12 +170,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Choco install build tools
-        run: choco install python visualcpp-build-tools -y
-
-      - name: Set npm config VS version
-        run: npm config set msvs_version 2017
-
       - name: Install dependencies
         run: $RUSH install -t .
 
@@ -185,7 +179,9 @@ jobs:
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-desktop
-          $RUSH deploy --overwrite --target-folder ../common/deploy/runbotics-desktop
+          $RUSH deploy --scenario runbotics-desktop \
+            --target-folder ../common/deploy/runbotics-desktop \
+            --overwrite
 
       - name: Assign package version
         uses: nyaa8/package-version@v1
