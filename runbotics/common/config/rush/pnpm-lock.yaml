@@ -5,29 +5,6 @@ importers:
   .:
     specifiers: {}
 
-  ../../runbotics-actions-windows:
-    specifiers:
-      '@nestjs/common': ^8.4.2
-      '@types/node': ^18.11.18
-      microbundle: ^0.13.3
-      reflect-metadata: ^0.1.13
-      runbotics-sdk: workspace:^1.0.0
-      rxjs: ^7.5.5
-      tslib: ^2.3.0
-      typescript: ^4.3.5
-      winax: 3.3.4
-    dependencies:
-      '@nestjs/common': 8.4.2_47vcjb2de6lyibr6g4enoa5lyu
-      reflect-metadata: 0.1.13
-      rxjs: 7.5.5
-      winax: 3.3.4
-    devDependencies:
-      '@types/node': 18.11.18
-      microbundle: 0.13.3
-      runbotics-sdk: link:../runbotics-sdk
-      tslib: 2.3.1
-      typescript: 4.6.2
-
   ../../runbotics-common:
     specifiers:
       '@types/jexl': ^2.2.0
@@ -96,7 +73,6 @@ importers:
       qs: ^6.11.1
       reflect-metadata: ^0.1.13
       rimraf: ^3.0.2
-      runbotics-actions-windows: workspace:^1.0.0
       runbotics-common: workspace:^1.0.0
       runbotics-sdk: workspace:^1.0.0
       rxjs: ^7.5.5
@@ -112,7 +88,6 @@ importers:
       typescript: ^4.9.4
       uuid: ^8.3.2
       vm2: ^3.9.16
-      winax: 3.3.4
       winston: ^3.4.0
       winston-daily-rotate-file: ^4.6.0
       ws: ^7.4.5
@@ -149,7 +124,6 @@ importers:
       qs: 6.11.1
       reflect-metadata: 0.1.13
       rimraf: 3.0.2
-      runbotics-actions-windows: link:../runbotics-actions-windows
       runbotics-common: link:../runbotics-common
       runbotics-sdk: link:../runbotics-sdk
       rxjs: 7.5.5
@@ -163,8 +137,6 @@ importers:
       winston: 3.6.0
       winston-daily-rotate-file: 4.6.1_winston@3.6.0
       ws: 7.4.6
-    optionalDependencies:
-      winax: 3.3.4
     devDependencies:
       '@nestjs/cli': 9.1.8
       '@nestjs/schematics': 9.0.4_typescript@4.9.4
@@ -4731,32 +4703,6 @@ packages:
       - webpack-cli
     dev: true
 
-  /@nestjs/common/8.4.2_47vcjb2de6lyibr6g4enoa5lyu:
-    resolution: {integrity: sha512-l5CTBvW7PaqZPHRwtLU7G0NK2XBLQZL8jnvH0ArGGduljb5MpgsXwgDt8OYlc5m50IGBL/2j70Cad3CEpKcLUA==}
-    peerDependencies:
-      cache-manager: '*'
-      class-transformer: '*'
-      class-validator: '*'
-      reflect-metadata: ^0.1.12
-      rxjs: ^7.1.0
-    peerDependenciesMeta:
-      cache-manager:
-        optional: true
-      class-transformer:
-        optional: true
-      class-validator:
-        optional: true
-    dependencies:
-      axios: 0.26.1
-      iterare: 1.2.1
-      reflect-metadata: 0.1.13
-      rxjs: 7.5.5
-      tslib: 2.3.1
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /@nestjs/common/9.2.0_47vcjb2de6lyibr6g4enoa5lyu:
     resolution: {integrity: sha512-Ndcqak/ETYi+n1c5lFRPbxKLyUuM6DIOxcvfEFGfi0f6ad4dWDXRDx7z/n8V0l8+Y8djvvOHgf3t0e93w963Qg==}
     peerDependencies:
@@ -7388,14 +7334,6 @@ packages:
     resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
     dependencies:
       follow-redirects: 1.14.9
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
-  /axios/0.26.1:
-    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
-    dependencies:
-      follow-redirects: 1.15.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -17993,6 +17931,7 @@ packages:
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
+    dev: true
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
@@ -18836,14 +18775,6 @@ packages:
       siginfo: 2.0.0
       stackback: 0.0.2
     dev: true
-
-  /winax/3.3.4:
-    resolution: {integrity: sha512-hwh/tFGGCZgrvoxgd8xqSYgnWYUHvqLUMTtKgV/qSEwy4MC31JUukhBlKbBlqpnuDkzMGpxavyI4YCyrdtagyA==}
-    engines: {node: '>= 10.0.0'}
-    os: [win32]
-    hasBin: true
-    requiresBuild: true
-    dev: false
 
   /windows-release/4.0.0:
     resolution: {integrity: sha512-OxmV4wzDKB1x7AZaZgXMVsdJ1qER1ed83ZrTYd5Bwq2HfJVg3DJS8nqlAG4sMoJ7mu8cuRmLEYyU13BKwctRAg==}

@@ -18,7 +18,6 @@ import LoopActionHandler from './loop';
 import MailActionHandler from './mail';
 import { MicrosoftModule } from './microsoft';
 import JavaScriptActionHandler from './rce';
-import SapActionHandler from './sap';
 import SharepointExcelActionHandler from './sharepoint/excel';
 import SharepointFileActionHandler from './sharepoint/file';
 import VariableActionHandler from './variable';
@@ -41,7 +40,6 @@ const ALL_ACTION_HANDLERS = [
     LoopActionHandler,
     MailActionHandler,
     JavaScriptActionHandler,
-    SapActionHandler,
     SharepointExcelActionHandler,
     SharepointFileActionHandler,
     VariableActionHandler,

@@ -359,10 +359,6 @@
    */
     "projects": [
         {
-            "packageName": "runbotics-actions-windows",
-            "projectFolder": "runbotics-actions-windows"
-        },
-        {
             "packageName": "runbotics-common",
             "projectFolder": "runbotics-common"
         },
