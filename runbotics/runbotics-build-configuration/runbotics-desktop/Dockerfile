@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM node:18-alpine
 WORKDIR /usr/src/app
 
 RUN apt-get update && \
