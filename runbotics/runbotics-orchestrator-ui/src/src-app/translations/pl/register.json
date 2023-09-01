@@ -15,11 +15,6 @@
     "Register.SwitchToLoginMessage": "Mam już konto",
     "Register.Error.NoInternet": "Brak połączenia z internetem",
     "Register.Error.4xx": "Niepoprawny format danych lub dany email jest już zajęty",
-    "Register.Error.5xx": "Wystąpił problem z serwerem. Spróbuj ponownie później a jeśli problem się utrzymuje - skontaktuj się z nami poprzez formularz na stronie głownej",
-    "Register.Error.500": "Wystąpił niespodziewany problem z serwerem. Gdyby problem się powielał skontaktuj się z nami poprzez formularz na stronie głownej",
-    "Register.Error.501": "Błędne zapytanie serwera",
-    "Register.Error.502": "Błędna odpowiedź serwera",
-    "Register.Error.503": "Żadanie w tej chwili nie może zostać wykonane",
-    "Register.Error.504": "Przekroczony został limit czasu oczekiania na odpowiedź serwera. Spróbuj odświeżyć stronę",
+    "Register.Error.5xx": "Wystąpił nieoczekiwany problem z serwerem. Spróbuj ponownie później a jeśli problem się utrzymuje - skontaktuj się z nami poprzez formularz na stronie głownej",
     "Register.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }
