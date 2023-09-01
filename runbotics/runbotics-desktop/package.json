@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.8.0-SNAPSHOT.50",
+    "version": "2.8.0-SNAPSHOT.51",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -24,6 +24,8 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
+        "@azure/msal-node": "^1.15.0",
+        "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
         "@nestjs/config": "^2.2.0",
