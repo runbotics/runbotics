@@ -40,7 +40,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
@@ -54,7 +53,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'), //?
                         },
                     },
                 },
@@ -101,7 +100,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
@@ -115,7 +113,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'), //?
                         },
                     },
                 },
@@ -166,7 +164,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
@@ -231,10 +228,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableName',
-                                ),
-
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
@@ -274,15 +268,14 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             platform: {
-                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
+                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Platform'),
                                 type: 'string',
                                 enum: ['OneDrive', 'SharePoint'],
                                 default: ['OneDrive'],
-
                             },
                         },
                         dependencies: {
@@ -295,31 +288,31 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             siteName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.SharePoint.SiteName',
                                                 ),
                                                 type: 'string',
                                             },
                                             listName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.SharePoint.ListName',
                                                 ),
                                                 type: 'string',
                                             },
                                             filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
                                             worksheetName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.WorksheetName',
                                                 ),
                                                 type: 'string',
                                             },
                                             persistChanges: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.PersistChanges',
                                                 ),
                                                 type: 'boolean',
                                             },
@@ -333,19 +326,19 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
                                             worksheetName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.WorksheetName',
                                                 ),
                                                 type: 'string',
                                             },
                                             persistChanges: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFile.PersistChanges',
                                                 ),
                                                 type: 'boolean',
                                             },
@@ -360,39 +353,19 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                     },
                 },
             },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
             formData: {
                 input: {
-                    siteRelativePath: undefined,
+                    platform: 'OneDrive',
+                    siteName: undefined,
                     listName: undefined,
                     filePath: undefined,
                     worksheetName: undefined,
                     persistChanges: true,
                 },
-                output: {
-                },
             },
-
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                input: {
-                    collection: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info'),
-                        }
-                    },
-                    elementVariable: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info'),
-                        }
-                    },
-                    iterations: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
-                        }
-                    }
-                }
-            },
-
         },
     },
     'sharepointExcel.closeSession': {
@@ -418,7 +391,6 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
