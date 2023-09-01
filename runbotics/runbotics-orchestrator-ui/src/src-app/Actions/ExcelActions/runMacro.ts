@@ -5,7 +5,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { ActionSystem, IBpmnAction, Runner } from '../types';
 
 const getActionsRunMacro = (): IBpmnAction => ({
-    id: 'excel.runMacro',
+    id: ExcelAction.RUN_MACRO,
     label: translate('Process.Details.Modeler.Actions.Excel.RunMacro.Label'),
     script: ExcelAction.RUN_MACRO,
     runner: Runner.DESKTOP_SCRIPT,
@@ -31,7 +31,6 @@ const getActionsRunMacro = (): IBpmnAction => ({
                             maxItems: 10,
                         },
                     },
-
                     required: ['macro'],
                 },
             },
