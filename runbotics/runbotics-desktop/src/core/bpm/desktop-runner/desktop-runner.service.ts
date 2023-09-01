@@ -92,11 +92,7 @@ export class DesktopRunnerService implements OnModuleInit {
         // } else {
         //     this.logger.warn('Hot reload is on! Remember to turn it off in production env.');
         // }
-        // try {
-        //     await this.loadExternalModule('runbotics-actions-windows');
-        // } catch(e) {
-        //     this.logger.error('Error loading extensions from runbotics-actions-windows', e);
-        // }
+
 
         await this.loadExtensionsDirModules();
 

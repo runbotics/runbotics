@@ -358,10 +358,6 @@
    * 3. It's useful to have a centralized inventory of all projects and their important metadata.
    */
     "projects": [
-      //   {
-      //       "packageName": "runbotics-actions-windows",
-      //       "projectFolder": "runbotics-actions-windows"
-      //   },
         {
             "packageName": "runbotics-common",
             "projectFolder": "runbotics-common"

@@ -189,12 +189,7 @@ jobs:
           path: './runbotics/runbotics-desktop/package.json'
 
       - name: Build and push image
-        run: |
-          cd ../common/deploy/runbotics-desktop
-          docker build -t 'runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}' -t runbotics/runbotics-desktop:latest .
-          docker push --all-tags runbotics/runbotics-desktop
-
-      - uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2
         with:
           context: ./runbotics/common/deploy/runbotics-desktop
           file: ./runbotics/common/deploy/runbotics-desktop/Dockerfile
