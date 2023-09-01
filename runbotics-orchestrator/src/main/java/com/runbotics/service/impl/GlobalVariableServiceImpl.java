@@ -46,6 +46,7 @@ public class GlobalVariableServiceImpl implements GlobalVariableService {
         GlobalVariable globalVariable = globalVariableMapper.toEntity(globalVariableDTO);
         globalVariable.setLastModified(ZonedDateTime.now());
         var user = userService.getUserWithAuthorities().get();
+        if ( globalVariableDTO.getId() == null ) globalVariable.setCreator(user);
         globalVariable.setUser(user);
         globalVariable = globalVariableRepository.save(globalVariable);
         return globalVariableMapper.toDto(globalVariable);

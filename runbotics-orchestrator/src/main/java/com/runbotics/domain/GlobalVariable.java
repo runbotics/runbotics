@@ -34,6 +34,9 @@ public class GlobalVariable implements Serializable {
     private ZonedDateTime lastModified;
 
     @ManyToOne
+    private User creator;
+
+    @ManyToOne
     private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -126,6 +129,14 @@ public class GlobalVariable implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public User getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(User user) {
+        this.creator = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
