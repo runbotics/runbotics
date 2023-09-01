@@ -179,7 +179,7 @@ jobs:
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-desktop
-          $RUSH deploy --scenario deploy \
+          $RUSH deploy \
             --target-folder ../common/deploy/runbotics-desktop \
             --overwrite
 
