@@ -264,7 +264,7 @@ jobs:
           client-payload: '{}'
 
   dispatch-bot:
-      needs: [push-bot]
+      # needs: [push-bot]
       runs-on: ubuntu-latest
       steps:
         - name: Dispatch deploy dob
