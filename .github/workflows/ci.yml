@@ -8,7 +8,7 @@ on:
 env:
   RUSH: node ../common/scripts/install-run-rush.js
   RUSHX: node ../common/scripts/install-run-rushx.js
-  NODE_VERSION: 14.x
+  NODE_VERSION: 18.x
 
 jobs:
   changes-detection:
@@ -38,7 +38,6 @@ jobs:
             bot:
               - 'runbotics/runbotics-desktop/**'
               - 'runbotics/runbotics-common/**'
-              - 'runbotics/runbotics-actions-windows/**'
               - 'runbotics/runbotics-sdk/**'
             api:
               - 'runbotics-orchestrator/**'
@@ -177,7 +176,7 @@ jobs:
        || github.ref == 'refs/heads/master'
        || needs.changes-detection.outputs.bot == 'true'
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -216,17 +215,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Choco install build tools
-        run: choco install visualcpp-build-tools -y
-
-      - name: Set npm config VS version
-        run: npm config set msvs_version 2017
 
       - name: Install dependencies
         run: ${{ env.RUSH }} install -t .

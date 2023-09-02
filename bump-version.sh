@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "[INFO] - Bump rush apps versions started"
 cd runbotics && sh bump-rush.sh && cd ..
 echo "[INFO] - Bump rush apps versions completed"
