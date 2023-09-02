@@ -14,7 +14,6 @@ import { botSystemsActions } from '#src-app/store/slices/BotSystem';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
@@ -24,6 +23,7 @@ import {
     StyledPaper,
 } from './ProcessConfigureView.styles';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
+import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();

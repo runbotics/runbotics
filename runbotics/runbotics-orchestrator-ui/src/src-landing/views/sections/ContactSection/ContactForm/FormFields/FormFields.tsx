@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import Checkbox from '#src-landing/components/Checkbox';
 
-import { REQUIRED_FIELDS } from '../ContactForm';
 import styles from './FormFields.module.scss';
 import { CheckboxProps, FormInputProps, SubmitProps } from './FormFields.types';
+import { REQUIRED_FIELDS } from '../ContactForm';
 
 export const FormInput: FC<FormInputProps<HTMLInputElement>> = ({
     placeholder,

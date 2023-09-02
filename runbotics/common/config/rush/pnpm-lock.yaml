@@ -51,8 +51,8 @@ importers:
         specifier: ^9.2.1
         version: 9.4.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/schedule':
-        specifier: ^2.1.0
-        version: 2.2.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)
+        specifier: ^3.0.3
+        version: 3.0.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)
       '@stomp/stompjs':
         specifier: ^6.1.0
         version: 6.1.2
@@ -183,9 +183,6 @@ importers:
       '@types/bpmn-moddle':
         specifier: ^5.1.6
         version: 5.1.6
-      '@types/cron':
-        specifier: ^2.0.0
-        version: 2.4.0
       '@types/jest':
         specifier: ^27.0.2
         version: 27.5.2
@@ -287,7 +284,7 @@ importers:
         version: 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@17.0.65)(react@18.2.0)
       '@mui/x-data-grid':
         specifier: ^5.17.0
-        version: 5.17.26(@mui/material@5.14.7)(@mui/system@5.14.7)(react-dom@18.2.0)(react@18.2.0)
+        version: 5.17.0(@mui/material@5.14.7)(@mui/system@5.14.7)(react-dom@18.2.0)(react@18.2.0)
       '@mui/x-date-pickers':
         specifier: ~5.0.7
         version: 5.0.20(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@mui/material@5.14.7)(@mui/system@5.14.7)(date-fns@2.30.0)(moment@2.29.4)(react-dom@18.2.0)(react@18.2.0)
@@ -3383,8 +3380,8 @@ packages:
       react-is: 18.2.0
     dev: false
 
-  /@mui/x-data-grid@5.17.26(@mui/material@5.14.7)(@mui/system@5.14.7)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-eGJq9J0g9cDGLFfMmugOadZx0mJeOd/yQpHwEa5gUXyONS6qF0OhXSWyDOhDdA3l2TOoQzotMN5dY/T4Wl1KYA==}
+  /@mui/x-data-grid@5.17.0(@mui/material@5.14.7)(@mui/system@5.14.7)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-JiI2zNMN4fGKzHFy59/7PUE6LDablkJMWcXAc6fsSIh6cnnDk8zZVa8rOR7ntTu63G9L30iJ3mobPvjuoXjeCQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.4.1
@@ -3739,8 +3736,22 @@ packages:
       reflect-metadata: ^0.1.12
     dependencies:
       '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(@nestjs/microservices@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(@nestjs/platform-express@9.4.3)(@nestjs/websockets@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       cron: 2.3.1
+      reflect-metadata: 0.1.13
+      uuid: 9.0.0
+    dev: false
+
+  /@nestjs/schedule@3.0.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-xsMA4dmP3LcW3rt2iMPfm88bDbCj/hLuDsLrKmJQlbnxyCYtBwLtmu/4cSfZELLM7pTDT+E8QDAqGwhYyUUjxg==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      '@nestjs/core': ^8.0.0 || ^9.0.0 || ^10.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(@nestjs/microservices@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      cron: 2.4.1
       reflect-metadata: 0.1.13
       uuid: 9.0.0
     dev: false
@@ -7075,6 +7086,12 @@ packages:
 
   /cron@2.3.1:
     resolution: {integrity: sha512-1eRRlIT0UfIqauwbG9pkg3J6CX9A6My2ytJWqAXoK0T9oJnUZTzGBNPxao0zjodIbPgf8UQWjE62BMb9eVllSQ==}
+    dependencies:
+      luxon: 3.4.2
+    dev: false
+
+  /cron@2.4.1:
+    resolution: {integrity: sha512-ty0hUSPuENwDtIShDFxUxWEIsqiu2vhoFtt6Vwrbg4lHGtJX2/cV2p0hH6/qaEM9Pj+i6mQoau48BO5wBpkP4w==}
     dependencies:
       luxon: 3.4.2
     dev: false

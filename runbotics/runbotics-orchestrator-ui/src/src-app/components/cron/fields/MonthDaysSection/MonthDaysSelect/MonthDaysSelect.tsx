@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
+import { MonthDaysSelectProps } from './MonthDaysSelect.types';
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
-import { MonthDaysSelectProps } from './MonthDaysSelect.types';
 
 const MonthDaysSelect: FC<MonthDaysSelectProps> = ({ 
     value, 

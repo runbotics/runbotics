@@ -10,11 +10,11 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import { VARIABLE_NAME_PATTERN } from '#src-app/types/format';
 
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import { applyModelerElement } from '../../helpers/elementManipulation';
 import { BPMNHelper, BpmnSubProcess } from '../../helpers/elementParameters';
 import ActionLabelForm from '../ActionLabelForm';
 import customWidgets from '../widgets';
-import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 interface LoopParameters {
     input: {

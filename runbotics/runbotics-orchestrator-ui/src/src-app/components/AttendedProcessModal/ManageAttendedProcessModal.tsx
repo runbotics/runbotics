@@ -30,11 +30,11 @@ import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Mode
 
 import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
 
+import { defaultForm } from './utils';
 import ErrorBoundary from '../utils/ErrorBoundary';
 
 import If from '../utils/If';
 
-import { defaultForm } from './utils';
 
 interface AdminModalProps {
     process: IProcess;

@@ -11,10 +11,10 @@ import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
-import DeleteUserDialog from '../DeleteUserDialog';
-import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersRegistrationTable from './UsersRegistrationTable';
 import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegistrationView.styles';
+import DeleteUserDialog from '../DeleteUserDialog';
+import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 interface SelectedRoles { [id: number]: Role };
 interface MapActivatedUserParams {

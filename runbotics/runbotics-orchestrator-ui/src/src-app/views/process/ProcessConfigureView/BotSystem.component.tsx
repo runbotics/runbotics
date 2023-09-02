@@ -13,8 +13,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { botSystemsSelector } from '../../../store/slices/BotSystem';
 import { Wrapper } from './BotComponent.styles';
+import { botSystemsSelector } from '../../../store/slices/BotSystem';
 
 
 interface BotSystemProps {

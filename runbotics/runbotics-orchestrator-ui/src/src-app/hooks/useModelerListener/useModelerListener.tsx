@@ -18,7 +18,6 @@ import {
 
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import useTranslations from '../useTranslations';
 import {
     CommandStackEvent,
     EventBusEvent,
@@ -29,6 +28,7 @@ import {
     validateElement,
     validateStartEvents,
 } from './useModelerListener.validation';
+import useTranslations from '../useTranslations';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     BpmnElementType.SERVICE_TASK,

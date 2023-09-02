@@ -14,10 +14,10 @@ import { capitalizeFirstLetter} from '#src-app/utils/text';
 
 import { formatTimeDiff } from '#src-app/utils/utils';
 
-import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations';
 import {
     GridContainer, GridItem
 } from './ProcessInstanceEventsDetails.styles';
+import useTranslations, { checkIfKeyExists } from '../../../hooks/useTranslations';
 
 
 interface Props {

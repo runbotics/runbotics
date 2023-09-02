@@ -7,10 +7,10 @@ import { useDispatch } from '#src-app/store';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
-import If from '../utils/If';
 import ProcessEventBreadcrumbs from './ProcessEventBreadcrumbs';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
+import If from '../utils/If';
 
 interface InfoPanelProps {
     processInstanceId?: string;

@@ -6,8 +6,8 @@ import arrowRightSrc from '#public/images/shapes/arrows-right-bottom-rounded-tra
 import useTranslations from '#src-app/hooks/useTranslations';
 import { INTEGRATION_SECTION_ID } from '#src-landing/utils/utils';
 
-import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 import styles from './IntegrationBackground.module.scss';
+import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 
 const IntegrationBackground: FC = ({ children }) => {
     const { translate } = useTranslations();

@@ -3,10 +3,10 @@ import React, { VFC } from 'react';
 import { CardActionArea, Divider, CardHeader } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import Tile, { TileAvatar } from '..';
 import BotCollectionTileContent from './BotCollectionTile.content';
 import BotCollectionTileFooter from './BotCollectionTile.footer';
 import { BotCollectionTileProps } from './BotCollectionTile.types';
+import Tile, { TileAvatar } from '..';
 
 const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, displayMode }) => {
     const router = useRouter();

@@ -7,9 +7,9 @@ import LoaderImg from '#public/images/shapes/loader.svg';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import styles from './FormButtonGroup.module.scss';
 import { FormStatusType, Status } from '../ContactForm.types';
 import { FormButton } from '../FormFields';
-import styles from './FormButtonGroup.module.scss';
 
 const ResetBox: FC = () => (
     <button className={styles.reset} type="reset">

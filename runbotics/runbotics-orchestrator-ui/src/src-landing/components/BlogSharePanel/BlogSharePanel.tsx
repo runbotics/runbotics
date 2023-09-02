@@ -5,9 +5,9 @@ import Link from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import styles from './BlogSharePanel.module.scss';
 import ClipboardIcon from '../ClipboardIcon';
 import Typography from '../Typography';
-import styles from './BlogSharePanel.module.scss';
 
 
 const BlogSharePanel = () => {

@@ -2,11 +2,11 @@ import { FC } from 'react';
 
 import If from '#src-app/components/utils/If';
 
-import PeriodDefinition from '../../components/PeriodDefinition';
-import { PeriodType } from '../../types';
 import NthWeekDaysSelect from './NthWeekDaysSelect';
 import { WeekDaysSectionProps } from './WeekDaysSection.types';
 import WeekDaysSelect from './WeekDaysSelect';
+import PeriodDefinition from '../../components/PeriodDefinition';
+import { PeriodType } from '../../types';
 
 const WeekDaysSection: FC<WeekDaysSectionProps> = ({ 
     locale,

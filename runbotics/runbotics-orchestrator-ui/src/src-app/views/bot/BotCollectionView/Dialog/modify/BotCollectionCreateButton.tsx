@@ -5,9 +5,9 @@ import { PlusCircle as PlusIcon } from 'react-feather';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
 import { BotCollectionModifyProps } from './BotCollectionModify.types';
 import BotCollectionModifyDialog from './BotCollectionModifyDialog';
+import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
 
 const BotCollectionCreateButton: FC<BotCollectionModifyProps> = ({ botCollection, displayMode }) => {
     const [show, setShow] = useState(false);

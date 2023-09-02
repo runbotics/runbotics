@@ -9,11 +9,11 @@ import BlogLayout from '#src-landing/components/BlogLayout';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
 
+import styles from './BlogView.module.scss';
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import CardsSection from '../sections/blog/CardsSection';
 import FiltersSection from '../sections/blog/FiltersSection';
 
-import styles from './BlogView.module.scss';
 
 interface BlogViewProps {
     posts: BlogPost[];

@@ -8,8 +8,8 @@ import piggyBank from '#public/images/shapes/piggy-bank.svg';
 import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
-import { OPEN_SOURCE_TITLE_ID } from '../OpenSourceSection.utils';
 import styles from './OpenSourceContent.module.scss';
+import { OPEN_SOURCE_TITLE_ID } from '../OpenSourceSection.utils';
 
 const OpenSourceContent = () => (
     <div className={styles.content}>

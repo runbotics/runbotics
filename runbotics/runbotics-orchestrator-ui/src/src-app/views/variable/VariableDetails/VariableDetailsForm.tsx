@@ -7,10 +7,10 @@ import { Divider, MenuItem, TextField } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { VariableDetailState, VariableType } from '../Variable.types';
 import ValueList from './ValueList/ValueList';
 import { VariableState, VariableValidation } from './VariableDetails.types';
 import { mapVariableToInnerState, requiredFieldValidator, valueListValidator } from './VariableDetails.utils';
+import { VariableDetailState, VariableType } from '../Variable.types';
 
 
 interface VariableDetailsFormProps {

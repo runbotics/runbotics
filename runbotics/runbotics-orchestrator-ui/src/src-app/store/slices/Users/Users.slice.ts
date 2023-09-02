@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../index';
 import buildUsersExtraReducers from './Users.extraReducers';
 import { UsersState } from './Users.state';
 import * as usersThunks from './Users.thunks';
+import { RootState } from '../../index';
 
 const initialState: UsersState = {
     all: [],

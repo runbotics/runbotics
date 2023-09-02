@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from 'react';
 
+import { NthWeekDaysSelectProps } from './NthWeekDaysSelect.types';
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
-import { NthWeekDaysSelectProps } from './NthWeekDaysSelect.types';
 
 const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({ 
     value, 

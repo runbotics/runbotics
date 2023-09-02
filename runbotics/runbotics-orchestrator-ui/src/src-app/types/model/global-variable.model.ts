@@ -1,5 +1,5 @@
-import { VariableType } from '../../views/variable/Variable.types';
 import { IUser } from './user.model';
+import { VariableType } from '../../views/variable/Variable.types';
 
 export interface IGlobalVariable {
     id?: number;

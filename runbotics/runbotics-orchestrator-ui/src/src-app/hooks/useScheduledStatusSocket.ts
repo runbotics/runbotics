@@ -8,9 +8,9 @@ import {
 import { SocketContext } from '#src-app/providers/Socket.provider';
 import { ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler/Scheduler.state';
 
+import useTranslations from './useTranslations';
 import { useDispatch } from '../store';
 import { schedulerActions } from '../store/slices/Scheduler';
-import useTranslations from './useTranslations';
 
 const isFinishedStatus = (status: ProcessInstanceStatus) => status === ProcessInstanceStatus.COMPLETED
     || status === ProcessInstanceStatus.ERRORED

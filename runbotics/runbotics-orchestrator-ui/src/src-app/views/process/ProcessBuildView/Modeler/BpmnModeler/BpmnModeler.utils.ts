@@ -1,12 +1,12 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import _ from 'lodash';
 
-import { BPMNElement } from '../helpers/elementParameters';
-
 import {
     ModelerHTMLCanvasElement,
     ModelerRegistryElement,
 } from './BpmnModeler.types';
+import { BPMNElement } from '../helpers/elementParameters';
+
 
 /**
  * For the given modeler, copy an element to

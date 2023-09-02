@@ -11,13 +11,13 @@ import useQuery from '#src-app/hooks/useQuery';
 
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 
-import { useDispatch, useSelector } from '../../../store';
-import { botCollectionActions, botCollectionSelector } from '../../../store/slices/BotCollections';
-import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 import BotCollectionGridView from './BotCollectionGridView';
 import BotCollectionTable from './BotCollectionTable/BotCollectionTable';
 import { getBotCollectionPageParams, getLimitByDisplayMode } from './BotCollectionView.utils';
 import BotCollectionHeader from './Header/BotCollectionHeader';
+import { useDispatch, useSelector } from '../../../store';
+import { botCollectionActions, botCollectionSelector } from '../../../store/slices/BotCollections';
+import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 
 
 const BotCollectionView: VFC = () => {

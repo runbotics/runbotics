@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import { IFormData } from '../../../../../../Actions/types';
 import {
     getFormData,
@@ -21,7 +22,6 @@ import { applyModelerElement } from '../../helpers/elementManipulation';
 import { BPMNHelper } from '../../helpers/elementParameters';
 import ActionLabelForm from '../ActionLabelForm';
 import customWidgets from '../widgets';
-import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const ActionFormRenderer: FC = () => {
     const { modeler } = useModelerContext();

@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import internalBpmnActions from '../../../../../Actions';
 import ActionFormRenderer from './renderers/ActionFormRenderer';
 import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
 import LoopActionRenderer from './renderers/LoopActionRenderer';
+import internalBpmnActions from '../../../../../Actions';
 
 const ActionFormPanel: FC = () => {
     const { selectedElement, selectedAction } = useSelector(

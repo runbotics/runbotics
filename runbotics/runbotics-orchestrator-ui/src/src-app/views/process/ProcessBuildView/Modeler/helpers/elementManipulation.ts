@@ -3,8 +3,6 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 
-import { ActionToBPMNElement } from '../ActionFormPanel/ActionToBPMNElement';
-import { ParameterDestination } from '../extensions/palette/CustomPalette';
 import {
     BPMNElement,
     BPMNHelper,
@@ -12,6 +10,8 @@ import {
     getInputParameters,
     getOutputParameters,
 } from './elementParameters';
+import { ActionToBPMNElement } from '../ActionFormPanel/ActionToBPMNElement';
+import { ParameterDestination } from '../extensions/palette/CustomPalette';
 
 interface ApplyModelerElementProps {
     element: BPMNElement;

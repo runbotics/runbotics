@@ -9,10 +9,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersSelector } from '#src-app/store/slices/Users';
 
-import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
 import { StyledActionsContainer, StyledTextField } from './UsersListView.styles';
+import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 const UsersListView: FC = () => {
     const { translate } = useTranslations();

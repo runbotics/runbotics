@@ -6,8 +6,8 @@ import benefitsArrows from '#public/images/shapes/benefits-arrows.svg';
 import { translate } from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
-import { BENEFITS_TITLE_ID } from '../BenefitsSection.utils';
 import styles from './BenefitsContent.module.scss';
+import { BENEFITS_TITLE_ID } from '../BenefitsSection.utils';
 
 const BenefitsContent: FC = () => (
     <article className={styles.root}>

@@ -10,9 +10,9 @@ import Image from 'next/image';
 
 import { ContentfulRichText } from '#contentful/common';
 
+import styles from './RichTextRenderer.module.scss';
 import EmbeddedVideo from '../EmbeddedVideo';
 import Typography from '../Typography';
-import styles from './RichTextRenderer.module.scss';
 
 interface Props {
     content: ContentfulRichText;

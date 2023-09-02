@@ -7,9 +7,9 @@ import If from '#src-app/components/utils/If';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { DeleteButton, StyledListItem } from './ValueList.styles';
 import { VariableValue } from '../VariableDetails.types';
 
-import { DeleteButton, StyledListItem } from './ValueList.styles';
 
 
 

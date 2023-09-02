@@ -21,16 +21,6 @@ import { useSelector } from '#src-app/store';
 
 import i18n from '#src-app/translations/i18n';
 
-import internalBpmnActions from '../../../../../Actions';
-import { IBpmnAction, Runner } from '../../../../../Actions/types';
-import { internalTemplates } from '../../../../../Templates';
-import {
-    ActionToBPMNElement,
-    TaskType
-} from '../ActionFormPanel/ActionToBPMNElement';
-import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
-import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
-import { TemplatesSchema } from '../templates/Template.types';
 import ActionList from './ActionList/ActionList';
 import {
     classes,
@@ -47,6 +37,16 @@ import ActionSearch from './ActionSearch';
 import FilterModal from './FilterModal';
 import { Item } from './ListGroup';
 import useGroupReducer, { groupActions } from './useGroupsReducer';
+import internalBpmnActions from '../../../../../Actions';
+import { IBpmnAction, Runner } from '../../../../../Actions/types';
+import { internalTemplates } from '../../../../../Templates';
+import {
+    ActionToBPMNElement,
+    TaskType
+} from '../ActionFormPanel/ActionToBPMNElement';
+import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
+import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
+import { TemplatesSchema } from '../templates/Template.types';
 
 const filterModalInitialState: GroupFilters = {
     groupNames: [],

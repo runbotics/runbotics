@@ -4,11 +4,11 @@ import { createTheme as createMuiTheme, ThemeOptions } from '@mui/material/style
 import { enUS, plPL } from '@mui/x-data-grid';
 import _ from 'lodash';
 
-import { ThemeType } from '../utils/constants';
 import { components } from './components';
 import { lightTheme } from './light';
 import { typography } from './typography';
 import { zIndex } from './zIndex';
+import { ThemeType } from '../utils/constants';
 
 
 interface ThemeConfig {

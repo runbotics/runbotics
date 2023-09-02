@@ -16,12 +16,12 @@ import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import If from '../../utils/If';
-import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper, LoadingRow } from './Table.styles';
 import { DataTableProps } from './Table.types';
 import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
+import If from '../../utils/If';
+import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
 
 
 const Table = <T extends object>({

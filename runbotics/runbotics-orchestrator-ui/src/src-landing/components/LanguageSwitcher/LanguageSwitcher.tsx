@@ -10,8 +10,8 @@ import { useDispatch } from '#src-app/store';
 import { usersActions } from '#src-app/store/slices/Users';
 import { languages, Language } from '#src-app/translations/translations';
 
-import { capitalizeFirstLetter } from '../../utils/utils';
 import styles from './LanguageSwitcher.module.scss';
+import { capitalizeFirstLetter } from '../../utils/utils';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);

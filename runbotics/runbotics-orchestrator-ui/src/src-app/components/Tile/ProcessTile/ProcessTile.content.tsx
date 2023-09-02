@@ -11,9 +11,9 @@ import If from '#src-app/components/utils/If';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { DATE_FORMAT } from '..';
 import { StyledContent } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
+import { DATE_FORMAT } from '..';
 
 
 const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) => {

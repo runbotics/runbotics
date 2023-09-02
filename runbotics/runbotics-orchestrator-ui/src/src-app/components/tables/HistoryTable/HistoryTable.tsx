@@ -17,6 +17,9 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
+import useProcessInstanceColumns from './HistoryTable.columns';
+import { Wrapper } from './HistoryTable.styles';
+import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
 import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
@@ -26,9 +29,6 @@ import { DefaultPageSize } from '../../../views/process/ProcessBrowseView/Proces
 import ResizableDrawer from '../../ResizableDrawer';
 import If from '../../utils/If';
 import Table from '../Table';
-import useProcessInstanceColumns from './HistoryTable.columns';
-import { Wrapper } from './HistoryTable.styles';
-import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
 
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
