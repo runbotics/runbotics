@@ -39,12 +39,12 @@ export enum Language {
 
 export type Coordinate = string | number;
 
-export interface PointData {
+export interface PointObj {
     x: Coordinate;
     y: Coordinate;
 }
 
-export interface RegionData {
+export interface RegionObj {
     left: Coordinate;
     top: Coordinate;
     width: Coordinate;

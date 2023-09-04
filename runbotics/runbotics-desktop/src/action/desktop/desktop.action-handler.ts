@@ -38,8 +38,8 @@ import {
     DesktopReadTextFromImageActionOutput,
     ClickTarget,
     MouseButton,
-    PointData,
-    RegionData,
+    PointObj,
+    RegionObj,
     KEY_REFERENCE,
     OCR_CONFIDENCE
 } from './types';
@@ -144,13 +144,13 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         if (region) {
             this.checkRegion(region);
             const newRegion = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
-            return screen.captureRegion(fileName, newRegion, FileType[imageFormat], filePath);
+            return await screen.captureRegion(fileName, newRegion, FileType[imageFormat], filePath);
         } else {
-            return screen.capture(fileName, FileType[input.imageFormat], filePath);
+            return await screen.capture(fileName, FileType[input.imageFormat], filePath);
         }
     }
 
-    async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionData> {
+    async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionObj> {
         const image = path.normalize(input.imageFullPath);
         this.checkFileExist(image);
 
@@ -162,7 +162,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         return this.toRegionObj(region);
     }
 
-    async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionData> {
+    async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionObj> {
         const image = path.normalize(input.imageFullPath);
         this.checkFileExist(image);
 
@@ -188,9 +188,11 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
             return text;
         } catch (error) {
-            throw new Error('An error occurred while reading data from the image. ' + error);
+            throw new Error('An error occurred during the OCR process. ' + error);
         } finally {
-            await worker?.terminate();
+            if (worker) {
+                await worker.terminate();
+            }
         }
     }
 
@@ -209,12 +211,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private async moveMouseToPoint(point: PointData) {
+    private async moveMouseToPoint(point: PointObj) {
         const destination = new Point(Number(point.x), Number(point.y));
         await mouse.move(straightTo(destination));
     }
 
-    private async moveMouseToRegion(region: RegionData) {
+    private async moveMouseToRegion(region: RegionObj) {
         const destination = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
         await mouse.move(straightTo(centerOf(destination)));
     }
@@ -228,7 +230,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         return this.system === 'darwin' ? Key.LeftCmd : Key.LeftControl;
     }
 
-    private checkPoint(point: unknown) {
+    private checkPoint(point: any) {
         if (typeof point !== 'object') {
             throw new Error('Point must be of object type and its coordinates (x, y) must be numeric.');
         }
@@ -242,7 +244,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private checkRegion(region: unknown) {
+    private checkRegion(region: any) {
         if (typeof region !== 'object') {
             throw new Error('Region must be of object type and its properties (left, top, width, height) must be numeric.');
         }
@@ -271,7 +273,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         };
     }
 
-    private toRegionObj(region: Region): RegionData {
+    private toRegionObj(region: Region): RegionObj {
         return { 
             left: region.left, 
             top: region.top, 
