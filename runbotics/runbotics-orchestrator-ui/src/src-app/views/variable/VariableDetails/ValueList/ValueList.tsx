@@ -11,10 +11,10 @@ import If from '#src-app/components/utils/If';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { VariableType } from '../../Variable.types';
-import { ListVariableState, VariableState, VariableValue } from '../VariableDetails.types';
 import { AddButton, AddListItem, SearchListItem, SearchInput, SearchWrapper, StyledList } from './ValueList.styles';
 import ValueListItem from './ValueListItem';
+import { VariableType } from '../../Variable.types';
+import { ListVariableState, VariableState, VariableValue } from '../VariableDetails.types';
 
 
 interface ValueListProps {

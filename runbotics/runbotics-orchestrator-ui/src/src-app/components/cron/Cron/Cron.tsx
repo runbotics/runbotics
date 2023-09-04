@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef, useReducer, FC } from 'react';
 
+import { ClearButton, CronContainer } from './Cron.styles';
 import If from '../../utils/If';
 import { setValuesFromCronString, getCronStringFromValues } from '../converter';
 import { cronReducer } from '../CronReducer/cronReducer';
@@ -13,7 +14,6 @@ import WeekDaysSection from '../fields/WeekDaysSection';
 import DEFAULT_LOCALE_EN from '../locale';
 import { CronProps, PeriodType } from '../types';
 import { cronShortcuts, initialCronState } from '../utils';
-import { ClearButton, CronContainer } from './Cron.styles';
 
 // eslint-disable-next-line max-lines-per-function
 const Cron: FC<CronProps> = ({

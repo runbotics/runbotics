@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../index';
 import buildProcessInstanceEventExtraReducers from './ProcessInstanceEvent.extraReducers';
 import * as reducers from './ProcessInstanceEvent.reducers';
 import { EventMapTypes, ProcessInstanceEventState } from './ProcessInstanceEvent.state';
 import * as processInstanceEventThunks from './ProcessInstanceEvent.thunks';
+import { RootState } from '../../index';
 
 export const initialState: ProcessInstanceEventState = {
     all: {

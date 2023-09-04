@@ -17,9 +17,9 @@ import { IProcess } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { Form } from '../utils/FormDialog.styles';
 import BotCollectionComponent from './ProcessConfigureView/BotCollection.component';
 import BotSystemComponent from './ProcessConfigureView/BotSystem.component';
+import { Form } from '../utils/FormDialog.styles';
 
 
 type EditProcessDialogProps = {

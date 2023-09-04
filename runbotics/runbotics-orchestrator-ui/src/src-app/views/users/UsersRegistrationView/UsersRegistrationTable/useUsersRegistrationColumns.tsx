@@ -4,8 +4,8 @@ import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
-import { UserField, getAllUserRoles, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 import { StyledSelect } from './UsersRegistrationTable.styles';
+import { UserField, getAllUserRoles, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 const useUsersRegistrationColumns = (handleSelectChange): GridColDef[] => {
     const { translate } = useTranslations();

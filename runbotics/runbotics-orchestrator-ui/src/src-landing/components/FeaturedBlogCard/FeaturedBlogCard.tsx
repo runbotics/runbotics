@@ -12,10 +12,10 @@ import arrowIcon from '#public/images/icons/right.svg';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import styles from './FeaturedBlogCard.module.scss';
 import { cutText } from '../BlogCard';
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
-import styles from './FeaturedBlogCard.module.scss';
 
 interface FeaturedBlogCardProps {
     post: BlogPost;

@@ -7,9 +7,9 @@ import { useSelector } from 'react-redux';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
-import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 import { DataGridStyle} from './UsersRegistrationTable.styles';
 import useUsersRegistrationColumns from './useUsersRegistrationColumns';
+import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 interface UsersRegistrationTableProps {
     page: number;

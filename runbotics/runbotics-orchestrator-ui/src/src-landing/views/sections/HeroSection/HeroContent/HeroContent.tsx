@@ -3,8 +3,8 @@ import { FC } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
-import { HERO_TITLE_ID } from '../HeroSection.utils';
 import styles from './HeroContent.module.scss';
+import { HERO_TITLE_ID } from '../HeroSection.utils';
 
 const HeroSection: FC = () => {
     const { translate } = useTranslations();

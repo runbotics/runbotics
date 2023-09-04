@@ -3,8 +3,8 @@ import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
-import { UserField, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 import { StyledCell } from './UsersListTable.styles';
+import { UserField, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 const useUsersListColumns = (): GridColDef[] => {
     const { translate } = useTranslations();

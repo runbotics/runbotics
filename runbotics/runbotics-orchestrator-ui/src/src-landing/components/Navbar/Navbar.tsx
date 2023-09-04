@@ -14,9 +14,9 @@ import {
     BLOG_SECTION_ID,
 } from '#src-landing/utils/utils';
 
-import LoginLink from '../Header/LoginLink';
 import styles from './Navbar.module.scss';
 import { NavbarProps } from './Navbar.types';
+import LoginLink from '../Header/LoginLink';
 
 const Navbar: FC<NavbarProps> = ({
     isNavExpanded = true,

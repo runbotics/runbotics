@@ -6,10 +6,10 @@ import If from '#src-app/components/utils/If';
 
 import { IterationGutter } from '#src-app/store/slices/ProcessInstanceEvent';
 
+import { sortByFinished } from './ProcessInstanceEventsDetails.utils';
 import EventSlide from '../EventSlide';
 
 import IterationSlide from '../IterationSlide';
-import { sortByFinished } from './ProcessInstanceEventsDetails.utils';
 
 export interface EventRendererProps {
     processInstanceEvents: IProcessInstanceEvent[];

@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
+import { MonthsSelectProps } from './MonthsSelect.types';
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import DEFAULT_LOCALE_EN from '../../locale';
-import { MonthsSelectProps } from './MonthsSelect.types';
 
 const MonthsSelect: FC<MonthsSelectProps> = ({
     value, 

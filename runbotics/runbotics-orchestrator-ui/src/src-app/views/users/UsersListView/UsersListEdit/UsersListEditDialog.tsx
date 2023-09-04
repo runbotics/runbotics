@@ -13,11 +13,11 @@ import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import englishEditListTranslations from '#src-app/translations/en/users/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
-import DeleteUserDialog from '../../DeleteUserDialog';
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
 import { FormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
 import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidationState } from './UsersListEdit.utils';
 import UsersListEditForm from './UsersListEditForm';
+import DeleteUserDialog from '../../DeleteUserDialog';
 
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,

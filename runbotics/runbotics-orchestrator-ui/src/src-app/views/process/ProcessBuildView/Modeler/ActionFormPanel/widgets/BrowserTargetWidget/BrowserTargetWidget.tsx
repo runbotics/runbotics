@@ -6,10 +6,10 @@ import { WidgetProps } from '@rjsf/core';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import CustomTextWidget from '../CustomTextWidget';
 import { FieldsWrapper } from './BrowserTarget.styles';
 import { BrowserTargetState } from './BrowserTarget.types';
 import { initialFormState, PREFIX_WIDTH } from './BrowserTarget.utils';
+import CustomTextWidget from '../CustomTextWidget';
 
 
 const BrowserTargetWidget: FC<WidgetProps> = (props) => {

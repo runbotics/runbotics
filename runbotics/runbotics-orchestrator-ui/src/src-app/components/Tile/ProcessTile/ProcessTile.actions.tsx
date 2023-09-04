@@ -18,8 +18,8 @@ import { processActions } from '#src-app/store/slices/Process';
 import DeleteProcess from '#src-app/views/process/DeleteProcess';
 import EditProcessDialog from '#src-app/views/process/EditProcessDialog';
 
-import { useDispatch } from '../../../store';
 import { ProcessTileProps } from './ProcessTile.types';
+import { useDispatch } from '../../../store';
 
 
 

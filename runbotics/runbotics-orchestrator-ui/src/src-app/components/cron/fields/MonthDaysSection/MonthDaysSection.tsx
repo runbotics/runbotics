@@ -2,10 +2,10 @@ import { FC } from 'react';
 
 import If from '#src-app/components/utils/If';
 
-import PeriodDefinition from '../../components/PeriodDefinition';
 import { MonthDaysSectionProps } from './MonthDaysSection.types';
 import MonthDaysSelect from './MonthDaysSelect';
 import NthMonthDaysSelect from './NthMonthDaysSelect';
+import PeriodDefinition from '../../components/PeriodDefinition';
 
 const MonthDaysSection: FC<MonthDaysSectionProps> = ({
     locale,

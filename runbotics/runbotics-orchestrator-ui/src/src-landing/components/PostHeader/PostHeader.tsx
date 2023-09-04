@@ -10,9 +10,9 @@ import ToyIcon from '#public/images/icons/toy.svg';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import styles from './PostHeader.module.scss';
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
-import styles from './PostHeader.module.scss';
 
 
 type Props = Omit<

@@ -9,10 +9,10 @@ import BotCollectionTile from '#src-app/components/Tile/BotCollectionTile';
 
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 
-import { useSelector } from '../../../store';
-import { botCollectionSelector } from '../../../store/slices/BotCollections';
 import { CollectionsRoot, classes } from './BotCollectionView.styles';
 import { BotCollectionViewProps } from './BotCollectionView.types';
+import { useSelector } from '../../../store';
+import { botCollectionSelector } from '../../../store/slices/BotCollections';
 
 
 const BotCollectionGridView: VFC<BotCollectionViewProps> = ({ page, setPage, displayMode }) => {

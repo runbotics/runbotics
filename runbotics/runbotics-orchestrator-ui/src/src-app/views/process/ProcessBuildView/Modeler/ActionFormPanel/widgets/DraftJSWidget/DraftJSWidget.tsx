@@ -10,7 +10,6 @@ import { Editor } from 'react-draft-wysiwyg';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import InfoButtonTooltip from '../components/InfoButtonTooltip';
 
 import {
     useWrapperStyleObject,
@@ -22,6 +21,7 @@ import {
     StyledIconWrapper
 } from './DraftJSWidget.styles';
 import { isInfoTooltip } from './DraftJSWidgets.utils';
+import InfoButtonTooltip from '../components/InfoButtonTooltip';
 
 
 const parseContentToEditorState = (text: string) => {

@@ -2,11 +2,11 @@ import React, { FC } from 'react';
 
 import If from '#src-app/components/utils/If';
 
+import { MinutesSelectProps } from './MinutesSelect.types';
 import CustomSelect from '../../components/CustomSelect';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import { UNITS, UnitIndex } from '../../constants';
 import { PeriodType } from '../../types';
-import { MinutesSelectProps } from './MinutesSelect.types';
 
 const MinutesSelect: FC<MinutesSelectProps> = ({ 
     value, 

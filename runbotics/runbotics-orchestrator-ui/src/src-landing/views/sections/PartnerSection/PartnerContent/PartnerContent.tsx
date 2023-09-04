@@ -9,8 +9,8 @@ import LinkButton from '#src-landing/components/LinkButton';
 import Typography from '#src-landing/components/Typography';
 import { CONTACT_US_SECTION_ID } from '#src-landing/utils/utils';
 
-import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
 import styles from './PartnerContent.module.scss';
+import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
 
 const PartnerContent = () => {
     const { translate } = useTranslations();

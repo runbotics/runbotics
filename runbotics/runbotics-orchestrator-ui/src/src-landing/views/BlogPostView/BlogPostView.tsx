@@ -13,8 +13,8 @@ import PostHeader from '#src-landing/components/PostHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 import Typography from '#src-landing/components/Typography';
 
-import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
+import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 
 interface Props {
     post: BlogPost;

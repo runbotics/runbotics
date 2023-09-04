@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../index';
 import buildBotSystemsExtraReducers from './BotSystems.extraReducers';
 import * as botSystemsThunks from './BotSystems.thunks';
 import { BotSystemsState } from './BotSystemsState';
+import { RootState } from '../../index';
 
 const initialState: BotSystemsState = {
     loading: false,

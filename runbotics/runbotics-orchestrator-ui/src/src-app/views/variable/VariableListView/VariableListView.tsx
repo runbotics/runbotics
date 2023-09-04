@@ -7,11 +7,11 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import Header from './Header';
+import Table from './Table/Table';
 import { VariableDetailState } from '../Variable.types';
 import VariableDetails from '../VariableDetails/VariableDetails';
 
-import Header from './Header';
-import Table from './Table/Table';
 
 
 const initialVariableDetailState: VariableDetailState = { show: false };

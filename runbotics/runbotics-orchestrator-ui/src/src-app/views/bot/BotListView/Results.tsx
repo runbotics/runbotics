@@ -34,10 +34,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { botActions } from '../../../store/slices/Bot';
-import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 import ActionBotButton from './ActionBotButton';
 import { classes, StyledCard } from './Results.styles';
+import { botActions } from '../../../store/slices/Bot';
+import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 
 
 

@@ -11,9 +11,9 @@ import { useSelector } from '#src-app/store';
 
 import { ModelerErrorType } from '#src-app/store/slices/Process';
 
-import FloatingGroup from '../FloatingGroup';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
 import TooltipError from './TooltipError';
+import FloatingGroup from '../FloatingGroup';
 
 interface RunSavePanelProps {
     process: IProcess;

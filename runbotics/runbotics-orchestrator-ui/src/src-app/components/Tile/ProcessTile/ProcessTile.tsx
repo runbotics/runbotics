@@ -13,9 +13,9 @@ import { ProcessTab } from '#src-app/utils/process-tab';
 
 import { Description, ProcessTileContent, ProcessTileFooter, ProcessTileProps, StyledCardActionArea } from '.';
 
+import { buildProcessUrl } from './ProcessTile.utils';
 import Tile, { TileAvatar } from '..';
 
-import { buildProcessUrl } from './ProcessTile.utils';
 
 
 

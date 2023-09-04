@@ -3,11 +3,11 @@ import React, { FC, useCallback } from 'react';
 import { MenuItem, SvgIcon } from '@mui/material';
 import { Calendar as CalendarIcon } from 'react-feather';
 
+import { PeriodContainer, PeriodSelect } from './Period.styles';
+import { PeriodProps } from './Period.types';
 import PeriodDefinition from '../../components/PeriodDefinition';
 import DEFAULT_LOCALE_EN from '../../locale';
 import { PeriodType } from '../../types';
-import { PeriodContainer, PeriodSelect } from './Period.styles';
-import { PeriodProps } from './Period.types';
 
 const Period: FC<PeriodProps> = ({ value, setValue, locale, disabled, readOnly }) => {
     const options = [

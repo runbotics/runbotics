@@ -1,6 +1,6 @@
+import { IBotCollectionWithFilters } from './BotCollectionView.types';
 import { PageRequestParams } from '../../../utils/types/page';
 import { CollectionsDisplayMode, DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
-import { IBotCollectionWithFilters } from './BotCollectionView.types';
 
 export const ROWS_PER_PAGE_LIST_VIEW = [5, 10, 25];
 

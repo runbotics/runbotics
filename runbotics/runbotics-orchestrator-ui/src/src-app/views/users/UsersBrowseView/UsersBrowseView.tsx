@@ -8,11 +8,11 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { UsersTab } from '#src-app/utils/users-tab';
 
+import { StyledUsersViewHeader } from './UsersBrowseView.styles';
+import { useUsersTabs } from './UsersBrowseView.utils';
 import UsersListView from '../UsersListView';
 import UsersRegistrationView from '../UsersRegistrationView';
 
-import { StyledUsersViewHeader } from './UsersBrowseView.styles';
-import { useUsersTabs } from './UsersBrowseView.utils';
 
 const UsersBrowseView: VFC = () => {
     const { translate } = useTranslations();
