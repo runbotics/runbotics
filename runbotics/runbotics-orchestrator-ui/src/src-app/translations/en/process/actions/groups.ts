@@ -18,6 +18,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.BeeOffice': 'BeeOffice',
     'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
     'Process.Details.Modeler.ActionsGroup.Application': 'Application',
+    'Process.Details.Modeler.ActionsGroup.Desktop': 'Desktop',
     'Process.Details.Modeler.ActionsGroup.External': 'External',
 };
 

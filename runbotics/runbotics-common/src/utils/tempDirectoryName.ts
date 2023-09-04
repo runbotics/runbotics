@@ -1,0 +1,1 @@
+export const TEMP_DIRECTORY_NAME = 'temp';
