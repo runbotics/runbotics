@@ -8,7 +8,7 @@ import { IBpmnAction, Runner, RegexPattern } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
-    'sharepointExcel.getCell': {
+    [SharepointExcelAction.GET_CELL]: {
         id: SharepointExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCell.Label'),
         script: SharepointExcelAction.GET_CELL,
@@ -40,17 +40,22 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    cell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
+                        },
+                    }
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -69,7 +74,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'sharepointExcel.getRange': {
+    [SharepointExcelAction.GET_RANGE]: {
         id: SharepointExcelAction.GET_RANGE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetRange.Label'),
         script: SharepointExcelAction.GET_RANGE,
@@ -130,7 +135,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'sharepointExcel.setCell': {
+    [SharepointExcelAction.SET_CELL]: {
         id: SharepointExcelAction.SET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label'),
         script: SharepointExcelAction.SET_CELL,
@@ -196,7 +201,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'sharepointExcel.updateRange': {
+    [SharepointExcelAction.UPDATE_RANGE]: {
         id: SharepointExcelAction.UPDATE_RANGE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label'),
         script: SharepointExcelAction.UPDATE_RANGE,
@@ -395,7 +400,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
 
         },
     },
-    'sharepointExcel.closeSession': {
+    [SharepointExcelAction.CLOSE_SESSION]: {
         id: SharepointExcelAction.CLOSE_SESSION,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
         script: SharepointExcelAction.CLOSE_SESSION,
