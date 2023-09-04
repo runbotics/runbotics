@@ -46,7 +46,7 @@ const ALL_ACTION_HANDLERS = [
     VariableActionHandler,
     ExcelService,
     MicrosoftGraphService,
-    MicrosoftAuthService
+    MicrosoftAuthService,
     DesktopActionHandler
 ];
 
