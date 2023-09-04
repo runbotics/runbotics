@@ -40,7 +40,7 @@ export const login = createAsyncThunk(
                 throw error;
             }
 
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response);
         }
     }
 );
