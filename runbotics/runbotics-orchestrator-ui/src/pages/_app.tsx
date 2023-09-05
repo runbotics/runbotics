@@ -5,7 +5,6 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import moment from 'moment';
 import { default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
-import Head from 'next/head';
 
 import { I18nextProvider } from 'react-i18next';
 
@@ -29,6 +28,7 @@ const { publicRuntimeConfig } = getConfig();
 
 import '#src-landing/scss/main.scss';
 import '#src-landing/scss/global.scss';
+import Metadata from '#src-landing/components/Matadata/Metadata';
 
 interface AppProps extends PageProps {
     emotionCache?: EmotionCache;
@@ -43,7 +43,7 @@ const clientSideEmotionCache = createEmotionCache();
 function App(props: AppProps) {
     const {
         Component,
-        pageProps,
+        pageProps: { metadata, ...restPageProps },
         emotionCache = clientSideEmotionCache,
         router,
     } = props;
@@ -55,9 +55,7 @@ function App(props: AppProps) {
 
     return (
         <div style={{ height: '100%' }}>
-            <Head>
-                <title>RunBotics</title>
-            </Head>
+            <Metadata metadata={metadata} />
             <CacheProvider value={emotionCache}>
                 <Provider store={store}>
                     <SettingsProvider>
@@ -70,7 +68,7 @@ function App(props: AppProps) {
                                             shouldAttach={router.pathname.includes('/app/')}
                                         >
                                             <Layout>
-                                                <Component {...pageProps} />
+                                                <Component {...restPageProps} />
                                             </Layout>
                                         </SocketProvider>
                                     </InitializeAuth>

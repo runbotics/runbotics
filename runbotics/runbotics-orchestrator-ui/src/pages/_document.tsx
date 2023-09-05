@@ -36,9 +36,6 @@ class MyDocument extends Document {
                     <meta charSet="utf-8" />
                     <meta name="theme-color" content="#000000" />
                     <link rel="icon" href="/images/favicon.ico" />
-                    <meta name="description" content="RunBotics" />
-                    <meta name="keywords" content="RunBotics" />
-                    <meta name="author" content="RunBotics" />
                 </Head>
 
                 <body>
