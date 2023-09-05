@@ -17,8 +17,7 @@ interface Metadata {
 const DEFAULT_TAG_CONTENT = 'RunBotics';
 
 const Metadata: FC<Metadata> = ({ metadata }) => {
-    const getContent = (tag: string) =>
-        metadata ? (metadata[tag] ?? DEFAULT_TAG_CONTENT) : DEFAULT_TAG_CONTENT;
+    const getContent = (tag: string) => (metadata && metadata[tag]) ?? DEFAULT_TAG_CONTENT;
 
     return (
         <Head>

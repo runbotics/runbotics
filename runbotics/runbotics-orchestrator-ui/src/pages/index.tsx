@@ -28,6 +28,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ res, local
     const blogPosts = cache.posts?.slice(0, 3) ?? [];
 
     const metadata: MetadataTags = {
+        description: 'RunBotics - Home',
         image: HeroBg.src,
     };
 
