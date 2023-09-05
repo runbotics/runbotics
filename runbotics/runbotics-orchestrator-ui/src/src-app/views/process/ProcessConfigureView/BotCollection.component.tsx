@@ -17,13 +17,12 @@ import { Wrapper } from './BotComponent.styles';
 
 
 interface BotCollectionProps {
-    disabled?: boolean;
     selectedBotCollection: IBotCollection;
     onSelectBotCollection?: (collection: IBotCollection) => void;
 }
 
 const BotCollectionComponent: VFC<BotCollectionProps> = ({
-    selectedBotCollection, onSelectBotCollection, disabled = false
+    selectedBotCollection, onSelectBotCollection,
 }) => {
     const { botCollections } = useSelector(botCollectionSelector);
     const { translate } = useTranslations();
@@ -57,7 +56,7 @@ const BotCollectionComponent: VFC<BotCollectionProps> = ({
                     value={selectedBotCollection?.id ?? ''}
                     variant="standard"
                     onChange={handleBotCollectionChange}
-                    disabled={!hasEditBotCollectionAccess || disabled}
+                    disabled={!hasEditBotCollectionAccess}
                 >
                     {getBotCollectionsOptions()}
                 </Select>

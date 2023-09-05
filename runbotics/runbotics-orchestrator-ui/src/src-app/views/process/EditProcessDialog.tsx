@@ -25,13 +25,12 @@ import { Form } from '../utils/FormDialog.styles';
 type EditProcessDialogProps = {
     open?: boolean;
     process: IProcess;
-    disabled?: boolean;
     onClose: () => void;
     onAdd: (process: IProcess) => void;
 };
 
 const EditProcessDialog: FC<EditProcessDialogProps> = ({
-    process, onAdd, onClose, open, disabled = false
+    process, onAdd, onClose, open,
 }) => {
     const [formState, setFormState] = useState<IProcess>({ ...process });
     const { translate } = useTranslations();
@@ -58,7 +57,6 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                             onChange={handleInputChange}
                             value={formState.name}
                             variant="outlined"
-                            disabled={disabled}
                             required
                         />
                         <TextField
@@ -69,16 +67,13 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                             onChange={handleInputChange}
                             value={formState.description}
                             variant="outlined"
-                            disabled={disabled}
                         />
                         <Box display="flex" justifyContent="space-between">
                             <BotCollectionComponent
-                                disabled={disabled}
                                 selectedBotCollection={formState.botCollection}
                                 onSelectBotCollection={(botCollection) => setFormState({ ...formState, botCollection })}
                             />
                             <BotSystemComponent
-                                disabled={disabled}
                                 selectedBotSystem={formState.system}
                                 onSelectBotSystem={(system) => setFormState({ ...formState, system })}
                             />
@@ -90,7 +85,6 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                                         setFormState({ ...formState, isPublic: e.target.checked });
                                     }}
                                     checked={formState.isPublic}
-                                    disabled={disabled}
                                 />
                             )}
                             label={translate('Process.Edit.Form.Fields.Public.Label')}
@@ -112,7 +106,6 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                     color="primary"
                     autoFocus
                     onClick={handleSubmit}
-                    disabled={disabled}
                 >
                     {translate('Common.Save')}
                 </Button>

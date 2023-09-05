@@ -1,4 +1,4 @@
-import React, { VFC, useState, useContext } from 'react';
+import React, { VFC, useState, useContext, FC } from 'react';
 
 import {
     Button,
@@ -19,13 +19,12 @@ import { processActions } from '#src-app/store/slices/Process';
 
 type DeleteProcessDialogProps = {
     open?: boolean;
-    disabled?: boolean;
     process: IProcess;
     onClose: () => void;
     onDelete: (process: IProcess) => void;
 };
 
-const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = ({ disabled = false, ...props }) => {
+const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { page, pageSize, search } = useContext(ProcessPageContext);
@@ -70,7 +69,6 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = ({ disabled = false, 
                     color="primary"
                     autoFocus
                     onClick={handleSubmit}
-                    disabled={disabled}
                 >
                     {translate('Common.Confirm')}
                 </Button>
@@ -81,10 +79,9 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = ({ disabled = false, 
 
 type DeleteProcessProps = {
     process: IProcess;
-    disabled?: boolean;
 };
 
-const DeleteProcess = ({ process, disabled = false }: DeleteProcessProps) => {
+const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
     const [show, setShow] = useState(false);
     const { translate } = useTranslations();
 
@@ -94,13 +91,12 @@ const DeleteProcess = ({ process, disabled = false }: DeleteProcessProps) => {
 
     return (
         <>
-            <MenuItem disabled={disabled} onClick={() => setShow(true)}>{translate('Process.Delete.ActionName')}</MenuItem>
+            <MenuItem onClick={() => setShow(true)}>{translate('Process.Delete.ActionName')}</MenuItem>
             <DeleteProcessDialog
                 process={process}
-                open={show && !disabled}
+                open={show}
                 onClose={() => setShow(false)}
                 onDelete={handleDelete}
-                disabled={disabled}
             />
         </>
     );

@@ -35,9 +35,9 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
     const [showDialog, setShowDialog] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
-    const isProcessOwner = useProcessOwner(process);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
-    const isElementDisabled = !(isAdmin || isProcessOwner);
+    const isProcessOwner = useProcessOwner(process);
+    const hasModifyProcessAccess = isAdmin || isProcessOwner;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -67,8 +67,8 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
 
     return (
         <>
-            <If condition={hasEditProcessAccess || hasDeleteProcessAccess}>
-                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick}>
+            <If condition={hasModifyProcessAccess && (hasEditProcessAccess || hasDeleteProcessAccess)}>
+                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick} >
                     <MoreVertIcon />
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
@@ -78,7 +78,7 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                         </MenuItem>
                     </If>
                     <If condition={hasDeleteProcessAccess}>
-                        <DeleteProcess process={process} disabled={isElementDisabled} />
+                        <DeleteProcess process={process} />
                     </If>
                 </Menu>
             </If>
@@ -88,7 +88,6 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                     onClose={() => setShowDialog(false)}
                     onAdd={handleEdit}
                     process={process}
-                    disabled={isElementDisabled}
                 />
             </If>
         </>
