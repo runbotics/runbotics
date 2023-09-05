@@ -72,11 +72,13 @@ blockquote:has(.p) {
 
 .imageWrapper {
     position: relative;
-    width: 100%;
+
+    width: 80%;
+
+    margin-inline: auto;
     border-radius: 10px;
 }
 
 .image {
     padding: 20px;
-
 }

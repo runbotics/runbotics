@@ -30,7 +30,11 @@ const ProsSection = () => {
     ));
 
     return (
-        <section className={styles.root} id={PROS_SECTION_ID} aria-labelledby={PROS_TITLE_ID}>
+        <section
+            className={styles.root}
+            id={PROS_SECTION_ID}
+            aria-labelledby={PROS_TITLE_ID}
+        >
             <div className={styles.grid__head__1}></div>
             <div className={styles.grid__head__2}>
                 <Typography id={PROS_TITLE_ID} variant="h2">
@@ -38,6 +42,7 @@ const ProsSection = () => {
                 </Typography>
             </div>
             <div className={styles.grid__head__3}></div>
+
             {tiles}
             <MediaScroller className={styles.mediaScroller}>
                 {tiles}

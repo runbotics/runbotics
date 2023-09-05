@@ -3,18 +3,25 @@ import React, { FC, useEffect } from 'react';
 import { Divider, Grid, Tab, Tabs } from '@mui/material';
 
 import { useRouter } from 'next/router';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessMainViewManager from './ProcessMainView.manager';
-import { ProcessInternalPage, ProcessTitle } from './ProcessMainView.styled';
+import {
+    OpenInNewIconStyled,
+    ProcessInternalPage,
+    ProcessTitle,
+    TutorialBlogPost,
+    TutorialLink
+} from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
     const router = useRouter();
@@ -23,6 +30,7 @@ const ProcessMainView: FC = () => {
     const { id, tab } = router.query;
     const { translate } = useTranslations();
     const { user } = useAuth();
+    const isGuest = useRole([Role.ROLE_GUEST]);
 
     useEffect(() => () => {
         dispatch(processActions.resetDraft());
@@ -53,7 +61,7 @@ const ProcessMainView: FC = () => {
     return (
         <ProcessInternalPage title={translate('Process.MainView.Meta.Title')} fullWidth>
             <Grid container>
-                <Grid item xs={3} mb={1} mt={1} ml={1}>
+                <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
                         onChange={(_, processTab) => handleMainTabsChange(processTab)}
                         scrollButtons="auto"
@@ -69,8 +77,15 @@ const ProcessMainView: FC = () => {
                             />
                         ))}
                     </Tabs>
+                    {isGuest &&
+                        <TutorialBlogPost variant="h5" color="textPrimary">
+                            <TutorialLink href="/blog/post/runbotics-tutorial" target="blank">
+                                {translate('Process.MainView.Link.RunBoticsTutorial')}
+                                <OpenInNewIconStyled fontSize='small' />
+                            </TutorialLink>
+                        </TutorialBlogPost>}
                 </Grid>
-                <Grid item xs={6} mb={1} mt={1}>
+                <Grid item xs={true} mb={1} mt={1}>
                     <ProcessTitle variant="h3" color="textPrimary">
                         {process.name}
                     </ProcessTitle>

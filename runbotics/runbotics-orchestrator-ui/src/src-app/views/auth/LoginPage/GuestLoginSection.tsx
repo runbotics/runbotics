@@ -21,7 +21,7 @@ const GuestLoginSection: FC<Props> = ({ isGuestSubmitting, handleGuestLogin }) =
             <Box
                 display="flex"
                 flexDirection="column"
-                justifyContent="space-between"
+                gap={'10px'}
                 minHeight={300}
             >
                 <Box alignItems="center" display="flex" justifyContent="center" mb={0}>

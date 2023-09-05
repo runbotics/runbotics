@@ -26,6 +26,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Service Implementation for managing {@link Process}.
  */
@@ -237,6 +244,14 @@ public class ProcessServiceImpl implements ProcessService {
         }
 
         return processOptional;
+    }
+
+    @Override
+    public List<ProcessDTO> findUserProcesses(User user) {
+        return this.processRepository.findAllByCreatedBy(user)
+            .stream()
+            .map(processMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     public boolean hasRequesterCreateProcessAccess() {
