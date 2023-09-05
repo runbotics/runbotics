@@ -7,14 +7,27 @@
                 <not>
                     <columnExists tableName="global_variable" columnName="creator_id"/>
                 </not>
-                <not>
-                    <foreignKeyConstraintExists foreignKeyName="fk_global_variable_creator_id" foreignKeyTableName="global_variable" />
-                </not>
             </and>
         </preConditions>
         <addColumn tableName="global_variable">
             <column name="creator_id" type="BIGINT"  />
         </addColumn>
+        <sql>
+            UPDATE global_variable
+            SET creator_id = user_id
+            WHERE creator_id IS NULL;
+        </sql>
+    </changeSet>
+    <changeSet author="depcikm" id="20230831151264-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="global_variable"/>
+                <columnExists tableName="global_variable" columnName="creator_id"/>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="fk_global_variable_creator_id" foreignKeyTableName="global_variable" />
+                </not>
+            </and>
+        </preConditions>
         <addForeignKeyConstraint baseTableName="global_variable"
                                  baseColumnNames="creator_id"
                                  constraintName="fk_global_variable_creator_id"
@@ -25,10 +38,5 @@
                                  validate="true"
                                  onDelete="SET NULL"
         />
-        <sql>
-            UPDATE global_variable
-            SET creator_id = user_id
-            WHERE creator_id ISNULL;
-        </sql>
     </changeSet>
 </databaseChangeLog>

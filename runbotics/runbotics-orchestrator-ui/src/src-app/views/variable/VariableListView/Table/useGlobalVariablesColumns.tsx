@@ -14,7 +14,7 @@ import { Role } from 'runbotics-common';
 import useAuth from '#src-app/hooks/useAuth';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { IGlobalVariable, Creator } from '#src-app/types/model/global-variable.model';
+import { IGlobalVariable, UserDTO } from '#src-app/types/model/global-variable.model';
 import { IUser } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
@@ -62,7 +62,7 @@ const useGlobalVariablesColumns = ({
             headerName: translate('Variables.ListView.Table.Header.CreatedBy'),
             flex: 0.8,
             renderCell: (params: GridCellParams) => {
-                const creator = params.row.creator as Creator;
+                const creator = params.row.creator as UserDTO;
                 return creator?.login ?? '';
             },
         },
@@ -80,24 +80,22 @@ const useGlobalVariablesColumns = ({
             type: 'actions',
             flex: 0.1,
             getActions: (params: GridRowParams<IGlobalVariable>) => {
-                const creator = params.row.creator as IUser;
+                const creator = params.row.creator as UserDTO;
                 const isOwner = currentUser.id === creator.id;
-                const disabled = !(isAdmin || isOwner);
 
                 const handleEditClick = () => {
-                    if (!disabled && onEdit) onEdit(params.row);
+                    if (onEdit) onEdit(params.row);
                 };
                 const handleDeleteClick = () => {
-                    if (!disabled && onDelete) onDelete(params.row);
+                    if (onDelete) onDelete(params.row);
                 };
-                return [
+                const gridActions = [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label={translate('Variables.ListView.Table.Actions.Edit')}
                         onClick={handleEditClick}
                         showInMenu={hasEditVariableAccess}
                         key="edit"
-                        disabled={disabled}
                     />,
                     <GridActionsCellItem
                         label={translate('Variables.ListView.Table.Actions.Delete')}
@@ -105,9 +103,9 @@ const useGlobalVariablesColumns = ({
                         onClick={handleDeleteClick}
                         showInMenu={hasDeleteVariableAccess}
                         key="delete"
-                        disabled={disabled}
                     />,
                 ];
+                return (isAdmin || isOwner) ? gridActions : [];
             },
         },
     ];
