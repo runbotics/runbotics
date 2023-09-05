@@ -170,7 +170,7 @@ const ContactForm: FC = () => {
                         checked={formState.checkbox}
                     />
                 </div>
-                <ol className={formState.checkbox ? styles.processing_data : styles.hidden}>{processingDataText}</ol>
+                <ol className={formState.checkbox ? styles.processingData : styles.hidden}>{processingDataText}</ol>
                 <div className={styles.formRow}>
                     <FormButtonGroup status={status} />
                 </div>

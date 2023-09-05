@@ -1,5 +1,6 @@
 package com.runbotics.service;
 
+import com.runbotics.domain.User;
 import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
@@ -7,6 +8,7 @@ import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +42,9 @@ public interface ProcessService {
     Optional<ProcessDTO> updateBotCollection(ProcessDTO processDTO);
 
     Optional<ProcessDTO> updateBotSystem(ProcessDTO processDTO);
+
+    List<ProcessDTO> findUserProcesses(User user);
+
 
     /**
      * Get all the processes.

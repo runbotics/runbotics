@@ -1,0 +1,14 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="depcikm" id="20230830944490-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            DELETE FROM authority_feature_key
+            WHERE authority = 'ROLE_USER'
+            AND feature_key IN ('EXTERNAL_ACTION_READ', 'EXTERNAL_ACTION_EDIT', 'EXTERNAL_ACTION_ADD', 'EXTERNAL_ACTION_DELETE');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -18,8 +18,8 @@ $GRID-GAPS: 27px 23px;
     grid-auto-rows: $GRID-ROWS;
 }
 
-.mediaScroller:has(article) {
-    display: none;
+.mediaScroller {
+    display: none !important;
 }
 
 .grid {
@@ -98,8 +98,8 @@ $GRID-GAPS: 27px 23px;
         display: none;
     }
 
-    .mediaScroller:has(article) {
-        display: grid;
+    .mediaScroller {
+        display: grid !important;
         grid-auto-columns: minmax(300px, 40%);
         padding: 5px;
     }

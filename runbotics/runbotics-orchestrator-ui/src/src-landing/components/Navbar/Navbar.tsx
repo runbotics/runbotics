@@ -37,6 +37,9 @@ const Navbar: FC<NavbarProps> = ({
                 }`}
             >
                 <li className={styles.listItem}>
+                    <LoginLink />
+                </li>
+                <li className={styles.listItem}>
                     <Link
                         href={`/#${BENEFITS_SECTION_ID}`}
                         className={styles.link}
@@ -128,9 +131,6 @@ const Navbar: FC<NavbarProps> = ({
                     >
                         {translate('Landing.Header.Nav.Option.ContactUs')}
                     </Link>
-                </li>
-                <li className={styles.listItem}>
-                    <LoginLink />
                 </li>
             </ul>
         </nav>

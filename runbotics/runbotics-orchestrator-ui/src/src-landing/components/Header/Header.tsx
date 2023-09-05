@@ -4,26 +4,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-
 import logo from '#public/images/runBoticsLogo/logo-black-simp.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
-
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
 import styles from './Header.module.scss';
 import LoginLink from './LoginLink';
 import LanguageSwitcher from '../LanguageSwitcher';
-
 import Navbar from '../Navbar';
-
 
 
 const Header = () => {
     const { translate } = useTranslations();
-
-    const {locale} = useRouter();
-
+    const { locale } = useRouter();
     const [isNavExpanded, setIsNavExpanded] = useState(false);
 
     const toggleNav = () => {
@@ -64,16 +58,13 @@ const Header = () => {
                         text={translate('Landing.Header.Button.SkipNav')}
                     />
                 </Link>
-
                 <Navbar
                     isNavExpanded={isNavExpanded}
                     hideNav={hideNav}
                     isMobileVisible={false}
                 />
-
                 <div className={styles.buttonGroup}>
                     <LanguageSwitcher />
-
                     <button
                         className={`${styles.menuIcon} ${iconMobileStyle}`}
                         onClick={toggleNav}
