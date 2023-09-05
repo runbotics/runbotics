@@ -100,7 +100,13 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 <Button color="primary" onClick={onClose}>
                     {translate('Common.Cancel')}
                 </Button>
-                <Button type="submit" variant="contained" color="primary" autoFocus onClick={handleSubmit}>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    autoFocus
+                    onClick={handleSubmit}
+                >
                     {translate('Common.Save')}
                 </Button>
             </DialogActions>
