@@ -11,6 +11,7 @@ import {
 import { getPost } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
 import { Language } from '#src-app/translations/translations';
+import { MetadataTags } from '#src-landing/components/Matadata/Metadata';
 import BlogPostView from '#src-landing/views/BlogPostView';
 
 interface Props {
@@ -51,9 +52,16 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
         };
     }
 
+    const metadata: MetadataTags = {
+        title: `${post.title} | Runbotics Blog`,
+        description: `RunBotics - ${post.title}`,
+        image: post.featuredImage?.url,
+    };
+
     return {
         props: {
             post,
+            metadata,
         },
     };
 };
