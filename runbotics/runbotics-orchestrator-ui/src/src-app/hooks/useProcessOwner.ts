@@ -4,8 +4,7 @@ import useAuth from './useAuth';
 
 export const useProcessOwner = (process: IProcess): boolean => {
     const { user } = useAuth();
-    const userId = typeof user.id === 'number' ? user.id : Number(user.id);
-    const isProcessOwner = userId === process.createdBy?.id;
+    const isProcessOwner = user.id === process.createdBy?.id;
 
     return isProcessOwner;
 };
