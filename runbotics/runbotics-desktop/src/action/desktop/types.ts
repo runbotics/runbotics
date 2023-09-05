@@ -1,7 +1,6 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export const KEY_REFERENCE = 'Key.';
-export const OCR_CONFIDENCE = 0.9;
 
 export type DesktopActionRequest =
 | DesktopRunRequest<'desktop.click', DesktopClickActionInput>
@@ -11,8 +10,6 @@ export type DesktopActionRequest =
 | DesktopRunRequest<'desktop.cursorSelect', DesktopCursorSelectActionInput>
 | DesktopRunRequest<'desktop.readClipboardContent'>
 | DesktopRunRequest<'desktop.maximizeActiveWindow'>
-| DesktopRunRequest<'desktop.findScreenRegion', DesktopFindScreenRegionActionInput>
-| DesktopRunRequest<'desktop.waitForScreenRegion', DesktopWaitForScreenRegionActionInput>
 | DesktopRunRequest<'desktop.takeScreenshot', DesktopTakeScreenshotActionInput>
 | DesktopRunRequest<'desktop.readTextFromImage', DesktopReadTextFromImageActionInput>;
 
@@ -73,14 +70,6 @@ export type DesktopCursorSelectActionInput = {
 }
 
 export type DesktopReadClipboardContentActionOutput = string;
-
-export type DesktopFindScreenRegionActionInput = {
-    imageFullPath: string;
-}
-
-export type DesktopWaitForScreenRegionActionInput = {
-    imageFullPath: string;
-}
 
 export type DesktopTakeScreenshotActionInput = {
     imageName?: string;

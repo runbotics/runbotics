@@ -190,8 +190,6 @@ export enum DesktopAction {
 	CURSOR_SELECT = 'desktop.cursorSelect',
 	READ_CLIPBOARD_CONTENT= 'desktop.readClipboardContent',
 	MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
-	FIND_SCREEN_REGION = 'desktop.findScreenRegion',
-	WAIT_FOR_SCREEN_REGION = 'desktop.waitForScreenRegion',
 	TAKE_SCREENSHOT = 'desktop.takeScreenshot',
 	READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
 }
