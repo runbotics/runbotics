@@ -4,12 +4,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
-import { FeatureKey, IProcess } from 'runbotics-common';
+import { FeatureKey, IProcess, Role } from 'runbotics-common';
 
 
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import { useProcessOwner } from '#src-app/hooks/useProcessOwner';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { processActions } from '#src-app/store/slices/Process';
@@ -33,6 +35,9 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
     const [showDialog, setShowDialog] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
+    const isAdmin = useRole([Role.ROLE_ADMIN]);
+    const isProcessOwner = useProcessOwner(process);
+    const hasModifyProcessAccess = isAdmin || isProcessOwner;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -62,8 +67,8 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
 
     return (
         <>
-            <If condition={hasEditProcessAccess || hasDeleteProcessAccess}>
-                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick}>
+            <If condition={hasModifyProcessAccess && (hasEditProcessAccess || hasDeleteProcessAccess)}>
+                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick} >
                     <MoreVertIcon />
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
