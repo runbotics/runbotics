@@ -1,4 +1,3 @@
-require('@nut-tree/template-matcher');
 import fs from 'fs';
 import path from 'path';
 import { StatelessActionHandler } from 'runbotics-sdk';
@@ -14,7 +13,6 @@ import {
     straightTo,
     centerOf,
     sleep,
-    imageResource,
     MouseConfig,
     KeyboardConfig,
     Point,
@@ -30,8 +28,6 @@ import {
     DesktopCopyActionInput,
     DesktopCursorSelectActionInput,
     DesktopReadClipboardContentActionOutput,
-    DesktopFindScreenRegionActionInput,
-    DesktopWaitForScreenRegionActionInput,
     DesktopTakeScreenshotActionInput,
     DesktopTakeScreenshotActionOutput,
     DesktopReadTextFromImageActionInput,
@@ -40,8 +36,7 @@ import {
     MouseButton,
     PointData,
     RegionData,
-    KEY_REFERENCE,
-    OCR_CONFIDENCE
+    KEY_REFERENCE
 } from './types';
 
 
@@ -61,7 +56,6 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         super();
         mouse.config = this.mouseConfig;
         keyboard.config = this.keyboardConfig;
-        screen.config.confidence = OCR_CONFIDENCE;
     }
 
     async click(input: DesktopClickActionInput): Promise<void> {
@@ -150,29 +144,29 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionData> {
-        const image = path.normalize(input.imageFullPath);
-        this.checkFileExist(image);
+    // async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionData> {
+    //     const image = path.normalize(input.imageFullPath);
+    //     this.checkFileExist(image);
 
-        const { filePath, fileName } = this.getFilePathElements(image);
-        screen.config.resourceDirectory = filePath;
+    //     const { filePath, fileName } = this.getFilePathElements(image);
+    //     screen.config.resourceDirectory = filePath;
 
-        const resource = await imageResource(fileName);
-        const region = await screen.find(resource);
-        return this.toRegionObj(region);
-    }
+    //     const resource = await imageResource(fileName);
+    //     const region = await screen.find(resource);
+    //     return this.toRegionObj(region);
+    // }
 
-    async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionData> {
-        const image = path.normalize(input.imageFullPath);
-        this.checkFileExist(image);
+    // async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionData> {
+    //     const image = path.normalize(input.imageFullPath);
+    //     this.checkFileExist(image);
 
-        const { filePath, fileName } = this.getFilePathElements(image);
-        screen.config.resourceDirectory = filePath;
+    //     const { filePath, fileName } = this.getFilePathElements(image);
+    //     screen.config.resourceDirectory = filePath;
 
-        const resource = await imageResource(fileName);
-        const region = await screen.waitFor(resource, 5000);
-        return this.toRegionObj(region);
-    }
+    //     const resource = await imageResource(fileName);
+    //     const region = await screen.waitFor(resource, 5000);
+    //     return this.toRegionObj(region);
+    // }
 
     async readTextFromImage(input: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
         let worker: any;
@@ -296,10 +290,6 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 return this.readClipboardContent();
             case 'desktop.maximizeActiveWindow':
                 return this.maximizeActiveWindow();
-            case 'desktop.findScreenRegion':
-                return this.findScreenRegion(request.input);
-            case 'desktop.waitForScreenRegion':
-                return this.waitForScreenRegion(request.input);
             case 'desktop.takeScreenshot':
                 return this.takeScreenshot(request.input);
             case 'desktop.readTextFromImage':
