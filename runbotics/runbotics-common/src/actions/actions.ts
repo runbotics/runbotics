@@ -107,12 +107,15 @@ export enum DesktopOfficeAction {
     POWERPOINT_CLOSE = 'powerpoint.close',
 }
 
+export enum ExcelCloudAction {
+    OPEN_FILE = 'excelCloud.openWorkbook',
+    SET_CELL = 'excelCloud.setCell',
+}
+
 export enum SharepointExcelAction {
 	GET_CELL = 'sharepointExcel.getCell',
 	GET_RANGE = 'sharepointExcel.getRange',
-	SET_CELL = 'sharepointExcel.setCell',
 	UPDATE_RANGE = 'sharepointExcel.updateRange',
-	OPEN_FILE=  'sharepointExcel.openFile',
 	CLOSE_SESSION = 'sharepointExcel.closeSession',
 }
 

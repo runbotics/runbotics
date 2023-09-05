@@ -4,8 +4,8 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 import { MicrosoftCloudPlatform } from 'runbotics-common';
 import { RunboticsLogger } from '#logger';
 
-import { SharePointService } from './service/share-point';
-import { OneDriveService } from './service/one-drive';
+import { SharePointService } from '../share-point';
+import { OneDriveService } from '../one-drive';
 import { getContentType } from './utils';
 import { FileActionRequest, MicrosoftFileUploadInput } from './types';
 

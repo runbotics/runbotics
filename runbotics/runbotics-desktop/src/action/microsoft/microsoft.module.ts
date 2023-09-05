@@ -3,7 +3,7 @@ import { MicrosoftService } from './microsoft.service';
 import { MicrosoftSession } from './microsoft.session';
 import { MicrosoftAuthService } from './microsoft-auth.service';
 import { MicrosoftGraphService } from './microsoft-graph';
-import { SharePointService } from './file/service/share-point';
+import { SharePointService } from './share-point';
 import { ExcelService } from './excel';
 
 @Module({

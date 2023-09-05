@@ -14,7 +14,7 @@ import {
 } from './excel.types';
 
 import { MicrosoftCloudPlatform } from 'runbotics-common';
-import { SharePointService } from '../file/service/share-point';
+import { SharePointService } from '../share-point';
 
 @Injectable()
 export class ExcelService {
@@ -85,8 +85,9 @@ export class ExcelService {
         });
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
+    // https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=http
     public setCell(address: string, value: string): Promise<WorkbookRange> {
+        this.checkSession();
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
@@ -166,5 +167,11 @@ export class ExcelService {
             workbookSessionInfo: null,
             worksheetIdentifier: input.worksheetIdentifier,
         };
+    }
+
+    private checkSession() {
+        if (!this.session) {
+            throw new Error('The "Open workbook" action was not used.')
+        }
     }
 }

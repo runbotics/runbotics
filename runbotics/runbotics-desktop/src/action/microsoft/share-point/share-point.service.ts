@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '#logger';
 
-import { MicrosoftGraphService } from '../../../microsoft-graph';
+import { MicrosoftGraphService } from '../microsoft-graph';
 import { Site, Drive, DriveItem } from './share-point.types';
-import { bufferFromBase64 } from '../../utils';
+import { bufferFromBase64 } from '../file/utils';
 
 @Injectable()
 export class SharePointService {

@@ -6,6 +6,7 @@ import getBrowserActions from './browser.actions';
 import getCsvActions from './csv.actions';
 import getDesktopActions from './desktop.actions';
 import getExcelActions from './excel.actions';
+import getExcelCloudActions from './excelCloud.actions';
 import getFileActions from './file.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
@@ -31,6 +32,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getCsvActions(),
     ...getSharepointExcelActions(),
     ...getSharepointFileActions(),
+    ...getExcelCloudActions(),
     ...getPowerPointActions(),
     ...getBrowserActions(),
     ...getJavascriptActions(),

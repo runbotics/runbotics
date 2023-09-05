@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '#logger';
 
-import { MicrosoftGraphService } from '../../../microsoft-graph/microsoft-graph.service';
+import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
 import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';
-import { bufferFromBase64 } from '../../utils';
+import { bufferFromBase64 } from '../file/utils';
 
 @Injectable()
 export class OneDriveService {

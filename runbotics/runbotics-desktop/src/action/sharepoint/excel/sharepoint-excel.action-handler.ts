@@ -10,16 +10,16 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         super();
     }
 
-    async openFile(
-        input: SharepointTypes.SharepointExcelOpenFileActionInput
-    ): Promise<SharepointTypes.SharepointOpenActionOutput> {
-        return await this.excelService.openFile({
+    async openWorkbook(
+        input: SharepointTypes.ExcelCloudOpenWorkbookActionInput
+    ) {
+        await this.excelService.openFile({
             platform: input.platform,
-            sessionIdentifier: input.filePath,
-            worksheetIdentifier: input.worksheetName,
+            sessionIdentifier: input.workbookPath,
+            worksheetIdentifier: input.worksheet,
             persistChanges: input.persistChanges,
-            siteName: input.siteName,
-            listName: input.listName,
+            site: input.site,
+            list: input.list,
         });
     }
 
@@ -42,9 +42,9 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     }
 
     async setCell(
-        input: SharepointTypes.SharepointSetExcelCellActionInput
-    ): Promise<SharepointTypes.SharepointExcelSetCellActionOutput> {
-        return this.excelService.setCell(input.cell, input.content);
+        input: SharepointTypes.ExcelCloudSetCellActionInput
+    ) {
+        this.excelService.setCell(input.cell, input.value);
     }
 
     async updateRange(
@@ -59,14 +59,14 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
                 return this.getCell(request.input);
             case 'sharepointExcel.getRange':
                 return this.getRange(request.input);
-            case 'sharepointExcel.setCell':
+            case 'excelCloud.setCell':
                 return this.setCell(request.input);
             case 'sharepointExcel.updateRange':
                 return this.updateRange(request.input);
             case 'sharepointExcel.closeSession':
                 return this.closeSession(request.input);
-            case 'sharepointExcel.openFile':
-                return this.openFile(request.input);
+            case 'excelCloud.openWorkbook':
+                return this.openWorkbook(request.input);
             default:
                 throw new Error('Action not found');
         }

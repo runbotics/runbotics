@@ -10,8 +10,8 @@ export interface OneDriveSession {
 }
 
 export interface SharePointSession extends OneDriveSession {
-    siteName?: string,
-    listName?: string
+    site?: string,
+    list?: string
 }
 
 export interface OpenFileInput extends SharePointSession {

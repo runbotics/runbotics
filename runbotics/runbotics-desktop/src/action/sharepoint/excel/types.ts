@@ -1,30 +1,27 @@
-import { Platform } from '#action/microsoft/excel/excel.types';
+import { MicrosoftCloudPlatform } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type FileActionRequest =
-| DesktopRunRequest<'sharepointExcel.setCell', SharepointSetExcelCellActionInput>
+| DesktopRunRequest<'excelCloud.setCell', ExcelCloudSetCellActionInput>
 | DesktopRunRequest<'sharepointExcel.getCell', SharepointGetExcelCellActionInput>
 | DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
 | DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>
-| DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
+| DesktopRunRequest<'excelCloud.openWorkbook', ExcelCloudOpenWorkbookActionInput>;
 
-export interface SharepointExcelOpenFileActionInput {
-    platform: Platform;
-    filePath: string;
-    worksheetName: string;
+export interface ExcelCloudOpenWorkbookActionInput {
+    platform: MicrosoftCloudPlatform;
+    workbookPath: string;
+    worksheet: string;
     persistChanges: boolean;
-    siteName?: string;
-    listName?: string;
+    site?: string;
+    list?: string;
 }
 
-export type SharepointOpenActionOutput = any;
-
-export type SharepointSetExcelCellActionInput = {
-    content: string;
+export type ExcelCloudSetCellActionInput = {
+    value: string;
     cell: string;
 };
-export type SharepointExcelSetCellActionOutput = any;
 
 export type SharepointExcelUpdateRangeActionInput = {
     range: string;

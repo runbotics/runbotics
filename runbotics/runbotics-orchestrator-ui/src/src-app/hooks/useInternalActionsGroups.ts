@@ -6,6 +6,7 @@ import getBrowserActions from '#src-app/Actions/browser.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
+import getExcelCloudActions from '#src-app/Actions/excelCloud.actions';
 import getFileActions from '#src-app/Actions/file.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
@@ -124,6 +125,12 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.SharepointExcel'
             ),
             items: Object.values(getSharepointExcelActions())
+        },
+        excelCloud: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.ExcelCloud'
+            ),
+            items: Object.values(getExcelCloudActions())
         },
         sharepointFile: {
             label: translate(
