@@ -9,8 +9,12 @@ import {
 } from '@mui/x-data-grid';
 import moment from 'moment';
 
+import { Role } from 'runbotics-common';
+
+import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { IGlobalVariable, UserDTO } from '#src-app/types/model/global-variable.model';
 import { IUser } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
@@ -27,12 +31,14 @@ const useGlobalVariablesColumns = ({
     hasDeleteVariableAccess,
 }: ColumnsActions): GridEnrichedColDef[] => {
     const { translate } = useTranslations();
+    const { user: currentUser } = useAuth();
+    const isAdmin = useRole([Role.ROLE_ADMIN]);
 
     return [
         {
             field: 'name',
             headerName: translate('Variables.ListView.Table.Header.Name'),
-            flex: 0.8,
+            flex: 0.6,
         },
         {
             field: 'description',
@@ -42,7 +48,7 @@ const useGlobalVariablesColumns = ({
         {
             field: 'type',
             headerName: translate('Variables.ListView.Table.Header.Type'),
-            flex: 0.5,
+            flex: 0.4,
         },
         {
             field: 'lastModified',
@@ -52,9 +58,18 @@ const useGlobalVariablesColumns = ({
                 moment(params.value as string).format('YYYY-MM-DD HH:mm'),
         },
         {
+            field: 'createdBy',
+            headerName: translate('Variables.ListView.Table.Header.CreatedBy'),
+            flex: 0.8,
+            renderCell: (params: GridCellParams) => {
+                const creator = params.row.creator as UserDTO;
+                return creator?.login ?? '';
+            },
+        },
+        {
             field: 'modifiedBy',
             headerName: translate('Variables.ListView.Table.Header.ModifiedBy'),
-            flex: 0.6,
+            flex: 0.8,
             renderCell: (params: GridCellParams) => {
                 const user = params.row.user as IUser;
                 return user?.login ?? '';
@@ -63,14 +78,18 @@ const useGlobalVariablesColumns = ({
         {
             field: 'actions',
             type: 'actions',
+            flex: 0.1,
             getActions: (params: GridRowParams<IGlobalVariable>) => {
+                const creator = params.row.creator as UserDTO;
+                const isOwner = currentUser.id === creator.id;
+
                 const handleEditClick = () => {
                     if (onEdit) onEdit(params.row);
                 };
                 const handleDeleteClick = () => {
                     if (onDelete) onDelete(params.row);
                 };
-                return [
+                const gridActions = [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label={translate('Variables.ListView.Table.Actions.Edit')}
@@ -86,6 +105,7 @@ const useGlobalVariablesColumns = ({
                         key="delete"
                     />,
                 ];
+                return (isAdmin || isOwner) ? gridActions : [];
             },
         },
     ];

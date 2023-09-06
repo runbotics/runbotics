@@ -23,6 +23,8 @@ public class GlobalVariableDTO implements Serializable {
 
     private UserDTO user;
 
+    private UserDTO creator;
+
     public Long getId() {
         return id;
     }
@@ -79,6 +81,14 @@ public class GlobalVariableDTO implements Serializable {
         this.user = user;
     }
 
+    public UserDTO getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserDTO user) {
+        this.creator = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -111,6 +121,7 @@ public class GlobalVariableDTO implements Serializable {
             ", value='" + getValue() + "'" +
             ", lastModified='" + getLastModified() + "'" +
             ", user=" + getUser() +
+            ", creator=" + getCreator() +
             "}";
     }
 }
