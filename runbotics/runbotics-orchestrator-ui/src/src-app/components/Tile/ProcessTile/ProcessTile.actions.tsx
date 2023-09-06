@@ -57,6 +57,10 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                     size: pageSize,
                 }),
             );
+            enqueueSnackbar(
+                translate('Component.Tile.Process.Update.Success', { name: process.name }),
+                { variant: 'success' })
+            ;
         } catch (e) {
             enqueueSnackbar(
                 translate('Component.Tile.Process.Update.Failed', { name: process.name }),
@@ -73,7 +77,7 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
                     <If condition={hasEditProcessAccess}>
-                        <MenuItem onClick={() => setShowDialog(true)}>
+                        <MenuItem onClick={() => { setShowDialog(true);  handleClose(); }}>
                             {translate('Common.Edit')}
                         </MenuItem>
                     </If>
@@ -82,9 +86,9 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                     </If>
                 </Menu>
             </If>
-            <If condition={hasEditProcessAccess}>
+            <If condition={hasEditProcessAccess && showDialog}>
                 <EditProcessDialog
-                    open={showDialog}
+                    open
                     onClose={() => setShowDialog(false)}
                     onAdd={handleEdit}
                     process={process}

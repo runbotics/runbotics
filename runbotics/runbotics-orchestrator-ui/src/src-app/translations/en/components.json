@@ -16,6 +16,7 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
+    "Component.Tile.Process.Update.Success": "Successfully updated {{ name }} process",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",
     "Component.Tile.Process.Settings.AriaLabel": "settings",
     "Component.Tile.Process.Tags.ExpandLabel": "expand",

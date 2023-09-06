@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 
-import { IProcess } from 'runbotics-common';
+import { IProcess, ITag } from 'runbotics-common';
 
 
 import { RootState } from '#src-app/store';
@@ -16,6 +16,11 @@ import { StartProcessResponse } from './Process.state';
 
 const processPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
+
+const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
+    .url(url)
+    .params(params)
+    .build();
 
 export const fetchProcessById = createAsyncThunk<
     IProcess,
@@ -117,7 +122,7 @@ export const startProcess = createAsyncThunk<StartProcessResponse, { processId: 
         .then((response) => response.data)
         .catch((error) => {
             const message = error.response.status === 504 ? { message: 'Process start failed' } : error.response.data;
-            
+
             return thunkAPI.rejectWithValue(message);
         }),
 );
@@ -136,4 +141,10 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     async ({ processId }) => {
         await Axios.delete(`/api/processes/${processId}`);
     },
+);
+
+export const getTagsByName = createAsyncThunk<ITag[], PageRequestParams>(
+    'tags/getByName',
+    (params) => Axios.get<ITag[]>(buildPageURL(params, '/api/tags'))
+        .then((response) => response.data)
 );
