@@ -9,13 +9,12 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
-import { FeatureKey, Role } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
-import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';

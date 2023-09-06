@@ -19,8 +19,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
-import { Form } from '../utils/FormDialog.styles';
 import { EditProcessDialogSelectFields, EditProcessDialogTextFields } from './EditProcessDialogForm';
+import { Form } from '../utils/FormDialog.styles';
 
 const DEBOUNCE_TIME = 300;
 
