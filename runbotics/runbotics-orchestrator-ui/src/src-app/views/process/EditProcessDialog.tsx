@@ -35,16 +35,6 @@ const initialFormValidationState: FormValidationState = {
     name: true
 };
 
-const getProcessDataWithoutNulls = (process: IProcess): IProcess => ({
-    ...process,
-    description: process.description ?? ''
-});
-
-const getProcessDataWithoutEmptyStrings = (process: IProcess): IProcess => ({
-    ...process,
-    description: (process.description === '' ? null : process.description)
-});
-
 const EditProcessDialog: FC<EditProcessDialogProps> = ({
     process, onAdd, onClose, open,
 }) => {
@@ -52,7 +42,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const dispatch = useDispatch();
 
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
-    const [processFormState, setProcessFormState] = useState<IProcess>();
+    const [processFormState, setProcessFormState] = useState<IProcess>({ ...process });
     const [searchedDatabaseTags, setSearchedDatabaseTags] = useState<Tag[]>([]);
     const [selectedTagsNames, setSelectedTagsNames] = useState<string[]>([]);
     const [search, setSearch] = useState<string>('');
@@ -122,11 +112,11 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     };
 
     const handleSubmit = () => {
-        onAdd(getProcessDataWithoutEmptyStrings(processFormState));
+        onAdd(processFormState);
     };
 
     useEffect(() => {
-        setProcessFormState(getProcessDataWithoutNulls(process));
+        setProcessFormState(process);
         setSelectedTagsNames(process.tags.map((tag) => tag.name));
     }, [process]);
 

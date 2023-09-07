@@ -1,5 +1,7 @@
 import React, { FC, useState, useRef, useLayoutEffect } from 'react';
 
+import { Chip } from '@mui/material';
+
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -12,7 +14,6 @@ import {
     StaticLine,
     Container,
     StyledExpandIcon,
-    StyledChipName
 } from './ProcessTileTag.styles';
 import { ProcessTileTagProps } from './ProcessTileTag.types';
 
@@ -59,9 +60,9 @@ const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
 
     return (
         <Container>
-            <TagBox ref={refTagBox} isExpanded={isTagBoxExpanded} >
+            <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
                 {tags.map((tag) =>
-                    <StyledChipName
+                    <Chip
                         label={tag.name}
                         key={tag.name}
                         size='small'
@@ -86,7 +87,7 @@ const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
                                 : translate('Component.Tile.Process.Tags.ExpandLabel')
                             }
                         </StyledTypography>
-                        <StyledExpandIcon isExpanded={isTagBoxExpanded}/>
+                        <StyledExpandIcon $isExpanded={isTagBoxExpanded}/>
                     </DividerAction>
                 </If>
             </DividerBox>

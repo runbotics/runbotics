@@ -1,10 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Chip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import styled from 'styled-components';
-
-export const StyledChipName = styled(Chip)`
-    margin: 0 8px 8px 0;
-`;
 
 export const StyledTypography = styled(Typography)(({ theme }) => `
     && {
@@ -20,12 +16,12 @@ export const StyledTypography = styled(Typography)(({ theme }) => `
     }
 `);
 
-export const StyledExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean; }>`
+export const StyledExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean; }>`
     && {
         position: relative;
         top: 10px;
         color: ${props => props.theme.palette.grey[500]};
-        transform: rotate(${props => props.isExpanded ? '-180deg' : '0'});
+        transform: rotate(${props => props.$isExpanded ? '-180deg' : '0'});
         transition: 0.5s;
     }
 `;
@@ -38,14 +34,15 @@ export const Container = styled.div`
     height: 20px;
 `;
 
-export const TagBox = styled.div<{ isExpanded: boolean; }>`
+export const TagBox = styled.div<{ $isExpanded: boolean; }>`
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${props => props.isExpanded ? '170px' : '130%'};
+    height: ${props => props.$isExpanded ? '170px' : '130%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
+    gap: 8px;
     margin: 0;
     z-index: 3;
     isolation: isolate;

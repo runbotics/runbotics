@@ -52,7 +52,7 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
                 name="name"
                 label={translate('Process.Edit.Form.Fields.Name.Label')}
                 onChange={handleInputChange}
-                value={processFormState?.name}
+                value={processFormState.name}
                 variant="outlined"
                 error={!formValidationState.name}
                 {...(!formValidationState.name && { helperText: translate('Process.Edit.Form.Fields.Error.Required') })}
@@ -63,7 +63,7 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
                 margin="normal"
                 name="description"
                 onChange={handleInputChange}
-                value={processFormState?.description}
+                value={processFormState.description ?? ''}
                 variant="outlined"
             />
         </>
@@ -80,11 +80,11 @@ export const EditProcessDialogSelectFields: FC<FormSelectFieldsProps> = ({
         <>
             <Box display="flex" justifyContent="space-between">
                 <BotCollectionComponent
-                    selectedBotCollection={processFormState?.botCollection}
+                    selectedBotCollection={processFormState.botCollection}
                     onSelectBotCollection={(botCollection) => setProcessFormState(prevState => ({ ...prevState, botCollection }))}
                 />
                 <BotSystemComponent
-                    selectedBotSystem={processFormState?.system}
+                    selectedBotSystem={processFormState.system}
                     onSelectBotSystem={(system) => setProcessFormState(prevState => ({ ...prevState, system }))}
                 />
             </Box>
@@ -94,7 +94,7 @@ export const EditProcessDialogSelectFields: FC<FormSelectFieldsProps> = ({
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setProcessFormState((prevState) => ({ ...prevState, isPublic: e.target.checked }));
                         }}
-                        checked={processFormState?.isPublic ?? false}
+                        checked={processFormState.isPublic ?? false}
                     />
                 )}
                 label={translate('Process.Edit.Form.Fields.Public.Label')}
