@@ -67,20 +67,16 @@ export class ExcelService {
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
     public getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookRange> {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${
-            Number(cellCoordinates.row) - 1
-        },column=${this.getColumnNumber(cellCoordinates.column) - 1})`;
+        const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
+            this.getColumnNumber(cellCoordinates.column) - 1
+        })`;
 
-        try {
-            const response = this.microsoftGraphService.get(this.createWorkbookUrl(url), {
-                headers: {
-                    'workbook-session-id': this.session.workbookSessionInfo.id,
-                },
-            });
-            return response;
-        } catch(error) {
-            throw new Error(error.message);
-        }
+        const response = this.microsoftGraphService.get(this.createWorkbookUrl(url), {
+            headers: {
+                'workbook-session-id': this.session.workbookSessionInfo.id
+            }
+        });
+        return response;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
@@ -147,8 +143,7 @@ export class ExcelService {
         // it uses the ASCII code of the letter to calculate the number
         // e.g A = 65, B = 66, C = 67, etc.
         // so we subtract 64 from the ASCII code to get the column number
-        const colnum = (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
-        return colnum;
+        return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
     }
 
     private async getSiteIdByName(name: string): Promise<Site> {

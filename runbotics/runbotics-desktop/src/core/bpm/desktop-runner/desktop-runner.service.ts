@@ -1,7 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from 'runbotics-sdk';
-import { readdirSync } from 'fs';
+import { readdirSync, existsSync, access } from 'fs';
 import path from 'path';
 
 import ImportActionHandler from '#action/import';
@@ -119,7 +119,7 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter((dirent) => dirent.isDirectory())
+                .filter((dirent) => dirent.isDirectory() && !dirent.name.startsWith('.') && this.checkIfFileSystemEntryPresentInDirectory(dirent.path, dirent.name, ['dist', 'node_modules', 'package.json', 'package-lock.json']))
                 .map((dirent) => dirent.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
@@ -239,5 +239,14 @@ export class DesktopRunnerService implements OnModuleInit {
         const notFoundErrorMessage = `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Script ${request.script} not found`;
         this.logger.error(notFoundErrorMessage);
         throw new Error(notFoundErrorMessage);
+    }
+
+    checkIfFileSystemEntryPresentInDirectory(directoryPath: string, directoryName: string, fileSystemEntires: string[]): boolean {
+        const isPresent = fileSystemEntires.every(fileSystemEntry => {
+            const path = directoryPath + '\\' + directoryName + '\\' + fileSystemEntry;
+            return existsSync(path);
+        });
+
+        return isPresent;
     }
 }
