@@ -77,7 +77,10 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
                     <If condition={hasEditProcessAccess}>
-                        <MenuItem onClick={() => { setShowDialog(true);  handleClose(); }}>
+                        <MenuItem onClick={() => {
+                            setShowDialog(true);
+                            handleClose();
+                        }}>
                             {translate('Common.Edit')}
                         </MenuItem>
                     </If>

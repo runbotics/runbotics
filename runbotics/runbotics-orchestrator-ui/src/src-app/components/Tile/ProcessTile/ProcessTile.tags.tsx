@@ -5,23 +5,25 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import {
     StyledTypography,
-    StyledChip,
-    StyledMoreIcon,
-    StyledLessIcon,
     TagBox,
-    ExpandBox,
-    ExpandAction,
-    ExpandLine,
+    DividerBox,
+    DividerAction,
+    DividerLine,
     StaticLine,
-    Container
+    Container,
+    StyledExpandIcon,
+    StyledChipName
 } from './ProcessTile.tags.styles';
 import { ProcessTileTagsProps } from './ProcessTile.types';
+
+const TAGS_CONTAINER_MARGIN_VALUE = 85;
+const TAG_RIGHT_MARGIN_VALUE = 8;
 
 const ProcessTileTags: FC<ProcessTileTagsProps> = ({ tags }) => {
     const { translate } = useTranslations();
 
     const [areTagsExpanded, setAreTagsExpanded] = useState<boolean>(false);
-    const [areTagsFitLine, setAreTagsFitLine] = useState<boolean>(false);
+    const [areTagsFittingLine, setAreTagsFittingLine] = useState<boolean>(false);
     const [tagsWidth, setTagsWidth] = useState<number>(0);
 
     const refTags = useRef(Array.from({ length: tags.length }, _ => React.createRef<HTMLDivElement>()));
@@ -29,22 +31,20 @@ const ProcessTileTags: FC<ProcessTileTagsProps> = ({ tags }) => {
 
     const willTagsFit = (tagsWidthSum: number): void => {
         if (!refTagBox.current) return;
-        const tagDivWidth: number = refTagBox.current.offsetWidth - 85;
-        const tagsWithMarginWidth: number = tagsWidthSum + (Object.keys(refTags.current).length - 1) * 8;
+        const tagDivWidth: number = refTagBox.current.offsetWidth - TAGS_CONTAINER_MARGIN_VALUE;
+        const tagsWithMarginWidth: number = tagsWidthSum + (Object.keys(refTags.current).length - 1) * TAG_RIGHT_MARGIN_VALUE;
 
-        tagsWithMarginWidth > tagDivWidth ? setAreTagsFitLine(false) : setAreTagsFitLine(true);
+        setAreTagsFittingLine(tagsWithMarginWidth < tagDivWidth);
     };
 
-    const handleResize = (): number => {
-        const tagsWidthSum: number = refTags.current.reduce(
-            (prevValue, tag) => prevValue + tag.current.offsetWidth, 0);
-
+    const handleWindowResize = (): number => {
+        const tagsWidthSum: number = refTags.current.reduce((prevValue, tag) => prevValue + tag.current.offsetWidth, 0);
         setTagsWidth(tagsWidthSum);
         return tagsWidthSum;
     };
 
     useLayoutEffect(() => {
-        const tagsWidthSum: number = handleResize();
+        const tagsWidthSum: number = handleWindowResize();
         window.addEventListener('resize', () => willTagsFit(tagsWidthSum));
 
         return () => {
@@ -58,46 +58,39 @@ const ProcessTileTags: FC<ProcessTileTagsProps> = ({ tags }) => {
 
     return (
         <Container>
-            <TagBox ref={refTagBox} hidden={!areTagsExpanded} >
+            <TagBox ref={refTagBox} isHidden={!areTagsExpanded} >
                 {
                     tags.map((tag, id) =>
-                        <StyledChip
+                        <StyledChipName
                             ref={refTags.current[id]}
-                            className='tag'
                             label={tag.name}
                             key={tag.name}
                             size='small'
                         />)
                 }
             </TagBox>
-            <ExpandBox>
+            <DividerBox>
                 <If
-                    condition={tags.length && !areTagsFitLine}
+                    condition={tags.length && !areTagsFittingLine}
                     else={<StaticLine/>}
                 >
-                    <ExpandLine/>
-                    <ExpandAction
+                    <DividerLine/>
+                    <DividerAction
                         onClick={() => setAreTagsExpanded(!areTagsExpanded)}
                     >
                         <StyledTypography
                             variant='body2'
                             fontSize={11}
                         >
-                            {
-                                areTagsExpanded
-                                    ? translate('Component.Tile.Process.Tags.CollapseLabel')
-                                    : translate('Component.Tile.Process.Tags.ExpandLabel')
+                            {areTagsExpanded
+                                ? translate('Component.Tile.Process.Tags.CollapseLabel')
+                                : translate('Component.Tile.Process.Tags.ExpandLabel')
                             }
                         </StyledTypography>
-                        <If
-                            condition={areTagsExpanded}
-                            else={<StyledMoreIcon/>}
-                        >
-                            <StyledLessIcon/>
-                        </If>
-                    </ExpandAction>
+                        <StyledExpandIcon isExpanded={areTagsExpanded}/>
+                    </DividerAction>
                 </If>
-            </ExpandBox>
+            </DividerBox>
         </Container>
     );
 };

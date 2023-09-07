@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 
-import { IProcess, ITag } from 'runbotics-common';
+import { IProcess, Tag } from 'runbotics-common';
 
 
 import { RootState } from '#src-app/store';
@@ -143,8 +143,8 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     },
 );
 
-export const getTagsByName = createAsyncThunk<ITag[], PageRequestParams>(
+export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
     'tags/getByName',
-    (params) => Axios.get<ITag[]>(buildPageURL(params, '/api/tags'))
+    (params) => Axios.get<Tag[]>(buildPageURL(params, '/api/tags'))
         .then((response) => response.data)
 );

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 import { unwrapResult } from '@reduxjs/toolkit';
-import { IProcess, ITag } from 'runbotics-common';
+import { IProcess, Tag } from 'runbotics-common';
 
 import useDebounce from '#src-app/hooks/useDebounce';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -23,6 +23,8 @@ import { EditProcessDialogSelectFields, EditProcessDialogTextFields } from './Ed
 import { Form } from '../utils/FormDialog.styles';
 
 const DEBOUNCE_TIME = 300;
+const MAX_NUMBER_OF_TAGS = 15;
+const MAX_TAG_LENGTH = 20;
 
 type EditProcessDialogProps = {
     open?: boolean;
@@ -56,28 +58,27 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const dispatch = useDispatch();
 
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
-    const [formState, setFormState] = useState<IProcess>();
-    const [searchedTags, setSearchedTags] = useState<ITag[]>([]);
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [processFormState, setProcessFormState] = useState<IProcess>();
+    const [searchedDatabaseTags, setSearchedDatabaseTags] = useState<Tag[]>([]);
+    const [selectedTagsNames, setSelectedTagsNames] = useState<string[]>([]);
     const [search, setSearch] = useState<string>('');
     const debouncedSearch = useDebounce<string>(search.trim(), DEBOUNCE_TIME);
 
-    const handleTagSelect = (updatedTags: string[]) => {
-        const lastTagInSearch = searchedTags.find(tag => tag.name === updatedTags.at(-1));
+    const handleTagChange = (updatedTags: string[]) => {
+        setSelectedTagsNames(updatedTags);
 
-        setSelectedTags(updatedTags);
-        if (updatedTags.length > selectedTags.length) {
-            setFormState((prevState) => ({
+        const hasTagBeenAdded = updatedTags.length > selectedTagsNames.length;
+        if (hasTagBeenAdded) {
+            const tagToAdd = (searchedDatabaseTags.find(tag => tag.name === updatedTags.at(-1))) ?? { name: updatedTags.at(-1) };
+            setProcessFormState((prevState) => ({
                 ...prevState,
-                tags: [
-                    ...formState.tags,
-                    lastTagInSearch ?? { name: updatedTags.at(-1) }
-                ]
+                tags: [...processFormState.tags, tagToAdd]
             }));
         } else {
-            setFormState((prevState) => ({
+            const filteredTags = [...processFormState.tags].filter((tag) => updatedTags.includes(tag.name));
+            setProcessFormState((prevState) => ({
                 ...prevState,
-                tags: [...formState.tags].filter((tag) => updatedTags.includes(tag.name))
+                tags: filteredTags
             }));
         }
 
@@ -86,38 +87,38 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
 
     const handleTagSearch = (e: ChangeEvent<HTMLInputElement>) => {
         const filteredSearch = e.target.value.replaceAll(/[^A-Za-z0-9]/g, '');
-        if (filteredSearch.length <= 20) setSearch(filteredSearch);
+        if (filteredSearch.length <= MAX_TAG_LENGTH) setSearch(filteredSearch);
     };
 
     const handleAddByEnter = (e: KeyboardEvent<HTMLInputElement>) => {
         if(e.key === 'Enter'
             && search !== ''
-            && selectedTags.length < 15
-            && !selectedTags.includes(search)
-        ) handleTagSelect(selectedTags.concat(search));
+            && selectedTagsNames.length < MAX_NUMBER_OF_TAGS
+            && !selectedTagsNames.includes(search)
+        ) handleTagChange(selectedTagsNames.concat(search));
     };
 
-    const refreshList = (searchedValue: string) => {
-        if(searchedValue !== '') {
-            dispatch(processActions.getTagsByName(
-                { filter: { contains: { 'name': debouncedSearch } } }
-            ))
-                .then(unwrapResult)
-                .then((tags) => {
-                    setSearchedTags(tags);
-                });
-        }
+    const refreshTagList = (searchedValue: string) => {
+        if(searchedValue === '') return;
+
+        dispatch(processActions.getTagsByName(
+            { filter: { contains: { 'name': debouncedSearch } } }
+        ))
+            .then(unwrapResult)
+            .then((tags) => {
+                setSearchedDatabaseTags(tags);
+            });
     };
 
     useEffect(() => {
-        refreshList(debouncedSearch);
+        refreshTagList(debouncedSearch);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     const checkFormFieldsValidation = () => formValidationState.name;
 
     const getSearchedTagNames = () => {
-        const searchedTagNames = searchedTags.map((tag) => tag.name);
+        const searchedTagNames = searchedDatabaseTags.map((tag) => tag.name);
         return (
             !searchedTagNames.includes(search) && search !== ''
                 ? searchedTagNames.concat(search)
@@ -126,12 +127,12 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     };
 
     const handleSubmit = () => {
-        onAdd(getProcessDataWithoutEmptyStrings(formState));
+        onAdd(getProcessDataWithoutEmptyStrings(processFormState));
     };
 
     useEffect(() => {
-        setFormState(getProcessDataWithoutNulls(process));
-        setSelectedTags(process.tags.map((tag) => tag.name));
+        setProcessFormState(getProcessDataWithoutNulls(process));
+        setSelectedTagsNames(process.tags.map((tag) => tag.name));
     }, [process]);
 
     return (
@@ -140,14 +141,14 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
             <DialogContent>
                 <Form>
                     <EditProcessDialogTextFields
-                        formState={formState}
-                        setFormState={setFormState}
+                        processFormState={processFormState}
+                        setProcessFormState={setProcessFormState}
                         formValidationState={formValidationState}
                         setFormValidationState={setFormValidationState}
                     />
                     <Autocomplete
                         fullWidth
-                        value={selectedTags}
+                        value={selectedTagsNames}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -155,23 +156,23 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                                 onChange={handleTagSearch}
                                 onKeyDown={handleAddByEnter}
                                 placeholder={
-                                    selectedTags.length
+                                    selectedTagsNames.length
                                         ? ''
                                         : translate('Process.Edit.Form.Fields.Placeholder.TagSearch')
                                 }
                             />
                         )}
                         options={getSearchedTagNames()}
-                        onChange={(_, value) => handleTagSelect(value)}
-                        getOptionDisabled={() => !(selectedTags.length < 15)}
+                        onChange={(_, value) => handleTagChange(value)}
+                        getOptionDisabled={() => !(selectedTagsNames.length < MAX_NUMBER_OF_TAGS)}
                         filterOptions={(options) => options}
                         noOptionsText={translate('Process.Edit.Form.Fields.SearchTag.TagNotFound')}
                         disableCloseOnSelect
                         multiple
                     />
                     <EditProcessDialogSelectFields
-                        formState={formState}
-                        setFormState={setFormState}
+                        processFormState={processFormState}
+                        setProcessFormState={setProcessFormState}
                     />
                 </Form>
             </DialogContent>

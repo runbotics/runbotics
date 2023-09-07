@@ -15,20 +15,20 @@ import BotCollectionComponent from './ProcessConfigureView/BotCollection.compone
 import BotSystemComponent from './ProcessConfigureView/BotSystem.component';
 
 interface FormTextFieldsProps {
-    formState: IProcess;
-    setFormState: (IProcess) => void;
+    processFormState: IProcess;
+    setProcessFormState: (IProcess) => void;
     formValidationState: FormValidationState;
     setFormValidationState: (FormValidationState) => void;
 }
 
 interface FormSelectFieldsProps {
-    formState: IProcess;
-    setFormState: (IProcess) => void;
+    processFormState: IProcess;
+    setProcessFormState: (IProcess) => void;
 }
 
 export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
-    formState,
-    setFormState,
+    processFormState,
+    setProcessFormState,
     formValidationState,
     setFormValidationState
 }) => {
@@ -37,12 +37,11 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name;
         const value = e.target.value;
-        setFormState((prevState) => ({ ...prevState, [name]: value }));
-        if (name === 'name') {
-            setFormValidationState((prevState) =>
-                ({ ...prevState, name: (value.trim() !== '' ) })
-            );
-        }
+        setProcessFormState((prevState) => ({ ...prevState, [name]: value }));
+
+        if (name !== 'name') return;
+
+        setFormValidationState((prevState) => ({ ...prevState, name: (value.trim() !== '' ) }));
     };
 
     return (
@@ -53,7 +52,7 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
                 name="name"
                 label={translate('Process.Edit.Form.Fields.Name.Label')}
                 onChange={handleInputChange}
-                value={formState?.name}
+                value={processFormState?.name}
                 variant="outlined"
                 error={!formValidationState.name}
                 {...(!formValidationState.name && { helperText: translate('Process.Edit.Form.Fields.Error.Required') })}
@@ -64,7 +63,7 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
                 margin="normal"
                 name="description"
                 onChange={handleInputChange}
-                value={formState?.description}
+                value={processFormState?.description}
                 variant="outlined"
             />
         </>
@@ -72,8 +71,8 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
 };
 
 export const EditProcessDialogSelectFields: FC<FormSelectFieldsProps> = ({
-    formState,
-    setFormState
+    processFormState,
+    setProcessFormState
 }) => {
     const { translate } = useTranslations();
 
@@ -81,21 +80,21 @@ export const EditProcessDialogSelectFields: FC<FormSelectFieldsProps> = ({
         <>
             <Box display="flex" justifyContent="space-between">
                 <BotCollectionComponent
-                    selectedBotCollection={formState?.botCollection}
-                    onSelectBotCollection={(botCollection) => setFormState(prevState => ({ ...prevState, botCollection }))}
+                    selectedBotCollection={processFormState?.botCollection}
+                    onSelectBotCollection={(botCollection) => setProcessFormState(prevState => ({ ...prevState, botCollection }))}
                 />
                 <BotSystemComponent
-                    selectedBotSystem={formState?.system}
-                    onSelectBotSystem={(system) => setFormState(prevState => ({ ...prevState, system }))}
+                    selectedBotSystem={processFormState?.system}
+                    onSelectBotSystem={(system) => setProcessFormState(prevState => ({ ...prevState, system }))}
                 />
             </Box>
             <FormControlLabel
                 control={(
                     <Switch
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setFormState((prevState) => ({ ...prevState, isPublic: e.target.checked }));
+                            setProcessFormState((prevState) => ({ ...prevState, isPublic: e.target.checked }));
                         }}
-                        checked={formState?.isPublic ?? false}
+                        checked={processFormState?.isPublic ?? false}
                     />
                 )}
                 label={translate('Process.Edit.Form.Fields.Public.Label')}
