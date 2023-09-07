@@ -6,33 +6,26 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FeatureKey, IProcess, Role } from 'runbotics-common';
 
-
-
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { useProcessOwner } from '#src-app/hooks/useProcessOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
+import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
-
-
 import DeleteProcess from '#src-app/views/process/DeleteProcess';
 import EditProcessDialog from '#src-app/views/process/EditProcessDialog';
 
-import { ProcessTileProps } from './ProcessTile.types';
-import { useDispatch } from '../../../store';
+import { ProcessTileActionsProps } from './ProcessTileActions.types';
 
-
-
-
-const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
+const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const { page, pageSize } = useContext(ProcessPageContext);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
-    const [showDialog, setShowDialog] = useState(false);
+    const [isDialogVisible, setIsDialogVisible] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
@@ -47,10 +40,15 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
         setAnchorEl(null);
     };
 
+    const handleOpenEditModal = () => {
+        setIsDialogVisible(true);
+        handleClose();
+    };
+
     const handleEdit = async (processToSave: IProcess) => {
         try {
             await dispatch(processActions.updateProcess(processToSave));
-            setShowDialog(false);
+            setIsDialogVisible(false);
             await dispatch(
                 processActions.getProcessesPage({
                     page,
@@ -59,8 +57,8 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
             );
             enqueueSnackbar(
                 translate('Component.Tile.Process.Update.Success', { name: process.name }),
-                { variant: 'success' })
-            ;
+                { variant: 'success' }
+            );
         } catch (e) {
             enqueueSnackbar(
                 translate('Component.Tile.Process.Update.Failed', { name: process.name }),
@@ -77,10 +75,7 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
                     <If condition={hasEditProcessAccess}>
-                        <MenuItem onClick={() => {
-                            setShowDialog(true);
-                            handleClose();
-                        }}>
+                        <MenuItem onClick={handleOpenEditModal}>
                             {translate('Common.Edit')}
                         </MenuItem>
                     </If>
@@ -89,10 +84,10 @@ const ProcessTileActions: VFC<ProcessTileProps> = ({ process }) => {
                     </If>
                 </Menu>
             </If>
-            <If condition={hasEditProcessAccess && showDialog}>
+            <If condition={hasEditProcessAccess && isDialogVisible}>
                 <EditProcessDialog
                     open
-                    onClose={() => setShowDialog(false)}
+                    onClose={() => setIsDialogVisible(false)}
                     onAdd={handleEdit}
                     process={process}
                 />

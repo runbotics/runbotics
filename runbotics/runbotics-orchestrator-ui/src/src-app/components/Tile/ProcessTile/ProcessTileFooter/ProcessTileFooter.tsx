@@ -5,11 +5,11 @@ import ErrorIcon from '@mui/icons-material/Error';
 import QueueIcon from '@mui/icons-material/Queue';
 import { Typography } from '@mui/material';
 
-import {
-    ProcessTileActions, ProcessTileProps, Footer, IconsWrapper, StyledSvg,
-} from '.';
+import { Footer, IconsWrapper, StyledSvg } from './ProcessTileFooter.styles';
+import { ProcessTileFooterProps } from './ProcessTileFooter.types';
+import ProcessTileActions from '../ProcessTileActions';
 
-const ProcessTileFooter: FunctionComponent<ProcessTileProps> = ({ process }) => (
+const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process }) => (
     <Footer>
         <IconsWrapper>
             <StyledSvg fontSize="small" color="action">

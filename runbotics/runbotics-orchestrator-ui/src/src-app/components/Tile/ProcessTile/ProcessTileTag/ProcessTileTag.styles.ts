@@ -38,11 +38,11 @@ export const Container = styled.div`
     height: 20px;
 `;
 
-export const TagBox = styled.div<{ isHidden: boolean; }>`
+export const TagBox = styled.div<{ isExpanded: boolean; }>`
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${props => props.isHidden ? '130%' : '170px'};
+    height: ${props => props.isExpanded ? '170px' : '130%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
@@ -51,7 +51,7 @@ export const TagBox = styled.div<{ isHidden: boolean; }>`
     isolation: isolate;
     overflow: hidden;
     background-color: ${props => props.theme.palette.background.paper};
-    transition: 0.3s;
+    transition: 0.4s;
 `;
 
 export const DividerBox = styled.div`
@@ -84,7 +84,7 @@ export const DividerLine = styled.div`
 `;
 
 export const StaticLine = styled.div`
-    width: 90%;
+    width: 85%;
     height: 1px;
     margin-right: 5px;
     background-color: ${props => props.theme.palette.grey[300]}

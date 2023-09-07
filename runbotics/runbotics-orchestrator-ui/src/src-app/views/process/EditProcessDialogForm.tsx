@@ -41,7 +41,7 @@ export const EditProcessDialogTextFields: FC<FormTextFieldsProps> = ({
 
         if (name !== 'name') return;
 
-        setFormValidationState((prevState) => ({ ...prevState, name: (value.trim() !== '' ) }));
+        setFormValidationState((prevState) => ({ ...prevState, name: (value.trim() !== '') }));
     };
 
     return (

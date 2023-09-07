@@ -6,14 +6,15 @@ import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
-
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-
 import { ProcessTab } from '#src-app/utils/process-tab';
 
-import { Description, ProcessTileTags, ProcessTileContent, ProcessTileFooter, ProcessTileProps, StyledCardHeader, StyledCardActionArea } from '.';
-
+import { Description, StyledCardHeader, StyledCardActionArea } from './ProcessTile.styles';
+import { ProcessTileProps } from './ProcessTile.types';
 import { buildProcessUrl } from './ProcessTile.utils';
+import ProcessTileContent from './ProcessTileContent';
+import ProcessTileFooter from './ProcessTileFooter';
+import ProcessTileTag from './ProcessTileTag';
 import Tile, { TileAvatar } from '..';
 
 
@@ -36,7 +37,7 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
                 sx={{ width: '100%' }}
                 onClick={handleRedirect}
             />
-            <ProcessTileTags tags={process.tags} />
+            <ProcessTileTag tags={process.tags} />
             <StyledCardActionArea onClick={handleRedirect}>
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent process={process} />

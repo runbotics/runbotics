@@ -1,14 +1,8 @@
 import React, { ChangeEvent, FC, useState, useEffect, KeyboardEvent } from 'react';
 
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Button,
-    TextField,
-
-    Autocomplete,
+    DialogActions, DialogContent, DialogTitle, Dialog,
+    Button, TextField, Autocomplete,
 } from '@mui/material';
 
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -26,7 +20,7 @@ const DEBOUNCE_TIME = 300;
 const MAX_NUMBER_OF_TAGS = 15;
 const MAX_TAG_LENGTH = 20;
 
-type EditProcessDialogProps = {
+interface EditProcessDialogProps {
     open?: boolean;
     process: IProcess;
     onClose: () => void;
@@ -90,8 +84,9 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
         if (filteredSearch.length <= MAX_TAG_LENGTH) setSearch(filteredSearch);
     };
 
-    const handleAddByEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === 'Enter'
+    const handleEnterKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if(
+            e.key === 'Enter'
             && search !== ''
             && selectedTagsNames.length < MAX_NUMBER_OF_TAGS
             && !selectedTagsNames.includes(search)
@@ -120,7 +115,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const getSearchedTagNames = () => {
         const searchedTagNames = searchedDatabaseTags.map((tag) => tag.name);
         return (
-            !searchedTagNames.includes(search) && search !== ''
+            search !== '' && !searchedTagNames.includes(search)
                 ? searchedTagNames.concat(search)
                 : searchedTagNames
         );
@@ -154,7 +149,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                                 {...params}
                                 label='Tags'
                                 onChange={handleTagSearch}
-                                onKeyDown={handleAddByEnter}
+                                onKeyDown={handleEnterKeyDown}
                                 placeholder={
                                     selectedTagsNames.length
                                         ? ''
