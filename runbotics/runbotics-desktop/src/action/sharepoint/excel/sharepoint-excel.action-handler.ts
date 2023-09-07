@@ -31,8 +31,17 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
-    ): Promise<SharepointTypes.SharepointExcelGetCellActionOutput> {
-        return this.excelService.getCell({ column: input.cell[0], row: input.cell[1] });
+    ): Promise<SharepointTypes.ExcelCellValue> {
+        const column = input.cell.match(/[A-Z]+/).toString();
+        const row = input.cell.match(/\d+/).toString();
+        const response = await this.excelService.getCell({ column, row });
+        const { values, text, numberFormat } = response;
+
+        if (numberFormat[0][0].includes('@') || numberFormat[0][0].includes('%')) {
+            return text[0][0];
+        }
+
+        return values[0][0];
     }
 
     async getRange(
