@@ -119,7 +119,7 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter((dirent) => dirent.isDirectory() && dirent.name !== 'common' && dirent.name[0] !== '.')
+                .filter((dirent) => dirent.isDirectory())
                 .map((dirent) => dirent.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 

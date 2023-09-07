@@ -40,11 +40,10 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             throw new Error(SharePointExcelErrorMessage.getCellIncorrectInput());
         }
 
-        const response = await this.excelService.getCell({
+        const { values, text, numberFormat } = await this.excelService.getCell({
             column: column.toString(),
             row: row.toString()
         });
-        const { values, text, numberFormat } = response;
 
         if (numberFormat[0][0].includes('@') || numberFormat[0][0].includes('%')) {
             return text[0][0];
