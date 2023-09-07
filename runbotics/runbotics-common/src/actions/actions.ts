@@ -158,7 +158,6 @@ export enum ApplicationAction {
 }
 
 export enum ExcelAction {
-
 	OPEN = 'excel.open',
 	GET_CELL = 'excel.getCell',
 	GET_CELLS = 'excel.getCells',
@@ -172,7 +171,7 @@ export enum ExcelAction {
 	WORKSHEET_EXISTS = "excel.worksheetExists",
 	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
 	DELETE_COLUMNS = 'excel.deleteColumns',
-	INSERT_COLUMNS_BEFORE = "excel.insertColumnsBefore",
+	INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
 	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
 	INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
 	INSERT_ROWS_AFTER = "excel.insertRowsAfter",
@@ -181,26 +180,40 @@ export enum ExcelAction {
     DELETE_ROWS = 'excel.deleteRows',
 	SAVE = 'excel.save',
 	CLOSE = 'excel.close',
+}
 
+export enum DesktopAction {
+	CLICK = 'desktop.click',
+	TYPE = 'desktop.type',
+	COPY = 'desktop.copy',
+	PASTE = 'desktop.paste',
+	CURSOR_SELECT = 'desktop.cursorSelect',
+	READ_CLIPBOARD_CONTENT= 'desktop.readClipboardContent',
+	MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
+	TAKE_SCREENSHOT = 'desktop.takeScreenshot',
+	READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
 }
 
 export type AllActionIds =
-    | VariableAction
-    | GeneralAction
-    | MailAction
-    | BrowserAction
-    | LoopAction
-    | ApiAction
-    | JavascriptAction
-    | AsanaAction
-    | GoogleAction
-    | JiraAction
-    | FileAction
-    | CsvAction
-    | DesktopOfficeAction
-    | SharepointExcelAction
-    | SharepointFileAction
-    | BeeOfficeAction
-    | SapAction
-    | ApplicationAction
-    | ExcelAction;
+	| VariableAction
+	| GeneralAction
+	| MailAction
+	| BrowserAction
+	| LoopAction
+	| ApiAction
+	| JavascriptAction
+	| AsanaAction
+	| GoogleAction
+	| JiraAction
+	| FileAction
+	| CsvAction
+	| DesktopOfficeAction
+	| SharepointExcelAction
+	| SharepointFileAction
+	| BeeOfficeAction
+	| SapAction
+	| ApplicationAction
+	| ExcelAction
+	| DesktopAction;
+
+

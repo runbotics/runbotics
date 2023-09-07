@@ -10,11 +10,12 @@ import {
 
 import clsx from 'clsx';
 
-import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey } from 'runbotics-common';
+import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey, Role } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
@@ -40,6 +41,7 @@ const ActionList: FC<ActionListProps> = ({
     handleItemClick,
     filters,
 }) => {
+    const isGuest = useRole([Role.ROLE_GUEST]);
     const { process } = useSelector((state) => state.process.draft);
     const { translate } = useTranslations();
     const hasAdvancedActionsAccess = useFeatureKey([
@@ -69,6 +71,10 @@ const ActionList: FC<ActionListProps> = ({
         </ListItemButton>
     );
 
+    const getTranslationMessage = () => isGuest
+        ? translate('Process.Details.Modeler.ActionListPanel.NotAvailableForGuests')
+        : translate('Process.Details.Modeler.ActionListPanel.NotAvailable');
+
     return (
         <List className={clsx(classes.list)}>
             <If
@@ -88,13 +94,7 @@ const ActionList: FC<ActionListProps> = ({
                     return (
                         <Tooltip
                             key={key}
-                            title={
-                                isGroupDisabled
-                                    ? translate(
-                                        'Process.Details.Modeler.ActionListPanel.NotAvailable'
-                                    )
-                                    : ''
-                            }
+                            title={isGroupDisabled ? getTranslationMessage() : ''}
                         >
                             <div>
                                 <ListGroup
@@ -140,9 +140,7 @@ const ActionList: FC<ActionListProps> = ({
                                                 isActionDisabled &&
                                                 !isGroupDisabled
                                             ) {
-                                                title = translate(
-                                                    'Process.Details.Modeler.ActionListPanel.NotAvailable'
-                                                );
+                                                title = getTranslationMessage();
                                             }
 
                                             return (

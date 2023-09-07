@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-    <changeSet author="gontareka (generated)" id="1616941722004-2">
+    <changeSet author="gontareka (generated)" id="1616941722004-1">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="rel_extension_instance__users"/>
@@ -15,7 +15,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-3">
+    <changeSet author="gontareka (generated)" id="1616941722004-2">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="rel_process__subscribers"/>
@@ -30,7 +30,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-5">
+    <changeSet author="gontareka (generated)" id="1616941722004-3">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK2ewrthftnnc1dlufvy9jji8ai"/>
@@ -38,7 +38,7 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="users_id" baseTableName="rel_extension_instance__users" constraintName="FK2ewrthftnnc1dlufvy9jji8ai" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-6">
+    <changeSet author="gontareka (generated)" id="1616941722004-4">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FKf5r6rd1nmqjk2grni56w4gncu"/>
@@ -46,7 +46,7 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="subscribers_id" baseTableName="rel_process__subscribers" constraintName="FKf5r6rd1nmqjk2grni56w4gncu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user" validate="true"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-7">
+    <changeSet author="gontareka (generated)" id="1616941722004-5">
         <preConditions onFail="MARK_RAN">
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FKfcvv9u0robio5s151ylgs8ugo"/>
@@ -54,45 +54,37 @@
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="process_id" baseTableName="rel_process__subscribers" constraintName="FKfcvv9u0robio5s151ylgs8ugo" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="process" validate="true"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-8">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FKhxltiedh6m8yhdsv3d6olmgv7"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseColumnNames="extension_instance_id" baseTableName="rel_extension_instance__users" constraintName="FKhxltiedh6m8yhdsv3d6olmgv7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="extension_instance" validate="true"/>
-    </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-9">
+    <changeSet author="gontareka (generated)" id="1616941722004-6">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKhpusxji5jb5jcl9kfac2h7s8y"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="extension_instance_users" constraintName="FKhpusxji5jb5jcl9kfac2h7s8y"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-10">
+    <changeSet author="gontareka (generated)" id="1616941722004-7">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="FKpmmdhbcgbp7t2ng635iqvc7y5"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="extension_instance_users" constraintName="FKpmmdhbcgbp7t2ng635iqvc7y5"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-11">
+    <changeSet author="gontareka (generated)" id="1616941722004-8">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="fk_process_subscribers_process_id"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="process_subscribers" constraintName="fk_process_subscribers_process_id"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-12">
+    <changeSet author="gontareka (generated)" id="1616941722004-9">
         <preConditions onFail="MARK_RAN">
             <foreignKeyConstraintExists foreignKeyName="fk_process_subscribers_subscribers_id"/>
         </preConditions>
         <dropForeignKeyConstraint baseTableName="process_subscribers" constraintName="fk_process_subscribers_subscribers_id"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-13">
+    <changeSet author="gontareka (generated)" id="1616941722004-10">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="extension_instance_users"/>
         </preConditions>
         <dropTable tableName="extension_instance_users"/>
     </changeSet>
-    <changeSet author="gontareka (generated)" id="1616941722004-14">
+    <changeSet author="gontareka (generated)" id="1616941722004-11">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="process_subscribers"/>
         </preConditions>

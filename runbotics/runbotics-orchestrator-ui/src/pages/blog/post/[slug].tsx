@@ -10,7 +10,9 @@ import {
 } from '#contentful/blog-main';
 import { getPost } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
+import backupRunBoticsImage from '#public/images/banners/hero-background.png';
 import { Language } from '#src-app/translations/translations';
+import { MetadataTags } from '#src-landing/components/Matadata/Metadata';
 import BlogPostView from '#src-landing/views/BlogPostView';
 
 interface Props {
@@ -51,9 +53,16 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
         };
     }
 
+    const metadata: MetadataTags = {
+        title: `${post.title} | Runbotics Blog`,
+        description: post.summary,
+        image: post.featuredImage?.url ?? backupRunBoticsImage.src,
+    };
+
     return {
         props: {
             post,
+            metadata,
         },
     };
 };

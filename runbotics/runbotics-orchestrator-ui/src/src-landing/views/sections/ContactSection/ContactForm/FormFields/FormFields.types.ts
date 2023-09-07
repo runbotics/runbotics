@@ -12,8 +12,9 @@ export interface FormInputProps<T> extends HTMLAttributes<T> {
 }
 
 export interface CheckboxProps
-    extends Omit<FormInputProps<HTMLInputElement>, 'value'> {
+    extends Omit<FormInputProps<HTMLInputElement>, 'value' | 'labelValue'> {
     checked: boolean;
+    labelValue: string | JSX.Element;
 }
 
 export interface SubmitProps

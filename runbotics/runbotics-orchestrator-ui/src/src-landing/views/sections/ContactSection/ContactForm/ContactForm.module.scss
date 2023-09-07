@@ -20,17 +20,13 @@ $FORM-MAX-WIDTH: 800px;
     position: relative;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     gap: $padding-3;
     flex-wrap: wrap;
 }
 
 .submitRow {
-    composes: formRow;
-    display: grid;
-    grid-template-columns: 4fr 1fr 1fr;
-
     img {
         margin-left: auto;
     }
@@ -49,7 +45,7 @@ $FORM-MAX-WIDTH: 800px;
     }
   }
 
-.processing_data{
+.processingData {
     @include common-styles;
 
     height: 100%;
@@ -57,12 +53,17 @@ $FORM-MAX-WIDTH: 800px;
     opacity: 1;
 }
 
-.hidden{
+.hidden {
     @include common-styles;
-
-    height: 0;
-
     opacity: 0;
+    height: 0;
+    margin: 0;
+
+    li {
+        margin: 0;
+        opacity: 0;
+        height: 0;
+    }
 }
 
 
@@ -73,9 +74,7 @@ $FORM-MAX-WIDTH: 800px;
     }
 
     .submitRow {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: $margin-1;
+        width: 100%;
 
         img {
             margin-inline: auto;

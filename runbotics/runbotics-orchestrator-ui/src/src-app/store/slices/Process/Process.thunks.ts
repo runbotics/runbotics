@@ -40,6 +40,12 @@ export const fetchProcessById = createAsyncThunk<
         });
 });
 
+export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
+    'processes/guestDemo',
+    () => Axios.get<IProcess>('/api/guests/process')
+        .then((response) => response.data),
+);
+
 export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/partialUpdate',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}`, process)

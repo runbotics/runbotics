@@ -2,19 +2,29 @@ import { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getBlogMainCache, recreateCache
+import {
+    getBlogMainCache,
+    recreateCache
 } from '#contentful/blog-main';
 
-
-
 import {
-    BlogPost, Category, DEFAULT_PAGE_SIZE, FILTER_QUERY_PARAMS, Tag, filterPosts, extractFilterQueryParams, hasQueryParams, Page, FilterQueryParamsEnum
+    BlogPost,
+    Category,
+    DEFAULT_PAGE_SIZE,
+    FILTER_QUERY_PARAMS,
+    Tag,
+    filterPosts,
+    extractFilterQueryParams,
+    hasQueryParams,
+    Page,
+    FilterQueryParamsEnum
 } from '#contentful/common';
 
+import BlogBg from '#public/images/banners/blog-header.png';
 import { Language } from '#src-app/translations/translations';
 
+import { MetadataTags } from '#src-landing/components/Matadata/Metadata';
 import BlogView from '#src-landing/views/BlogView';
-
 interface Props {
     posts: BlogPost[];
     categories: Category[];
@@ -36,9 +46,13 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
 export default BlogPage;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res, locale }) => {
+    const metadata: MetadataTags = {
+        title: 'RunBotics | Blog',
+        description: 'RunBotics - Blog',
+        image: BlogBg.src,
+    };
 
     let cache = getBlogMainCache(locale as Language);
-
 
     if (!cache) {
         cache = await recreateCache(locale as Language);
@@ -63,6 +77,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
         return {
             props: {
                 ...cache,
+                metadata,
                 posts: currentPagePosts,
                 featuredPost: !isMoreThanPage && currentPage === 1 ? cache.featuredPost : null,
                 page: {
@@ -80,6 +95,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res
     return {
         props: {
             ...cache,
+            metadata,
             posts: regularPosts.slice(0, DEFAULT_PAGE_SIZE),
             page: {
                 current: 1,
