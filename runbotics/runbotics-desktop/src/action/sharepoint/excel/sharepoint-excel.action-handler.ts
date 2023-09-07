@@ -3,6 +3,7 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 
 import * as SharepointTypes from './types';
 import { ExcelService } from '../../microsoft/excel/excel.service';
+import SharePointExcelErrorMessage from './sharepointExcelErrorMessages'; 
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
@@ -32,9 +33,17 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
     ): Promise<SharepointTypes.ExcelCellValue> {
-        const column = input.cell.match(/[A-Z]+/).toString();
-        const row = input.cell.match(/\d+/).toString();
-        const response = await this.excelService.getCell({ column, row });
+        const column = input.cell.match(/[A-Z]+/);
+        const row = input.cell.match(/\d+/);
+
+        if (!column || !row) {
+            throw new Error(SharePointExcelErrorMessage.getCellIncorrectInput());
+        }
+
+        const response = await this.excelService.getCell({
+            column: column.toString(),
+            row: row.toString()
+        });
         const { values, text, numberFormat } = response;
 
         if (numberFormat[0][0].includes('@') || numberFormat[0][0].includes('%')) {

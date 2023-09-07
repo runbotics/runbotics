@@ -85,7 +85,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
             .set('variables', variableActionHandler)
-            .set('desktop', desktopActionHandler)
+            .set('desktop', desktopActionHandler);
     }
 
     async onModuleInit() {
@@ -119,7 +119,7 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter((dirent) => dirent.isDirectory())
+                .filter((dirent) => dirent.isDirectory() && dirent.name !== 'common' && dirent.name[0] !== '.')
                 .map((dirent) => dirent.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
