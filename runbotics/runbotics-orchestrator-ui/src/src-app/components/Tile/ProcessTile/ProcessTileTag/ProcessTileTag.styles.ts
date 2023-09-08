@@ -38,14 +38,13 @@ export const TagBox = styled.div<{ $isExpanded: boolean; }>`
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${props => props.$isExpanded ? '170px' : '130%'};
+    height: ${props => props.$isExpanded ? '170px' : '100%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
     gap: 8px;
     margin: 0;
     z-index: 3;
-    isolation: isolate;
     overflow: hidden;
     background-color: ${props => props.theme.palette.background.paper};
     transition: 0.4s;
@@ -58,7 +57,6 @@ export const DividerBox = styled.div`
     width: 100%;
     height: 10px;
     z-index: 3;
-    isolation: isolate;
     background-color: ${props => props.theme.palette.background.paper};
 `;
 

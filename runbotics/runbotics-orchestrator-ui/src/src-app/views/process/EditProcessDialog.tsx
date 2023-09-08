@@ -43,7 +43,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
 
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
     const [processFormState, setProcessFormState] = useState<IProcess>({ ...process });
-    const [searchedDatabaseTags, setSearchedDatabaseTags] = useState<Tag[]>([]);
+    const [autocompleteTagList, setAutocompleteTagList] = useState<Tag[]>([]);
     const [selectedTagsNames, setSelectedTagsNames] = useState<string[]>([]);
     const [search, setSearch] = useState<string>('');
     const debouncedSearch = useDebounce<string>(search.trim(), DEBOUNCE_TIME);
@@ -53,7 +53,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
 
         const hasTagBeenAdded = updatedTags.length > selectedTagsNames.length;
         if (hasTagBeenAdded) {
-            const tagToAdd = (searchedDatabaseTags.find(tag => tag.name === updatedTags.at(-1))) ?? { name: updatedTags.at(-1) };
+            const tagToAdd = (autocompleteTagList.find(tag => tag.name === updatedTags.at(-1))) ?? { name: updatedTags.at(-1) };
             setProcessFormState((prevState) => ({
                 ...prevState,
                 tags: [...processFormState.tags, tagToAdd]
@@ -91,7 +91,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
         ))
             .then(unwrapResult)
             .then((tags) => {
-                setSearchedDatabaseTags(tags);
+                setAutocompleteTagList(tags);
             });
     };
 
@@ -103,7 +103,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const checkFormFieldsValidation = () => formValidationState.name;
 
     const getSearchedTagNames = () => {
-        const searchedTagNames = searchedDatabaseTags.map((tag) => tag.name);
+        const searchedTagNames = autocompleteTagList.map((tag) => tag.name);
         return (
             search !== '' && !searchedTagNames.includes(search)
                 ? searchedTagNames.concat(search)
