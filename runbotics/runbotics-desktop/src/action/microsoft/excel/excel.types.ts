@@ -125,20 +125,20 @@ export interface DriveItem {
 }
 
 export interface WorkbookRange {
-    address?: Array<Array<string>>;
-    addressLocal?: Array<Array<string>>;
-    cellCount?: Array<Array<number>>;
-    columnCount?: Array<Array<number>>;
-    columnHidden?: Array<Array<boolean>>;
-    columnIndex?: Array<Array<number>>;
+    address?: string;
+    addressLocal?: string;
+    cellCount?: number;
+    columnCount?: number;
+    columnHidden?: boolean;
+    columnIndex?: number;
     formulas?: Array<Array<string>>;
     formulasLocal?: Array<Array<string>>;
     formulasR1C1?: Array<Array<string>>;
-    hidden?: Array<Array<boolean>>;
+    hidden?: boolean;
     numberFormat?: Array<Array<string>>;
-    rowCount?: Array<Array<number>>;
-    rowHidden?: Array<Array<boolean>>;
-    rowIndex?: Array<Array<number>>;
+    rowCount?: number;
+    rowHidden?: boolean;
+    rowIndex?: number;
     text?: Array<Array<string>>;
     valueTypes?: Array<Array<string>>;
     values?: Array<Array<ExcelCellValue>>;
