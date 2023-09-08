@@ -16,6 +16,7 @@ import {
     WorkbookRange,
     WorkbookRangeUpdateBody,
     WorkbookSessionInfo,
+    Worksheet,
     WorksheetIdentifier,
 } from './excel.types';
 
@@ -38,10 +39,14 @@ export class ExcelService {
                 ? await this.createSharePointSession(input)
                 : this.createOneDriveSession(input.platform, input.sessionIdentifier, input.worksheetIdentifier);
 
+        if (!input.worksheetIdentifier) {
+            this.session.worksheetIdentifier = await this.getDefaultWorksheetIdentifier();
+        }
+
         const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
             this.createWorkbookUrl(url),
             {
-                persistChanges: input.persistChanges,
+                persistChanges: true,
             }
         );
 
@@ -156,6 +161,7 @@ export class ExcelService {
 
     private async getSiteIdByName(name: string): Promise<Site> {
         const url = `/sites?search=${name}`;
+
         return (await this.microsoftGraphService.get(url))['value'][0];
     }
 
@@ -183,8 +189,12 @@ export class ExcelService {
 
         const siteId = site.id;
 
-        const driveId = await this.getDriveIdBySiteAndListName(siteId, input.list);
+        const listName = await this.getSharePointListName(siteId, input.list);
+
+        const driveId = await this.getDriveIdBySiteAndListName(siteId, listName);
+
         const fileId = await this.getItemId(siteId, driveId, input.sessionIdentifier);
+
         return {
             platform: input.platform,
             sessionIdentifier: input.sessionIdentifier,
@@ -207,5 +217,23 @@ export class ExcelService {
             workbookSessionInfo: null,
             worksheetIdentifier,
         };
+    }
+
+    private async getDefaultWorksheetIdentifier() {
+        const url = this.createWorkbookUrl('/worksheets');
+
+        const { name }: Worksheet = (await this.microsoftGraphService.get(url))['value'][0];
+
+        return name;
+    }
+
+    private async getSharePointListName(siteId: string, listName: string) {
+        const url = `/sites/${siteId}/drive`;
+
+        if (!listName) {
+            const { name } = await this.microsoftGraphService.get(url) as Drive;
+            return name;
+        }
+        return listName;
     }
 }

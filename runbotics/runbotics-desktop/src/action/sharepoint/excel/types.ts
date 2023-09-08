@@ -12,10 +12,9 @@ export type FileActionRequest =
 export interface SharepointExcelOpenFileActionInput {
     platform: Platform;
     filePath: string;
-    worksheetName: string;
-    persistChanges: boolean;
+    worksheetName?: string;
     siteName: string;
-    listName: string;
+    listName?: string;
 }
 
 export type SharepointOpenActionOutput = any;
