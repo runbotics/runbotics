@@ -1,6 +1,7 @@
 export type SessionIdentifier = string;
 export type WorksheetIdentifier = number | string;
 export type Platform = 'SharePoint' | 'OneDrive';
+export type ExcelCellValue = string | number | boolean;
 export interface Session {
     platform: Platform;
     sessionIdentifier: SessionIdentifier;
@@ -124,23 +125,23 @@ export interface DriveItem {
 }
 
 export interface WorkbookRange {
-    address?: string;
-    addressLocal?: string;
-    cellCount?: number;
-    columnCount?: number;
-    columnHidden?: boolean;
-    columnIndex?: number;
-    formulas?: string;
-    formulasLocal?: string;
-    formulasR1C1?: string;
-    hidden?: boolean;
-    numberFormat?: string;
-    rowCount?: number;
-    rowHidden?: boolean;
-    rowIndex?: number;
-    text?: string;
-    valueTypes?: string;
-    values?: string;
+    address?: Array<Array<string>>;
+    addressLocal?: Array<Array<string>>;
+    cellCount?: Array<Array<number>>;
+    columnCount?: Array<Array<number>>;
+    columnHidden?: Array<Array<boolean>>;
+    columnIndex?: Array<Array<number>>;
+    formulas?: Array<Array<string>>;
+    formulasLocal?: Array<Array<string>>;
+    formulasR1C1?: Array<Array<string>>;
+    hidden?: Array<Array<boolean>>;
+    numberFormat?: Array<Array<string>>;
+    rowCount?: Array<Array<number>>;
+    rowHidden?: Array<Array<boolean>>;
+    rowIndex?: Array<Array<number>>;
+    text?: Array<Array<string>>;
+    valueTypes?: Array<Array<string>>;
+    values?: Array<Array<ExcelCellValue>>;
 }
 
 export interface WorkbookRangeUpdateBody {
@@ -153,4 +154,11 @@ export interface WorkbookRangeUpdateBody {
     values?: Array<Array<any>>;
 }
 
-
+export interface WorkbookCell {
+    value?: ExcelCellValue;
+    text?: string;
+    numberFormat?: string;
+    address?: string;
+    formula?: string;
+    valueType?: string;
+}

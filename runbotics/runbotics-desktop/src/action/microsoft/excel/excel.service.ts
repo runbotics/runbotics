@@ -11,6 +11,7 @@ import {
     SessionInput,
     SharePointSessionInput,
     Site,
+    WorkbookCell,
     WorkbookCellCoordinates,
     WorkbookRange,
     WorkbookRangeUpdateBody,
@@ -66,17 +67,24 @@ export class ExcelService {
         );
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    public getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookRange> {
+    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookCell> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
 
-        const response = this.microsoftGraphService.get(this.createWorkbookUrl(url), {
+        const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id
             }
         });
-        return response;
+
+        const microsoftGraphGetCellUsage: WorkbookCell = {
+            value: response.values[0][0],
+            text: response.text[0][0],
+            numberFormat: response.numberFormat[0][0]
+        };
+        
+        return microsoftGraphGetCellUsage;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http

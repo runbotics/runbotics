@@ -117,8 +117,8 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter(dirent => this.detectExtensionsDirectories(dirent))
-                .map(dirent => dirent.name);
+                .filter(directoryEntry => this.detectExtensionsDirectories(directoryEntry))
+                .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
             for (const extension of extensions) {
@@ -249,15 +249,28 @@ export class DesktopRunnerService implements OnModuleInit {
         return isPresent;
     }
 
-    private detectExtensionsDirectories(dirent: Dirent) {
+    private checkIfPackageManagerPresentInDirectory(directoryPath: string, directoryName: string, packageManagerFile: string[]) {
+        const isPresent = packageManagerFile.some(packageFile => {
+            const path = directoryPath + '\\' + directoryName + '\\' + packageFile;
+            return existsSync(path);
+        });
+
+        return isPresent;
+    }
+
+    private detectExtensionsDirectories(directoryEntry: Dirent) {
         return (
-            dirent.isDirectory() &&
-            !dirent.name.startsWith('.') &&
-            this.checkIfFileSystemEntryPresentInDirectory(dirent.path, dirent.name, [
+            directoryEntry.isDirectory() &&
+            !directoryEntry.name.startsWith('.') &&
+            this.checkIfFileSystemEntryPresentInDirectory(directoryEntry.path, directoryEntry.name, [
                 'dist',
                 'node_modules',
-                'package.json',
-                'package-lock.json'
+                'package.json'
+            ]) &&
+            this.checkIfPackageManagerPresentInDirectory(directoryEntry.path, directoryEntry.name, [
+                'package-lock.json',
+                'yarn.lock',
+                'pnpm-lock.yaml'
             ])
         );
     }

@@ -45,5 +45,3 @@ export type SharepointExcelGetRangeActionOutput = any;
 export type SharepointExcelCloseSessionActionInput = any;
 
 export type SharepointExcelCloseSessionActionOutput = any;
-
-export type ExcelCellValue = string | number | boolean;

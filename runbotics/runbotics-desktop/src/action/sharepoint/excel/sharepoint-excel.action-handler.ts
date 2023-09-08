@@ -4,6 +4,7 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 import * as SharepointTypes from './types';
 import { ExcelService } from '../../microsoft/excel/excel.service';
 import SharePointExcelErrorMessage from './sharepointExcelErrorMessages'; 
+import { ExcelCellValue } from '#action/microsoft/excel/excel.types';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
@@ -32,7 +33,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
-    ): Promise<SharepointTypes.ExcelCellValue> {
+    ): Promise<ExcelCellValue> {
         const column = input.cell.match(/[A-Z]+/);
         const row = input.cell.match(/\d+/);
 
@@ -40,16 +41,16 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             throw new Error(SharePointExcelErrorMessage.getCellIncorrectInput());
         }
 
-        const { values, text, numberFormat } = await this.excelService.getCell({
+        const { value, text, numberFormat } = await this.excelService.getCell({
             column: column.toString(),
             row: row.toString()
         });
 
-        if (numberFormat[0][0].includes('@') || numberFormat[0][0].includes('%')) {
-            return text[0][0];
+        if (numberFormat.includes('@') || numberFormat.includes('%')) {
+            return text;
         }
 
-        return values[0][0];
+        return value;
     }
 
     async getRange(
