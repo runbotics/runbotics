@@ -1,7 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from 'runbotics-sdk';
-import { readdirSync } from 'fs';
+import { readdirSync, existsSync, Dirent } from 'fs';
 import path from 'path';
 
 import ImportActionHandler from '#action/import';
@@ -85,7 +85,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('sharepointExcel', sharepointExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
             .set('variables', variableActionHandler)
-            .set('desktop', desktopActionHandler)
+            .set('desktop', desktopActionHandler);
     }
 
     async onModuleInit() {
@@ -96,12 +96,10 @@ export class DesktopRunnerService implements OnModuleInit {
         //     this.logger.warn('Hot reload is on! Remember to turn it off in production env.');
         // }
 
-
         await this.loadExtensionsDirModules();
 
-        this.runtimeService.processChange().subscribe(async (data) => {
-            const isRootProcessFinished = FINISHED_PROCESS_STATUSES.includes(data.eventType)
-                && !data.processInstance.rootProcessInstanceId;
+        this.runtimeService.processChange().subscribe(async data => {
+            const isRootProcessFinished = FINISHED_PROCESS_STATUSES.includes(data.eventType) && !data.processInstance.rootProcessInstanceId;
             if (!isRootProcessFinished) return;
 
             await this.clearHandlers();
@@ -119,8 +117,8 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter((dirent) => dirent.isDirectory())
-                .map((dirent) => dirent.name);
+                .filter(directoryEntry => this.detectExtensionsDirectories(directoryEntry))
+                .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
             for (const extension of extensions) {
@@ -141,14 +139,15 @@ export class DesktopRunnerService implements OnModuleInit {
 
             const handlersNames = Array.from(this.processHandlersInstancesMap.keys()).join(', ');
             this.logger.log(`Tearing down action handlers sessions [${handlersNames}]`);
-            await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
-                .map(handlerInstance => {
-                    if(isStatefulActionHandler(handlerInstance)) {
+            await Promise.allSettled(
+                Array.from(this.processHandlersInstancesMap.values()).map(handlerInstance => {
+                    if (isStatefulActionHandler(handlerInstance)) {
                         return handlerInstance.tearDown();
                     } else {
                         this.logger.error(`No tear down method in handler ${handlerInstance.constructor.name}`);
                     }
-                }));
+                })
+            );
         } catch (e) {
             this.logger.error('Error clearing handler', e);
         } finally {
@@ -203,7 +202,7 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, handler] of this.internalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                handlerInstance = handler; 
+                handlerInstance = handler;
                 this.processHandlersInstancesMap.set(handler.constructor.name, handlerInstance);
 
                 return await handlerInstance.run(request);
@@ -212,7 +211,7 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, handler] of this.externalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                // handler is just a source code of action handler class, so the name is available directly in handler object  
+                // handler is just a source code of action handler class, so the name is available directly in handler object
                 const activeProcessInstance = this.processHandlersInstancesMap.get(handler.name);
                 handlerInstance = activeProcessInstance ?? new handler();
 
@@ -224,7 +223,7 @@ export class DesktopRunnerService implements OnModuleInit {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
                 e.message,
-                e,
+                e
             );
             throw e;
         } finally {
@@ -239,5 +238,40 @@ export class DesktopRunnerService implements OnModuleInit {
         const notFoundErrorMessage = `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Script ${request.script} not found`;
         this.logger.error(notFoundErrorMessage);
         throw new Error(notFoundErrorMessage);
+    }
+
+    private checkIfFileSystemEntryPresentInDirectory(directoryPath: string, directoryName: string, fileSystemEntires: string[]): boolean {
+        const isPresent = fileSystemEntires.every(fileSystemEntry => {
+            const path = directoryPath + '\\' + directoryName + '\\' + fileSystemEntry;
+            return existsSync(path);
+        });
+
+        return isPresent;
+    }
+
+    private checkIfPackageManagerPresentInDirectory(directoryPath: string, directoryName: string, packageManagerFile: string[]) {
+        const isPresent = packageManagerFile.some(packageFile => {
+            const path = directoryPath + '\\' + directoryName + '\\' + packageFile;
+            return existsSync(path);
+        });
+
+        return isPresent;
+    }
+
+    private detectExtensionsDirectories(directoryEntry: Dirent) {
+        return (
+            directoryEntry.isDirectory() &&
+            !directoryEntry.name.startsWith('.') &&
+            this.checkIfFileSystemEntryPresentInDirectory(directoryEntry.path, directoryEntry.name, [
+                'dist',
+                'node_modules',
+                'package.json'
+            ]) &&
+            this.checkIfPackageManagerPresentInDirectory(directoryEntry.path, directoryEntry.name, [
+                'package-lock.json',
+                'yarn.lock',
+                'pnpm-lock.yaml'
+            ])
+        );
     }
 }

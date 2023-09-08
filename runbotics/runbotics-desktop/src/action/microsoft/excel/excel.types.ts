@@ -1,6 +1,7 @@
 export type SessionIdentifier = string;
 export type WorksheetIdentifier = number | string;
 export type Platform = 'SharePoint' | 'OneDrive';
+export type ExcelCellValue = string | number | boolean;
 export interface Session {
     platform: Platform;
     sessionIdentifier: SessionIdentifier;
@@ -130,17 +131,17 @@ export interface WorkbookRange {
     columnCount?: number;
     columnHidden?: boolean;
     columnIndex?: number;
-    formulas?: string;
-    formulasLocal?: string;
-    formulasR1C1?: string;
+    formulas?: Array<Array<string>>;
+    formulasLocal?: Array<Array<string>>;
+    formulasR1C1?: Array<Array<string>>;
     hidden?: boolean;
-    numberFormat?: string;
+    numberFormat?: Array<Array<string>>;
     rowCount?: number;
     rowHidden?: boolean;
     rowIndex?: number;
-    text?: string;
-    valueTypes?: string;
-    values?: string;
+    text?: Array<Array<string>>;
+    valueTypes?: Array<Array<string>>;
+    values?: Array<Array<ExcelCellValue>>;
 }
 
 export interface WorkbookRangeUpdateBody {
@@ -153,4 +154,11 @@ export interface WorkbookRangeUpdateBody {
     values?: Array<Array<any>>;
 }
 
-
+export interface WorkbookCell {
+    value?: ExcelCellValue;
+    text?: string;
+    numberFormat?: string;
+    address?: string;
+    formula?: string;
+    valueType?: string;
+}
