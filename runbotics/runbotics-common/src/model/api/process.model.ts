@@ -2,6 +2,7 @@ import { IScheduleProcess } from './schedule-process.model';
 import { IUser } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
+import { Tag } from './tag.model';
 
 export interface IProcess {
     id?: number;
@@ -21,6 +22,7 @@ export interface IProcess {
     createdBy?: IUser | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
+    tags?: Tag[];
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {

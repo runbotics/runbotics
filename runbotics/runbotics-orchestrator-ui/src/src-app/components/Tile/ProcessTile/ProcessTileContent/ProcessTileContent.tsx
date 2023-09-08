@@ -6,14 +6,13 @@ import { Box, Typography } from '@mui/material';
 import { red } from '@mui/material/colors';
 import moment from 'moment';
 
-
 import If from '#src-app/components/utils/If';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledContent } from './ProcessTile.styles';
-import { ProcessTileProps } from './ProcessTile.types';
-import { DATE_FORMAT } from '..';
+import { StyledContent } from './ProcessTileContent.styles';
+import { DATE_FORMAT } from '../../Tile.utils';
+import { ProcessTileProps } from '../ProcessTile.types';
 
 
 const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) => {
