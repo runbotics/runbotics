@@ -111,12 +111,18 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    range: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Range.Info'),
+                        },
+                    }
+                },
                 output: {
                     variableName: {
                         'ui:options': {
