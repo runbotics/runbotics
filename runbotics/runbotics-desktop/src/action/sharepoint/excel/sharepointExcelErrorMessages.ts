@@ -11,6 +11,13 @@ export default class SharePointExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
+
+    static getCellsIncorrectInput(): string {
+        return `
+            Range of cells has to include start and end cell addresses separated by a colon (e.g. 'A1:C3').
+            ${this.getCheckInputTip()}
+        `;
+    }
     
     /* Tips */
 

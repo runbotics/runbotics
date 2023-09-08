@@ -162,3 +162,12 @@ export interface WorkbookCell {
     formula?: string;
     valueType?: string;
 }
+
+export interface WorkbookCellRange {
+    values?: Array<ExcelCellValue>;
+    text?: Array<string>;
+    numberFormats?: Array<string>
+    address?: string;
+    formula?: Array<string>;
+    valueType?: Array<string>;
+}

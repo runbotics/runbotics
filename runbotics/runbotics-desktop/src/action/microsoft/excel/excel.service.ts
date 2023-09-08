@@ -5,6 +5,7 @@ import { MicrosoftGraphService } from '../microsoft-graph';
 import {
     Drive,
     DriveItem,
+    ExcelCellValue,
     Platform,
     Session,
     SessionIdentifier,
@@ -88,14 +89,30 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    public getRange(address: string): Promise<WorkbookRange> {
+    async getRange(address: string): Promise<ExcelCellValue[]> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(url), {
+        const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
         });
+
+        const { values, text, numberFormat, columnCount, rowCount, rowIndex} = response;
+        const cellValues = [];
+
+        for (let i = rowIndex; i < rowCount; i++) {
+            const rowValues: ExcelCellValue[] = [];
+            for (let j = 0; j < columnCount; j++) {
+                const cellValue = numberFormat[i][j].includes('@') || numberFormat[i][j].includes('%')
+                    ? text[i][j]
+                    : values[i][j];
+                rowValues.push(cellValue);
+            }
+            cellValues.push(rowValues);
+        }
+ 
+        return cellValues;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
