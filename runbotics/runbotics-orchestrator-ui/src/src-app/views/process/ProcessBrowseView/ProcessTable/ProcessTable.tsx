@@ -6,12 +6,11 @@ import { useRouter } from 'next/router';
 import { IProcess } from 'runbotics-common';
 
 
-import { buildProcessUrl } from '#src-app/components/Tile/ProcessTile';
+import { buildProcessUrl } from '#src-app/components/Tile/ProcessTile/ProcessTile.utils';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { useSelector } from '#src-app/store';
 
 import useProcessColumns from './useProcessColumns';
-
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 

@@ -16,8 +16,11 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
+    "Component.Tile.Process.Update.Success": "Pomyślnie zaktualizowano proces {{ name }}",
     "Component.Tile.Process.Update.Failed": "Nie udało się zaktualizować procesu {{ name }}",
     "Component.Tile.Process.Settings.AriaLabel": "Ustawienia",
+    "Component.Tile.Process.Tags.ExpandLabel": "rozwiń",
+    "Component.Tile.Process.Tags.CollapseLabel": "zwiń",
     "Component.Tile.Process.Content.Created": "Utworzono:",
     "Component.Tile.Process.Content.Creator": "Twórca:",
     "Component.Tile.Process.Content.Updated": "Zaktualizowano:",
