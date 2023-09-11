@@ -13,6 +13,7 @@ const editListTranslations = {
     'Users.List.Edit.Form.Label.Language': 'Language',
     'Users.List.Edit.Form.Select.Language.English': 'English',
     'Users.List.Edit.Form.Select.Language.Polish': 'Polish',
+    'Users.List.Edit.Form.Switch.Activated': 'Activated:',
     'Users.List.Edit.Form.Error.FieldRequired': 'Field is required',
     'Users.List.Edit.Form.Error.Email': 'Incorrect email'
 };

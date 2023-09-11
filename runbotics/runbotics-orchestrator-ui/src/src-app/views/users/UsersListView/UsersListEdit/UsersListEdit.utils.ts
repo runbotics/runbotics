@@ -15,6 +15,7 @@ export const getUserDataWithoutEmptyStrings = (userData: IUser) => ({
     id: userData.id,
     email: userData.email,
     login: userData.login,
+    activated: userData.activated,
     firstName: (userData.firstName === '' ? null : userData.firstName),
     lastName: (userData.lastName === '' ? null : userData.lastName),
     langKey: userData.langKey
