@@ -16,7 +16,6 @@ export interface SessionInput {
     platform: Platform,
     sessionIdentifier: SessionIdentifier,
     worksheetIdentifier: WorksheetIdentifier,
-    persistChanges: boolean,
     siteRelativePath?: string,
     list?: string
 }
@@ -154,11 +153,18 @@ export interface WorkbookRangeUpdateBody {
     values?: Array<Array<any>>;
 }
 
-export interface WorkbookCellRange {
-    values?: Array<ExcelCellValue>;
-    text?: Array<string>;
-    numberFormats?: Array<string>
+export interface WorkbookCell {
+    value?: ExcelCellValue;
+    text?: string;
+    numberFormat?: string;
     address?: string;
     formula?: Array<string>;
     valueType?: Array<string>;
+}
+
+export interface Worksheet {
+    id: string;
+    name: string;
+    position: number;
+    visibility: string;
 }
