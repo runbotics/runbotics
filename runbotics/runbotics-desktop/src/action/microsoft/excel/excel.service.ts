@@ -231,7 +231,7 @@ export class ExcelService {
         const url = `/sites/${siteId}/drive`;
 
         if (!listName) {
-            const { name } = await this.microsoftGraphService.get(url) as Drive;
+            const { name } = await this.microsoftGraphService.get<Drive>(url);
             return name;
         }
         return listName;

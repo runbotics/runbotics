@@ -354,6 +354,11 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 input: {
+                    listName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.ListName.Info'),
+                        },
+                    },
                     filePath: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info'),
