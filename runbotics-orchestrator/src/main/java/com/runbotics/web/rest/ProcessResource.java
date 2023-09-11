@@ -131,8 +131,7 @@ public class ProcessResource {
      */
     @PreAuthorize(
         "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')" +
-        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
-        "or @securityService.canModifyProcess(#id)"
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
     )
     @PutMapping("/processes/{id}")
     public ResponseEntity<ProcessDTO> updateProcess(
@@ -339,12 +338,12 @@ public class ProcessResource {
      */
     @PreAuthorize(
         "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')" +
-        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
-        "or @securityService.canModifyProcess(#id)"
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
     )
     @DeleteMapping("/processes/{id}")
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {
         log.debug("REST request to delete Process : {}", id);
+        processService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

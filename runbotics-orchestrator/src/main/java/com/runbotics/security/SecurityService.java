@@ -50,20 +50,20 @@ public class SecurityService {
     }
 
     @Transactional
-    public boolean canModifyProcess(Long processId) {
+    public boolean isProcessOwner(Long processId) {
         Long processOwnerId = processService.findOne(processId).get().getCreatedBy().getId();
         return this.isOwner(processOwnerId);
     }
 
     @Transactional
-    public boolean canModifyGlobalVariable(Long globalVariableId) {
+    public boolean isGlobalVariableOwner(Long globalVariableId) {
         Long globalVariableOwnerId = globalVariableService.findOne(globalVariableId).get().getCreator().getId();
         return this.isOwner(globalVariableOwnerId);
     }
 
     private boolean isOwner(Long id) {
         Long currentUserId = userService.getUserWithAuthorities().get().getId();
-        log.info("Checking if user with id {} can modify", currentUserId);
+        log.debug("Checking if user with id {} can modify", currentUserId);
         return currentUserId.equals(id);
     }
 }

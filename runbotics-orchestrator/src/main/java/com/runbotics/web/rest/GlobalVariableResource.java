@@ -88,8 +88,7 @@ public class GlobalVariableResource {
      */
     @PreAuthorize(
         "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_EDIT + "')" +
-        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
-        "or @securityService.canModifyGlobalVariable(#id)"
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
     )
     @PutMapping("/global-variables/{id}")
     public ResponseEntity<GlobalVariableDTO> updateGlobalVariable(
@@ -203,8 +202,7 @@ public class GlobalVariableResource {
      */
     @PreAuthorize(
         "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_DELETE + "')" +
-        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
-        "or @securityService.canModifyGlobalVariable(#id)"
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
     )
     @DeleteMapping("/global-variables/{id}")
     public ResponseEntity<Void> deleteGlobalVariable(@PathVariable Long id) {
