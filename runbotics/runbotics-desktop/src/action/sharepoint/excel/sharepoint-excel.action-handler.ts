@@ -55,7 +55,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getRange(
         input: SharepointTypes.SharepointExcelGetRangeActionInput
-    ): Promise<ExcelCellValue[]> {
+    ): Promise<ExcelCellValue[][]> {
         const properRange = input.range.match(/^([a-zA-Z]+\$?\d+):(\$?[a-zA-Z]+\$?\d+)/);
 
         if (!properRange) {

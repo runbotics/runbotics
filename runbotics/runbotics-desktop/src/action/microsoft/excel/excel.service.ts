@@ -89,7 +89,7 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    async getRange(address: string): Promise<ExcelCellValue[]> {
+    async getRange(address: string): Promise<ExcelCellValue[][]> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
