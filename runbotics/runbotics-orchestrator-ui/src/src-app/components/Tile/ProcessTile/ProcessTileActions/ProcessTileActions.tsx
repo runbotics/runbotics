@@ -8,7 +8,7 @@ import { FeatureKey, IProcess, Role } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import { useProcessOwner } from '#src-app/hooks/useProcessOwner';
+import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -29,8 +29,8 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
-    const isProcessOwner = useProcessOwner(process);
-    const hasModifyProcessAccess = isAdmin || isProcessOwner;
+    const isProcessOwner = useOwner();
+    const hasModifyProcessAccess = isAdmin || isProcessOwner(process.createdBy?.id);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
