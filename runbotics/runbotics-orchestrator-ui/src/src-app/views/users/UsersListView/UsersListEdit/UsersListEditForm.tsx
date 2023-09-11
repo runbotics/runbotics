@@ -1,6 +1,6 @@
 import React, { FC, ChangeEvent } from 'react';
 
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, MenuItem, Switch, Typography } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages } from '#src-app/translations/translations';
@@ -43,36 +43,40 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
         setUser((prevState) => ({ ...prevState, langKey: event.target.value }));
     };
 
+    const handleActivatedSwitchChange = () => {
+        setUser((prevState) => ({ ...prevState, activated: !user.activated }));
+    };
+
     return (
         <>
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Email')}
-                value={user?.email}
+                value={user.email}
                 onChange={handleEmailFieldInput}
                 error={!formValidationState.email}
                 {...(!formValidationState.email && { helperText: translate('Users.List.Edit.Form.Error.Email') })}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.Login')}
-                value={user?.login}
+                value={user.login}
                 onChange={handleLoginFieldInput}
                 error={!formValidationState.login}
                 {...(!formValidationState.login && { helperText: translate('Users.List.Edit.Form.Error.FieldRequired') })}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.FirstName')}
-                value={user?.firstName}
+                value={user.firstName}
                 onChange={handleFirstNameFieldInput}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.LastName')}
-                value={user?.lastName}
+                value={user.lastName}
                 onChange={handleLastNameFieldInput}
             />
             <TextField
                 select
                 label={translate('Users.List.Edit.Form.Label.Language')}
-                value={user?.langKey}
+                value={user.langKey}
                 onChange={handleLanguageFieldInput}
             >
                 <MenuItem value={languages[0]}>
@@ -82,6 +86,10 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
                     {translate('Users.List.Edit.Form.Select.Language.Polish')}
                 </MenuItem>
             </TextField>
+            <Typography>
+                {translate('Users.List.Edit.Form.Switch.Activated')}
+                <Switch checked={user.activated} onChange={handleActivatedSwitchChange} />
+            </Typography>
         </>
     );
 };

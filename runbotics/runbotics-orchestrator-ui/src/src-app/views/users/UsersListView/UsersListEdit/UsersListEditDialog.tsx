@@ -30,7 +30,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
 
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
     const { activated } = useSelector(usersSelector);
-    const [user, setUser] = useState<IUser>();
+    const [user, setUser] = useState<IUser>(userData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 

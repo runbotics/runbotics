@@ -316,10 +316,6 @@ public class UserService {
             .findById(adminUserDTO.getId())
             .map(
                 existingUser -> {
-                    if (existingUser.isActivated()) {
-                        adminUserDTO.setActivated(existingUser.isActivated());
-                    }
-
                     userRepository.findOtherUserByLoginOrEmail(
                         adminUserDTO.getId(),
                         adminUserDTO.getEmail(),
