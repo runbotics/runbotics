@@ -58,6 +58,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         onEdit,
         hasDeleteVariableAccess,
         hasEditVariableAccess,
+        globalVariables,
     });
 
     useEffect(() => {

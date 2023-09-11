@@ -11,7 +11,7 @@ import moment from 'moment';
 
 import { Role } from 'runbotics-common';
 
-import useAuth from '#src-app/hooks/useAuth';
+import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { IGlobalVariable, UserDTO } from '#src-app/types/model/global-variable.model';
@@ -22,6 +22,7 @@ interface ColumnsActions {
     onEdit: (globalVariable: IGlobalVariable) => void;
     hasEditVariableAccess: boolean;
     hasDeleteVariableAccess: boolean;
+    globalVariables: IGlobalVariable[];
 }
 
 const useGlobalVariablesColumns = ({
@@ -29,10 +30,14 @@ const useGlobalVariablesColumns = ({
     onDelete,
     hasEditVariableAccess,
     hasDeleteVariableAccess,
+    globalVariables,
 }: ColumnsActions): GridEnrichedColDef[] => {
     const { translate } = useTranslations();
-    const { user: currentUser } = useAuth();
+    const isGlobalVariableOwner = useOwner();
     const isAdmin = useRole([Role.ROLE_ADMIN]);
+    const isActionsColumnHidden = globalVariables.every(({ creator }) =>
+        !(isAdmin || isGlobalVariableOwner(creator.id))
+    );
 
     return [
         {
@@ -79,9 +84,9 @@ const useGlobalVariablesColumns = ({
             field: 'actions',
             type: 'actions',
             flex: 0.1,
+            hide: isActionsColumnHidden,
             getActions: (params: GridRowParams<IGlobalVariable>) => {
                 const creator = params.row.creator as UserDTO;
-                const isOwner = currentUser.id === creator.id;
 
                 const handleEditClick = () => {
                     if (onEdit) onEdit(params.row);
@@ -105,7 +110,7 @@ const useGlobalVariablesColumns = ({
                         key="delete"
                     />,
                 ];
-                return (isAdmin || isOwner) ? gridActions : [];
+                return (isAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];
             },
         },
     ];
