@@ -4,7 +4,6 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 import * as SharepointTypes from './types';
 import { ExcelService } from '../../microsoft/excel/excel.service';
 import SharePointExcelErrorMessage from './sharepointExcelErrorMessages'; 
-import { ExcelCellValue } from '#action/microsoft/excel/excel.types';
 import { RegexPattern } from '../../../../../runbotics-orchestrator-ui/src/src-app/Actions/types';
 
 @Injectable()
@@ -33,7 +32,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
-    ): Promise<ExcelCellValue> {
+    ): Promise<SharepointTypes.SharepointExcelGetCellActionOutput> {
         const column = input.cell.match(/[A-Z]+/);
         const row = input.cell.match(/\d+/);
 
@@ -51,7 +50,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getCells(
         input: SharepointTypes.SharepointExcelGetCellsActionInput
-    ): Promise<ExcelCellValue[][]> {
+    ): Promise<SharepointTypes.SharepointExcelGetCellsActionOutput> {
         const startCell = input.startCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
         const endCell = input.endCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
 
