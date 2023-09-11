@@ -43,8 +43,8 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
         setUser((prevState) => ({ ...prevState, langKey: event.target.value }));
     };
 
-    const handleActivatedSwitchChange = () => {
-        setUser((prevState) => ({ ...prevState, activated: !user.activated }));
+    const handleActivatedSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setUser((prevState) => ({ ...prevState, activated: event.target.checked }));
     };
 
     return (
