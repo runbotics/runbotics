@@ -11,8 +11,7 @@ import {
     SessionIdentifier,
     SessionInput,
     SharePointSessionInput,
-    Site,
-    WorkbookCell,
+    Site, 
     WorkbookCellCoordinates,
     WorkbookRange,
     WorkbookRangeUpdateBody,
@@ -68,7 +67,7 @@ export class ExcelService {
         );
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookCell> {
+    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<ExcelCellValue> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
@@ -79,13 +78,11 @@ export class ExcelService {
             }
         });
 
-        const microsoftGraphGetCellUsage: WorkbookCell = {
-            value: response.values[0][0],
-            text: response.text[0][0],
-            numberFormat: response.numberFormat[0][0]
-        };
+        const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0]) 
+            ? response.text[0][0] 
+            : response.values[0][0];
         
-        return microsoftGraphGetCellUsage;
+        return cellValue;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
@@ -104,7 +101,7 @@ export class ExcelService {
         for (let i = rowIndex; i < rowCount; i++) {
             const rowValues: ExcelCellValue[] = [];
             for (let j = 0; j < columnCount; j++) {
-                const cellValue = numberFormat[i][j].includes('@') || numberFormat[i][j].includes('%')
+                const cellValue = this.isValueUnclear(numberFormat[i][j])
                     ? text[i][j]
                     : values[i][j];
                 rowValues.push(cellValue);
@@ -224,5 +221,9 @@ export class ExcelService {
             workbookSessionInfo: null,
             worksheetIdentifier,
         };
+    }
+
+    private isValueUnclear(numberFormat: string): boolean{
+        return numberFormat.includes('@') || numberFormat.includes('%');
     }
 }

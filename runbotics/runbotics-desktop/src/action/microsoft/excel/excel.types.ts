@@ -154,15 +154,6 @@ export interface WorkbookRangeUpdateBody {
     values?: Array<Array<any>>;
 }
 
-export interface WorkbookCell {
-    value?: ExcelCellValue;
-    text?: string;
-    numberFormat?: string;
-    address?: string;
-    formula?: string;
-    valueType?: string;
-}
-
 export interface WorkbookCellRange {
     values?: Array<ExcelCellValue>;
     text?: Array<string>;

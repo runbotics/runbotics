@@ -41,16 +41,12 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             throw new Error(SharePointExcelErrorMessage.getCellIncorrectInput());
         }
 
-        const { value, text, numberFormat } = await this.excelService.getCell({
+        const cellValue = await this.excelService.getCell({
             column: column.toString(),
             row: row.toString()
         });
 
-        if (numberFormat.includes('@') || numberFormat.includes('%')) {
-            return text;
-        }
-
-        return value;
+        return cellValue;
     }
 
     async getRange(
@@ -62,9 +58,9 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             throw new Error(SharePointExcelErrorMessage.getCellsIncorrectInput());
         }
 
-        const items = await this.excelService.getRange(input.range);
+        const cellValues = await this.excelService.getRange(input.range);
 
-        return items;
+        return cellValues;
     }
 
     async setCell(
