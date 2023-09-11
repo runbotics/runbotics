@@ -180,6 +180,7 @@ jobs:
         run: |
           mkdir -p ../common/deploy/runbotics-desktop
           $RUSH deploy \
+            --scenario runbotics-desktop \
             --target-folder ../common/deploy/runbotics-desktop \
             --overwrite
 
