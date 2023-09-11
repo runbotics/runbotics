@@ -320,7 +320,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath": "Path to file",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName": "Worksheet name",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges": "Persist changes",
-    "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info": "Refers to the location path, where the starting point is the folder, where the bot lands after login to the account, e.g. folderName/fileName.ext",
+    "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info": "Refers to the location path, where the starting point is the folder, where the bot lands after login to the account, e.g. folderName/fileName.xlsx",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.ListName.Info": "The default name is 'Documents'",
     "Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label": "Close session",
     "Process.Details.Modeler.Actions.SharepointFile.DownloadFileFromRoot.Label": "Download file from root",
