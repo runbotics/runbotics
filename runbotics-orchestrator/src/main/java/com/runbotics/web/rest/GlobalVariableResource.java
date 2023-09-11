@@ -1,6 +1,7 @@
 package com.runbotics.web.rest;
 
 import com.runbotics.repository.GlobalVariableRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.GlobalVariableQueryService;
 import com.runbotics.service.GlobalVariableService;
@@ -85,7 +86,11 @@ public class GlobalVariableResource {
      * or with status {@code 500 (Internal Server Error)} if the globalVariableDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_EDIT + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_EDIT + "')" +
+        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
+        "or @securityService.canModifyGlobalVariable(#id)"
+    )
     @PutMapping("/global-variables/{id}")
     public ResponseEntity<GlobalVariableDTO> updateGlobalVariable(
         @PathVariable(value = "id", required = false) final Long id,
@@ -196,7 +201,11 @@ public class GlobalVariableResource {
      * @param id the id of the globalVariableDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_DELETE + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_DELETE + "')" +
+        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
+        "or @securityService.canModifyGlobalVariable(#id)"
+    )
     @DeleteMapping("/global-variables/{id}")
     public ResponseEntity<Void> deleteGlobalVariable(@PathVariable Long id) {
         log.debug("REST request to delete GlobalVariable : {}", id);

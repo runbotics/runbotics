@@ -3,6 +3,7 @@ package com.runbotics.web.rest;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
@@ -128,7 +129,11 @@ public class ProcessResource {
      * or with status {@code 500 (Internal Server Error)} if the processDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')" +
+        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
+        "or @securityService.canModifyProcess(#id)"
+    )
     @PutMapping("/processes/{id}")
     public ResponseEntity<ProcessDTO> updateProcess(
         @PathVariable(value = "id", required = false) final Long id,
@@ -332,11 +337,14 @@ public class ProcessResource {
      * @param id the id of the processDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')" +
+        "and hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")" +
+        "or @securityService.canModifyProcess(#id)"
+    )
     @DeleteMapping("/processes/{id}")
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {
         log.debug("REST request to delete Process : {}", id);
-        processService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
