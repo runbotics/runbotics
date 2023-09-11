@@ -3,9 +3,7 @@ import useAuth from './useAuth';
 export const useOwner = () => {
     const { user } = useAuth();
 
-    return (ownerId: number) => {
-        const isOwner = user.id === ownerId;
+    const isOwner = (ownerId: number) => user.id === ownerId;
 
-        return isOwner;
-    };
+    return isOwner;
 };
