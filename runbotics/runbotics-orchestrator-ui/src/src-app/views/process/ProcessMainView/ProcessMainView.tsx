@@ -8,7 +8,7 @@ import { FeatureKey, Role } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
-import { useProcessOwner } from '#src-app/hooks/useProcessOwner';
+import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -32,7 +32,7 @@ const ProcessMainView: FC = () => {
     const { translate } = useTranslations();
     const { user } = useAuth();
     const isGuest = useRole([Role.ROLE_GUEST]);
-    const isProcessOwner = useProcessOwner(process);
+    const isProcessOwner = useOwner();
     const isAdmin = useRole([Role.ROLE_ADMIN]);
 
     useEffect(() => () => {
@@ -56,7 +56,7 @@ const ProcessMainView: FC = () => {
             value: ProcessTab.CONFIGURE,
             label: translate('Process.MainView.Tabs.Configure.Title'),
             featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
-            show: process?.isPublic ? (isAdmin || isProcessOwner) : true,
+            show: process?.isPublic ? (isAdmin || isProcessOwner(process.createdBy?.id)) : true,
         },
     ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys) && processTab.show);
 
