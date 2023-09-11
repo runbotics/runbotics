@@ -4,7 +4,7 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 import * as SharepointTypes from './types';
 import { ExcelService } from '../../microsoft/excel/excel.service';
 import SharePointExcelErrorMessage from './sharepointExcelErrorMessages'; 
-import { ExcelCellValue } from '#action/microsoft/excel/excel.types';
+import { RegexPattern } from '../../../../../runbotics-orchestrator-ui/src/src-app/Actions/types';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
@@ -32,7 +32,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async getCell(
         input: SharepointTypes.SharepointGetExcelCellActionInput
-    ): Promise<ExcelCellValue> {
+    ): Promise<SharepointTypes.SharepointExcelGetCellActionOutput> {
         const column = input.cell.match(/[A-Z]+/);
         const row = input.cell.match(/\d+/);
 
@@ -40,22 +40,28 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             throw new Error(SharePointExcelErrorMessage.getCellIncorrectInput());
         }
 
-        const { value, text, numberFormat } = await this.excelService.getCell({
+        const cellValue = await this.excelService.getCell({
             column: column.toString(),
             row: row.toString()
         });
 
-        if (numberFormat.includes('@') || numberFormat.includes('%')) {
-            return text;
-        }
-
-        return value;
+        return cellValue;
     }
 
-    async getRange(
-        input: SharepointTypes.SharepointExcelGetRangeActionInput
-    ): Promise<SharepointTypes.SharepointExcelGetRangeActionOutput> {
-        return this.excelService.getRange(input.range);
+    async getCells(
+        input: SharepointTypes.SharepointExcelGetCellsActionInput
+    ): Promise<SharepointTypes.SharepointExcelGetCellsActionOutput> {
+        const startCell = input.startCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
+        const endCell = input.endCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
+
+        if (!startCell || !endCell) {
+            throw new Error(SharePointExcelErrorMessage.getCellsIncorrectInput());
+        }
+
+        const range = `${startCell}:${endCell}`;
+        const cellValues = await this.excelService.getCells(range);
+
+        return cellValues;
     }
 
     async setCell(
@@ -74,8 +80,8 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         switch (request.script) {
             case 'sharepointExcel.getCell':
                 return this.getCell(request.input);
-            case 'sharepointExcel.getRange':
-                return this.getRange(request.input);
+            case 'sharepointExcel.getCells':
+                return this.getCells(request.input);
             case 'sharepointExcel.setCell':
                 return this.setCell(request.input);
             case 'sharepointExcel.updateRange':

@@ -5,13 +5,13 @@ import { MicrosoftGraphService } from '../microsoft-graph';
 import {
     Drive,
     DriveItem,
+    ExcelCellValue,
     Platform,
     Session,
     SessionIdentifier,
     SessionInput,
     SharePointSessionInput,
-    Site,
-    WorkbookCell,
+    Site, 
     WorkbookCellCoordinates,
     WorkbookRange,
     WorkbookRangeUpdateBody,
@@ -72,7 +72,7 @@ export class ExcelService {
         );
     }
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<WorkbookCell> {
+    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<ExcelCellValue> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
@@ -83,24 +83,38 @@ export class ExcelService {
             }
         });
 
-        const microsoftGraphGetCellUsage: WorkbookCell = {
-            value: response.values[0][0],
-            text: response.text[0][0],
-            numberFormat: response.numberFormat[0][0]
-        };
+        const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0]) 
+            ? response.text[0][0] 
+            : response.values[0][0];
         
-        return microsoftGraphGetCellUsage;
+        return cellValue;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    public getRange(address: string): Promise<WorkbookRange> {
+    async getCells(address: string): Promise<ExcelCellValue[][]> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
-        return this.microsoftGraphService.get(this.createWorkbookUrl(url), {
+        const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
             headers: {
                 'workbook-session-id': this.session.workbookSessionInfo.id,
             },
         });
+
+        const { values, text, numberFormat, columnCount, rowCount, rowIndex} = response;
+        const cellValues = [];
+
+        for (let row = rowIndex; row < rowCount; row++) {
+            const rowValues: ExcelCellValue[] = [];
+            for (let column = 0; column < columnCount; column++) {
+                const cellValue = this.isValueUnclear(numberFormat[row][column])
+                    ? text[row][column]
+                    : values[row][column];
+                rowValues.push(cellValue);
+            }
+            cellValues.push(rowValues);
+        }
+ 
+        return cellValues;
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
@@ -235,5 +249,9 @@ export class ExcelService {
             return name;
         }
         return listName;
+    }
+
+    private isValueUnclear(numberFormat: string): boolean {
+        return numberFormat.includes('@') || numberFormat.includes('%');
     }
 }

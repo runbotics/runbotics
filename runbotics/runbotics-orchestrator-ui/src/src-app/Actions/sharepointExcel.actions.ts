@@ -53,6 +53,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                     cell: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
+                            type: 'string',
+                            pattern: RegexPattern.EXCEL_CELL_ADDRESS
                         },
                     }
                 },
@@ -93,12 +95,18 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            range: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.Range'),
+                            startCell: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.StartCell'),
                                 type: 'string',
+                                pattern: RegexPattern.EXCEL_CELL_ADDRESS
                             },
+                            endCell: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.EndCell'),
+                                type: 'string',
+                                pattern: RegexPattern.EXCEL_CELL_ADDRESS
+                            }
                         },
-                        required: ['range'],
+                        required: ['startCell', 'endCell'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -111,12 +119,23 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: RegexPattern.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    startCell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.StartCell.Info'),
+                        },
+                    },
+                    endCell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.EndCell.Info'),
+                        },
+                    }
+                },
                 output: {
                     variableName: {
                         'ui:options': {

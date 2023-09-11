@@ -11,6 +11,14 @@ export default class SharePointExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
+
+    static getCellsIncorrectInput(): string {
+        return `
+            Start cell addresses has to include a column letter and a row number (e.g. A1).
+            End cell addresses has to include a column letter and a row number (e.g. H5).
+            ${this.getCheckInputTip()}
+        `;
+    }
     
     /* Tips */
 

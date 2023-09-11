@@ -1,4 +1,4 @@
-import { Platform } from '#action/microsoft/excel/excel.types';
+import { ExcelCellValue, Platform } from '#action/microsoft/excel/excel.types';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export type FileActionRequest =
@@ -6,7 +6,7 @@ export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.getCell', SharepointGetExcelCellActionInput>
 | DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
-| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>
+| DesktopRunRequest<'sharepointExcel.getCells', SharepointExcelGetCellsActionInput>
 | DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
 export interface SharepointExcelOpenFileActionInput {
@@ -34,12 +34,13 @@ export type SharepointExcelUpdateRangeActionOutput = any;
 export type SharepointGetExcelCellActionInput = {
     cell: string;
 };
-export type SharepointExcelGetCellActionOutput = any;
+export type SharepointExcelGetCellActionOutput = ExcelCellValue;
 
-export type SharepointExcelGetRangeActionInput = {
-    range: string;
+export type SharepointExcelGetCellsActionInput = {
+    startCell: string;
+    endCell: string;
 };
-export type SharepointExcelGetRangeActionOutput = any;
+export type SharepointExcelGetCellsActionOutput = ExcelCellValue[][];
 
 export type SharepointExcelCloseSessionActionInput = any;
 

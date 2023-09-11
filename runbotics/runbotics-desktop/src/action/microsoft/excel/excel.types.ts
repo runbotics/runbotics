@@ -54,9 +54,9 @@ export interface Drive {
     createdDateTime?: string;
     description?: string;
     driveType?: 'personal' | 'business' | 'documentLibrary';
-    following?: Array<DriveItem>;
+    following?: DriveItem[];
     id?: string;
-    items?: Array<DriveItem>;
+    items?: DriveItem[];
     lastModifiedBy?: unknown;
     lastModifiedDateTime?: string;
     name?: string;
@@ -96,15 +96,15 @@ export interface DriveItem {
     video?: unknown;
     webDavUrl?: string;
     /*relationships */
-    activities?: Array<unknown>;
+    activities?: unknown[];
     analytics?: unknown;
-    children?: Array<unknown>;
+    children?: unknown[];
     createdByUser?: unknown;
     lastModifiedByUser?: unknown;
-    permissions?: Array<unknown>;
-    subscriptions?: Array<unknown>;
-    thumbnails?: Array<unknown>;
-    versions?: Array<unknown>;
+    permissions?: unknown[];
+    subscriptions?: unknown[];
+    thumbnails?: unknown[];
+    versions?: unknown[];
 
     /* inherited from baseItem */
     createdBy?: unknown;
@@ -130,17 +130,17 @@ export interface WorkbookRange {
     columnCount?: number;
     columnHidden?: boolean;
     columnIndex?: number;
-    formulas?: Array<Array<string>>;
-    formulasLocal?: Array<Array<string>>;
-    formulasR1C1?: Array<Array<string>>;
+    formulas?: string[][];
+    formulasLocal?: string[][];
+    formulasR1C1?: string[][];
     hidden?: boolean;
-    numberFormat?: Array<Array<string>>;
+    numberFormat?: string[][];
     rowCount?: number;
     rowHidden?: boolean;
     rowIndex?: number;
-    text?: Array<Array<string>>;
-    valueTypes?: Array<Array<string>>;
-    values?: Array<Array<ExcelCellValue>>;
+    text?: string[][];
+    valueTypes?: string[][];
+    values?: ExcelCellValue[][];
 }
 
 export interface WorkbookRangeUpdateBody {
@@ -150,7 +150,7 @@ export interface WorkbookRangeUpdateBody {
     formulasR1C1?: string;
     numberFormat?: string;
     rowHidden?: boolean;
-    values?: Array<Array<any>>;
+    values?: ExcelCellValue[][];
 }
 
 export interface WorkbookCell {
@@ -158,8 +158,8 @@ export interface WorkbookCell {
     text?: string;
     numberFormat?: string;
     address?: string;
-    formula?: string;
-    valueType?: string;
+    formula?: string[];
+    valueType?: string[];
 }
 
 export interface Worksheet {
