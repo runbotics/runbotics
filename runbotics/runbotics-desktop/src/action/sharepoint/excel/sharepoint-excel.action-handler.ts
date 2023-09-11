@@ -19,7 +19,6 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             platform: input.platform,
             sessionIdentifier: input.filePath,
             worksheetIdentifier: input.worksheetName,
-            persistChanges: input.persistChanges,
             siteRelativePath: input.siteName,
             list: input.listName,
         });

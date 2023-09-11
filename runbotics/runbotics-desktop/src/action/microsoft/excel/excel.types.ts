@@ -16,7 +16,6 @@ export interface SessionInput {
     platform: Platform,
     sessionIdentifier: SessionIdentifier,
     worksheetIdentifier: WorksheetIdentifier,
-    persistChanges: boolean,
     siteRelativePath?: string,
     list?: string
 }
@@ -161,4 +160,11 @@ export interface WorkbookCell {
     address?: string;
     formula?: string;
     valueType?: string;
+}
+
+export interface Worksheet {
+    id: string;
+    name: string;
+    position: number;
+    visibility: string;
 }

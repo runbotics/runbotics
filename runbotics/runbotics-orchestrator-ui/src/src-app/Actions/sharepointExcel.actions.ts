@@ -286,8 +286,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
                                 type: 'string',
                                 enum: ['OneDrive', 'SharePoint'],
-                                default: ['OneDrive'],
-
+                                default: 'OneDrive',
                             },
                         },
                         dependencies: {
@@ -322,14 +321,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            persistChanges: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
-                                                ),
-                                                type: 'boolean',
-                                            },
                                         },
-                                        required: ['siteName', 'listName', 'filePath', 'worksheetName'],
+                                        required: ['siteName', 'filePath'],
                                     },
                                     {
                                         properties: {
@@ -348,14 +341,8 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            persistChanges: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.PersistChanges',
-                                                ),
-                                                type: 'boolean',
-                                            },
                                         },
-                                        required: ['filePath', 'worksheetName'],
+                                        required: ['filePath'],
                                     },
                                 ],
                             },
@@ -365,39 +352,26 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                     },
                 },
             },
+            uiSchema: {
+                input: {
+                    listName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.ListName.Info'),
+                        },
+                    },
+                    filePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info'),
+                        },
+                    },
+                },
+            },
             formData: {
                 input: {
-                    siteRelativePath: undefined,
-                    listName: undefined,
+                    siteName: undefined,
                     filePath: undefined,
-                    worksheetName: undefined,
-                    persistChanges: true,
-                },
-                output: {
                 },
             },
-
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                input: {
-                    collection: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.Collection.Info'),
-                        }
-                    },
-                    elementVariable: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable.Info'),
-                        }
-                    },
-                    iterations: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Loop.Loop2.NumberOfIterations.Info'),
-                        }
-                    }
-                }
-            },
-
         },
     },
     [SharepointExcelAction.CLOSE_SESSION]: {
