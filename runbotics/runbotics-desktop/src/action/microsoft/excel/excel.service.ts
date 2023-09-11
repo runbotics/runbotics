@@ -251,7 +251,7 @@ export class ExcelService {
         return listName;
     }
 
-    private isValueUnclear(numberFormat: string): boolean{
+    private isValueUnclear(numberFormat: string): boolean {
         return numberFormat.includes('@') || numberFormat.includes('%');
     }
 }

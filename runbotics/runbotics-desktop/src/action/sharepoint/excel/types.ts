@@ -34,7 +34,9 @@ export type SharepointExcelUpdateRangeActionOutput = any;
 export type SharepointGetExcelCellActionInput = {
     cell: string;
 };
-export type SharepointExcelGetCellActionOutput = any;
+export type SharepointExcelGetCellActionOutput = {
+    cell: string
+};
 
 export type SharepointExcelGetCellsActionInput = {
     startCell: string;
