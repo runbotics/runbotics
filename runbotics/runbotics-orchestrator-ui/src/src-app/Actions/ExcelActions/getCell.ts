@@ -1,8 +1,8 @@
-import { ExcelAction } from 'runbotics-common';
+import { ExcelAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, RegexPattern, Runner } from '../types';
+import { ActionSystem, IBpmnAction, Runner } from '../types';
 
 const getActionGetCell = (): IBpmnAction => ({
     id: ExcelAction.GET_CELL,
@@ -42,7 +42,7 @@ const getActionGetCell = (): IBpmnAction => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                            pattern: RegexPattern.VARIABLE_NAME,
+                            pattern: ActionRegex.VARIABLE_NAME,
                         },
                     },
                 },
@@ -74,7 +74,7 @@ const getActionGetCell = (): IBpmnAction => ({
                 variableName: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.GetCell.Output.VariableName.Info'),
-                        pattern: RegexPattern.VARIABLE_NAME,
+                        pattern: ActionRegex.VARIABLE_NAME,
                     }
                 }
             }

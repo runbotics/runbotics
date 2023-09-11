@@ -1,8 +1,8 @@
-import { ExcelAction } from 'runbotics-common';
+import { ExcelAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, RegexPattern, Runner } from '../types';
+import { ActionSystem, IBpmnAction, Runner } from '../types';
 
 const getActionFindFirstEmptyRow = (): IBpmnAction => ({
     id: ExcelAction.FIND_FIRST_EMPTY_ROW,
@@ -42,7 +42,7 @@ const getActionFindFirstEmptyRow = (): IBpmnAction => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                            pattern: RegexPattern.VARIABLE_NAME,
+                            pattern: ActionRegex.VARIABLE_NAME,
                         },
                     },
                 },
@@ -66,7 +66,7 @@ const getActionFindFirstEmptyRow = (): IBpmnAction => ({
                 variableName: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.FindFirstEmptyRow.Output.VariableName.Info'),
-                        pattern: RegexPattern.VARIABLE_NAME,
+                        pattern: ActionRegex.VARIABLE_NAME,
                     }
                 }
             }

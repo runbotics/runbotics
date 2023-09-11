@@ -1,8 +1,8 @@
-import { ExcelAction } from 'runbotics-common';
+import { ExcelAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, RegexPattern, Runner } from '../types';
+import { ActionSystem, IBpmnAction, Runner } from '../types';
 
 const getActionWorksheetExists = (): IBpmnAction => ({
     id: ExcelAction.WORKSHEET_EXISTS,
@@ -27,7 +27,7 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                         worksheet: {
                             title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                             type: 'string',
-                            pattern: RegexPattern.EXCEL_WORKSHEET_NAME,
+                            pattern: ActionRegex.EXCEL_WORKSHEET_NAME,
                         },
                     },
                     required: ['worksheet'],
@@ -39,7 +39,7 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                         variableName: {
                             title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                             type: 'string',
-                            pattern: RegexPattern.VARIABLE_NAME,
+                            pattern: ActionRegex.VARIABLE_NAME,
                         },
                     },
                 },
@@ -59,7 +59,7 @@ const getActionWorksheetExists = (): IBpmnAction => ({
                 variableName: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.WorksheetExists.Output.VariableName.Info'),
-                        pattern: RegexPattern.VARIABLE_NAME,
+                        pattern: ActionRegex.VARIABLE_NAME,
                     }
                 },
             }

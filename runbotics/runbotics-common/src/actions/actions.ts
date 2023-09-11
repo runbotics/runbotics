@@ -1,6 +1,17 @@
 export const SHARE_POINT = "SharePoint";
 export const ONE_DRIVE = "OneDrive";
 
+export enum CloudPath {
+    ROOT = 'root',
+    SITE = 'site',
+}
+
+export enum ActionRegex {
+    VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
+    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
+    EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\$?\\d+'
+}
+
 export enum ACTION_GROUP {
     VARIABLES = 'variables',
     GENERAL = 'general',

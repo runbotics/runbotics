@@ -7,5 +7,5 @@ rushx build;
 echo "[INFO] runbotics-desktop - Build completed";
 
 echo "[INFO] runbotics-desktop - Rush deploy started";
-rush deploy --overwrite --target-folder ../common/deploy/runbotics-desktop;
+rush deploy --scenario runbotics-desktop --overwrite --target-folder ../common/deploy/runbotics-desktop;
 echo "[INFO] runbotics-desktop - Rush deploy completed";

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from 'runbotics-sdk';
+import { ActionRegex } from 'runbotics-common';
 
 import * as SharepointTypes from './types';
 import { ExcelService } from '../../microsoft/excel/excel.service';
 import SharePointExcelErrorMessage from './sharepointExcelErrorMessages'; 
-import { RegexPattern } from '../../../../../runbotics-orchestrator-ui/src/src-app/Actions/types';
 
 @Injectable()
 export default class SharepointExcelActionHandler extends StatelessActionHandler {
@@ -51,8 +51,8 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async getCells(
         input: SharepointTypes.SharepointExcelGetCellsActionInput
     ): Promise<SharepointTypes.SharepointExcelGetCellsActionOutput> {
-        const startCell = input.startCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
-        const endCell = input.endCell.match(RegexPattern.EXCEL_CELL_ADDRESS);
+        const startCell = input.startCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
+        const endCell = input.endCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
 
         if (!startCell || !endCell) {
             throw new Error(SharePointExcelErrorMessage.getCellsIncorrectInput());

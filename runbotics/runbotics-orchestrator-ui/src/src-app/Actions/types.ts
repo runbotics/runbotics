@@ -14,17 +14,6 @@ export enum ActionSystem {
     LINUX = 'Linux',
 }
 
-export enum CloudPath {
-    ROOT = 'root',
-    SITE = 'site',
-}
-
-export enum RegexPattern {
-    VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
-    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
-    EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\$?\\d+'
-}
-
 export type IActionField = {
     id: string;
     label: string;

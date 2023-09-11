@@ -1,8 +1,8 @@
-import { SharepointFileAction } from 'runbotics-common';
+import { SharepointFileAction, ActionRegex, CloudPath } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, CloudPath, RegexPattern } from './types';
+import { IBpmnAction, Runner } from './types';
 
 
 
@@ -50,7 +50,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: RegexPattern.VARIABLE_NAME,
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -138,7 +138,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: RegexPattern.VARIABLE_NAME,
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -236,7 +236,7 @@ const getSharepointFileActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
 
                                 type: 'string',
-                                pattern: RegexPattern.VARIABLE_NAME,
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],

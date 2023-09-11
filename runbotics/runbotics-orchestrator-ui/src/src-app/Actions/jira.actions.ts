@@ -1,8 +1,8 @@
-import { JiraAction } from 'runbotics-common';
+import { JiraAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, RegexPattern } from './types';
+import { IBpmnAction, Runner } from './types';
 
 
 
@@ -49,7 +49,7 @@ const getJiraActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
 
                                 type: 'string',
-                                pattern: RegexPattern.VARIABLE_NAME,
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
