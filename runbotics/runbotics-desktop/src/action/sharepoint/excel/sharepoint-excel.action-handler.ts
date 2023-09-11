@@ -49,16 +49,18 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         return cellValue;
     }
 
-    async getRange(
-        input: SharepointTypes.SharepointExcelGetRangeActionInput
+    async getCells(
+        input: SharepointTypes.SharepointExcelGetCellsActionInput
     ): Promise<ExcelCellValue[][]> {
-        const properRange = input.range.match(/^([a-zA-Z]+\$?\d+):(\$?[a-zA-Z]+\$?\d+)/);
+        const startCell = input.startCell.match(/^[a-zA-Z]+\$?\d+/);
+        const endCell = input.endCell.match(/^[a-zA-Z]+\$?\d+/);
 
-        if (!properRange) {
+        if (!startCell || !endCell) {
             throw new Error(SharePointExcelErrorMessage.getCellsIncorrectInput());
         }
 
-        const cellValues = await this.excelService.getRange(input.range);
+        const range = `${startCell}:${endCell}`;
+        const cellValues = await this.excelService.getCells(range);
 
         return cellValues;
     }
@@ -79,8 +81,8 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         switch (request.script) {
             case 'sharepointExcel.getCell':
                 return this.getCell(request.input);
-            case 'sharepointExcel.getRange':
-                return this.getRange(request.input);
+            case 'sharepointExcel.getCells':
+                return this.getCells(request.input);
             case 'sharepointExcel.setCell':
                 return this.setCell(request.input);
             case 'sharepointExcel.updateRange':

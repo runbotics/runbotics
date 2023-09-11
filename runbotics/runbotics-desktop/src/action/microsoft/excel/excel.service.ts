@@ -86,7 +86,7 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    async getRange(address: string): Promise<ExcelCellValue[][]> {
+    async getCells(address: string): Promise<ExcelCellValue[][]> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
@@ -98,12 +98,12 @@ export class ExcelService {
         const { values, text, numberFormat, columnCount, rowCount, rowIndex} = response;
         const cellValues = [];
 
-        for (let i = rowIndex; i < rowCount; i++) {
+        for (let row = rowIndex; row < rowCount; row++) {
             const rowValues: ExcelCellValue[] = [];
-            for (let j = 0; j < columnCount; j++) {
-                const cellValue = this.isValueUnclear(numberFormat[i][j])
-                    ? text[i][j]
-                    : values[i][j];
+            for (let column = 0; column < columnCount; column++) {
+                const cellValue = this.isValueUnclear(numberFormat[row][column])
+                    ? text[row][column]
+                    : values[row][column];
                 rowValues.push(cellValue);
             }
             cellValues.push(rowValues);

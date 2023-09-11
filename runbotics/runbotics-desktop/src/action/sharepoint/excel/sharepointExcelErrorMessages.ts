@@ -14,7 +14,8 @@ export default class SharePointExcelErrorMessage {
 
     static getCellsIncorrectInput(): string {
         return `
-            Range of cells has to include start and end cell addresses separated by a colon (e.g. 'A1:C3').
+            Start cell addresses has to include a column letter and a row number (e.g. A1).
+            End cell addresses has to include a column letter and a row number (e.g. H5).
             ${this.getCheckInputTip()}
         `;
     }

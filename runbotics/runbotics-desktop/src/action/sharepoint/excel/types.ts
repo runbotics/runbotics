@@ -6,7 +6,7 @@ export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.getCell', SharepointGetExcelCellActionInput>
 | DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
-| DesktopRunRequest<'sharepointExcel.getRange', SharepointExcelGetRangeActionInput>
+| DesktopRunRequest<'sharepointExcel.getCells', SharepointExcelGetCellsActionInput>
 | DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
 
 export interface SharepointExcelOpenFileActionInput {
@@ -37,10 +37,11 @@ export type SharepointGetExcelCellActionInput = {
 };
 export type SharepointExcelGetCellActionOutput = any;
 
-export type SharepointExcelGetRangeActionInput = {
-    range: string;
+export type SharepointExcelGetCellsActionInput = {
+    startCell: string;
+    endCell: string;
 };
-export type SharepointExcelGetRangeActionOutput = any;
+export type SharepointExcelGetCellsActionOutput = any;
 
 export type SharepointExcelCloseSessionActionInput = any;
 
