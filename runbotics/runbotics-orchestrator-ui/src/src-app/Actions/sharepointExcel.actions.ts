@@ -76,10 +76,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.GET_RANGE]: {
-        id: SharepointExcelAction.GET_RANGE,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetRange.Label'),
-        script: SharepointExcelAction.GET_RANGE,
+    [SharepointExcelAction.GET_CELLS]: {
+        id: SharepointExcelAction.GET_CELLS,
+        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCells.Label'),
+        script: SharepointExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -96,12 +96,12 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             startCell: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.StartCell'),
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.StartCell'),
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS
                             },
                             endCell: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.EndCell'),
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell'),
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS
                             }
@@ -127,12 +127,12 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     startCell: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.StartCell.Info'),
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.StartCell.Info'),
                         },
                     },
                     endCell: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetRange.EndCell.Info'),
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell.Info'),
                         },
                     }
                 },

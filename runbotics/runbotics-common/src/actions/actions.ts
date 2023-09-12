@@ -118,7 +118,7 @@ export enum DesktopOfficeAction {
 
 export enum SharepointExcelAction {
 	GET_CELL = 'sharepointExcel.getCell',
-	GET_RANGE = 'sharepointExcel.getRange',
+	GET_CELLS = 'sharepointExcel.getCells',
 	SET_CELL = 'sharepointExcel.setCell',
 	UPDATE_RANGE = 'sharepointExcel.updateRange',
 	OPEN_FILE='sharepointExcel.openFile',
