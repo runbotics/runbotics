@@ -170,6 +170,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                             cell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell'),
                                 type: 'string',
+                                pattern: ActionRegex.EXCEL_CELL_ADDRESS
                             },
                             value: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),

@@ -28,7 +28,7 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    async openFile(input: SharePointSessionInput) {
+    public async openFile(input: SharePointSessionInput): Promise<WorkbookSessionInfo> {
         const url = '/createSession';
 
         this.session =
@@ -111,14 +111,14 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public setCell(address: string, value: string) {
+    async setCell(address: string, value: string) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],
         };
 
-        return this.microsoftGraphService.patch<Range>(
+        await this.microsoftGraphService.patch<Range>(
             this.createWorkbookUrl(url),
             newRange,
             this.getSessionHeader(),
@@ -126,7 +126,7 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    setRange(address: string, values: string | ExcelCellValue[][]) {
+    async setRange(address: string, values: string | ExcelCellValue[][]) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         if (!Array.isArray(values)) {
@@ -137,11 +137,17 @@ export class ExcelService {
             values,
         };
 
-        return this.microsoftGraphService.patch<Range>(
+        await this.microsoftGraphService.patch<Range>(
             this.createWorkbookUrl(url),
             newRange,
             this.getSessionHeader(),
         );
+    }
+
+    checkSession() {
+        if (!this.session) {
+            throw new Error('The "Open workbook" action was not used.')
+        }
     }
 
     private createWorkbookUrl(url: string) {

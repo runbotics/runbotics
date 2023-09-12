@@ -308,7 +308,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.GetCells.StartCell.Info": "Adres komórki początkowej (np. A1)",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell": "Komórka końcowa",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell.Info": "Adres komórki końcowej (np. H5)",
-    "Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label": "Ustaw wartość komórki",
+    "Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label": "Ustaw komórkę",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value": "Wartość",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell": "Komórka",
     "Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label": "Aktualizuj zakres komórek",
@@ -490,3 +490,4 @@
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Skopiowano zmienną",
     "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"
 }
+

@@ -4,7 +4,7 @@ import { DesktopRunRequest } from 'runbotics-sdk';
 export type FileActionRequest =
 | DesktopRunRequest<'sharepointExcel.setCell', SharepointSetExcelCellActionInput>
 | DesktopRunRequest<'sharepointExcel.getCell', SharepointGetExcelCellActionInput>
-| DesktopRunRequest<'sharepointExcel.closeSession', SharepointExcelCloseSessionActionInput>
+| DesktopRunRequest<'sharepointExcel.closeSession'>
 | DesktopRunRequest<'sharepointExcel.updateRange', SharepointExcelUpdateRangeActionInput>
 | DesktopRunRequest<'sharepointExcel.getCells', SharepointExcelGetCellsActionInput>
 | DesktopRunRequest<'sharepointExcel.openFile', SharepointExcelOpenFileActionInput>;
@@ -23,7 +23,6 @@ export type SharepointSetExcelCellActionInput = {
     value: string;
     cell: string;
 };
-export type SharepointExcelSetCellActionOutput = any;
 
 export type SharepointExcelUpdateRangeActionInput = {
     range: string;
@@ -41,7 +40,5 @@ export type SharepointExcelGetCellsActionInput = {
     endCell: string;
 };
 export type SharepointExcelGetCellsActionOutput = ExcelCellValue[][];
-
-export type SharepointExcelCloseSessionActionInput = any;
 
 export type SharepointExcelCloseSessionActionOutput = any;

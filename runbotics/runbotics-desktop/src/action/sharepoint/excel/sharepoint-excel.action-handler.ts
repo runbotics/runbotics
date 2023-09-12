@@ -15,7 +15,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async openFile(
         input: SharepointTypes.SharepointExcelOpenFileActionInput
     ): Promise<SharepointTypes.SharepointOpenActionOutput> {
-        return await this.excelService.openFile({
+        return this.excelService.openFile({
             platform: input.platform,
             sessionIdentifier: input.filePath,
             worksheetIdentifier: input.worksheetName,
@@ -24,9 +24,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
         });
     }
 
-    async closeSession(
-        input: SharepointTypes.SharepointExcelCloseSessionActionInput
-    ): Promise<SharepointTypes.SharepointExcelCloseSessionActionOutput> {
+    async closeSession(): Promise<SharepointTypes.SharepointExcelCloseSessionActionOutput> {
         return this.excelService.closeSession();
     }
 
@@ -66,8 +64,8 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
 
     async setCell(
         input: SharepointTypes.SharepointSetExcelCellActionInput
-    ): Promise<SharepointTypes.SharepointExcelSetCellActionOutput> {
-        this.excelService.setCell(input.cell, input.value);
+    ): Promise<void> {
+        await this.excelService.setCell(input.cell, input.value);
     }
 
     async updateRange(
@@ -77,6 +75,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     }
 
     async run(request: SharepointTypes.FileActionRequest) {
+        this.excelService.checkSession();
         switch (request.script) {
             case 'sharepointExcel.getCell':
                 return this.getCell(request.input);
@@ -87,7 +86,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             case 'sharepointExcel.updateRange':
                 return this.updateRange(request.input);
             case 'sharepointExcel.closeSession':
-                return this.closeSession(request.input);
+                return this.closeSession();
             case 'sharepointExcel.openFile':
                 return this.openFile(request.input);
             default:
