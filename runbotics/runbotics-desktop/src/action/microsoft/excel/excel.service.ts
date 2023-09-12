@@ -28,7 +28,7 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    public async openFile(input: SharePointSessionInput): Promise<WorkbookSessionInfo> {
+    async openFile(input: SharePointSessionInput): Promise<WorkbookSessionResponse> {
         const url = '/createSession';
 
         this.session =
@@ -110,7 +110,7 @@ export class ExcelService {
         return cellValues;
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
+    // https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=http
     async setCell(address: string, value: string) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
