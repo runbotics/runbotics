@@ -31,7 +31,7 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    async openFile(input: SessionInput): Promise<WorkbookSessionResponse> {
+    async openFile(input: SessionInput) {
         const url = '/createSession';
 
         this.session =
