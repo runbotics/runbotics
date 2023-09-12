@@ -175,7 +175,13 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             this.checkFileExist(imageFullPath);
             const imageBuffer = fs.readFileSync(imageFullPath);
 
-            worker = await createWorker({ langPath: '.\\trained_data' });
+            const newPath = path.resolve(__dirname, '..', '..', '..', '..', 'resources', 'app.asar.unpacked', 'node_modules');
+            
+            worker = await createWorker({ 
+                workerPath: './node_modules/tesseract.js/dist/worker.min.js',
+                langPath: './trained_data' ,
+                workerBlobURL: false
+            });
             await worker.loadLanguage(language);
             await worker.initialize(language);
             const { data: { text } } = await worker.recognize(imageBuffer);

@@ -87,11 +87,13 @@
             "dist/",
             "node_modules/",
             "package.json",
-            "driver"
+            "driver",
+            "trained_data"
         ],
         "extraFiles": [
             ".env",
-            "driver/"
+            "driver/",
+            "trained_data/"
         ],
         "linux": {
             "target": "deb"
@@ -155,6 +157,7 @@
         "driver",
         "start.sh",
         "cert",
-        "public"
+        "public",
+        "trained_data"
     ]
 }
