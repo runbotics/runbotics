@@ -13,7 +13,7 @@ import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
 import CsvActionHandler from '#action/csv';
 import GeneralActionHandler from '#action/general';
-import SharepointExcelActionHandler from '#action/sharepoint/excel';
+import { CloudExcelActionHandler } from '#action/microsoft/excel/automation';
 import SharepointFileActionHandler from '#action/sharepoint/file';
 import ApiRequestHandler from '#action/api-request';
 import ApplicationActionHandler from '#action/application';
@@ -61,7 +61,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
-        private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
+        private readonly sharepointExcelActionHandler: CloudExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
         private readonly desktopActionHandler: DesktopActionHandler

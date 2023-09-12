@@ -310,7 +310,7 @@
     "Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label": "Update range of cells",
     "Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Cell": "Specific cell",
     "Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Values": "Values [variable]",
-    "Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System": "System",
+    "Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Platform": "Platform",
     "Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Label": "Open workbook",
     "Process.Details.Modeler.Actions.SharepointExcel.OpenFileFromSite.Label": "Open file from site and create session",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath": "Site name",

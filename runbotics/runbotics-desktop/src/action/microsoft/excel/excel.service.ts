@@ -1,83 +1,87 @@
 import { Injectable } from '@nestjs/common';
-import { ONE_DRIVE, SHARE_POINT } from 'runbotics-common';
+import { MicrosoftPlatform } from 'runbotics-common';
 
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
+import { SharePointService } from '../share-point';
 import {
-    Drive,
-    DriveItem,
     ExcelCellValue,
-    Platform,
-    Session,
-    SessionIdentifier,
-    SessionInput,
-    SharePointSessionInput,
-    Site, 
+    ExcelSession,
+    ExcelSessionInfo,
+    SharePointSessionInfo,
     WorkbookCellCoordinates,
     Range,
     WorkbookRangeUpdateBody,
-    WorkbookSessionResponse,
+    WorkbookSessionInfo,
     Worksheet,
-    WorksheetIdentifier,
+    SharePointFileInfo,
+    OneDriveSessionInfo,
+    OneDriveFileInfo,
+    FileInfo,
 } from './excel.types';
+import { OneDriveService } from '../one-drive';
+import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
 
 @Injectable()
 export class ExcelService {
     private readonly logger = new RunboticsLogger(ExcelService.name);
 
-    private session: Session = null;
+    constructor(
+        private readonly microsoftGraphService: MicrosoftGraphService,
+        private readonly sharePointService: SharePointService,
+        private readonly oneDriveService: OneDriveService,
+    ) {}
 
-    constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=javascript
+     */
+    async createSession(fileInfo: ExcelSessionInfo): Promise<ExcelSession> {
+        const session = fileInfo.platform === MicrosoftPlatform.SharePoint
+            ? await this.gatherSharePointFileInfo(fileInfo)
+            : await this.gatherOneDriveFileInfo(fileInfo);
 
-    // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    async openFile(input: SessionInput) {
-        const url = '/createSession';
-
-        this.session =
-            input.platform === SHARE_POINT
-                ? await this.createSharePointSession(input)
-                : this.createOneDriveSession(input.platform, input.sessionIdentifier, input.worksheetIdentifier);
-
-        if (!input.worksheetIdentifier) {
-            this.session.worksheetIdentifier = await this.getDefaultWorksheetIdentifier();
-        }
-
-        const workbookSessionResponse = await this.microsoftGraphService.post<WorkbookSessionResponse>(
-            this.createWorkbookUrl(url),
+        const workbookSessionInfo = await this.microsoftGraphService.post<WorkbookSessionInfo>(
+            this.createWorkbookUrl(session, '/createSession'),
             {
                 persistChanges: true,
             }
         );
 
-        this.session = {
-            ...this.session,
-            workbookSessionInfo: workbookSessionResponse,
-        };
+        const worksheet = await this.getActiveWorksheet({
+            ...session,
+            worksheetName: fileInfo.worksheetName
+        });
 
-        return workbookSessionResponse;
+        return {
+            ...session,
+            worksheetName: worksheet.name,
+            workbookSessionId: workbookSessionInfo.id,
+        };
     }
 
-    //https://learn.microsoft.com/en-us/graph/api/workbook-closesession?view=graph-rest-1.0&tabs=http
-    async closeSession() {
-        const url = '/closeSession';
-
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/workbook-closesession?view=graph-rest-1.0&tabs=javascript
+     */
+    async closeSession(session: ExcelSession) {
         await this.microsoftGraphService.post(
-            this.createWorkbookUrl(url),
+            this.createWorkbookUrl(session, '/closeSession'),
             {},
-            this.getSessionHeader(),
+            this.getSessionHeader(session),
         );
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    async getCell(cellCoordinates: WorkbookCellCoordinates) {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
+     */
+    async getCell(session: ExcelSession, cellCoordinates: WorkbookCellCoordinates) {
+        const url = `/worksheets/${session.worksheetName}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
 
         const response = await this.microsoftGraphService.get<Range>(
-            this.createWorkbookUrl(url),
-            this.getSessionHeader(),
+            this.createWorkbookUrl(session, url),
+            this.getSessionHeader(session),
         );
 
         const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0]) 
@@ -87,16 +91,18 @@ export class ExcelService {
         return cellValue;
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=http
-    async getCells(address: string): Promise<ExcelCellValue[][]> {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=javascript
+     */
+    async getCells(session: ExcelSession, address: string): Promise<ExcelCellValue[][]> {
+        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         const response = await this.microsoftGraphService.get<Range>(
-            this.createWorkbookUrl(url),
-            this.getSessionHeader(),
+            this.createWorkbookUrl(session, url),
+            this.getSessionHeader(session),
         );
 
-        const { values, text, numberFormat, columnCount, rowCount, rowIndex} = response;
+        const { values, text, numberFormat, columnCount, rowCount, rowIndex } = response;
         const cellValues = [];
 
         for (let row = rowIndex; row < rowCount; row++) {
@@ -113,24 +119,29 @@ export class ExcelService {
         return cellValues;
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    setCell(address: string, value: string) {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
+     */
+    setCell(session: ExcelSession, address: string, value: string) {
+        const url = `/worksheets/${session.worksheetName}/range(address='${address}:${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],
         };
 
         return this.microsoftGraphService.patch<Range>(
-            this.createWorkbookUrl(url),
+            this.createWorkbookUrl(session, url),
             newRange,
-            this.getSessionHeader(),
+            this.getSessionHeader(session),
         );
     }
 
-    // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    setRange(address: string, values: string | ExcelCellValue[][]) {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
+     */
+    setRange(session: ExcelSession, address: string, values: string | ExcelCellValue[][]) {
+        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         if (!Array.isArray(values)) {
             values = JSON.parse(values) as ExcelCellValue[][];
@@ -141,20 +152,47 @@ export class ExcelService {
         };
 
         return this.microsoftGraphService.patch<Range>(
-            this.createWorkbookUrl(url),
+            this.createWorkbookUrl(session, url),
             newRange,
-            this.getSessionHeader(),
+            this.getSessionHeader(session),
         );
     }
 
-    private createWorkbookUrl(url: string) {
-        switch (this.session.platform) {
-            case SHARE_POINT:
-                return `/sites/${this.session.siteId}/drives/${this.session.driveId}/items/${this.session.fileId}/workbook`.concat(
-                    url
-                );
-            case ONE_DRIVE:
-                return `/me/drive/root:/${this.session.sessionIdentifier}:/workbook`.concat(url);
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/workbook-list-worksheets?view=graph-rest-1.0&tabs=javascript
+     */
+    getWorksheets(session: FileInfo) {
+        return this.microsoftGraphService.get<CollectionResponse<Worksheet>>(
+            this.createWorkbookUrl(session, '/worksheets'),
+            this.getSessionHeader(session),
+        );
+    }
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-get?view=graph-rest-1.0&tabs=javascript
+     */
+    getWorksheet(session: ExcelSession) {
+        return this.microsoftGraphService
+            .get<Worksheet>(
+                this.createWorkbookUrl(session, `/worksheets/${session.worksheetName}`),
+                this.getSessionHeader(session),
+            );
+    }
+
+    private getActiveWorksheet(session: ExcelSession | FileInfo) {
+        if (hasWorksheetName(session)) {
+            return this.getWorksheet(session);
+        }
+        return this.getWorksheets(session)
+            .then(response => response.value[0]);
+    }
+
+    private createWorkbookUrl(session: ExcelSession | FileInfo, url: string) {
+        switch (session.platform) {
+            case MicrosoftPlatform.SharePoint:
+                return `/sites/${session.siteId}/drives/${session.driveId}/items/${session.fileId}/workbook${url}`;
+            case MicrosoftPlatform.OneDrive:
+                return `/me/drive/items/${session.fileId}/workbook${url}`;
             default:
                 throw new Error('Invalid platform');
         }
@@ -169,97 +207,58 @@ export class ExcelService {
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
     }
 
-    // TODO: move to sharepoint service
-    private async getSiteIdByName(name: string) {
-        const url = `/sites?search=${name}`;
+    private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
+        const siteWithDrives = await this.sharePointService.getSiteWithDrives(sessionInfo.siteName);
 
-        return this.microsoftGraphService.get<CollectionResponse<Site>>(url)
-            .then(response => response.value[0]);
-    }
-
-    // TODO: move to sharepoint service
-    private async getDriveIdBySiteAndListName(siteId: string, listName: string) {
-        const url = `/sites/${siteId}/drives/`;
-
-        const data = (await this.microsoftGraphService.get<CollectionResponse<Drive>>(url)).value;
-
-        return data.filter(drive => drive.name === listName)[0].id;
-    }
-
-    // TODO: move to sharepoint service
-    private async getItemId(siteId: string, driveId: string, path: string) {
-        const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
-
-        const data: DriveItem = await this.microsoftGraphService.get(url);
-
-        return data.id;
-    }
-
-    private async createSharePointSession(input: SharePointSessionInput): Promise<Session> {
-        const site = await this.getSiteIdByName(input.siteRelativePath);
-        if (site === undefined) {
-            throw new Error(`Site ${input.siteRelativePath} not found`);
+        if (!siteWithDrives) {
+            throw new Error(`Site ${sessionInfo.siteName} not found`);
         }
 
-        const siteId = site.id;
+        const drive = siteWithDrives.drives
+            .find(drive => drive.name === sessionInfo.listName);
+    
+        if (!drive) {
+            throw new Error(`Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} list`);
+        }
 
-        const listName = await this.getSharePointListName(siteId, input.list);
+        const file = await this.sharePointService.getDriveItem(siteWithDrives.id, drive.id, sessionInfo.filePath);
 
-        const driveId = await this.getDriveIdBySiteAndListName(siteId, listName);
-
-        const fileId = await this.getItemId(siteId, driveId, input.sessionIdentifier);
+        if (!file) {
+            throw new Error('Provided file path does not exist');
+        }
 
         return {
-            platform: input.platform,
-            sessionIdentifier: input.sessionIdentifier,
-            workbookSessionInfo: null,
-            worksheetIdentifier: input.worksheetIdentifier,
-            siteId,
-            driveId,
-            fileId,
+            platform: MicrosoftPlatform.SharePoint,
+            siteId: siteWithDrives.id,
+            driveId: drive.id,
+            fileId: file.id,
         };
     }
 
-    private createOneDriveSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier
-    ): Session {
+    private async gatherOneDriveFileInfo(sessionInfo: OneDriveSessionInfo): Promise<OneDriveFileInfo> {
+        const file = await this.oneDriveService.getItemByPath(sessionInfo.filePath);
+
+        if (!file) {
+            throw new Error('Provided file path does not exist');
+        }
+
         return {
-            platform,
-            sessionIdentifier,
-            workbookSessionInfo: null,
-            worksheetIdentifier,
+            platform: MicrosoftPlatform.OneDrive,
+            fileId: file.id,
         };
     }
 
-    private async getDefaultWorksheetIdentifier() {
-        const url = this.createWorkbookUrl('/worksheets');
-
-        const { name } = (await this.microsoftGraphService.get<CollectionResponse<Worksheet>>(url)).value[0];
-
-        return name;
-    }
-
-    private async getSharePointListName(siteId: string, listName: string) {
-        const url = `/sites/${siteId}/drive`;
-
-        if (!listName) {
-            const { name } = await this.microsoftGraphService.get<Drive>(url);
-            return name;
-        }
-        return listName;
-    }
-
-    private isValueUnclear(numberFormat: string): boolean {
+    private isValueUnclear(numberFormat: string) {
         return numberFormat.includes('@') || numberFormat.includes('%');
     }
 
-    private getSessionHeader() {
-        return {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        };
+    private getSessionHeader(session: ExcelSession | FileInfo) {
+        if (hasWorkbookSessionId(session)) {
+            return {
+                headers: {
+                    'workbook-session-id': session.workbookSessionId,
+                },
+            };
+        }
     }
 }

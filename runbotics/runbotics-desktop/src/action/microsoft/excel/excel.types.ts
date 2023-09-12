@@ -1,36 +1,50 @@
-export type SessionIdentifier = string;
-export type WorksheetIdentifier = number | string;
-export type Platform = 'SharePoint' | 'OneDrive';
-export type ExcelCellValue = string | number | boolean;
+import { MicrosoftPlatform } from 'runbotics-common';
 
-export interface Session {
-    platform: Platform;
-    sessionIdentifier: SessionIdentifier;
-    worksheetIdentifier: WorksheetIdentifier;
-    workbookSessionInfo: WorkbookSessionResponse;
-    siteId?: string;
-    driveId?: string;
-    fileId?: string;
+import { Drive, DriveItem } from '../common.types';
+import { Site } from '../share-point/share-point.types';
+
+// Session
+export interface OneDriveSession {
+    platform: MicrosoftPlatform.OneDrive;
+    fileId: DriveItem['id'];
+    worksheetName: Worksheet['name'];
+    workbookSessionId?: WorkbookSessionInfo['id'];
 }
 
-export interface SessionInput {
-    platform: Platform,
-    sessionIdentifier: SessionIdentifier,
-    worksheetIdentifier: WorksheetIdentifier,
-    siteRelativePath?: string,
-    list?: string
+export interface SharePointSession extends Omit<OneDriveSession, 'platform'> {
+    platform: MicrosoftPlatform.SharePoint;
+    siteId: Site['id'];
+    driveId: Drive['id'];
 }
 
-export interface SharePointSessionInput {
-    platform: Platform,
-    sessionIdentifier: SessionIdentifier,
-    worksheetIdentifier: WorksheetIdentifier,
-    siteRelativePath?: string,
-    list?: string
+export type ExcelSession = SharePointSession | OneDriveSession;
+
+// Session Info
+export interface OneDriveSessionInfo {
+    platform: MicrosoftPlatform.OneDrive;
+    filePath: string;
+    worksheetName?: string;
 }
 
-export interface WorkbookSessionResponse {
-    '@odata.context': string;
+export interface SharePointSessionInfo extends Omit<OneDriveSessionInfo, 'platform'> {
+    platform: MicrosoftPlatform.SharePoint,
+    siteName: string,
+    listName: string
+}
+
+export type ExcelSessionInfo = OneDriveSessionInfo | SharePointSessionInfo;
+
+// File Info
+export type SharePointFileInfo = Omit<SharePointSession, 'worksheetName' | 'workbookSessionId'>;
+export type OneDriveFileInfo = Omit<OneDriveSession, 'worksheetName' | 'workbookSessionId'>;
+export type FileInfo = SharePointFileInfo | OneDriveFileInfo;
+
+// Common
+
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/workbooksessioninfo?view=graph-rest-1.0
+ */
+export interface WorkbookSessionInfo {
     id: string;
     persistChanges: boolean;
 }
@@ -40,114 +54,26 @@ export interface WorkbookCellCoordinates {
     column: string;
 }
 
-// TODO: move to sharepoint service types
-//https://graph.microsoft.com/v1.0/$metadata#sites/$entity
-export interface Site {
-    id?: string;
-    displayName?: string;
-    /* inherited from baseItem */
-    name?: string;
-    createdDateTime?: string;
-    lastModifiedDateTime?: string;
-    webUrl?: string;
-}
-
-// TODO: move to one drive service types
-//https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
-export interface Drive {
-    createdBy?: unknown;
-    createdDateTime?: string;
-    description?: string;
-    driveType?: 'personal' | 'business' | 'documentLibrary';
-    following?: DriveItem[];
-    id?: string;
-    items?: DriveItem[];
-    lastModifiedBy?: unknown;
-    lastModifiedDateTime?: string;
-    name?: string;
-    owner?: unknown;
-    quota?: unknown;
-    root?: unknown;
-    sharepointIds?: unknown;
-    special?: unknown;
-    system?: unknown;
-    webUrl?: string;
-}
-
-// TODO: move to one drive service types
-//https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
-export interface DriveItem {
-    audio?: unknown;
-    bundle?: unknown;
-    content?: unknown;
-    cTag?: string;
-    deleted?: unknown;
-    description?: string;
-    file?: unknown;
-    fileSystemInfo?: unknown;
-    folder?: unknown;
-    image?: unknown;
-    location?: unknown;
-    malware?: unknown;
-    package?: unknown;
-    pendingOperations?: unknown;
-    photo?: unknown;
-    publication?: unknown;
-    remoteItem?: unknown;
-    root?: unknown;
-    searchResult?: unknown;
-    shared?: unknown;
-    sharepointIds?: unknown;
-    size?: 1024;
-    specialFolder?: unknown;
-    video?: unknown;
-    webDavUrl?: string;
-    /*relationships */
-    activities?: unknown[];
-    analytics?: unknown;
-    children?: unknown[];
-    createdByUser?: unknown;
-    lastModifiedByUser?: unknown;
-    permissions?: unknown[];
-    subscriptions?: unknown[];
-    thumbnails?: unknown[];
-    versions?: unknown[];
-
-    /* inherited from baseItem */
-    createdBy?: unknown;
-    createdDateTime?: string;
-    eTag?: string;
-    id?: string;
-    lastModifiedBy?: unknown;
-    lastModifiedDateTime?: string;
-    name?: string;
-    parentReference?: unknown;
-    webUrl?: string;
-
-    /* instance annotations */
-    '@microsoft.graph.conflictBehavior'?: string;
-    '@microsoft.graph.downloadUrl'?: string;
-    '@microsoft.graph.sourceUrl'?: string;
-}
+export type ExcelCellValue = string | number | boolean;
 
 export interface Range {
-    address?: string;
-    addressLocal?: string;
-    cellCount?: number;
-    columnCount?: number;
-    columnHidden?: boolean;
-    columnIndex?: number;
+    address: string;
+    addressLocal: string;
+    columnCount: number;
+    cellCount: number;
+    columnHidden: boolean;
+    rowHidden: boolean;
+    numberFormat: string[][];
+    columnIndex: number;
+    text: string[][];
     formulas?: string[][];
     formulasLocal?: string[][];
     formulasR1C1?: string[][];
-    hidden?: boolean;
-    numberFormat?: string[][];
-    rowCount?: number;
-    rowHidden?: boolean;
-    rowIndex?: number;
-    text?: string[][];
-    valueTypes?: string[][];
-    values?: ExcelCellValue[][];
+    hidden: boolean;
+    rowCount: number;
+    rowIndex: number;
+    valueTypes: string[][];
+    values: ExcelCellValue[][];
 }
 
 export interface WorkbookRangeUpdateBody {
@@ -161,7 +87,6 @@ export interface WorkbookRangeUpdateBody {
 }
 
 export interface Worksheet {
-    '@odata.id': string;
     id: string;
     name: string;
     position: number;

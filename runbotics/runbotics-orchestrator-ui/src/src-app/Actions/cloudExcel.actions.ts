@@ -1,17 +1,15 @@
-import { SharepointExcelAction, ActionRegex } from 'runbotics-common';
+import { CloudExcelAction, ActionRegex, MicrosoftPlatform } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 // eslint-disable-next-line max-lines-per-function
-const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
-    [SharepointExcelAction.GET_CELL]: {
-        id: SharepointExcelAction.GET_CELL,
+const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
+    [CloudExcelAction.GET_CELL]: {
+        id: CloudExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCell.Label'),
-        script: SharepointExcelAction.GET_CELL,
+        script: CloudExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -76,10 +74,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.GET_CELLS]: {
-        id: SharepointExcelAction.GET_CELLS,
+    [CloudExcelAction.GET_CELLS]: {
+        id: CloudExcelAction.GET_CELLS,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCells.Label'),
-        script: SharepointExcelAction.GET_CELLS,
+        script: CloudExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -154,10 +152,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.SET_CELL]: {
-        id: SharepointExcelAction.SET_CELL,
+    [CloudExcelAction.SET_CELL]: {
+        id: CloudExcelAction.SET_CELL,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label'),
-        script: SharepointExcelAction.SET_CELL,
+        script: CloudExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -220,10 +218,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.UPDATE_RANGE]: {
-        id: SharepointExcelAction.UPDATE_RANGE,
+    [CloudExcelAction.UPDATE_RANGE]: {
+        id: CloudExcelAction.UPDATE_RANGE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label'),
-        script: SharepointExcelAction.UPDATE_RANGE,
+        script: CloudExcelAction.UPDATE_RANGE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -288,23 +286,23 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.OPEN_FILE]: {
-        id: SharepointExcelAction.OPEN_FILE,
+    [CloudExcelAction.OPEN_FILE]: {
+        id: CloudExcelAction.OPEN_FILE,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Label'),
-        script: SharepointExcelAction.OPEN_FILE,
+        script: CloudExcelAction.OPEN_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             platform: {
-                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.System'),
+                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Platform'),
                                 type: 'string',
-                                enum: ['OneDrive', 'SharePoint'],
+                                enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
                                 default: 'OneDrive',
                             },
                         },
@@ -314,7 +312,7 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                                     {
                                         properties: {
                                             platform: {
-                                                enum: ['SharePoint'],
+                                                enum: [MicrosoftPlatform.SharePoint],
                                             },
                                             siteName: {
                                                 title: translate(
@@ -393,10 +391,10 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [SharepointExcelAction.CLOSE_SESSION]: {
-        id: SharepointExcelAction.CLOSE_SESSION,
+    [CloudExcelAction.CLOSE_SESSION]: {
+        id: CloudExcelAction.CLOSE_SESSION,
         label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
-        script: SharepointExcelAction.CLOSE_SESSION,
+        script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -444,4 +442,4 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
 });
 
-export default getSharepointExcelActions;
+export default getCloudExcelActions;
