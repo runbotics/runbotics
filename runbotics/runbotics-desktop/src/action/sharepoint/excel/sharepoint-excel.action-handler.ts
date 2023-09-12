@@ -75,7 +75,10 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     }
 
     async run(request: SharepointTypes.FileActionRequest) {
-        this.excelService.checkSession();
+        if (request.script !== 'sharepointExcel.openFile') {
+            this.excelService.checkSession();
+        }
+        
         switch (request.script) {
             case 'sharepointExcel.getCell':
                 return this.getCell(request.input);
