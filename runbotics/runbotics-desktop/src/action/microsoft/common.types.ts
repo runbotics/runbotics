@@ -1,4 +1,6 @@
-//https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
+ */
 export interface Drive {
     createdDateTime: string;
     description: string;
@@ -19,7 +21,9 @@ export interface Drive {
     system?: unknown;
 }
 
-//https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
+ */
 export interface DriveItem {
     audio?: unknown;
     bundle?: unknown;

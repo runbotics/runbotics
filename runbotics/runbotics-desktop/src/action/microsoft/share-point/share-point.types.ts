@@ -1,6 +1,8 @@
 import { Drive } from '../common.types';
 
-//https://graph.microsoft.com/v1.0/$metadata#sites/$entity
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/site?view=graph-rest-1.0
+ */
 export interface Site {
     id: string;
     displayName: string;
