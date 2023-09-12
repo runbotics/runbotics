@@ -167,14 +167,14 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            value: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),
-                                type: 'string',
-                            },
                             cell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell'),
                                 type: 'string',
                             },
+                            value: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),
+                                type: 'string',
+                            },      
                         },
                         required: ['value', 'cell'],
                     },
@@ -182,11 +182,18 @@ const getSharepointExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    cell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
+                        },
+                    }
+                },
             },
             formData: {
                 input: {
-                    value: undefined,
                     cell: undefined,
+                    value: undefined,
                 },
             },
         },

@@ -111,8 +111,8 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    setCell(address: string, value: string) {
-        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
+    public setCell(address: string, value: string) {
+        const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],

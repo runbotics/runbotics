@@ -67,7 +67,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async setCell(
         input: SharepointTypes.SharepointSetExcelCellActionInput
     ): Promise<SharepointTypes.SharepointExcelSetCellActionOutput> {
-        return this.excelService.setCell(input.cell, input.value);
+        this.excelService.setCell(input.cell, input.value);
     }
 
     async updateRange(
