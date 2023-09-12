@@ -12,7 +12,7 @@ const Wrapper = styled(Card)<TileProps>`
     box-sizing: border-box;
     height: 100%;
     min-height: 13.125rem;
-    isolation: isolate;
+    // isolation: isolate;
 
     && {
         box-shadow: 0 0.25rem 0.5rem 0 ${alpha('#8d8c8c', 0.4)};

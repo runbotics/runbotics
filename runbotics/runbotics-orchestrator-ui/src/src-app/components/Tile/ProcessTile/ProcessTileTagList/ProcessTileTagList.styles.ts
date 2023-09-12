@@ -6,20 +6,13 @@ export const StyledTypography = styled(Typography)(({ theme }) => `
     && {
         color: ${theme.palette.grey[500]};
         text-transform: lowercase;
-        position: relative;
-        top: 7px;
         user-select: none;
-
-        &:hover {
-            cursor: pointer;
-        }
+        padding-left: 8px;
     }
 `);
 
 export const StyledExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean; }>`
     && {
-        position: relative;
-        top: 10px;
         color: ${props => props.theme.palette.grey[500]};
         transform: rotate(${props => props.$isExpanded ? '-180deg' : '0'});
         transition: 0.5s;
@@ -30,8 +23,9 @@ export const Container = styled.div`
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    top: -8px;
-    height: 20px;
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
 `;
 
 export const TagBox = styled.div<{ $isExpanded: boolean; }>`
@@ -44,43 +38,46 @@ export const TagBox = styled.div<{ $isExpanded: boolean; }>`
     padding: 0 10px 0 65px;
     gap: 8px;
     margin: 0;
-    z-index: 3;
     overflow: hidden;
-    background-color: ${props => props.theme.palette.background.paper};
-    transition: 0.4s;
+    background-color: ${props => props.$isExpanded ? props.theme.palette.background.paper : 'transparent'};
+    transition: 0.3s;
 `;
 
-export const DividerBox = styled.div`
+export const DividerBox = styled.div<{ $isExpanded: boolean; }>`
+    margin-top: 3px;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     width: 100%;
     height: 10px;
-    z-index: 3;
-    background-color: ${props => props.theme.palette.background.paper};
+    background-color: ${props => props.$isExpanded ? props.theme.palette.background.paper : 'transparent'};
 `;
 
-export const DividerAction = styled.div`
+export const DividerAction = styled.div(({ theme }) => `
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
+    height: 14px;
+    width: 70px;
+    border-radius: 10px;
+    transition: 0.3s;
 
     &:hover {
         cursor: pointer;
+        background-color: ${theme.palette.grey[300]};
     }
-`;
+`);
 
-export const DividerLine = styled.div`
+export const DividerLine = styled.div(({ theme }) => `
     width: 75%;
     height: 1px;
     margin-right: 5px;
-    background-color: ${props => props.theme.palette.grey[300]};
-`;
+    background-color: ${theme.palette.grey[300]};
+`);
 
-export const StaticLine = styled.div`
+export const StaticLine = styled.div(({ theme }) => `
     width: 85%;
     height: 1px;
     margin-right: 5px;
-    background-color: ${props => props.theme.palette.grey[300]}
-`;
+    background-color: ${theme.palette.grey[300]};
+`);
