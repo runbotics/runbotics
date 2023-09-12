@@ -2,11 +2,12 @@ export type SessionIdentifier = string;
 export type WorksheetIdentifier = number | string;
 export type Platform = 'SharePoint' | 'OneDrive';
 export type ExcelCellValue = string | number | boolean;
+
 export interface Session {
     platform: Platform;
     sessionIdentifier: SessionIdentifier;
     worksheetIdentifier: WorksheetIdentifier;
-    workbookSessionInfo: WorkbookSessionInfo;
+    workbookSessionInfo: WorkbookSessionResponse;
     siteId?: string;
     driveId?: string;
     fileId?: string;
@@ -28,7 +29,8 @@ export interface SharePointSessionInput {
     list?: string
 }
 
-export interface WorkbookSessionInfo {
+export interface WorkbookSessionResponse {
+    '@odata.context': string;
     id: string;
     persistChanges: boolean;
 }
@@ -38,6 +40,7 @@ export interface WorkbookCellCoordinates {
     column: string;
 }
 
+// TODO: move to sharepoint service types
 //https://graph.microsoft.com/v1.0/$metadata#sites/$entity
 export interface Site {
     id?: string;
@@ -48,6 +51,8 @@ export interface Site {
     lastModifiedDateTime?: string;
     webUrl?: string;
 }
+
+// TODO: move to one drive service types
 //https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
 export interface Drive {
     createdBy?: unknown;
@@ -68,6 +73,8 @@ export interface Drive {
     system?: unknown;
     webUrl?: string;
 }
+
+// TODO: move to one drive service types
 //https://learn.microsoft.com/en-us/graph/api/resources/driveitem?view=graph-rest-1.0
 export interface DriveItem {
     audio?: unknown;
@@ -123,7 +130,7 @@ export interface DriveItem {
     '@microsoft.graph.sourceUrl'?: string;
 }
 
-export interface WorkbookRange {
+export interface Range {
     address?: string;
     addressLocal?: string;
     cellCount?: number;
@@ -153,16 +160,8 @@ export interface WorkbookRangeUpdateBody {
     values?: ExcelCellValue[][];
 }
 
-export interface WorkbookCell {
-    value?: ExcelCellValue;
-    text?: string;
-    numberFormat?: string;
-    address?: string;
-    formula?: string[];
-    valueType?: string[];
-}
-
 export interface Worksheet {
+    '@odata.id': string;
     id: string;
     name: string;
     position: number;

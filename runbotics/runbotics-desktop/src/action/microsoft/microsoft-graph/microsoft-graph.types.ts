@@ -42,3 +42,8 @@ export interface RequestOptions {
      */
     count?: boolean;
 }
+
+export interface CollectionResponse<T> {
+    '@odata.context': string;
+    value: T[];
+}
