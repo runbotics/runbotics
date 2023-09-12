@@ -20,7 +20,7 @@ export interface SharepointExcelOpenFileActionInput {
 export type SharepointOpenActionOutput = any;
 
 export type SharepointSetExcelCellActionInput = {
-    content: string;
+    value: string;
     cell: string;
 };
 export type SharepointExcelSetCellActionOutput = any;

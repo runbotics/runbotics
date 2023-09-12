@@ -19,7 +19,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
             platform: input.platform,
             sessionIdentifier: input.filePath,
             worksheetIdentifier: input.worksheetName,
-            siteRelativePath: input.siteName,
+            site: input.siteName,
             list: input.listName,
         });
     }
@@ -67,7 +67,7 @@ export default class SharepointExcelActionHandler extends StatelessActionHandler
     async setCell(
         input: SharepointTypes.SharepointSetExcelCellActionInput
     ): Promise<SharepointTypes.SharepointExcelSetCellActionOutput> {
-        return this.excelService.setCell(input.cell, input.content);
+        return this.excelService.setCell(input.cell, input.value);
     }
 
     async updateRange(

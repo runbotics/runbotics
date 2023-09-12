@@ -3,30 +3,22 @@ export type WorksheetIdentifier = number | string;
 export type Platform = 'SharePoint' | 'OneDrive';
 export type ExcelCellValue = string | number | boolean;
 
-export interface Session {
+export interface OneDriveSessionInput {
     platform: Platform;
     sessionIdentifier: SessionIdentifier;
     worksheetIdentifier: WorksheetIdentifier;
+}
+
+export interface SharePointSessionInput extends OneDriveSessionInput {
+    site?: string,
+    list?: string
+}
+
+export interface Session extends OneDriveSessionInput {
     workbookSessionInfo: WorkbookSessionResponse;
     siteId?: string;
     driveId?: string;
     fileId?: string;
-}
-
-export interface SessionInput {
-    platform: Platform,
-    sessionIdentifier: SessionIdentifier,
-    worksheetIdentifier: WorksheetIdentifier,
-    siteRelativePath?: string,
-    list?: string
-}
-
-export interface SharePointSessionInput {
-    platform: Platform,
-    sessionIdentifier: SessionIdentifier,
-    worksheetIdentifier: WorksheetIdentifier,
-    siteRelativePath?: string,
-    list?: string
 }
 
 export interface WorkbookSessionResponse {

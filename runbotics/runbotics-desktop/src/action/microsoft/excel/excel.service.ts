@@ -8,10 +8,8 @@ import {
     Drive,
     DriveItem,
     ExcelCellValue,
-    Platform,
     Session,
-    SessionIdentifier,
-    SessionInput,
+    OneDriveSessionInput,
     SharePointSessionInput,
     Site, 
     WorkbookCellCoordinates,
@@ -19,7 +17,6 @@ import {
     WorkbookRangeUpdateBody,
     WorkbookSessionResponse,
     Worksheet,
-    WorksheetIdentifier,
 } from './excel.types';
 
 @Injectable()
@@ -31,13 +28,13 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    async openFile(input: SessionInput) {
+    async openFile(input: SharePointSessionInput) {
         const url = '/createSession';
 
         this.session =
             input.platform === SHARE_POINT
                 ? await this.createSharePointSession(input)
-                : this.createOneDriveSession(input.platform, input.sessionIdentifier, input.worksheetIdentifier);
+                : this.createOneDriveSession(input);
 
         if (!input.worksheetIdentifier) {
             this.session.worksheetIdentifier = await this.getDefaultWorksheetIdentifier();
@@ -196,9 +193,9 @@ export class ExcelService {
     }
 
     private async createSharePointSession(input: SharePointSessionInput): Promise<Session> {
-        const site = await this.getSiteIdByName(input.siteRelativePath);
+        const site = await this.getSiteIdByName(input.site);
         if (site === undefined) {
-            throw new Error(`Site ${input.siteRelativePath} not found`);
+            throw new Error(`Site ${input.site} not found`);
         }
 
         const siteId = site.id;
@@ -221,15 +218,13 @@ export class ExcelService {
     }
 
     private createOneDriveSession(
-        platform: Platform,
-        sessionIdentifier: SessionIdentifier,
-        worksheetIdentifier: WorksheetIdentifier
+        input: OneDriveSessionInput
     ): Session {
         return {
-            platform,
-            sessionIdentifier,
+            platform: input.platform,
+            sessionIdentifier: input.sessionIdentifier,
             workbookSessionInfo: null,
-            worksheetIdentifier,
+            worksheetIdentifier: input.worksheetIdentifier,
         };
     }
 
