@@ -9,8 +9,9 @@ import {
     DriveItem,
     ExcelCellValue,
     Session,
-    OneDriveSessionInput,
-    SharePointSessionInput,
+    BaseSession,
+    SharePointSession,
+    SessionInput,
     Site, 
     WorkbookCellCoordinates,
     Range,
@@ -28,7 +29,7 @@ export class ExcelService {
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    async openFile(input: SharePointSessionInput): Promise<WorkbookSessionResponse> {
+    async openFile(input: SessionInput) {
         const url = '/createSession';
 
         this.session =
@@ -198,7 +199,7 @@ export class ExcelService {
         return data.id;
     }
 
-    private async createSharePointSession(input: SharePointSessionInput): Promise<Session> {
+    private async createSharePointSession(input: SharePointSession): Promise<Session> {
         const site = await this.getSiteIdByName(input.site);
         if (site === undefined) {
             throw new Error(`Site ${input.site} not found`);
@@ -224,7 +225,7 @@ export class ExcelService {
     }
 
     private createOneDriveSession(
-        input: OneDriveSessionInput
+        input: BaseSession
     ): Session {
         return {
             platform: input.platform,
