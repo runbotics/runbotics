@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { ONE_DRIVE, SHARE_POINT } from 'runbotics-common';
+
 import { RunboticsLogger } from '#logger';
 
-import { MicrosoftGraphService } from '../microsoft-graph';
+import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import {
     Drive,
     DriveItem,
@@ -13,25 +15,23 @@ import {
     SharePointSessionInput,
     Site, 
     WorkbookCellCoordinates,
-    WorkbookRange,
+    Range,
     WorkbookRangeUpdateBody,
-    WorkbookSessionInfo,
+    WorkbookSessionResponse,
     Worksheet,
     WorksheetIdentifier,
 } from './excel.types';
-
-import { ONE_DRIVE, SHARE_POINT } from 'runbotics-common';
 
 @Injectable()
 export class ExcelService {
     private readonly logger = new RunboticsLogger(ExcelService.name);
 
-    session: Session = null;
+    private session: Session = null;
 
     constructor(private readonly microsoftGraphService: MicrosoftGraphService) {}
 
     // https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=http
-    public async openFile(input: SessionInput): Promise<WorkbookSessionInfo> {
+    async openFile(input: SessionInput): Promise<WorkbookSessionResponse> {
         const url = '/createSession';
 
         this.session =
@@ -43,7 +43,7 @@ export class ExcelService {
             this.session.worksheetIdentifier = await this.getDefaultWorksheetIdentifier();
         }
 
-        const workbookSessionInfo: WorkbookSessionInfo = await this.microsoftGraphService.post(
+        const workbookSessionResponse = await this.microsoftGraphService.post<WorkbookSessionResponse>(
             this.createWorkbookUrl(url),
             {
                 persistChanges: true,
@@ -52,36 +52,33 @@ export class ExcelService {
 
         this.session = {
             ...this.session,
-            workbookSessionInfo,
+            workbookSessionInfo: workbookSessionResponse,
         };
 
-        return workbookSessionInfo;
+        return workbookSessionResponse;
     }
+
     //https://learn.microsoft.com/en-us/graph/api/workbook-closesession?view=graph-rest-1.0&tabs=http
-    public closeSession(): Promise<void> {
+    async closeSession() {
         const url = '/closeSession';
 
-        return this.microsoftGraphService.post(
+        await this.microsoftGraphService.post(
             this.createWorkbookUrl(url),
             {},
-            {
-                headers: {
-                    'workbook-session-id': this.session.workbookSessionInfo.id,
-                },
-            }
+            this.getSessionHeader(),
         );
     }
+
     // https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
-    async getCell(cellCoordinates: WorkbookCellCoordinates): Promise<ExcelCellValue> {
+    async getCell(cellCoordinates: WorkbookCellCoordinates) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
 
-        const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id
-            }
-        });
+        const response = await this.microsoftGraphService.get<Range>(
+            this.createWorkbookUrl(url),
+            this.getSessionHeader(),
+        );
 
         const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0]) 
             ? response.text[0][0] 
@@ -94,11 +91,10 @@ export class ExcelService {
     async getCells(address: string): Promise<ExcelCellValue[][]> {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
-        const response = await this.microsoftGraphService.get<WorkbookRange>(this.createWorkbookUrl(url), {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        });
+        const response = await this.microsoftGraphService.get<Range>(
+            this.createWorkbookUrl(url),
+            this.getSessionHeader(),
+        );
 
         const { values, text, numberFormat, columnCount, rowCount, rowIndex} = response;
         const cellValues = [];
@@ -118,37 +114,37 @@ export class ExcelService {
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public setCell(address: string, value: string): Promise<WorkbookRange> {
+    setCell(address: string, value: string) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}:${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],
         };
 
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(url), newRange, {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        });
+        return this.microsoftGraphService.patch<Range>(
+            this.createWorkbookUrl(url),
+            newRange,
+            this.getSessionHeader(),
+        );
     }
 
     // https://learn.microsoft.com/en-us/graph/api/range-insert?view=graph-rest-1.0&tabs=http
-    public async setRange(address: string, values: string | any[][]) {
+    setRange(address: string, values: string | ExcelCellValue[][]) {
         const url = `/worksheets/${this.session.worksheetIdentifier}/range(address='${address}')`;
 
         if (!Array.isArray(values)) {
-            values = JSON.parse(values) as (string | number | boolean)[][];
+            values = JSON.parse(values) as ExcelCellValue[][];
         }
 
         const newRange: WorkbookRangeUpdateBody = {
             values,
         };
 
-        return this.microsoftGraphService.patch(this.createWorkbookUrl(url), newRange, {
-            headers: {
-                'workbook-session-id': this.session.workbookSessionInfo.id,
-            },
-        });
+        return this.microsoftGraphService.patch<Range>(
+            this.createWorkbookUrl(url),
+            newRange,
+            this.getSessionHeader(),
+        );
     }
 
     private createWorkbookUrl(url: string) {
@@ -173,20 +169,24 @@ export class ExcelService {
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
     }
 
-    private async getSiteIdByName(name: string): Promise<Site> {
+    // TODO: move to sharepoint service
+    private async getSiteIdByName(name: string) {
         const url = `/sites?search=${name}`;
 
-        return (await this.microsoftGraphService.get(url))['value'][0];
+        return this.microsoftGraphService.get<CollectionResponse<Site>>(url)
+            .then(response => response.value[0]);
     }
 
+    // TODO: move to sharepoint service
     private async getDriveIdBySiteAndListName(siteId: string, listName: string) {
         const url = `/sites/${siteId}/drives/`;
 
-        const data = (await this.microsoftGraphService.get(url))['value'] as Drive[];
+        const data = (await this.microsoftGraphService.get<CollectionResponse<Drive>>(url)).value;
 
         return data.filter(drive => drive.name === listName)[0].id;
     }
 
+    // TODO: move to sharepoint service
     private async getItemId(siteId: string, driveId: string, path: string) {
         const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
 
@@ -236,7 +236,7 @@ export class ExcelService {
     private async getDefaultWorksheetIdentifier() {
         const url = this.createWorkbookUrl('/worksheets');
 
-        const { name }: Worksheet = (await this.microsoftGraphService.get(url))['value'][0];
+        const { name } = (await this.microsoftGraphService.get<CollectionResponse<Worksheet>>(url)).value[0];
 
         return name;
     }
@@ -253,5 +253,13 @@ export class ExcelService {
 
     private isValueUnclear(numberFormat: string): boolean {
         return numberFormat.includes('@') || numberFormat.includes('%');
+    }
+
+    private getSessionHeader() {
+        return {
+            headers: {
+                'workbook-session-id': this.session.workbookSessionInfo.id,
+            },
+        };
     }
 }
