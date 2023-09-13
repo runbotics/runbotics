@@ -23,7 +23,7 @@ export type InternalHandlerKey =
 | 'javascript'
 | 'typescript'
 | 'sap'
-| 'sharepointExcel'
+| 'cloudExcel'
 | 'sharepointFile'
 | 'variables'
 | 'excel'

@@ -13,7 +13,7 @@ import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
 import CsvActionHandler from '#action/csv';
 import GeneralActionHandler from '#action/general';
-import SharepointExcelActionHandler from '#action/sharepoint/excel';
+import { CloudExcelActionHandler } from '#action/microsoft/excel/automation';
 import SharepointFileActionHandler from '#action/sharepoint/file';
 import ApiRequestHandler from '#action/api-request';
 import ApplicationActionHandler from '#action/application';
@@ -61,7 +61,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
-        private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
+        private readonly cloudExcelActionHandler: CloudExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
         private readonly desktopActionHandler: DesktopActionHandler
@@ -82,7 +82,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
             .set('typescript', javaScriptActionHandler)
-            .set('sharepointExcel', sharepointExcelActionHandler)
+            .set('cloudExcel', cloudExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler);
@@ -219,6 +219,10 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
                 return await handlerInstance.run(request);
             }
+
+            this.logger.error(`[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] handler not found`);
+
+            throw new Error(`No handler found for action ${request.script}`);
         } catch (e) {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
@@ -234,10 +238,6 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.delete(handlerInstance.constructor.name);
             }
         }
-
-        const notFoundErrorMessage = `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Script ${request.script} not found`;
-        this.logger.error(notFoundErrorMessage);
-        throw new Error(notFoundErrorMessage);
     }
 
     private checkIfFileSystemEntryPresentInDirectory(directoryPath: string, directoryName: string, fileSystemEntires: string[]): boolean {

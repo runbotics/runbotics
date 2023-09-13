@@ -1,5 +1,7 @@
-export const SHARE_POINT = "SharePoint";
-export const ONE_DRIVE = "OneDrive";
+export enum MicrosoftPlatform {
+    SharePoint = 'SharePoint',
+    OneDrive = 'OneDrive',
+}
 
 export enum CloudPath {
     ROOT = 'root',
@@ -116,13 +118,13 @@ export enum DesktopOfficeAction {
     POWERPOINT_CLOSE = 'powerpoint.close',
 }
 
-export enum SharepointExcelAction {
-	GET_CELL = 'sharepointExcel.getCell',
-	GET_CELLS = 'sharepointExcel.getCells',
-	SET_CELL = 'sharepointExcel.setCell',
-	UPDATE_RANGE = 'sharepointExcel.updateRange',
-	OPEN_FILE='sharepointExcel.openFile',
-	CLOSE_SESSION = 'sharepointExcel.closeSession',
+export enum CloudExcelAction {
+	GET_CELL = 'cloudExcel.getCell',
+	GET_CELLS = 'cloudExcel.getCells',
+	SET_CELL = 'cloudExcel.setCell',
+	UPDATE_RANGE = 'cloudExcel.updateRange',
+	OPEN_FILE='cloudExcel.openFile',
+	CLOSE_SESSION = 'cloudExcel.closeSession',
 }
 
 export enum SharepointFileAction {
@@ -219,7 +221,7 @@ export type AllActionIds =
 	| FileAction
 	| CsvAction
 	| DesktopOfficeAction
-	| SharepointExcelAction
+	| CloudExcelAction
 	| SharepointFileAction
 	| BeeOfficeAction
 	| SapAction

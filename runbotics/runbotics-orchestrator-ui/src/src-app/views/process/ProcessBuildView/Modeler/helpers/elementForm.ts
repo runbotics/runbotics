@@ -40,13 +40,13 @@ export const getFormData = (
     const { runFromHere, disabled } = selectedElement.businessObject;
 
     const defaultParameters = {
-        ...selectedAction.form.formData,
+        ...selectedAction?.form.formData,
         disabled,
         runFromHere,
         input: getInputParameters(selectedElement)
     };
 
-    if (selectedAction.output && selectedAction.output.assignVariables) {
+    if (selectedAction?.output && selectedAction?.output.assignVariables) {
         defaultParameters.output = Object.entries(
             getOutputParameters(selectedElement)
         ).reduce((acc, [key], index) => {
@@ -76,7 +76,7 @@ export const getFormSchema = (
     if (!action) selectedAction = getActionFromElement(selectedElement);
 
     return {
-        ...selectedAction.form.schema,
+        ...selectedAction?.form.schema,
         properties: {
             disabled: {
                 type: 'boolean',

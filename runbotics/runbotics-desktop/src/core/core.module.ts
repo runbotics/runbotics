@@ -17,7 +17,6 @@ import { WebsocketService } from './websocket/websocket.service';
         ScheduleModule.forRoot(),
         forwardRef(() => ActionModule),
         forwardRef(() => WebsocketModule),
-
     ],
     providers: [
         RuntimeService,
@@ -32,7 +31,6 @@ import { WebsocketService } from './websocket/websocket.service';
         DesktopRunnerService,
         MessageQueueService,
         WebsocketService,
-
     ],
 })
 export class CoreModule {}

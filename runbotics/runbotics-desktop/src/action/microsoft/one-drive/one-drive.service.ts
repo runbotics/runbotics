@@ -4,6 +4,7 @@ import { RunboticsLogger } from '#logger';
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
 import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
 import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';
+import { DriveItem } from '../common.types';
 
 @Injectable()
 export class OneDriveService {
@@ -16,7 +17,12 @@ export class OneDriveService {
     // https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0&tabs=javascript
     getItem(itemId: string) {
         return this.microsoftGraphService
-            .get(`/me/drive/items/${itemId}`);
+            .get<DriveItem>(`/me/drive/items/${itemId}`);
+    }
+
+    getItemByPath(path: string) {
+        return this.microsoftGraphService
+            .get<DriveItem>(`/me/drive/root:/${path}`);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript

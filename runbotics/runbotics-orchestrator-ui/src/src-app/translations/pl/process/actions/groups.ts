@@ -15,7 +15,7 @@ const actionsGroupsTranslations: typeof englishActionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
     'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
     'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
-    'Process.Details.Modeler.ActionsGroup.SharepointExcel': 'SharePoint Excel',
+    'Process.Details.Modeler.ActionsGroup.CloudExcel': 'Cloud Excel',
     'Process.Details.Modeler.ActionsGroup.SharepointFile': 'SharePoint Plik',
     'Process.Details.Modeler.ActionsGroup.BeeOffice': 'BeeOffice',
     'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
