@@ -3,9 +3,9 @@ import { PassThrough } from 'stream';
 
 import { RunboticsLogger } from '#logger';
 
-import { MicrosoftGraphService } from '../microsoft-graph';
-import { SiteWithDrives } from './share-point.types';
-import { DriveItem } from '../common.types';
+import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
+import { Site } from './share-point.types';
+import { Drive, DriveItem } from '../common.types';
 
 @Injectable()
 export class SharePointService {
@@ -26,16 +26,20 @@ export class SharePointService {
         return this.microsoftGraphService
             .get<PassThrough>(`/sites/${siteId}/drive/items/${itemId}/content`);
     }
-    
+
     getDriveItem(siteId: string, driveId: string, path: string) {
         const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
 
         return this.microsoftGraphService.get<DriveItem>(url);
     }
 
-    getSiteWithDrives(siteName: string) {
+    getSiteByName(siteName: Site['name']) {
         return this.microsoftGraphService
-            .get<SiteWithDrives>(`/sites/${siteName}`, { expand: 'drive' });
+            .get<CollectionResponse<Site>>('/sites', { search: siteName });
     }
 
+    getSiteDrives(siteId: Site['id']) {
+        return this.microsoftGraphService
+            .get<CollectionResponse<Drive>>(`/sites/${siteId}/drives`);
+    }
 }

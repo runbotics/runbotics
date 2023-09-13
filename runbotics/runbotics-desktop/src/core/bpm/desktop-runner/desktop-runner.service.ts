@@ -61,7 +61,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
-        private readonly sharepointExcelActionHandler: CloudExcelActionHandler,
+        private readonly cloudExcelActionHandler: CloudExcelActionHandler,
         private readonly sharepointFileActionHandler: SharepointFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
         private readonly desktopActionHandler: DesktopActionHandler
@@ -82,7 +82,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
             .set('typescript', javaScriptActionHandler)
-            .set('sharepointExcel', sharepointExcelActionHandler)
+            .set('cloudExcel', cloudExcelActionHandler)
             .set('sharepointFile', sharepointFileActionHandler)
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler);
@@ -219,6 +219,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
                 return await handlerInstance.run(request);
             }
+            // TODO: handle throw error 'no action handler found for action request.script'
         } catch (e) {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
@@ -227,6 +228,7 @@ export class DesktopRunnerService implements OnModuleInit {
             );
             throw e;
         } finally {
+            // TODO: add to isStatelessActionHandler, check if handlerInstance exists
             if (isStatelessActionHandler(handlerInstance)) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`

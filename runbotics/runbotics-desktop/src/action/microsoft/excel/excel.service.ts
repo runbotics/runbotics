@@ -40,19 +40,19 @@ export class ExcelService {
         const session = fileInfo.platform === MicrosoftPlatform.SharePoint
             ? await this.gatherSharePointFileInfo(fileInfo)
             : await this.gatherOneDriveFileInfo(fileInfo);
-
+        
         const workbookSessionInfo = await this.microsoftGraphService.post<WorkbookSessionInfo>(
             this.createWorkbookUrl(session, '/createSession'),
             {
                 persistChanges: true,
             }
         );
-
+        
         const worksheet = await this.getActiveWorksheet({
             ...session,
             worksheetName: fileInfo.worksheetName
         });
-
+        
         return {
             ...session,
             worksheetName: worksheet.name,
@@ -102,10 +102,10 @@ export class ExcelService {
             this.getSessionHeader(session),
         );
 
-        const { values, text, numberFormat, columnCount, rowCount, rowIndex } = response;
+        const { values, text, numberFormat, columnCount, rowCount } = response;
         const cellValues = [];
 
-        for (let row = rowIndex; row < rowCount; row++) {
+        for (let row = 0; row < rowCount; row++) {
             const rowValues: ExcelCellValue[] = [];
             for (let column = 0; column < columnCount; column++) {
                 const cellValue = this.isValueUnclear(numberFormat[row][column])
@@ -115,7 +115,7 @@ export class ExcelService {
             }
             cellValues.push(rowValues);
         }
- 
+
         return cellValues;
     }
 
@@ -208,20 +208,20 @@ export class ExcelService {
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
-        const siteWithDrives = await this.sharePointService.getSiteWithDrives(sessionInfo.siteName);
+        const site = (await this.sharePointService.getSiteByName(sessionInfo.siteName)).value[0];
 
-        if (!siteWithDrives) {
+        if (!site) {
             throw new Error(`Site ${sessionInfo.siteName} not found`);
         }
 
-        const drive = siteWithDrives.drives
-            .find(drive => drive.name === sessionInfo.listName);
-    
+        const drive = await this.sharePointService.getSiteDrives(site.id)
+            .then((drive) => drive.value.find(drive => drive.name === sessionInfo.listName));
+
         if (!drive) {
             throw new Error(`Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} list`);
         }
 
-        const file = await this.sharePointService.getDriveItem(siteWithDrives.id, drive.id, sessionInfo.filePath);
+        const file = await this.sharePointService.getDriveItem(site.id, drive.id, sessionInfo.filePath);
 
         if (!file) {
             throw new Error('Provided file path does not exist');
@@ -229,7 +229,7 @@ export class ExcelService {
 
         return {
             platform: MicrosoftPlatform.SharePoint,
-            siteId: siteWithDrives.id,
+            siteId: site.id,
             driveId: drive.id,
             fileId: file.id,
         };
