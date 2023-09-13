@@ -40,19 +40,19 @@ export class ExcelService {
         const session = fileInfo.platform === MicrosoftPlatform.SharePoint
             ? await this.gatherSharePointFileInfo(fileInfo)
             : await this.gatherOneDriveFileInfo(fileInfo);
-        
+
         const workbookSessionInfo = await this.microsoftGraphService.post<WorkbookSessionInfo>(
             this.createWorkbookUrl(session, '/createSession'),
             {
                 persistChanges: true,
             }
         );
-        
+
         const worksheet = await this.getActiveWorksheet({
             ...session,
             worksheetName: fileInfo.worksheetName
         });
-        
+
         return {
             ...session,
             worksheetName: worksheet.name,
@@ -84,10 +84,10 @@ export class ExcelService {
             this.getSessionHeader(session),
         );
 
-        const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0]) 
-            ? response.text[0][0] 
+        const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0])
+            ? response.text[0][0]
             : response.values[0][0];
-        
+
         return cellValue;
     }
 
