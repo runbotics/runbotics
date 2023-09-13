@@ -8,7 +8,7 @@ import { IBpmnAction, Runner } from './types';
 const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     [CloudExcelAction.GET_CELL]: {
         id: CloudExcelAction.GET_CELL,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCell.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCell.Label'),
         script: CloudExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -76,7 +76,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_CELLS]: {
         id: CloudExcelAction.GET_CELLS,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.GetCells.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCells.Label'),
         script: CloudExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -154,7 +154,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.SET_CELL]: {
         id: CloudExcelAction.SET_CELL,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.SetCell.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCell.Label'),
         script: CloudExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -220,7 +220,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.UPDATE_RANGE]: {
         id: CloudExcelAction.UPDATE_RANGE,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.UpdateRange.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.UpdateRange.Label'),
         script: CloudExcelAction.UPDATE_RANGE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -288,7 +288,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.OPEN_FILE]: {
         id: CloudExcelAction.OPEN_FILE,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label'),
         script: CloudExcelAction.OPEN_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -300,7 +300,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             platform: {
-                                title: translate('Process.Details.Modeler.Actions.SharepointExcel.OpenFile.Platform'),
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Platform'),
                                 type: 'string',
                                 enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
                                 default: 'OneDrive',
@@ -393,7 +393,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.CLOSE_SESSION]: {
         id: CloudExcelAction.CLOSE_SESSION,
-        label: translate('Process.Details.Modeler.Actions.SharepointExcel.CloseSession.Label'),
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
         script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
         output: {

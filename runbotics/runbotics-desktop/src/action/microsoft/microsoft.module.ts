@@ -10,19 +10,20 @@ import { MicrosoftGraphService } from './microsoft-graph';
 import { SharePointService } from './share-point';
 import { ExcelService } from './excel';
 import { CloudExcelActionHandler } from './excel/automation';
+import { OneDriveService } from './one-drive';
 
 @Module({
     imports: [],
     providers: [
         CloudExcelActionHandler,
-        SharePointService, ExcelService,
+        SharePointService, ExcelService, OneDriveService,
         MicrosoftGraphService, MicrosoftAuthService,
         MicrosoftService, MicrosoftSession
     ],
     exports: [
         MicrosoftService, MicrosoftSession,
         CloudExcelActionHandler,
-        SharePointService, ExcelService,
+        SharePointService, ExcelService, OneDriveService,
     ],
 })
 export class MicrosoftModule {}

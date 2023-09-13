@@ -21,9 +21,12 @@ import JavaScriptActionHandler from './rce';
 import SharepointFileActionHandler from './sharepoint/file';
 import VariableActionHandler from './variable';
 import { ExcelService } from './microsoft/excel';
+import DesktopActionHandler from './desktop';
+import { CloudExcelActionHandler } from './microsoft/excel/automation';
+import { OneDriveService } from './microsoft/one-drive';
+import { SharePointService } from './microsoft/share-point';
 import { MicrosoftGraphService } from './microsoft/microsoft-graph';
 import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
-import DesktopActionHandler from './desktop';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -41,8 +44,11 @@ const ALL_ACTION_HANDLERS = [
     MailActionHandler,
     JavaScriptActionHandler,
     SharepointFileActionHandler,
+    CloudExcelActionHandler,
     VariableActionHandler,
     ExcelService,
+    OneDriveService,
+    SharePointService,
     MicrosoftGraphService,
     MicrosoftAuthService,
     DesktopActionHandler
