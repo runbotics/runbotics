@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useLayoutEffect } from 'react';
+import React, { FC, useState, useRef, useLayoutEffect, MouseEvent } from 'react';
 
 import { Chip } from '@mui/material';
 
@@ -14,13 +14,13 @@ import {
     StaticLine,
     Container,
     StyledExpandIcon,
-} from './ProcessTileTag.styles';
-import { ProcessTileTagProps } from './ProcessTileTag.types';
+} from './ProcessTileTagList.styles';
+import { ProcessTileTagListProps } from './ProcessTileTagList.types';
 
 const TAGS_CONTAINER_MARGIN_VALUE = 85;
 const TAG_RIGHT_MARGIN_VALUE = 8;
 
-const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
+const ProcessTileTagList: FC<ProcessTileTagListProps> = ({ tags }) => {
     const { translate } = useTranslations();
 
     const [isTagBoxExpanded, setIsTagBoxExpanded] = useState<boolean>(false);
@@ -58,6 +58,12 @@ const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
         checkTagsWidth(tagsWidth, []);
     }, [tagsWidth]);
 
+    const handleTagBoxResize = (e: MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsTagBoxExpanded(!isTagBoxExpanded);
+    };
+
     return (
         <Container>
             <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
@@ -69,14 +75,14 @@ const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
                     />)
                 }
             </TagBox>
-            <DividerBox>
+            <DividerBox $isExpanded={isTagBoxExpanded}>
                 <If
                     condition={tags.length && isTagListMultiLine}
                     else={<StaticLine/>}
                 >
                     <DividerLine/>
                     <DividerAction
-                        onClick={() => setIsTagBoxExpanded(!isTagBoxExpanded)}
+                        onClick={handleTagBoxResize}
                     >
                         <StyledTypography
                             variant='body2'
@@ -95,4 +101,4 @@ const ProcessTileTag: FC<ProcessTileTagProps> = ({ tags }) => {
     );
 };
 
-export default ProcessTileTag;
+export default ProcessTileTagList;

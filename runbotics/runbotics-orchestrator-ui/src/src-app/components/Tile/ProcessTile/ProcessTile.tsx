@@ -1,6 +1,6 @@
 import type { VFC } from 'react';
 
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, CardHeader } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
@@ -9,12 +9,12 @@ import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
-import { Description, StyledCardHeader, StyledCardActionArea } from './ProcessTile.styles';
+import { Description, StyledCardActionArea } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
 import { buildProcessUrl } from './ProcessTile.utils';
 import ProcessTileContent from './ProcessTileContent';
 import ProcessTileFooter from './ProcessTileFooter';
-import ProcessTileTag from './ProcessTileTag';
+import ProcessTileTagList from './ProcessTileTagList';
 import Tile, { TileAvatar } from '..';
 
 
@@ -30,15 +30,17 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
 
     return (
         <Tile>
-            <StyledCardHeader
-                avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
-                title={process.name}
-                titleTypographyProps={{ variant: 'h5' }}
-                sx={{ width: '100%' }}
-                onClick={handleRedirect}
-            />
-            <ProcessTileTag tags={process.tags} />
             <StyledCardActionArea onClick={handleRedirect}>
+                <CardHeader
+                    avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
+                    title={process.name}
+                    titleTypographyProps={{ variant: 'h5' }}
+                    sx={{ width: '100%', paddingBottom: '5px' }}
+                    onClick={handleRedirect}
+                />
+                <If condition={Boolean(process.tags.length)}>
+                    <ProcessTileTagList tags={process.tags} />
+                </If>
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent process={process} />
                 </If>
