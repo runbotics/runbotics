@@ -11,13 +11,14 @@ export const StyledTypography = styled(Typography)(({ theme }) => `
     }
 `);
 
-export const StyledExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean; }>`
+export const StyledExpandIcon = styled(ExpandMoreIcon)
+    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
     && {
-        color: ${props => props.theme.palette.grey[500]};
-        transform: rotate(${props => props.$isExpanded ? '-180deg' : '0'});
+        color: ${theme.palette.grey[500]};
+        transform: rotate(${$isExpanded ? '-180deg' : '0'});
         transition: 0.5s;
     }
-`;
+`);
 
 export const Container = styled.div`
     display: flex;
@@ -28,30 +29,32 @@ export const Container = styled.div`
     margin-bottom: 10px;
 `;
 
-export const TagBox = styled.div<{ $isExpanded: boolean; }>`
+export const TagBox = styled.div
+    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${props => props.$isExpanded ? '170px' : '100%'};
+    height: ${$isExpanded ? '170px' : '100%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
     gap: 8px;
     margin: 0;
     overflow: hidden;
-    background-color: ${props => props.$isExpanded ? props.theme.palette.background.paper : 'transparent'};
+    background-color: ${$isExpanded ? theme.palette.background.paper : 'transparent'};
     transition: 0.3s;
-`;
+`);
 
-export const DividerBox = styled.div<{ $isExpanded: boolean; }>`
+export const DividerBox = styled.div
+    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
     margin-top: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 10px;
-    background-color: ${props => props.$isExpanded ? props.theme.palette.background.paper : 'transparent'};
-`;
+    background-color: ${$isExpanded ? theme.palette.background.paper : 'transparent'};
+`);
 
 export const DividerAction = styled.div(({ theme }) => `
     display: flex;
