@@ -1,6 +1,6 @@
 import LRUMap from 'mnemonist/lru-map';
 
-type CacheKeys = `posts_${string}` | `categories_${string}` | `tags_${string}` | string;
+type CacheKeys = 'posts'  | 'postsBySlug' | 'categories' | 'tags' | string;
 
 /**
  * Cache instance singleton

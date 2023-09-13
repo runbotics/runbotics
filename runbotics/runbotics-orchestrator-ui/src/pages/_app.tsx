@@ -11,6 +11,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
+import { getBlogMainCache, isCached, recreateCache } from '#contentful/blog-main';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 
 import MainLayout from '#src-app/layouts/MainLayout';
@@ -20,7 +21,7 @@ import SocketProvider from '#src-app/providers/Socket.provider';
 import StylesProvider from '#src-app/providers/Styles.provider';
 import store from '#src-app/store';
 import i18n from '#src-app/translations/i18n';
-import { DEFAULT_LANG } from '#src-app/translations/translations';
+import { DEFAULT_LANG, Language } from '#src-app/translations/translations';
 import createEmotionCache from '#src-app/utils/createEmotionCache';
 import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
@@ -84,6 +85,14 @@ function App(props: AppProps) {
 
 App.getInitialProps = async (context) => {
     const pageProps = await NextApp.getInitialProps(context);
+
+    const language = context.router.locale as Language;
+
+    if (!isCached(language)) {
+        await recreateCache(language);
+    } else {
+        context.ctx.res.setHeader('X-Cache', 'HIT');
+    }
 
     return {
         ...pageProps,
