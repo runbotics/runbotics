@@ -40,8 +40,10 @@ export interface BlogPost {
     category: Category;
 }
 
+export type BlogPostsBySlug = Record<string, BlogPost>;
+
 export interface Category {
-    title: string; 
+    title: string;
     slug: string;
 }
 

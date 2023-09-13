@@ -1,4 +1,6 @@
-import { BlogPost, Category, FetchContentfulResponse, Tag } from '#contentful/common';
+import { BlogPost, BlogPostsBySlug, Category, FetchContentfulResponse, Tag } from '#contentful/common';
+
+import { getMainPage } from './api';
 
 interface AllPostsCollection {
     blogPostCollection: {
@@ -45,3 +47,7 @@ export type GetAllModelsResponse = FetchContentfulResponse<
     & AllCategoriesCollection
     & AllTagsCollection
 >
+
+export interface GetBlogMainCache extends Awaited<ReturnType<typeof getMainPage>> {
+    postsBySlug: BlogPostsBySlug;
+}
