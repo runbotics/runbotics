@@ -8,7 +8,9 @@ export enum ActionHandler {
 
 export const isStatelessActionHandler = (
     handler: unknown
-): handler is StatelessActionHandler => typeof handler === 'object'
+): handler is StatelessActionHandler => handler !== undefined
+    && handler !== null
+    && typeof handler === 'object'
     && 'getType' in handler
     && handler.getType
     && typeof handler.getType === 'function'
@@ -16,7 +18,9 @@ export const isStatelessActionHandler = (
 
 export const isStatefulActionHandler = (
     handler: unknown
-): handler is StatefulActionHandler => typeof handler === 'object'
+): handler is StatefulActionHandler => handler !== undefined
+    && handler !== null
+    && typeof handler === 'object'
     && 'getType' in handler
     && typeof handler.getType === 'function'
     && handler.getType() === ActionHandler.Stateful

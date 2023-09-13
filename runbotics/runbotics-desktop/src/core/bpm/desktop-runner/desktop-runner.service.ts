@@ -219,7 +219,10 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
                 return await handlerInstance.run(request);
             }
-            // TODO: handle throw error 'no action handler found for action request.script'
+
+            this.logger.error(`[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] handler not found`);
+
+            throw new Error(`No handler found for action ${request.script}`);
         } catch (e) {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
@@ -228,7 +231,6 @@ export class DesktopRunnerService implements OnModuleInit {
             );
             throw e;
         } finally {
-            // TODO: add to isStatelessActionHandler, check if handlerInstance exists
             if (isStatelessActionHandler(handlerInstance)) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`
@@ -236,10 +238,6 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.delete(handlerInstance.constructor.name);
             }
         }
-
-        const notFoundErrorMessage = `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Script ${request.script} not found`;
-        this.logger.error(notFoundErrorMessage);
-        throw new Error(notFoundErrorMessage);
     }
 
     private checkIfFileSystemEntryPresentInDirectory(directoryPath: string, directoryName: string, fileSystemEntires: string[]): boolean {

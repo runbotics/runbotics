@@ -33,7 +33,7 @@ export class SharePointService {
         return this.microsoftGraphService.get<DriveItem>(url);
     }
 
-    getSiteByName(siteName: Site['name']) {
+    getSitesByName(siteName: Site['name']) {
         return this.microsoftGraphService
             .get<CollectionResponse<Site>>('/sites', { search: siteName });
     }

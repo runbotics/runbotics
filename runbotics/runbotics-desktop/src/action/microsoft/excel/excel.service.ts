@@ -208,14 +208,17 @@ export class ExcelService {
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
-        const site = (await this.sharePointService.getSiteByName(sessionInfo.siteName)).value[0];
+        const site = await this.sharePointService.getSitesByName(sessionInfo.siteName)
+            .then(sites => sites.value[0]);
 
         if (!site) {
             throw new Error(`Site ${sessionInfo.siteName} not found`);
         }
 
         const drive = await this.sharePointService.getSiteDrives(site.id)
-            .then((drive) => drive.value.find(drive => drive.name === sessionInfo.listName));
+            .then(drives => drives.value
+                .find(drive => drive.name === sessionInfo.listName)
+            );
 
         if (!drive) {
             throw new Error(`Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} list`);
