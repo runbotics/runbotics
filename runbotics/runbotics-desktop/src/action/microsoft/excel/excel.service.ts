@@ -179,6 +179,18 @@ export class ExcelService {
             );
     }
 
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-delete?view=graph-rest-1.0&tabs=http
+     */
+    deleteWorksheet(session: ExcelSession, worksheetName: Worksheet['name']) {
+        return this.microsoftGraphService
+            .delete(
+                this.createWorkbookUrl(session, `/worksheets/${worksheetName}`),
+                this.getSessionHeader(session),
+            );
+    }
+
     private getActiveWorksheet(session: ExcelSession | FileInfo) {
         if (hasWorksheetName(session)) {
             return this.getWorksheet(session);
@@ -221,7 +233,9 @@ export class ExcelService {
             );
 
         if (!drive) {
-            throw new Error(`Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} list`);
+            throw new Error(`
+                Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} or ${sessionInfo.listName} is not of type 'Document library'`
+            );
         }
 
         const file = await this.sharePointService.getDriveItem(site.id, drive.id, sessionInfo.filePath);

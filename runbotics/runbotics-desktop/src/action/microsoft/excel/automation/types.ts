@@ -9,7 +9,8 @@ export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.CLOSE_SESSION>
 | DesktopRunRequest<CloudExcelAction.UPDATE_RANGE, CloudExcelUpdateRangeActionInput>
 | DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
-| DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>;
+| DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
+| DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>;
 
 export type CloudExcelSetCellActionInput = {
     content: string;
@@ -28,4 +29,8 @@ export type CloudGetExcelCellActionInput = {
 export type CloudExcelGetCellsActionInput = {
     startCell: string;
     endCell: string;
+};
+
+export type CloudExcelDeleteWorksheetActionInput = {
+    worksheetName: string;
 };
