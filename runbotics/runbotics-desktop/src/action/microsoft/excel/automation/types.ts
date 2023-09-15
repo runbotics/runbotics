@@ -18,7 +18,7 @@ export type CloudExcelSetCellActionInput = {
 
 export type CloudExcelSetCellsActionInput = {
     startCell: string;
-    values: string | (string | number | boolean)[][];
+    values: (string | number | boolean)[][];
 };
 
 export type CloudGetExcelCellActionInput = {

@@ -22,6 +22,7 @@ import {
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
+import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
 
 @Injectable()
 export class ExcelService {
@@ -139,23 +140,28 @@ export class ExcelService {
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
+     * @description {string} url requires range address in a format of column letters, e.g. "A1:C3"
      */
-    setCells(session: ExcelSession, startingCell: string, values: string | ExcelCellValue[][]) {
+    setCells(session: ExcelSession, startCell: string, values: ExcelCellValue[][]) {
         if (!Array.isArray(values)) {
             values = JSON.parse(values) as ExcelCellValue[][];
         }
 
-        // need to get endCell address basing on below - column should be letter
-        const startColumnLetter = startingCell.match(/[A-Z]+/).toString();
+        if (!values.length) {
+            throw new Error(CloudExcelErrorMessage.setCellsIncorrectInput());
+        }
+        
+        const startColumnLetter = startCell.match(/[A-Z]+/).toString();
         const startColumnNumber = this.getColumnNumber(startColumnLetter);
-        const startRow = +startingCell.match(/\d+/);
+        const startRow = +startCell.match(/\d+/);
         
         const endColumnNumber = startColumnNumber + values[0].length - 1;
         const endColumnLetter = this.getColumnLetter(endColumnNumber);
         const endRow = startRow + values.length - 1;
+
+        const address = `${startColumnLetter}${startRow}:${endColumnLetter}${endRow}`;
         
-        //here I need to convert column number to column letter
-        const url = `/worksheets/${session.worksheetName}/range(address='${startColumnLetter}${startRow}:${endColumnLetter}${endRow}')`;
+        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values,
@@ -217,17 +223,14 @@ export class ExcelService {
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
     }
 
-
+    /**
+     * @description converts column number to a letter format
+     * @param {number} columnNumber column number to convert
+     * @returns {string} column in a letter format
+     */
     private getColumnLetter(columnNumber: number): string {
-        let columnName = '';
-
-        while (columnNumber > 0) {
-            const reminder = (columnNumber - 1) % 26;
-            columnName = String.fromCharCode(65 + reminder).toString() + columnName;
-            columnNumber = Math.floor((columnNumber - reminder) / 26);
-        }
-        
-        return columnName;
+        const res = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[(columnNumber - 1) % 26];
+        return columnNumber >= 26 ? this.getColumnLetter(Math.floor(columnNumber / 26) - 1) + res : res;
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {

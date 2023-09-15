@@ -16,6 +16,15 @@ export class CloudExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
+
+    static setCellsIncorrectInput(): string {
+        return `
+            Start cell addresses has to include a column letter and a row number (e.g. A1).
+            Values has to be in a format of array of rows, where each row is an array of values to set, (e.g. [["value A3", "value B3"],["value A4", "value B4"]]).
+            For single cell update use setCell action.
+            ${this.getCheckInputTip()}
+        `;
+    }
     
     /* Tips */
 
