@@ -481,6 +481,55 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [CloudExcelAction.DELETE_COLUMNS]: {
+        id: CloudExcelAction.DELETE_COLUMNS,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.Label'),
+        script: CloudExcelAction.DELETE_COLUMNS,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            startColumn: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.StartColumn'),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_COLUMN_NAME
+                            },
+                            endColumn: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.EndColumn'),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_COLUMN_NAME
+                            }
+                        },
+                        required: ['startColumn'],
+                    },
+                },
+            },
+            uiSchema: {
+                input: {
+                    startColumn: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.StartColumn.Info'),
+                        },
+                    },
+                    endColumn: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.EndColumn.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    startColumn: undefined,
+                },
+            },
+        },
+    },
 });
 
 export default getCloudExcelActions;

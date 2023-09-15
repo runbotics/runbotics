@@ -16,9 +16,16 @@ export class CloudExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
-    
-    /* Tips */
 
+    static getColumnsIncorrectInput(): string {
+        return `
+            Start column has to be capital letter from range [A-Z].
+            End column is optional, but if provided it has to be capital letter from range [A-Z].
+            ${this.getCheckInputTip()}
+        `;
+    }
+
+    /* Tips */
     private static getCheckInputTip(): string {
         return `
             Check the input tab above.
