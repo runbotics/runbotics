@@ -229,8 +229,8 @@ export class ExcelService {
      * @returns {string} column in a letter format
      */
     private getColumnLetter(columnNumber: number): string {
-        const res = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[(columnNumber - 1) % 26];
-        return columnNumber >= 26 ? this.getColumnLetter(Math.floor(columnNumber / 26) - 1) + res : res;
+        const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[(columnNumber - 1) % 26];
+        return columnNumber >= 26 ? this.getColumnLetter(Math.floor(columnNumber / 26) - 1) + letter : letter;
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
