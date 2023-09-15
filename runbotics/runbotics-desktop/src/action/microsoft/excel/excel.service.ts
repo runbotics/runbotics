@@ -140,12 +140,22 @@ export class ExcelService {
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
      */
-    setRange(session: ExcelSession, address: string, values: string | ExcelCellValue[][]) {
-        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
-
+    setCells(session: ExcelSession, startingCell: string, values: string | ExcelCellValue[][]) {
         if (!Array.isArray(values)) {
             values = JSON.parse(values) as ExcelCellValue[][];
         }
+
+        // need to get endCell address basing on below - column should be letter
+        const startColumnLetter = startingCell.match(/[A-Z]+/).toString();
+        const startColumnNumber = this.getColumnNumber(startColumnLetter);
+        const startRow = +startingCell.match(/\d+/);
+        
+        const endColumnNumber = startColumnNumber + values[0].length - 1;
+        const endColumnLetter = this.getColumnLetter(endColumnNumber);
+        const endRow = startRow + values.length - 1;
+        
+        //here I need to convert column number to column letter
+        const url = `/worksheets/${session.worksheetName}/range(address='${startColumnLetter}${startRow}:${endColumnLetter}${endRow}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values,
@@ -205,6 +215,19 @@ export class ExcelService {
         // e.g A = 65, B = 66, C = 67, etc.
         // so we subtract 64 from the ASCII code to get the column number
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
+    }
+
+
+    private getColumnLetter(columnNumber: number): string {
+        let columnName = '';
+
+        while (columnNumber > 0) {
+            const reminder = (columnNumber - 1) % 26;
+            columnName = String.fromCharCode(65 + reminder).toString() + columnName;
+            columnNumber = Math.floor((columnNumber - reminder) / 26);
+        }
+        
+        return columnName;
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {

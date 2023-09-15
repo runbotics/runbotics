@@ -122,7 +122,7 @@ export enum CloudExcelAction {
 	GET_CELL = 'cloudExcel.getCell',
 	GET_CELLS = 'cloudExcel.getCells',
 	SET_CELL = 'cloudExcel.setCell',
-	UPDATE_RANGE = 'cloudExcel.updateRange',
+	SET_CELLS = 'cloudExcel.setCells',
 	OPEN_FILE='cloudExcel.openFile',
 	CLOSE_SESSION = 'cloudExcel.closeSession',
 }
