@@ -1,7 +1,9 @@
 import { IProcess } from 'runbotics-common';
 
 interface IProcessWithFilters extends IProcess {
-    createdByName?: string | null;
+    name: string | null;
+    createdByName: string | null;
+    tagName: string | null;
 }
 
 export default IProcessWithFilters;
