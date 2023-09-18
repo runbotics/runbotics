@@ -1,9 +1,9 @@
 import { Worker } from 'worker_threads';
 import { DesktopRunRequest } from "../handler";
-import { MultithreadStateful } from "./MultithreadStateful";
 import { WorkerMessageType } from "./Multithread.types";
+import { MultithreadStatefulActionHandler } from './MultithreadStatefulActionHandler';
 
-export class MultithreadRunner extends MultithreadStateful {
+export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler {
     private worker = null;
 
     constructor(handlerPath: string) {

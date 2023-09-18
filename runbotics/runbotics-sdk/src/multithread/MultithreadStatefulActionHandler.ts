@@ -1,10 +1,10 @@
 import { ActionHandler, DesktopRunRequest, DesktopRunResponse } from "../handler";
 
-export abstract class MultithreadStateful {
+export abstract class MultithreadStatefulActionHandler {
     abstract run(request: DesktopRunRequest): Promise<DesktopRunResponse>;
 
     getType(): string {
-        return ActionHandler.StatefulMultithreaded;
+        return ActionHandler.MultithreadStateful;
     }
 
     abstract tearDown(): Promise<void>;

@@ -17,7 +17,7 @@
     "scripts": {
         "postinstall": "rushx build",
         "build": "microbundle src/**/*.ts --target node --format cjs",
-        "start": "microbundle watch --format modern,cjs"
+        "start": "microbundle src/**/*.ts --target node watch --format modern,cjs"
     },
     "devDependencies": {
         "@types/node": "^18.15.3",
