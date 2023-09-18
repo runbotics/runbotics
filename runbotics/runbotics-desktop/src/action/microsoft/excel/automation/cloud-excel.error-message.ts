@@ -19,8 +19,8 @@ export class CloudExcelErrorMessage {
 
     static getColumnsIncorrectInput(): string {
         return `
-            Start column has to be capital letter from range [A-Z].
-            End column is optional, but if provided it has to be capital letter from range [A-Z].
+            Starting column name has to be letters from range A-Z.
+            Ending column name is optional, but if provided it has to be letters from range A-Z.
             ${this.getCheckInputTip()}
         `;
     }
