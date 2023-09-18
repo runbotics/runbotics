@@ -26,11 +26,7 @@ plugins {
 
 group = "com.runbotics"
 
-<<<<<<< HEAD
-version = "2.8.0-SNAPSHOT.74"
-=======
-version = "2.8.0-SNAPSHOT.73"
->>>>>>> 01539615 (chore: :pushpin: bump app version to 2.8.0-SNAPSHOT.73)
+version = "2.8.0-SNAPSHOT.75"
 
 description = ""
 
