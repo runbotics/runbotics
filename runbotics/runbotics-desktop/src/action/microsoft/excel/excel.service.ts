@@ -198,7 +198,6 @@ export class ExcelService {
             );
     }
 
-
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-delete?view=graph-rest-1.0&tabs=http
      */
@@ -207,6 +206,20 @@ export class ExcelService {
             .delete(
                 this.createWorkbookUrl(session, `/worksheets/${worksheetName}`),
                 this.getSessionHeader(session),
+            );
+    }
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/range-delete?view=graph-rest-1.0&tabs=http
+     */
+    deleteColumns(session: ExcelSession, columnRange: string) {
+        return this.microsoftGraphService.
+            post(
+                this.createWorkbookUrl(session, `/worksheets/${session.worksheetName}/range(address='${columnRange}')/delete`),
+                {
+                    ...this.getSessionHeader(session),
+                    shift: 'left'
+                },
             );
     }
 
