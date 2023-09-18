@@ -125,6 +125,7 @@ export enum CloudExcelAction {
 	UPDATE_RANGE = 'cloudExcel.updateRange',
 	OPEN_FILE='cloudExcel.openFile',
 	CLOSE_SESSION = 'cloudExcel.closeSession',
+    DELETE_WORKSHEET = "cloudExcel.deleteWorksheet",
 }
 
 export enum SharepointFileAction {
