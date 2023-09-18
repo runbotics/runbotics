@@ -218,10 +218,10 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    [CloudExcelAction.UPDATE_RANGE]: {
-        id: CloudExcelAction.UPDATE_RANGE,
-        label: translate('Process.Details.Modeler.Actions.CloudExcel.UpdateRange.Label'),
-        script: CloudExcelAction.UPDATE_RANGE,
+    [CloudExcelAction.SET_CELLS]: {
+        id: CloudExcelAction.SET_CELLS,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCells.Label'),
+        script: CloudExcelAction.SET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -237,16 +237,17 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            range: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Cell'),
+                            startCell: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell'),
                                 type: 'string',
+                                pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
                             values: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.UpdateRange.Values'),
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values'),
                                 type: 'string',
                             },
                         },
-                        required: ['range', 'values'],
+                        required: ['startCell', 'values'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -261,12 +262,23 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    startCell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell.Info'),
+                        },
+                    },
+                    values: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values.Info'),
+                        },
+                    },
+                },
                 output: {
                     variableName: {
                         'ui:options': {

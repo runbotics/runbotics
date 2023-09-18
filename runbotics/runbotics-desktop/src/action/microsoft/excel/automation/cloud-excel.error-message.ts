@@ -25,6 +25,18 @@ export class CloudExcelErrorMessage {
         `;
     }
 
+
+    static setCellsIncorrectInput(): string {
+        return `
+            Start cell field expects cell address (e.g. A1).
+            Values field expects specified nested lists. Each list represents a row and the elements inside the values in the corresponding column, e.g. [["A3 value", "B3 value"], ["A4 value", "B4 value"]])
+            To skip a cell use null.
+            To clear a cell use "".
+            For single cell update use setCell action.
+            ${this.getCheckInputTip()}
+        `;
+    }
+    
     /* Tips */
     private static getCheckInputTip(): string {
         return `

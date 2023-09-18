@@ -1,13 +1,13 @@
 import { CloudExcelAction } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
-import { ExcelSessionInfo, Worksheet } from '#action/microsoft/excel/excel.types';
+import { ExcelSessionInfo, ExcelCellValue, Worksheet } from '#action/microsoft/excel/excel.types';
 
 export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.SET_CELL, CloudExcelSetCellActionInput>
 | DesktopRunRequest<CloudExcelAction.GET_CELL, CloudGetExcelCellActionInput>
 | DesktopRunRequest<CloudExcelAction.CLOSE_SESSION>
-| DesktopRunRequest<CloudExcelAction.UPDATE_RANGE, CloudExcelUpdateRangeActionInput>
+| DesktopRunRequest<CloudExcelAction.SET_CELLS, CloudExcelSetCellsActionInput>
 | DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
 | DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
 | DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
@@ -18,9 +18,9 @@ export type CloudExcelSetCellActionInput = {
     cell: string;
 };
 
-export type CloudExcelUpdateRangeActionInput = {
-    range: string;
-    values: string | (string | number | boolean)[][];
+export type CloudExcelSetCellsActionInput = {
+    startCell: string;
+    values: ExcelCellValue[][];
 };
 
 export type CloudGetExcelCellActionInput = {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MicrosoftPlatform } from 'runbotics-common';
+import { MicrosoftPlatform, ActionRegex } from 'runbotics-common';
 
 import { RunboticsLogger } from '#logger';
 
@@ -22,6 +22,9 @@ import {
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
+import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
+
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 @Injectable()
 export class ExcelService {
@@ -139,13 +142,29 @@ export class ExcelService {
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
+     * @description {string} url requires range address in a format of column letters, e.g. "A1:C3"
      */
-    setRange(session: ExcelSession, address: string, values: string | ExcelCellValue[][]) {
-        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
-
+    setCells(session: ExcelSession, startCell: string, values: ExcelCellValue[][]) {
         if (!Array.isArray(values)) {
-            values = JSON.parse(values) as ExcelCellValue[][];
+            try {
+                values = JSON.parse(values) as ExcelCellValue[][];
+                if (!values.length) throw Error;
+            } catch (e) {
+                throw new Error(CloudExcelErrorMessage.setCellsIncorrectInput());
+            }
         }
+        
+        const startColumnLetter = startCell.match(ActionRegex.EXCEL_COLUMN_NAME).toString();
+        const startColumnNumber = this.getColumnNumber(startColumnLetter);
+        const startRow = Number(startCell.match(ActionRegex.EXCEL_ROW_NUMBER));
+        
+        const endColumnNumber = startColumnNumber + values[0].length - 1;
+        const endColumnLetter = this.getColumnLetter(endColumnNumber);
+        const endRow = startRow + values.length - 1;
+
+        const address = `${startColumnLetter}${startRow}:${endColumnLetter}${endRow}`;
+        
+        const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values,
@@ -230,6 +249,17 @@ export class ExcelService {
         // e.g A = 65, B = 66, C = 67, etc.
         // so we subtract 64 from the ASCII code to get the column number
         return (column.length - 1) * 26 + (column.charCodeAt(column.length - 1) - 64);
+    }
+
+    /**
+     * @description converts column number to a letter format
+     * @param {number} columnNumber column number to convert
+     * @returns {string} column in a letter format
+     * @example getColumnLetter(29) // 'AC'
+     */
+    private getColumnLetter(columnNumber: number): string {
+        const letter = ALPHABET[(columnNumber - 1) % 26];
+        return columnNumber > 26 ? this.getColumnLetter(Math.floor((columnNumber - 1) / 26)) + letter : letter;
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
