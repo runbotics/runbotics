@@ -28,6 +28,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             cell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell'),
                                 type: 'string',
+                                pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
                         },
                         required: ['cell'],
@@ -52,7 +53,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_CELL_ADDRESS
                         },
                     }
                 },
