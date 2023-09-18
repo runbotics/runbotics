@@ -12,7 +12,7 @@
     "types": "dist/index.d.ts",
     "exports": {
         ".": "./dist/index.js",
-        "./multithread/Worker": "./dist/worker.js"
+        "./multithread/Worker": "./dist/Worker.js"
     },
     "scripts": {
         "postinstall": "rushx build",
