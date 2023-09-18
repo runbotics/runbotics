@@ -234,8 +234,8 @@ export class ExcelService {
 
         if (!drive) {
             throw new Error(`
-                Site ${sessionInfo.siteName} does not contain ${sessionInfo.listName} or ${sessionInfo.listName} is not of type 'Document library'`
-            );
+                Site ${sessionInfo.siteName} does not contain "${sessionInfo.listName}" list or "${sessionInfo.listName}" is not a list of type 'Document library'
+            `);
         }
 
         const file = await this.sharePointService.getDriveItem(site.id, drive.id, sessionInfo.filePath);
