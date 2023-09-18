@@ -59,6 +59,10 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.setCells(this.session, input.startCell, input.values);
     }
 
+    deleteWorksheet(input: SharepointTypes.CloudExcelDeleteWorksheetActionInput) {
+        return this.excelService.deleteWorksheet(this.session, input.worksheetName);
+    }
+
     run(request: SharepointTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
@@ -75,6 +79,9 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             case CloudExcelAction.SET_CELLS:
                 this.checkSession();
                 return this.setCells(request.input);
+            case CloudExcelAction.DELETE_WORKSHEET:
+                this.checkSession();
+                return this.deleteWorksheet(request.input);
             case CloudExcelAction.CLOSE_SESSION:
                 return this.closeSession();
             default:
