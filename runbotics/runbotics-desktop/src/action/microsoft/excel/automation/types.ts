@@ -1,7 +1,7 @@
 import { CloudExcelAction } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
-import { ExcelSessionInfo } from '#action/microsoft/excel/excel.types';
+import { ExcelSessionInfo, Worksheet } from '#action/microsoft/excel/excel.types';
 
 export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.SET_CELL, CloudExcelSetCellActionInput>
@@ -32,5 +32,5 @@ export type CloudExcelGetCellsActionInput = {
 };
 
 export type CloudExcelDeleteWorksheetActionInput = {
-    worksheetName: string;
+    worksheetName: Worksheet['name'];
 };
