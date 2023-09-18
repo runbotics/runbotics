@@ -12,7 +12,7 @@ export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler 
     }
 
     async tearDown(): Promise<void> {
-        return await this.worker.postMessage({ type: WorkerMessageType.EXIT });
+        await this.worker.postMessage({ type: WorkerMessageType.EXIT });
     }
 
     run(request: DesktopRunRequest<string, any>): Promise<any> {
@@ -27,8 +27,7 @@ export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler 
         this.worker = new Worker('./Worker.js', { workerData: { handlerPath } });
     }
 
-    private async onMessage(resolve, reject, callback?: () => void) {
-        if (callback) callback();
+    private async onMessage(resolve, reject) {
         this.worker.on('message', (result) => {
             resolve(result);
         });
