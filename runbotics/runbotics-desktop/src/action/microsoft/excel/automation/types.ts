@@ -10,7 +10,7 @@ export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.UPDATE_RANGE, CloudExcelUpdateRangeActionInput>
 | DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
 | DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
-| DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>,
+| DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
 | DesktopRunRequest<CloudExcelAction.DELETE_COLUMNS, CloudExcelDeleteColumnsActionInput>;
 
 export type CloudExcelSetCellActionInput = {
