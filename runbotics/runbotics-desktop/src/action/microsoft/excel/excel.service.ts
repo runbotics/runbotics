@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { MicrosoftPlatform, ExcelCellValue, ActionRegex } from 'runbotics-common';
+import { MicrosoftPlatform, ActionRegex } from 'runbotics-common';
 
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import { SharePointService } from '../share-point';
 import {
+    ExcelCellValue,
     ExcelSession,
     ExcelSessionInfo,
     SharePointSessionInfo,
@@ -23,7 +24,7 @@ import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
 import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
 
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 @Injectable()
 export class ExcelService {
@@ -244,7 +245,7 @@ export class ExcelService {
      * @example getColumnLetter(29) // 'AC'
      */
     private getColumnLetter(columnNumber: number): string {
-        const letter = alphabet[(columnNumber - 1) % 26];
+        const letter = ALPHABET[(columnNumber - 1) % 26];
         return columnNumber > 26 ? this.getColumnLetter(Math.floor((columnNumber - 1) / 26)) + letter : letter;
     }
 

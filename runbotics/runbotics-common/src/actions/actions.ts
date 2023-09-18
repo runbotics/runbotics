@@ -210,8 +210,6 @@ export enum DesktopAction {
 	READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
 }
 
-export type ExcelCellValue = string | number | boolean;
-
 export type AllActionIds =
 	| VariableAction
 	| GeneralAction

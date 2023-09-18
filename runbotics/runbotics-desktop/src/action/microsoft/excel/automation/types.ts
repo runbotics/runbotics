@@ -1,7 +1,7 @@
-import { CloudExcelAction, ExcelCellValue } from 'runbotics-common';
+import { CloudExcelAction } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
-import { ExcelSessionInfo, Worksheet } from '#action/microsoft/excel/excel.types';
+import { ExcelSessionInfo, ExcelCellValue, Worksheet } from '#action/microsoft/excel/excel.types';
 
 export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.SET_CELL, CloudExcelSetCellActionInput>

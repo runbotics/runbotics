@@ -1,4 +1,4 @@
-import { MicrosoftPlatform, ExcelCellValue } from 'runbotics-common';
+import { MicrosoftPlatform } from 'runbotics-common';
 
 import { Drive, DriveItem } from '../common.types';
 import { Site } from '../share-point/share-point.types';
@@ -53,6 +53,8 @@ export interface WorkbookCellCoordinates {
     row: string;
     column: string;
 }
+
+export type ExcelCellValue = string | number | boolean;
 
 export interface Range {
     address: string;
