@@ -16,9 +16,16 @@ export class CloudExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
-    
-    /* Tips */
 
+    static getColumnsIncorrectInput(): string {
+        return `
+            Starting column name has to be letters from range A-Z.
+            Ending column name is optional, but if provided it has to be letters from range A-Z.
+            ${this.getCheckInputTip()}
+        `;
+    }
+
+    /* Tips */
     private static getCheckInputTip(): string {
         return `
             Check the input tab above.

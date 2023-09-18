@@ -5,7 +5,7 @@ import { StatefulActionHandler } from 'runbotics-sdk';
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
 import * as SharepointTypes from './types';
-import { CloudExcelErrorMessage } from './cloud-excel.error-message'; 
+import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
@@ -63,6 +63,19 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteWorksheet(this.session, input.worksheetName);
     }
 
+    deleteColumns(input: SharepointTypes.CloudExcelDeleteColumnsActionInput) {
+        const startColumn = input.startColumn.match(ActionRegex.EXCEL_COLUMN_NAME);
+        const endColumn = input.endColumn ? input.endColumn.match(ActionRegex.EXCEL_COLUMN_NAME) : startColumn;
+
+        if (!startColumn || !endColumn) {
+            throw new Error(CloudExcelErrorMessage.getColumnsIncorrectInput());
+        }
+
+        const columnRange = `${startColumn}:${endColumn}`;
+
+        return this.excelService.deleteColumns(this.session, columnRange);
+    }
+
     run(request: SharepointTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
@@ -82,6 +95,9 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             case CloudExcelAction.DELETE_WORKSHEET:
                 this.checkSession();
                 return this.deleteWorksheet(request.input);
+            case CloudExcelAction.DELETE_COLUMNS:
+                this.checkSession();
+                return this.deleteColumns(request.input);
             case CloudExcelAction.CLOSE_SESSION:
                 return this.closeSession();
             default:
