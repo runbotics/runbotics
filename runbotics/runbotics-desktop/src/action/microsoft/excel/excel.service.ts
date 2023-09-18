@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { MicrosoftPlatform } from 'runbotics-common';
+import { MicrosoftPlatform, ExcelCellValue, ActionRegex } from 'runbotics-common';
 
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import { SharePointService } from '../share-point';
 import {
-    ExcelCellValue,
     ExcelSession,
     ExcelSessionInfo,
     SharePointSessionInfo,
@@ -23,6 +22,8 @@ import {
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
 import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
+
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 @Injectable()
 export class ExcelService {
@@ -144,16 +145,17 @@ export class ExcelService {
      */
     setCells(session: ExcelSession, startCell: string, values: ExcelCellValue[][]) {
         if (!Array.isArray(values)) {
-            values = JSON.parse(values) as ExcelCellValue[][];
-        }
-
-        if (!values.length) {
-            throw new Error(CloudExcelErrorMessage.setCellsIncorrectInput());
+            try {
+                values = JSON.parse(values) as ExcelCellValue[][];
+                if (!values.length) throw Error;
+            } catch (e) {
+                throw new Error(CloudExcelErrorMessage.setCellsIncorrectInput());
+            }
         }
         
-        const startColumnLetter = startCell.match(/[A-Z]+/).toString();
+        const startColumnLetter = startCell.match(ActionRegex.EXCEL_COLUMN_NAME).toString();
         const startColumnNumber = this.getColumnNumber(startColumnLetter);
-        const startRow = +startCell.match(/\d+/);
+        const startRow = Number(startCell.match(ActionRegex.EXCEL_ROW_NUMBER));
         
         const endColumnNumber = startColumnNumber + values[0].length - 1;
         const endColumnLetter = this.getColumnLetter(endColumnNumber);
@@ -239,10 +241,11 @@ export class ExcelService {
      * @description converts column number to a letter format
      * @param {number} columnNumber column number to convert
      * @returns {string} column in a letter format
+     * @example getColumnLetter(29) // 'AC'
      */
     private getColumnLetter(columnNumber: number): string {
-        const letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[(columnNumber - 1) % 26];
-        return columnNumber >= 26 ? this.getColumnLetter(Math.floor(columnNumber / 26) - 1) + letter : letter;
+        const letter = alphabet[(columnNumber - 1) % 26];
+        return columnNumber > 26 ? this.getColumnLetter(Math.floor((columnNumber - 1) / 26)) + letter : letter;
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {

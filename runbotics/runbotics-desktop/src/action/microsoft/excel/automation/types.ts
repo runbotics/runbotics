@@ -1,4 +1,4 @@
-import { CloudExcelAction } from 'runbotics-common';
+import { CloudExcelAction, ExcelCellValue } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 import { ExcelSessionInfo, Worksheet } from '#action/microsoft/excel/excel.types';
@@ -19,7 +19,7 @@ export type CloudExcelSetCellActionInput = {
 
 export type CloudExcelSetCellsActionInput = {
     startCell: string;
-    values: (string | number | boolean)[][];
+    values: ExcelCellValue[][];
 };
 
 export type CloudGetExcelCellActionInput = {

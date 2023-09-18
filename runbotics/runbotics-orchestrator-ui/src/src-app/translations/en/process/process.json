@@ -311,7 +311,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell": "Start cell",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell.Info": "Starting cell address (e.g. A3)",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values": "Values",
-    "Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values.Info": "Array of rows, where each row is an array of values to set, e.g. [[\"value A3\", \"value B3\"],[\"value A4\", \"value B4\"]]. If value is \"\" the cell will be cleared. If value is null the cell will be skipped",
+    "Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values.Info": "Array of rows, where each row is an array of values to set, e.g. [['value A3', 'value B3'], ['value A4', 'value B4']]. If value is '' the cell will be cleared. If value is null the cell will be skipped",
     "Process.Details.Modeler.Actions.CloudExcel.OpenFile.Platform": "Platform",
     "Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label": "Open workbook",
     "Process.Details.Modeler.Actions.CloudExcel.OpenFileFromSite.Label": "Open file from site and create session",
