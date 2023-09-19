@@ -14,7 +14,7 @@ import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/Proces
 import { StartProcessResponse } from './Process.state';
 
 
-const processPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
+const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
 
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
