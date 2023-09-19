@@ -480,7 +480,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: ActionRegex.EXCEL_WORKSHEET_NAME
                             },
                         },
-
                         required: ['worksheetName'],
                     },
                     output: {
@@ -491,7 +490,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Common.VariableName',
                                 ),
-
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },

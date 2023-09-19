@@ -201,8 +201,8 @@ export class ExcelService {
      * @see https://learn.microsoft.com/en-us/graph/api/worksheetcollection-add?view=graph-rest-1.0&tabs=javascript
      */
     async createWorksheet(session: ExcelSession, worksheetName: Worksheet['name']) {
-        await this.microsoftGraphService
-            .post(
+        const response = await this.microsoftGraphService
+            .post<Worksheet>(
                 this.createWorkbookUrl(session, '/worksheets/add'),
                 {
                     ...this.getSessionHeader(session),
@@ -210,7 +210,9 @@ export class ExcelService {
                 }
             );
 
-        return worksheetName;
+        const { name } = response;
+
+        return name;
     }
 
     /**
