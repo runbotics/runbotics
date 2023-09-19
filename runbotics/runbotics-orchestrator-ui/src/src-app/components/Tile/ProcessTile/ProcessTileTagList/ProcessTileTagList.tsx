@@ -72,20 +72,22 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     return (
         <Container>
             <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
-                {tags.filter(tag => tagNameFitSearch(tag.name))
-                    .concat(tags.filter(tag => !tagNameFitSearch(tag.name)))
-                    .map((tag) =>
-                        <Chip
-                            label={
-                                <HighlightText
-                                    text={tag.name}
-                                    matchingText={searchValue}
-                                    matchStyle={highlightTextStyle}
-                                />
-                            }
-                            key={tag.name}
-                            size='small'
-                        />)
+                {tags.reduce((acc, tag) =>
+                    tagNameFitSearch(tag.name)
+                        ? [tag, ...acc]
+                        : [...acc, tag]
+                , []).map(tag =>
+                    <Chip
+                        label={
+                            <HighlightText
+                                text={tag.name}
+                                matchingText={searchValue}
+                                matchStyle={highlightTextStyle}
+                            />
+                        }
+                        key={tag.name}
+                        size='small'
+                    />)
                 }
             </TagBox>
             <DividerBox $isExpanded={isTagBoxExpanded}>
