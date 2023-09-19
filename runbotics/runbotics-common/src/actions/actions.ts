@@ -10,7 +10,7 @@ export enum CloudPath {
 
 export enum ActionRegex {
     VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
-    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]*$',
+    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+$',
     EXCEL_ROW_NUMBER = '[\\d]+'
@@ -127,6 +127,7 @@ export enum CloudExcelAction {
 	SET_CELLS = 'cloudExcel.setCells',
 	OPEN_FILE='cloudExcel.openFile',
 	CLOSE_SESSION = 'cloudExcel.closeSession',
+    CREATE_WORKSHEET = "cloudExcel.createWorksheet",
     DELETE_WORKSHEET = "cloudExcel.deleteWorksheet",
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
 }

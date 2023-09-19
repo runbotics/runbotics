@@ -453,6 +453,47 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [CloudExcelAction.CREATE_WORKSHEET]: {
+        id: CloudExcelAction.CREATE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
+        script: CloudExcelAction.CREATE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                        required: ['worksheetName'],
+                    },
+                },
+            },
+            uiSchema: {
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    worksheetName: undefined,
+                },
+            },
+        },
+    },
     [CloudExcelAction.DELETE_WORKSHEET]: {
         id: CloudExcelAction.DELETE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label'),

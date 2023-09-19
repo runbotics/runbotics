@@ -197,6 +197,21 @@ export class ExcelService {
                 this.getSessionHeader(session),
             );
     }
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheetcollection-add?view=graph-rest-1.0&tabs=javascript
+     */
+    createWorksheet(session: ExcelSession, worksheetName: Worksheet['name']) {
+        // create regex for worksheet name (max chara num 31, cannot contain any of the following characters \ , / , * , ? , : , [ , ].)
+        // check if name already taken
+        return this.microsoftGraphService
+            .post(
+                this.createWorkbookUrl(session, '/worksheets/add'),
+                {
+                    ...this.getSessionHeader(session),
+                    name: worksheetName
+                }
+            );
+    }
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-delete?view=graph-rest-1.0&tabs=http

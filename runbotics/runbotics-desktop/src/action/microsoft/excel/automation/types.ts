@@ -10,6 +10,7 @@ export type CloudExcelActionRequest =
 | DesktopRunRequest<CloudExcelAction.SET_CELLS, CloudExcelSetCellsActionInput>
 | DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
 | DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
+| DesktopRunRequest<CloudExcelAction.CREATE_WORKSHEET, CloudExcelCreateWorksheetActionInput>
 | DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
 | DesktopRunRequest<CloudExcelAction.DELETE_COLUMNS, CloudExcelDeleteColumnsActionInput>;
 
@@ -30,6 +31,10 @@ export type CloudGetExcelCellActionInput = {
 export type CloudExcelGetCellsActionInput = {
     startCell: string;
     endCell: string;
+};
+
+export type CloudExcelCreateWorksheetActionInput = {
+    worksheetName: Worksheet['name'];
 };
 
 export type CloudExcelDeleteWorksheetActionInput = {
