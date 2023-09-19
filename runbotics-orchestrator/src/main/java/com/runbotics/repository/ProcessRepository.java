@@ -43,7 +43,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "LEFT JOIN tag_process tp ON p.id = tp.process_id " +
             "LEFT JOIN tag t ON tp.tag_id = t.id " +
             "LEFT JOIN jhi_user u ON u.id = p.created_by_id " +
-            "WHERE (p.name LIKE %:name% OR t.name LIKE %:tagName% OR u.email LIKE %:createdByName%) " +
+            "WHERE (p.name iLIKE %:name% OR t.name iLIKE %:tagName% OR u.email iLIKE %:createdByName%) " +
             "GROUP BY p.id"
         , nativeQuery = true
     )
@@ -56,7 +56,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "LEFT JOIN jhi_user u ON u.id = p.created_by_id " +
             "WHERE u.id NOT IN (SELECT g.user_id FROM guest g) " +
             "AND (p.created_by_id = :id OR p.is_public = true) " +
-            "AND (p.name LIKE %:name% OR t.name LIKE %:tagName% OR u.email LIKE %:createdByName%) " +
+            "AND (p.name iLIKE %:name% OR t.name iLIKE %:tagName% OR u.email iLIKE %:createdByName%) " +
             "GROUP BY p.id"
         , nativeQuery = true
     )
