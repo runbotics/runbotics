@@ -10,7 +10,7 @@ export enum CloudPath {
 
 export enum ActionRegex {
     VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
-    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:\\|]{1,31}$',
+    EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+$',
     EXCEL_ROW_NUMBER = '[\\d]+'
