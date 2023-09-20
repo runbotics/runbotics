@@ -453,6 +453,77 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [CloudExcelAction.CREATE_WORKSHEET]: {
+        id: CloudExcelAction.CREATE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
+        script: CloudExcelAction.CREATE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                        required: ['worksheetName'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    worksheetName: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
     [CloudExcelAction.DELETE_WORKSHEET]: {
         id: CloudExcelAction.DELETE_WORKSHEET,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label'),
