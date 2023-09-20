@@ -613,6 +613,54 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [CloudExcelAction.DELETE_ROWS]: {
+        id: CloudExcelAction.DELETE_ROWS,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Label'),
+        script: CloudExcelAction.DELETE_ROWS,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            rowRange: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.RowRange'),
+                                type: 'string',
+                            },
+                            worksheet: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet'),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_COLUMN_NAME
+                            }
+                        },
+                        required: ['rowRange'],
+                    },
+                },
+            },
+            uiSchema: {
+                input: {
+                    rowRange: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.RowRange.Info'),
+                        },
+                    },
+                    endColumn: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    rowRange: undefined,
+                },
+            },
+        },
+    },
 });
 
 export default getCloudExcelActions;

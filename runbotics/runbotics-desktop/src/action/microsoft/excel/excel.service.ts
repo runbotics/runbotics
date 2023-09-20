@@ -240,6 +240,22 @@ export class ExcelService {
             );
     }
 
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/range-delete?view=graph-rest-1.0&tabs=http
+     */
+    deleteRows(session: ExcelSession, rowRange: string, worksheet: string) {
+        const worksheetName = worksheet ? worksheet : session.worksheetName;
+
+        return this.microsoftGraphService.
+            post(
+                this.createWorkbookUrl(session, `/worksheets/${worksheetName}/range(address='${rowRange}')/delete`),
+                {
+                    ...this.getSessionHeader(session),
+                    shift: 'up'
+                },
+            );
+    }
+
     private getActiveWorksheet(session: ExcelSession | FileInfo) {
         if (hasWorksheetName(session)) {
             return this.getWorksheet(session);

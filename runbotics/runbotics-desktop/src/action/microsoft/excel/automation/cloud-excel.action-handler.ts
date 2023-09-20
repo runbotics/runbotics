@@ -7,6 +7,8 @@ import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/
 import * as SharepointTypes from './types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
+import { sortNumbersDescending } from '../excel.utils';
+
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
     private session: ExcelSession = null;
@@ -80,6 +82,40 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
+    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput) {
+        const rowRange = input.rowRange;
+        const worksheet = input.worksheet ? input.worksheet : null;
+
+        if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
+            const cells = rowRange.split(':');
+            const address = `${cells[0]}:${cells[1]}`;
+            return this.excelService.deleteRows(this.session, address, worksheet);
+        }
+
+        if (rowRange.match(ActionRegex.EXCEL_ROW_NUMBER)) {
+            const address = `A${rowRange}:XFD${rowRange}`;
+            const response = this.excelService.deleteRows(this.session, address, worksheet);
+            return response;
+        }
+
+        try {
+            const rows = JSON.parse(rowRange);
+
+            if (!Array.isArray(rows)) {
+                throw new Error;
+            }
+
+            const sortedDescendingRows = sortNumbersDescending(rows);
+
+            sortedDescendingRows.forEach((row: number) => {
+                const address = `A${row}:XFD${row}`;
+                this.excelService.deleteRows(this.session, address, worksheet);
+            });
+        } catch (e) {
+            throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+        }
+    }
+
     run(request: SharepointTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
@@ -105,6 +141,9 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             case CloudExcelAction.DELETE_COLUMNS:
                 this.checkSession();
                 return this.deleteColumns(request.input);
+            case CloudExcelAction.DELETE_ROWS:
+                this.checkSession();
+                return this.deleteRows(request.input);
             case CloudExcelAction.CLOSE_SESSION:
                 return this.closeSession();
             default:
