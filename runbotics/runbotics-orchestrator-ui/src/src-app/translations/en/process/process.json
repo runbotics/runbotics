@@ -330,7 +330,7 @@
     "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Close session",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label": "Create worksheet",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName": "Worksheet name",
-    "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "Maximum number of characters: 31. Characters not allowed: \\ , / , * , ? , : , [ , ]",
+    "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "New worksheet name. Maximum number of characters: 31. Characters not allowed: \\ , / , * , ? , : , [ , ]",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label": "Delete worksheet",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName": "Worksheet name",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName.Info": "It corresponds to the cloud file opened in the 'Open workbook' action",

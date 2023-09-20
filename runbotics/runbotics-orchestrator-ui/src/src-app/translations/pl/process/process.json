@@ -334,7 +334,7 @@
     "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Zakończ sesję",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label": "Stwórz arkusz",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName": "Nazwa arkusza",
-    "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "Maksymalna liczba znaków: 31. Znaki niedozwolone: \\ , / , * , ? , : , [ , ]",
+    "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "Nazwa nowego arkusza. Maksymalna liczba znaków: 31. Znaki niedozwolone: \\ , / , * , ? , : , [ , ]",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label": "Usuń arkusz",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName": "Nazwa arkusza",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName.Info": "Odnosi się do pliku otworzonego w akcji 'Otwórz skoroszyt'",
