@@ -4,6 +4,7 @@
         <preConditions onFail="MARK_RAN">
             <and>
                 <tableExists tableName="guest"/>
+                <columnExists tableName="guest" columnName="ip" />
                 <not>
                     <columnExists tableName="guest" columnName="ip_hash"/>
                 </not>
