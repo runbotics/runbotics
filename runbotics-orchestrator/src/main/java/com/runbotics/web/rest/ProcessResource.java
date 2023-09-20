@@ -294,13 +294,11 @@ public class ProcessResource {
     @GetMapping("/processes-page")
     public ResponseEntity<Page<ProcessDTO>> getAllProcessesByPage(ProcessCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Processes by criteria: {}", criteria);
-        var requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
-        Page<ProcessDTO> page = processQueryService.findByCriteria(criteria, pageable);
-        List<ProcessDTO> withoutGuestProcesses = this.processQueryService.filterGuestProcessesByUserRole(page.getContent(), requester.getAuthorities().toString());
-        Page<ProcessDTO> filteredPage = new PageImpl<>(withoutGuestProcesses, pageable, page.getTotalElements());
 
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), filteredPage);
-        return ResponseEntity.ok().headers(headers).body(filteredPage);
+        User requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
+        Page<ProcessDTO> page = processQueryService.findBySearchField(criteria, pageable, requester);
+        HttpHeaders header = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(header).body(page);
     }
 
     /**

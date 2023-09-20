@@ -266,7 +266,15 @@ public class ProcessServiceImpl implements ProcessService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Process : {}", id);
+        Optional<Process> process = processRepository.findById(id);
+        if (process.isEmpty()) {
+            throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
+        }
+
+        List<Long> remainingTags = process.get().getTags()
+            .stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
+        tagService.deleteUnusedTags(remainingTags);
     }
 
     @Override

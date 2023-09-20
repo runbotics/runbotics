@@ -47,6 +47,8 @@ public class ProcessCriteria implements Serializable, Criteria {
 
     private StringFilter botCollectionName;
 
+    private StringFilter tagName;
+
     public ProcessCriteria() {}
 
     public ProcessCriteria(ProcessCriteria other) {
@@ -61,6 +63,7 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.createdById = other.createdById == null ? null : other.createdById.copy();
         this.createdByName = other.createdByName == null ? null : other.createdByName.copy();
         this.botCollectionName = other.botCollectionName == null ? null : other.botCollectionName.copy();
+        this.tagName = other.tagName == null ? null : other.tagName.copy();
     }
 
     @Override
@@ -233,6 +236,21 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.botCollectionName = botCollectionName;
     }
 
+    public StringFilter tagName() {
+        if (tagName == null) {
+            tagName = new StringFilter();
+        }
+        return tagName;
+    }
+
+    public StringFilter getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(StringFilter tagName) {
+        this.tagName = tagName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -253,7 +271,8 @@ public class ProcessCriteria implements Serializable, Criteria {
             Objects.equals(failureExecutionsCount, that.failureExecutionsCount) &&
             Objects.equals(createdById, that.createdById) &&
             Objects.equals(createdByName, that.createdByName) &&
-            Objects.equals(botCollectionName, that.botCollectionName)
+            Objects.equals(botCollectionName, that.botCollectionName) &&
+            Objects.equals(tagName, that.tagName)
         );
     }
 
@@ -270,7 +289,8 @@ public class ProcessCriteria implements Serializable, Criteria {
             failureExecutionsCount,
             createdById,
             createdByName,
-            botCollectionName
+            botCollectionName,
+            tagName
         );
     }
 
@@ -287,6 +307,7 @@ public class ProcessCriteria implements Serializable, Criteria {
             (successExecutionsCount != null ? "successExecutionsCount=" + successExecutionsCount + ", " : "") +
             (failureExecutionsCount != null ? "failureExecutionsCount=" + failureExecutionsCount + ", " : "") +
             (createdById != null ? "createdById=" + createdById + ", " : "") +
+            (tagName != null ? "tagName=" + tagName + ", " : "") +
             "}";
     }
 }

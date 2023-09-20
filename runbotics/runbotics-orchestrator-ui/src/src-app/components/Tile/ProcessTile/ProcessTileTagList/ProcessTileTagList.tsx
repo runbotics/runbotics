@@ -2,6 +2,7 @@ import React, { FC, useState, useRef, useLayoutEffect, MouseEvent } from 'react'
 
 import { Chip } from '@mui/material';
 
+import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -20,7 +21,9 @@ import { ProcessTileTagListProps } from './ProcessTileTagList.types';
 const TAGS_CONTAINER_MARGIN_VALUE = 85;
 const TAG_RIGHT_MARGIN_VALUE = 8;
 
-const ProcessTileTagList: FC<ProcessTileTagListProps> = ({ tags }) => {
+const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
+    tags, searchValue
+}) => {
     const { translate } = useTranslations();
 
     const [isTagBoxExpanded, setIsTagBoxExpanded] = useState<boolean>(false);
@@ -64,12 +67,23 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({ tags }) => {
         setIsTagBoxExpanded(!isTagBoxExpanded);
     };
 
+    const tagNameFitSearch = (tagName: string) => Boolean(tagName.match(RegExp(searchValue, 'ig')));
+
     return (
         <Container>
             <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
-                {tags.map((tag) =>
+                {tags.reduce((acc, tag) =>
+                    tagNameFitSearch(tag.name)
+                        ? [tag, ...acc]
+                        : [...acc, tag]
+                , []).map(tag =>
                     <Chip
-                        label={tag.name}
+                        label={
+                            <HighlightText
+                                text={tag.name}
+                                matchingText={searchValue}
+                            />
+                        }
                         key={tag.name}
                         size='small'
                     />)

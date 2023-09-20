@@ -41,10 +41,10 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
                 filter: {
                     contains: {
                         ...(debouncedValue.trim() && {
-                            [searchField === 'createdBy'
-                                ? 'createdByName'
-                                : 'name']: debouncedValue.trim(),
-                        }),
+                            name: debouncedValue.trim(),
+                            createdByName: debouncedValue.trim(),
+                            tagName: debouncedValue.trim()
+                        })
                     },
                 },
             })

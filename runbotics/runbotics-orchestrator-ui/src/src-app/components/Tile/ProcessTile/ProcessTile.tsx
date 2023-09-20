@@ -2,9 +2,11 @@ import type { VFC } from 'react';
 
 import { Box, Divider, CardHeader } from '@mui/material';
 
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
+import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { ProcessTab } from '#src-app/utils/process-tab';
@@ -20,6 +22,8 @@ import Tile, { TileAvatar } from '..';
 
 const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const searchFromUrl = searchParams.get('search');
     const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
 
@@ -33,16 +37,27 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
             <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader
                     avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
-                    title={process.name}
+                    title={
+                        <HighlightText
+                            text={process.name}
+                            matchingText={searchFromUrl}
+                        />
+                    }
                     titleTypographyProps={{ variant: 'h5' }}
                     sx={{ width: '100%', paddingBottom: '5px' }}
                     onClick={handleRedirect}
                 />
                 <If condition={Boolean(process.tags.length)}>
-                    <ProcessTileTagList tags={process.tags} />
+                    <ProcessTileTagList
+                        tags={process.tags}
+                        searchValue={searchFromUrl}
+                    />
                 </If>
                 <If condition={hasProcessDetailsAccess}>
-                    <ProcessTileContent process={process} />
+                    <ProcessTileContent
+                        process={process}
+                        searchValue={searchFromUrl}
+                    />
                 </If>
                 <If condition={!hasProcessDetailsAccess && Boolean(process.description)}>
                     <Box
