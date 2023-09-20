@@ -73,7 +73,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        this.botLifecycleService.handleProcessInstanceInterruption(bot);
+        await this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
@@ -86,7 +86,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
     ) {
-        await this.setBotStatusBusy(socket.bot);
+        if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
+            processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+            await this.setBotStatusBusy(socket.bot);
+        }
 
         const installationId = socket.bot.installationId;
 
@@ -113,11 +116,11 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        await this.setBotStatusBusy(socket.bot);
-
         if(processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS){
             this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
             return;
+        } else {
+            await this.setBotStatusBusy(socket.bot);
         }
 
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
@@ -131,7 +134,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
-        await this.setBotStatusBusy(socket.bot);
+        if (processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS) {
+            await this.setBotStatusBusy(socket.bot);
+        }
 
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);

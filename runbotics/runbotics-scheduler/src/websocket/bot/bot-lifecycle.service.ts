@@ -49,8 +49,8 @@ export class BotLifecycleService {
                 updated: new Date().toString(),
             };
 
-            this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);            
-            this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
+            await this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);
+            await this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
         });
     }
 
