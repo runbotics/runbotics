@@ -22,7 +22,7 @@ const TAGS_CONTAINER_MARGIN_VALUE = 85;
 const TAG_RIGHT_MARGIN_VALUE = 8;
 
 const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
-    tags, highlightTextStyle, searchValue
+    tags, searchValue
 }) => {
     const { translate } = useTranslations();
 
@@ -82,7 +82,6 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
                             <HighlightText
                                 text={tag.name}
                                 matchingText={searchValue}
-                                matchStyle={highlightTextStyle}
                             />
                         }
                         key={tag.name}

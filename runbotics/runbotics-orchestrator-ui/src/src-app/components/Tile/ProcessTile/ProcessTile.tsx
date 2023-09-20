@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
-import HighlightText, { useHighlightTextStyle } from '#src-app/components/HighlightText';
+import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { ProcessTab } from '#src-app/utils/process-tab';
@@ -27,8 +27,6 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
     const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
 
-    const highlightTextStyle = useHighlightTextStyle();
-
     const handleRedirect = () => {
         if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
         else router.push(buildProcessUrl(process, ProcessTab.RUN));
@@ -43,7 +41,6 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
                         <HighlightText
                             text={process.name}
                             matchingText={searchFromUrl}
-                            matchStyle={highlightTextStyle}
                         />
                     }
                     titleTypographyProps={{ variant: 'h5' }}
@@ -53,14 +50,12 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
                 <If condition={Boolean(process.tags.length)}>
                     <ProcessTileTagList
                         tags={process.tags}
-                        highlightTextStyle={highlightTextStyle}
                         searchValue={searchFromUrl}
                     />
                 </If>
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent
                         process={process}
-                        highlightTextStyle={highlightTextStyle}
                         searchValue={searchFromUrl}
                     />
                 </If>

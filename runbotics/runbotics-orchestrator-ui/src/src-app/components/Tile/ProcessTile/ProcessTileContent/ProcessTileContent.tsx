@@ -15,7 +15,7 @@ import { ProcessTileContentProps } from './ProcessTileContent.types';
 import { DATE_FORMAT } from '../../Tile.utils';
 
 const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
-    process, highlightTextStyle, searchValue
+    process, searchValue
 }) => {
     const { translate } = useTranslations();
 
@@ -37,7 +37,6 @@ const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
                     <HighlightText
                         text={process.createdBy ? process.createdBy.login : 'RunBotics'}
                         matchingText={searchValue}
-                        matchStyle={highlightTextStyle}
                     />
                 </Typography>
             </Box>
