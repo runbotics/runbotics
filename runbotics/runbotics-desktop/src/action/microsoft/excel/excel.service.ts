@@ -197,6 +197,23 @@ export class ExcelService {
                 this.getSessionHeader(session),
             );
     }
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheetcollection-add?view=graph-rest-1.0&tabs=javascript
+     */
+    async createWorksheet(session: ExcelSession, worksheetName: Worksheet['name']) {
+        const response = await this.microsoftGraphService
+            .post<Worksheet>(
+                this.createWorkbookUrl(session, '/worksheets/add'),
+                {
+                    ...this.getSessionHeader(session),
+                    name: worksheetName
+                }
+            );
+
+        const { name } = response;
+
+        return name;
+    }
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-delete?view=graph-rest-1.0&tabs=http
