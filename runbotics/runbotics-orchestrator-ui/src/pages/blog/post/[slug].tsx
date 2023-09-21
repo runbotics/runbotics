@@ -2,7 +2,8 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getSinglePostCacheBySlug } from '#contentful/blog-main';
+import { isCached, recreateCache } from '#contentful/blog-main';
+import { getSinglePostCache } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
 import backupRunBoticsImage from '#public/images/banners/hero-background.png';
 import { Language } from '#src-app/translations/translations';
@@ -23,7 +24,12 @@ interface Params extends Record<string, string> {
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, locale }) => {
     const language = locale as Language;
-    const post = getSinglePostCacheBySlug(language, params.slug);
+
+    if (!isCached(language)) {
+        await recreateCache();
+    }
+
+    const post = getSinglePostCache(language, params.slug);
 
     if (!post) {
         return {

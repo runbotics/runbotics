@@ -11,7 +11,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
-import { getBlogMainCache, isCached, recreateCache } from '#contentful/blog-main';
+import { isCached, recreateCache } from '#contentful/blog-main';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 
 import MainLayout from '#src-app/layouts/MainLayout';
