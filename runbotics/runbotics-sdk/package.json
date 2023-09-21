@@ -24,7 +24,6 @@
     },
     "devDependencies": {
         "@types/node": "^18.15.3",
-        "bpmn-engine": "^12.0.2",
         "microbundle": "^0.13.3",
         "rollup-plugin-typescript2": "^0.30.0",
         "typescript": "^5.1.6"
