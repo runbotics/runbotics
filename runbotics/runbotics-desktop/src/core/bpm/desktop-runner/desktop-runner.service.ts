@@ -117,7 +117,7 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter(directoryEntry => this.detectExtensions(directoryEntry, this.serverConfigService.extensionsDirPath))
+                .filter(directoryEntry => this.detectExtensionsDirectories(directoryEntry))
                 .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
@@ -240,8 +240,8 @@ export class DesktopRunnerService implements OnModuleInit {
         }
     }
 
-    private checkDirectoryIncludes(directoryPath: string, directoryName: string, expectedFiles: string[]): boolean {
-        const isPresent = expectedFiles.every(fileSystemEntry => {
+    private checkIfFileSystemEntryPresentInDirectory(directoryPath: string, directoryName: string, fileSystemEntires: string[]): boolean {
+        const isPresent = fileSystemEntires.every(fileSystemEntry => {
             const path = directoryPath + '\\' + directoryName + '\\' + fileSystemEntry;
             return existsSync(path);
         });
@@ -249,13 +249,29 @@ export class DesktopRunnerService implements OnModuleInit {
         return isPresent;
     }
 
-    private detectExtensions(directoryEntry: Dirent, extensionsPath: string) {
-        return directoryEntry.isDirectory()
-            && !directoryEntry.name.startsWith('.')
-            && this.checkDirectoryIncludes(
-                extensionsPath,
-                directoryEntry.name,
-                ['dist', 'node_modules', 'package.json']
-            );
+    private checkIfPackageManagerPresentInDirectory(directoryPath: string, directoryName: string, packageManagerFile: string[]) {
+        const isPresent = packageManagerFile.some(packageFile => {
+            const path = directoryPath + '\\' + directoryName + '\\' + packageFile;
+            return existsSync(path);
+        });
+
+        return isPresent;
+    }
+
+    private detectExtensionsDirectories(directoryEntry: Dirent) {
+        return (
+            directoryEntry.isDirectory() &&
+            !directoryEntry.name.startsWith('.') &&
+            this.checkIfFileSystemEntryPresentInDirectory(directoryEntry.path, directoryEntry.name, [
+                'dist',
+                'node_modules',
+                'package.json'
+            ]) &&
+            this.checkIfPackageManagerPresentInDirectory(directoryEntry.path, directoryEntry.name, [
+                'package-lock.json',
+                'yarn.lock',
+                'pnpm-lock.yaml'
+            ])
+        );
     }
 }
