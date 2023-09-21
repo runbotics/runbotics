@@ -18,7 +18,7 @@ import {
 } from './ProcessTileTagList.styles';
 import { ProcessTileTagListProps } from './ProcessTileTagList.types';
 
-const TAGS_CONTAINER_MARGIN_VALUE = 85;
+const TAGS_CONTAINER_MARGIN_VALUE = 67;
 const TAG_RIGHT_MARGIN_VALUE = 8;
 
 const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
@@ -32,11 +32,11 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
 
     const refTagBox = useRef<HTMLDivElement>();
 
-    const checkTagsWidth = (tagsWidthSum: number, refTags: HTMLDivElement[]): void => {
+    const checkTagsWidth = (tagsWidthSum: number): void => {
         if (!refTagBox.current) return;
 
         const tagDivWidth: number = refTagBox.current.offsetWidth - TAGS_CONTAINER_MARGIN_VALUE;
-        const tagsWithMarginWidth: number = tagsWidthSum + (refTags.length - 1) * TAG_RIGHT_MARGIN_VALUE;
+        const tagsWithMarginWidth: number = tagsWidthSum + (tags.length) * TAG_RIGHT_MARGIN_VALUE;
 
         setIsTagListMultiLine(tagsWithMarginWidth > tagDivWidth);
     };
@@ -50,15 +50,15 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     useLayoutEffect(() => {
         const refTags: HTMLDivElement[] = Array.from(refTagBox.current.childNodes) as HTMLDivElement[];
         const tagsWidthSum: number = handleWindowResize(refTags);
-        window.addEventListener('resize', () => checkTagsWidth(tagsWidthSum, refTags));
+        window.addEventListener('resize', () => checkTagsWidth(tagsWidthSum));
 
         return () => {
-            window.removeEventListener('resize', () => checkTagsWidth(tagsWidthSum, refTags));
+            window.removeEventListener('resize', () => checkTagsWidth(tagsWidthSum));
         };
     }, []);
 
     useLayoutEffect(() => {
-        checkTagsWidth(tagsWidth, []);
+        checkTagsWidth(tagsWidth);
     }, [tagsWidth]);
 
     const handleTagBoxResize = (e: MouseEvent<HTMLDivElement>) => {
