@@ -1,9 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import { Box, Typography } from '@mui/material';
-import { red } from '@mui/material/colors';
 import moment from 'moment';
 
 import HighlightText from '#src-app/components/HighlightText';
@@ -12,7 +9,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledContent } from './ProcessTileContent.styles';
 import { ProcessTileContentProps } from './ProcessTileContent.types';
-import { DATE_FORMAT } from '../../Tile.utils';
 
 const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
     process, searchValue
@@ -21,7 +17,7 @@ const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
 
     return (
         <StyledContent>
-            <Box>
+            {/* <Box>
                 <Typography color="textSecondary" variant="body2">
                     {translate('Component.Tile.Process.Content.Created')}
                 </Typography>
@@ -58,6 +54,41 @@ const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
                 >
                     <CheckCircleOutlineOutlinedIcon color="success" />
                 </If>
+            </Box> */}
+            <Box>
+                <Typography color='textPrimary' variant='h6'>
+                    Last run:
+                </Typography>
+                <Typography color='textSecondary' variant='body2'>
+                    placeholder
+                </Typography>
+            </Box>
+            <Box>
+                <Typography color='textPrimary' variant='h6'>
+                    Creator:
+                </Typography>
+                <Typography color='textSecondary' variant='body2'>
+                    <HighlightText
+                        text={process.createdBy ? process.createdBy.login : 'RunBotics'}
+                        matchingText={searchValue}
+                    />
+                </Typography>
+            </Box>
+            <Box>
+                <Typography color='textPrimary' variant='h6'>
+                    Updated:
+                </Typography>
+                <Typography color='textSecondary' variant='body2'>
+                    {moment(process.updated).fromNow()}
+                </Typography>
+            </Box>
+            <Box>
+                <Typography color='textPrimary' variant='h6'>
+                    Editor:
+                </Typography>
+                <Typography color='textSecondary' variant='body2'>
+                    placeholder
+                </Typography>
             </Box>
         </StyledContent>
     );

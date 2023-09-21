@@ -34,7 +34,7 @@ export const TagBox = styled.div
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${$isExpanded ? '170px' : '100%'};
+    height: ${$isExpanded ? '177px' : '100%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
@@ -53,7 +53,7 @@ export const DividerBox = styled.div
     align-items: center;
     width: 100%;
     height: 10px;
-    background-color: ${$isExpanded ? theme.palette.background.paper : 'transparent'};
+    background: ${$isExpanded ? `linear-gradient(180deg, transparent 50%, ${theme.palette.grey[200]} 50%);` : 'transparent'};
 `);
 
 export const DividerAction = styled.div(({ theme }) => `
