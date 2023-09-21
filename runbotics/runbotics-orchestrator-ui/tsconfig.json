@@ -1,4 +1,13 @@
 {
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "transpileOnly": true,
+        "files": true,
+        "compilerOptions": {
+          "module": "CommonJS",
+          "isolatedModules": false
+        }
+      },
     "compilerOptions": {
         "baseUrl": ".",
         "target": "es5",

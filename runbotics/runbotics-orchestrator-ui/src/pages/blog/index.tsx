@@ -2,9 +2,7 @@ import { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import {
-    getBlogMainCache, recreateCache,
-} from '#contentful/blog-main';
+import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
 
 import {
     BlogPost,
