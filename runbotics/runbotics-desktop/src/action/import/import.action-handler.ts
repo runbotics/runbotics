@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
 import csv from 'csvtojson/v2';
 
 export type ImportActionRequest =
-| DesktopRunRequest<'import.csv', ImportCSVActionInput>;
+    | DesktopRunRequest<'import.csv', ImportCSVActionInput>;
 
 export type ImportCSVActionInput = {
     file: string;

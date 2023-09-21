@@ -1,4 +1,5 @@
-import { Worker } from 'worker_threads';
+const { Worker } = require('worker_threads');
+import path from "path";
 import { DesktopRunRequest } from "../handler";
 import { WorkerMessageType } from "./Multithread.types";
 import { MultithreadStatefulActionHandler } from './MultithreadStatefulActionHandler';
@@ -16,6 +17,7 @@ export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler 
     }
 
     run(request: DesktopRunRequest<string, any>): Promise<any> {
+        console.log('[MultithreadStatefulRunner] run request: ', request);
         return new Promise((resolve, reject) => {
             const stringRequest = JSON.stringify(request)
             this.worker.postMessage({ type: WorkerMessageType.RUN, stringRequest });
@@ -24,7 +26,8 @@ export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler 
     }
 
     private async startWorker(handlerPath) {
-        this.worker = new Worker('./Worker.js', { workerData: { handlerPath } });
+        console.log('[MultithreadStatefulRunner] startWorker');
+        this.worker = new Worker(path.resolve('./node_modules/@runbotics/runbotics-sdk/dist/Worker.js'), { workerData: { handlerPath } });
     }
 
     private async onMessage(resolve, reject) {
@@ -33,6 +36,11 @@ export class MultithreadStatefulRunner extends MultithreadStatefulActionHandler 
         });
         this.worker.on('error', (error) => {
             reject(error);
+        });
+        this.worker.on('unhandledRejection', (error) => {
+            console.error('Unhandled Promise Rejection:', error);
+            console.error('Terminating worker...');
+            this.worker.terminate();
         });
     }
 }

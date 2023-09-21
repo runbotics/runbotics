@@ -1,4 +1,4 @@
-import { Worker } from 'worker_threads';
+const { Worker } = require('worker_threads');
 import { DesktopRunRequest } from "../handler";
 import { WorkerMessageType } from "./Multithread.types";
 import { MultithreadStatelessActionHandler } from './MultithreadStatelessActionHandler';
