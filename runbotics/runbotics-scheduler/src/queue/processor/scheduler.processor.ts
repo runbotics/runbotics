@@ -118,7 +118,7 @@ export class SchedulerProcessor {
         const processInstanceIdentifier =
             await this.processSchedulerService.startProcess(job.data, bot);
 
-        this.botGateway.setBotStatusBusy(bot);
+        await this.botGateway.setBotStatusBusy(bot);
 
         this.logger.log(
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,

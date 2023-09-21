@@ -27,12 +27,12 @@ export class WebsocketService implements OnApplicationBootstrap {
         this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, () => {
-            if(message.payload.status === ProcessInstanceEventStatus.COMPLETED){
+            if(message.payload.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
                 this.messageService.clear();
                 return;
             }
-            this.messageService.remove(message);
 
+            this.messageService.remove(message);
         });
     }
 
