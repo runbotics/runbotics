@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import { FC, useRef } from 'react';
 
 import { Box, Divider, CardHeader } from '@mui/material';
 
@@ -20,12 +20,14 @@ import ProcessTileTagList from './ProcessTileTagList';
 import Tile, { TileAvatar } from '..';
 
 
-const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
+const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const searchFromUrl = searchParams.get('search');
     const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
     const hasBuildTabAccess = useFeatureKey([FeatureKey.PROCESS_BUILD_VIEW]);
+
+    const refProcessTileContent = useRef<HTMLDivElement>();
 
     const handleRedirect = () => {
         if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
@@ -47,14 +49,14 @@ const ProcessTile: VFC<ProcessTileProps> = ({ process }) => {
                     sx={{ width: '100%', paddingBottom: '5px' }}
                     onClick={handleRedirect}
                 />
-                <If condition={Boolean(process.tags.length)}>
-                    <ProcessTileTagList
-                        tags={process.tags}
-                        searchValue={searchFromUrl}
-                    />
-                </If>
+                <ProcessTileTagList
+                    tags={process.tags}
+                    searchValue={searchFromUrl}
+                    refProcessTileContent={refProcessTileContent}
+                />
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent
+                        refProcessTileContent={refProcessTileContent}
                         process={process}
                         searchValue={searchFromUrl}
                     />

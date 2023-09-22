@@ -22,7 +22,7 @@ const TAGS_CONTAINER_MARGIN_VALUE = 67;
 const TAG_RIGHT_MARGIN_VALUE = 8;
 
 const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
-    tags, searchValue
+    tags, searchValue, refProcessTileContent
 }) => {
     const { translate } = useTranslations();
 
@@ -71,7 +71,11 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
 
     return (
         <Container>
-            <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
+            <TagBox
+                ref={refTagBox}
+                $isExpanded={isTagBoxExpanded}
+                refProcessTileContent={refProcessTileContent.current}
+            >
                 {tags.reduce((acc, tag) =>
                     tagNameFitSearch(tag.name)
                         ? [tag, ...acc]

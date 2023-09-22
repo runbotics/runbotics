@@ -30,11 +30,12 @@ export const Container = styled.div`
 `;
 
 export const TagBox = styled.div
-    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
+    <{ $isExpanded: boolean; refProcessTileContent: HTMLDivElement; }>
+    (({ theme, $isExpanded, refProcessTileContent }) => `
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${$isExpanded ? '177px' : '100%'};
+    height: ${$isExpanded ? `${refProcessTileContent.offsetHeight+32}px` : '100%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
