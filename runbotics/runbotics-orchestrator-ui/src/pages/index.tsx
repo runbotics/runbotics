@@ -2,7 +2,7 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getBlogMainCache } from '#contentful/blog-main';
+import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
 import { BlogPost } from '#contentful/common';
 import HeroBg from '#public/images/banners/hero-background.png';
 import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
@@ -18,7 +18,7 @@ const IndexPage: VFC<Props> = ({ blogPosts }) => <MainView blogPosts={blogPosts}
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale }) => {
     const language = locale as Language;
-    const cache = getBlogMainCache(language);
+    const cache = getBlogMainCache(language) ?? await recreateCache(language);
 
     const blogPosts = cache.posts?.slice(0, 3) ?? [];
 

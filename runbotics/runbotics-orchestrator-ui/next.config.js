@@ -1,4 +1,4 @@
-const { PHASE_PRODUCTION_SERVER, PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+const { PHASE_PRODUCTION_SERVER } = require('next/constants');
 const { initializeContentfulCache } = require('./src/contentful/initializeContentfulCache.js');
 
 module.exports = async (phase) => {
@@ -52,7 +52,7 @@ module.exports = async (phase) => {
         },
     }
 
-    if (phase === PHASE_PRODUCTION_SERVER || phase === PHASE_DEVELOPMENT_SERVER) {
+    if (phase === PHASE_PRODUCTION_SERVER) {
         await initializeContentfulCache();
     }
 

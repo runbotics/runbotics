@@ -5,10 +5,10 @@ import { Language } from '#src-app/translations/translations';
 import { CacheKey } from './types';
 
 type CacheKeys = CacheKey | string;
-type ContentfulCacheContent = Record<Language, LRUMap<CacheKeys, unknown>>;
-type GlobalContentfulCache = typeof globalThis & { [key: symbol]: ContentfulCacheContent };
+type ContentfulCache = Record<Language, LRUMap<CacheKeys, unknown>>;
 
 const CONTENTFUL_CACHE_KEY = 'contentfulCache';
+const contentfulCacheSymbol = Symbol.for(CONTENTFUL_CACHE_KEY);
 
 /**
  * Cache instance singleton
@@ -16,36 +16,17 @@ const CONTENTFUL_CACHE_KEY = 'contentfulCache';
  * Adjust size of cache accordingly to number of posts
  */
 
-export class ContentfulCache {
-    private static instance: ContentfulCache;
-    private static globalContentfulCache: GlobalContentfulCache = global;
-    private static sym: symbol = Symbol.for(CONTENTFUL_CACHE_KEY);
-
-    private constructor() {}
-
-    public static initialize() {
-        if (!ContentfulCache.instance) {
-            ContentfulCache.instance = new ContentfulCache();
-            ContentfulCache.createCacheInstance();
-        }
-    }
-
-    private static createInstance() {
-        return new LRUMap<CacheKeys, unknown>(53);
-    }
-
-    private static createCacheInstance() {
-        ContentfulCache.globalContentfulCache[ContentfulCache.sym] = {
-            en: ContentfulCache.createInstance(),
-            pl: ContentfulCache.createInstance(),
-        };
-    }
-
-    public static recreateCacheInstance() {
-        ContentfulCache.createCacheInstance();
-    }
-
-    public static getContentfulCache(language: Language) {
-        return ContentfulCache.globalContentfulCache[ContentfulCache.sym][language];
-    }
+function createCacheInstance() {
+    return new LRUMap<CacheKeys, unknown>(53);
 }
+
+if (!global[contentfulCacheSymbol]) {
+    global[contentfulCacheSymbol] = {
+        en: createCacheInstance(),
+        pl: createCacheInstance(),
+    };
+}
+
+const contentfulCache = global[contentfulCacheSymbol] as ContentfulCache;
+
+export { contentfulCache, createCacheInstance };

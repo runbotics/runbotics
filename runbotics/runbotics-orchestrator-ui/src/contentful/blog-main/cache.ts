@@ -4,7 +4,8 @@ import {
     CacheKey,
     Category,
     Tag,
-    ContentfulCache,
+    contentfulCache,
+    createCacheInstance,
 } from '#contentful/common';
 import { DEFAULT_LANG, Language, languages } from '#src-app/translations/translations';
 
@@ -12,27 +13,27 @@ import { getMainPage } from './api';
 import { BlogMainCache } from './types';
 
 export function getBlogPostsCache(language: Language = DEFAULT_LANG) {
-    return ContentfulCache.getContentfulCache(language).get(CacheKey.Posts) as BlogPost[] | undefined;
+    return contentfulCache[language].get(CacheKey.Posts) as BlogPost[] | undefined;
 }
 
 export function setBlogPostsCache(language: Language, cacheValue: BlogPost[]) {
-    ContentfulCache.getContentfulCache(language).set(CacheKey.Posts, cacheValue);
+    contentfulCache[language].set(CacheKey.Posts, cacheValue);
 }
 
 export function getBlogCategoriesCache(language: Language) {
-    return ContentfulCache.getContentfulCache(language).get(CacheKey.Categories) as Category[] | undefined;
+    return contentfulCache[language].get(CacheKey.Categories) as Category[] | undefined;
 }
 
 export function setBlogCategoriesCache(language: Language, cacheValue: Category[]) {
-    ContentfulCache.getContentfulCache(language).set(CacheKey.Categories, cacheValue);
+    contentfulCache[language].set(CacheKey.Categories, cacheValue);
 }
 
 export function getBlogTagsCache(language: Language) {
-    return ContentfulCache.getContentfulCache(language).get(CacheKey.Tags) as Tag[] | undefined;
+    return contentfulCache[language].get(CacheKey.Tags) as Tag[] | undefined;
 }
 
 export function setBlogTagsCache(language: Language, cacheValue: Tag[]) {
-    ContentfulCache.getContentfulCache(language).set(CacheKey.Tags, cacheValue);
+    contentfulCache[language].set(CacheKey.Tags, cacheValue);
 }
 
 export function getBlogMainCache(
@@ -56,15 +57,13 @@ export function getBlogMainCache(
 }
 
 export function isCached(language: Language) {
-    const contentfulCache = ContentfulCache.getContentfulCache(language);
-    if (contentfulCache && contentfulCache.size > 0) return true;
+    if (contentfulCache[language] && contentfulCache[language].size > 0) return true;
     return false;
 }
 
 export async function recreateCache(language: Language = DEFAULT_LANG) {
-    ContentfulCache.recreateCacheInstance();
-
     await Promise.allSettled(languages.map(async (lang) => {
+        contentfulCache[lang] = createCacheInstance();
         const modelMap = await getMainPage(lang);
 
         if (modelMap.posts) {
@@ -86,8 +85,4 @@ export async function recreateCache(language: Language = DEFAULT_LANG) {
     }));
 
     return getBlogMainCache(language);
-}
-
-export function initializeContentfulCache() {
-    ContentfulCache.initialize();
 }
