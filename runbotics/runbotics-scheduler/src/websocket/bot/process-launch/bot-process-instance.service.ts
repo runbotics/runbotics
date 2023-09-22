@@ -37,14 +37,14 @@ export class BotProcessService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const incrementedProcessInstance = await this.incrementExecutionCount(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: incrementedProcessInstance.id } });
+            const updatedLastRunTimeInProcessInstance = await this.updateLastRunTime(processInstance, newProcessInstance, bot);
+            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastRunTimeInProcessInstance.id } });
 
             await queryRunner.manager.createQueryBuilder()
                 .insert()
                 .into(ProcessInstanceEntity)
-                .values({ ...incrementedProcessInstance })
-                .orUpdate(getProcessInstanceUpdateFieldsByStatus(incrementedProcessInstance.status, dbProcessInstance?.status), ['id'])
+                .values({ ...updatedLastRunTimeInProcessInstance })
+                .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastRunTimeInProcessInstance.status, dbProcessInstance?.status), ['id'])
                 .execute();
 
             await queryRunner.commitTransaction();
@@ -118,7 +118,7 @@ export class BotProcessService {
         return { newProcessInstance, bot: newProcessInstance.bot };
     }
 
-    private async incrementExecutionCount(
+    private async updateLastRunTime(
         processInstance: IProcessInstance,
         instanceToSave: IProcessInstance,
         bot: IBot,
@@ -129,14 +129,14 @@ export class BotProcessService {
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
             newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
-            await this.incrementExecutionCountInStartedProcess(newProcessInstance);
+            await this.updateLastRunTimeInProcess(newProcessInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
             newProcessInstance.input = processInstance.input;
             if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
-            await this.incrementExecutionsByProcessStatus(processInstance);
+            await this.updateLastRunTimeInProcess(processInstance);
         }
         if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
@@ -145,24 +145,13 @@ export class BotProcessService {
         return newProcessInstance;
     }
 
-    private async incrementExecutionCountInStartedProcess(processInstance: IProcessInstance) {
-        if(!processInstance?.process?.id) return;
+    private async updateLastRunTimeInProcess(processInstance: IProcessInstance) {
+        if (!processInstance?.process?.id) return;
         const process = await this.processService.findById(processInstance.process.id);
+
         if (process) {
-            process.executionsCount++;
+            process.lastRun = new Date().toISOString();
             await this.processService.save(process);
         }
-    }
-
-    private async incrementExecutionsByProcessStatus(processInstance: IProcessInstance) {
-        const process = await this.processService.findById(processInstance?.process?.id);
-        if (process) {
-            if (processInstance.status === ProcessInstanceStatus.COMPLETED) {
-                process.successExecutionsCount++;
-            } else if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-                process.failureExecutionsCount++;
-            }
-        }
-        await this.processService.save(process);
     }
 }

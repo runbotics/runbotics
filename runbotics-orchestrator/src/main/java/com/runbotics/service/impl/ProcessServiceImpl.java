@@ -74,9 +74,7 @@ public class ProcessServiceImpl implements ProcessService {
             User user = userService.getUserWithAuthorities().get();
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
-            process.setExecutionsCount(0L);
-            process.setFailureExecutionsCount(0L);
-            process.setSuccessExecutionsCount(0L);
+            process.setEditor(user);
         }
         if (process.getBotCollection() == null) {
             process.setBotCollection(botCollectionService.getPublicCollection());
@@ -137,12 +135,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
+        User requester = userService.getUserWithAuthorities().get();
         return processRepository
             .findById(processDiagramDTO.getId())
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
                     existingProcess.setUpdated(ZonedDateTime.now());
+                    existingProcess.setEditor(requester);
                     return existingProcess;
                 }
             )
