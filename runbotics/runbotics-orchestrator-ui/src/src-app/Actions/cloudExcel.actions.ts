@@ -298,6 +298,48 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [CloudExcelAction.SWITCH_WORKSHEET]: {
+        id: CloudExcelAction.SWITCH_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.SwitchWorksheet.Label'),
+        script: CloudExcelAction.SWITCH_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.SwitchWorksheet.WorksheetName'),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                        required: ['worksheetName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.SwitchWorksheet.WorksheetName.Info'),
+                            type: 'string',
+                            pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                        },
+                    }
+                },
+            },
+            formData: {
+                input: {
+                    worksheetName: undefined,
+                },
+            },
+        },
+    },
     [CloudExcelAction.OPEN_FILE]: {
         id: CloudExcelAction.OPEN_FILE,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label'),

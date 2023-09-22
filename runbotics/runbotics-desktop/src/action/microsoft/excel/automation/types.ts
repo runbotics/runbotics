@@ -4,19 +4,24 @@ import { DesktopRunRequest } from 'runbotics-sdk';
 import { ExcelSessionInfo, ExcelCellValue, Worksheet } from '#action/microsoft/excel/excel.types';
 
 export type CloudExcelActionRequest =
-| DesktopRunRequest<CloudExcelAction.SET_CELL, CloudExcelSetCellActionInput>
-| DesktopRunRequest<CloudExcelAction.GET_CELL, CloudGetExcelCellActionInput>
-| DesktopRunRequest<CloudExcelAction.CLOSE_SESSION>
-| DesktopRunRequest<CloudExcelAction.SET_CELLS, CloudExcelSetCellsActionInput>
-| DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
-| DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
-| DesktopRunRequest<CloudExcelAction.CREATE_WORKSHEET, CloudExcelCreateWorksheetActionInput>
-| DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
-| DesktopRunRequest<CloudExcelAction.DELETE_COLUMNS, CloudExcelDeleteColumnsActionInput>;
+    | DesktopRunRequest<CloudExcelAction.SET_CELL, CloudExcelSetCellActionInput>
+    | DesktopRunRequest<CloudExcelAction.GET_CELL, CloudGetExcelCellActionInput>
+    | DesktopRunRequest<CloudExcelAction.CLOSE_SESSION>
+    | DesktopRunRequest<CloudExcelAction.SET_CELLS, CloudExcelSetCellsActionInput>
+    | DesktopRunRequest<CloudExcelAction.GET_CELLS, CloudExcelGetCellsActionInput>
+    | DesktopRunRequest<CloudExcelAction.OPEN_FILE, ExcelSessionInfo>
+    | DesktopRunRequest<CloudExcelAction.CREATE_WORKSHEET, CloudExcelCreateWorksheetActionInput>
+    | DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
+    | DesktopRunRequest<CloudExcelAction.DELETE_COLUMNS, CloudExcelDeleteColumnsActionInput>
+    | DesktopRunRequest<CloudExcelAction.SWITCH_WORKSHEET, CloudExcelSwitchWorksheet>;
 
 export type CloudExcelSetCellActionInput = {
     content: string;
     cell: string;
+};
+
+export type CloudExcelSwitchWorksheet = {
+    worksheetName: string;
 };
 
 export type CloudExcelSetCellsActionInput = {

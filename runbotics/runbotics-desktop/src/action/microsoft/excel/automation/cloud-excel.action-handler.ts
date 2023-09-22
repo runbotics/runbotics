@@ -80,6 +80,10 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
+    switchWorksheet(input: SharepointTypes.CloudExcelUpdateRangeActionInput) {
+        return this.excelService.switchWorksheet(this.session, input.worksheetName);
+    }
+
     run(request: SharepointTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:

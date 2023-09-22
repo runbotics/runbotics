@@ -34,7 +34,7 @@ export class ExcelService {
         private readonly microsoftGraphService: MicrosoftGraphService,
         private readonly sharePointService: SharePointService,
         private readonly oneDriveService: OneDriveService,
-    ) {}
+    ) { }
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=javascript
@@ -246,6 +246,23 @@ export class ExcelService {
         }
         return this.getWorksheets(session)
             .then(response => response.value[0]);
+    }
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/resources/worksheet?view=graph-rest-1.0
+     */
+    public async switchWorksheet(session: ExcelSession, worksheetName: string): Promise<void> {
+        const url = `/worksheets/${worksheetName}/activate`;
+
+        await this.microsoftGraphService.post(
+            this.createWorkbookUrl(session, url),
+            {},
+            {
+                headers: {
+                    'workbook-session-id': session.workbookSessionId,
+                },
+            }
+        );
     }
 
     private createWorkbookUrl(session: ExcelSession | FileInfo, url: string) {
