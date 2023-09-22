@@ -5,8 +5,6 @@ const initializeContentfulCache = async () => {
 
     const compiledCacheTS = require('./blog-main/cache.ts');
 
-    compiledCacheTS.initializeContentfulCache();
-
     await compiledCacheTS.recreateCache();
 };
 
