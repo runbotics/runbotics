@@ -5,17 +5,14 @@ import { MenuItem, Select } from '@mui/material';
 
 import { FeatureKey, IBotSystem } from 'runbotics-common';
 
-
-
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
+import { botSystemsSelector } from '#src-app/store/slices/BotSystem';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { Wrapper } from './BotComponent.styles';
-import { botSystemsSelector } from '../../../store/slices/BotSystem';
-
 
 interface BotSystemProps {
     selectedBotSystem: IBotSystem;
