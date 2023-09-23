@@ -65,7 +65,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
     async handleDisconnect(client: Socket) {
         const installationId = client.handshake.auth.installationId;
-        const botExists = await !!this.botService.findByInstallationId(installationId);
+        const botExists = await this.botService.findByInstallationId(installationId);
 
         if (!botExists) return;
 
