@@ -13,6 +13,7 @@ import { BotSystemService } from '../database/bot-system/bot-system.service';
 import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
+import { Connection } from 'typeorm';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -29,6 +30,7 @@ export class AuthService {
         private readonly botSystemService: BotSystemService,
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
+        private readonly connection: Connection,
     ) {}
 
     validatePayload(payload: JWTPayload) {
@@ -213,12 +215,35 @@ export class AuthService {
     }
 
     async unregisterBot(installationId: string) {
-        const bot = await this.botService.findByInstallationId(installationId);
-        bot.status = BotStatus.DISCONNECTED;
-        this.logger.log(`Bot ${bot.installationId} is unregistered`);
-        return this.botService.save(bot).catch(() => {
-            throw new WsException(`Bot ${bot.installationId} cannot be unregistered`);
-        });
+        const queryRunner = this.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const bot = await queryRunner.manager
+                .findOne(BotEntity, { where: { installationId: installationId }, relations: ['user', 'system', 'collection']});
+
+            bot.status = BotStatus.DISCONNECTED;
+
+            await queryRunner.manager
+                .createQueryBuilder()
+                .setLock('pessimistic_write')
+                .update(BotEntity)
+                .set({
+                   ...bot,
+                })
+                .where('id = :id', { id: bot.id })
+                .execute();
+
+            await queryRunner.commitTransaction();
+            this.logger.log(`Bot ${bot.installationId} has been unregistered`);
+            return bot;
+        } catch (err: unknown) {
+            this.logger.error('Process instance update error: rollback', err);
+            await queryRunner.rollbackTransaction();
+            throw new WsException(`Bot ${installationId} cannot be unregistered`);
+        } finally {
+            await queryRunner.release();
+        }
     }
 }
 
