@@ -6,7 +6,6 @@ const getBotSystem = () => {
         case 'win32':
             return BotSystem.WINDOWS;
         case 'linux':
-        case 'darwin':
             return BotSystem.LINUX;
         case 'darwin':
             return BotSystem.MAC;

@@ -22,7 +22,7 @@ import {
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
-import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
+import { CloudExcelErrorMessage } from '../automation/excel/cloud-excel.error-message';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
