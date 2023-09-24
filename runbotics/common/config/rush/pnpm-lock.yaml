@@ -92,6 +92,9 @@ importers:
       dayjs:
         specifier: ^1.11.0
         version: 1.11.9
+      file-type:
+        specifier: ^16.5.4
+        version: 16.5.4
       googleapis:
         specifier: ^73.0.0
         version: 73.0.0
@@ -271,8 +274,8 @@ importers:
         specifier: ^11.8.1
         version: 11.11.0(@emotion/react@11.10.8)(@types/react@17.0.65)(react@18.2.0)
       '@hookform/resolvers':
-        specifier: ^1.3.5
-        version: 1.3.8(react-hook-form@6.15.8)
+        specifier: ^3.3.1
+        version: 3.3.1(react-hook-form@6.15.8)
       '@monaco-editor/react':
         specifier: ^4.4.6
         version: 4.5.2(monaco-editor@0.41.0)(react-dom@18.2.0)(react@18.2.0)
@@ -2773,10 +2776,10 @@ packages:
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
     dev: false
 
-  /@hookform/resolvers@1.3.8(react-hook-form@6.15.8):
-    resolution: {integrity: sha512-mEUqsqbx5S78+uN1tVS1vrgaFEeh4cbFzBs0tuzvWmJFGSSDaqf0Z9SoKvrDFXl8eBIQvADA6H4vsbUYnlXuxw==}
+  /@hookform/resolvers@3.3.1(react-hook-form@6.15.8):
+    resolution: {integrity: sha512-K7KCKRKjymxIB90nHDQ7b9nli474ru99ZbqxiqDAWYsYhOsU3/4qLxW91y+1n04ic13ajjZ66L3aXbNef8PELQ==}
     peerDependencies:
-      react-hook-form: '>=6.6.0'
+      react-hook-form: ^7.0.0
     dependencies:
       react-hook-form: 6.15.8(react@18.2.0)
     dev: false

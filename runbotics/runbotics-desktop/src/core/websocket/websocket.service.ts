@@ -2,7 +2,7 @@ import { Inject, Injectable, OnApplicationBootstrap, forwardRef } from '@nestjs/
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
 import { RunboticsLogger } from '#logger';
 import { Message, MessageQueueService } from './queue/message-queue.service';
-import { BotWsMessage, ProcessInstanceEventStatus } from 'runbotics-common';
+import { ProcessInstanceEventStatus } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 
 @Injectable()

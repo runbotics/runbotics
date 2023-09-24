@@ -4,6 +4,7 @@ import getAsanaActions from '#src-app/Actions/asana.actions';
 import getBeeOfficeActions from '#src-app/Actions/beeOffice.actions';
 import getBrowserActions from '#src-app/Actions/browser.actions';
 import getCloudExcelActions from '#src-app/Actions/cloudExcel.actions';
+import getCloudFileActions from '#src-app/Actions/cloudFile.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
@@ -16,7 +17,6 @@ import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
-import getSharepointFileActions from '#src-app/Actions/sharepointFile.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -119,17 +119,17 @@ const useInternalActionsGroups = (): Record<
             ),
             items: Object.values(getPowerPointActions())
         },
-        sharepointExcel: {
+        cloudExcel: {
             label: translate(
                 'Process.Details.Modeler.ActionsGroup.CloudExcel'
             ),
             items: Object.values(getCloudExcelActions())
         },
-        sharepointFile: {
+        cloudFile: {
             label: translate(
-                'Process.Details.Modeler.ActionsGroup.SharepointFile'
+                'Process.Details.Modeler.ActionsGroup.CloudFile'
             ),
-            items: Object.values(getSharepointFileActions())
+            items: Object.values(getCloudFileActions())
         },
         beeoffice: {
             label: translate(
