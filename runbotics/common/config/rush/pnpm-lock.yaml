@@ -92,6 +92,9 @@ importers:
       dayjs:
         specifier: ^1.11.0
         version: 1.11.9
+      file-type:
+        specifier: ^16.5.4
+        version: 16.5.4
       googleapis:
         specifier: ^73.0.0
         version: 73.0.0

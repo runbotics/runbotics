@@ -30,8 +30,8 @@ export enum ACTION_GROUP {
     FILE = 'file',
     CSV = 'csv',
     DESKTOP_OFFICE_ACTIONS = 'desktopOfficeActions',
-    SHAREPOINT_EXCEL = 'sharepointExcel',
-    SHAREPOINT_FILE = 'sharepointFile',
+    CLOUD_EXCEL = 'cloudExcel',
+    CLOUD_FILE = 'cloudFile',
     BEEOFFICE = 'beeoffice',
     SAP = 'sap',
     APPLICATION = 'application',
@@ -132,12 +132,10 @@ export enum CloudExcelAction {
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
 }
 
-export enum SharepointFileAction {
-    DOWNLOAD_FILE_FROM_ROOT = 'sharepointFile.downloadFileFromRoot',
-    DOWNLOAD_FILE_FROM_SITE = 'sharepointFile.downloadFileFromSite',
-    DOWNLOAD_FILES = 'sharepointFile.downloadFiles',
-    UPLOAD_FILE = 'sharepointFile.uploadFile',
-    CREATE_FOLDER = 'sharepointFile.createFolder',
+export enum CloudFileAction {
+    DOWNLOAD_FILE = 'cloudFile.download',
+    UPLOAD_FILE = 'cloudFile.upload',
+    CREATE_FOLDER = 'cloudFile.createFolder',
 }
 
 export enum BeeOfficeAction {
@@ -227,11 +225,9 @@ export type AllActionIds =
 	| CsvAction
 	| DesktopOfficeAction
 	| CloudExcelAction
-	| SharepointFileAction
+	| CloudFileAction
 	| BeeOfficeAction
 	| SapAction
 	| ApplicationAction
 	| ExcelAction
 	| DesktopAction;
-
-

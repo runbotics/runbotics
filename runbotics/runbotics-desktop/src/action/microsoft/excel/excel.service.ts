@@ -22,7 +22,7 @@ import {
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
-import { CloudExcelErrorMessage } from './automation/cloud-excel.error-message';
+import { CloudExcelErrorMessage } from '../automation/excel/cloud-excel.error-message';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -298,7 +298,12 @@ export class ExcelService {
             `);
         }
 
-        const file = await this.sharePointService.getDriveItem(site.id, drive.id, sessionInfo.filePath);
+        const file = await this.sharePointService.getFileByPath({
+            siteId: site.id,
+            driveId: drive.id,
+            fileName: sessionInfo.fileName,
+            parentFolderPath: sessionInfo.parentFolderPath,
+        });
 
         if (!file) {
             throw new Error('Provided file path does not exist');
@@ -313,7 +318,10 @@ export class ExcelService {
     }
 
     private async gatherOneDriveFileInfo(sessionInfo: OneDriveSessionInfo): Promise<OneDriveFileInfo> {
-        const file = await this.oneDriveService.getItemByPath(sessionInfo.filePath);
+        const path = sessionInfo.parentFolderPath
+            ? `${sessionInfo.parentFolderPath}/${sessionInfo.fileName}`
+            : sessionInfo.fileName;
+        const file = await this.oneDriveService.getItemByPath(path);
 
         if (!file) {
             throw new Error('Provided file path does not exist');

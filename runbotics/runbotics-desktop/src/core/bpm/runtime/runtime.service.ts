@@ -23,7 +23,7 @@ import {
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { EventEmitter } from 'events';
-import { mkdirSync, rmdirSync } from 'fs';
+import { mkdirSync, rmSync } from 'fs';
 
 import { RunboticsLogger } from '#logger';
 
@@ -43,6 +43,7 @@ import {
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -57,7 +58,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     constructor(
         @Inject(forwardRef(() => DesktopRunnerService))
         private desktopRunnerService: DesktopRunnerService,
-        private readonly loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService,
+        private readonly serverConfigService: ServerConfigService,
     ) {}
 
     onApplicationBootstrap() {
@@ -90,7 +92,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     private getTempDirPath() {
-        return `${process.cwd()}/temp`;
+        return this.serverConfigService.tempFolderPath;
     }
 
     private createTempDir() {
@@ -99,7 +101,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private cleanTempDir = async (processInstanceId: string): Promise<void> => {
         try {
-            rmdirSync(`${process.cwd()}/temp`, { recursive: true });
+            rmSync(this.getTempDirPath(), { recursive: true });
             this.logger.log(
                 `[${processInstanceId}] Deleted process instance temp directory`
             );

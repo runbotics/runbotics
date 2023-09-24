@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PassThrough } from 'stream';
+import axios from 'axios';
+import { createWriteStream } from 'fs';
+import { IncomingMessage } from 'http';
 
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
-import { Site } from './share-point.types';
+import { CreateFolderParams, DownloadFileParams, GetFileByPathParams, Site, UploadFileParams } from './share-point.types';
 import { Drive, DriveItem } from '../common.types';
+import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
 @Injectable()
 export class SharePointService {
@@ -15,22 +18,29 @@ export class SharePointService {
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
 
-    /**
-     * 1. download file id/path
-     * 2. upload file
-     * 3. download multiple files
-     * 4. create folder
-     */
+    async downloadFileByPath({
+        siteId, driveId, fileName, parentFolderPath, localDirectory,
+    }: DownloadFileParams) {
+        const driveItem = await this.getFileByPath({ siteId, driveId, fileName, parentFolderPath });
 
-    downloadById(siteId: string, itemId: string) {
-        return this.microsoftGraphService
-            .get<PassThrough>(`/sites/${siteId}/drive/items/${itemId}/content`);
+        const absolutePath = verifyDestinationPath(driveItem.name, localDirectory);
+
+        const writer = createWriteStream(absolutePath);
+        const fileContent = await axios
+            .get<IncomingMessage>(driveItem['@microsoft.graph.downloadUrl'], { responseType: 'stream' })
+            .then(d => d.data);
+            
+        fileContent.pipe(writer);
+        return saveFileStream(writer, absolutePath);
     }
 
-    getDriveItem(siteId: string, driveId: string, path: string) {
+    getFileByPath({
+        siteId, driveId, fileName, parentFolderPath, options,
+    }: GetFileByPathParams) {
+        const path = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
         const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
 
-        return this.microsoftGraphService.get<DriveItem>(url);
+        return this.microsoftGraphService.get<DriveItem>(url, options);
     }
 
     getSitesByName(siteName: Site['name']) {
@@ -41,5 +51,33 @@ export class SharePointService {
     getSiteDrives(siteId: Site['id']) {
         return this.microsoftGraphService
             .get<CollectionResponse<Drive>>(`/sites/${siteId}/drives`);
+    }
+
+    createFolder({ siteId, driveId, parentFolderPath, folderName }: CreateFolderParams) {
+        const path = parentFolderPath ? `:/${parentFolderPath}:`: '';
+        return this.microsoftGraphService
+            .post<DriveItem>(`/sites/${siteId}/drives/${driveId}/root${path}/children`, {
+                name: folderName,
+                folder: {},
+                '@microsoft.graph.conflictBehaviour': 'fail'
+            });
+    }
+
+    // Up to 4MB
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=javascript
+    uploadFile({
+        siteId, driveId, fileName, content, contentType, parentFolderPath,
+    }: UploadFileParams) {
+        const fullFilePath = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
+        return this.microsoftGraphService
+            .put<DriveItem>(
+                `/sites/${siteId}/drives/${driveId}/root:/${fullFilePath}:/content`,
+                content,
+                {
+                    headers: {
+                        'Content-Type': contentType,
+                    },
+                }
+            );
     }
 }

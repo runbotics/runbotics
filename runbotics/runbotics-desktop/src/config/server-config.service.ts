@@ -68,4 +68,8 @@ export class ServerConfigService {
             password: this.configService.get('MS_PASSWORD'),
         };
     }
+
+    get tempFolderPath(): string {
+        return `${process.cwd()}/temp`;
+    }
 }

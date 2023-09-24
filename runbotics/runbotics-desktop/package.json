@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.8.0-SNAPSHOT.84",
+    "version": "2.8.0-SNAPSHOT.85",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -45,6 +45,7 @@
         "csv-writer": "^1.6.0",
         "csvtojson": "^2.0.10",
         "dayjs": "^1.11.0",
+        "file-type": "^16.5.4",
         "googleapis": "^73.0.0",
         "jexl": "^2.3.0",
         "lodash": "^4.17.19",

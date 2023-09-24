@@ -22,7 +22,8 @@ export type ExcelSession = SharePointSession | OneDriveSession;
 // Session Info
 export interface OneDriveSessionInfo {
     platform: MicrosoftPlatform.OneDrive;
-    filePath: string;
+    fileName: string;
+    parentFolderPath?: string;
     worksheetName?: string;
 }
 

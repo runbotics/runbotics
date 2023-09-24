@@ -24,7 +24,7 @@ export type InternalHandlerKey =
 | 'typescript'
 | 'sap'
 | 'cloudExcel'
-| 'sharepointFile'
+| 'cloudFile'
 | 'variables'
 | 'excel'
 | 'desktop';
