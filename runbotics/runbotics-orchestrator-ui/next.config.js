@@ -3,11 +3,11 @@ module.exports = {
         ? [
             {
                 source: '/api/:path*',
-                destination: 'http://localhost:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
+                destination: 'http://127.0.0.1:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
             },
             {
                 source: '/scheduler/:path*',
-                destination: 'http://localhost:4000/scheduler/:path*',
+                destination: 'http://127.0.0.1:4000/scheduler/:path*',
             },
         ]
         : [],
@@ -17,7 +17,7 @@ module.exports = {
         return config;
     },
     publicRuntimeConfig: {
-        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://localhost:4000',
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:4000',
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN
     },
 
