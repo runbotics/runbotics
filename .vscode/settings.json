@@ -15,7 +15,6 @@
         "runbotics-orchestrator",
         "runbotics-common",
         "runbotics-cli",
-        "runbotics-sdk"
     ],
     "svg.preview.background": "transparent",
 }

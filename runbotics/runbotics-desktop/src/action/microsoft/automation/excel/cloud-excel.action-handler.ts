@@ -4,8 +4,8 @@ import { StatefulActionHandler } from 'runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
-import * as SharepointTypes from './types';
-import { CloudExcelErrorMessage } from './cloud-excel.error-message';
+import * as SharepointTypes from './cloud-excel.types';
+import { CloudExcelErrorMessage } from './cloud-excel.error-message'; 
 
 import { sortNumbersDescending } from '../excel.utils';
 

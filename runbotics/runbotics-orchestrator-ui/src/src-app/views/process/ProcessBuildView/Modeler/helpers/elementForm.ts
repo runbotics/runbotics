@@ -90,7 +90,7 @@ export const getFormSchema = (
                     'Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'
                 )
             },
-            ...selectedAction.form.schema.properties
+            ...selectedAction?.form.schema.properties
         }
     };
 };

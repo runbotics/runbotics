@@ -14,7 +14,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
     'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
     'Process.Details.Modeler.ActionsGroup.CloudExcel': 'Cloud Excel',
-    'Process.Details.Modeler.ActionsGroup.SharepointFile': 'SharePoint File',
+    'Process.Details.Modeler.ActionsGroup.CloudFile': 'Cloud File',
     'Process.Details.Modeler.ActionsGroup.BeeOffice': 'BeeOffice',
     'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
     'Process.Details.Modeler.ActionsGroup.Application': 'Application',

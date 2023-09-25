@@ -92,6 +92,9 @@ importers:
       dayjs:
         specifier: ^1.11.0
         version: 1.11.9
+      file-type:
+        specifier: ^16.5.4
+        version: 16.5.4
       googleapis:
         specifier: ^73.0.0
         version: 73.0.0
@@ -812,9 +815,6 @@ importers:
 
   ../../runbotics-sdk:
     devDependencies:
-      '@types/node':
-        specifier: ^18.15.3
-        version: 18.17.13
       bpmn-engine:
         specifier: ^12.0.2
         version: 12.0.5
@@ -3018,7 +3018,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
       '@types/yargs': 16.0.5
       chalk: 4.1.2
     dev: true
@@ -4934,7 +4934,7 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: true
 
   /@types/bpmn-moddle@5.1.6:
@@ -4963,7 +4963,7 @@ packages:
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: true
 
   /@types/cookie@0.4.1:
@@ -5025,7 +5025,7 @@ packages:
   /@types/express-serve-static-core@4.17.36:
     resolution: {integrity: sha512-zbivROJ0ZqLAtMzgzIUC4oNqDG9iF0lSsAqpOD9kbs5xcIM3dTiyuHvBc7R8MtWBp3AAWGaovJa+wzWPjLYW7Q==}
     dependencies:
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
       '@types/qs': 6.9.8
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -5136,7 +5136,7 @@ packages:
   /@types/jsonwebtoken@8.5.8:
     resolution: {integrity: sha512-zm6xBQpFDIDM6o9r6HSgDeIcLy82TKWctCXEPbJJcXb5AKmi5BNNdLXneixK4lplX3PqIVcwLBCGE/kAGnlD4A==}
     dependencies:
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: false
 
   /@types/jsonwebtoken@8.5.9:
@@ -5315,7 +5315,7 @@ packages:
   /@types/redis@2.8.32:
     resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
     dependencies:
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: true
 
   /@types/redux-form@8.3.5:
@@ -5359,7 +5359,7 @@ packages:
     resolution: {integrity: sha512-Cwo8LE/0rnvX7kIIa3QHCkcuF21c05Ayb0ZfxPiv0W8VRiZiNW/WuRupHKpqqGVGf7SUA44QSOUKaEd9lIrd/Q==}
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: true
 
   /@types/serve-static@1.15.2:
@@ -5367,7 +5367,7 @@ packages:
     dependencies:
       '@types/http-errors': 2.0.1
       '@types/mime': 3.0.1
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
     dev: true
 
   /@types/slate-react@0.22.9:
@@ -11524,7 +11524,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.17.13
+      '@types/node': 17.0.45
       merge-stream: 2.0.0
       supports-color: 8.1.1
 

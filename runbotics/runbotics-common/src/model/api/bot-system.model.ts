@@ -5,5 +5,6 @@ export interface IBotSystem {
 export enum BotSystem {
     WINDOWS = 'WINDOWS',
     LINUX = 'LINUX',
+    MAC = 'MAC',
     ANY = 'ANY'
 }

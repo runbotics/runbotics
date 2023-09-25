@@ -58,7 +58,7 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         return logger;
     }
 
-    constructor(@Optional() protected context?: string, @Optional() private readonly isTimestampEnabled = false) { }
+    constructor(@Optional() protected context?: string, @Optional() private readonly isTimestampEnabled = false) {}
 
     onModuleInit() {
         let logLevel;

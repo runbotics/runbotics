@@ -13,8 +13,8 @@ import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
 import CsvActionHandler from '#action/csv';
 import GeneralActionHandler from '#action/general';
-import { CloudExcelActionHandler } from '#action/microsoft/excel/automation';
-import SharepointFileActionHandler from '#action/sharepoint/file';
+import { CloudExcelActionHandler } from '#action/microsoft/automation/excel';
+import { CloudFileActionHandler } from '#action/microsoft/automation/file';
 import ApiRequestHandler from '#action/api-request';
 import ApplicationActionHandler from '#action/application';
 import AsanaActionHandler from '#action/asana';
@@ -62,7 +62,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
         private readonly cloudExcelActionHandler: CloudExcelActionHandler,
-        private readonly sharepointFileActionHandler: SharepointFileActionHandler,
+        private readonly cloudFileActionHandler: CloudFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
         private readonly desktopActionHandler: DesktopActionHandler
     ) {
@@ -83,7 +83,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('javascript', javaScriptActionHandler)
             .set('typescript', javaScriptActionHandler)
             .set('cloudExcel', cloudExcelActionHandler)
-            .set('sharepointFile', sharepointFileActionHandler)
+            .set('cloudFile', cloudFileActionHandler)
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler);
     }

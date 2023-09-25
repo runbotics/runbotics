@@ -7,6 +7,8 @@ const getBotSystem = () => {
             return BotSystem.WINDOWS;
         case 'linux':
             return BotSystem.LINUX;
+        case 'darwin':
+            return BotSystem.MAC;
         default:
             return system.toUpperCase();
     }

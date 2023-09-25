@@ -2,7 +2,7 @@ import { Inject, Injectable, OnApplicationBootstrap, forwardRef } from '@nestjs/
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
 import { RunboticsLogger } from '#logger';
 import { Message, MessageQueueService } from './queue/message-queue.service';
-import { BotWsMessage, ProcessInstanceEventStatus } from 'runbotics-common';
+import { ProcessInstanceEventStatus } from 'runbotics-common';
 import { InjectIoClientProvider, IoClient } from 'nestjs-io-client';
 
 @Injectable()
@@ -27,12 +27,12 @@ export class WebsocketService implements OnApplicationBootstrap {
         this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, () => {
-            if(message.payload.status === ProcessInstanceEventStatus.COMPLETED){
+            if(message.payload.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
                 this.messageService.clear();
                 return;
             }
-            this.messageService.remove(message);
 
+            this.messageService.remove(message);
         });
     }
 

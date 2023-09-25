@@ -1,8 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { IBot, IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-common';
-import { ProcessInstanceService } from 'src/database/process-instance/process-instance.service';
-import { Logger } from 'src/utils/logger';
+
+import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
+import { Logger } from '#/utils/logger';
 import { ProcessInstanceEventService } from '#/database/process-instance-event/process-instance-event.service';
+
 import { BotProcessEventService } from './process-launch/bot-process-instance-event.service';
 import { BotProcessService } from './process-launch/bot-process-instance.service';
 
@@ -33,24 +36,22 @@ export class BotLifecycleService {
                 disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
             ) return;
             
-            const completeProcessInstance: IProcessInstance =
-                await this.processInstanceService
-                    .findById(disconnectedInstance.id)
-                    .then(processInstance => processInstance)
-                    .catch(error => {
-                        this.logger.error(`Error getting processInstance: ${error}`);
-                        return null;
-                    });
+            const completeProcessInstance = await this.processInstanceService
+                .findById(disconnectedInstance.id)
+                .catch<null>(error => {
+                    this.logger.error(`Error getting processInstance: ${error}`);
+                    return null;
+                });
                 
             const newProcessInstance: IProcessInstance = {
                 ...completeProcessInstance,
                 status: ProcessInstanceStatus.ERRORED, 
                 error: 'Bot has been shut down',
-                updated: new Date().toString(),
+                updated: dayjs().toISOString(),
             };
 
-            this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);            
-            this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
+            await this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);
+            await this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
         });
     }
 

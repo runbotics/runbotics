@@ -126,19 +126,19 @@ export class BotProcessService {
         const newProcessInstance = {...instanceToSave};
 
         const newBot = {...bot};
-        newBot.status = BotStatus.BUSY;
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
+            newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
             await this.incrementExecutionCountInStartedProcess(newProcessInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
             newProcessInstance.input = processInstance.input;
-            if(!newProcessInstance.rootProcessInstanceId) {
+            if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
             await this.incrementExecutionsByProcessStatus(processInstance);
         }
-        if(!newProcessInstance.rootProcessInstanceId) {
+        if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, newBot);
         }

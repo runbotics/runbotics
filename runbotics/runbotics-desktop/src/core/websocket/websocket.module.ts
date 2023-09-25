@@ -35,7 +35,7 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
                 };
             },
         }),
-        forwardRef(()=>CoreModule),
+        forwardRef(() => CoreModule),
     ],
     providers: [
         AuthService,

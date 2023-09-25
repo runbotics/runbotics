@@ -6,16 +6,17 @@ import { Box, Typography } from '@mui/material';
 import { red } from '@mui/material/colors';
 import moment from 'moment';
 
+import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledContent } from './ProcessTileContent.styles';
+import { ProcessTileContentProps } from './ProcessTileContent.types';
 import { DATE_FORMAT } from '../../Tile.utils';
-import { ProcessTileProps } from '../ProcessTile.types';
 
-
-const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) => {
+const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
+    process, searchValue
+}) => {
     const { translate } = useTranslations();
 
     return (
@@ -33,7 +34,10 @@ const ProcessTileContent: FunctionComponent<ProcessTileProps> = ({ process }) =>
                     {translate('Component.Tile.Process.Content.Creator')}
                 </Typography>
                 <Typography color="textPrimary" variant="h6">
-                    {process.createdBy ? process.createdBy.login : 'RunBotics'}
+                    <HighlightText
+                        text={process.createdBy ? process.createdBy.login : 'RunBotics'}
+                        matchingText={searchValue}
+                    />
                 </Typography>
             </Box>
             <Box>

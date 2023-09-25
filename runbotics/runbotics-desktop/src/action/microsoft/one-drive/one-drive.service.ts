@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
+import { IncomingMessage } from 'http';
+import { createWriteStream } from 'fs';
+
 import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
-import { CreateItemResponse, UploadFileResponse } from './one-drive.types';
-import { RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY } from './one-drive.utils';
+import { UploadFileParams } from './one-drive.types';
 import { DriveItem } from '../common.types';
+import { RequestOptions } from '../microsoft-graph';
+import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
 @Injectable()
 export class OneDriveService {
@@ -13,6 +18,25 @@ export class OneDriveService {
     constructor(
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
+
+    async downloadFileByPath(fileName: string, localDirectory: string, parentFolderPath?: string) {
+        const driveItem = await this.getFileByPath(fileName, parentFolderPath);
+
+        const absolutePath = verifyDestinationPath(driveItem.name, localDirectory);
+
+        const writer = createWriteStream(absolutePath);
+        const fileContent = await axios
+            .get<IncomingMessage>(driveItem['@microsoft.graph.downloadUrl'], { responseType: 'stream' })
+            .then(d => d.data);
+            
+        fileContent.pipe(writer);
+        return saveFileStream(writer, absolutePath);
+    }
+
+    getFileByPath(fileName: string, parentFolderPath?: string, options?: RequestOptions) {
+        const path = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
+        return this.microsoftGraphService.get<DriveItem>(`/me/drive/root:/${path}:`, options);
+    }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0&tabs=javascript
     getItem(itemId: string) {
@@ -31,42 +55,22 @@ export class OneDriveService {
             .delete(`me/drive/root:/${itemPath}`);
     }
 
-    deleteItemFromWorkingDirectory(filePath: string) {
-        return this.deleteItemByPath(`${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${filePath}`);
-    }
-
     // Up to 4MB
     // https://learn.microsoft.com/en-us/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=javascript
-    uploadFile(
-        fullFilePath: string,
-        content: string,
-        contentType: string,
-    ) {
+    uploadFile({
+        fileName, content, contentType, parentFolderPath,
+    }: UploadFileParams) {
+        const fullFilePath = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
         return this.microsoftGraphService
-            .put<UploadFileResponse>(
+            .put<DriveItem>(
                 `/me/drive/root:/${fullFilePath}:/content`,
-                this.bufferFromBase64(content),
+                content,
                 {
                     headers: {
                         'Content-Type': contentType,
                     },
                 }
             );
-    }
-
-    uploadToWorkingDirectory(
-        filePath: string,
-        content: string,
-        contentType: string,
-    ) {
-        const extendedFilePath = `${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${filePath}`;
-        this.logger.log(`Uploading file to "${extendedFilePath}"`);
-        return this.uploadFile(extendedFilePath, content, contentType);
-    }
-    
-    createFolderInWorkingDirectory(folderName: string) {
-        this.logger.log(`Creating folder "${RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY}/${folderName}"`);
-        return this.createFolder(folderName, RUNBOTICS_ONE_DRIVE_WORKING_DIRECTORY);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-post-children?view=graph-rest-1.0&tabs=javascript
@@ -76,17 +80,10 @@ export class OneDriveService {
     ) {
         const urlPath = absolutePath ? `:/${absolutePath}:`: '';
         return this.microsoftGraphService
-            .post<CreateItemResponse>(`/me/drive/root${urlPath}/children`, {
+            .post<DriveItem>(`/me/drive/root${urlPath}/children`, {
                 name: folderName,
                 folder: {},
-                '@microsoft.graph.conflictBehavior': 'fail', // fail, replace, rename
+                '@microsoft.graph.conflictBehavior': 'fail',
             });
-    }
-
-    private bufferFromBase64(base64File: string) {
-        if (base64File.includes('base64,')) {
-            return Buffer.from(base64File.split(';base64,').pop(), 'base64');
-        }
-        return Buffer.from(base64File, 'base64');
     }
 }

@@ -23,7 +23,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
-    const { page, pageSize } = useContext(ProcessPageContext);
+    const { page, pageSize, search } = useContext(ProcessPageContext);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const [isDialogVisible, setIsDialogVisible] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
@@ -53,6 +53,15 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                 processActions.getProcessesPage({
                     page,
                     size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim()
+                            })
+                        }
+                    }
                 }),
             );
             enqueueSnackbar(
