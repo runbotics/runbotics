@@ -378,7 +378,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             worksheetName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
                                                 ),
                                                 type: 'string',
                                             },
