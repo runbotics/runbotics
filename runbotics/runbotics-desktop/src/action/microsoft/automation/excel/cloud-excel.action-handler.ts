@@ -7,7 +7,7 @@ import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/
 import * as SharepointTypes from './cloud-excel.types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message'; 
 
-import { sortNumbersDescending } from '../excel.utils';
+import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
