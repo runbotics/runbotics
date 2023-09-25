@@ -113,7 +113,6 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             }
             const sortedDescendingRows = sortNumbersDescending(rows);
             this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
-            // this.deleteRowsRecursively(this.session, sortedDescendingRows, worksheet);
         }
     }
 
@@ -160,27 +159,6 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         if (this.session === null) {
             throw new Error('There is no Cloud Excel session. Open file before');
         }
-    }
-
-    async deleteRowsRecursively(session: ExcelSession, sortedDescendingRows: number[], worksheet: string, index = 0) {
-        if (index >= sortedDescendingRows.length) {
-            return; // Exit the recursion when all rows have been processed
-        }
-        
-        console.log(session);
-        const row = sortedDescendingRows[index];
-        const address = `${row}:${row}`;
-        
-        try {
-            const value = await this.excelService.deleteRows(session, address, worksheet);
-            console.log('after response', row, value);
-        } catch (e) {
-            console.log(e);
-        }
-        
-        // Recursively call the function for the next row
-        await this.deleteRowsRecursively(session, sortedDescendingRows, worksheet, index + 1);
-        console.log('recursive', row);
     }
 
     async deleteRowsOneByOne(session: ExcelSession, array: number[], worksheet: string) {
