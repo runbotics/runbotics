@@ -350,9 +350,9 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            localDirectory: {
+                                            worksheetName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.Download.LocalDirectory',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
                                                 ),
                                                 type: 'string',
                                             },
@@ -376,9 +376,9 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            localDirectory: {
+                                            worksheetName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.Download.LocalDirectory',
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
                                                 ),
                                                 type: 'string',
                                             },
