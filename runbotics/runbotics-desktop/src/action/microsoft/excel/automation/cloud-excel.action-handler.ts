@@ -82,16 +82,13 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
-    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput){
+    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput) {
         const rowRange = input.rowRange;
         const worksheet = input.worksheet ? input.worksheet : null;
 
         if (Array.isArray(rowRange)) {
             const sortedDescendingRows = sortNumbersDescending(rowRange);
-            for (const row of sortedDescendingRows) {
-                const address = `${row}:${row}`;
-                this.excelService.deleteRows(this.session, address, worksheet);
-            }
+            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
         } else if (!rowRange.match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
             throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
         } else if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
@@ -112,7 +109,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
                 throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
             }
             const sortedDescendingRows = sortNumbersDescending(rows);
-            this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
+            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
         }
     }
 
@@ -163,7 +160,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
 
     async deleteRowsOneByOne(session: ExcelSession, array: number[], worksheet: string) {
         for (const row of array) {
-            const address = `${row}:${row}`; 
+            const address = `${row}:${row}`;
             try {
                 await this.excelService.deleteRows(session, address, worksheet);
             } catch (error) {
