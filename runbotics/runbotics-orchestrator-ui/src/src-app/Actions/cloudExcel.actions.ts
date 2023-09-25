@@ -328,19 +328,25 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             siteName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
+                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
                                                 ),
                                                 type: 'string',
                                             },
                                             listName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+                                                    'Process.Details.Modeler.Actions.Microsoft.ListName',
                                                 ),
                                                 type: 'string',
                                             },
-                                            filePath: {
+                                            parentFolderPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            fileName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
                                                 ),
                                                 type: 'string',
                                             },
@@ -351,16 +357,22 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['siteName', 'filePath', 'listName'],
+                                        required: ['siteName', 'listName', 'fileName'],
                                     },
                                     {
                                         properties: {
                                             platform: {
-                                                enum: ['OneDrive'],
+                                                enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            filePath: {
+                                            parentFolderPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            fileName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
                                                 ),
                                                 type: 'string',
                                             },
@@ -371,7 +383,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['filePath'],
+                                        required: ['fileName'],
                                     },
                                 ],
                             },
