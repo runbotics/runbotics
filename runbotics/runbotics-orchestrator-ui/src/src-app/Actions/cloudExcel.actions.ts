@@ -328,50 +328,62 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             },
                                             siteName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.SiteRelativePath',
+                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
                                                 ),
                                                 type: 'string',
                                             },
                                             listName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.ListName',
+                                                    'Process.Details.Modeler.Actions.Microsoft.ListName',
                                                 ),
                                                 type: 'string',
                                             },
-                                            filePath: {
+                                            parentFolderPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.FilePath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
                                                 ),
                                                 type: 'string',
                                             },
-                                            worksheetName: {
+                                            fileName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            localDirectory: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.Download.LocalDirectory',
                                                 ),
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['siteName', 'filePath', 'listName'],
+                                        required: ['siteName', 'listName', 'fileName'],
                                     },
                                     {
                                         properties: {
                                             platform: {
-                                                enum: ['OneDrive'],
+                                                enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            filePath: {
+                                            parentFolderPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
                                                 ),
                                                 type: 'string',
                                             },
-                                            worksheetName: {
+                                            fileName: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            localDirectory: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.Download.LocalDirectory',
                                                 ),
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['filePath'],
+                                        required: ['fileName'],
                                     },
                                 ],
                             },
