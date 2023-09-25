@@ -628,7 +628,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         properties: {
                             rowRange: {
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.RowRange'),
-                                type: 'string',
+                                type: 'string'
                             },
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet'),

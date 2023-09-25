@@ -14,7 +14,8 @@ export enum ActionRegex {
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+$',
     EXCEL_ROW_NUMBER = '[\\d]+$',
-    EXCEL_ROW_RANGE = '([\\d]+):([\\d]+)$'
+    EXCEL_ROW_RANGE = '([\\d]+):([\\d]+)$',
+    EXCEL_DELETE_ROWS_INPUT = '^(([\\d]+):([\\d]+))$|^(\\[("\\d+"\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^([\\d]+)$'
 }
 
 export enum ACTION_GROUP {

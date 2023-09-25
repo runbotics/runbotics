@@ -82,37 +82,38 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
-    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput) {
+    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput){
         const rowRange = input.rowRange;
         const worksheet = input.worksheet ? input.worksheet : null;
 
-        if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
-            const cells = rowRange.split(':');
-            const address = `${cells[0]}:${cells[1]}`;
-            return this.excelService.deleteRows(this.session, address, worksheet);
-        }
-
-        if (rowRange.match(ActionRegex.EXCEL_ROW_NUMBER)) {
-            const address = `A${rowRange}:XFD${rowRange}`;
-            const response = this.excelService.deleteRows(this.session, address, worksheet);
-            return response;
-        }
-
-        try {
-            const rows = JSON.parse(rowRange);
-
-            if (!Array.isArray(rows)) {
-                throw new Error;
-            }
-
-            const sortedDescendingRows = sortNumbersDescending(rows);
-
-            sortedDescendingRows.forEach((row: number) => {
-                const address = `A${row}:XFD${row}`;
+        if (Array.isArray(rowRange)) {
+            const sortedDescendingRows = sortNumbersDescending(rowRange);
+            for (const row of sortedDescendingRows) {
+                const address = `${row}:${row}`;
                 this.excelService.deleteRows(this.session, address, worksheet);
-            });
-        } catch (e) {
+            }
+        } else if (!rowRange.match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
             throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+        } else if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
+            const [startRow, endRow] = rowRange.split(':');
+            const address = `${startRow}:${endRow}`;
+            return this.excelService.deleteRows(this.session, address, worksheet);
+        } else if (rowRange.match(ActionRegex.EXCEL_ROW_NUMBER)) {
+            const address = `${rowRange}:${rowRange}`;
+            return this.excelService.deleteRows(this.session, address, worksheet);
+        } else {
+            let rows: (string | number)[];
+            try {
+                rows = JSON.parse(rowRange);
+                if (!Array.isArray(rows)) {
+                    throw new Error();
+                }
+            } catch (e) {
+                throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+            }
+            const sortedDescendingRows = sortNumbersDescending(rows);
+            this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
+            // this.deleteRowsRecursively(this.session, sortedDescendingRows, worksheet);
         }
     }
 
@@ -158,6 +159,38 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     private checkSession() {
         if (this.session === null) {
             throw new Error('There is no Cloud Excel session. Open file before');
+        }
+    }
+
+    async deleteRowsRecursively(session: ExcelSession, sortedDescendingRows: number[], worksheet: string, index = 0) {
+        if (index >= sortedDescendingRows.length) {
+            return; // Exit the recursion when all rows have been processed
+        }
+        
+        console.log(session);
+        const row = sortedDescendingRows[index];
+        const address = `${row}:${row}`;
+        
+        try {
+            const value = await this.excelService.deleteRows(session, address, worksheet);
+            console.log('after response', row, value);
+        } catch (e) {
+            console.log(e);
+        }
+        
+        // Recursively call the function for the next row
+        await this.deleteRowsRecursively(session, sortedDescendingRows, worksheet, index + 1);
+        console.log('recursive', row);
+    }
+
+    async deleteRowsOneByOne(session: ExcelSession, array: number[], worksheet: string) {
+        for (const row of array) {
+            const address = `${row}:${row}`; 
+            try {
+                await this.excelService.deleteRows(session, address, worksheet);
+            } catch (error) {
+                throw new Error(error);
+            }
         }
     }
 }
