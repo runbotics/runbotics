@@ -13,8 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(401).send('Invalid secret');
     }
 
-    await Promise.allSettled(languages.map((language) => recreateCache(language)));
-
+    Promise.allSettled(languages.map((language) => recreateCache(language)));
+    
     return res.send('RunBotics blog cache recreated');
 };
 

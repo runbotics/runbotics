@@ -1,7 +1,5 @@
 import { BlogPost, Category, FetchContentfulResponse, Tag } from '#contentful/common';
 
-import { getMainPage } from './api';
-
 interface AllPostsCollection {
     blogPostCollection: {
         items: BlogPost[];
@@ -47,5 +45,3 @@ export type GetAllModelsResponse = FetchContentfulResponse<
     & AllCategoriesCollection
     & AllTagsCollection
 >
-
-export type BlogMainCache = Awaited<ReturnType<typeof getMainPage>> | null;

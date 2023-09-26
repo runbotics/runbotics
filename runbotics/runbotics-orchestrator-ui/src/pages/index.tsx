@@ -16,9 +16,14 @@ interface Props {
 
 const IndexPage: VFC<Props> = ({ blogPosts }) => <MainView blogPosts={blogPosts} />;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ locale }) => {
-    const language = locale as Language;
-    const cache = getBlogMainCache(language) ?? await recreateCache(language);
+export const getServerSideProps: GetServerSideProps<Props> = async ({ res, locale }) => {
+    let cache = getBlogMainCache(locale as Language);
+
+    if (!cache) {
+        cache = await recreateCache(locale as Language);
+    } else {
+        res.setHeader('X-Cache', 'HIT');
+    }
 
     const blogPosts = cache.posts?.slice(0, 3) ?? [];
 

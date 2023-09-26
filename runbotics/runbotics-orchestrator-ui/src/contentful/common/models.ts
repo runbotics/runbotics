@@ -41,7 +41,7 @@ export interface BlogPost {
 }
 
 export interface Category {
-    title: string;
+    title: string; 
     slug: string;
 }
 
