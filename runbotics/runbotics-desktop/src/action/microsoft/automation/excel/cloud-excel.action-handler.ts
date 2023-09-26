@@ -83,23 +83,22 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     }
 
     deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput) {
-        const rowRange = input.rowRange;
-        const worksheet = input.worksheet ? input.worksheet : null;
+        const { rowRange, worksheet } = input;
+
+        if (!rowRange.toString().match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
+            throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+        }
 
         if (Array.isArray(rowRange)) {
             const sortedDescendingRows = sortNumbersDescending(rowRange);
             return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
-        } else if (!rowRange.match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
-            throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
         } else if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
-            const [startRow, endRow] = rowRange.split(':');
-            const address = `${startRow}:${endRow}`;
-            return this.excelService.deleteRows(this.session, address, worksheet);
-        } else if (rowRange.match(ActionRegex.EXCEL_ROW_NUMBER)) {
+            return this.excelService.deleteRows(this.session, rowRange, worksheet);
+        } else if (rowRange.match(ActionRegex.EXCEL_DELETE_ROW_INPUT)) {
             const address = `${rowRange}:${rowRange}`;
             return this.excelService.deleteRows(this.session, address, worksheet);
         } else {
-            let rows: (string | number)[];
+            let rows: number[];
             try {
                 rows = JSON.parse(rowRange);
                 if (!Array.isArray(rows)) {
@@ -161,11 +160,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     async deleteRowsOneByOne(session: ExcelSession, array: number[], worksheet: string) {
         for (const row of array) {
             const address = `${row}:${row}`;
-            try {
-                await this.excelService.deleteRows(session, address, worksheet);
-            } catch (error) {
-                throw new Error(error);
-            }
+            await this.excelService.deleteRows(session, address, worksheet);
         }
     }
 }

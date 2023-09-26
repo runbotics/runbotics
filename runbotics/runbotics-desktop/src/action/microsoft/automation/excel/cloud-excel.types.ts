@@ -48,6 +48,6 @@ export type CloudExcelDeleteColumnsActionInput = {
 };
 
 export type CloudExcelDeleteRowsActionInput = {
-    rowRange: string | (string | number)[];
+    rowRange: string | number[];
     worksheet?: string;
 };

@@ -654,7 +654,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.RowRange.Info'),
                         },
                     },
-                    endColumn: {
+                    worksheet: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet.Info'),
                         },
