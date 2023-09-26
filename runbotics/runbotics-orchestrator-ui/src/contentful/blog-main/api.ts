@@ -58,6 +58,7 @@ export async function getFilteredPosts(
     filterFragment: string,
     language: Language,
     options: GetFilteredPostsOptions = {},
+  
 ) {
     const entries = await fetchGraphQL<GetAllPostsResponse>(
         buildFilteredPostsQuery({

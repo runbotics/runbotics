@@ -31,9 +31,3 @@ export enum FilterQueryParamsEnum {
     Search = 'search',
     Page = 'page',
 }
-
-export enum CacheKey {
-    Categories = 'categories',
-    Tags = 'tags',
-    Posts = 'posts',
-}

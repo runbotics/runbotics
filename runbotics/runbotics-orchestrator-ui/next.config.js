@@ -1,3 +1,4 @@
+
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [

@@ -1,10 +1,10 @@
 import { BlogPost, contentfulCache } from '#contentful/common';
 import { Language } from '#src-app/translations/translations';
 
-export function getSinglePostCache(language: Language, valueKey: BlogPost['slug']) {
-    return contentfulCache[language].get(valueKey) as BlogPost | undefined;
+export function getPostCache(cacheKey: string, language: Language) {
+    return contentfulCache[language].get(cacheKey) as BlogPost | undefined;
 }
 
-export function setSinglePostCache(language: Language, cacheValue: BlogPost) {
-    contentfulCache[language].set(cacheValue.slug, cacheValue);
+export function setPostCache(cacheKey: string, cacheValue: BlogPost, language: Language) {
+    contentfulCache[language].set(cacheKey, cacheValue);
 }
