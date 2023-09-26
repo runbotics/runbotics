@@ -1,4 +1,4 @@
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import { Injectable } from '@nestjs/common';
 import { externalAxios } from '#config';

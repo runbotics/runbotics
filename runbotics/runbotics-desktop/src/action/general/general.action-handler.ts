@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
+import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';

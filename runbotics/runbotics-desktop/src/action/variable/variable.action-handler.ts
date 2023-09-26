@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { GlobalVariableType, IGlobalVariable } from 'runbotics-common';
-import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
+import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';

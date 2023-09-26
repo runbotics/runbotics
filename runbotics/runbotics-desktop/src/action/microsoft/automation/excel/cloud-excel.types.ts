@@ -1,5 +1,5 @@
 import { CloudExcelAction } from 'runbotics-common';
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 
 import { ExcelSessionInfo, ExcelCellValue, Worksheet } from '#action/microsoft/excel/excel.types';
 

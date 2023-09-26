@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DesktopRunRequest, DesktopRunResponse, StatelessActionHandler } from 'runbotics-sdk';
+import { DesktopRunRequest, DesktopRunResponse, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { google, sheets_v4 } from 'googleapis';
 import Schema$ValueRange = sheets_v4.Schema$ValueRange;
 import Sheets = sheets_v4.Sheets;
