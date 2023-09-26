@@ -1,4 +1,4 @@
-FROM node:18-alpine as builder
+FROM node:14-alpine as builder
 
 WORKDIR /usr/src/app
 
@@ -24,7 +24,7 @@ RUN $rush deploy \
 
 
 
-FROM node:18-alpine AS runner
+FROM node:14-alpine AS runner
 
 ENV NODE_ENV production
 
