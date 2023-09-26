@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {UserMapper.class, ScheduleProcessMapper.class})
 public interface ProcessMapper extends EntityMapper<ProcessDTO, Process> {
     @Mapping(target = "createdBy", source = "createdBy", qualifiedByName = "login")
+    @Mapping(target = "editor", source = "editor", qualifiedByName = "login")
     @Mapping(target = "schedules", ignore = true)
     @BeanMapping(qualifiedByName = "DTO")
     ProcessDTO toDto(Process s);

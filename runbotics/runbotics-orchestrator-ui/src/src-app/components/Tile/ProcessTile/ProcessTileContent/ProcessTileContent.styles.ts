@@ -1,19 +1,34 @@
-import { CardContent, Box } from '@mui/material';
+import { CardContent, Container, Box } from '@mui/material';
 import styled from 'styled-components';
 
-export const StyledContent = styled(CardContent)(({ theme }) => `
+export const StyledContent = styled(CardContent)`
     display: grid;
-    grid-template-columns: 2fr 1.9fr;
-    gap: 0.5rem;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    column-gap: 5px;
     height: 100%;
     width: 100%;
-    background: linear-gradient(${theme.palette.grey[300]}, ${theme.palette.grey[300]}) center/1.5px 80% no-repeat;
 
     && {
-        padding: 1rem 0 1rem 2rem;
+        padding: 15px 10px;
     }
-`);
+`;
+
+export const StyledContainer = styled(Container)`
+    && {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        justify-content: flex-start;
+        row-gap: 1rem;
+    }
+`;
 
 export const StyledBox = styled(Box)`
-    width: 90%;
+   overflow: hidden;
 `;
+
+export const VerticalLine = styled.div(({ theme }) => `
+    width: 1px;
+    height: 95%;
+    background-color: ${theme.palette.grey[300]};
+    margin-top: 5px;
+`);

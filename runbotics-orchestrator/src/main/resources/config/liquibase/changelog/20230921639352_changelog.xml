@@ -30,8 +30,29 @@
                 <constraints nullable="true"/>
             </column>
             <column name="editor_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="20230921639352-3">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="process" columnName="editor_id"/>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="fk_editor_id"/>
+                </not>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint
+            baseColumnNames="editor_id"
+            baseTableName="process"
+            constraintName="fk_editor_id"
+            deferrable="false"
+            initiallyDeferred="false"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"
+            validate="true"
+        />
     </changeSet>
 </databaseChangeLog>

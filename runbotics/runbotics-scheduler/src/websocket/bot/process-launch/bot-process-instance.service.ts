@@ -129,14 +129,14 @@ export class BotProcessService {
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
             newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
-            await this.updateLastRunTimeInProcess(newProcessInstance);
+            await this.updateProcessLastRunTime(newProcessInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
             newProcessInstance.input = processInstance.input;
             if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
-            await this.updateLastRunTimeInProcess(processInstance);
+            await this.updateProcessLastRunTime(processInstance);
         }
         if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
@@ -145,12 +145,12 @@ export class BotProcessService {
         return newProcessInstance;
     }
 
-    private async updateLastRunTimeInProcess(processInstance: IProcessInstance) {
+    private async updateProcessLastRunTime(processInstance: IProcessInstance) {
         if (!processInstance?.process?.id) return;
         const process = await this.processService.findById(processInstance.process.id);
 
         if (process) {
-            process.lastRun = new Date().toISOString();
+            process.lastRun = processInstance.created;
             await this.processService.save(process);
         }
     }

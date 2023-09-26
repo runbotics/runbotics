@@ -56,7 +56,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                 />
                 <If condition={hasProcessDetailsAccess}>
                     <ProcessTileContent
-                        refProcessTileContent={refProcessTileContent}
+                        ref={refProcessTileContent}
                         process={process}
                         searchValue={searchFromUrl}
                     />

@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useLayoutEffect, MouseEvent } from 'react';
+import React, { FC, useState, useRef, useLayoutEffect, MouseEvent, useEffect } from 'react';
 
 import { Chip } from '@mui/material';
 
@@ -29,6 +29,7 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     const [isTagBoxExpanded, setIsTagBoxExpanded] = useState<boolean>(false);
     const [isTagListMultiLine, setIsTagListMultiLine] = useState<boolean>(true);
     const [tagsWidth, setTagsWidth] = useState<number>(0);
+    const [expandedHeight, setExpandedHeight] = useState<number>(0);
 
     const refTagBox = useRef<HTMLDivElement>();
 
@@ -57,9 +58,7 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
         };
     }, []);
 
-    useLayoutEffect(() => {
-        checkTagsWidth(tagsWidth);
-    }, [tagsWidth]);
+    useLayoutEffect(() => { checkTagsWidth(tagsWidth); }, [tagsWidth]);
 
     const handleTagBoxResize = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -69,12 +68,16 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
 
     const tagNameFitSearch = (tagName: string) => Boolean(tagName.match(RegExp(searchValue, 'ig')));
 
+    useEffect(() => {
+        setExpandedHeight(refProcessTileContent.current.offsetHeight + 32);
+    }, [refProcessTileContent]);
+
     return (
         <Container>
             <TagBox
                 ref={refTagBox}
                 $isExpanded={isTagBoxExpanded}
-                refProcessTileContent={refProcessTileContent.current}
+                $expandedHeight={expandedHeight}
             >
                 {tags.reduce((acc, tag) =>
                     tagNameFitSearch(tag.name)
@@ -93,14 +96,15 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
                     />)
                 }
             </TagBox>
-            <DividerBox $isExpanded={isTagBoxExpanded}>
+            <DividerBox>
                 <If
                     condition={tags.length && isTagListMultiLine}
                     else={<StaticLine/>}
                 >
-                    <DividerLine/>
+                    <DividerLine $isExpanded={isTagBoxExpanded}/>
                     <DividerAction
                         onClick={handleTagBoxResize}
+                        $isExpanded={isTagBoxExpanded}
                     >
                         <StyledTypography
                             variant='body2'

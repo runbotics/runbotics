@@ -269,11 +269,6 @@ public class Process implements Serializable {
         return lastRun;
     }
 
-    public Process lastRun(ZonedDateTime lastRun) {
-        this.lastRun = lastRun;
-        return this;
-    }
-
     public void setLastRun(ZonedDateTime lastRun) {
         this.lastRun = lastRun;
     }
