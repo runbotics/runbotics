@@ -5,7 +5,7 @@ import { StatefulActionHandler } from 'runbotics-sdk';
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
 import * as SharepointTypes from './cloud-excel.types';
-import { CloudExcelErrorMessage } from './cloud-excel.error-message'; 
+import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
@@ -33,10 +33,14 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             throw new Error(CloudExcelErrorMessage.getCellIncorrectInput());
         }
 
-        return this.excelService.getCell(this.session, {
-            column: column.toString(),
-            row: row.toString()
-        });
+        return this.excelService.getCell(
+            this.session,
+            {
+                column: column.toString(),
+                row: row.toString()
+            },
+            input.isStringExpected
+        );
     }
 
     getCells(input: SharepointTypes.CloudExcelGetCellsActionInput) {
@@ -48,7 +52,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         }
 
         const range = `${startCell}:${endCell}`;
-        return this.excelService.getCells(this.session, range);
+        return this.excelService.getCells(this.session, range, input.isStringExpected);
     }
 
     setCell(input: SharepointTypes.CloudExcelSetCellActionInput) {

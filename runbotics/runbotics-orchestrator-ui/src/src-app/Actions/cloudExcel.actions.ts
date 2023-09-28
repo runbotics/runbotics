@@ -30,8 +30,12 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
+                            isStringExpected: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.IsStringExpected'),
+                                type: 'boolean',
+                            },
                         },
-                        required: ['cell'],
+                        required: ['cell', 'isStringExpected'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -54,7 +58,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
                             type: 'string',
                         },
-                    }
+                    },
                 },
                 output: {
                     variableName: {
@@ -67,6 +71,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     cell: undefined,
+                    isStringExpected: false,
                 },
                 output: {
                     variableName: undefined,
@@ -102,9 +107,13 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell'),
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS
-                            }
+                            },
+                            isStringExpected: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.IsStringExpected'),
+                                type: 'boolean',
+                            },
                         },
-                        required: ['startCell', 'endCell'],
+                        required: ['startCell', 'endCell', 'isStringExpected'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -132,7 +141,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell.Info'),
                         },
-                    }
+                    },
                 },
                 output: {
                     variableName: {
@@ -145,6 +154,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     range: undefined,
+                    isStringExpected: false,
                 },
                 output: {
                     variableName: undefined,
