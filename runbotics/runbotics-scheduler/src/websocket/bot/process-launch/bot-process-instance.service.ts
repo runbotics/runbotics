@@ -37,14 +37,14 @@ export class BotProcessService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const updatedLastRunTimeInProcessInstance = await this.updateLastRunTime(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastRunTimeInProcessInstance.id } });
+            const updatedLastInstanceRunTime = await this.updateLastRunTime(processInstance, newProcessInstance, bot);
+            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastInstanceRunTime.id } });
 
             await queryRunner.manager.createQueryBuilder()
                 .insert()
                 .into(ProcessInstanceEntity)
-                .values({ ...updatedLastRunTimeInProcessInstance })
-                .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastRunTimeInProcessInstance.status, dbProcessInstance?.status), ['id'])
+                .values({ ...updatedLastInstanceRunTime })
+                .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastInstanceRunTime.status, dbProcessInstance?.status), ['id'])
                 .execute();
 
             await queryRunner.commitTransaction();

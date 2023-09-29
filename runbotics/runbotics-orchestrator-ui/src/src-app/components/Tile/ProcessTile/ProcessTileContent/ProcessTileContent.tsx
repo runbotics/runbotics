@@ -9,11 +9,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { StyledContent, StyledBox, StyledContainer, VerticalLine } from './ProcessTileContent.styles';
 import { ProcessTileContentProps } from './ProcessTileContent.types';
 
-const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>(({process, searchValue }, ref) => {
+const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>(({ process, searchValue }, contentBoxRef) => {
     const { translate } = useTranslations();
 
     return (
-        <StyledContent ref={ref}>
+        <StyledContent ref={contentBoxRef}>
             <StyledContainer>
                 <StyledBox>
                     <Typography color='textPrimary' variant='h6'>

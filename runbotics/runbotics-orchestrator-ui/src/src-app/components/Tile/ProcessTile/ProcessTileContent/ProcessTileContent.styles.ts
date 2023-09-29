@@ -28,7 +28,5 @@ export const StyledBox = styled(Box)`
 
 export const VerticalLine = styled.div(({ theme }) => `
     width: 1px;
-    height: 95%;
     background-color: ${theme.palette.grey[300]};
-    margin-top: 5px;
 `);

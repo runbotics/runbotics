@@ -20,6 +20,7 @@ import { ProcessTileTagListProps } from './ProcessTileTagList.types';
 
 const TAGS_CONTAINER_MARGIN_VALUE = 67;
 const TAG_RIGHT_MARGIN_VALUE = 8;
+const COMBINED_TILE_CONTENT_PADDING_VALUE = 32;
 
 const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     tags, searchValue, refProcessTileContent
@@ -69,7 +70,7 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     const tagNameFitSearch = (tagName: string) => Boolean(tagName.match(RegExp(searchValue, 'ig')));
 
     useEffect(() => {
-        setExpandedHeight(refProcessTileContent.current.offsetHeight + 32);
+        setExpandedHeight(refProcessTileContent.current.offsetHeight + COMBINED_TILE_CONTENT_PADDING_VALUE);
     }, [refProcessTileContent]);
 
     return (

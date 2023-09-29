@@ -53,6 +53,7 @@
             referencedColumnNames="id"
             referencedTableName="jhi_user"
             validate="true"
+            onDelete="SET NULL"
         />
     </changeSet>
 </databaseChangeLog>
