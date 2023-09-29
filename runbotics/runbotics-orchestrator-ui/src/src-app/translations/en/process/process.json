@@ -329,7 +329,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges": "Persist changes",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info": "Refers to the location path, where the starting point is the folder, where the bot lands after login to the account, e.g. folderName/fileName.xlsx",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.ListName.Info": "It must be a resource of type 'Document library'",
-    "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Close session",
+    "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Close workbook",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label": "Create worksheet",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName": "Worksheet name",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "New worksheet name. Maximum number of characters: 31. Characters not allowed: \\ , / , * , ? , : , [ , ]",

@@ -426,48 +426,10 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
         script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
         form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableName',
-                                ),
-
-                                type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
-                            },
-                        },
-                        required: ['variableName'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['output'],
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
-            },
-            formData: {
-                output: {
-                    variableName: undefined,
-                },
-            },
+            schema: {},
+            uiSchema: {},
+            formData: {},
         },
     },
     [CloudExcelAction.CREATE_WORKSHEET]: {
