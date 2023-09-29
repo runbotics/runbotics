@@ -43,7 +43,10 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
                         <HighlightText
-                            text={process.createdBy ? process.createdBy.login : 'RunBotics'}
+                            text={process.createdBy
+                                ? process.createdBy.login
+                                : translate('Component.Tile.Process.Content.Creator.Placeholder')
+                            }
                             matchingText={searchValue}
                         />
                     </Typography>
@@ -53,7 +56,10 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                         {translate('Component.Tile.Process.Content.Editor')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
-                        {process.editor ? process.editor.login : 'RunBotics'}
+                        {process.editor
+                            ? process.editor.login
+                            : translate('Component.Tile.Process.Content.Editor.Placeholder')
+                        }
                     </Typography>
                 </StyledBox>
             </StyledContainer>
