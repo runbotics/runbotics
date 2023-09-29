@@ -8,7 +8,7 @@ export const StyledCardActionArea = styled(CardActionArea)`
     && {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         height: 100%;
         width: 100%;
     }

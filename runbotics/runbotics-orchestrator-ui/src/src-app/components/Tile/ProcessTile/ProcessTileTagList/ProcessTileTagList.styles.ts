@@ -30,11 +30,12 @@ export const Container = styled.div`
 `;
 
 export const TagBox = styled.div
-    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
+    <{ $isExpanded: boolean; $expandedHeight: number; }>
+    (({ theme, $isExpanded, $expandedHeight }) => `
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: ${$isExpanded ? '170px' : '100%'};
+    height: ${$isExpanded ? `${$expandedHeight}px` : '100%'};
     min-height: 26px;
     width: 100%;
     padding: 0 10px 0 65px;
@@ -45,18 +46,17 @@ export const TagBox = styled.div
     transition: 0.3s;
 `);
 
-export const DividerBox = styled.div
-    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
+export const DividerBox = styled.div`
     margin-top: 3px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 10px;
-    background-color: ${$isExpanded ? theme.palette.background.paper : 'transparent'};
-`);
+`;
 
-export const DividerAction = styled.div(({ theme }) => `
+export const DividerAction = styled.div
+    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,6 +64,7 @@ export const DividerAction = styled.div(({ theme }) => `
     width: 70px;
     border-radius: 10px;
     transition: 0.3s;
+    background-color: ${$isExpanded ? theme.palette.grey[200] : 'transparent'};
 
     &:hover {
         cursor: pointer;
@@ -71,11 +72,12 @@ export const DividerAction = styled.div(({ theme }) => `
     }
 `);
 
-export const DividerLine = styled.div(({ theme }) => `
+export const DividerLine = styled.div
+    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
     width: 75%;
     height: 1px;
     margin-right: 5px;
-    background-color: ${theme.palette.grey[300]};
+    background-color: ${$isExpanded ? 'transparent' : theme.palette.grey[300]};
 `);
 
 export const StaticLine = styled.div(({ theme }) => `

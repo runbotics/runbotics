@@ -194,17 +194,6 @@ public class ProcessQueryService extends QueryService<Process> {
             if (criteria.getUpdated() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getUpdated(), Process_.updated));
             }
-            if (criteria.getExecutionsCount() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getExecutionsCount(), Process_.executionsCount));
-            }
-            if (criteria.getSuccessExecutionsCount() != null) {
-                specification =
-                    specification.and(buildRangeSpecification(criteria.getSuccessExecutionsCount(), Process_.successExecutionsCount));
-            }
-            if (criteria.getFailureExecutionsCount() != null) {
-                specification =
-                    specification.and(buildRangeSpecification(criteria.getFailureExecutionsCount(), Process_.failureExecutionsCount));
-            }
             if (criteria.getIsPublic() != null) {
                 userIdAndPublicSpec = userIdAndPublicSpec.or(buildSpecification(criteria.getIsPublic(), Process_.isPublic));
             } else {

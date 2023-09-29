@@ -42,13 +42,7 @@ public class ProcessDTO implements Serializable {
     private ZonedDateTime updated;
 
     @JsonView(ProcessDTOViews.DefaultView.class)
-    private Long executionsCount;
-
-    @JsonView(ProcessDTOViews.DefaultView.class)
-    private Long successExecutionsCount;
-
-    @JsonView(ProcessDTOViews.DefaultView.class)
-    private Long failureExecutionsCount;
+    private ZonedDateTime lastRun;
 
     private String executionInfo;
 
@@ -69,6 +63,9 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private UserDTO editor;
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<TagDTO> tags;
@@ -129,26 +126,6 @@ public class ProcessDTO implements Serializable {
         this.updated = updated;
     }
 
-    public Long getExecutionsCount() {
-        return executionsCount;
-    }
-
-    public void setExecutionsCount(Long executionsCount) {
-        this.executionsCount = executionsCount;
-    }
-
-    public Long getSuccessExecutionsCount() {
-        return successExecutionsCount;
-    }
-
-    public void setSuccessExecutionsCount(Long successExecutionsCount) {
-        this.successExecutionsCount = successExecutionsCount;
-    }
-
-    public Long getFailureExecutionsCount() {
-        return failureExecutionsCount;
-    }
-
     public String getExecutionInfo() {
         return executionInfo;
     }
@@ -159,10 +136,6 @@ public class ProcessDTO implements Serializable {
 
     public Boolean getIsTriggerable() {
         return isTriggerable;
-    }
-
-    public void setFailureExecutionsCount(Long failureExecutionsCount) {
-        this.failureExecutionsCount = failureExecutionsCount;
     }
 
     public void setExecutionInfo(String executionInfo) {
@@ -209,6 +182,22 @@ public class ProcessDTO implements Serializable {
         this.botCollection = botCollection;
     }
 
+    public ZonedDateTime getLastRun() {
+        return lastRun;
+    }
+
+    public void setLastRun(ZonedDateTime lastRun) {
+        this.lastRun = lastRun;
+    }
+
+    public UserDTO getEditor() {
+        return editor;
+    }
+
+    public void setEditor(UserDTO editor) {
+        this.editor = editor;
+    }
+
     public Set<TagDTO> getTags() {
         return tags;
     }
@@ -250,15 +239,14 @@ public class ProcessDTO implements Serializable {
             ", isPublic=" + isPublic +
             ", created=" + created +
             ", updated=" + updated +
-            ", executionsCount=" + executionsCount +
-            ", successExecutionsCount=" + successExecutionsCount +
-            ", failureExecutionsCount=" + failureExecutionsCount +
+            ", lastRun=" + lastRun +
             ", executionInfo=" + executionInfo +
             ", isAttended=" + isAttended +
             ", isTriggerable=" + isTriggerable +
             ", createdBy=" + createdBy +
             ", system=" + system +
             ", schedules=" + schedules +
+            ", editor=" + editor +
             ", tags=" + tags +
             '}';
     }

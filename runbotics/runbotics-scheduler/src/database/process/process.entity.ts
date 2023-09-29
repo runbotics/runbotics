@@ -36,15 +36,9 @@ export class ProcessEntity implements IProcess {
     @Column({ name: 'is_triggerable' })
         isTriggerable?: boolean;
 
-    @Column({ name: 'executions_count' })
-        executionsCount: number;
+    @Column({ name: 'last_run' })
+        lastRun?: string;
 
-    @Column({ name: 'failure_executions_count' })
-        failureExecutionsCount: number;
-
-    @Column({ name: 'success_executions_count' })
-        successExecutionsCount: number;
-    
     @Column({ name: 'execution_info' })
         executionInfo: string;
 
@@ -62,4 +56,8 @@ export class ProcessEntity implements IProcess {
     @ManyToOne(() => BotCollectionEntity)
     @JoinColumn({ name: 'bot_collection', referencedColumnName: 'id' })
         botCollection: IBotCollection;
+
+    @ManyToOne(() => UserEntity)
+    @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
+        editor: IUser;
 }
