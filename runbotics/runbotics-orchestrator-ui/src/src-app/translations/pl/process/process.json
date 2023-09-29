@@ -333,7 +333,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.PersistChanges": "Utrzymuj zmiany",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info": "Odnosi się do ścieżki, gdzie punktem początkowym jest folder, w którym bot ląduje po zalogowaniu się do konta, np. nazwaFolderu/nazwaPliku.xlsx",
     "Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.ListName.Info": "Musi to być zasób typu 'Document library'",
-    "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Zakończ sesję",
+    "Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label": "Zamknij arkusz",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label": "Stwórz arkusz",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName": "Nazwa arkusza",
     "Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info": "Nazwa nowego arkusza. Maksymalna liczba znaków: 31. Znaki niedozwolone: \\ , / , * , ? , : , [ , ]",
