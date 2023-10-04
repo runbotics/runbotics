@@ -54,7 +54,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     }, [selectedElement, customValidationErrors]);
 
     const validateVariableName = (value: string) => {
-        const variable = variables.find(({ name }) => name === value);
+        const variable = variables.find(({name}) => name === value);
         return !(variable && !(variable?.actionId && variable?.actionId === selectedElement.id));
     };
 
