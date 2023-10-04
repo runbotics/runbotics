@@ -11,10 +11,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-import { BPMNElement } from '../../../helpers/elementParameters';
 import {
     FieldWithTooltipWrapper, InfoTooltip
-} from "#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip";
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip';
+
+import { BPMNElement } from '../../../helpers/elementParameters';
 
 interface BasicTextFieldProps extends WidgetProps {
     params?: AutocompleteRenderInputParams;

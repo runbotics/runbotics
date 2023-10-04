@@ -4,10 +4,11 @@ import { WidgetProps } from '@rjsf/core';
 
 import { Options } from '#src-app/hooks/useOptions';
 
-import AutocompleteWidget from './AutocompleteWidget';
 import {
     FieldWithTooltipWrapper, InfoTooltip
-} from "#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip";
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip';
+
+import AutocompleteWidget from './AutocompleteWidget';
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
