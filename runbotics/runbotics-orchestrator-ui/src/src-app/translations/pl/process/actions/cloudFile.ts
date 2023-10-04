@@ -2,6 +2,7 @@ import englishCloudFileActionsTranslations from '#src-app/translations/en/proces
 
 const cloudFileActionsTranslations: typeof englishCloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath': 'Ścieżka do folderu pliku w chmurze',
+    'Process.Details.Modeler.Actions.CloudFile.DestinationFolderPath': 'Ścieżka do docelowego folderu pliku',
     'Process.Details.Modeler.Actions.CloudFile.FileName': 'Nazwa pliku',
 
     'Process.Details.Modeler.Actions.CloudFile.Download.Label': 'Pobierz plik',
@@ -12,6 +13,8 @@ const cloudFileActionsTranslations: typeof englishCloudFileActionsTranslations =
 
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label': 'Stwórz folder',
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.FolderName': 'Nazwa folderu',
+
+    'Process.Details.Modeler.Actions.CloudFile.MoveFile.Label': 'Przenieś plik',
 };
 
 export default cloudFileActionsTranslations;

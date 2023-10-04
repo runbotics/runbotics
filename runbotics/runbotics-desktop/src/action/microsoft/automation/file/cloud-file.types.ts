@@ -4,7 +4,8 @@ import { DesktopRunRequest } from 'runbotics-sdk';
 export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
     | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
-    | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>;
+    | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
+    | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>;
 
 
 interface SharePointCommon {
@@ -43,4 +44,15 @@ export interface OneDriveCreateFolderActionInput {
 }
 
 export type SharePointCreateFolderActionInput = SharePointCommon & Omit<OneDriveCreateFolderActionInput, 'platform'>;
-export type CloudFileCreateFolderActionInput = OneDriveCreateFolderActionInput | SharePointCreateFolderActionInput; 
+export type CloudFileCreateFolderActionInput = OneDriveCreateFolderActionInput | SharePointCreateFolderActionInput;
+
+// MOVE FILE
+export interface OneDriveMoveFileActionInput {
+    platform: MicrosoftPlatform.OneDrive;
+    fileName: string;
+    destinationFolderPath: string;
+    parentFolderPath?: string;
+}
+
+export type SharePointMoveFileActionInput = SharePointCommon & Omit<OneDriveMoveFileActionInput, 'platform'>;
+export type CloudFileMoveFileActionInput = OneDriveMoveFileActionInput | SharePointMoveFileActionInput;

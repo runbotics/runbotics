@@ -4,3 +4,9 @@ export interface UploadFileParams {
     contentType: string,
     parentFolderPath?: string,
 }
+
+export interface MoveFileParams {
+    fileName: string;
+    destinationFolderPath: string;
+    parentFolderPath?: string;
+}

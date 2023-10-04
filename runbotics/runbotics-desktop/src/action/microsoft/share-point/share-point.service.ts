@@ -6,7 +6,7 @@ import { IncomingMessage } from 'http';
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
-import { CreateFolderParams, DownloadFileParams, GetFileByPathParams, Site, UploadFileParams } from './share-point.types';
+import { CreateFolderParams, DownloadFileParams, GetFileByPathParams, Site, UploadFileParams, MoveFileParams } from './share-point.types';
 import { Drive, DriveItem } from '../common.types';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
@@ -29,7 +29,7 @@ export class SharePointService {
         const fileContent = await axios
             .get<IncomingMessage>(driveItem['@microsoft.graph.downloadUrl'], { responseType: 'stream' })
             .then(d => d.data);
-            
+
         fileContent.pipe(writer);
         return saveFileStream(writer, absolutePath);
     }
@@ -79,5 +79,27 @@ export class SharePointService {
                     },
                 }
             );
+    }
+
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-move?view=graph-rest-1.0&tabs=javascript
+    async moveFile({
+        siteId, driveId, fileName, parentFolderPath, destinationFolderPath
+    }: MoveFileParams){
+        const file = await this.getFileByPath({
+            siteId, driveId, fileName, parentFolderPath
+        });
+        if (!file) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        const destinationFolder = await this.microsoftGraphService
+            .get<DriveItem>(
+                `/sites/${siteId}/drives/${driveId}/root:/${destinationFolderPath}`
+            );
+
+        return this.microsoftGraphService
+            .patch<DriveItem>(`/sites/${siteId}/drives/${driveId}/items/${file.id}`, {
+                parentReference: { id: destinationFolder.id }
+            });
     }
 }

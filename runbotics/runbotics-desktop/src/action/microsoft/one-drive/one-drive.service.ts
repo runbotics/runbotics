@@ -6,7 +6,7 @@ import { createWriteStream } from 'fs';
 import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
-import { UploadFileParams } from './one-drive.types';
+import { UploadFileParams, MoveFileParams } from './one-drive.types';
 import { DriveItem } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
@@ -28,7 +28,7 @@ export class OneDriveService {
         const fileContent = await axios
             .get<IncomingMessage>(driveItem['@microsoft.graph.downloadUrl'], { responseType: 'stream' })
             .then(d => d.data);
-            
+
         fileContent.pipe(writer);
         return saveFileStream(writer, absolutePath);
     }
@@ -84,6 +84,24 @@ export class OneDriveService {
                 name: folderName,
                 folder: {},
                 '@microsoft.graph.conflictBehavior': 'fail',
+            });
+    }
+
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-move?view=graph-rest-1.0&tabs=javascript
+    async moveFile({
+        fileName,
+        destinationFolderPath,
+        parentFolderPath
+    }: MoveFileParams) {
+        const file = await this.getFileByPath(fileName, parentFolderPath);
+        if (!file) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        const destinationFolder = await this.getItemByPath(destinationFolderPath);
+        return this.microsoftGraphService
+            .patch<DriveItem>(`/me/drive/items/${file.id}`, {
+                parentReference: { id: destinationFolder.id }
             });
     }
 }
