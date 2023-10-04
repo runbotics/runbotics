@@ -12,9 +12,15 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
 import { BPMNElement } from '../../../helpers/elementParameters';
+import {
+    FieldWithTooltipWrapper, InfoTooltip
+} from "#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip";
 
 interface BasicTextFieldProps extends WidgetProps {
     params?: AutocompleteRenderInputParams;
+    options: {
+        info?: string;
+    };
     customErrors?: string[];
     variables: Variable[];
     formContext: {
@@ -47,7 +53,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     }, [selectedElement, customValidationErrors]);
 
     const validateVariableName = (value: string) => {
-        const variable = variables.find(({name}) => name === value);
+        const variable = variables.find(({ name }) => name === value);
         return !(variable && !(variable?.actionId && variable?.actionId === selectedElement.id));
     };
 
@@ -64,19 +70,22 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     }, [debouncedValue]);
 
     return (
-        <TextField
-            {...params}
-            value={currentValue}
-            fullWidth
-            variant="outlined"
-            disabled={isFieldDisabled}
-            required={props.required}
-            label={props.label}
-            onChange={(event) => handleChange(event.target.value)}
-            InputLabelProps={{ shrink: true }}
-            error={Boolean(errors) || Boolean(props.rawErrors)}
-            helperText={errors ? errors : null}
-        />
+        <FieldWithTooltipWrapper>
+            <TextField
+                {...params}
+                value={currentValue}
+                fullWidth
+                variant="outlined"
+                disabled={isFieldDisabled}
+                required={props.required}
+                label={props.label}
+                onChange={(event) => handleChange(event.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={Boolean(errors) || Boolean(props.rawErrors)}
+                helperText={errors ? errors : null}
+            />
+            <InfoTooltip text={props.options?.info}/>
+        </FieldWithTooltipWrapper>
     );
 };
 

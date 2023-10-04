@@ -2,14 +2,12 @@ import React, { FC } from 'react';
 
 import { WidgetProps } from '@rjsf/core';
 
-import styled from 'styled-components';
-
-import If from '#src-app/components/utils/If';
-
 import { Options } from '#src-app/hooks/useOptions';
 
 import AutocompleteWidget from './AutocompleteWidget';
-import InfoButtonTooltip from './components/InfoButtonTooltip';
+import {
+    FieldWithTooltipWrapper, InfoTooltip
+} from "#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip";
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
@@ -19,21 +17,13 @@ interface ElementAwareAutocompleteProps extends WidgetProps {
     autocompleteOptions: Options;
 }
 
-const AutocompleteWrapper = styled.div`
-    display: flex;
-    width: 100%;
-    align-items: center;
-`;
-
 const ElementAwareAutocomplete: FC<ElementAwareAutocompleteProps> = (
     props
 ) => (
-    <AutocompleteWrapper>
-        <AutocompleteWidget {...props} value={props.value} />
-        <If condition={Boolean(props.options?.info)}>
-            <InfoButtonTooltip message={props.options?.info} />
-        </If>
-    </AutocompleteWrapper>
+    <FieldWithTooltipWrapper>
+        <AutocompleteWidget {...props} value={props.value}/>
+        <InfoTooltip text={props.options?.info}/>
+    </FieldWithTooltipWrapper>
 );
 
 export default ElementAwareAutocomplete;
