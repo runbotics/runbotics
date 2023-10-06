@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from 'runbotics-sdk';
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
-import { readFile } from 'fs/promises';
 import { fromFile } from 'file-type';
 
 import { OneDriveService } from '#action/microsoft/one-drive';
@@ -14,6 +13,7 @@ import {
     CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
@@ -26,7 +26,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     ) {
         super();
     }
-    
+
     async downloadFile(input: CloudFileDownloadFileActionInput) {
         const localDirectory = input.localDirectory ?? this.serverConfigService.tempFolderPath;
 
@@ -51,7 +51,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     async uploadFile(input: CloudFileUploadFileActionInput) {
         const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${input.fileName}`;
         const { content, contentType } = await this.readLocalFile(localPath);
-    
+
         if (input.platform === MicrosoftPlatform.OneDrive) {
             return this.oneDriveService.uploadFile({
                 fileName: input.fileName,
@@ -93,7 +93,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             parentFolderPath: input.parentFolderPath,
         });
     }
-    
+
     run(request: CloudFileActionRequest) {
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -129,7 +129,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     private async readLocalFile(path: string) {
-        const content = await readFile(path);
+        const content = readFileSync(path);
         const { mime } = await fromFile(path);
 
         return {
