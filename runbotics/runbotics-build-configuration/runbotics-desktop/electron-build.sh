@@ -1,3 +1,3 @@
 #!/bin/sh
 
-cd runbotics-desktop && pnpm electron-builder && cd ..
+cd ../../ && cd ./runbotics-desktop && pnpm electron-builder && cd ..
