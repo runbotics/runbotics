@@ -8,12 +8,10 @@ import dynamic from 'next/dynamic';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import InfoButtonTooltip
-    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
-
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
 
-import { TooltipTextfieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
+import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
+import { TooltipTextFieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
 
 const CustomTextWidget = dynamic(() => import('../CustomTextWidget'), { ssr: false });
 
@@ -60,12 +58,12 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     return (
         <Grid container key={`${id}-key`} alignItems="center" spacing={3}>
             <Grid item xs={12}>
-                <TooltipTextfieldWrapper>
+                <TooltipTextFieldWrapper>
                     <TextField
                         fullWidth
                         required={isRequired}
                         variant="outlined"
-                        label={mainFieldLabel ? mainFieldLabel : 'Key'}
+                        label={mainFieldLabel ? mainFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key')}
                         size="medium"
                         defaultValue={mainFieldValue}
                         disabled={isDisabled}
@@ -81,24 +79,24 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                     <If condition={Boolean(mainFieldInfo)}>
                         <InfoButtonTooltip message={mainFieldInfo}/>
                     </If>
-                </TooltipTextfieldWrapper>
+                </TooltipTextFieldWrapper>
             </Grid>
             <Grid item xs={12}>
-                <TooltipTextfieldWrapper>
+                <TooltipTextFieldWrapper>
                     <CustomTextWidget
                         {...formProps}
                         required={isRequired}
                         customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
-                        label={subFieldLabel ? subFieldLabel : 'Value'}
+                        label={subFieldLabel ? subFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value')}
                         defaultValue={subFieldValue}
                         value={subFieldValue}
                         disabled={isDisabled}
                         type="text"
                     />
                     <If condition={Boolean(subFieldInfo)}>
-                        <InfoButtonTooltip message={subFieldInfo}/>
+                        <InfoButtonTooltip message={subFieldInfo} />
                     </If>
-                </TooltipTextfieldWrapper>
+                </TooltipTextFieldWrapper>
             </Grid>
             <Grid item>
                 <Button color="secondary" disabled={isDisabled} onClick={onDropPropertyClick(label)}>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TooltipTextfieldWrapper = styled.div`
+export const TooltipTextFieldWrapper = styled.div`
     display: flex;
     width: 100%;
     align-items: center;

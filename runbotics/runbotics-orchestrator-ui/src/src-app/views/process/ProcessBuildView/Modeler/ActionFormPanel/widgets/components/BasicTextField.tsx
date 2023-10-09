@@ -12,13 +12,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-import InfoButtonTooltip
-    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 import {
-    TooltipTextfieldWrapper
+    TooltipTextFieldWrapper
 } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
 
 import { BPMNElement } from '../../../helpers/elementParameters';
+import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
 
 interface BasicTextFieldProps extends WidgetProps {
     params?: AutocompleteRenderInputParams;
@@ -74,7 +73,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     }, [debouncedValue]);
 
     return (
-        <TooltipTextfieldWrapper>
+        <TooltipTextFieldWrapper>
             <TextField
                 {...params}
                 value={currentValue}
@@ -89,9 +88,9 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
                 helperText={errors ? errors : null}
             />
             <If condition={Boolean(props.options?.info)}>
-                <InfoButtonTooltip message={props.options?.info}/>
+                <InfoButtonTooltip message={props.options?.info} />
             </If>
-        </TooltipTextfieldWrapper>
+        </TooltipTextFieldWrapper>
     );
 };
 
