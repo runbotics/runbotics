@@ -8,7 +8,10 @@ import dynamic from 'next/dynamic';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
-import { FieldWithTooltipWrapper, InfoTooltip } from '../InfoTooltip/InfoTooltip';
+import { TooltipTextfieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
+import If from '#src-app/components/utils/If';
+import InfoButtonTooltip
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 
 const CustomTextWidget = dynamic(() => import('../CustomTextWidget'), { ssr: false });
@@ -56,7 +59,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     return (
         <Grid container key={`${id}-key`} alignItems="center" spacing={3}>
             <Grid item xs={12}>
-                <FieldWithTooltipWrapper>
+                <TooltipTextfieldWrapper>
                     <TextField
                         fullWidth
                         required={isRequired}
@@ -74,11 +77,13 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                         error={isMainFieldErrorDisplayed}
                         helperText={isMainFieldErrorDisplayed ? errorMessage : null}
                     />
-                    <InfoTooltip text={mainFieldInfo}/>
-                </FieldWithTooltipWrapper>
+                    <If condition={Boolean(mainFieldInfo)}>
+                        <InfoButtonTooltip message={mainFieldInfo}/>
+                    </If>
+                </TooltipTextfieldWrapper>
             </Grid>
             <Grid item xs={12}>
-                <FieldWithTooltipWrapper>
+                <TooltipTextfieldWrapper>
                     <CustomTextWidget
                         {...formProps}
                         required={isRequired}
@@ -89,8 +94,10 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                         disabled={isDisabled}
                         type="text"
                     />
-                    <InfoTooltip text={subFieldInfo}/>
-                </FieldWithTooltipWrapper>
+                    <If condition={Boolean(subFieldInfo)}>
+                        <InfoButtonTooltip message={subFieldInfo}/>
+                    </If>
+                </TooltipTextfieldWrapper>
             </Grid>
             <Grid item>
                 <Button color="secondary" disabled={isDisabled} onClick={onDropPropertyClick(label)}>

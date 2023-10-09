@@ -5,10 +5,13 @@ import { WidgetProps } from '@rjsf/core';
 import { Options } from '#src-app/hooks/useOptions';
 
 import {
-    FieldWithTooltipWrapper, InfoTooltip
-} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip';
+    TooltipTextfieldWrapper
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
 
 import AutocompleteWidget from './AutocompleteWidget';
+import If from '#src-app/components/utils/If';
+import InfoButtonTooltip
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {
@@ -21,10 +24,12 @@ interface ElementAwareAutocompleteProps extends WidgetProps {
 const ElementAwareAutocomplete: FC<ElementAwareAutocompleteProps> = (
     props
 ) => (
-    <FieldWithTooltipWrapper>
+    <TooltipTextfieldWrapper>
         <AutocompleteWidget {...props} value={props.value}/>
-        <InfoTooltip text={props.options?.info}/>
-    </FieldWithTooltipWrapper>
+        <If condition={Boolean(props.options?.info)}>
+            <InfoButtonTooltip message={props.options?.info}/>
+        </If>
+    </TooltipTextfieldWrapper>
 );
 
 export default ElementAwareAutocomplete;

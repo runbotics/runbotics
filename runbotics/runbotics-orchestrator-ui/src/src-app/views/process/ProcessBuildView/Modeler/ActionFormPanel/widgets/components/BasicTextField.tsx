@@ -12,8 +12,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
 import {
-    FieldWithTooltipWrapper, InfoTooltip
-} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoTooltip';
+    TooltipTextfieldWrapper
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
+import If from '#src-app/components/utils/If';
+import InfoButtonTooltip
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 import { BPMNElement } from '../../../helpers/elementParameters';
 
@@ -71,7 +74,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     }, [debouncedValue]);
 
     return (
-        <FieldWithTooltipWrapper>
+        <TooltipTextfieldWrapper>
             <TextField
                 {...params}
                 value={currentValue}
@@ -85,8 +88,10 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
                 error={Boolean(errors) || Boolean(props.rawErrors)}
                 helperText={errors ? errors : null}
             />
-            <InfoTooltip text={props.options?.info}/>
-        </FieldWithTooltipWrapper>
+            <If condition={Boolean(props.options?.info)}>
+                <InfoButtonTooltip message={props.options?.info}/>
+            </If>
+        </TooltipTextfieldWrapper>
     );
 };
 
