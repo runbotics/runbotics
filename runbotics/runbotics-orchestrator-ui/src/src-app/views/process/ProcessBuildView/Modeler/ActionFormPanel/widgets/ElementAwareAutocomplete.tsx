@@ -2,16 +2,16 @@ import React, { FC } from 'react';
 
 import { WidgetProps } from '@rjsf/core';
 
+import If from '#src-app/components/utils/If';
 import { Options } from '#src-app/hooks/useOptions';
 
+import InfoButtonTooltip
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 import {
     TooltipTextfieldWrapper
 } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
 
 import AutocompleteWidget from './AutocompleteWidget';
-import If from '#src-app/components/utils/If';
-import InfoButtonTooltip
-    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 interface ElementAwareAutocompleteProps extends WidgetProps {
     options: {

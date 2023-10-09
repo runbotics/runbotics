@@ -5,14 +5,13 @@ import { Button, TextField, Grid } from '@mui/material';
 import { utils } from '@rjsf/core';
 import dynamic from 'next/dynamic';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
-import { TooltipTextfieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
-import If from '#src-app/components/utils/If';
 import InfoButtonTooltip
     from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
-
+import { TooltipTextfieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
 
 const CustomTextWidget = dynamic(() => import('../CustomTextWidget'), { ssr: false });
 

@@ -3,6 +3,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AutocompleteRenderInputParams, TextField } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
+import If from '#src-app/components/utils/If';
 import useCustomValidation from '#src-app/hooks/useCustomValidation';
 import useDebounce from '#src-app/hooks/useDebounce';
 import { Variable } from '#src-app/hooks/useOptions';
@@ -11,12 +12,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
+import InfoButtonTooltip
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 import {
     TooltipTextfieldWrapper
 } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
-import If from '#src-app/components/utils/If';
-import InfoButtonTooltip
-    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 import { BPMNElement } from '../../../helpers/elementParameters';
 
