@@ -1,5 +1,6 @@
 const cloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath': 'Cloud file\'s directory path',
+    'Process.Details.Modeler.Actions.CloudFile.DestinationFolderPath': 'Cloud file\'s destination path',
     'Process.Details.Modeler.Actions.CloudFile.FileName': 'File name',
 
     'Process.Details.Modeler.Actions.CloudFile.Download.Label': 'Download file',
@@ -10,6 +11,8 @@ const cloudFileActionsTranslations = {
 
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label': 'Create folder',
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.FolderName': 'Folder name',
+
+    'Process.Details.Modeler.Actions.CloudFile.MoveFile.Label': 'Move file',
 };
 
 export default cloudFileActionsTranslations;

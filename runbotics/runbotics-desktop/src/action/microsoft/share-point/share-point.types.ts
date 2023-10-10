@@ -30,6 +30,12 @@ export interface UploadFileParams extends SharePointCommon {
     parentFolderPath?: string;
 }
 
+export interface MoveFileParams extends SharePointCommon {
+    fileName: string;
+    destinationFolderPath: string;
+    parentFolderPath?: string;
+}
+
 /**
  * @see https://learn.microsoft.com/en-us/graph/api/resources/site?view=graph-rest-1.0
  */

@@ -9,7 +9,7 @@ import { RunboticsLogger } from '#logger';
 
 import {
     CloudFileActionRequest, CloudFileCreateFolderActionInput,
-    CloudFileDownloadFileActionInput,
+    CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
     CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
@@ -94,6 +94,29 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         });
     }
 
+    async moveFile(input: CloudFileMoveFileActionInput) {
+        if (input.platform === MicrosoftPlatform.OneDrive) {
+            return this.oneDriveService.moveFile({
+                fileName: input.fileName,
+                destinationFolderPath: input.destinationFolderPath,
+                parentFolderPath: input.parentFolderPath
+            });
+        }
+
+        const { site, drive } = await this.getSharePointListInfo({
+            listName: input.listName,
+            siteName: input.siteName
+        });
+
+        return this.sharePointService.moveFile({
+            siteId: site.id,
+            driveId: drive.id,
+            fileName: input.fileName,
+            parentFolderPath: input.parentFolderPath,
+            destinationFolderPath: input.destinationFolderPath
+        });
+    }
+
     run(request: CloudFileActionRequest) {
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -102,6 +125,8 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.uploadFile(request.input);
             case CloudFileAction.CREATE_FOLDER:
                 return this.createFolder(request.input);
+            case CloudFileAction.MOVE_FILE:
+                return this.moveFile(request.input);
             default:
                 throw new Error('Action not found');
         }
