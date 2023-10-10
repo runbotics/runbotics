@@ -6,7 +6,7 @@ import { createWriteStream } from 'fs';
 import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
-import { UploadFileParams, MoveFileParams } from './one-drive.types';
+import { UploadFileParams, MoveFileParams, DeleteItemParams } from './one-drive.types';
 import { DriveItem } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
@@ -47,12 +47,6 @@ export class OneDriveService {
     getItemByPath(path: string) {
         return this.microsoftGraphService
             .get<DriveItem>(`/me/drive/root:/${path}`);
-    }
-
-    // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript
-    deleteItemByPath(itemPath: string) {
-        return this.microsoftGraphService
-            .delete(`me/drive/root:/${itemPath}`);
     }
 
     // Up to 4MB
@@ -103,5 +97,20 @@ export class OneDriveService {
             .patch<DriveItem>(`/me/drive/items/${file.id}`, {
                 parentReference: { id: destinationFolder.id }
             });
+    }
+
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript
+    async deleteItem({
+        itemName,
+        parentFolderPath
+    }: DeleteItemParams) {
+        const path = parentFolderPath ? `${parentFolderPath}/${itemName}` : itemName;
+        const item = await this.getItemByPath(path);
+        if (!item) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        return this.microsoftGraphService
+            .delete(`/me/drive/items/${item.id}`);
     }
 }

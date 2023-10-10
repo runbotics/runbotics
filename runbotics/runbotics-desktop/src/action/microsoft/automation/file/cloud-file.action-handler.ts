@@ -11,6 +11,7 @@ import {
     CloudFileActionRequest, CloudFileCreateFolderActionInput,
     CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
     CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
+    CloudFileDeleteItemActionInput
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
@@ -117,6 +118,27 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         });
     }
 
+    async deleteItem(input: CloudFileDeleteItemActionInput) {
+        if (input.platform === MicrosoftPlatform.OneDrive) {
+            return this.oneDriveService.deleteItem({
+                itemName: input.itemName,
+                parentFolderPath: input.parentFolderPath
+            });
+        }
+
+        const { site, drive } = await this.getSharePointListInfo({
+            listName: input.listName,
+            siteName: input.siteName
+        });
+
+        return this.sharePointService.deleteItem({
+            siteId: site.id,
+            driveId: drive.id,
+            itemName: input.itemName,
+            parentFolderPath: input.parentFolderPath,
+        });
+    }
+
     run(request: CloudFileActionRequest) {
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -127,6 +149,8 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.createFolder(request.input);
             case CloudFileAction.MOVE_FILE:
                 return this.moveFile(request.input);
+            case CloudFileAction.DELETE_ITEM:
+                return this.deleteItem(request.input);
             default:
                 throw new Error('Action not found');
         }

@@ -412,7 +412,100 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                 }
             }
         }
-    }
+    },
+    [CloudFileAction.DELETE_ITEM]: {
+        id: CloudFileAction.DELETE_ITEM,
+        label: translate('Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label'),
+        script: CloudFileAction.DELETE_ITEM,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            platform: {
+                                title: translate('Process.Details.Modeler.Actions.Microsoft.Platform'),
+                                type: 'string',
+                                enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
+                                default: MicrosoftPlatform.OneDrive,
+                            },
+                        },
+                        dependencies: {
+                            platform: {
+                                oneOf: [
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: [MicrosoftPlatform.SharePoint],
+                                            },
+                                            siteName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            listName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.Microsoft.ListName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            itemName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
+                                                ),
+                                                type: 'string',
+                                            },
+                                            parentFolderPath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
+                                                ),
+                                                type: 'string',
+                                            }
+                                        },
+                                        required: ['siteName', 'listName', 'itemName'],
+                                    },
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: [MicrosoftPlatform.OneDrive],
+                                            },
+                                            itemName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
+                                                ),
+                                                type: 'string',
+                                            },
+                                            parentFolderPath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
+                                                ),
+                                                type: 'string',
+                                            }
+                                        },
+                                        required: ['itemName'],
+                                    },
+                                ],
+                            },
+                        },
+                    }
+                }
+            },
+            uiSchema: {},
+            formData: {
+                input: {
+                    siteName: undefined,
+                    listName: undefined,
+                    parentFolderPath: undefined,
+                    fileName: undefined,
+                    destinationFolderPath: undefined
+                }
+            }
+        }
+    },
 });
 
 export default getCloudFileActions;

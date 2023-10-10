@@ -36,6 +36,11 @@ export interface MoveFileParams extends SharePointCommon {
     parentFolderPath?: string;
 }
 
+export interface DeleteItemParams extends SharePointCommon {
+    itemName: string;
+    parentFolderPath?: string;
+}
+
 /**
  * @see https://learn.microsoft.com/en-us/graph/api/resources/site?view=graph-rest-1.0
  */

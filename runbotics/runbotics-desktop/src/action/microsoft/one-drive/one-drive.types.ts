@@ -10,3 +10,8 @@ export interface MoveFileParams {
     destinationFolderPath: string;
     parentFolderPath?: string;
 }
+
+export interface DeleteItemParams {
+    itemName: string;
+    parentFolderPath?: string;
+}
