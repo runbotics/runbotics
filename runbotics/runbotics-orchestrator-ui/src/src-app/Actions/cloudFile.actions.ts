@@ -325,7 +325,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Microsoft.Platform'),
                                 type: 'string',
                                 enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
-                                default: 'OneDrive',
+                                default: MicrosoftPlatform.OneDrive,
                             },
                         },
                         dependencies: {
