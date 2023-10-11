@@ -95,7 +95,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             if (Object.keys(Key).includes(trimmedKey)) {
                 return Key[trimmedKey];
             } else {
-                throw new Error('Unsupported key. Got: ' + trimmedKey + '. Supported keys: ' + Object.keys(Key).join(', ') + '.');
+                throw new Error('Unsupported key. Got: ' + trimmedKey + '. Check tooltip for supported keys.');
             }
         });
         await this.performKeyboardShortcut(keysToPress);

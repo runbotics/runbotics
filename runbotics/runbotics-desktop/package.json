@@ -78,6 +78,7 @@
         "productName": "RunBotics",
         "electronVersion": "8.2.0",
         "appId": "com.runbotics.runbotics-desktop",
+        "asar": false,
         "mac": {
             "category": "utility"
         },
