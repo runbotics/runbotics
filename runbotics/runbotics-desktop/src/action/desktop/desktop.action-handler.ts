@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { StatelessActionHandler } from 'runbotics-sdk';
-import { TEMP_DIRECTORY_NAME } from 'runbotics-common';
+import { DesktopAction, TEMP_DIRECTORY_NAME } from 'runbotics-common';
 import { RunboticsLogger } from '#logger';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
@@ -23,7 +23,7 @@ import {
 } from '@nut-tree/nut-js';
 import {
     DesktopActionRequest,
-    DesktopClickActionInput, 
+    DesktopClickActionInput,
     DesktopTypeActionInput,
     DesktopCopyActionInput,
     DesktopCursorSelectActionInput,
@@ -36,7 +36,8 @@ import {
     MouseButton,
     PointData,
     RegionData,
-    KEY_REFERENCE
+    KEY_REFERENCE,
+    DesktopPerformKeyboardShortcutActionInput
 } from './types';
 
 
@@ -51,7 +52,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     private readonly keyboardConfig: KeyboardConfig = {
         autoDelayMs: 50,
     };
-    
+
     constructor() {
         super();
         mouse.config = this.mouseConfig;
@@ -60,7 +61,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async click(input: DesktopClickActionInput): Promise<void> {
         const button: Button = input.mouseButton === MouseButton.LEFT ? Button.LEFT : Button.RIGHT;
-        
+
         if (input.clickTarget === ClickTarget.POINT) {
             const point = input.point;
             this.checkPoint(point);
@@ -70,7 +71,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             this.checkRegion(region);
             await this.moveMouseToRegion(region);
         }
-        
+
         if (input.doubleClick) {
             await mouse.doubleClick(button);
         } else {
@@ -79,12 +80,25 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     async type(input: DesktopTypeActionInput): Promise<void> {
-        const optionalKey = input.text.substring(4); 
+        const optionalKey = input.text.substring(KEY_REFERENCE.length);
         if (input.text.startsWith(KEY_REFERENCE) && Object.keys(Key).includes(optionalKey)) {
             await keyboard.type(Key[optionalKey]);
         } else {
             await keyboard.type(input.text);
         }
+    }
+
+    async runKeyboardShortcut(input: DesktopPerformKeyboardShortcutActionInput): Promise<void> {
+        const shortcutsArr = input.shortcut.split('+');
+        const keysToPress = shortcutsArr.map(key => {
+            const trimmedKey = key.trim();
+            if (Object.keys(Key).includes(trimmedKey)) {
+                return Key[trimmedKey];
+            } else {
+                throw new Error('Unsupported key. Got: ' + trimmedKey + '. Check tooltip for supported keys.');
+            }
+        });
+        await this.performKeyboardShortcut(keysToPress);
     }
 
     async copy(input: DesktopCopyActionInput): Promise<void> {
@@ -93,7 +107,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         } else {
             const superKey: Key = this.getSuperKey();
             await this.performKeyboardShortcut([superKey, Key.C]);
-        } 
+        }
     }
 
     async paste(): Promise<void> {
@@ -115,9 +129,8 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             const content = await clipboard.getContent();
             return content;
         } catch (error) {
-            throw new Error('Non-text clipboard content is not supported')
+            throw new Error('Non-text clipboard content is not supported');
         }
-        
     }
 
     async takeScreenshot(input: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
@@ -266,33 +279,35 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     private toRegionObj(region: Region): RegionData {
-        return { 
-            left: region.left, 
-            top: region.top, 
-            width: region.width, 
-            height: region.height 
+        return {
+            left: region.left,
+            top: region.top,
+            width: region.width,
+            height: region.height
         };
     }
 
     run(request: DesktopActionRequest) {
         switch (request.script) {
-            case 'desktop.click':
+            case DesktopAction.CLICK:
                 return this.click(request.input);
-            case 'desktop.type':
+            case DesktopAction.TYPE:
                 return this.type(request.input);
-            case 'desktop.copy':
+            case DesktopAction.PERFORM_KEYBOARD_SHORTCUT:
+                return this.runKeyboardShortcut(request.input);
+            case DesktopAction.COPY:
                 return this.copy(request.input);
-            case 'desktop.paste':
+            case DesktopAction.PASTE:
                 return this.paste();
-            case 'desktop.cursorSelect':
+            case DesktopAction.CURSOR_SELECT:
                 return this.cursorSelect(request.input);
-            case 'desktop.readClipboardContent':
+            case DesktopAction.READ_CLIPBOARD_CONTENT:
                 return this.readClipboardContent();
-            case 'desktop.maximizeActiveWindow':
+            case DesktopAction.MAXIMIZE_ACTIVE_WINDOW:
                 return this.maximizeActiveWindow();
-            case 'desktop.takeScreenshot':
+            case DesktopAction.TAKE_SCREENSHOT:
                 return this.takeScreenshot(request.input);
-            case 'desktop.readTextFromImage':
+            case DesktopAction.READ_TEXT_FROM_IMAGE:
                 return this.readTextFromImage(request.input);
             default:
                 throw new Error('Action not found');

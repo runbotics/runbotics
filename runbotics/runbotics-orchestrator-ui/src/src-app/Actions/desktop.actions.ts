@@ -28,10 +28,9 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                     'Region'
                                 ]
                             },
-                            
                             mouseButton: {
                                 title: translate('Process.Details.Modeler.Actions.Desktop.Click.MouseButton'),
-                                type:'string',
+                                type: 'string',
                                 enum: [
                                     'LEFT',
                                     'RIGHT'
@@ -132,6 +131,45 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     text: undefined
+                },
+            },
+        },
+    },
+    [DesktopAction.PERFORM_KEYBOARD_SHORTCUT]: {
+        id: DesktopAction.PERFORM_KEYBOARD_SHORTCUT,
+        label: translate('Process.Details.Modeler.Actions.Desktop.PerformKeyboardShortcut.Label'),
+        script: DesktopAction.PERFORM_KEYBOARD_SHORTCUT,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            shortcut: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.PerformKeyboardShortcut.Shortcut'),
+                                type: 'string',
+                            }
+                        },
+                        required: ['shortcut'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    shortcut: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.PerformKeyboardShortcut.Shortcut.Info'),
+                        }
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    shortcut: undefined
                 },
             },
         },

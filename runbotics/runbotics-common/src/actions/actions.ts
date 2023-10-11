@@ -121,12 +121,12 @@ export enum DesktopOfficeAction {
 }
 
 export enum CloudExcelAction {
-	GET_CELL = 'cloudExcel.getCell',
-	GET_CELLS = 'cloudExcel.getCells',
-	SET_CELL = 'cloudExcel.setCell',
-	SET_CELLS = 'cloudExcel.setCells',
-	OPEN_FILE='cloudExcel.openFile',
-	CLOSE_SESSION = 'cloudExcel.closeSession',
+    GET_CELL = 'cloudExcel.getCell',
+    GET_CELLS = 'cloudExcel.getCells',
+    SET_CELL = 'cloudExcel.setCell',
+    SET_CELLS = 'cloudExcel.setCells',
+    OPEN_FILE = 'cloudExcel.openFile',
+    CLOSE_SESSION = 'cloudExcel.closeSession',
     CREATE_WORKSHEET = "cloudExcel.createWorksheet",
     DELETE_WORKSHEET = "cloudExcel.deleteWorksheet",
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
@@ -175,60 +175,61 @@ export enum ApplicationAction {
 }
 
 export enum ExcelAction {
-	OPEN = 'excel.open',
-	GET_CELL = 'excel.getCell',
-	GET_CELLS = 'excel.getCells',
-	SET_CELL = 'excel.setCell',
-	SET_CELLS = 'excel.setCells',
-	CLEAR_CELLS = 'excel.clearCells',
-	CREATE_WORKSHEET = 'excel.createWorksheet',
-	RENAME_WORKSHEET = 'excel.renameWorksheet',
+    OPEN = 'excel.open',
+    GET_CELL = 'excel.getCell',
+    GET_CELLS = 'excel.getCells',
+    SET_CELL = 'excel.setCell',
+    SET_CELLS = 'excel.setCells',
+    CLEAR_CELLS = 'excel.clearCells',
+    CREATE_WORKSHEET = 'excel.createWorksheet',
+    RENAME_WORKSHEET = 'excel.renameWorksheet',
     DELETE_WORKSHEET = 'excel.deleteWorksheet',
-	SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
-	WORKSHEET_EXISTS = "excel.worksheetExists",
-	FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
-	DELETE_COLUMNS = 'excel.deleteColumns',
-	INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
-	INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
-	INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
-	INSERT_ROWS_AFTER = "excel.insertRowsAfter",
-	RUN_MACRO = "excel.runMacro",
-	READ_TABLE = 'excel.readTable',
+    SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
+    WORKSHEET_EXISTS = "excel.worksheetExists",
+    FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
+    DELETE_COLUMNS = 'excel.deleteColumns',
+    INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
+    INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
+    INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
+    INSERT_ROWS_AFTER = "excel.insertRowsAfter",
+    RUN_MACRO = "excel.runMacro",
+    READ_TABLE = 'excel.readTable',
     DELETE_ROWS = 'excel.deleteRows',
-	SAVE = 'excel.save',
-	CLOSE = 'excel.close',
+    SAVE = 'excel.save',
+    CLOSE = 'excel.close',
 }
 
 export enum DesktopAction {
-	CLICK = 'desktop.click',
-	TYPE = 'desktop.type',
-	COPY = 'desktop.copy',
-	PASTE = 'desktop.paste',
-	CURSOR_SELECT = 'desktop.cursorSelect',
-	READ_CLIPBOARD_CONTENT= 'desktop.readClipboardContent',
-	MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
-	TAKE_SCREENSHOT = 'desktop.takeScreenshot',
-	READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
+    CLICK = 'desktop.click',
+    TYPE = 'desktop.type',
+    COPY = 'desktop.copy',
+    PASTE = 'desktop.paste',
+    CURSOR_SELECT = 'desktop.cursorSelect',
+    READ_CLIPBOARD_CONTENT = 'desktop.readClipboardContent',
+    MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
+    TAKE_SCREENSHOT = 'desktop.takeScreenshot',
+    READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
+    PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
 }
 
 export type AllActionIds =
-	| VariableAction
-	| GeneralAction
-	| MailAction
-	| BrowserAction
-	| LoopAction
-	| ApiAction
-	| JavascriptAction
-	| AsanaAction
-	| GoogleAction
-	| JiraAction
-	| FileAction
-	| CsvAction
-	| DesktopOfficeAction
-	| CloudExcelAction
-	| CloudFileAction
-	| BeeOfficeAction
-	| SapAction
-	| ApplicationAction
-	| ExcelAction
-	| DesktopAction;
+    | VariableAction
+    | GeneralAction
+    | MailAction
+    | BrowserAction
+    | LoopAction
+    | ApiAction
+    | JavascriptAction
+    | AsanaAction
+    | GoogleAction
+    | JiraAction
+    | FileAction
+    | CsvAction
+    | DesktopOfficeAction
+    | CloudExcelAction
+    | CloudFileAction
+    | BeeOfficeAction
+    | SapAction
+    | ApplicationAction
+    | ExcelAction
+    | DesktopAction;

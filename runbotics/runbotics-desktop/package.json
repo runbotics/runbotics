@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.8.0-SNAPSHOT.95",
+    "version": "2.8.0-SNAPSHOT.96",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -78,6 +78,7 @@
         "productName": "RunBotics",
         "electronVersion": "8.2.0",
         "appId": "com.runbotics.runbotics-desktop",
+        "asar": false,
         "mac": {
             "category": "utility"
         },
