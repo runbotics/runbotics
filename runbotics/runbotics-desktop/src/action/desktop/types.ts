@@ -1,17 +1,19 @@
+import { DesktopAction } from 'runbotics-common';
 import { DesktopRunRequest } from 'runbotics-sdk';
 
 export const KEY_REFERENCE = 'Key.';
 
 export type DesktopActionRequest =
-| DesktopRunRequest<'desktop.click', DesktopClickActionInput>
-| DesktopRunRequest<'desktop.type', DesktopTypeActionInput>
-| DesktopRunRequest<'desktop.copy', DesktopCopyActionInput>
-| DesktopRunRequest<'desktop.paste'>
-| DesktopRunRequest<'desktop.cursorSelect', DesktopCursorSelectActionInput>
-| DesktopRunRequest<'desktop.readClipboardContent'>
-| DesktopRunRequest<'desktop.maximizeActiveWindow'>
-| DesktopRunRequest<'desktop.takeScreenshot', DesktopTakeScreenshotActionInput>
-| DesktopRunRequest<'desktop.readTextFromImage', DesktopReadTextFromImageActionInput>;
+    | DesktopRunRequest<DesktopAction.CLICK, DesktopClickActionInput>
+    | DesktopRunRequest<DesktopAction.TYPE, DesktopTypeActionInput>
+    | DesktopRunRequest<DesktopAction.COPY, DesktopCopyActionInput>
+    | DesktopRunRequest<DesktopAction.PASTE>
+    | DesktopRunRequest<DesktopAction.CURSOR_SELECT, DesktopCursorSelectActionInput>
+    | DesktopRunRequest<DesktopAction.READ_CLIPBOARD_CONTENT>
+    | DesktopRunRequest<DesktopAction.MAXIMIZE_ACTIVE_WINDOW>
+    | DesktopRunRequest<DesktopAction.TAKE_SCREENSHOT, DesktopTakeScreenshotActionInput>
+    | DesktopRunRequest<DesktopAction.READ_TEXT_FROM_IMAGE, DesktopReadTextFromImageActionInput>
+    | DesktopRunRequest<DesktopAction.PERFORM_KEYBOARD_SHORTCUT, DesktopPerformKeyboardShortcutActionInput>;
 
 export enum MouseButton {
     LEFT = 'LEFT',
@@ -58,6 +60,10 @@ export type DesktopClickActionInput = {
 
 export type DesktopTypeActionInput = {
     text: string;
+}
+
+export type DesktopPerformKeyboardShortcutActionInput = {
+    shortcut: string;
 }
 
 export type DesktopCopyActionInput = {
