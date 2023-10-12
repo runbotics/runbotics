@@ -12,9 +12,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-import {
-    TooltipTextFieldWrapper
-} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
+import { TooltipTextFieldWrapper } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip.styles';
 
 import { BPMNElement } from '../../../helpers/elementParameters';
 import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
@@ -28,7 +26,7 @@ interface BasicTextFieldProps extends WidgetProps {
     variables: Variable[];
     formContext: {
         selectedElement: BPMNElement;
-    }
+    };
 }
 
 const DEBOUNCE_TIME = 600;
@@ -40,24 +38,31 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     formContext: { selectedElement },
     ...props
 }) => {
-    const { customValidationErrors } = useSelector((state) => state.process.modeler);
+    const { customValidationErrors } = useSelector(
+        (state) => state.process.modeler
+    );
     const [currentValue, setCurrentValue] = useState(props.value || '');
     const debouncedValue = useDebounce<string>(currentValue, DEBOUNCE_TIME);
-    const { validator } = useCustomValidation();
+    // const { validator } = useCustomValidation(); // forbids variable name duplication
     const [errors, setErrors] = useState(props.customErrors);
     const { translate } = useTranslations();
 
     const isFieldDisabled = useMemo(() => {
         if (customValidationErrors.length > 0) {
-            const erroredElement = customValidationErrors.find(error => error.elementId !== selectedElement.id);
+            const erroredElement = customValidationErrors.find(
+                (error) => error.elementId !== selectedElement.id
+            );
             return Boolean(erroredElement);
         }
         return false;
     }, [selectedElement, customValidationErrors]);
 
     const validateVariableName = (value: string) => {
-        const variable = variables.find(({name}) => name === value);
-        return !(variable && !(variable?.actionId && variable?.actionId === selectedElement.id));
+        const variable = variables.find(({ name }) => name === value);
+        return !(
+            variable &&
+            !(variable?.actionId && variable?.actionId === selectedElement.id)
+        );
     };
 
     const handleChange = (newValue: string | undefined) => {
@@ -66,10 +71,15 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
     };
 
     useEffect(() => {
-        const isValid = validator(() => validateVariableName(currentValue));
+        // const isValid = validator(() => validateVariableName(currentValue)); // forbids variable name duplication
+        const isValid = true;
         isValid
             ? setErrors(props.customErrors)
-            : setErrors([translate('Process.BuildView.Modeler.Widgets.VariableNameIsTaken')]);
+            : setErrors([
+                translate(
+                    'Process.BuildView.Modeler.Widgets.VariableNameIsTaken'
+                ),
+            ]);
     }, [debouncedValue]);
 
     return (
