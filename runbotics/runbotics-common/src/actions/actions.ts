@@ -198,6 +198,7 @@ export enum ExcelAction {
     DELETE_ROWS = 'excel.deleteRows',
     SAVE = 'excel.save',
     CLOSE = 'excel.close',
+    EXPORT_TO_CSV = "excel.exportToCSV"
 }
 
 export enum DesktopAction {
