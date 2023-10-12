@@ -2,6 +2,7 @@ const cloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath': 'Cloud file\'s directory path',
     'Process.Details.Modeler.Actions.CloudFile.DestinationFolderPath': 'Cloud file\'s destination path',
     'Process.Details.Modeler.Actions.CloudFile.FileName': 'File name',
+    'Process.Details.Modeler.Actions.CloudFile.ItemName': 'Item name',
 
     'Process.Details.Modeler.Actions.CloudFile.Download.Label': 'Download file',
     'Process.Details.Modeler.Actions.CloudFile.Download.LocalDirectory': 'Bot local directory',
@@ -13,6 +14,8 @@ const cloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.FolderName': 'Folder name',
 
     'Process.Details.Modeler.Actions.CloudFile.MoveFile.Label': 'Move file',
+
+    'Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label': 'Delete file/folder',
 };
 
 export default cloudFileActionsTranslations;

@@ -5,8 +5,8 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
     | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
     | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
-    | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>;
-
+    | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
+    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>;
 
 interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
@@ -56,3 +56,13 @@ export interface OneDriveMoveFileActionInput {
 
 export type SharePointMoveFileActionInput = SharePointCommon & Omit<OneDriveMoveFileActionInput, 'platform'>;
 export type CloudFileMoveFileActionInput = OneDriveMoveFileActionInput | SharePointMoveFileActionInput;
+
+// DELETE ITEM
+export interface OneDriveDeleteItemActionInput {
+    platform: MicrosoftPlatform.OneDrive;
+    itemName: string;
+    parentFolderPath?: string;
+}
+
+export type SharePointDeleteItemActionInput = SharePointCommon & Omit<OneDriveDeleteItemActionInput, 'platform'>;
+export type CloudFileDeleteItemActionInput = OneDriveDeleteItemActionInput | SharePointDeleteItemActionInput;

@@ -6,7 +6,10 @@ import { IncomingMessage } from 'http';
 import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
-import { CreateFolderParams, DownloadFileParams, GetFileByPathParams, Site, UploadFileParams, MoveFileParams } from './share-point.types';
+import {
+    CreateFolderParams, DownloadFileParams, GetFileByPathParams,
+    Site, UploadFileParams, MoveFileParams, DeleteItemParams
+} from './share-point.types';
 import { Drive, DriveItem } from '../common.types';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
@@ -101,5 +104,19 @@ export class SharePointService {
             .patch<DriveItem>(`/sites/${siteId}/drives/${driveId}/items/${file.id}`, {
                 parentReference: { id: destinationFolder.id }
             });
+    }
+
+    async deleteItem({
+        siteId, driveId, itemName, parentFolderPath
+    }: DeleteItemParams) {
+        const item = await this.getFileByPath({
+            siteId, driveId, fileName: itemName, parentFolderPath
+        });
+        if (!item) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        return this.microsoftGraphService
+            .delete(`/sites/${siteId}/drives/${driveId}/items/${item.id}`);
     }
 }

@@ -136,7 +136,8 @@ export enum CloudFileAction {
     DOWNLOAD_FILE = 'cloudFile.download',
     UPLOAD_FILE = 'cloudFile.upload',
     CREATE_FOLDER = 'cloudFile.createFolder',
-    MOVE_FILE = 'cloudFile.moveFile'
+    MOVE_FILE = 'cloudFile.moveFile',
+    DELETE_ITEM = "cloudFile.deleteItem"
 }
 
 export enum BeeOfficeAction {
