@@ -6,7 +6,7 @@ import { IBpmnAction, Runner } from '../types';
 
 const getActionExportToCsv = (): IBpmnAction => ({
     id: ExcelAction.EXPORT_TO_CSV,
-    label: translate('Process.Details.Modeler.Actions.Excel.getActionExportToCsv.Label'),
+    label: translate('Process.Details.Modeler.Actions.Excel.ExportToCsv.Label'),
     script: ExcelAction.EXPORT_TO_CSV,
     runner: Runner.DESKTOP_SCRIPT,
     form: {
@@ -18,7 +18,7 @@ const getActionExportToCsv = (): IBpmnAction => ({
                     type: 'object',
                     properties: {
                         filePath: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.getActionExportToCsv.FilePath'),
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportToCsv.FilePath'),
                             type: 'string',
                         },
                     },
@@ -31,7 +31,7 @@ const getActionExportToCsv = (): IBpmnAction => ({
             input: {
                 filePath: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.getActionExportToCsv.FilePath.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportToCsv.FilePath.Info'),
                     },
                 },
             },
