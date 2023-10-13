@@ -1,8 +1,18 @@
-import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
+import { IProcess, IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
+type ProcessId = IProcess['id'];
+
+type ActiveInfo = {
+    orchestratorProcessInstanceId: string | null;
+    processInstance: IProcessInstance | null;
+}
+
+type AllActiveMap = Record<ProcessId, ActiveInfo>;
+
 export interface ProcessInstanceState {
+    allActiveMap: AllActiveMap;
     active: {
         orchestratorProcessInstanceId: string | null;
         processInstance: IProcessInstance | null;

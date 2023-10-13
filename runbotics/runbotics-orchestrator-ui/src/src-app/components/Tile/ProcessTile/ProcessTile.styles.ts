@@ -14,6 +14,19 @@ export const StyledCardActionArea = styled(CardActionArea)`
     }
 `;
 
+export const RunBox = styled.button`
+    width: 50px;
+    height: 50px;
+    background-color: orange;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    border: 0;
+    cursor: pointer;
+`;
+
 export const Description = styled(Typography)`
     && {
         display: -webkit-box;

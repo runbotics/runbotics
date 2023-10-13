@@ -6,12 +6,33 @@ import { initialState } from './ProcessInstance.slice';
 import { ProcessInstanceState } from './ProcessInstance.state';
 import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
+interface MapOrchestrator {
+    processId: number,
+    orchestratorProcessInstanceId: string
+}
+
 export const updateOrchestratorProcessInstanceId = (state: ProcessInstanceState, action: PayloadAction<string>) => {
     state.active.orchestratorProcessInstanceId = action.payload;
 };
 
+export const updateOrchestratorProcessInstanceIdMap = (state: ProcessInstanceState, action: PayloadAction<MapOrchestrator>) => {
+    state.allActiveMap[action.payload.processId] = {
+        ...(state.allActiveMap[action.payload.processId]),
+        orchestratorProcessInstanceId: action.payload.orchestratorProcessInstanceId
+    };
+
+};
+
 export const updateActiveProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
     state.active.processInstance = action.payload;
+};
+
+export const updateActiveProcessInstanceMap = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
+    const { id: processId } = action.payload.process;
+    state.allActiveMap[processId] = {
+        ...(state.allActiveMap[processId]),
+        processInstance: action.payload
+    };
 };
 
 export const updateProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
@@ -39,12 +60,16 @@ export const resetActive = (state: ProcessInstanceState) => {
     state.active = initialState.active;
 };
 
+export const resetAllActiveProcessInstances = (state: ProcessInstanceState) => {
+    state.allActiveMap = {};
+};
+
 const updateProcessInstancePageList = (processInstanceList: IProcessInstance[], newProcessInst: IProcessInstance) => {
     const exist = processInstanceList.some((item) => item.id === newProcessInst.id);
 
-    if (!exist) 
+    if (!exist)
     { return { exist }; }
-    
+
 
     const newProcessInstancesList = processInstanceList.reduce<IProcessInstance[]>(
         (acc, processInstance) => (processInstance.id === newProcessInst.id
@@ -64,9 +89,9 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
         action.payload,
     );
 
-    if (exist) 
+    if (exist)
     { state.all.page.content = newProcessInstancesList; }
-    else 
+    else
     { state.all.page?.content.unshift(action.payload); }
-    
+
 };
