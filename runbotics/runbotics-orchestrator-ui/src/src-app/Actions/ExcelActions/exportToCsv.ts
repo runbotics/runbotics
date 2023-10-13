@@ -60,11 +60,7 @@ const getActionExportToCsv = (): IBpmnAction => ({
                 },
             },
         },
-        formData: {
-            output: {
-                variableName: undefined,
-            },
-        },
+        formData: {},
     },
 });
 
