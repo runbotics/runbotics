@@ -6,6 +6,74 @@ import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
+    [CloudExcelAction.GET_RANGE]: {
+        id: CloudExcelAction.GET_RANGE,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.GetRange.Label'),
+        script: CloudExcelAction.GET_RANGE,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName.Info'),
+                            type: 'string',
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {},
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
     [CloudExcelAction.GET_CELL]: {
         id: CloudExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCell.Label'),
