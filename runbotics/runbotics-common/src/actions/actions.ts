@@ -13,7 +13,8 @@ export enum ActionRegex {
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+$',
-    EXCEL_ROW_NUMBER = '[\\d]+'
+    EXCEL_ROW_NUMBER = '[\\d]+',
+    EXCEL_SPLIT_ADDRESS = '[!:]'
 }
 
 export enum ACTION_GROUP {
@@ -130,6 +131,7 @@ export enum CloudExcelAction {
     CREATE_WORKSHEET = "cloudExcel.createWorksheet",
     DELETE_WORKSHEET = "cloudExcel.deleteWorksheet",
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
+    GET_RANGE = 'cloudExcel.getRange',
 }
 
 export enum CloudFileAction {
