@@ -1,4 +1,4 @@
-import { ExcelAction } from 'runbotics-common';
+import { ActionRegex, ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -9,6 +9,12 @@ const getActionExportToCsv = (): IBpmnAction => ({
     label: translate('Process.Details.Modeler.Actions.Excel.ExportToCsv.Label'),
     script: ExcelAction.EXPORT_TO_CSV,
     runner: Runner.DESKTOP_SCRIPT,
+    output: {
+        assignVariables: true,
+        outputMethods: {
+            variableName: '${content.output[0]}',
+        },
+    },
     form: {
         schema: {
             type: 'object',
@@ -24,10 +30,21 @@ const getActionExportToCsv = (): IBpmnAction => ({
                     },
                     required: ['filePath'],
                 },
+                output: {
+                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                    type: 'object',
+                    properties: {
+                        variableName: {
+                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                            type: 'string',
+                            pattern: ActionRegex.VARIABLE_NAME,
+                        }
+                    },
+                },
             },
         },
         uiSchema: {
-            'ui:order': ['input'],
+            'ui:order': ['input', 'output'],
             input: {
                 filePath: {
                     'ui:options': {
@@ -35,8 +52,19 @@ const getActionExportToCsv = (): IBpmnAction => ({
                     },
                 },
             },
+            output: {
+                variableName: {
+                    'ui:options': {
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportToCsv.Output'),
+                    },
+                },
+            },
         },
-        formData: {},
+        formData: {
+            output: {
+                variableName: undefined,
+            },
+        },
     },
 });
 
