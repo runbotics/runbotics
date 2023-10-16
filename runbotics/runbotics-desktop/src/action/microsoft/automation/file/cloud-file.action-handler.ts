@@ -97,7 +97,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
     async moveFile(input: CloudFileMoveFileActionInput) {
         if (input.platform === MicrosoftPlatform.OneDrive) {
-            this.oneDriveService.moveFile({
+            await this.oneDriveService.moveFile({
                 fileName: input.fileName,
                 destinationFolderPath: input.destinationFolderPath,
                 parentFolderPath: input.parentFolderPath
@@ -108,7 +108,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 siteName: input.siteName
             });
 
-            this.sharePointService.moveFile({
+            await this.sharePointService.moveFile({
                 siteId: site.id,
                 driveId: drive.id,
                 fileName: input.fileName,
