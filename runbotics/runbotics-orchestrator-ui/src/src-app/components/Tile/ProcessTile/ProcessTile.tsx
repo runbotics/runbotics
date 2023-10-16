@@ -8,8 +8,8 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { FeatureKey } from 'runbotics-common';
 
-import PauseIcon from '#public/images/icons/pause.svg';
 import PlayIcon from '#public/images/icons/play.svg';
+import SquareIcon from '#public/images/icons/square.svg';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -41,8 +41,8 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const { allActiveMap: processInstancesMap } = useSelector(processInstanceSelector);
-    const processInstance = processInstancesMap[process.id]?.processInstance ?? null;
+    const { allActiveMap: processInstanceMap } = useSelector(processInstanceSelector);
+    const processInstance = processInstanceMap[process.id]?.processInstance ?? null;
     const [isProcessActive, setIsProcessActive] = useState(checkActiveProcess(processInstance));
 
     const handleRedirect = () => {
@@ -105,7 +105,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                                 condition={isProcessActive}
                                 else={<Image src={PlayIcon} alt='Play icon'/>}
                             >
-                                <Image src={PauseIcon} alt='Pause Icon'/>
+                                <Image src={SquareIcon} alt='Pause Icon'/>
                             </If>
                         </RunBox>
                     }
