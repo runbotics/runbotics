@@ -93,7 +93,7 @@ export class OneDriveService {
         }
 
         const destinationFolder = await this.getItemByPath(destinationFolderPath);
-        this.microsoftGraphService
+        return this.microsoftGraphService
             .patch<DriveItem>(`/me/drive/items/${file.id}`, {
                 parentReference: { id: destinationFolder.id }
             });
