@@ -97,25 +97,25 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
     async moveFile(input: CloudFileMoveFileActionInput) {
         if (input.platform === MicrosoftPlatform.OneDrive) {
-            return this.oneDriveService.moveFile({
+            await this.oneDriveService.moveFile({
                 fileName: input.fileName,
                 destinationFolderPath: input.destinationFolderPath,
                 parentFolderPath: input.parentFolderPath
             });
+        } else {
+            const { site, drive } = await this.getSharePointListInfo({
+                listName: input.listName,
+                siteName: input.siteName
+            });
+
+            await this.sharePointService.moveFile({
+                siteId: site.id,
+                driveId: drive.id,
+                fileName: input.fileName,
+                parentFolderPath: input.parentFolderPath,
+                destinationFolderPath: input.destinationFolderPath
+            });
         }
-
-        const { site, drive } = await this.getSharePointListInfo({
-            listName: input.listName,
-            siteName: input.siteName
-        });
-
-        return this.sharePointService.moveFile({
-            siteId: site.id,
-            driveId: drive.id,
-            fileName: input.fileName,
-            parentFolderPath: input.parentFolderPath,
-            destinationFolderPath: input.destinationFolderPath
-        });
     }
 
     async deleteItem(input: CloudFileDeleteItemActionInput) {
