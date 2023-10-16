@@ -100,7 +100,7 @@ export class SharePointService {
                 `/sites/${siteId}/drives/${driveId}/root:/${destinationFolderPath}`
             );
 
-        return this.microsoftGraphService
+        this.microsoftGraphService
             .patch<DriveItem>(`/sites/${siteId}/drives/${driveId}/items/${file.id}`, {
                 parentReference: { id: destinationFolder.id }
             });
