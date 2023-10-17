@@ -214,6 +214,10 @@ export enum DesktopAction {
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
 }
 
+export enum VisualBasicAction {
+    RUN_MACRO = 'vBasic.runMacro',
+}
+
 export type AllActionIds =
     | VariableAction
     | GeneralAction
@@ -234,4 +238,5 @@ export type AllActionIds =
     | SapAction
     | ApplicationAction
     | ExcelAction
-    | DesktopAction;
+    | DesktopAction
+    | VisualBasicAction;

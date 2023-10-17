@@ -18,6 +18,7 @@ import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
+import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
@@ -148,6 +149,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.Application'
             ),
             items: Object.values(getApplicationActions())
+        },
+        visualBasic: {
+            label: 'Visual Basic',
+            items: Object.values(getVisualBasicActions())
         },
         external: {
             label: translate(

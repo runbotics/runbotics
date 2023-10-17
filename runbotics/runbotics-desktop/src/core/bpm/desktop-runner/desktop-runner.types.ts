@@ -27,7 +27,8 @@ export type InternalHandlerKey =
 | 'cloudFile'
 | 'variables'
 | 'excel'
-| 'desktop';
+| 'desktop'
+| 'vBasic';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

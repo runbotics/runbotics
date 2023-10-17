@@ -21,6 +21,7 @@ import JavaScriptActionHandler from './rce';
 import VariableActionHandler from './variable';
 import { ExcelService } from './microsoft/excel';
 import DesktopActionHandler from './desktop';
+import VisualBasicActionHandler from './visual-basic';
 import { CloudExcelActionHandler } from './microsoft/automation/excel';
 import { OneDriveService } from './microsoft/one-drive';
 import { SharePointService } from './microsoft/share-point';
@@ -51,7 +52,8 @@ const ALL_ACTION_HANDLERS = [
     SharePointService,
     MicrosoftGraphService,
     MicrosoftAuthService,
-    DesktopActionHandler
+    DesktopActionHandler,
+    VisualBasicActionHandler
 ];
 
 @Module({
