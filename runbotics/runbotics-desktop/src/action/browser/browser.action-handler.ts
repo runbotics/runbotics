@@ -11,7 +11,6 @@ import { RunboticsLogger } from '#logger';
 
 import { RunIndex } from './IndexAction';
 import * as BrowserTypes from './types';
-import { generatePdf, Target } from './utils';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -243,34 +242,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         }
     }
 
-    private async printToPdf(
-        input: BrowserTypes.BrowserPrintToPdfActionInput,
-    ): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
-        // Prince requires absolute path
-        const fileName = path.join(process.cwd(), 'temp', uuidv4());
-        let target: Target;
-
-        if (input.target === 'URL' && input.url) {
-            target = { url: input.url };
-        }
-
-        if (input.target === 'Session') {
-            target = { content: await this.session?.executeScript('return document.body.outerHTML') };
-        }
-        try {
-            const pdfBuffer = await generatePdf(target, {});
-            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (error) => {
-                if (error) throw error;
-                this.logger.log(`File saved successfully at ${fileName}.pdf`);
-            });
-        } catch (error) {
-            this.logger.error('Error occurred while printing to pdf', error);
-            throw error;
-        }
-
-        return `${fileName}.pdf`;
-    }
-
     private isBrowserOpen() {
         if (!this.session) {
             throw new Error('The browser is not running');
@@ -298,9 +269,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.selenium.select':
                 this.isBrowserOpen();
                 return this.doSelect(request.input);
-            case 'browser.selenium.printToPdf':
-                this.isBrowserOpen();
-                return this.printToPdf(request.input);
             case 'browser.selenium.takeScreenshot':
                 this.isBrowserOpen();
                 return this.takeScreenshot(request.input);
