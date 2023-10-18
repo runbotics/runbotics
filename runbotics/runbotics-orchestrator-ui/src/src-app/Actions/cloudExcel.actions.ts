@@ -61,7 +61,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info'),
                         },
                     },
                 },
