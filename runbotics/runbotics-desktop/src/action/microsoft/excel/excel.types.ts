@@ -93,3 +93,16 @@ export interface Worksheet {
     position: number;
     visibility: string;
 }
+
+export interface UsedRangeResponse {
+    address: string;
+    columnCount: number;
+    rowCount: number;
+    cellCount: number;
+    text: string[][];
+}
+
+export interface WorksheetRange extends Omit<UsedRangeResponse, 'address'> {
+    startCell: string;
+    endCell: string;
+}

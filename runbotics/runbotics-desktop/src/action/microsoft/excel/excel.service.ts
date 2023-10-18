@@ -19,6 +19,8 @@ import {
     OneDriveSessionInfo,
     OneDriveFileInfo,
     FileInfo,
+    UsedRangeResponse,
+    WorksheetRange,
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
@@ -72,6 +74,28 @@ export class ExcelService {
             {},
             this.getSessionHeader(session),
         );
+    }
+
+    /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-usedrange?view=graph-rest-1.0&tabs=http
+     */
+    async getRange(session: ExcelSession, inputWorksheetName?: Worksheet['name']): Promise<WorksheetRange> {
+        const worksheetName = inputWorksheetName ?? session.worksheetName;
+
+        const response = await this.microsoftGraphService.get<UsedRangeResponse>(
+            this.createWorkbookUrl(session, `/worksheets/${worksheetName}/usedRange?$select=address,columnCount,rowCount,cellCount,text`),
+            this.getSessionHeader(session));
+
+        const splitRangeAddress = response.address.split(new RegExp(ActionRegex.EXCEL_SPLIT_ADDRESS));
+
+        return {
+            startCell: splitRangeAddress[1],
+            endCell: splitRangeAddress[2] ?? splitRangeAddress[1],
+            columnCount: response.columnCount,
+            rowCount: response.rowCount,
+            cellCount: response.cellCount,
+            text: response.text,
+        };
     }
 
     /**
