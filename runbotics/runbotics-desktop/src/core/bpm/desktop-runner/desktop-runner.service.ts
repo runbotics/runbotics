@@ -22,6 +22,7 @@ import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
 import DesktopActionHandler from '#action/desktop';
+import VisualBasicActionHandler from '#action/visual-basic';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
@@ -64,7 +65,8 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly cloudExcelActionHandler: CloudExcelActionHandler,
         private readonly cloudFileActionHandler: CloudFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
-        private readonly desktopActionHandler: DesktopActionHandler
+        private readonly desktopActionHandler: DesktopActionHandler,
+        private readonly visualBasicActionHandler: VisualBasicActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -85,7 +87,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('cloudExcel', cloudExcelActionHandler)
             .set('cloudFile', cloudFileActionHandler)
             .set('variables', variableActionHandler)
-            .set('desktop', desktopActionHandler);
+            .set('desktop', desktopActionHandler)
+            .set('visualBasic', visualBasicActionHandler);
     }
 
     async onModuleInit() {

@@ -19,6 +19,7 @@ import getPowerPointActions from './powerpoint.actions';
 import getSapActions from './sap.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
+import getVisualBasicActions from './visualBasic.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),
@@ -41,6 +42,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getApiActions(),
     ...getExcelActions(),
     ...getDesktopActions(),
+    ...getVisualBasicActions(),
 };
 
 export default internalBpmnActions;
