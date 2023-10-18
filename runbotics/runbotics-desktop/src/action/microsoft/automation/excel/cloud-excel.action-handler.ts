@@ -25,6 +25,10 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
+    getRange(input: SharepointTypes.CloudExcelGetRangeActionInput) {
+        return this.excelService.getRange(this.session, input.worksheetName);
+    }
+
     getCell(input: SharepointTypes.CloudGetExcelCellActionInput) {
         const column = input.cell.match(/[A-Z]+/);
         const row = input.cell.match(/\d+/);
@@ -88,6 +92,9 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
                 return this.openFile(request.input);
+            case CloudExcelAction.GET_RANGE:
+                this.checkSession();
+                return this.getRange(request.input);
             case CloudExcelAction.GET_CELL:
                 this.checkSession();
                 return this.getCell(request.input);
