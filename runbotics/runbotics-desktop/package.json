@@ -76,7 +76,7 @@
     },
     "build": {
         "productName": "RunBotics",
-        "electronVersion": "8.2.0",
+        "electronVersion": "19.1.9",
         "appId": "com.runbotics.runbotics-desktop",
         "asar": false,
         "mac": {
