@@ -28,7 +28,7 @@ export type InternalHandlerKey =
 | 'variables'
 | 'excel'
 | 'desktop'
-| 'vBasic';
+| 'visualBasic';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

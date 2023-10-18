@@ -88,7 +88,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('cloudFile', cloudFileActionHandler)
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler)
-            .set('vBasic', visualBasicActionHandler);
+            .set('visualBasic', visualBasicActionHandler);
     }
 
     async onModuleInit() {

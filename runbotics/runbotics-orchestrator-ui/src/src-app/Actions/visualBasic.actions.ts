@@ -5,9 +5,9 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { ActionSystem, IBpmnAction, Runner } from './types';
 
 const getVisualBasicActions: () => Record<string, IBpmnAction> = () => ({
-    'vBasic.runMacro': {
+    'visualBasic.runScript': {
         id: VisualBasicAction.RUN_MACRO,
-        label: translate('Process.Details.Modeler.Actions.VBasic.RunMacro.Label'),
+        label: translate('Process.Details.Modeler.Actions.VisualBasic.RunScript.Label'),
         script: VisualBasicAction.RUN_MACRO,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
@@ -26,11 +26,11 @@ const getVisualBasicActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             scriptPath: {
-                                title: translate('Process.Details.Modeler.Actions.VBasic.RunMacro.Input.ScriptPath'),
+                                title: translate('Process.Details.Modeler.Actions.VisualBasic.RunScript.Input.ScriptPath'),
                                 type: 'string',
                             },
                             scriptArguments: {
-                                title: translate('Process.Details.Modeler.Actions.VBasic.RunMacro.Input.ScriptArguments'),
+                                title: translate('Process.Details.Modeler.Actions.VisualBasic.RunScript.Input.ScriptArguments'),
                                 type: 'string',
                             },
                         },
@@ -52,6 +52,13 @@ const getVisualBasicActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    scriptArguments: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.VisualBasic.RunScript.Input.ScriptArguments.Info'),
+                        }
+                    }
+                },
                 output: {
                     variableName: {
                         'ui:options': {

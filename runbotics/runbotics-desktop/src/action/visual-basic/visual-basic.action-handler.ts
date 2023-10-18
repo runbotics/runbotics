@@ -9,7 +9,7 @@ class VisualBasicActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async runMacro(input: VisualBasicTypes.RunMacroActionInput): Promise<VisualBasicTypes.RunMacroActionOutput> {
+    async runScript(input: VisualBasicTypes.RunScriptActionInput): Promise<VisualBasicTypes.RunScriptActionOutput> {
         const { spawn } = child;
         const scriptArguments = input.scriptArguments ? input.scriptArguments.split(',') : [];
         const scriptPathWithArguments = [input.scriptPath].concat(scriptArguments);
@@ -34,8 +34,8 @@ class VisualBasicActionHandler extends StatelessActionHandler {
     
     run(request: VisualBasicTypes.VisualBasicActionRequest) {
         switch (request.script) {
-            case 'vBasic.runMacro':
-                return this.runMacro(request.input);
+            case 'visualBasic.runScript':
+                return this.runScript(request.input);
             default:
                 throw new Error('Action not found');
         }

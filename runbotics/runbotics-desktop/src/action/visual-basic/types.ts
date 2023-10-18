@@ -1,12 +1,13 @@
 import { DesktopRunRequest } from 'runbotics-sdk';
+import { VisualBasicAction } from 'runbotics-common';
 
-export type VisualBasicActionRequest = DesktopRunRequest<'vBasic.runMacro', RunMacroActionInput>;
+export type VisualBasicActionRequest = DesktopRunRequest<VisualBasicAction.RUN_MACRO, RunScriptActionInput>;
 
-export type RunMacroActionInput = {
+export type RunScriptActionInput = {
     scriptPath: string;
     scriptArguments: string;
 };
 
-export type RunMacroActionOutput = {
+export type RunScriptActionOutput = {
     output: any;
 };
