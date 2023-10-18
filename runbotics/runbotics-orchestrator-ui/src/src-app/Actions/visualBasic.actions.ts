@@ -5,10 +5,10 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { ActionSystem, IBpmnAction, Runner } from './types';
 
 const getVisualBasicActions: () => Record<string, IBpmnAction> = () => ({
-    'visualBasic.runScript': {
-        id: VisualBasicAction.RUN_MACRO,
+    [VisualBasicAction.RUN_SCRIPT]: {
+        id: VisualBasicAction.RUN_SCRIPT,
         label: translate('Process.Details.Modeler.Actions.VisualBasic.RunScript.Label'),
-        script: VisualBasicAction.RUN_MACRO,
+        script: VisualBasicAction.RUN_SCRIPT,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {

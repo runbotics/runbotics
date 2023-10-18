@@ -2,6 +2,7 @@ import { StatelessActionHandler } from 'runbotics-sdk';
 import child from 'child_process';
 import { Injectable } from '@nestjs/common';
 import * as VisualBasicTypes from './types';
+import { VisualBasicAction } from 'runbotics-common';
 
 @Injectable()
 class VisualBasicActionHandler extends StatelessActionHandler {
@@ -34,7 +35,7 @@ class VisualBasicActionHandler extends StatelessActionHandler {
     
     run(request: VisualBasicTypes.VisualBasicActionRequest) {
         switch (request.script) {
-            case 'visualBasic.runScript':
+            case VisualBasicAction.RUN_SCRIPT:
                 return this.runScript(request.input);
             default:
                 throw new Error('Action not found');

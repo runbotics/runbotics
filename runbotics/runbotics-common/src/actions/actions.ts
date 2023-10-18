@@ -217,7 +217,7 @@ export enum DesktopAction {
 }
 
 export enum VisualBasicAction {
-    RUN_MACRO = 'visualBasic.runScript',
+    RUN_SCRIPT = 'visualBasic.runScript',
 }
 
 export type AllActionIds =
