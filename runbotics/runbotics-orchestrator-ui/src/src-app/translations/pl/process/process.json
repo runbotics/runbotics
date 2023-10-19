@@ -341,7 +341,7 @@
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.Label": "Pobierz zakres",
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName": "Nazwa arkusza",
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName.Info": "To pole jest opcjonalne. Jeśli nie zostanie określone, nazwa arkusza będzie taka sama, jak podana w akcji 'Otwórz skoroszyt' lub domyślna",
-    "Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info": "Przypisuje wynik do zmiennej. Zwracana wartość to obiekt zawierający pola startCell, endCell, ColumCount, rowCount, cellCount oraz tekst = zawartość arkusza zwrócona jako tablica tablic, np. [['A1', 'B1', 'C1'], ['A2', 'B2', 'C2']]",
+    "Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info": "Przypisuje wynik do zmiennej. Zwracana wartość to obiekt zawierający pola startCell, endCell, columCount, rowCount, cellCount oraz text (zawartość arkusza zwrócona jako tablica tablic, np. [['A1', 'B1', 'C1'], ['A2', 'B2', 'C2']])",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label": "Usuń arkusz",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName": "Nazwa arkusza",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName.Info": "Odnosi się do pliku otworzonego w akcji 'Otwórz skoroszyt'",

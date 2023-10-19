@@ -337,7 +337,7 @@
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.Label": "Get range",
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName": "Worksheet name",
     "Process.Details.Modeler.Actions.CloudExcel.GetRange.WorksheetName.Info": "This field is optional. If not specified, the name of the worksheet will be the same as specified in the 'Open workbook' action or the default",
-    "Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info": "Assign the output to variable. Returned value is an object with startCell, endCell, columnCount, rowCount, cellCount and text = content of the worksheet returned as an array of arrays, e.g. [['A1', 'B1', 'C1'], ['A2', 'B2', 'C2']]",
+    "Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info": "Assign the output to variable. Returned value is an object with startCell, endCell, columnCount, rowCount, cellCount and text (content of the worksheet returned as an array of arrays, e.g. [['A1', 'B1', 'C1'], ['A2', 'B2', 'C2']])",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label": "Delete worksheet",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName": "Worksheet name",
     "Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName.Info": "It corresponds to the cloud file opened in the 'Open workbook' action",
