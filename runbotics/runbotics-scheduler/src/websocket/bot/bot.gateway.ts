@@ -31,6 +31,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     private logger: Logger = new Logger(BotWebSocketGateway.name);
     private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
+    private CONNECTION_TIMEOUT = 20_000;
 
     constructor(
         private readonly authService: AuthService,
@@ -53,14 +54,19 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
     async handleConnection(client: Socket) {
         this.logger.log(`Bot ${client.id} is trying to establish connection`);
+        const connectionTimeout = this.setConnectionTimeout(client);
 
-        const { bot } = await this.authService.validateBotWebsocketConnection({ client });
+        const validationResponse = await this.authService.validateBotWebsocketConnection({client});
+        clearTimeout(connectionTimeout);
 
-        this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+        if (validationResponse !== null && validationResponse !== undefined) {
+            const { bot } = validationResponse;
+            this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
+            this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
 
-        this.connections.set(bot.id, client.id);
+            this.connections.set(bot.id, client.id);
+        }
     }
 
     async handleDisconnect(client: Socket) {
@@ -173,5 +179,14 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
             this.logger.log('Success: bot status updated');
         }
+    }
+
+    private setConnectionTimeout(client: Socket) {
+        return setTimeout(() => {
+            this.logger.log(`Connection timeout reached (${(this.CONNECTION_TIMEOUT / 1_000)}s). Client is disconnecting...`);
+            if (client) {
+                client.disconnect(true);
+            }
+        }, this.CONNECTION_TIMEOUT);
     }
 }

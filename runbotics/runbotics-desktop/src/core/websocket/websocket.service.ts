@@ -22,9 +22,10 @@ export class WebsocketService implements OnApplicationBootstrap {
     }
 
     async emitMessage(
-        message: Message
+        message: Message, isReconnected?: boolean
     ) {
-        this.messageService.add(message);
+        if (!isReconnected)
+            this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, () => {
             if(message.payload.status !== ProcessInstanceEventStatus.IN_PROGRESS) {

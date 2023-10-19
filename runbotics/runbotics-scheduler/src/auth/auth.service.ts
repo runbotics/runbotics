@@ -40,7 +40,7 @@ export class AuthService {
     validateToken(token: string) {
         const secret = this.serverConfigService.secret;
         const jwtPayload = jwt.verify(token, secret) as JWTPayload;
-        this.logger.log(`Validating token - ${jwtPayload.sub}`);
+        this.logger.debug(`Validating token - ${jwtPayload.sub}`);
         return this.validatePayload(jwtPayload);
     }
 
@@ -118,6 +118,14 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
+        return await this.validateBotConnection({client, isGuard})
+            .catch((error) => {
+                this.logger.error('Bot connection error', error);
+                return null;
+            });
+    }
+
+    async validateBotConnection({ client, isGuard }: ValidatorBotWsProps) {
         const { token, installationId, system, collection, version } = client.handshake.auth;
 
         this.validateParameterFromBot(token, 'empty token', client);
@@ -149,12 +157,12 @@ export class AuthService {
                     this.logger.warn(`Bot cannot be registered. Provided version ${version} does not fulfill minimum ${this.serverConfigService.requiredBotVersion}`);
                     throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`);
                 }
-                this.logger.log(`Bot ${bot.installationId} can be registered`);
+                this.logger.debug(`Bot can be registered`);
                 return bot;
             })
             .then((bot) => {
                 if (isGuard) return bot;
-                this.logger.log(`Bot ${bot.installationId} is not a guard`);
+                this.logger.debug(`Bot is not a guard`);
                 return bot
                     ? this.registerBot(bot, mutableBotParams)
                     : this.registerNewBot({ installationId, user, ...mutableBotParams });
@@ -169,7 +177,7 @@ export class AuthService {
     }
 
     private validateParameterFromBot(parameter, exceptionMessage: string, client: Socket) {
-        this.logger.log(`Validating bot - ${exceptionMessage} (result:${!!parameter})`);
+        this.logger.debug(`Validating bot - ${exceptionMessage} (result:${!!parameter})`);
         if (!parameter) {
             client.disconnect();
             throw new WsException(exceptionMessage);
@@ -177,14 +185,14 @@ export class AuthService {
     }
 
     private validateBotSystem(system: BotSystem, client: Socket): void {
-        this.logger.log(`Validating bot - system (result:${Object.values(BotSystem).includes(system)})`);
+        this.logger.debug(`Validating bot - system (result:${Object.values(BotSystem).includes(system)})`);
         if (Object.values(BotSystem).includes(system)) return;
         client.disconnect();
         throw new WsException(`Bot system (${system}) is incompatible`);
     }
 
     private validateBot(installationId: string) {
-        this.logger.log(`Validating bot - installationId (${installationId})`);
+        this.logger.debug(`Validating bot - installationId (${installationId})`);
         return this.botService.findByInstallationId(installationId);
     }
 
