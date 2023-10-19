@@ -16,6 +16,8 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
+    "Component.Tile.Process.Header.Alt.PlayIcon": "Play icon",
+    "Component.Tile.Process.Header.Alt.SquareIcon": "Square icon",
     "Component.Tile.Process.Update.Success": "Successfully updated {{ name }} process",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",
     "Component.Tile.Process.Settings.AriaLabel": "settings",
@@ -34,12 +36,6 @@
     "Component.Tile.Process.Footer.Icon.Tooltip.Private": "Private process",
     "Component.Tile.Process.Footer.Icon.Tooltip.Public": "Public process",
     "Component.Tile.Process.Footer.Icon.Tooltip.Scheduled": "Scheduled",
-    "Component.Tile.Process.Footer.Status.Completed": "COMPLETED",
-    "Component.Tile.Process.Footer.Status.InProgress": "IN PROGRESS",
-    "Component.Tile.Process.Footer.Status.Initializing": "INITIALIZING",
-    "Component.Tile.Process.Footer.Status.Errored": "ERRORED",
-    "Component.Tile.Process.Footer.Status.Stopped": "STOPPED",
-    "Component.Tile.Process.Footer.Status.Terminated": "TERMINATED",
 
     "Component.Tile.BotCollection.Content.Created": "Created:",
     "Component.Tile.BotCollection.Content.Creator": "Creator:",
@@ -84,13 +80,6 @@
 
     "Component.HistoryTable.Step.StartEvent": "Start event",
     "Component.HistoryTable.Step.EndEvent": "End event",
-
-    "Component.HistoryTable.Status.Completed": "COMPLETED",
-    "Component.HistoryTable.Status.InProgress": "IN PROGRESS",
-    "Component.HistoryTable.Status.Initializing": "INITIALIZING",
-    "Component.HistoryTable.Status.Errored": "ERRORED",
-    "Component.HistoryTable.Status.Stopped": "STOPPED",
-    "Component.HistoryTable.Status.Terminated": "TERMINATED",
 
     "Component.Cron.Locale.Every": "every",
     "Component.Cron.Locale.EveryMonth": "every month",

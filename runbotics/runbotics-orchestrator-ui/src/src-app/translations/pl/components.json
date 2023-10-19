@@ -16,6 +16,8 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
+    "Component.Tile.Process.Header.Alt.PlayIcon": "Ikona startu",
+    "Component.Tile.Process.Header.Alt.SquareIcon": "Ikona kwadratu",
     "Component.Tile.Process.Update.Success": "Pomyślnie zaktualizowano proces {{ name }}",
     "Component.Tile.Process.Update.Failed": "Nie udało się zaktualizować procesu {{ name }}",
     "Component.Tile.Process.Settings.AriaLabel": "Ustawienia",
@@ -34,12 +36,6 @@
     "Component.Tile.Process.Footer.Icon.Tooltip.Private": "Proces prywatny",
     "Component.Tile.Process.Footer.Icon.Tooltip.Public": "Proces publiczny",
     "Component.Tile.Process.Footer.Icon.Tooltip.Scheduled": "Zaplanowany",
-    "Component.Tile.Process.Footer.Status.Completed": "UKOŃCZONY",
-    "Component.Tile.Process.Footer.Status.InProgress": "TRWA",
-    "Component.Tile.Process.Footer.Status.Initializing": "INICJALIZOWANY",
-    "Component.Tile.Process.Footer.Status.Errored": "BŁĘDNY",
-    "Component.Tile.Process.Footer.Status.Stopped": "ZATRZYMANY",
-    "Component.Tile.Process.Footer.Status.Terminated": "PRZERWANY",
 
     "Component.Tile.BotCollection.Content.Created": "Utworzono:",
     "Component.Tile.BotCollection.Content.Creator": "Twórca:",
@@ -84,20 +80,6 @@
 
     "Component.HistoryTable.Step.StartEvent": "Rozpoczęto zdarzenie",
     "Component.HistoryTable.Step.EndEvent": "Zakończono zdarzenie",
-
-    "Component.HistoryTable.Status.COMPLETED": "UKOŃCZONY",
-    "Component.HistoryTable.Status.IN_PROGRESS": "TRWA",
-    "Component.HistoryTable.Status.INITIALIZING": "INICJALIZOWANY",
-    "Component.HistoryTable.Status.ERRORED": "BŁĘDNY",
-    "Component.HistoryTable.Status.STOPPED": "ZATRZYMANY",
-    "Component.HistoryTable.Status.TERMINATED": "PRZERWANY",
-
-    "Component.HistoryTable.Status.Completed": "UKOŃCZONY",
-    "Component.HistoryTable.Status.InProgress": "TRWA",
-    "Component.HistoryTable.Status.Initializing": "INICJALIZOWANY",
-    "Component.HistoryTable.Status.Errored": "BŁĘDNY",
-    "Component.HistoryTable.Status.Stopped": "ZATRZYMANY",
-    "Component.HistoryTable.Status.Terminated": "PRZERWANY",
 
     "Component.Cron.Locale.Every": "Co",
     "Component.Cron.Locale.EveryMonth": "Każdy miesiąc",

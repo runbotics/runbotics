@@ -1,18 +1,37 @@
 import { useContext, useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { IProcessInstance, WsMessage } from 'runbotics-common';
+import { useDispatch } from 'react-redux';
+import { IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 
 import { SocketContext } from '#src-app/providers/Socket.provider';
-import { processInstanceSelector, processInstanceActions } from '#src-app/store/slices/ProcessInstance';
+import { useSelector } from '#src-app/store';
+import { processSelector, processActions } from '#src-app/store/slices/Process';
+import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 const useProcessInstanceMapSocket = () => {
     const dispatch = useDispatch();
     const socket = useContext(SocketContext);
-    const processInstanceState = useSelector(processInstanceSelector);
+    const { allActiveMap }= useSelector(processInstanceSelector);
+    const { all } = useSelector(processSelector);
+
+    const findProcessById = (processId: number) =>
+        all.page.content.find((process) => process.id === processId);
 
     useEffect(() => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
+            if (
+                allActiveMap[processInstance.id]?.processInstance.status
+                !== ProcessInstanceStatus.IN_PROGRESS
+                &&
+                processInstance.status === ProcessInstanceStatus.IN_PROGRESS
+            ) {
+                const lastRun = (new Date()).toISOString();
+                dispatch(processActions.updateProcessPage({
+                    ...findProcessById(processInstance.process.id),
+                    lastRun
+                }));
+            }
+
             dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
         });
 
@@ -20,7 +39,7 @@ const useProcessInstanceMapSocket = () => {
             socket.off(WsMessage.PROCESS);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket, processInstanceState.allActiveMap]);
+    }, [socket]);
 };
 
 export default useProcessInstanceMapSocket;

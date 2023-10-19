@@ -60,7 +60,7 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                         color={getProcessInstanceStatusColor(processInstance.status)}
                     >
                         {/*@ts-ignore*/}
-                        {translate(`Component.Tile.Process.Footer.Status.${formattedStatus}`)}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
                     </Label>
                 }
                 <ProcessTileActions process={process} />

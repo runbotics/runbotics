@@ -17,7 +17,7 @@ export const updateOrchestratorProcessInstanceId = (state: ProcessInstanceState,
 
 export const updateOrchestratorProcessInstanceIdMap = (state: ProcessInstanceState, action: PayloadAction<MapOrchestrator>) => {
     state.allActiveMap[action.payload.processId] = {
-        ...(state.allActiveMap[action.payload.processId]),
+        processInstance: null,
         orchestratorProcessInstanceId: action.payload.orchestratorProcessInstanceId
     };
 

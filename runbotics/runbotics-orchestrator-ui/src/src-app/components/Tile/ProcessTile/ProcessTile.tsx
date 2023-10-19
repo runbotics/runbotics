@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
 
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
@@ -23,7 +23,7 @@ import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { Description, StyledCardActionArea, RunBox } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
-import { buildProcessUrl, checkActiveProcess } from './ProcessTile.utils';
+import { buildProcessUrl } from './ProcessTile.utils';
 import ProcessTileContent from './ProcessTileContent';
 import ProcessTileFooter from './ProcessTileFooter';
 import ProcessTileTagList from './ProcessTileTagList';
@@ -42,8 +42,10 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { allActiveMap: processInstanceMap } = useSelector(processInstanceSelector);
-    const processInstance = processInstanceMap[process.id]?.processInstance ?? null;
-    const [isProcessActive, setIsProcessActive] = useState(checkActiveProcess(processInstance));
+    const processInstance = processInstanceMap[process.id]?.processInstance;
+    const [isProcessActive, setIsProcessActive] = useState(
+        processInstance && isProcessInstanceActive(processInstance.status)
+    );
 
     const handleRedirect = () => {
         if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
@@ -66,17 +68,13 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                     })
                 );
 
-                const lastRun = (new Date()).toISOString();
-                dispatch(processActions.updateProcessPage({ ...process, lastRun }));
                 setIsProcessActive(true);
             })
             .catch((error) => {
-                const translationKeyPrefix = 'Component.Tile.Process.Instance.Error';
-
-                const message = error?.message ?? translate(translationKeyPrefix);
-                const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-
-                const translationKey = `${translationKeyPrefix}.${capitalizeMessage}`;
+                const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
+                const message = error.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
+                const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+                const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
 
                 const errorMessage = checkIfKeyExists(translationKey)
                     ? translate(translationKey)
@@ -89,7 +87,9 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     };
 
     useEffect(() => {
-        setIsProcessActive(checkActiveProcess(processInstance));
+        setIsProcessActive(
+            processInstance && isProcessInstanceActive(processInstance.status)
+        );
     }, [processInstance]);
 
     return (
@@ -103,9 +103,17 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                         >
                             <If
                                 condition={isProcessActive}
-                                else={<Image src={PlayIcon} alt='Play icon'/>}
+                                else={
+                                    <Image
+                                        src={PlayIcon}
+                                        alt={translate('Component.Tile.Process.Header.Alt.PlayIcon')}
+                                    />
+                                }
                             >
-                                <Image src={SquareIcon} alt='Pause Icon'/>
+                                <Image
+                                    src={SquareIcon}
+                                    alt={translate('Component.Tile.Process.Header.Alt.SquareIcon')}
+                                />
                             </If>
                         </RunBox>
                     }
