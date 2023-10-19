@@ -70,7 +70,6 @@ export enum BrowserAction {
     READ_INPUT = 'browser.read.input',
     INDEX = 'browser.index',
     SELENIUM_TAKE_SCREENSHOT = 'browser.selenium.takeScreenshot',
-    SELENIUM_PRINT_TO_PDF = 'browser.selenium.printToPdf',
 }
 
 export enum LoopAction {

@@ -2,7 +2,7 @@ import { BrowserAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { ActionSystem, IBpmnAction, Runner } from './types';
+import { IBpmnAction, Runner } from './types';
 
 
 
@@ -764,107 +764,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 },
                 output: {
                     variableName: '',
-                },
-            },
-        },
-    },
-    'browser.selenium.printToPdf': {
-        id: BrowserAction.SELENIUM_PRINT_TO_PDF,
-        label: translate('Process.Details.Modeler.Actions.Browser.Selenium.PrintToPdf.Label'),
-        script: BrowserAction.SELENIUM_PRINT_TO_PDF,
-        runner: Runner.DESKTOP_SCRIPT,
-        system: ActionSystem.WINDOWS,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: 'Input',
-                        type: 'object',
-                        properties: {
-                            method: {
-                                title: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Method'),
-                                type: 'string',
-                                enum: ['Session', 'URL'],
-                                default: 'Session',
-                            },
-                        },
-                        required: ['method'],
-                        dependencies: {
-                            method: {
-                                oneOf: [
-                                    {
-                                        properties: {
-                                            method: {
-                                                enum: ['Session'],
-                                            },
-                                            sessionDescription: {
-                                                type: 'string',
-                                                title: 'Session description',
-                                            },
-                                        },
-                                    },
-                                    {
-                                        properties: {
-                                            method: {
-                                                enum: ['URL'],
-                                            },
-                                            url: {
-                                                type: 'string',
-                                                title: 'URL'
-                                            },
-                                        },
-                                    },
-                                ],
-                            },
-                        },
-                    },
-                    output: {
-                        title: 'Output',
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
-                                type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
-                            },
-                        },
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                input: {
-                    sessionDescription: {
-                        'ui:widget': 'TypographyWidget',
-                        'ui:options': {
-                            text: translate('Process.Details.Modeler.Actions.Browser.PrintToPdf.Session.Description'),
-                            variant: 'subtitle1',
-                            infoIcon: true,
-                        },
-                    },
-                },
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
-            },
-            formData: {
-                input: {
-                    url: 'https://',
-                },
-                output: {
-                    variableName: undefined,
                 },
             },
         },
