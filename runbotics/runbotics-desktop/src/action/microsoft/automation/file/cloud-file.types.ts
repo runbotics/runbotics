@@ -6,7 +6,8 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
     | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
     | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
-    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>;
+    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
+    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>;
 
 interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
@@ -62,3 +63,15 @@ export interface OneDriveDeleteItemActionInput {
 
 export type SharePointDeleteItemActionInput = SharePointCommon & Omit<OneDriveDeleteItemActionInput, 'platform'>;
 export type CloudFileDeleteItemActionInput = OneDriveDeleteItemActionInput | SharePointDeleteItemActionInput;
+
+// CREATE SHARE LINK
+export interface OneDriveCreateShareLink {
+    platform: MicrosoftPlatform.OneDrive;
+    shareType: string;
+    shareScope: string;
+    itemName: string;
+    parentFolderPath?: string;
+}
+
+export type SharePointCreateShareLink = SharePointCommon & Omit<OneDriveCreateShareLink, 'platform'>;
+export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreateShareLink;

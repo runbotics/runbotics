@@ -12,3 +12,10 @@ export interface MoveFileParams {
 export interface DeleteItemParams {
     itemPath: string;
 }
+
+export interface CreateShareLinkParams {
+    shareType: string;
+    shareScope: string;
+    itemName: string;
+    parentFolderPath?: string;
+}
