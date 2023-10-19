@@ -1,14 +1,19 @@
 import { useContext, useEffect } from 'react';
 
 import { useDispatch } from 'react-redux';
-import { IProcessInstance, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import {
+    ProcessInstanceStatus, IProcessInstance,
+    WsMessage, Role
+} from 'runbotics-common';
 
+import useAuth from '#src-app/hooks/useAuth';
 import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useSelector } from '#src-app/store';
 import { processSelector, processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 const useProcessInstanceMapSocket = () => {
+    const { user } = useAuth();
     const dispatch = useDispatch();
     const socket = useContext(SocketContext);
     const { allActiveMap }= useSelector(processInstanceSelector);
@@ -32,7 +37,10 @@ const useProcessInstanceMapSocket = () => {
                 }));
             }
 
-            dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
+            if (user.roles.includes(Role.ROLE_ADMIN)
+                || processInstance.process.isPublic
+                || processInstance.process.createdBy.id === user.id
+            ) dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
         });
 
         return () => {
