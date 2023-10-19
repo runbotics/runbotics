@@ -18,7 +18,11 @@ const cloudFileActionsTranslations: typeof englishCloudFileActionsTranslations =
 
     'Process.Details.Modeler.Actions.CloudFile.MoveFile.Label': 'Przenieś plik',
 
-    'Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label': 'Usuń element',
+    'Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label': 'Usuń plik/folder',
+
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label': 'Stwórz link udostępniający',
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareType': 'Typ udostępnienia',
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareScope': 'Zakres udostępnienia',
 };
 
 export default cloudFileActionsTranslations;

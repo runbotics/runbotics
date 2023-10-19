@@ -6,8 +6,8 @@ import { createWriteStream } from 'fs';
 import { RunboticsLogger } from '#logger';
 
 import { MicrosoftGraphService } from '../microsoft-graph/microsoft-graph.service';
-import { UploadFileParams, MoveFileParams, DeleteItemParams } from './one-drive.types';
-import { DriveItem } from '../common.types';
+import { UploadFileParams, MoveFileParams, DeleteItemParams, CreateShareLinkParams } from './one-drive.types';
+import { DriveItem, Permission } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
@@ -108,5 +108,25 @@ export class OneDriveService {
 
         return this.microsoftGraphService
             .delete(`/me/drive/items/${item.id}`);
+    }
+
+    //https://learn.microsoft.com/en-us/graph/api/driveitem-createlink?view=graph-rest-1.0&tabs=javascript
+    async createShareLink({
+        shareType,
+        shareScope,
+        itemName,
+        parentFolderPath
+    }: CreateShareLinkParams) {
+        const path = parentFolderPath ? `${parentFolderPath}/${itemName}` : itemName;
+        const item = await this.getItemByPath(path);
+        if (!item) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        return this.microsoftGraphService
+            .post<Permission>(`/me/drive/items/${item.id}/createLink`, {
+                type: shareType,
+                scope: shareScope
+            });
     }
 }
