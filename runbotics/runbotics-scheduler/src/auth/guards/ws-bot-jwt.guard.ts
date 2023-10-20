@@ -9,11 +9,13 @@ export class WsBotJwtGuard implements CanActivate {
     async canActivate(context: ExecutionContext) {
         const client = context.switchToWs().getClient<Socket>();
 
-        const { bot, user } = await this.authService.validateBotWebsocketConnection({client, isGuard: true});
-
-        context.switchToWs().getClient().user = user;
+        const validationResponse = await this.authService.validateBotWebsocketConnection({client, isGuard: true});
+        if (validationResponse === null || validationResponse === undefined) {
+            return false;
+        }
+        const { bot, user } = validationResponse;
         context.switchToWs().getClient().bot = bot;
-
+        context.switchToWs().getClient().user = user;
         return !!user;
     }
 }
