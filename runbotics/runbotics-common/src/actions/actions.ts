@@ -127,10 +127,10 @@ export enum CloudExcelAction {
     SET_CELLS = 'cloudExcel.setCells',
     OPEN_FILE = 'cloudExcel.openFile',
     CLOSE_SESSION = 'cloudExcel.closeSession',
-    CREATE_WORKSHEET = "cloudExcel.createWorksheet",
-    DELETE_WORKSHEET = "cloudExcel.deleteWorksheet",
+    CREATE_WORKSHEET = 'cloudExcel.createWorksheet',
+    DELETE_WORKSHEET = 'cloudExcel.deleteWorksheet',
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
-    GET_RANGE = 'cloudExcel.getRange',
+    GET_WORKSHEET_CONTENT = 'cloudExcel.getWorksheetContent',
 }
 
 export enum CloudFileAction {
@@ -138,7 +138,7 @@ export enum CloudFileAction {
     UPLOAD_FILE = 'cloudFile.upload',
     CREATE_FOLDER = 'cloudFile.createFolder',
     MOVE_FILE = 'cloudFile.moveFile',
-    DELETE_ITEM = "cloudFile.deleteItem"
+    DELETE_ITEM = 'cloudFile.deleteItem'
 }
 
 export enum BeeOfficeAction {
@@ -187,19 +187,19 @@ export enum ExcelAction {
     RENAME_WORKSHEET = 'excel.renameWorksheet',
     DELETE_WORKSHEET = 'excel.deleteWorksheet',
     SET_ACTIVE_WORKSHEET = 'excel.setActiveWorksheet',
-    WORKSHEET_EXISTS = "excel.worksheetExists",
+    WORKSHEET_EXISTS = 'excel.worksheetExists',
     FIND_FIRST_EMPTY_ROW = 'excel.findFirstEmptyRow',
     DELETE_COLUMNS = 'excel.deleteColumns',
     INSERT_COLUMNS_BEFORE = 'excel.insertColumnsBefore',
-    INSERT_COLUMNS_AFTER = "excel.insertColumnsAfter",
-    INSERT_ROWS_BEFORE = "excel.insertRowsBefore",
-    INSERT_ROWS_AFTER = "excel.insertRowsAfter",
-    RUN_MACRO = "excel.runMacro",
+    INSERT_COLUMNS_AFTER = 'excel.insertColumnsAfter',
+    INSERT_ROWS_BEFORE = 'excel.insertRowsBefore',
+    INSERT_ROWS_AFTER = 'excel.insertRowsAfter',
+    RUN_MACRO = 'excel.runMacro',
     READ_TABLE = 'excel.readTable',
     DELETE_ROWS = 'excel.deleteRows',
     SAVE = 'excel.save',
     CLOSE = 'excel.close',
-    EXPORT_TO_CSV = "excel.exportToCsv"
+    EXPORT_TO_CSV = 'excel.exportToCsv'
 }
 
 export enum DesktopAction {

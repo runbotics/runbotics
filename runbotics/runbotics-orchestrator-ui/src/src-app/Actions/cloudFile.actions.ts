@@ -1,4 +1,4 @@
-import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
+import { ActionRegex, CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -11,6 +11,12 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.CloudFile.Download.Label'),
         script: CloudFileAction.DOWNLOAD_FILE,
         runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -46,15 +52,9 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            parentFolderPath: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
@@ -65,22 +65,16 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['siteName', 'listName', 'fileName'],
+                                        required: ['siteName', 'listName', 'filePath'],
                                     },
                                     {
                                         properties: {
                                             platform: {
                                                 enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            parentFolderPath: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
@@ -91,21 +85,39 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['fileName'],
+                                        required: ['filePath'],
                                     },
                                 ],
                             },
                         },
                     },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.CloudFile.Download.Output.Label'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
                 },
             },
-            uiSchema: {},
+            uiSchema: {
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
+            },
             formData: {
                 input: {
                     siteName: undefined,
                     listName: undefined,
-                    parentFolderPath: undefined,
-                    fileName: undefined,
+                    filePath: undefined,
                     localDirectory: undefined,
                 },
             },
@@ -157,20 +169,14 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            fileName: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['siteName', 'listName', 'fileName'],
+                                        required: ['siteName', 'listName', 'filePath'],
                                     },
                                     {
                                         properties: {
@@ -183,20 +189,14 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            fileName: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['fileName'],
+                                        required: ['filePath'],
                                     },
                                 ],
                             },
@@ -210,8 +210,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                     siteName: undefined,
                     listName: undefined,
                     localParentFolderPath: undefined,
-                    fileName: undefined,
-                    parentFolderPath: undefined,
+                    filePath: undefined,
                 },
             },
         },
@@ -348,15 +347,9 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            parentFolderPath: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName'
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath'
                                                 ),
                                                 type: 'string',
                                             },
@@ -367,22 +360,16 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string'
                                             }
                                         },
-                                        required: ['siteName', 'listName', 'fileName', 'destinationFolderPath'],
+                                        required: ['siteName', 'listName', 'filePath', 'destinationFolderPath'],
                                     },
                                     {
                                         properties: {
                                             platform: {
                                                 enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            parentFolderPath: {
+                                            filePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName'
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath'
                                                 ),
                                                 type: 'string',
                                             },
@@ -393,7 +380,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string'
                                             }
                                         },
-                                        required: ['fileName', 'destinationFolderPath'],
+                                        required: ['filePath', 'destinationFolderPath'],
                                     },
                                 ],
                             },
@@ -406,8 +393,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     siteName: undefined,
                     listName: undefined,
-                    parentFolderPath: undefined,
-                    fileName: undefined,
+                    filePath: undefined,
                     destinationFolderPath: undefined
                 }
             }
@@ -453,40 +439,28 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            itemName: {
+                                            itemPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemPath'
                                                 ),
                                                 type: 'string',
                                             },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
-                                                ),
-                                                type: 'string',
-                                            }
                                         },
-                                        required: ['siteName', 'listName', 'itemName'],
+                                        required: ['siteName', 'listName', 'itemPath'],
                                     },
                                     {
                                         properties: {
                                             platform: {
                                                 enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            itemName: {
+                                            itemPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemPath'
                                                 ),
                                                 type: 'string',
                                             },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
-                                                ),
-                                                type: 'string',
-                                            }
                                         },
-                                        required: ['itemName'],
+                                        required: ['itemPath'],
                                     },
                                 ],
                             },
@@ -499,8 +473,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     siteName: undefined,
                     listName: undefined,
-                    parentFolderPath: undefined,
-                    fileName: undefined,
+                    itemPath: undefined,
                     destinationFolderPath: undefined
                 }
             }
