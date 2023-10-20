@@ -77,6 +77,11 @@
         "electronVersion": "19.1.9",
         "appId": "com.runbotics.runbotics-desktop",
         "asar": false,
+        "asarUnpack": [
+            "./node_modules/tesseract.js/**/*",
+            "./node_modules/@nut-tree/**/*",
+            "./node_modules/clipboardy/**/*"
+        ],
         "mac": {
             "category": "utility"
         },
