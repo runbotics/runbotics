@@ -14,13 +14,16 @@ dayjs.extend(utc);
 @Injectable()
 export class SubscriptionService implements OnModuleInit {
     private readonly logger = new Logger(SubscriptionService.name);
+    private readonly notificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL;
+    private readonly lifecycleNotificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL_LIFECYCLE;
+    private readonly resource = `me/mailFolders('${this.serverConfigService.emailTriggerConfig.mailbox || 'Inbox'}')/messages`;
 
     constructor(
         private readonly serverConfigService: ServerConfigService,
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
 
-    onModuleInit() {       
+    onModuleInit() {
         this.initializeEmailTriggerSubscription();
     }
 
@@ -28,17 +31,14 @@ export class SubscriptionService implements OnModuleInit {
         this.logger.log('Creating new email subscription');
         const twoDaysFromNowUTC = dayjs.utc().add(2, 'days').format();
 
-        const notificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL;
-        const lifecycleNotificationUrl = this.serverConfigService.entrypointUrl + EMAIL_NOTIFICATION_URL_PATH.FULL_LIFECYCLE;
-
         const subscription: CreateSubscriptionRequest = {
             changeType: 'created',
             // https://learn.microsoft.com/en-us/graph/outlook-change-notifications-overview?tabs=javascript#example-3-create-a-subscription-to-get-change-notifications-with-resource-data-for-a-message-based-on-a-condition-preview
-            resource: `me/mailFolders('${this.serverConfigService.emailTriggerConfig.mailbox || 'Inbox'}')/messages`,
-            notificationUrl,
+            resource: this.resource,
+            notificationUrl: this.notificationUrl,
             expirationDateTime: twoDaysFromNowUTC,
             clientState: EMAIL_NOTIFICATION_CLIENT_STATE,
-            lifecycleNotificationUrl,
+            lifecycleNotificationUrl: this.lifecycleNotificationUrl,
         };
 
         try {
@@ -113,15 +113,11 @@ export class SubscriptionService implements OnModuleInit {
     private validateSubscriptions(subscriptions: GetSubscriptionResponse[]) {
         return subscriptions
             .reduce<SubscriptionValidation>((acc, subscription) => {
-                const completeEmailNotificationUrl = this.serverConfigService.entrypointUrl
-                    + EMAIL_NOTIFICATION_URL_PATH.FULL;
-                const completeEmailLifecycleNotificationUrl = this.serverConfigService.entrypointUrl
-                    + EMAIL_NOTIFICATION_URL_PATH.FULL_LIFECYCLE;
-
-                const isValidEmailSubscription = subscription.notificationUrl === completeEmailNotificationUrl
-                    && subscription.lifecycleNotificationUrl === completeEmailLifecycleNotificationUrl;
-                const isInvalidSubscription = !subscription.notificationUrl.includes(this.serverConfigService.entrypointUrl)
-                    || !subscription.lifecycleNotificationUrl.includes(this.serverConfigService.entrypointUrl);
+                const isResourceMatching = subscription.resource === this.resource;
+                const isValidEmailSubscription = isResourceMatching && subscription.notificationUrl === this.notificationUrl
+                    && subscription.lifecycleNotificationUrl === this.lifecycleNotificationUrl;
+                const isInvalidSubscription = isResourceMatching && (!subscription.notificationUrl.includes(this.serverConfigService.entrypointUrl)
+                    || !subscription.lifecycleNotificationUrl.includes(this.serverConfigService.entrypointUrl));
 
                 if (isValidEmailSubscription)
                     acc.validEmailSubscriptions.push(subscription);
