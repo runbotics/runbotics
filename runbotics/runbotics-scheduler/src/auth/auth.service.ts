@@ -118,7 +118,7 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
-        return await this.validateBotConnection({client, isGuard})
+        return this.validateBotConnection({client, isGuard})
             .catch((error) => {
                 this.logger.error('Bot connection error', error);
                 return null;
