@@ -32,7 +32,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         const localDirectory = input.localDirectory ?? this.serverConfigService.tempFolderPath;
 
         if (input.platform === MicrosoftPlatform.OneDrive) {
-            return this.oneDriveService.downloadFileByPath(input.fileName, localDirectory, input.parentFolderPath);
+            return this.oneDriveService.downloadFileByPath(input.filePath, localDirectory);
         }
 
         const { site, drive } = await this.getSharePointListInfo({
@@ -43,22 +43,21 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         return this.sharePointService.downloadFileByPath({
             siteId: site.id,
             driveId: drive.id,
-            fileName: input.fileName,
+            filePath: input.filePath,
             localDirectory,
-            parentFolderPath: input.parentFolderPath,
         });
     }
 
     async uploadFile(input: CloudFileUploadFileActionInput) {
-        const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${input.fileName}`;
+        const fileName = input.filePath.split('/').at(-1);
+        const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${fileName}`;
         const { content, contentType } = await this.readLocalFile(localPath);
 
         if (input.platform === MicrosoftPlatform.OneDrive) {
             return this.oneDriveService.uploadFile({
-                fileName: input.fileName,
+                filePath: input.filePath,
                 content,
                 contentType,
-                parentFolderPath: input.parentFolderPath,
             });
         }
 
@@ -70,10 +69,9 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         return this.sharePointService.uploadFile({
             siteId: site.id,
             driveId: drive.id,
-            fileName: input.fileName,
+            filePath: input.filePath,
             content,
             contentType,
-            parentFolderPath: input.parentFolderPath,
         });
     }
 
@@ -98,9 +96,8 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     async moveFile(input: CloudFileMoveFileActionInput) {
         if (input.platform === MicrosoftPlatform.OneDrive) {
             await this.oneDriveService.moveFile({
-                fileName: input.fileName,
+                filePath: input.filePath,
                 destinationFolderPath: input.destinationFolderPath,
-                parentFolderPath: input.parentFolderPath
             });
         } else {
             const { site, drive } = await this.getSharePointListInfo({
@@ -111,8 +108,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             await this.sharePointService.moveFile({
                 siteId: site.id,
                 driveId: drive.id,
-                fileName: input.fileName,
-                parentFolderPath: input.parentFolderPath,
+                filePath: input.filePath,
                 destinationFolderPath: input.destinationFolderPath
             });
         }
@@ -121,8 +117,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     async deleteItem(input: CloudFileDeleteItemActionInput) {
         if (input.platform === MicrosoftPlatform.OneDrive) {
             return this.oneDriveService.deleteItem({
-                itemName: input.itemName,
-                parentFolderPath: input.parentFolderPath
+                itemPath: input.itemPath,
             });
         }
 
@@ -134,8 +129,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         return this.sharePointService.deleteItem({
             siteId: site.id,
             driveId: drive.id,
-            itemName: input.itemName,
-            parentFolderPath: input.parentFolderPath,
+            filePath: input.itemPath,
         });
     }
 

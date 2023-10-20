@@ -22,8 +22,7 @@ export type ExcelSession = SharePointSession | OneDriveSession;
 // Session Info
 export interface OneDriveSessionInfo {
     platform: MicrosoftPlatform.OneDrive;
-    fileName: string;
-    parentFolderPath?: string;
+    filePath: string;
     worksheetName?: string;
 }
 
@@ -102,7 +101,7 @@ export interface UsedRangeResponse {
     text: string[][];
 }
 
-export interface WorksheetRange extends Omit<UsedRangeResponse, 'address'> {
+export interface WorksheetContentRange extends Omit<UsedRangeResponse, 'address'> {
     startCell: string;
     endCell: string;
 }

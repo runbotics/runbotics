@@ -17,8 +17,7 @@ interface SharePointCommon {
 // DOWNLOAD FILE
 export interface OneDriveDownloadFileActionInput {
     platform: MicrosoftPlatform.OneDrive;
-    fileName: string;
-    parentFolderPath?: string;
+    filePath?: string;
     localDirectory?: string;
 }
 
@@ -28,9 +27,8 @@ export type CloudFileDownloadFileActionInput = OneDriveDownloadFileActionInput |
 // UPLOAD FILE
 export interface OneDriveUploadFileActionInput {
     platform: MicrosoftPlatform.OneDrive;
-    fileName: string;
+    filePath: string;
     localParentFolderPath?: string;
-    parentFolderPath?: string;
 }
 
 export type SharePointUploadFileActionInput = SharePointCommon & Omit<OneDriveUploadFileActionInput, 'platform'>;
@@ -49,9 +47,8 @@ export type CloudFileCreateFolderActionInput = OneDriveCreateFolderActionInput |
 // MOVE FILE
 export interface OneDriveMoveFileActionInput {
     platform: MicrosoftPlatform.OneDrive;
-    fileName: string;
+    filePath: string;
     destinationFolderPath: string;
-    parentFolderPath?: string;
 }
 
 export type SharePointMoveFileActionInput = SharePointCommon & Omit<OneDriveMoveFileActionInput, 'platform'>;
@@ -60,8 +57,7 @@ export type CloudFileMoveFileActionInput = OneDriveMoveFileActionInput | SharePo
 // DELETE ITEM
 export interface OneDriveDeleteItemActionInput {
     platform: MicrosoftPlatform.OneDrive;
-    itemName: string;
-    parentFolderPath?: string;
+    itemPath: string;
 }
 
 export type SharePointDeleteItemActionInput = SharePointCommon & Omit<OneDriveDeleteItemActionInput, 'platform'>;

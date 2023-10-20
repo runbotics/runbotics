@@ -22,9 +22,9 @@ export class SharePointService {
     ) {}
 
     async downloadFileByPath({
-        siteId, driveId, fileName, parentFolderPath, localDirectory,
+        siteId, driveId, filePath, localDirectory,
     }: DownloadFileParams) {
-        const driveItem = await this.getFileByPath({ siteId, driveId, fileName, parentFolderPath });
+        const driveItem = await this.getFileByPath({ siteId, driveId, filePath });
 
         const absolutePath = verifyDestinationPath(driveItem.name, localDirectory);
 
@@ -38,10 +38,9 @@ export class SharePointService {
     }
 
     getFileByPath({
-        siteId, driveId, fileName, parentFolderPath, options,
+        siteId, driveId, filePath, options,
     }: GetFileByPathParams) {
-        const path = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
-        const url = `/sites/${siteId}/drives/${driveId}/root:/${path}`;
+        const url = `/sites/${siteId}/drives/${driveId}/root:/${filePath}`;
 
         return this.microsoftGraphService.get<DriveItem>(url, options);
     }
@@ -69,12 +68,11 @@ export class SharePointService {
     // Up to 4MB
     // https://learn.microsoft.com/en-us/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=javascript
     uploadFile({
-        siteId, driveId, fileName, content, contentType, parentFolderPath,
+        siteId, driveId, filePath, content, contentType,
     }: UploadFileParams) {
-        const fullFilePath = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
         return this.microsoftGraphService
             .put<DriveItem>(
-                `/sites/${siteId}/drives/${driveId}/root:/${fullFilePath}:/content`,
+                `/sites/${siteId}/drives/${driveId}/root:/${filePath}:/content`,
                 content,
                 {
                     headers: {
@@ -86,10 +84,10 @@ export class SharePointService {
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-move?view=graph-rest-1.0&tabs=javascript
     async moveFile({
-        siteId, driveId, fileName, parentFolderPath, destinationFolderPath
+        siteId, driveId, filePath, destinationFolderPath
     }: MoveFileParams){
         const file = await this.getFileByPath({
-            siteId, driveId, fileName, parentFolderPath
+            siteId, driveId, filePath
         });
         if (!file) {
             throw new Error('Provided file path does not exist');
@@ -107,10 +105,10 @@ export class SharePointService {
     }
 
     async deleteItem({
-        siteId, driveId, itemName, parentFolderPath
+        siteId, driveId, filePath,
     }: DeleteItemParams) {
         const item = await this.getFileByPath({
-            siteId, driveId, fileName: itemName, parentFolderPath
+            siteId, driveId, filePath,
         });
         if (!item) {
             throw new Error('Provided file path does not exist');

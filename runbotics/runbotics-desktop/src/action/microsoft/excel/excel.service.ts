@@ -20,7 +20,7 @@ import {
     OneDriveFileInfo,
     FileInfo,
     UsedRangeResponse,
-    WorksheetRange,
+    WorksheetContentRange,
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
@@ -79,7 +79,7 @@ export class ExcelService {
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-usedrange?view=graph-rest-1.0&tabs=http
      */
-    async getRange(session: ExcelSession, inputWorksheetName?: Worksheet['name']): Promise<WorksheetRange> {
+    async getWorksheetContent(session: ExcelSession, inputWorksheetName?: Worksheet['name']): Promise<WorksheetContentRange> {
         const worksheetName = inputWorksheetName ?? session.worksheetName;
 
         const response = await this.microsoftGraphService.get<UsedRangeResponse>(
@@ -325,8 +325,7 @@ export class ExcelService {
         const file = await this.sharePointService.getFileByPath({
             siteId: site.id,
             driveId: drive.id,
-            fileName: sessionInfo.fileName,
-            parentFolderPath: sessionInfo.parentFolderPath,
+            filePath: sessionInfo.filePath,
         });
 
         if (!file) {
@@ -342,10 +341,7 @@ export class ExcelService {
     }
 
     private async gatherOneDriveFileInfo(sessionInfo: OneDriveSessionInfo): Promise<OneDriveFileInfo> {
-        const path = sessionInfo.parentFolderPath
-            ? `${sessionInfo.parentFolderPath}/${sessionInfo.fileName}`
-            : sessionInfo.fileName;
-        const file = await this.oneDriveService.getItemByPath(path);
+        const file = await this.oneDriveService.getItemByPath(sessionInfo.filePath);
 
         if (!file) {
             throw new Error('Provided file path does not exist');

@@ -19,8 +19,8 @@ export class OneDriveService {
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
 
-    async downloadFileByPath(fileName: string, localDirectory: string, parentFolderPath?: string) {
-        const driveItem = await this.getFileByPath(fileName, parentFolderPath);
+    async downloadFileByPath(filePath: string, localDirectory: string) {
+        const driveItem = await this.getFileByPath(filePath);
 
         const absolutePath = verifyDestinationPath(driveItem.name, localDirectory);
 
@@ -33,9 +33,9 @@ export class OneDriveService {
         return saveFileStream(writer, absolutePath);
     }
 
-    getFileByPath(fileName: string, parentFolderPath?: string, options?: RequestOptions) {
-        const path = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
-        return this.microsoftGraphService.get<DriveItem>(`/me/drive/root:/${path}:`, options);
+    getFileByPath(filePath: string, options?: RequestOptions) {
+        return this.microsoftGraphService
+            .get<DriveItem>(`/me/drive/root:/${filePath}:`, options);
     }
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0&tabs=javascript
@@ -52,12 +52,11 @@ export class OneDriveService {
     // Up to 4MB
     // https://learn.microsoft.com/en-us/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=javascript
     uploadFile({
-        fileName, content, contentType, parentFolderPath,
+        filePath, content, contentType,
     }: UploadFileParams) {
-        const fullFilePath = parentFolderPath ? `${parentFolderPath}/${fileName}` : fileName;
         return this.microsoftGraphService
             .put<DriveItem>(
-                `/me/drive/root:/${fullFilePath}:/content`,
+                `/me/drive/root:/${filePath}:/content`,
                 content,
                 {
                     headers: {
@@ -83,11 +82,10 @@ export class OneDriveService {
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-move?view=graph-rest-1.0&tabs=javascript
     async moveFile({
-        fileName,
+        filePath,
         destinationFolderPath,
-        parentFolderPath
     }: MoveFileParams) {
-        const file = await this.getFileByPath(fileName, parentFolderPath);
+        const file = await this.getFileByPath(filePath);
         if (!file) {
             throw new Error('Provided file path does not exist');
         }
@@ -101,11 +99,9 @@ export class OneDriveService {
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript
     async deleteItem({
-        itemName,
-        parentFolderPath
+        itemPath,
     }: DeleteItemParams) {
-        const path = parentFolderPath ? `${parentFolderPath}/${itemName}` : itemName;
-        const item = await this.getItemByPath(path);
+        const item = await this.getItemByPath(itemPath);
         if (!item) {
             throw new Error('Provided file path does not exist');
         }
