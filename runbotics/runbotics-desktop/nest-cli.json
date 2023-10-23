@@ -1,10 +1,5 @@
 {
     "collection": "@nestjs/schematics",
     "sourceRoot": "src",
-    "entryFile": "src/main.js",
-    "compilerOptions": {
-        "assets": [
-            { "include": "utils/clipboard/win-clipboard", "outDir": "dist/src", "watchAssets": true }
-        ]
-    }
+    "entryFile": "src/main.js"
 }

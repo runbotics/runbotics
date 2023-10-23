@@ -81,8 +81,7 @@
         "asar": true,
         "asarUnpack": [
             "node_modules/tesseract.js/**/*",
-            "node_modules/@nut-tree/**/*",
-            "dist/src/utils/clipboard/win-clipboard/**/*"
+            "node_modules/@nut-tree/**/*"
         ],
         "mac": {
             "category": "utility"
@@ -95,12 +94,14 @@
             "node_modules/",
             "package.json",
             "driver/",
-            "trained_data/"
+            "trained_data/",
+            "win-clipboard/"
         ],
         "extraFiles": [
             ".env",
             "driver/",
-            "trained_data/"
+            "trained_data/",
+            "win-clipboard/"
         ],
         "linux": {
             "target": "deb"
@@ -163,6 +164,7 @@
         "dist",
         "driver",
         "trained_data",
+        "win-clipboard",
         "start.sh",
         "cert",
         "public"

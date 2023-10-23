@@ -1,12 +1,12 @@
 'use strict';
-import path from 'path';
 import execa from 'execa';
 import arch from 'arch';
+import { cwd } from 'process';
 
 // Binaries from: https://github.com/sindresorhus/win-clipboard
 const winBinaryPath = arch() === 'x64' ?
-    path.join(__dirname, './win-clipboard/clipboard_x86_64-pc-windows.exe').replace('app.asar', 'app.asar.unpacked') :
-    path.join(__dirname, './win-clipboard/clipboard_i686-pc-windows.exe').replace('app.asar', 'app.asar.unpacked');
+    `${cwd()}/win-clipboard/clipboard_x86_64-pc-windows.exe` :
+    `${cwd()}/win-clipboard/clipboard_i686-pc-windows.exe`;
 
 const clipboardActions = {
     copy: async (options: unknown) => execa(winBinaryPath, ['--copy'], options),

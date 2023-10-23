@@ -5,7 +5,7 @@ import { DesktopAction, TEMP_DIRECTORY_NAME } from 'runbotics-common';
 import { RunboticsLogger } from '#logger';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
-import clipboard from '../../utils/clipboard/clipboard';
+import clipboard from '../../utils/clipboard';
 import {
     mouse,
     keyboard,
