@@ -6,16 +6,24 @@ import Image from 'next/image';
 import PrivateIcon from '#public/images/icons/lock.svg';
 import PublicIcon from '#public/images/icons/public.svg';
 import ScheduleIcon from '#public/images/icons/scheduled.svg';
+
+import Label from '#src-app/components/Label';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { getProcessInstanceStatusColor } from '#src-app/utils/getProcessInstanceStatusColor';
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import { Footer, IconsWrapper, StyledBox, StyledIconsBox } from './ProcessTileFooter.styles';
 import { ProcessTileFooterProps } from './ProcessTileFooter.types';
 import ProcessTileActions from '../ProcessTileActions';
 
-
-const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process }) => {
+const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process, processInstance }) => {
     const { translate } = useTranslations();
+    const formattedStatus = processInstance && capitalizeFirstLetter({
+        text: processInstance.status,
+        lowerCaseRest: true,
+        delimiter: /_| /
+    });
 
     return (
         <Footer>
@@ -47,6 +55,14 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process 
                 </If>
             </IconsWrapper>
             <StyledBox>
+                {processInstance &&
+                    <Label
+                        color={getProcessInstanceStatusColor(processInstance.status)}
+                    >
+                        {/*@ts-ignore*/}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
+                    </Label>
+                }
                 <ProcessTileActions process={process} />
             </StyledBox>
         </Footer>

@@ -30,7 +30,7 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
     const translateKey = `Process.Details.Modeler.Actions.${capitalizeFirstLetter({ text: processInstanceEvent.step, delimiter: '.', join: '.'})}.Label`;
     const timeDiff = formatTimeDiff(processInstanceEvent.created, processInstanceEvent.finished);
     const formattedTimeDiff = timeDiff ? timeDiff : `< 500${translate('Common.Time.Miliseconds.Short')}`;
-    
+
 
     return (
         <GridContainer>
@@ -41,7 +41,7 @@ const ProcessInstanceEventsDetailsHeader: VFC<Props> = ({ processInstanceEvent }
                 <Typography>
                     <Label  color={getProcessInstanceStatusColor(processInstanceEvent.status)}>
                         {/* @ts-ignore */}
-                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
                     </Label>
                 </Typography>
 

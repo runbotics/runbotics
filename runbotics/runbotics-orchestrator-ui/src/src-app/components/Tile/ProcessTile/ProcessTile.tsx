@@ -1,24 +1,33 @@
-import { FC, useRef } from 'react';
+import { FC, useRef, useState, useEffect } from 'react';
 
 import { Box, Divider, CardHeader } from '@mui/material';
-
+import { unwrapResult } from '@reduxjs/toolkit';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { FeatureKey } from 'runbotics-common';
+import { useSnackbar } from 'notistack';
+import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
+
+import PlayIcon from '#public/images/icons/play.svg';
+import SquareIcon from '#public/images/icons/square.svg';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processActions } from '#src-app/store/slices/Process';
+import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessTab } from '#src-app/utils/process-tab';
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { Description, StyledCardActionArea } from './ProcessTile.styles';
+import { Description, StyledCardActionArea, RunBox } from './ProcessTile.styles';
 import { ProcessTileProps } from './ProcessTile.types';
 import { buildProcessUrl } from './ProcessTile.utils';
 import ProcessTileContent from './ProcessTileContent';
 import ProcessTileFooter from './ProcessTileFooter';
 import ProcessTileTagList from './ProcessTileTagList';
-import Tile, { TileAvatar } from '..';
-
+import Tile from '..';
 
 const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const router = useRouter();
@@ -29,16 +38,85 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
     const refProcessTileContent = useRef<HTMLDivElement>();
 
+    const { enqueueSnackbar } = useSnackbar();
+    const { translate } = useTranslations();
+    const dispatch = useDispatch();
+    const { allActiveMap: processInstanceMap } = useSelector(processInstanceSelector);
+    const processInstance = processInstanceMap[process.id]?.processInstance;
+    const [isProcessActive, setIsProcessActive] = useState(
+        processInstance && isProcessInstanceActive(processInstance.status)
+    );
+
     const handleRedirect = () => {
         if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
         else router.push(buildProcessUrl(process, ProcessTab.RUN));
     };
 
+    const handleProcessRun = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        dispatch(processActions.startProcess({
+            processId: process.id
+        }))
+            .then(unwrapResult)
+            .then((response) => {
+                dispatch(
+                    processInstanceActions.updateOrchestratorProcessInstanceIdMap({
+                        processId: process.id,
+                        orchestratorProcessInstanceId: response.orchestratorProcessInstanceId,
+                    })
+                );
+
+                setIsProcessActive(true);
+            })
+            .catch((error) => {
+                const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
+                const message = error.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
+                const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+                const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+
+                const errorMessage = checkIfKeyExists(translationKey)
+                    ? translate(translationKey)
+                    : message;
+                enqueueSnackbar(
+                    errorMessage,
+                    { variant: 'error' }
+                );
+            });
+    };
+
+    useEffect(() => {
+        setIsProcessActive(
+            processInstance && isProcessInstanceActive(processInstance.status)
+        );
+    }, [processInstance]);
+
     return (
         <Tile>
             <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader
-                    avatar={<TileAvatar href={buildProcessUrl(process)} title={process.name} />}
+                    avatar={
+                        <RunBox
+                            onClick={handleProcessRun}
+                            disabled={isProcessActive}
+                        >
+                            <If
+                                condition={isProcessActive}
+                                else={
+                                    <Image
+                                        src={PlayIcon}
+                                        alt={translate('Component.Tile.Process.Header.Alt.PlayIcon')}
+                                    />
+                                }
+                            >
+                                <Image
+                                    src={SquareIcon}
+                                    alt={translate('Component.Tile.Process.Header.Alt.SquareIcon')}
+                                />
+                            </If>
+                        </RunBox>
+                    }
                     title={
                         <HighlightText
                             text={process.name}
@@ -78,7 +156,10 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             </StyledCardActionArea>
             <If condition={hasProcessDetailsAccess}>
                 <Divider />
-                <ProcessTileFooter process={process} />
+                <ProcessTileFooter
+                    process={process}
+                    processInstance={processInstance}
+                />
             </If>
         </Tile>
     );

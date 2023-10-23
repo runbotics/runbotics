@@ -41,7 +41,7 @@ const useProcessInstanceColumns = (
         );
         dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
     };
-    
+
     const handleRowExpand = (currRow: ProcessInstanceRow) => {
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
         dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
@@ -79,7 +79,7 @@ const useProcessInstanceColumns = (
                 return (
                     <Label warning={value.warning} color={getProcessInstanceStatusColor(value.status)}>
                         {/* @ts-ignore */}
-                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
                     </Label>
                 );
             },

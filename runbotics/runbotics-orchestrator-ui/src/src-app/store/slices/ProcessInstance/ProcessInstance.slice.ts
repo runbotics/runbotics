@@ -7,6 +7,7 @@ import * as processInstanceThunks from './ProcessInstance.thunks';
 import { RootState } from '../../index';
 
 export const initialState: ProcessInstanceState = {
+    allActiveMap: {},
     active: {
         orchestratorProcessInstanceId: null,
         processInstance: null,
