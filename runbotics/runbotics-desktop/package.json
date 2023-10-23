@@ -34,6 +34,7 @@
         "@nestjs/schedule": "^3.0.3",
         "@nut-tree/nut-js": "^3.1.2",
         "@stomp/stompjs": "^6.1.0",
+        "arch": "^2.1.1",
         "asana": "^0.18.6",
         "axios": "^0.27.2",
         "bpmn-elements": "^5.1.2",
@@ -45,6 +46,7 @@
         "csv-writer": "^1.6.0",
         "csvtojson": "^2.0.10",
         "dayjs": "^1.11.0",
+        "execa": "^1.0.0",
         "file-type": "^16.5.4",
         "googleapis": "^73.0.0",
         "jexl": "^2.3.0",
@@ -76,11 +78,11 @@
         "productName": "RunBotics",
         "electronVersion": "19.1.9",
         "appId": "com.runbotics.runbotics-desktop",
-        "asar": false,
+        "asar": true,
         "asarUnpack": [
-            "./node_modules/tesseract.js/**/*",
-            "./node_modules/@nut-tree/**/*",
-            "./node_modules/clipboardy/**/*"
+            "node_modules/tesseract.js/**/*",
+            "node_modules/@nut-tree/**/*",
+            "dist/src/utils/clipboard/win-clipboard/**/*"
         ],
         "mac": {
             "category": "utility"
@@ -92,11 +94,13 @@
             "dist/",
             "node_modules/",
             "package.json",
-            "driver"
+            "driver/",
+            "trained_data/"
         ],
         "extraFiles": [
             ".env",
-            "driver/"
+            "driver/",
+            "trained_data/"
         ],
         "linux": {
             "target": "deb"
@@ -104,8 +108,7 @@
         "win": {
             "target": "nsis",
             "icon": "./public/icons/runbotics-512x512.png",
-            "certificateFile": "./cert/selfsigncert.pfx",
-            "certificatePassword": "&#%TysWeL^^J@S46"
+            "verifyUpdateCodeSignature": false
         },
         "nsis": {
             "allowToChangeInstallationDirectory": true,
@@ -129,7 +132,7 @@
         "@typescript-eslint/parser": "^5.48.0",
         "@types/bpmn-moddle": "^5.1.6",
         "cross-env": "^7.0.3",
-        "electron-builder": "^23.6.0",
+        "electron-builder": "^24.6.4",
         "eslint": "^8.31.0",
         "jest": "^27.2.5",
         "supertest": "^6.1.3",
@@ -158,6 +161,7 @@
     "files": [
         "dist",
         "driver",
+        "trained_data",
         "start.sh",
         "cert",
         "public"

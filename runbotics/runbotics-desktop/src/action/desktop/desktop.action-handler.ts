@@ -5,10 +5,10 @@ import { DesktopAction, TEMP_DIRECTORY_NAME } from 'runbotics-common';
 import { RunboticsLogger } from '#logger';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
+import clipboard from '../../utils/clipboard/clipboard';
 import {
     mouse,
     keyboard,
-    clipboard,
     screen,
     straightTo,
     centerOf,
@@ -103,7 +103,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async copy(input: DesktopCopyActionInput): Promise<void> {
         if (input.text) {
-            await clipboard.setContent(input.text);
+            await clipboard.write(input.text);
         } else {
             const superKey: Key = this.getSuperKey();
             await this.performKeyboardShortcut([superKey, Key.C]);
@@ -126,7 +126,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
     async readClipboardContent(): Promise<DesktopReadClipboardContentActionOutput> {
         try {
-            const content = await clipboard.getContent();
+            const content = await clipboard.read();
             return content;
         } catch (error) {
             throw new Error('Non-text clipboard content is not supported');
