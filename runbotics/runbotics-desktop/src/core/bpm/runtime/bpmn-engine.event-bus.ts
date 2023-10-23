@@ -12,7 +12,7 @@ export class BpmnEngineEventBus<T> implements IBpmnEngineEvent<T> {
     public subscribe(handler: Handler<T>): ISubscription {
         this.handlers.push(handler);
         return {
-            unsubscribe() {
+            unsubscribe: () => {
                 this.unsubscribe(handler);
             },
         };
