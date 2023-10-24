@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo $'[INFO] - runbotics-sdk install start\n'
-cd @runbotics/runbotics-sdk && pnpm install --ignore-scripts && cd ..
+cd runbotics-sdk && pnpm install --ignore-scripts && cd ..
 echo $'\n[INFO] - runbotics-sdk install finished'
 
 echo $'\n[INFO] - runbotics-common install start\n'
