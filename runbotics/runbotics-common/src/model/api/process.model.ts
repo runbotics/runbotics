@@ -14,14 +14,13 @@ export interface IProcess {
     isTriggerable?: boolean | null;
     created?: string | null;
     updated?: string | null;
-    executionsCount?: number | null;
-    successExecutionsCount?: number | null;
-    failureExecutionsCount?: number | null;
+    lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
     createdBy?: IUser | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
+    editor?: IUser | null;
     tags?: Tag[];
 }
 

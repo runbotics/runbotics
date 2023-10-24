@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from 'runbotics-sdk';
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
-import { readFile } from 'fs/promises';
 import { fromFile } from 'file-type';
 
 import { OneDriveService } from '#action/microsoft/one-drive';
@@ -10,10 +9,12 @@ import { RunboticsLogger } from '#logger';
 
 import {
     CloudFileActionRequest, CloudFileCreateFolderActionInput,
-    CloudFileDownloadFileActionInput,
+    CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
     CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
+    CloudFileDeleteItemActionInput
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
@@ -26,12 +27,12 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     ) {
         super();
     }
-    
+
     async downloadFile(input: CloudFileDownloadFileActionInput) {
         const localDirectory = input.localDirectory ?? this.serverConfigService.tempFolderPath;
 
         if (input.platform === MicrosoftPlatform.OneDrive) {
-            return this.oneDriveService.downloadFileByPath(input.fileName, localDirectory, input.parentFolderPath);
+            return this.oneDriveService.downloadFileByPath(input.filePath, localDirectory);
         }
 
         const { site, drive } = await this.getSharePointListInfo({
@@ -42,22 +43,21 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         return this.sharePointService.downloadFileByPath({
             siteId: site.id,
             driveId: drive.id,
-            fileName: input.fileName,
+            filePath: input.filePath,
             localDirectory,
-            parentFolderPath: input.parentFolderPath,
         });
     }
 
     async uploadFile(input: CloudFileUploadFileActionInput) {
-        const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${input.fileName}`;
+        const fileName = input.filePath.split('/').at(-1);
+        const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${fileName}`;
         const { content, contentType } = await this.readLocalFile(localPath);
-    
+
         if (input.platform === MicrosoftPlatform.OneDrive) {
             return this.oneDriveService.uploadFile({
-                fileName: input.fileName,
+                filePath: input.filePath,
                 content,
                 contentType,
-                parentFolderPath: input.parentFolderPath,
             });
         }
 
@@ -69,10 +69,9 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         return this.sharePointService.uploadFile({
             siteId: site.id,
             driveId: drive.id,
-            fileName: input.fileName,
+            filePath: input.filePath,
             content,
             contentType,
-            parentFolderPath: input.parentFolderPath,
         });
     }
 
@@ -93,7 +92,47 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             parentFolderPath: input.parentFolderPath,
         });
     }
-    
+
+    async moveFile(input: CloudFileMoveFileActionInput) {
+        if (input.platform === MicrosoftPlatform.OneDrive) {
+            await this.oneDriveService.moveFile({
+                filePath: input.filePath,
+                destinationFolderPath: input.destinationFolderPath,
+            });
+        } else {
+            const { site, drive } = await this.getSharePointListInfo({
+                listName: input.listName,
+                siteName: input.siteName
+            });
+
+            await this.sharePointService.moveFile({
+                siteId: site.id,
+                driveId: drive.id,
+                filePath: input.filePath,
+                destinationFolderPath: input.destinationFolderPath
+            });
+        }
+    }
+
+    async deleteItem(input: CloudFileDeleteItemActionInput) {
+        if (input.platform === MicrosoftPlatform.OneDrive) {
+            return this.oneDriveService.deleteItem({
+                itemPath: input.itemPath,
+            });
+        }
+
+        const { site, drive } = await this.getSharePointListInfo({
+            listName: input.listName,
+            siteName: input.siteName
+        });
+
+        return this.sharePointService.deleteItem({
+            siteId: site.id,
+            driveId: drive.id,
+            filePath: input.itemPath,
+        });
+    }
+
     run(request: CloudFileActionRequest) {
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -102,6 +141,10 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.uploadFile(request.input);
             case CloudFileAction.CREATE_FOLDER:
                 return this.createFolder(request.input);
+            case CloudFileAction.MOVE_FILE:
+                return this.moveFile(request.input);
+            case CloudFileAction.DELETE_ITEM:
+                return this.deleteItem(request.input);
             default:
                 throw new Error('Action not found');
         }
@@ -129,7 +172,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     private async readLocalFile(path: string) {
-        const content = await readFile(path);
+        const content = readFileSync(path);
         const { mime } = await fromFile(path);
 
         return {

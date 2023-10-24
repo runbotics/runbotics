@@ -6,6 +6,178 @@ import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
+    [CloudExcelAction.OPEN_FILE]: {
+        id: CloudExcelAction.OPEN_FILE,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label'),
+        script: CloudExcelAction.OPEN_FILE,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            platform: {
+                                title: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Platform'),
+                                type: 'string',
+                                enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
+                                default: 'OneDrive',
+                            },
+                        },
+                        dependencies: {
+                            platform: {
+                                oneOf: [
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: [MicrosoftPlatform.SharePoint],
+                                            },
+                                            siteName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            listName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.Microsoft.ListName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            filePath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            worksheetName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                        },
+                                        required: ['siteName', 'listName', 'filePath'],
+                                    },
+                                    {
+                                        properties: {
+                                            platform: {
+                                                enum: [MicrosoftPlatform.OneDrive],
+                                            },
+                                            filePath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.FilePath',
+                                                ),
+                                                type: 'string',
+                                            },
+                                            worksheetName: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
+                                                ),
+                                                type: 'string',
+                                            },
+                                        },
+                                        required: ['filePath'],
+                                    },
+                                ],
+                            },
+
+                        },
+
+                    },
+                },
+            },
+            uiSchema: {
+                input: {
+                    filePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    siteName: undefined,
+                    filePath: undefined,
+                    listName: undefined,
+                },
+            },
+        },
+    },
+    [CloudExcelAction.CREATE_WORKSHEET]: {
+        id: CloudExcelAction.CREATE_WORKSHEET,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
+        script: CloudExcelAction.CREATE_WORKSHEET,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                        required: ['worksheetName'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Common.VariableName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    worksheetName: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
     [CloudExcelAction.GET_CELL]: {
         id: CloudExcelAction.GET_CELL,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCell.Label'),
@@ -30,8 +202,12 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
+                            isStringExpected: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.IsStringExpected'),
+                                type: 'boolean',
+                            },
                         },
-                        required: ['cell'],
+                        required: ['cell', 'isStringExpected'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -54,7 +230,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
                             type: 'string',
                         },
-                    }
+                    },
                 },
                 output: {
                     variableName: {
@@ -67,6 +243,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     cell: undefined,
+                    isStringExpected: false,
                 },
                 output: {
                     variableName: undefined,
@@ -102,9 +279,13 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell'),
                                 type: 'string',
                                 pattern: ActionRegex.EXCEL_CELL_ADDRESS
-                            }
+                            },
+                            isStringExpected: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.IsStringExpected'),
+                                type: 'boolean',
+                            },
                         },
-                        required: ['startCell', 'endCell'],
+                        required: ['startCell', 'endCell', 'isStringExpected'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -132,7 +313,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell.Info'),
                         },
-                    }
+                    },
                 },
                 output: {
                     variableName: {
@@ -145,7 +326,75 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     range: undefined,
+                    isStringExpected: false,
                 },
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
+    [CloudExcelAction.GET_WORKSHEET_CONTENT]: {
+        id: CloudExcelAction.GET_WORKSHEET_CONTENT,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.Label'),
+        script: CloudExcelAction.GET_WORKSHEET_CONTENT,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            worksheetName: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.WorksheetName',
+                                ),
+                                type: 'string',
+                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
+                            },
+                        },
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    worksheetName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.WorksheetName.Info'),
+                            type: 'string',
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.CloudExcel.GetRange.VariableName.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {},
                 output: {
                     variableName: undefined,
                 },
@@ -193,7 +442,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
-                        required: ['variableName'],
                     },
                 },
             },
@@ -291,239 +539,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     range: undefined,
                     values: undefined,
-                },
-                output: {
-                    variableName: undefined,
-                },
-            },
-        },
-    },
-    [CloudExcelAction.OPEN_FILE]: {
-        id: CloudExcelAction.OPEN_FILE,
-        label: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label'),
-        script: CloudExcelAction.OPEN_FILE,
-        runner: Runner.DESKTOP_SCRIPT,
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            platform: {
-                                title: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Platform'),
-                                type: 'string',
-                                enum: [MicrosoftPlatform.OneDrive, MicrosoftPlatform.SharePoint],
-                                default: 'OneDrive',
-                            },
-                        },
-                        dependencies: {
-                            platform: {
-                                oneOf: [
-                                    {
-                                        properties: {
-                                            platform: {
-                                                enum: [MicrosoftPlatform.SharePoint],
-                                            },
-                                            siteName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            listName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.Microsoft.ListName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            worksheetName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromSite.WorksheetName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                        },
-                                        required: ['siteName', 'listName', 'fileName'],
-                                    },
-                                    {
-                                        properties: {
-                                            platform: {
-                                                enum: [MicrosoftPlatform.OneDrive],
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            fileName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.FileName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                            worksheetName: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.WorksheetName',
-                                                ),
-                                                type: 'string',
-                                            },
-                                        },
-                                        required: ['fileName'],
-                                    },
-                                ],
-                            },
-
-                        },
-
-                    },
-                },
-            },
-            uiSchema: {
-                input: {
-                    filePath: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info'),
-                        },
-                    },
-                },
-            },
-            formData: {
-                input: {
-                    siteName: undefined,
-                    filePath: undefined,
-                    listName: undefined,
-                },
-            },
-        },
-    },
-    [CloudExcelAction.CLOSE_SESSION]: {
-        id: CloudExcelAction.CLOSE_SESSION,
-        label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
-        script: CloudExcelAction.CLOSE_SESSION,
-        runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableName',
-                                ),
-
-                                type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
-                            },
-                        },
-                        required: ['variableName'],
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['output'],
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
-            },
-            formData: {
-                output: {
-                    variableName: undefined,
-                },
-            },
-        },
-    },
-    [CloudExcelAction.CREATE_WORKSHEET]: {
-        id: CloudExcelAction.CREATE_WORKSHEET,
-        label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
-        script: CloudExcelAction.CREATE_WORKSHEET,
-        runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
-        form: {
-            schema: {
-                type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            worksheetName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName',
-                                ),
-                                type: 'string',
-                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
-                            },
-                        },
-                        required: ['worksheetName'],
-                    },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate(
-                                    'Process.Details.Modeler.Actions.Common.VariableName',
-                                ),
-                                type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
-                            },
-                        },
-                    },
-                },
-            },
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                input: {
-                    worksheetName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info'),
-                        },
-                    },
-                },
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
-            },
-            formData: {
-                input: {
-                    worksheetName: undefined,
                 },
                 output: {
                     variableName: undefined,
@@ -666,6 +681,17 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                     rowRange: undefined,
                 },
             },
+        },
+    },
+    [CloudExcelAction.CLOSE_SESSION]: {
+        id: CloudExcelAction.CLOSE_SESSION,
+        label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
+        script: CloudExcelAction.CLOSE_SESSION,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {},
+            uiSchema: {},
+            formData: {},
         },
     },
 });

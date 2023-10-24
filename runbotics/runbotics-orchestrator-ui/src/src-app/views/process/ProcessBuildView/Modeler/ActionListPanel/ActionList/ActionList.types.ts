@@ -32,7 +32,6 @@ export const ADVANCED_ACTION_IDS: AllActionIds[] = [
     GeneralAction.START_PROCESS,
     GeneralAction.DELAY,
     BrowserAction.SELENIUM_TAKE_SCREENSHOT,
-    BrowserAction.SELENIUM_PRINT_TO_PDF,
     ApiAction.DOWNLOAD_FILE,
 ];
 

@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, useLayoutEffect, MouseEvent } from 'react';
+import React, { FC, useState, useRef, useLayoutEffect, MouseEvent, useEffect } from 'react';
 
 import { Chip } from '@mui/material';
 
@@ -20,15 +20,17 @@ import { ProcessTileTagListProps } from './ProcessTileTagList.types';
 
 const TAGS_CONTAINER_MARGIN_VALUE = 67;
 const TAG_RIGHT_MARGIN_VALUE = 8;
+const COMBINED_TILE_CONTENT_PADDING_VALUE = 32;
 
 const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
-    tags, searchValue
+    tags, searchValue, refProcessTileContent
 }) => {
     const { translate } = useTranslations();
 
     const [isTagBoxExpanded, setIsTagBoxExpanded] = useState<boolean>(false);
     const [isTagListMultiLine, setIsTagListMultiLine] = useState<boolean>(true);
     const [tagsWidth, setTagsWidth] = useState<number>(0);
+    const [expandedHeight, setExpandedHeight] = useState<number>(0);
 
     const refTagBox = useRef<HTMLDivElement>();
 
@@ -57,9 +59,7 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
         };
     }, []);
 
-    useLayoutEffect(() => {
-        checkTagsWidth(tagsWidth);
-    }, [tagsWidth]);
+    useLayoutEffect(() => { checkTagsWidth(tagsWidth); }, [tagsWidth]);
 
     const handleTagBoxResize = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -69,9 +69,17 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
 
     const tagNameFitSearch = (tagName: string) => Boolean(tagName.match(RegExp(searchValue, 'ig')));
 
+    useEffect(() => {
+        setExpandedHeight(refProcessTileContent.current.offsetHeight + COMBINED_TILE_CONTENT_PADDING_VALUE);
+    }, [refProcessTileContent]);
+
     return (
         <Container>
-            <TagBox ref={refTagBox} $isExpanded={isTagBoxExpanded} >
+            <TagBox
+                ref={refTagBox}
+                $isExpanded={isTagBoxExpanded}
+                $expandedHeight={expandedHeight}
+            >
                 {tags.reduce((acc, tag) =>
                     tagNameFitSearch(tag.name)
                         ? [tag, ...acc]
@@ -89,14 +97,15 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
                     />)
                 }
             </TagBox>
-            <DividerBox $isExpanded={isTagBoxExpanded}>
+            <DividerBox>
                 <If
                     condition={tags.length && isTagListMultiLine}
                     else={<StaticLine/>}
                 >
-                    <DividerLine/>
+                    <DividerLine $isExpanded={isTagBoxExpanded}/>
                     <DividerAction
                         onClick={handleTagBoxResize}
+                        $isExpanded={isTagBoxExpanded}
                     >
                         <StyledTypography
                             variant='body2'

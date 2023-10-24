@@ -15,23 +15,21 @@ import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
 import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
-
-import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -74,9 +72,7 @@ public class ProcessServiceImpl implements ProcessService {
             User user = userService.getUserWithAuthorities().get();
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
-            process.setExecutionsCount(0L);
-            process.setFailureExecutionsCount(0L);
-            process.setSuccessExecutionsCount(0L);
+            process.setEditor(user);
         }
         if (process.getBotCollection() == null) {
             process.setBotCollection(botCollectionService.getPublicCollection());
@@ -137,12 +133,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
+        User requester = userService.getUserWithAuthorities().get();
         return processRepository
             .findById(processDiagramDTO.getId())
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
                     existingProcess.setUpdated(ZonedDateTime.now());
+                    existingProcess.setEditor(requester);
                     return existingProcess;
                 }
             )
@@ -248,10 +246,7 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public List<ProcessDTO> findUserProcesses(User user) {
-        return this.processRepository.findAllByCreatedBy(user)
-            .stream()
-            .map(processMapper::toDto)
-            .collect(Collectors.toList());
+        return this.processRepository.findAllByCreatedBy(user).stream().map(processMapper::toDto).collect(Collectors.toList());
     }
 
     public boolean hasRequesterCreateProcessAccess() {
@@ -271,8 +266,7 @@ public class ProcessServiceImpl implements ProcessService {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
 
-        List<Long> remainingTags = process.get().getTags()
-            .stream().map(Tag::getId).collect(Collectors.toList());
+        List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
         tagService.deleteUnusedTags(remainingTags);
     }

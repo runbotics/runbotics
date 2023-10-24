@@ -105,11 +105,12 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             variables: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.General.StartProcess.VariablesPassedToProcess',
+                                    'Process.Details.Modeler.Actions.General.StartProcess.ProcessInput',
                                 ),
                                 type: 'object',
                                 additionalProperties: {
                                     type: 'string',
+                                    subFieldInfo: translate('Process.Details.Modeler.Actions.General.StartProcess.ProcessInput.Tooltip'),
                                 },
                             },
                         },

@@ -1,6 +1,14 @@
 export interface UploadFileParams {
-    fileName: string,
+    filePath: string,
     content: Buffer,
     contentType: string,
-    parentFolderPath?: string,
+}
+
+export interface MoveFileParams {
+    filePath: string;
+    destinationFolderPath: string;
+}
+
+export interface DeleteItemParams {
+    itemPath: string;
 }

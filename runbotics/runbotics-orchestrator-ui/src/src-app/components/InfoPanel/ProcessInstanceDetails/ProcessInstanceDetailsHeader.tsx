@@ -37,7 +37,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
                 <Typography>
                     <Label warning={processInstance.warning} color={getProcessInstanceStatusColor(processInstance.status)}>
                         {/* @ts-ignore */}
-                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
                     </Label>
                 </Typography>
             </Grid>

@@ -15,6 +15,15 @@ export const updateProcess = (
     state.all.byId[action.payload.id] = action.payload;
 };
 
+export const updateProcessPage = (
+    state: ProcessState,
+    action: PayloadAction<IProcess>
+) => {
+    state.all.page.content = state.all.page.content.map((process) =>
+        process.id === action.payload.id ? action.payload : process
+    );
+};
+
 export const setAppliedActions = (
     state: ProcessState,
     action: PayloadAction<string[]>

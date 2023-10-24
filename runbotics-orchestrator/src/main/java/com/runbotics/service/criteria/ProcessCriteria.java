@@ -35,12 +35,6 @@ public class ProcessCriteria implements Serializable, Criteria {
 
     private ZonedDateTimeFilter updated;
 
-    private LongFilter executionsCount;
-
-    private LongFilter successExecutionsCount;
-
-    private LongFilter failureExecutionsCount;
-
     private LongFilter createdById;
 
     private StringFilter createdByName;
@@ -57,9 +51,6 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.isPublic = other.isPublic == null ? null : other.isPublic.copy();
         this.created = other.created == null ? null : other.created.copy();
         this.updated = other.updated == null ? null : other.updated.copy();
-        this.executionsCount = other.executionsCount == null ? null : other.executionsCount.copy();
-        this.successExecutionsCount = other.successExecutionsCount == null ? null : other.successExecutionsCount.copy();
-        this.failureExecutionsCount = other.failureExecutionsCount == null ? null : other.failureExecutionsCount.copy();
         this.createdById = other.createdById == null ? null : other.createdById.copy();
         this.createdByName = other.createdByName == null ? null : other.createdByName.copy();
         this.botCollectionName = other.botCollectionName == null ? null : other.botCollectionName.copy();
@@ -146,51 +137,6 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.updated = updated;
     }
 
-    public LongFilter getExecutionsCount() {
-        return executionsCount;
-    }
-
-    public LongFilter executionsCount() {
-        if (executionsCount == null) {
-            executionsCount = new LongFilter();
-        }
-        return executionsCount;
-    }
-
-    public void setExecutionsCount(LongFilter executionsCount) {
-        this.executionsCount = executionsCount;
-    }
-
-    public LongFilter getSuccessExecutionsCount() {
-        return successExecutionsCount;
-    }
-
-    public LongFilter successExecutionsCount() {
-        if (successExecutionsCount == null) {
-            successExecutionsCount = new LongFilter();
-        }
-        return successExecutionsCount;
-    }
-
-    public void setSuccessExecutionsCount(LongFilter successExecutionsCount) {
-        this.successExecutionsCount = successExecutionsCount;
-    }
-
-    public LongFilter getFailureExecutionsCount() {
-        return failureExecutionsCount;
-    }
-
-    public LongFilter failureExecutionsCount() {
-        if (failureExecutionsCount == null) {
-            failureExecutionsCount = new LongFilter();
-        }
-        return failureExecutionsCount;
-    }
-
-    public void setFailureExecutionsCount(LongFilter failureExecutionsCount) {
-        this.failureExecutionsCount = failureExecutionsCount;
-    }
-
     public LongFilter getCreatedById() {
         return createdById;
     }
@@ -266,9 +212,6 @@ public class ProcessCriteria implements Serializable, Criteria {
             Objects.equals(isPublic, that.isPublic) &&
             Objects.equals(created, that.created) &&
             Objects.equals(updated, that.updated) &&
-            Objects.equals(executionsCount, that.executionsCount) &&
-            Objects.equals(successExecutionsCount, that.successExecutionsCount) &&
-            Objects.equals(failureExecutionsCount, that.failureExecutionsCount) &&
             Objects.equals(createdById, that.createdById) &&
             Objects.equals(createdByName, that.createdByName) &&
             Objects.equals(botCollectionName, that.botCollectionName) &&
@@ -278,20 +221,7 @@ public class ProcessCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            name,
-            isPublic,
-            created,
-            updated,
-            executionsCount,
-            successExecutionsCount,
-            failureExecutionsCount,
-            createdById,
-            createdByName,
-            botCollectionName,
-            tagName
-        );
+        return Objects.hash(id, name, isPublic, created, updated, createdById, createdByName, botCollectionName, tagName);
     }
 
     // prettier-ignore
@@ -303,9 +233,6 @@ public class ProcessCriteria implements Serializable, Criteria {
             (isPublic != null ? "isPublic=" + isPublic + ", " : "") +
             (created != null ? "created=" + created + ", " : "") +
             (updated != null ? "updated=" + updated + ", " : "") +
-            (executionsCount != null ? "executionsCount=" + executionsCount + ", " : "") +
-            (successExecutionsCount != null ? "successExecutionsCount=" + successExecutionsCount + ", " : "") +
-            (failureExecutionsCount != null ? "failureExecutionsCount=" + failureExecutionsCount + ", " : "") +
             (createdById != null ? "createdById=" + createdById + ", " : "") +
             (tagName != null ? "tagName=" + tagName + ", " : "") +
             "}";

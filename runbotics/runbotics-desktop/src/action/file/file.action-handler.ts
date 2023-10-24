@@ -1,13 +1,14 @@
 import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
 import fs from 'fs';
 import { Injectable } from '@nestjs/common';
+import { FileAction } from 'runbotics-common';
 
 export type FileActionRequest =
-| DesktopRunRequest<'file.writeFile', FileWriteFileActionInput>
-| DesktopRunRequest<'file.readFile', FileReadFileActionInput>
-| DesktopRunRequest<'file.appendFile', FileAppendFileActionInput>
-| DesktopRunRequest<'file.createFile', FileCreateFileActionInput>
-| DesktopRunRequest<'file.removeFile', FileRemoveFileActionInput>;
+    | DesktopRunRequest<FileAction.WRITE_FILE, FileWriteFileActionInput>
+    | DesktopRunRequest<FileAction.READ_FILE, FileReadFileActionInput>
+    | DesktopRunRequest<FileAction.APPEND_FILE, FileAppendFileActionInput>
+    | DesktopRunRequest<FileAction.CREATE_FILE, FileCreateFileActionInput>
+    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>;
 
 // ----
 export type FileAppendFileActionInput = {

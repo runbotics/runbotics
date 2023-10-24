@@ -19,6 +19,8 @@ import {
     OneDriveSessionInfo,
     OneDriveFileInfo,
     FileInfo,
+    UsedRangeResponse,
+    WorksheetContentRange,
 } from './excel.types';
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
@@ -34,7 +36,7 @@ export class ExcelService {
         private readonly microsoftGraphService: MicrosoftGraphService,
         private readonly sharePointService: SharePointService,
         private readonly oneDriveService: OneDriveService,
-    ) {}
+    ) { }
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=javascript
@@ -75,9 +77,31 @@ export class ExcelService {
     }
 
     /**
+     * @see https://learn.microsoft.com/en-us/graph/api/worksheet-usedrange?view=graph-rest-1.0&tabs=http
+     */
+    async getWorksheetContent(session: ExcelSession, inputWorksheetName?: Worksheet['name']): Promise<WorksheetContentRange> {
+        const worksheetName = inputWorksheetName ?? session.worksheetName;
+
+        const response = await this.microsoftGraphService.get<UsedRangeResponse>(
+            this.createWorkbookUrl(session, `/worksheets/${worksheetName}/usedRange?$select=address,columnCount,rowCount,cellCount,text`),
+            this.getSessionHeader(session));
+
+        const splitRangeAddress = response.address.split(new RegExp(ActionRegex.EXCEL_SPLIT_ADDRESS));
+
+        return {
+            startCell: splitRangeAddress[1],
+            endCell: splitRangeAddress[2] ?? splitRangeAddress[1],
+            columnCount: response.columnCount,
+            rowCount: response.rowCount,
+            cellCount: response.cellCount,
+            text: response.text,
+        };
+    }
+
+    /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
      */
-    async getCell(session: ExcelSession, cellCoordinates: WorkbookCellCoordinates) {
+    async getCell(session: ExcelSession, cellCoordinates: WorkbookCellCoordinates, isStringExpected: boolean) {
         const url = `/worksheets/${session.worksheetName}/cell(row=${Number(cellCoordinates.row) - 1},column=${
             this.getColumnNumber(cellCoordinates.column) - 1
         })`;
@@ -87,7 +111,7 @@ export class ExcelService {
             this.getSessionHeader(session),
         );
 
-        const cellValue: ExcelCellValue = this.isValueUnclear(response.numberFormat[0][0])
+        const cellValue: ExcelCellValue = isStringExpected || this.isValueUnclear(response.numberFormat[0][0])
             ? response.text[0][0]
             : response.values[0][0];
 
@@ -97,7 +121,7 @@ export class ExcelService {
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-range?view=graph-rest-1.0&tabs=javascript
      */
-    async getCells(session: ExcelSession, address: string): Promise<ExcelCellValue[][]> {
+    async getCells(session: ExcelSession, address: string, isStringExpected: boolean): Promise<ExcelCellValue[][]> {
         const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         const response = await this.microsoftGraphService.get<Range>(
@@ -111,7 +135,7 @@ export class ExcelService {
         for (let row = 0; row < rowCount; row++) {
             const rowValues: ExcelCellValue[] = [];
             for (let column = 0; column < columnCount; column++) {
-                const cellValue = this.isValueUnclear(numberFormat[row][column])
+                const cellValue = isStringExpected || this.isValueUnclear(numberFormat[row][column])
                     ? text[row][column]
                     : values[row][column];
                 rowValues.push(cellValue);
@@ -153,17 +177,17 @@ export class ExcelService {
                 throw new Error(CloudExcelErrorMessage.setCellsIncorrectInput());
             }
         }
-        
+
         const startColumnLetter = startCell.match(ActionRegex.EXCEL_COLUMN_NAME).toString();
         const startColumnNumber = this.getColumnNumber(startColumnLetter);
         const startRow = Number(startCell.match(ActionRegex.EXCEL_ROW_NUMBER));
-        
+
         const endColumnNumber = startColumnNumber + values[0].length - 1;
         const endColumnLetter = this.getColumnLetter(endColumnNumber);
         const endRow = startRow + values.length - 1;
 
         const address = `${startColumnLetter}${startRow}:${endColumnLetter}${endRow}`;
-        
+
         const url = `/worksheets/${session.worksheetName}/range(address='${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
@@ -317,8 +341,7 @@ export class ExcelService {
         const file = await this.sharePointService.getFileByPath({
             siteId: site.id,
             driveId: drive.id,
-            fileName: sessionInfo.fileName,
-            parentFolderPath: sessionInfo.parentFolderPath,
+            filePath: sessionInfo.filePath,
         });
 
         if (!file) {
@@ -334,10 +357,7 @@ export class ExcelService {
     }
 
     private async gatherOneDriveFileInfo(sessionInfo: OneDriveSessionInfo): Promise<OneDriveFileInfo> {
-        const path = sessionInfo.parentFolderPath
-            ? `${sessionInfo.parentFolderPath}/${sessionInfo.fileName}`
-            : sessionInfo.fileName;
-        const file = await this.oneDriveService.getItemByPath(path);
+        const file = await this.oneDriveService.getItemByPath(sessionInfo.filePath);
 
         if (!file) {
             throw new Error('Provided file path does not exist');

@@ -1,66 +1,72 @@
-import React, { FunctionComponent } from 'react';
+import React, { forwardRef } from 'react';
 
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
-import { Box, Typography } from '@mui/material';
-import { red } from '@mui/material/colors';
+import { Typography } from '@mui/material';
 import moment from 'moment';
 
 import HighlightText from '#src-app/components/HighlightText';
-import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledContent } from './ProcessTileContent.styles';
+import { StyledContent, StyledBox, StyledContainer, VerticalLine } from './ProcessTileContent.styles';
 import { ProcessTileContentProps } from './ProcessTileContent.types';
-import { DATE_FORMAT } from '../../Tile.utils';
 
-const ProcessTileContent: FunctionComponent<ProcessTileContentProps> = ({
-    process, searchValue
-}) => {
+const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>(({ process, searchValue }, contentBoxRef) => {
     const { translate } = useTranslations();
 
     return (
-        <StyledContent>
-            <Box>
-                <Typography color="textSecondary" variant="body2">
-                    {translate('Component.Tile.Process.Content.Created')}
-                </Typography>
-                <Typography color="textPrimary" variant="h6">
-                    {moment(process.created).format(DATE_FORMAT)}
-                </Typography>
-            </Box>
-            <Box>
-                <Typography color="textSecondary" variant="body2">
-                    {translate('Component.Tile.Process.Content.Creator')}
-                </Typography>
-                <Typography color="textPrimary" variant="h6">
-                    <HighlightText
-                        text={process.createdBy ? process.createdBy.login : 'RunBotics'}
-                        matchingText={searchValue}
-                    />
-                </Typography>
-            </Box>
-            <Box>
-                <Typography color="textSecondary" variant="body2">
-                    {translate('Component.Tile.Process.Content.Updated')}
-                </Typography>
-                <Typography color="textPrimary" variant="h6">
-                    {moment(process.updated).fromNow()}
-                </Typography>
-            </Box>
-            <Box>
-                <Typography color="textSecondary" variant="body2">
-                    {translate('Component.Tile.Process.Content.Scheduled')}
-                </Typography>
-                <If
-                    condition={process.schedules && process.schedules.length > 0}
-                    else={<RemoveCircleOutlineOutlinedIcon sx={{ color: red[500] }} />}
-                >
-                    <CheckCircleOutlineOutlinedIcon color="success" />
-                </If>
-            </Box>
+        <StyledContent ref={contentBoxRef}>
+            <StyledContainer>
+                <StyledBox>
+                    <Typography color='textPrimary' variant='h6'>
+                        {translate('Component.Tile.Process.Content.LastRun')}
+                    </Typography>
+                    <Typography color='textSecondary' variant='body2'>
+                        {process.lastRun
+                            ? moment(process.lastRun).fromNow()
+                            : translate('Component.Tile.Process.Content.LastRun.Placeholder')
+                        }
+                    </Typography>
+                </StyledBox>
+                <StyledBox>
+                    <Typography color='textPrimary' variant='h6'>
+                        {translate('Component.Tile.Process.Content.Updated')}
+                    </Typography>
+                    <Typography color='textSecondary' variant='body2'>
+                        {moment(process.updated).fromNow()}
+                    </Typography>
+                </StyledBox>
+            </StyledContainer>
+            <VerticalLine/>
+            <StyledContainer>
+                <StyledBox>
+                    <Typography color='textPrimary' variant='h6'>
+                        {translate('Component.Tile.Process.Content.Creator')}
+                    </Typography>
+                    <Typography color='textSecondary' variant='body2'>
+                        <HighlightText
+                            text={process.createdBy
+                                ? process.createdBy.login
+                                : translate('Component.Tile.Process.Content.Creator.Placeholder')
+                            }
+                            matchingText={searchValue}
+                        />
+                    </Typography>
+                </StyledBox>
+                <StyledBox>
+                    <Typography color='textPrimary' variant='h6'>
+                        {translate('Component.Tile.Process.Content.Editor')}
+                    </Typography>
+                    <Typography color='textSecondary' variant='body2'>
+                        {process.editor
+                            ? process.editor.login
+                            : translate('Component.Tile.Process.Content.Editor.Placeholder')
+                        }
+                    </Typography>
+                </StyledBox>
+            </StyledContainer>
         </StyledContent>
     );
-};
+});
+
+ProcessTileContent.displayName = 'ProcessTileContent';
 
 export default ProcessTileContent;

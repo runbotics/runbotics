@@ -21,7 +21,7 @@ import {
     StyledIconWrapper
 } from './DraftJSWidget.styles';
 import { isInfoTooltip } from './DraftJSWidgets.utils';
-import InfoButtonTooltip from '../components/InfoButtonTooltip';
+import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
 
 
 const parseContentToEditorState = (text: string) => {

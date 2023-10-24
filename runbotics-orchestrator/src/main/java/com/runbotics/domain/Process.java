@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
@@ -53,17 +53,11 @@ public class Process implements Serializable {
     @Column(name = "updated")
     private ZonedDateTime updated;
 
-    @Column(name = "executions_count")
-    private Long executionsCount;
+    @Column(name = "last_run")
+    private ZonedDateTime lastRun;
 
     @Column(name = "execution_info")
     private String executionInfo;
-
-    @Column(name = "success_executions_count")
-    private Long successExecutionsCount;
-
-    @Column(name = "failure_executions_count")
-    private Long failureExecutionsCount;
 
     @ManyToOne
     @JoinColumn(name = "created_by_id")
@@ -79,6 +73,10 @@ public class Process implements Serializable {
     @ManyToOne
     @JoinColumn(name = "bot_collection")
     private BotCollection botCollection;
+
+    @ManyToOne
+    @JoinColumn(name = "editor_id")
+    private User editor;
 
     @ManyToMany
     @JoinTable(
@@ -149,9 +147,11 @@ public class Process implements Serializable {
     public Boolean getIsAttended() {
         return this.isAttended;
     }
+
     public Boolean getIsTriggerable() {
         return this.isTriggerable;
     }
+
     public Process isPublic(Boolean isPublic) {
         this.isPublic = isPublic;
         return this;
@@ -166,6 +166,7 @@ public class Process implements Serializable {
         this.isTriggerable = isTriggerable;
         return this;
     }
+
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }
@@ -204,52 +205,13 @@ public class Process implements Serializable {
         this.updated = updated;
     }
 
-    public Long getExecutionsCount() {
-        return this.executionsCount;
-    }
-
-    public Process executionsCount(Long executionsCount) {
-        this.executionsCount = executionsCount;
-        return this;
-    }
-
-    public void setExecutionsCount(Long executionsCount) {
-        this.executionsCount = executionsCount;
-    }
-
-    public Long getSuccessExecutionsCount() {
-        return this.successExecutionsCount;
-    }
-
-    public Process successExecutionsCount(Long successExecutionsCount) {
-        this.successExecutionsCount = successExecutionsCount;
-        return this;
-    }
-
-    public void setSuccessExecutionsCount(Long successExecutionsCount) {
-        this.successExecutionsCount = successExecutionsCount;
-    }
-
-    public Long getFailureExecutionsCount() {
-        return this.failureExecutionsCount;
-    }
-
     public String getExecutionInfo() {
         return this.executionInfo;
-    }
-
-    public Process failureExecutionsCount(Long failureExecutionsCount) {
-        this.failureExecutionsCount = failureExecutionsCount;
-        return this;
     }
 
     public Process executionInfo(String executionInfo) {
         this.executionInfo = executionInfo;
         return this;
-    }
-
-    public void setFailureExecutionsCount(Long failureExecutionsCount) {
-        this.failureExecutionsCount = failureExecutionsCount;
     }
 
     public void setExecutionInfo(String executionInfo) {
@@ -305,6 +267,27 @@ public class Process implements Serializable {
         this.schedules = schedules;
     }
 
+    public ZonedDateTime getLastRun() {
+        return lastRun;
+    }
+
+    public void setLastRun(ZonedDateTime lastRun) {
+        this.lastRun = lastRun;
+    }
+
+    public User getEditor() {
+        return editor;
+    }
+
+    public Process editor(User user) {
+        this.setEditor(user);
+        return this;
+    }
+
+    public void setEditor(User user) {
+        this.editor = user;
+    }
+
     public Set<Tag> getTags() {
         return tags;
     }
@@ -346,14 +329,13 @@ public class Process implements Serializable {
             ", isTriggerable=" + isTriggerable +
             ", created=" + created +
             ", updated=" + updated +
-            ", executionsCount=" + executionsCount +
-            ", successExecutionsCount=" + successExecutionsCount +
-            ", failureExecutionsCount=" + failureExecutionsCount +
+            ", lastRun=" + lastRun +
             ", executionInfo=" + executionInfo +
             ", createdBy=" + createdBy +
             ", system=" + system +
             ", schedules=" + schedules +
             ", botCollection=" + botCollection +
+            ", editor=" + editor +
             ", tags=" + tags +
             '}';
     }

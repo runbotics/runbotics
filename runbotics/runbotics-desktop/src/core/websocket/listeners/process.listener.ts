@@ -36,7 +36,7 @@ export class ProcessListener {
         this.logger.log(`Connected to Scheduler (id: ${this.io.id})`);
         this.queueService
             .getAll()
-            .forEach((element) => this.websocketService.emitMessage(element));
+            .forEach((element) => this.websocketService.emitMessage(element, true));
     }
 
     @OnConnectError()

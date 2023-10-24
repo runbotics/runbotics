@@ -106,7 +106,7 @@ const getVariablesActions: () => Record<string, IBpmnAction> = () => ({
         label: translate(
             'Process.Details.Modeler.Actions.Variables.AssignGlobalVariable.Label'
         ),
-        script: VariableAction.ASSIGN_LIST,
+        script: VariableAction.ASSIGN_GLOBAL,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {

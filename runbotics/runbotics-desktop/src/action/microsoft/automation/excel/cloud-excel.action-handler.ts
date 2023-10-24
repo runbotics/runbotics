@@ -4,8 +4,8 @@ import { StatefulActionHandler } from 'runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
-import * as SharepointTypes from './cloud-excel.types';
-import { CloudExcelErrorMessage } from './cloud-excel.error-message'; 
+import * as CloudExcelTypes from './cloud-excel.types';
+import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
 
@@ -27,7 +27,11 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         this.session = null;
     }
 
-    getCell(input: SharepointTypes.CloudGetExcelCellActionInput) {
+    getWorksheetContent(input: CloudExcelTypes.CloudExcelGetWorksheetContentActionInput) {
+        return this.excelService.getWorksheetContent(this.session, input.worksheetName);
+    }
+
+    getCell(input: CloudExcelTypes.CloudGetExcelCellActionInput) {
         const column = input.cell.match(/[A-Z]+/);
         const row = input.cell.match(/\d+/);
 
@@ -35,13 +39,17 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             throw new Error(CloudExcelErrorMessage.getCellIncorrectInput());
         }
 
-        return this.excelService.getCell(this.session, {
-            column: column.toString(),
-            row: row.toString()
-        });
+        return this.excelService.getCell(
+            this.session,
+            {
+                column: column.toString(),
+                row: row.toString()
+            },
+            input.isStringExpected
+        );
     }
 
-    getCells(input: SharepointTypes.CloudExcelGetCellsActionInput) {
+    getCells(input: CloudExcelTypes.CloudExcelGetCellsActionInput) {
         const startCell = input.startCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
         const endCell = input.endCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
 
@@ -50,26 +58,26 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         }
 
         const range = `${startCell}:${endCell}`;
-        return this.excelService.getCells(this.session, range);
+        return this.excelService.getCells(this.session, range, input.isStringExpected);
     }
 
-    setCell(input: SharepointTypes.CloudExcelSetCellActionInput) {
+    setCell(input: CloudExcelTypes.CloudExcelSetCellActionInput) {
         return this.excelService.setCell(this.session, input.cell, input.content);
     }
 
-    setCells(input: SharepointTypes.CloudExcelSetCellsActionInput) {
+    setCells(input: CloudExcelTypes.CloudExcelSetCellsActionInput) {
         return this.excelService.setCells(this.session, input.startCell, input.values);
     }
 
-    createWorksheet(input: SharepointTypes.CloudExcelDeleteWorksheetActionInput) {
+    createWorksheet(input: CloudExcelTypes.CloudExcelDeleteWorksheetActionInput) {
         return this.excelService.createWorksheet(this.session, input.worksheetName);
     }
 
-    deleteWorksheet(input: SharepointTypes.CloudExcelDeleteWorksheetActionInput) {
+    deleteWorksheet(input: CloudExcelTypes.CloudExcelDeleteWorksheetActionInput) {
         return this.excelService.deleteWorksheet(this.session, input.worksheetName);
     }
 
-    deleteColumns(input: SharepointTypes.CloudExcelDeleteColumnsActionInput) {
+    deleteColumns(input: CloudExcelTypes.CloudExcelDeleteColumnsActionInput) {
         const startColumn = input.startColumn.match(ActionRegex.EXCEL_COLUMN_NAME);
         const endColumn = input.endColumn ? input.endColumn.match(ActionRegex.EXCEL_COLUMN_NAME) : startColumn;
 
@@ -82,7 +90,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
-    deleteRows(input: SharepointTypes.CloudExcelDeleteRowsActionInput) {
+    deleteRows(input: CloudExcelTypes.CloudExcelDeleteRowsActionInput) {
         const { rowRange, worksheet } = input;
 
         if (!rowRange.toString().match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
@@ -112,10 +120,13 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         }
     }
 
-    run(request: SharepointTypes.CloudExcelActionRequest) {
+    run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
                 return this.openFile(request.input);
+            case CloudExcelAction.GET_WORKSHEET_CONTENT:
+                this.checkSession();
+                return this.getWorksheetContent(request.input);
             case CloudExcelAction.GET_CELL:
                 this.checkSession();
                 return this.getCell(request.input);

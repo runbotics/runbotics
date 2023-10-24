@@ -7,14 +7,12 @@ export interface SharePointCommon {
 }
 
 export interface DownloadFileParams extends SharePointCommon {
-    fileName: string;
+    filePath: string;
     localDirectory: string;
-    parentFolderPath?: string;
 }
 
 export interface GetFileByPathParams extends SharePointCommon {
-    fileName: string;
-    parentFolderPath?: string;
+    filePath: string;
     options?: RequestOptions;
 }
 
@@ -24,10 +22,18 @@ export interface CreateFolderParams extends SharePointCommon {
 }
 
 export interface UploadFileParams extends SharePointCommon {
-    fileName: string;
+    filePath: string;
     content: Buffer;
     contentType: string;
-    parentFolderPath?: string;
+}
+
+export interface MoveFileParams extends SharePointCommon {
+    filePath: string;
+    destinationFolderPath: string;
+}
+
+export interface DeleteItemParams extends SharePointCommon {
+    filePath: string;
 }
 
 /**
