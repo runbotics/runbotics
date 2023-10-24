@@ -1,4 +1,4 @@
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import child from 'child_process';
 import { Injectable } from '@nestjs/common';
 import * as VisualBasicTypes from './types';
