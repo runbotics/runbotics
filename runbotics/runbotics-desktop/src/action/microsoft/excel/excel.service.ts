@@ -150,14 +150,14 @@ export class ExcelService {
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/range-update?view=graph-rest-1.0&tabs=javascript
      */
-    setCell(session: ExcelSession, address: string, value: string) {
+    async setCell(session: ExcelSession, address: string, value: string) {
         const url = `/worksheets/${session.worksheetName}/range(address='${address}:${address}')`;
 
         const newRange: WorkbookRangeUpdateBody = {
             values: [[value]],
         };
 
-        return this.microsoftGraphService.patch<Range>(
+        await this.microsoftGraphService.patch<Range>(
             this.createWorkbookUrl(session, url),
             newRange,
             this.getSessionHeader(session),
