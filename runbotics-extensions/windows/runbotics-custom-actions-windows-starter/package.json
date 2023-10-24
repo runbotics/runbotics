@@ -19,7 +19,7 @@
         "microbundle": "0.13.3",
         "typescript": "3.9.9",
         "tslib": "2.3.0",
-        "runbotics-sdk": "1.0.0-SNAPSHOT.1",
+        "@runbotics/runbotics-sdk": "1.0.0-SNAPSHOT.1",
         "@nestjs/common": "^7.6.15",
         "lodash": "4.17.21"
     },
@@ -27,7 +27,7 @@
         "electron-builder": "22.11.7"
     },
     "peerDependencies": {
-        "runbotics-sdk": "1.0.0-SNAPSHOT.1",
+        "@runbotics/runbotics-sdk": "1.0.0-SNAPSHOT.1",
         "@nestjs/common": "^7.6.15",
         "axios": "0.21.1",
         "winax": "3.3.4"

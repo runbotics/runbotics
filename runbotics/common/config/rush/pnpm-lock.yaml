@@ -56,6 +56,9 @@ importers:
       '@nut-tree/nut-js':
         specifier: ^3.1.2
         version: 3.1.2
+      '@runbotics/runbotics-sdk':
+        specifier: workspace:^1.0.0
+        version: link:../runbotics-sdk
       '@stomp/stompjs':
         specifier: ^6.1.0
         version: 6.1.2
@@ -137,9 +140,6 @@ importers:
       runbotics-common:
         specifier: workspace:^1.0.0
         version: link:../runbotics-common
-      runbotics-sdk:
-        specifier: workspace:^1.0.0
-        version: link:../runbotics-sdk
       rxjs:
         specifier: ^7.5.5
         version: 7.8.1

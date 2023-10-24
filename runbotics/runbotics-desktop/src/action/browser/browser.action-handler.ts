@@ -1,6 +1,6 @@
 import { writeFile, writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
-import { StatefulActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';

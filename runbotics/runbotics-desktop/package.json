@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.8.0-SNAPSHOT.116",
+    "version": "2.8.0-SNAPSHOT.117",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -60,7 +60,7 @@
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "runbotics-common": "workspace:^1.0.0",
-        "runbotics-sdk": "workspace:^1.0.0",
+        "@runbotics/runbotics-sdk": "workspace:^1.0.0",
         "rxjs": "^7.5.5",
         "selenium-webdriver": "4.0.0-beta.4",
         "socket.io": "^4.4.1",

@@ -1,4 +1,4 @@
-import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from '@runbotics/runbotics-sdk';
 import { Injectable } from '@nestjs/common';
 import moment from 'moment';
 import { externalAxios } from '#config';

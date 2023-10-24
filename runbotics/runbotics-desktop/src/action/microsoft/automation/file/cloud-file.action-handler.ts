@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 import { fromFile } from 'file-type';
 

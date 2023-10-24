@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import * as vm from 'vm';
 import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';

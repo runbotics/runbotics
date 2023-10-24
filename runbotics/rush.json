@@ -378,7 +378,7 @@
             "shouldPublish": true
         },
         {
-            "packageName": "runbotics-sdk",
+            "packageName": "@runbotics/runbotics-sdk",
             "projectFolder": "runbotics-sdk"
         }
         // {

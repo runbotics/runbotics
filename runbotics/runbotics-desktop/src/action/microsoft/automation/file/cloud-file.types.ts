@@ -1,5 +1,5 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 
 export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>

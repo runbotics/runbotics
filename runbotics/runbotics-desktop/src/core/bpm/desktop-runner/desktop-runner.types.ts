@@ -1,4 +1,4 @@
-import { StatefulActionHandler, StatelessActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { Worker } from 'worker_threads';
 
 // helper abstract class implementation type

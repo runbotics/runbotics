@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ActionRegex, CloudExcelAction } from 'runbotics-common';
-import { StatefulActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
