@@ -1,4 +1,4 @@
-import { ActionRegex, CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
+import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -98,7 +98,6 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.CloudFile.Download.Output.Label'),
                                 type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                     },
@@ -535,20 +534,14 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 enum: ['Users', 'Organization', 'Anonymous'],
                                                 default: 'Users'
                                             },
-                                            itemName: {
+                                            itemPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
-                                                ),
-                                                type: 'string',
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemPath'
                                                 ),
                                                 type: 'string',
                                             }
                                         },
-                                        required: ['siteName', 'listName', 'shareType', 'shareScope', 'itemName'],
+                                        required: ['siteName', 'listName', 'shareType', 'shareScope', 'itemPath'],
                                     },
                                     {
                                         properties: {
@@ -571,20 +564,14 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 enum: ['Users', 'Organization', 'Anonymous'],
                                                 default: 'Users'
                                             },
-                                            itemName: {
+                                            itemPath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ItemName'
-                                                ),
-                                                type: 'string',
-                                            },
-                                            parentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.ParentFolderPath'
+                                                    'Process.Details.Modeler.Actions.CloudFile.ItemPath'
                                                 ),
                                                 type: 'string',
                                             }
                                         },
-                                        required: ['shareType', 'shareScope', 'itemName'],
+                                        required: ['shareType', 'shareScope', 'itemPath'],
                                     },
                                 ],
                             },
@@ -597,8 +584,7 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     siteName: undefined,
                     listName: undefined,
-                    parentFolderPath: undefined,
-                    fileName: undefined,
+                    itemPath: undefined,
                     destinationFolderPath: undefined,
                     shareType: 'View',
                     shareScope: 'Users'

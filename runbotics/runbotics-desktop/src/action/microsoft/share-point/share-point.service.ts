@@ -122,10 +122,10 @@ export class SharePointService {
 
     // https://learn.microsoft.com/en-us/graph/api/driveitem-createlink?view=graph-rest-1.0&tabs=javascript
     async createShareLink({
-        siteId, driveId, shareType, shareScope, itemName, parentFolderPath
+        siteId, driveId, shareType, shareScope, itemPath,
     }: CreateShareLinkParams) {
         const item = await this.getFileByPath({
-            siteId, driveId, fileName: itemName, parentFolderPath
+            siteId, driveId, filePath: itemPath,
         });
         if (!item) {
             throw new Error('Provided file path does not exist');

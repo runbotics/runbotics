@@ -114,11 +114,9 @@ export class OneDriveService {
     async createShareLink({
         shareType,
         shareScope,
-        itemName,
-        parentFolderPath
+        itemPath,
     }: CreateShareLinkParams) {
-        const path = parentFolderPath ? `${parentFolderPath}/${itemName}` : itemName;
-        const item = await this.getItemByPath(path);
+        const item = await this.getItemByPath(itemPath);
         if (!item) {
             throw new Error('Provided file path does not exist');
         }

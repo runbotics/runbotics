@@ -69,8 +69,7 @@ export interface OneDriveCreateShareLink {
     platform: MicrosoftPlatform.OneDrive;
     shareType: string;
     shareScope: string;
-    itemName: string;
-    parentFolderPath?: string;
+    itemPath: string;
 }
 
 export type SharePointCreateShareLink = SharePointCommon & Omit<OneDriveCreateShareLink, 'platform'>;

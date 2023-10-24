@@ -39,8 +39,7 @@ export interface DeleteItemParams extends SharePointCommon {
 export interface CreateShareLinkParams extends SharePointCommon {
     shareType: string;
     shareScope: string;
-    itemName: string;
-    parentFolderPath?: string;
+    itemPath: string;
 }
 
 /**

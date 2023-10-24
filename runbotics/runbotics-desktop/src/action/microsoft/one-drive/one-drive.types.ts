@@ -16,6 +16,5 @@ export interface DeleteItemParams {
 export interface CreateShareLinkParams {
     shareType: string;
     shareScope: string;
-    itemName: string;
-    parentFolderPath?: string;
+    itemPath: string;
 }

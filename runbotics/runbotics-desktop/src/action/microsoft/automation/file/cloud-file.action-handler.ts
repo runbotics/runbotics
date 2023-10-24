@@ -138,8 +138,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             const response = await this.oneDriveService.createShareLink({
                 shareType: input.shareType.toLowerCase(),
                 shareScope: input.shareScope.toLowerCase(),
-                itemName: input.itemName,
-                parentFolderPath: input.parentFolderPath
+                itemPath: input.itemPath,
             });
 
             return response.link.webUrl;
@@ -155,8 +154,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             driveId: drive.id,
             shareType: input.shareType.toLowerCase(),
             shareScope: input.shareScope.toLowerCase(),
-            itemName: input.itemName,
-            parentFolderPath: input.parentFolderPath
+            itemPath: input.itemPath,
         });
 
         return response.link.webUrl;
