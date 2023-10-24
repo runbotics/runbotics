@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class HealthcheckResource {
+
     @GetMapping("/healthcheck")
     public String healthcheck() {
         return "Orchestrator is running";
