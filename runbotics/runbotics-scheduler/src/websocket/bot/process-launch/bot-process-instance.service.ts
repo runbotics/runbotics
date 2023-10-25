@@ -72,6 +72,29 @@ export class BotProcessService {
             await queryRunner.release();
         }
     }
+    async updateInterruptedProcessInstance(processInstance: IProcessInstance) {
+        if (!processInstance.rootProcessInstanceId) {
+            this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
+        }
+        if (isProcessInstanceFinished(processInstance.status)) {
+            await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
+        }
+        await this.updateProcessLastRunTime(processInstance);
+    }
+
+    async updateProcessLastRunTime(processInstance: IProcessInstance) {
+        if (!processInstance?.process?.id) return;
+        const process = await this.processService.findById(processInstance.process.id);
+
+        if (process && !processInstance.created) {
+            const processInstanceFromDb = await this.processInstanceService.findById(processInstance.id);
+            processInstance.created = processInstanceFromDb.created;
+            await this.processService.save(process);
+        } else if (process && processInstance.created) {
+            process.lastRun = processInstance.created;
+            await this.processService.save(process);
+        }
+    }
 
     private setPropertiesFromProcessInstance(processInstance: IProcessInstance) {
         const instanceToSave = new ProcessInstanceEntity();
@@ -143,15 +166,5 @@ export class BotProcessService {
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, newBot);
         }
         return newProcessInstance;
-    }
-
-    private async updateProcessLastRunTime(processInstance: IProcessInstance) {
-        if (!processInstance?.process?.id) return;
-        const process = await this.processService.findById(processInstance.process.id);
-
-        if (process) {
-            process.lastRun = processInstance.created;
-            await this.processService.save(process);
-        }
     }
 }

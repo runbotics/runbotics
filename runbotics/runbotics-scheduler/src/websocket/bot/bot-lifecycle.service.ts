@@ -8,6 +8,7 @@ import { ProcessInstanceEventService } from '#/database/process-instance-event/p
 
 import { BotProcessEventService } from './process-launch/bot-process-instance-event.service';
 import { BotProcessService } from './process-launch/bot-process-instance.service';
+import { Connection } from 'typeorm';
 
 @Injectable()
 export class BotLifecycleService {
@@ -16,6 +17,7 @@ export class BotLifecycleService {
         private readonly processInstanceEventService: ProcessInstanceEventService,
         private readonly botProcessEventService: BotProcessEventService,
         private readonly botProcessService: BotProcessService,
+        private readonly connection: Connection,
     ) { }
     
     private readonly logger = new Logger(BotLifecycleService.name);
@@ -35,31 +37,25 @@ export class BotLifecycleService {
                 disconnectedInstance.status !== ProcessInstanceStatus.INITIALIZING &&
                 disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
             ) return;
-            
-            const completeProcessInstance = await this.processInstanceService
-                .findById(disconnectedInstance.id)
-                .catch<null>(error => {
-                    this.logger.error(`Error getting processInstance: ${error}`);
-                    return null;
-                });
-                
+
             const newProcessInstance: IProcessInstance = {
-                ...completeProcessInstance,
+                ...disconnectedInstance,
                 status: ProcessInstanceStatus.ERRORED, 
                 error: 'Bot has been shut down',
                 updated: dayjs().toISOString(),
             };
+            this.botProcessService.updateProcessLastRunTime(newProcessInstance);
 
-            await this.updateInterruptedProcessInstance(newProcessInstance, bot.installationId);
-            await this.handleProcessInstanceEventInterruption(disconnectedInstance, bot);
+            await this.updateInterruptedProcessInstance(newProcessInstance);
+            await this.handleProcessInstanceEventInterruption(newProcessInstance);
+            await this.processInstanceService.save(newProcessInstance);
         });
     }
 
-    private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance, bot: IBot): Promise<void> {
-        const activeEvents: IProcessInstanceEvent[] = 
-            await this.processInstanceEventService
-                .findActiveByProcessInstanceId(processInstance.id);
-                
+    private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance): Promise<void> {
+        const activeEvents: IProcessInstanceEvent[] = await this.processInstanceEventService
+            .findActiveByProcessInstanceId(processInstance.id);
+
         if(!activeEvents) return;
 
         await activeEvents.forEach(async event => {
@@ -70,19 +66,35 @@ export class BotLifecycleService {
                 finished: processInstance.updated,
                 processInstance,
             };
-            await this.updateInterruptedProcessInstanceEvent(newProcessInstanceEvent, bot);
+            await this.updateInterruptedProcessInstanceEvent(newProcessInstanceEvent, processInstance);
         });
     }
 
-    private async updateInterruptedProcessInstance(processInstance: IProcessInstance, installationId: string) {
+    private async updateInterruptedProcessInstance(processInstance: IProcessInstance) {
         this.logger.log(`Updating interrupted process-instance (${processInstance.id}) after bot disconnection | status: ${processInstance.status}`);
-        await this.botProcessService.updateProcessInstance(installationId, processInstance);
+        await this.botProcessService.updateInterruptedProcessInstance(processInstance);
         this.logger.log(`Success interrupted process-instance (${processInstance.id}) updated | status: ${processInstance.status}`);
     }
-    
-    private async updateInterruptedProcessInstanceEvent(processInstanceEvent: IProcessInstanceEvent, bot: IBot) {
+
+    private async updateInterruptedProcessInstanceEvent(
+        processInstanceEvent: IProcessInstanceEvent, processInstance: IProcessInstance
+    ) {
         this.logger.log(`Updating interrupted process-instance-event (${processInstanceEvent.id}) | status: ${processInstanceEvent.status}`);
-        await this.botProcessEventService.updateProcessInstanceEvent(processInstanceEvent, bot);
+        const queryRunner = this.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            await this.botProcessEventService.updateInterruptedProcessInstanceEvent(queryRunner, processInstanceEvent, processInstance);
+            await queryRunner.commitTransaction();
+        } catch (err: unknown) {
+            this.logger.error(
+                'Process instance event update error: rollback',
+                err
+            );
+            await queryRunner.rollbackTransaction();
+        } finally {
+            await queryRunner.release();
+        }
         this.logger.log(`Success interrupted process-instance-event (${processInstanceEvent.id}) updated | status: ${processInstanceEvent.status}`);
     }
 }
