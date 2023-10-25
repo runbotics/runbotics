@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 import { fromFile } from 'file-type';
 
@@ -11,7 +11,7 @@ import {
     CloudFileActionRequest, CloudFileCreateFolderActionInput,
     CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
     CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
-    CloudFileDeleteItemActionInput
+    CloudFileDeleteItemActionInput, CloudFileCreateShareLink
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
@@ -133,6 +133,33 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         });
     }
 
+    async createShareLink(input: CloudFileCreateShareLink) {
+        if (input.platform === MicrosoftPlatform.OneDrive) {
+            const response = await this.oneDriveService.createShareLink({
+                shareType: input.shareType.toLowerCase(),
+                shareScope: input.shareScope.toLowerCase(),
+                itemPath: input.itemPath,
+            });
+
+            return response.link.webUrl;
+        }
+
+        const { site, drive } = await this.getSharePointListInfo({
+            listName: input.listName,
+            siteName: input.siteName
+        });
+
+        const response = await this.sharePointService.createShareLink({
+            siteId: site.id,
+            driveId: drive.id,
+            shareType: input.shareType.toLowerCase(),
+            shareScope: input.shareScope.toLowerCase(),
+            itemPath: input.itemPath,
+        });
+
+        return response.link.webUrl;
+    }
+
     run(request: CloudFileActionRequest) {
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -145,6 +172,8 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.moveFile(request.input);
             case CloudFileAction.DELETE_ITEM:
                 return this.deleteItem(request.input);
+            case CloudFileAction.CREATE_SHARE_LINK:
+                return this.createShareLink(request.input);
             default:
                 throw new Error('Action not found');
         }

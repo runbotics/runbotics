@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, DialogActions, Paper, Tooltip } from '@mui/material';
 import _ from 'lodash';
 import { Controller, useForm } from 'react-hook-form';

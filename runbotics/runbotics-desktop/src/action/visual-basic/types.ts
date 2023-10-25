@@ -1,4 +1,4 @@
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { VisualBasicAction } from 'runbotics-common';
 
 export type VisualBasicActionRequest = DesktopRunRequest<VisualBasicAction.RUN_SCRIPT, RunScriptActionInput>;

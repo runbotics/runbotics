@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
 

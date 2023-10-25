@@ -1,7 +1,7 @@
 import Axios, { AxiosResponse } from 'axios';
 import fs from 'fs';
 import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import mimeTypes from 'mime-types';
 import { v4 as uuid } from 'uuid';
 

@@ -77,3 +77,33 @@ export interface DriveItem {
     '@microsoft.graph.downloadUrl'?: string;
     '@microsoft.graph.sourceUrl'?: string;
 }
+
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/sharinglink?view=graph-rest-1.0
+ */
+export interface SharingLink {
+    application: unknown;
+    preventsDownload: boolean;
+    type: 'view' | 'edit' | 'embed';
+    scope: 'anonymous' | 'organization' | 'users' | 'existingAccess	';
+    webHtml: string;
+    webUrl: string;
+}
+
+/**
+ * @see https://learn.microsoft.com/en-us/graph/api/resources/permission?view=graph-rest-1.0
+ */
+export interface Permission {
+    id: string;
+    roles: string[];
+    shareId: string;
+    expirationDateTime?: string;
+    hasPassword?: boolean;
+    link?: SharingLink;
+    invitation?: unknown;
+    inheritedFrom?: unknown;
+    grantedTo?: unknown;
+    grantedToIdentities?: unknown;
+    grantedToV2?: unknown;
+    grantedToIdentitiesV2?: unknown;
+}

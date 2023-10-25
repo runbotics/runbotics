@@ -1,6 +1,6 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from 'runbotics-sdk';
+import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { readdirSync, existsSync, Dirent } from 'fs';
 import path from 'path';
 
