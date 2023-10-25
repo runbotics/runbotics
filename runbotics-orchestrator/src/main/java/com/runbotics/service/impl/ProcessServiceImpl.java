@@ -246,7 +246,10 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public List<ProcessDTO> findUserProcesses(User user) {
-        return this.processRepository.findAllByCreatedBy(user).stream().map(processMapper::toDto).collect(Collectors.toList());
+        return this.processRepository.findAllByCreatedBy(user)
+            .stream()
+            .map(processMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     public boolean hasRequesterCreateProcessAccess() {

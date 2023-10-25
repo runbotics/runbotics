@@ -228,17 +228,31 @@ public class ProcessQueryService extends QueryService<Process> {
             return processes;
         }
 
-        return processes.stream().filter(process -> !guestIds.contains(process.getCreatedBy().getId())).collect(Collectors.toList());
+        return processes
+            .stream()
+            .filter(
+                process -> !guestIds.contains(process.getCreatedBy().getId())
+                )
+            .collect(Collectors.toList());
     }
 
     private Map<String, String> createCustomSearchSpecification(ProcessCriteria criteria) {
         Map<String, String> specification = new HashMap<>();
 
-        specification.put(PROCESS_NAME, criteria.getName() != null ? criteria.getName().getContains() : "");
+        specification.put(
+            PROCESS_NAME,
+            criteria.getName() != null ? criteria.getName().getContains() : ""
+        );
 
-        specification.put(PROCESS_CREATED_BY_NAME, criteria.getCreatedByName() != null ? criteria.getCreatedByName().getContains() : "");
+        specification.put(
+            PROCESS_CREATED_BY_NAME,
+            criteria.getCreatedByName() != null ? criteria.getCreatedByName().getContains() : ""
+        );
 
-        specification.put(PROCESS_TAG_NAME, criteria.getTagName() != null ? criteria.getTagName().getContains() : "");
+        specification.put(
+            PROCESS_TAG_NAME,
+            criteria.getTagName() != null ? criteria.getTagName().getContains() : ""
+        );
 
         return specification;
     }
