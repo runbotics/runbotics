@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 
@@ -148,9 +147,11 @@ public class Process implements Serializable {
     public Boolean getIsAttended() {
         return this.isAttended;
     }
+
     public Boolean getIsTriggerable() {
         return this.isTriggerable;
     }
+
     public Process isPublic(Boolean isPublic) {
         this.isPublic = isPublic;
         return this;
@@ -165,6 +166,7 @@ public class Process implements Serializable {
         this.isTriggerable = isTriggerable;
         return this;
     }
+
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }

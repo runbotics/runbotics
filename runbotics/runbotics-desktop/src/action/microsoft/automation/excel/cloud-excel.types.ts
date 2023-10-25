@@ -13,6 +13,7 @@ export type CloudExcelActionRequest =
     | DesktopRunRequest<CloudExcelAction.CREATE_WORKSHEET, CloudExcelCreateWorksheetActionInput>
     | DesktopRunRequest<CloudExcelAction.DELETE_WORKSHEET, CloudExcelDeleteWorksheetActionInput>
     | DesktopRunRequest<CloudExcelAction.DELETE_COLUMNS, CloudExcelDeleteColumnsActionInput>
+    | DesktopRunRequest<CloudExcelAction.DELETE_ROWS, CloudExcelDeleteRowsActionInput>
     | DesktopRunRequest<CloudExcelAction.GET_WORKSHEET_CONTENT, CloudExcelGetWorksheetContentActionInput>;
 
 export type CloudExcelSetCellActionInput = {
@@ -52,3 +53,8 @@ export type CloudExcelDeleteColumnsActionInput = {
 export type CloudExcelGetWorksheetContentActionInput = {
     worksheetName: Worksheet['name'];
 }
+
+export type CloudExcelDeleteRowsActionInput = {
+    rowRange: string | number[];
+    worksheet?: string;
+};

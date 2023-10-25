@@ -12,9 +12,12 @@ export enum ActionRegex {
     VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
-    EXCEL_COLUMN_NAME = '^[a-zA-Z]+$',
+    EXCEL_COLUMN_NAME = '^[a-zA-Z]+',
     EXCEL_ROW_NUMBER = '[\\d]+',
-    EXCEL_SPLIT_ADDRESS = '[!:]'
+    EXCEL_SPLIT_ADDRESS = '[!:]',
+    EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
+    EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
+    EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$'
 }
 
 export enum ACTION_GROUP {
@@ -131,6 +134,7 @@ export enum CloudExcelAction {
     DELETE_WORKSHEET = 'cloudExcel.deleteWorksheet',
     DELETE_COLUMNS = 'cloudExcel.deleteColumns',
     GET_WORKSHEET_CONTENT = 'cloudExcel.getWorksheetContent',
+    DELETE_ROWS = 'cloudExcel.deleteRows',
 }
 
 export enum CloudFileAction {

@@ -12,8 +12,8 @@ import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.mapper.ProcessMapper;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,9 +126,7 @@ public class ProcessQueryService extends QueryService<Process> {
                 .map(processMapper::toDto);
         }
 
-        return processRepository
-            .findAll(specification, page)
-            .map(processMapper::toDto);
+        return processRepository.findAll(specification, page).map(processMapper::toDto);
     }
 
     @Transactional(readOnly = true)
@@ -138,20 +136,24 @@ public class ProcessQueryService extends QueryService<Process> {
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 
         if (hasRequesterRoleAdmin) {
-            return processRepository.findBySearchForAdmin(
-                specification.get(PROCESS_NAME),
-                specification.get(PROCESS_TAG_NAME),
-                specification.get(PROCESS_CREATED_BY_NAME),
-                page
-            ).map(processMapper::toDto);
+            return processRepository
+                .findBySearchForAdmin(
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                )
+                .map(processMapper::toDto);
         } else {
-            return processRepository.findBySearchForUser(
-                user.getId(),
-                specification.get(PROCESS_NAME),
-                specification.get(PROCESS_TAG_NAME),
-                specification.get(PROCESS_CREATED_BY_NAME),
-                page
-            ).map(processMapper::toDto);
+            return processRepository
+                .findBySearchForUser(
+                    user.getId(),
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                )
+                .map(processMapper::toDto);
         }
     }
 
@@ -222,7 +224,7 @@ public class ProcessQueryService extends QueryService<Process> {
         boolean hasRequesterRoleAdmin = userRoles.contains(AuthoritiesConstants.ADMIN);
         List<Long> guestIds = this.userService.findAllGuestIds();
 
-        if(hasRequesterRoleAdmin){
+        if (hasRequesterRoleAdmin) {
             return processes;
         }
 
@@ -230,7 +232,7 @@ public class ProcessQueryService extends QueryService<Process> {
             .stream()
             .filter(
                 process -> !guestIds.contains(process.getCreatedBy().getId())
-            )
+                )
             .collect(Collectors.toList());
     }
 

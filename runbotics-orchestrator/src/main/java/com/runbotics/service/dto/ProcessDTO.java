@@ -1,5 +1,6 @@
 package com.runbotics.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
@@ -10,7 +11,6 @@ import java.util.Set;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * A DTO for the {@link Process} entity.
