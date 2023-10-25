@@ -21,6 +21,7 @@ const actionsGroupsTranslations: typeof englishActionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
     'Process.Details.Modeler.ActionsGroup.Application': 'Aplikacja',
     'Process.Details.Modeler.ActionsGroup.Desktop': 'Pulpit',
+    'Process.Details.Modeler.ActionsGroup.Image': 'Obraz',
     'Process.Details.Modeler.ActionsGroup.External': 'Zewnętrzne',
 };
 
