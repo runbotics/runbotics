@@ -11,6 +11,7 @@ import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
+import getImageActions from './image.actions';
 import getJavascriptActions from './javascript.actions';
 import getJiraActions from './jira.actions';
 import getLoopActions from './loop.actions';
@@ -43,6 +44,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getExcelActions(),
     ...getDesktopActions(),
     ...getVisualBasicActions(),
+    ...getImageActions(),
 };
 
 export default internalBpmnActions;

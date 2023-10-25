@@ -28,6 +28,7 @@ import { SharePointService } from './microsoft/share-point';
 import { MicrosoftGraphService } from './microsoft/microsoft-graph';
 import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
 import { CloudFileActionHandler } from './microsoft/automation/file';
+import { ImageActionHandler } from './image';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -53,7 +54,8 @@ const ALL_ACTION_HANDLERS = [
     MicrosoftGraphService,
     MicrosoftAuthService,
     DesktopActionHandler,
-    VisualBasicActionHandler
+    VisualBasicActionHandler,
+    ImageActionHandler,
 ];
 
 @Module({

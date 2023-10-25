@@ -456,7 +456,7 @@
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value": "Wartość",
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik (maksimum 4mb)",
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Wyłączone",
-    "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Uruchom z tej pozycji",
+    "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Uruchom od tego miejsca",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Nazwa akcji",
     "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title": "{{ system }}",
     "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title": "Działa wyłącznie na botach z systemem {{ system }}",

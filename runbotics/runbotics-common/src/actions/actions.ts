@@ -224,6 +224,10 @@ export enum VisualBasicAction {
     RUN_SCRIPT = 'visualBasic.runScript',
 }
 
+export enum ImageAction {
+    GRAY_SCALE = 'image.grayscale',
+}
+
 export type AllActionIds =
     | VariableAction
     | GeneralAction
@@ -245,4 +249,5 @@ export type AllActionIds =
     | ApplicationAction
     | ExcelAction
     | DesktopAction
-    | VisualBasicAction;
+    | VisualBasicAction
+    | ImageAction;
