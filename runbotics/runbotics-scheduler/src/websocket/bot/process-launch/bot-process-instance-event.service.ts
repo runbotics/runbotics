@@ -16,7 +16,7 @@ import { ProcessInstanceEventEntity } from '#/database/process-instance-event/pr
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 import { Injectable } from '@nestjs/common';
-import { getIsInstanceInterrupted } from './bot-process-instance.service.utils';
+import { isInstanceInterrupted } from './bot-process-instance.service.utils';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -113,8 +113,8 @@ export class BotProcessEventService {
     ) {
         if(!processInstance) return;
 
-        if(getIsInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
-            const error = processInstance?.error;
+        if(isInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
+            const error = processInstance.error;
             const newStatus =
                 processInstance.status === ProcessInstanceStatus.TERMINATED
                     ? ProcessInstanceEventStatus.TERMINATED

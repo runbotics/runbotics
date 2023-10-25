@@ -32,7 +32,7 @@ export class BotLifecycleService {
 
         if(disconnectedInstances.length === 0) return;
 
-        disconnectedInstances.forEach(async (disconnectedInstance) => {
+        await Promise.all(disconnectedInstances.map(async (disconnectedInstance) => {
             if (
                 disconnectedInstance.status !== ProcessInstanceStatus.INITIALIZING &&
                 disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
@@ -49,7 +49,7 @@ export class BotLifecycleService {
             await this.updateInterruptedProcessInstance(newProcessInstance);
             await this.handleProcessInstanceEventInterruption(newProcessInstance);
             await this.processInstanceService.save(newProcessInstance);
-        });
+        }));
     }
 
     private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance): Promise<void> {
@@ -72,7 +72,7 @@ export class BotLifecycleService {
 
     private async updateInterruptedProcessInstance(processInstance: IProcessInstance) {
         this.logger.log(`Updating interrupted process-instance (${processInstance.id}) after bot disconnection | status: ${processInstance.status}`);
-        await this.botProcessService.updateInterruptedProcessInstance(processInstance);
+        await this.botProcessService.handleAdditionalProcessInstanceInfos(processInstance);
         this.logger.log(`Success interrupted process-instance (${processInstance.id}) updated | status: ${processInstance.status}`);
     }
 

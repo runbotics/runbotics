@@ -72,7 +72,7 @@ export class BotProcessService {
             await queryRunner.release();
         }
     }
-    async updateInterruptedProcessInstance(processInstance: IProcessInstance) {
+    async handleAdditionalProcessInstanceInfos(processInstance: IProcessInstance) {
         if (!processInstance.rootProcessInstanceId) {
             this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
         }
@@ -88,7 +88,7 @@ export class BotProcessService {
 
         if (process && !processInstance.created) {
             const processInstanceFromDb = await this.processInstanceService.findById(processInstance.id);
-            processInstance.created = processInstanceFromDb.created;
+            process.lastRun = processInstanceFromDb.created;
             await this.processService.save(process);
         } else if (process && processInstance.created) {
             process.lastRun = processInstance.created;
