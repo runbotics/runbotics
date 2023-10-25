@@ -93,14 +93,16 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     deleteRows(input: CloudExcelTypes.CloudExcelDeleteRowsActionInput) {
         const { rowRange, worksheet } = input;
 
+        if (Array.isArray(rowRange)) {
+            const sortedDescendingRows = sortNumbersDescending(rowRange);
+            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
+        }
+
         if (!rowRange.toString().match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
             throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
         }
 
-        if (Array.isArray(rowRange)) {
-            const sortedDescendingRows = sortNumbersDescending(rowRange);
-            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
-        } else if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
+        if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
             return this.excelService.deleteRows(this.session, rowRange, worksheet);
         } else if (rowRange.match(ActionRegex.EXCEL_DELETE_ROW_INPUT)) {
             const address = `${rowRange}:${rowRange}`;
