@@ -1,4 +1,4 @@
-import { StatefulActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import child from 'child_process';
 import { promisify } from 'util';
 import { RunboticsLogger } from '#logger';

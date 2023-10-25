@@ -8,9 +8,10 @@ import { RunboticsLogger } from '#logger';
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import {
     CreateFolderParams, DownloadFileParams, GetFileByPathParams,
-    Site, UploadFileParams, MoveFileParams, DeleteItemParams
+    Site, UploadFileParams, MoveFileParams, DeleteItemParams,
+    CreateShareLinkParams
 } from './share-point.types';
-import { Drive, DriveItem } from '../common.types';
+import { Drive, DriveItem, Permission } from '../common.types';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
 @Injectable()
@@ -104,6 +105,7 @@ export class SharePointService {
             });
     }
 
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-delete?view=graph-rest-1.0&tabs=javascript
     async deleteItem({
         siteId, driveId, filePath,
     }: DeleteItemParams) {
@@ -116,5 +118,24 @@ export class SharePointService {
 
         return this.microsoftGraphService
             .delete(`/sites/${siteId}/drives/${driveId}/items/${item.id}`);
+    }
+
+    // https://learn.microsoft.com/en-us/graph/api/driveitem-createlink?view=graph-rest-1.0&tabs=javascript
+    async createShareLink({
+        siteId, driveId, shareType, shareScope, itemPath,
+    }: CreateShareLinkParams) {
+        const item = await this.getFileByPath({
+            siteId, driveId, filePath: itemPath,
+        });
+        if (!item) {
+            throw new Error('Provided file path does not exist');
+        }
+
+        console.log(shareType, shareScope);
+        return this.microsoftGraphService
+            .post<Permission>(`/sites/${siteId}/drives/${driveId}/items/${item.id}/createLink`, {
+                type: shareType,
+                scope: shareScope
+            });
     }
 }

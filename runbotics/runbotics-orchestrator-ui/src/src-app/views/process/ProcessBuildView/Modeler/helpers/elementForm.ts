@@ -50,8 +50,11 @@ export const getFormData = (
         defaultParameters.output = Object.entries(
             getOutputParameters(selectedElement)
         ).reduce((acc, [key], index) => {
+            const output = defaultParameters.output;
             acc[
-                Object.keys(defaultParameters.output)[index] || 'variableName'
+                output && Object.keys(defaultParameters.output).length >= index + 1
+                    ? Object.keys(defaultParameters.output)[index]
+                    : 'variableName'
             ] = key;
             return acc;
         }, {});

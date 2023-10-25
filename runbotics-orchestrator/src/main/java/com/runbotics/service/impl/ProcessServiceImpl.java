@@ -15,23 +15,21 @@ import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
 import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
-
-import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -271,8 +269,7 @@ public class ProcessServiceImpl implements ProcessService {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
 
-        List<Long> remainingTags = process.get().getTags()
-            .stream().map(Tag::getId).collect(Collectors.toList());
+        List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
         tagService.deleteUnusedTags(remainingTags);
     }

@@ -36,6 +36,16 @@ export class CloudExcelErrorMessage {
             ${this.getCheckInputTip()}
         `;
     }
+
+    static deleteRowsIncorrectInput() {
+        return `
+            Row range must be one of the following:
+            (a) single row number, e.g. 3,
+            (b) row range, e.g. 1:4,
+            (c) array of rows, e.g. [3, 5, 7].
+            ${this.getCheckInputTip()}
+        `;
+    }
     
     /* Tips */
     private static getCheckInputTip(): string {

@@ -1,6 +1,6 @@
 import { parentPort, workerData } from 'worker_threads';
 import { Type } from '@nestjs/common';
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { get } from 'lodash';
 import { set } from 'lodash';
 import path from 'path';
@@ -33,7 +33,7 @@ console.error = function (message?: any, ...optionalParams: any[]) {
     });
 };
 
-let handlerInstancesByMasterProcessInstanceId = {};
+const handlerInstancesByMasterProcessInstanceId = {};
 
 parentPort.on('message', async (message: { request: DesktopRunRequest<any>; service: any }) => {
     let handlerInstance = get(handlerInstancesByMasterProcessInstanceId, [

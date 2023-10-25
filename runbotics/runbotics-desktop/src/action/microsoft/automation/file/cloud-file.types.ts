@@ -1,12 +1,13 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 
 export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
     | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
     | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
     | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
-    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>;
+    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
+    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>;
 
 interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
@@ -62,3 +63,14 @@ export interface OneDriveDeleteItemActionInput {
 
 export type SharePointDeleteItemActionInput = SharePointCommon & Omit<OneDriveDeleteItemActionInput, 'platform'>;
 export type CloudFileDeleteItemActionInput = OneDriveDeleteItemActionInput | SharePointDeleteItemActionInput;
+
+// CREATE SHARE LINK
+export interface OneDriveCreateShareLink {
+    platform: MicrosoftPlatform.OneDrive;
+    shareType: string;
+    shareScope: string;
+    itemPath: string;
+}
+
+export type SharePointCreateShareLink = SharePointCommon & Omit<OneDriveCreateShareLink, 'platform'>;
+export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreateShareLink;

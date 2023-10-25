@@ -221,17 +221,7 @@ public class ProcessCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-            id,
-            name,
-            isPublic,
-            created,
-            updated,
-            createdById,
-            createdByName,
-            botCollectionName,
-            tagName
-        );
+        return Objects.hash(id, name, isPublic, created, updated, createdById, createdByName, botCollectionName, tagName);
     }
 
     // prettier-ignore

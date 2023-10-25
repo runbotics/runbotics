@@ -16,7 +16,11 @@ const cloudFileActionsTranslations = {
 
     'Process.Details.Modeler.Actions.CloudFile.MoveFile.Label': 'Move file',
 
-    'Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label': 'Delete item',
+    'Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label': 'Delete file/folder',
+
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label': 'Create share link',
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareType': 'Share type',
+    'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareScope': 'Share scope',
 };
 
 export default cloudFileActionsTranslations;

@@ -1,5 +1,5 @@
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { DesktopAction } from 'runbotics-common';
-import { DesktopRunRequest } from 'runbotics-sdk';
 
 export const KEY_REFERENCE = 'Key.';
 

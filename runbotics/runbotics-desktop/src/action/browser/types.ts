@@ -1,4 +1,4 @@
-import { DesktopRunRequest } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 
 export type BrowserActionRequest =
 | DesktopRunRequest<'browser.launch', BrowserLaunchActionInput>

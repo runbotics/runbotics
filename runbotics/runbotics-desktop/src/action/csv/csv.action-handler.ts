@@ -1,4 +1,4 @@
-import { StatelessActionHandler, DesktopRunRequest } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
 import parse from 'csv-parser';
 import { Injectable } from '@nestjs/common';

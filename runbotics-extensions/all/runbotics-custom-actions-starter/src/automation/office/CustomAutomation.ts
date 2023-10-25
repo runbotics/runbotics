@@ -1,6 +1,6 @@
-import { DesktopRunRequest } from 'runbotics-sdk';
-import { StatelessActionHandler } from 'runbotics-sdk';
-import { DesktopRunResponse } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
+import { DesktopRunResponse } from '@runbotics/runbotics-sdk';
 
 export type CustomActionRequest<I> = DesktopRunRequest<any> & {
     script: 'external.custom.hello';

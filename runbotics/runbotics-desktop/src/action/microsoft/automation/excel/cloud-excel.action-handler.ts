@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ActionRegex, CloudExcelAction } from 'runbotics-common';
-import { StatefulActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
 
 import * as CloudExcelTypes from './cloud-excel.types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message';
+
+import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
@@ -88,6 +90,38 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         return this.excelService.deleteColumns(this.session, columnRange);
     }
 
+    deleteRows(input: CloudExcelTypes.CloudExcelDeleteRowsActionInput) {
+        const { rowRange, worksheet } = input;
+
+        if (Array.isArray(rowRange)) {
+            const sortedDescendingRows = sortNumbersDescending(rowRange);
+            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
+        }
+
+        if (!rowRange.toString().match(ActionRegex.EXCEL_DELETE_ROWS_INPUT)) {
+            throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+        }
+
+        if (rowRange.match(ActionRegex.EXCEL_ROW_RANGE)) {
+            return this.excelService.deleteRows(this.session, rowRange, worksheet);
+        } else if (rowRange.match(ActionRegex.EXCEL_DELETE_ROW_INPUT)) {
+            const address = `${rowRange}:${rowRange}`;
+            return this.excelService.deleteRows(this.session, address, worksheet);
+        } else {
+            let rows: number[];
+            try {
+                rows = JSON.parse(rowRange);
+                if (!Array.isArray(rows)) {
+                    throw new Error();
+                }
+            } catch (e) {
+                throw new Error(CloudExcelErrorMessage.deleteRowsIncorrectInput());
+            }
+            const sortedDescendingRows = sortNumbersDescending(rows);
+            return this.deleteRowsOneByOne(this.session, sortedDescendingRows, worksheet);
+        }
+    }
+
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
@@ -116,6 +150,9 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
             case CloudExcelAction.DELETE_COLUMNS:
                 this.checkSession();
                 return this.deleteColumns(request.input);
+            case CloudExcelAction.DELETE_ROWS:
+                this.checkSession();
+                return this.deleteRows(request.input);
             case CloudExcelAction.CLOSE_SESSION:
                 return this.closeSession();
             default:
@@ -130,6 +167,13 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     private checkSession() {
         if (this.session === null) {
             throw new Error('There is no Cloud Excel session. Open file before');
+        }
+    }
+
+    async deleteRowsOneByOne(session: ExcelSession, array: number[], worksheet: string) {
+        for (const row of array) {
+            const address = `${row}:${row}`;
+            await this.excelService.deleteRows(session, address, worksheet);
         }
     }
 }
