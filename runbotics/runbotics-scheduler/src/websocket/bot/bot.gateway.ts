@@ -22,6 +22,7 @@ import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
+import { NestMailerService } from '#/nest-mailer/nest-mailer.service';
 
 type BotId = number;
 type SocketId = string;
@@ -42,7 +43,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botService: BotService,
         private readonly botLifecycleService: BotLifecycleService,
         private readonly guestService: GuestService,
-    ) { }
+        private readonly nestMailerService: NestMailerService,
+    ) {}
 
     get connectedBotsCount() {
         return this.connections.size;
@@ -84,6 +86,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
         this.connections.delete(bot.id);
+
+        await this.nestMailerService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)
