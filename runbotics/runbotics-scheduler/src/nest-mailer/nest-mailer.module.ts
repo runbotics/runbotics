@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { NestMailerService } from './nest-mailer.service';
 import { UserModule } from '#/database/user/user.module';
+import { Logger } from '#/utils/logger';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { UserModule } from '#/database/user/user.module';
             }),
         }),
         UserModule,
+        Logger,
     ],
     providers: [NestMailerService],
     exports: [NestMailerService],
