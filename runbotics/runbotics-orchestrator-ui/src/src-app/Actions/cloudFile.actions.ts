@@ -162,40 +162,40 @@ const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
                                                 ),
                                                 type: 'string',
                                             },
-                                            localParentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.Upload.LocalParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
                                             filePath: {
                                                 title: translate(
                                                     'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
+                                            cloudDirectoryPath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.Upload.CloudDirectoryPath',
+                                                ),
+                                                type: 'string',
+                                            },
                                         },
-                                        required: ['siteName', 'listName', 'filePath'],
+                                        required: ['siteName', 'listName', 'filePath', 'cloudDirectoryPath'],
                                     },
                                     {
                                         properties: {
                                             platform: {
                                                 enum: [MicrosoftPlatform.OneDrive],
                                             },
-                                            localParentFolderPath: {
-                                                title: translate(
-                                                    'Process.Details.Modeler.Actions.CloudFile.Upload.LocalParentFolderPath',
-                                                ),
-                                                type: 'string',
-                                            },
                                             filePath: {
                                                 title: translate(
                                                     'Process.Details.Modeler.Actions.CloudFile.FilePath',
                                                 ),
                                                 type: 'string',
                                             },
+                                            cloudDirectoryPath: {
+                                                title: translate(
+                                                    'Process.Details.Modeler.Actions.CloudFile.Upload.CloudDirectoryPath',
+                                                ),
+                                                type: 'string',
+                                            },
                                         },
-                                        required: ['filePath'],
+                                        required: ['filePath', 'cloudDirectoryPath'],
                                     },
                                 ],
                             },

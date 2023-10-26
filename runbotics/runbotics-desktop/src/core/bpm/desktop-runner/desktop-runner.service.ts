@@ -32,6 +32,7 @@ import {
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
+import { ImageActionHandler } from '#action/image';
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
@@ -67,6 +68,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly variableActionHandler: VariablesActionHandler,
         private readonly desktopActionHandler: DesktopActionHandler,
         private readonly visualBasicActionHandler: VisualBasicActionHandler,
+        private readonly imageActionHandler: ImageActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -88,7 +90,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('cloudFile', cloudFileActionHandler)
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler)
-            .set('visualBasic', visualBasicActionHandler);
+            .set('visualBasic', visualBasicActionHandler)
+            .set('image', imageActionHandler);
     }
 
     async onModuleInit() {

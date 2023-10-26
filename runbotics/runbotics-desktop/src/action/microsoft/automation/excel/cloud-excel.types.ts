@@ -17,7 +17,7 @@ export type CloudExcelActionRequest =
     | DesktopRunRequest<CloudExcelAction.GET_WORKSHEET_CONTENT, CloudExcelGetWorksheetContentActionInput>;
 
 export type CloudExcelSetCellActionInput = {
-    content: string;
+    value: string;
     cell: string;
 };
 

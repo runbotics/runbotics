@@ -2,6 +2,7 @@ import cloudFileActionsTranslations from './cloudFile';
 import commonActionsTranslations from './common';
 import excelActionsTranslations from './excel';
 import actionGroupsTranslations from './groups';
+import imageActionsTranslations from './image';
 import microsoftTranslations from './microsoft';
 
 const processActionsTranslations = {
@@ -10,6 +11,7 @@ const processActionsTranslations = {
     ...actionGroupsTranslations,
     ...cloudFileActionsTranslations,
     ...microsoftTranslations,
+    ...imageActionsTranslations,
 };
 
 export default processActionsTranslations;

@@ -11,7 +11,7 @@ const cloudFileActionsTranslations: typeof englishCloudFileActionsTranslations =
     'Process.Details.Modeler.Actions.CloudFile.Download.Output.Label': 'Ścieżka absolutna pliku',
 
     'Process.Details.Modeler.Actions.CloudFile.Upload.Label': 'Prześlij plik',
-    'Process.Details.Modeler.Actions.CloudFile.Upload.LocalParentFolderPath': 'Ścieżka do przesyłanego folderu',
+    'Process.Details.Modeler.Actions.CloudFile.Upload.CloudDirectoryPath': 'Ścieżka do przesyłanego folderu',
 
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label': 'Stwórz folder',
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.FolderName': 'Nazwa folderu',

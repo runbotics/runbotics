@@ -406,12 +406,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
         label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCell.Label'),
         script: CloudExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
-        output: {
-            assignVariables: true,
-            outputMethods: {
-                variableName: '${content.output[0]}',
-            },
-        },
         form: {
             schema: {
                 type: 'object',
@@ -420,8 +414,8 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            content: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Content'),
+                            value: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),
                                 type: 'string',
                             },
                             cell: {
@@ -429,40 +423,16 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                         },
-                        required: ['content', 'cell'],
-                    },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {
-                            variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
-                                type: 'string',
-                                pattern: ActionRegex.VARIABLE_NAME,
-                            },
-                        },
-                    },
+                        required: ['value', 'cell'],
+                    }
                 },
             },
-            uiSchema: {
-                'ui:order': ['input', 'output'],
-                output: {
-                    variableName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
-                        },
-                    },
-                },
-            },
+            uiSchema: {},
             formData: {
                 input: {
-                    content: undefined,
+                    value: undefined,
                     cell: undefined,
-                },
-                output: {
-                    variableName: undefined,
-                },
+                }
             },
         },
     },

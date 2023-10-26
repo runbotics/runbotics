@@ -11,6 +11,7 @@ import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
+import getImageActions from '#src-app/Actions/image.actions';
 import getJavascriptActions from '#src-app/Actions/javascript.actions';
 import getJiraActions from '#src-app/Actions/jira.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
@@ -101,6 +102,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.File'
             ),
             items: Object.values(getFileActions())
+        },
+        image: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Image'),
+            items: Object.values(getImageActions()),
         },
         csv: {
             label: translate(
