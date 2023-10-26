@@ -9,7 +9,7 @@ const cloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.Download.Output.Label': 'Absolute file path',
 
     'Process.Details.Modeler.Actions.CloudFile.Upload.Label': 'Upload file',
-    'Process.Details.Modeler.Actions.CloudFile.Upload.LocalParentFolderPath': 'Bot file\'s directory path',
+    'Process.Details.Modeler.Actions.CloudFile.Upload.CloudDirectoryPath': 'Cloud directory path',
 
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label': 'Create folder',
     'Process.Details.Modeler.Actions.CloudFile.CreateFolder.FolderName': 'Folder name',

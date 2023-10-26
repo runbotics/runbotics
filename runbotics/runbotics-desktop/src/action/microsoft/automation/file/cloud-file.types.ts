@@ -29,7 +29,7 @@ export type CloudFileDownloadFileActionInput = OneDriveDownloadFileActionInput |
 export interface OneDriveUploadFileActionInput {
     platform: MicrosoftPlatform.OneDrive;
     filePath: string;
-    localParentFolderPath?: string;
+    cloudDirectoryPath: string;
 }
 
 export type SharePointUploadFileActionInput = SharePointCommon & Omit<OneDriveUploadFileActionInput, 'platform'>;

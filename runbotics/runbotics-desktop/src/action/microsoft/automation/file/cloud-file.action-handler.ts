@@ -15,6 +15,7 @@ import {
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
+import path from 'path';
 
 @Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
@@ -49,16 +50,18 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     async uploadFile(input: CloudFileUploadFileActionInput) {
-        const fileName = input.filePath.split('/').at(-1);
-        const localPath = `${input.localParentFolderPath ?? this.serverConfigService.tempFolderPath}/${fileName}`;
-        const { content, contentType } = await this.readLocalFile(localPath);
+        const fileName = input.filePath.split(path.sep).at(-1);
+        const { content, contentType } = await this.readLocalFile(input.filePath);
+
+        const cloudFilePath = `${input.cloudDirectoryPath}/${fileName}`;
 
         if (input.platform === MicrosoftPlatform.OneDrive) {
-            return this.oneDriveService.uploadFile({
-                filePath: input.filePath,
+            await this.oneDriveService.uploadFile({
+                filePath: cloudFilePath,
                 content,
                 contentType,
             });
+            return cloudFilePath;
         }
 
         const { site, drive } = await this.getSharePointListInfo({
@@ -66,13 +69,14 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             siteName: input.siteName,
         });
 
-        return this.sharePointService.uploadFile({
+        await this.sharePointService.uploadFile({
             siteId: site.id,
             driveId: drive.id,
-            filePath: input.filePath,
+            filePath: cloudFilePath,
             content,
             contentType,
         });
+        return cloudFilePath;
     }
 
     async createFolder(input: CloudFileCreateFolderActionInput) {
