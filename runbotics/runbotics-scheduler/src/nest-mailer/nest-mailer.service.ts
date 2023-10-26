@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
 import { IBot } from 'runbotics-common';
+import { Logger } from '#/utils/logger';
 
 export type SendMailInput = {
     to: string;
@@ -15,6 +16,7 @@ const NOTIFICATION_MAIL_SUBJECT = 'RunBotics Healthcheck Notification 🔧';
 
 @Injectable()
 export class NestMailerService {
+    private readonly logger = new Logger(NestMailerService.name);
 
     constructor(
         private readonly mailerService: MailerService,
@@ -44,7 +46,10 @@ export class NestMailerService {
             ];
         }
 
-        await this.mailerService.sendMail(sendMailOptions);
+        await this.mailerService.sendMail(sendMailOptions)
+            .catch(error => {
+                this.logger.error(`Failed to send the mail with error: ${error.message}`);
+            });
     }
 
     public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
