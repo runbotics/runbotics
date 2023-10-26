@@ -6,7 +6,7 @@ const COMMON_PROCESS_INSTANCE_FIELDS = [
 ];
 
 const COMPLETED_PROCESS_INSTANCE_FIELDS = ['status', 'updated', 'output', ...COMMON_PROCESS_INSTANCE_FIELDS];
-const STARTING_PROCESS_INSTANCE_FIELDS = ['input', 'created', ...COMMON_PROCESS_INSTANCE_FIELDS];
+const STARTING_PROCESS_INSTANCE_FIELDS = ['created', ...COMMON_PROCESS_INSTANCE_FIELDS];
 
 export const isProcessInstanceFinished = (
     status: ProcessInstanceStatus

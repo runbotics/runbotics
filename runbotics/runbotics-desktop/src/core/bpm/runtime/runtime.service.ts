@@ -3,6 +3,7 @@ import {
     Inject,
     Injectable,
     OnApplicationBootstrap,
+    OnModuleDestroy,
 } from '@nestjs/common';
 import {
     BpmnEngine,
@@ -45,7 +46,7 @@ import { LoopHandlerService } from '../loop-handler';
 import { ServerConfigService } from '#config';
 
 @Injectable()
-export class RuntimeService implements OnApplicationBootstrap {
+export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     engines: Record<string, BpmnEngine> = {};
     processInstances: Record<string, BpmnProcessInstance> = {};
     private readonly logger = new RunboticsLogger(RuntimeService.name);
@@ -63,6 +64,23 @@ export class RuntimeService implements OnApplicationBootstrap {
 
     onApplicationBootstrap() {
         this.monitor();
+    }
+
+    onModuleDestroy() {
+        for (const processInstance of Object.values(this.processInstances)) {
+            this.logger.log(
+                `Destroying running process instance ${processInstance.id}`
+            );
+            this.processEventBus.publish({
+                processInstanceId: processInstance.id,
+                eventType: ProcessInstanceStatus.ERRORED,
+                processInstance: {
+                    ...processInstance,
+                    status: ProcessInstanceStatus.ERRORED,
+                    error: 'Bot has been shut down',
+                },
+            });
+        }
     }
 
     processChange(): IBpmnEngineEvent<IProcessEventData> {

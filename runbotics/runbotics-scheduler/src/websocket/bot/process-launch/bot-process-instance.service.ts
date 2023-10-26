@@ -50,7 +50,7 @@ export class BotProcessService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
-
+            
             if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
@@ -85,12 +85,8 @@ export class BotProcessService {
     async updateProcessLastRunTime(processInstance: IProcessInstance) {
         if (!processInstance?.process?.id) return;
         const process = await this.processService.findById(processInstance.process.id);
-
-        if (process && !processInstance.created) {
-            const processInstanceFromDb = await this.processInstanceService.findById(processInstance.id);
-            process.lastRun = processInstanceFromDb.created;
-            await this.processService.save(process);
-        } else if (process && processInstance.created) {
+        
+        if (process && processInstance.created) {
             process.lastRun = processInstance.created;
             await this.processService.save(process);
         }
@@ -135,7 +131,6 @@ export class BotProcessService {
         const newProcessInstance = { ...instanceToSave };
         const dbProcessInstance = await this.processInstanceService.findById(instanceToSave.id);
         if (dbProcessInstance) {
-            newProcessInstance.created = dbProcessInstance.created;
             newProcessInstance.user = dbProcessInstance.user;
         }
         return { newProcessInstance, bot: newProcessInstance.bot };
@@ -152,14 +147,13 @@ export class BotProcessService {
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
             newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
-            await this.updateProcessLastRunTime(newProcessInstance);
+        } else if (processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+            await this.updateProcessLastRunTime(processInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
-            newProcessInstance.input = processInstance.input;
             if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
-            await this.updateProcessLastRunTime(processInstance);
         }
         if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
