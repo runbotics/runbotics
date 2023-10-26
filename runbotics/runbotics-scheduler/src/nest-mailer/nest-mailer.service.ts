@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IBot } from 'runbotics-common';
+import { IBot, IProcess, IProcessInstance } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 
 export type SendMailInput = {
@@ -57,6 +57,14 @@ export class NestMailerService {
             to: bot.user.email ?? '',
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\n\nBest regards,\nRunBotics`,
+        });
+    }
+
+    public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
+        await this.sendMail({
+            to: process.createdBy.email ?? '',
+            subject: NOTIFICATION_MAIL_SUBJECT,
+            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
         });
     }
 }

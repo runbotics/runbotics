@@ -14,6 +14,7 @@ import { UiGateway } from './ui/ui.gateway';
 import { BotLifecycleService } from './bot/bot-lifecycle.service';
 import { Logger } from 'src/utils/logger';
 import { NestMailerModule } from '#/nest-mailer/nest-mailer.module';
+import { ProcessModule } from '#/database/process/process.module';
 
 @Global()
 @Module({
@@ -24,6 +25,7 @@ import { NestMailerModule } from '#/nest-mailer/nest-mailer.module';
         QueueModule,
         MicrosoftModule,
         NestMailerModule,
+        ProcessModule,
     ],
     providers: [
         BotWebSocketGateway, 

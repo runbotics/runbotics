@@ -23,6 +23,7 @@ import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
 import { NestMailerService } from '#/nest-mailer/nest-mailer.service';
+import { ProcessService } from '#/database/process/process.service';
 
 type BotId = number;
 type SocketId = string;
@@ -44,6 +45,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botLifecycleService: BotLifecycleService,
         private readonly guestService: GuestService,
         private readonly nestMailerService: NestMailerService,
+        private readonly processService: ProcessService,
     ) {}
 
     get connectedBotsCount() {
@@ -113,6 +115,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
             await this.guestService.decrementExecutionsCount(processInstance.user.id);
             this.logger.log('Restored user\'s executions-count because of process interruption');
+
+            const process = await this.processService.findById(processInstance.process.id);
+
+            await this.nestMailerService.sendProcessFailureNotificationMail(process, processInstance);
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
