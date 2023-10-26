@@ -62,7 +62,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     }
 
     setCell(input: CloudExcelTypes.CloudExcelSetCellActionInput) {
-        return this.excelService.setCell(this.session, input.cell, input.content);
+        return this.excelService.setCell(this.session, input.cell, input.value);
     }
 
     setCells(input: CloudExcelTypes.CloudExcelSetCellsActionInput) {

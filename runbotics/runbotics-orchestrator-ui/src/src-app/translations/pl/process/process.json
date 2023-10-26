@@ -318,7 +318,7 @@
     "Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell": "Komórka końcowa",
     "Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell.Info": "Adres komórki końcowej, np. H5",
     "Process.Details.Modeler.Actions.CloudExcel.SetCell.Label": "Ustaw komórkę",
-    "Process.Details.Modeler.Actions.SharePointExcel.SetCell.Content": "Zawartość komórki",
+    "Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value": "Zawartość komórki",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell": "Adres komórki",
     "Process.Details.Modeler.Actions.CloudExcel.SetCells.Label": "Ustaw komórki",
     "Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell": "Komórka początkowa",
