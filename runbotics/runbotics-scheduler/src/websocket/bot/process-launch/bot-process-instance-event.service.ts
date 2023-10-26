@@ -72,7 +72,7 @@ export class BotProcessEventService {
                     return null;
                 });
 
-            await this.updateInterruptedProcessInstanceEvent(queryRunner, processInstanceEvent, processInstance);
+            await this.updateProcessInstanceEventParams(queryRunner, processInstanceEvent, processInstance);
             await queryRunner.commitTransaction();
 
             const updatedProcessInstanceEvent =
@@ -108,7 +108,7 @@ export class BotProcessEventService {
         }
     }
 
-    async updateInterruptedProcessInstanceEvent(
+    async updateProcessInstanceEventParams(
         queryRunner: QueryRunner, processInstanceEvent: IProcessInstanceEvent, processInstance: IProcessInstance
     ) {
         if(!processInstance) return;

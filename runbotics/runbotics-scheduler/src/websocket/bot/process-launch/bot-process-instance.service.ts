@@ -37,7 +37,7 @@ export class BotProcessService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const updatedLastInstanceRunTime = await this.updateLastRunTime(processInstance, newProcessInstance, bot);
+            const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
             const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastInstanceRunTime.id } });
 
             await queryRunner.manager.createQueryBuilder()
@@ -136,7 +136,7 @@ export class BotProcessService {
         return { newProcessInstance, bot: newProcessInstance.bot };
     }
 
-    private async updateLastRunTime(
+    private async updateProcessParams(
         processInstance: IProcessInstance,
         instanceToSave: IProcessInstance,
         bot: IBot,

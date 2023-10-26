@@ -84,7 +84,7 @@ export class BotLifecycleService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            await this.botProcessEventService.updateInterruptedProcessInstanceEvent(queryRunner, processInstanceEvent, processInstance);
+            await this.botProcessEventService.updateProcessInstanceEventParams(queryRunner, processInstanceEvent, processInstance);
             await queryRunner.commitTransaction();
         } catch (err: unknown) {
             this.logger.error(
