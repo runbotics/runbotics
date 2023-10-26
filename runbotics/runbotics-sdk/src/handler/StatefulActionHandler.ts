@@ -5,7 +5,7 @@ import { DesktopRunResponse } from "./DesktopRunResponse";
 export abstract class StatefulActionHandler {
     abstract run(
         request: DesktopRunRequest
-    ): Promise<DesktopRunResponse> | Promise<void>;
+    ): Promise<DesktopRunResponse | void>;
 
     getType(): string {
         return ActionHandler.Stateful;
