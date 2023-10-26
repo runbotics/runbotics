@@ -62,7 +62,8 @@
         "lodash": "^4.17.19",
         "mime-types": "~2.1.35",
         "@nestjs/schedule": "^2.1.0",
-        "cross-fetch": "^3.1.5"
+        "cross-fetch": "^3.1.5",
+        "@nestjs-modules/mailer": "1.8.1"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",

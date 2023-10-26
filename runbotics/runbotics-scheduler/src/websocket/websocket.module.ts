@@ -13,6 +13,7 @@ import { WebsocketService } from './websocket.service';
 import { UiGateway } from './ui/ui.gateway';
 import { BotLifecycleService } from './bot/bot-lifecycle.service';
 import { Logger } from 'src/utils/logger';
+import { NestMailerModule } from '#/nest-mailer/nest-mailer.module';
 
 @Global()
 @Module({
@@ -22,6 +23,7 @@ import { Logger } from 'src/utils/logger';
         MailModule,
         QueueModule,
         MicrosoftModule,
+        NestMailerModule,
     ],
     providers: [
         BotWebSocketGateway, 
