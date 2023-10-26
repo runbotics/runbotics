@@ -1,6 +1,6 @@
 import { FC, useRef, useState, useEffect } from 'react';
 
-import { Box, Divider, CardHeader } from '@mui/material';
+import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -11,6 +11,7 @@ import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
 
+import { AttendedProcessModal } from '#src-app/components/AttendedProcessModal';
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
@@ -18,6 +19,7 @@ import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslation
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
+import { schedulerActions } from '#src-app/store/slices/Scheduler';
 import { ProcessTab } from '#src-app/utils/process-tab';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
@@ -29,6 +31,7 @@ import ProcessTileFooter from './ProcessTileFooter';
 import ProcessTileTagList from './ProcessTileTagList';
 import Tile from '..';
 
+// eslint-disable-next-line max-lines-per-function
 const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -47,17 +50,20 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         processInstance && isProcessInstanceActive(processInstance.status)
     );
 
+    const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
+    const [isAttendedModalVisible, setIsAttendedModalVisible] = useState(false);
+
     const handleRedirect = () => {
         if (hasBuildTabAccess) router.push(buildProcessUrl(process, ProcessTab.BUILD));
         else router.push(buildProcessUrl(process, ProcessTab.RUN));
     };
 
-    const handleProcessRun = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-
+    const handleProcessRun = (executionInfo?: Record<string, any>) => {
         dispatch(processActions.startProcess({
-            processId: process.id
+            processId: process.id,
+            ...((isProcessAttended) && {
+                executionInfo,
+            })
         }))
             .then(unwrapResult)
             .then((response) => {
@@ -84,6 +90,41 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                     { variant: 'error' }
                 );
             });
+
+        if (isProcessAttended) setIsAttendedModalVisible(false);
+    };
+
+    const handleProcessTerminate = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+
+        const processName = process.name;
+
+        dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
+            .then(() => {
+                enqueueSnackbar(
+                    translate('Scheduler.ActiveProcess.Terminate.Success', {
+                        processName,
+                    }), { variant: 'success' }
+                );
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                        processName,
+                    }), { variant: 'error' }
+                );
+            });
+    };
+
+    const handleRunButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+
+        if (isProcessAttended) {
+            setIsAttendedModalVisible(true);
+        }
+        else {
+            handleProcessRun();
+        }
     };
 
     useEffect(() => {
@@ -94,28 +135,41 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
     return (
         <Tile>
+            <AttendedProcessModal
+                process={process}
+                open={isAttendedModalVisible}
+                setOpen={setIsAttendedModalVisible}
+                onSubmit={handleProcessRun}
+            />
             <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader
                     avatar={
-                        <RunBox
-                            onClick={handleProcessRun}
-                            disabled={isProcessActive}
+                        <If
+                            condition={isProcessActive}
+                            else={
+                                <RunBox
+                                    onClick={handleRunButtonClick}
+                                >
+                                    <Tooltip title={translate('Component.Tile.Process.Header.Tooltip.RunProcess')}>
+                                        <Image
+                                            src={PlayIcon}
+                                            alt={translate('Component.Tile.Process.Header.Alt.PlayIcon')}
+                                        />
+                                    </Tooltip>
+                                </RunBox>
+                            }
                         >
-                            <If
-                                condition={isProcessActive}
-                                else={
-                                    <Image
-                                        src={PlayIcon}
-                                        alt={translate('Component.Tile.Process.Header.Alt.PlayIcon')}
-                                    />
-                                }
+                            <RunBox
+                                onClick={handleProcessTerminate}
                             >
-                                <Image
-                                    src={SquareIcon}
-                                    alt={translate('Component.Tile.Process.Header.Alt.SquareIcon')}
-                                />
-                            </If>
-                        </RunBox>
+                                <Tooltip title={translate('Component.Tile.Process.Header.Tooltip.AbortProcess')}>
+                                    <Image
+                                        src={SquareIcon}
+                                        alt={translate('Component.Tile.Process.Header.Alt.SquareIcon')}
+                                    />
+                                </Tooltip>
+                            </RunBox>
+                        </If>
                     }
                     title={
                         <HighlightText

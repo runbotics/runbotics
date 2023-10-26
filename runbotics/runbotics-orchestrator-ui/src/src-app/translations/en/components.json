@@ -18,6 +18,8 @@
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Play icon",
     "Component.Tile.Process.Header.Alt.SquareIcon": "Square icon",
+    "Component.Tile.Process.Header.Tooltip.RunProcess": "Run process",
+    "Component.Tile.Process.Header.Tooltip.AbortProcess": "Abort process",
     "Component.Tile.Process.Update.Success": "Successfully updated {{ name }} process",
     "Component.Tile.Process.Update.Failed": "Updating process {{ name }} failed",
     "Component.Tile.Process.Settings.AriaLabel": "settings",
