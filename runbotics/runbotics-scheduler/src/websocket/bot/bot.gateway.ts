@@ -22,7 +22,7 @@ import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
 import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
-import { NestMailerService } from '#/nest-mailer/nest-mailer.service';
+import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/database/process/process.service';
 
 type BotId = number;
@@ -44,7 +44,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botService: BotService,
         private readonly botLifecycleService: BotLifecycleService,
         private readonly guestService: GuestService,
-        private readonly nestMailerService: NestMailerService,
+        private readonly mailService: MailService,
         private readonly processService: ProcessService,
     ) {}
 
@@ -89,7 +89,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.connections.delete(bot.id);
 
-        await this.nestMailerService.sendBotDisconnectionNotificationMail(bot, installationId);
+        await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -118,7 +118,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
             const process = await this.processService.findById(processInstance.process.id);
 
-            await this.nestMailerService.sendProcessFailureNotificationMail(process, processInstance);
+            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);

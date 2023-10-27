@@ -34,3 +34,10 @@ export interface EmailTriggerConfig {
     mailbox: string | undefined;
     domainWhitelist: string[];
 }
+
+export interface MailConfig {
+    mailHost: string | undefined;
+    mailPort: string | undefined;
+    mailUsername: string | undefined;
+    mailPassword: string | undefined;
+}

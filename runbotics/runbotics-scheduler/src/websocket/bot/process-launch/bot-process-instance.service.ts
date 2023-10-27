@@ -7,7 +7,7 @@ import { ProcessInstanceEntity } from '#/database/process-instance/process-insta
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
-import { MailService } from '#/mail/mail.service';
+import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';
 import { NotificationService } from '#/microsoft/notification';
 
@@ -24,7 +24,7 @@ export class BotProcessService {
         private readonly processService: ProcessService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
-        private readonly mailService: MailService,
+        private readonly mailTriggerService: MailTriggerService,
         private readonly processFileService: ProcessFileService,
         private readonly notificationService: NotificationService,
     ) {}
@@ -59,7 +59,7 @@ export class BotProcessService {
                 if (isEmailTriggerData(processInstance.triggerData) && processInstance.triggerData.emailId)
                     await this.notificationService.sendProcessResultMail(processInstance);
                 else
-                    await this.mailService.sendProcessResultMail(processInstance);
+                    await this.mailTriggerService.sendProcessResultMail(processInstance);
             }
 
             if (isProcessInstanceFinished(processInstance.status)) {
