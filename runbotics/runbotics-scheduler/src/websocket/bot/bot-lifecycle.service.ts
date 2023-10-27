@@ -44,7 +44,6 @@ export class BotLifecycleService {
                 error: 'Bot has been shut down',
                 updated: dayjs().toISOString(),
             };
-            this.botProcessService.updateProcessLastRunTime(newProcessInstance);
 
             await this.updateInterruptedProcessInstance(newProcessInstance);
             await this.handleProcessInstanceEventInterruption(newProcessInstance);
