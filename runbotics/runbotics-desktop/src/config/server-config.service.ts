@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 // @ts-ignore
 import { version } from '../../package.json';
+import { decrypt } from '#utils/decryptor';
 
 export interface MicrosoftAuth {
     tenantId: string | undefined;
@@ -21,34 +22,34 @@ export class ServerConfigService {
     constructor(private configService: ConfigService) {}
 
     get extensionsDirPath(): string {
-        return this.configService.get('RUNBOTICS_EXTENSION_DIR');
+        return this.getEnvValue('RUNBOTICS_EXTENSION_DIR');
     }
 
     get entrypointUrl(): string {
-        return this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
+        return this.getEnvValue('RUNBOTICS_ENTRYPOINT_URL');
     }
 
     get entrypointSchedulerUrl(): string {
-        return this.configService.get('RUNBOTICS_SCHEDULER_ENTRYPOINT_URL');
+        return this.getEnvValue('RUNBOTICS_SCHEDULER_ENTRYPOINT_URL');
     }
 
     get installationId(): string {
-        return this.configService.get('RUNBOTICS_INSTALLATION_ID');
+        return this.getEnvValue('RUNBOTICS_INSTALLATION_ID');
     }
 
     get credentials(): Credentials {
         return {
-            username: this.configService.get('RUNBOTICS_USERNAME'),
-            password: this.configService.get('RUNBOTICS_PASSWORD'),
+            username: this.getEnvValue('RUNBOTICS_USERNAME'),
+            password: this.getEnvValue('RUNBOTICS_PASSWORD'),
         };
     }
 
     get collection(): string {
-        return this.configService.get('RUNBOTICS_BOT_COLLECTION');
+        return this.getEnvValue('RUNBOTICS_BOT_COLLECTION');
     }
 
     get system(): string {
-        return this.configService.get('RUNBOTICS_BOT_SYSTEM');
+        return this.getEnvValue('RUNBOTICS_BOT_SYSTEM');
     }
 
     get version(): string {
@@ -56,20 +57,29 @@ export class ServerConfigService {
     }
 
     get logger(): string {
-        return this.configService.get('RUNBOTICS_LOGGER');
+        return this.getEnvValue('RUNBOTICS_LOGGER');
     }
 
     get microsoftAuth(): MicrosoftAuth {
         return {
-            tenantId: this.configService.get('MS_TENANT_ID'),
-            clientId: this.configService.get('MS_CLIENT_ID'),
-            clientSecret: this.configService.get('MS_CLIENT_SECRET'),
-            username: this.configService.get('MS_USERNAME'),
-            password: this.configService.get('MS_PASSWORD'),
+            tenantId: this.getEnvValue('MS_TENANT_ID'),
+            clientId: this.getEnvValue('MS_CLIENT_ID'),
+            clientSecret: this.getEnvValue('MS_CLIENT_SECRET'),
+            username: this.getEnvValue('MS_USERNAME'),
+            password: this.getEnvValue('MS_PASSWORD'),
         };
     }
 
     get tempFolderPath(): string {
         return `${process.cwd()}/temp`;
+    }
+
+    private getEnvValue(key: string): string | undefined {
+        const configValue = this.configService.get(key);
+        const isEncrypted: boolean = JSON.parse(this.configService.get('ENCRYPTED'));
+        if (isEncrypted && configValue) {
+            return decrypt(configValue, this.configService.get('ENC_KEY'));
+        }
+        return configValue;
     }
 }
