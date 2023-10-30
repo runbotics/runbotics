@@ -38,9 +38,9 @@ const useProcessInstanceMapSocket = () => {
             }
 
             if (user.roles.includes(Role.ROLE_ADMIN)
-                || processInstance.process.isPublic
-                || processInstance.process.createdBy.id === user.id
+                || processInstance.user.id === user.id
             ) dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
+
         });
 
         return () => {
