@@ -610,6 +610,9 @@ importers:
       '@microsoft/microsoft-graph-client':
         specifier: ^3.0.5
         version: 3.0.6
+      '@nestjs-modules/mailer':
+        specifier: 1.8.1
+        version: 1.8.1(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(nodemailer@6.9.4)
       '@nestjs/bull':
         specifier: ^0.6.2
         version: 0.6.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(bull@4.11.3)

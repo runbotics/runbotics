@@ -4,7 +4,7 @@ import { StorageService } from './utils/storage.service';
 import { Logger } from './utils/logger';
 import { DatabaseModule } from './database/database.module';
 import { QueueModule } from './queue/queue.module';
-import { MailModule } from './mail/mail.module';
+import { MailTriggerModule } from './mail-trigger/mail-trigger.module';
 import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
@@ -12,7 +12,7 @@ import { WebsocketModule } from './websocket/websocket.module';
         AuthModule,
         DatabaseModule,
         QueueModule,
-        MailModule,
+        MailTriggerModule,
         WebsocketModule,
     ],
     providers: [
