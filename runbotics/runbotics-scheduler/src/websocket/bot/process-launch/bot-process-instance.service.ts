@@ -7,7 +7,7 @@ import { ProcessInstanceEntity } from '#/database/process-instance/process-insta
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
-import { MailService } from '#/mail/mail.service';
+import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';
 import { NotificationService } from '#/microsoft/notification';
 
@@ -24,7 +24,7 @@ export class BotProcessService {
         private readonly processService: ProcessService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
-        private readonly mailService: MailService,
+        private readonly mailTriggerService: MailTriggerService,
         private readonly processFileService: ProcessFileService,
         private readonly notificationService: NotificationService,
     ) {}
@@ -37,7 +37,7 @@ export class BotProcessService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const updatedLastInstanceRunTime = await this.updateLastRunTime(processInstance, newProcessInstance, bot);
+            const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
             const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastInstanceRunTime.id } });
 
             await queryRunner.manager.createQueryBuilder()
@@ -50,7 +50,7 @@ export class BotProcessService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
-
+            
             if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
@@ -59,7 +59,7 @@ export class BotProcessService {
                 if (isEmailTriggerData(processInstance.triggerData) && processInstance.triggerData.emailId)
                     await this.notificationService.sendProcessResultMail(processInstance);
                 else
-                    await this.mailService.sendProcessResultMail(processInstance);
+                    await this.mailTriggerService.sendProcessResultMail(processInstance);
             }
 
             if (isProcessInstanceFinished(processInstance.status)) {
@@ -70,6 +70,25 @@ export class BotProcessService {
             await queryRunner.rollbackTransaction();
         } finally {
             await queryRunner.release();
+        }
+    }
+    async handleAdditionalProcessInstanceInfos(processInstance: IProcessInstance) {
+        if (!processInstance.rootProcessInstanceId) {
+            this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
+        }
+        if (isProcessInstanceFinished(processInstance.status)) {
+            await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
+        }
+        await this.updateProcessLastRunTime(processInstance);
+    }
+
+    async updateProcessLastRunTime(processInstance: IProcessInstance) {
+        if (!processInstance?.process?.id) return;
+        const process = await this.processService.findById(processInstance.process.id);
+        
+        if (process && processInstance.created) {
+            process.lastRun = processInstance.created;
+            await this.processService.save(process);
         }
     }
 
@@ -112,13 +131,12 @@ export class BotProcessService {
         const newProcessInstance = { ...instanceToSave };
         const dbProcessInstance = await this.processInstanceService.findById(instanceToSave.id);
         if (dbProcessInstance) {
-            newProcessInstance.created = dbProcessInstance.created;
             newProcessInstance.user = dbProcessInstance.user;
         }
         return { newProcessInstance, bot: newProcessInstance.bot };
     }
 
-    private async updateLastRunTime(
+    private async updateProcessParams(
         processInstance: IProcessInstance,
         instanceToSave: IProcessInstance,
         bot: IBot,
@@ -129,29 +147,18 @@ export class BotProcessService {
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
             newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
-            await this.updateProcessLastRunTime(newProcessInstance);
+        } else if (processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+            await this.updateProcessLastRunTime(processInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
-            newProcessInstance.input = processInstance.input;
             if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
-            await this.updateProcessLastRunTime(processInstance);
         }
         if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, newBot);
         }
         return newProcessInstance;
-    }
-
-    private async updateProcessLastRunTime(processInstance: IProcessInstance) {
-        if (!processInstance?.process?.id) return;
-        const process = await this.processService.findById(processInstance.process.id);
-
-        if (process) {
-            process.lastRun = processInstance.created;
-            await this.processService.save(process);
-        }
     }
 }

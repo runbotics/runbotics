@@ -239,7 +239,6 @@ export class AuthService {
 
             await queryRunner.manager
                 .createQueryBuilder()
-                .setLock('pessimistic_write')
                 .update(BotEntity)
                 .set({
                    ...bot,
