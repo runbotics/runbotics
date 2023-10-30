@@ -9,7 +9,7 @@ import {
 import useAuth from '#src-app/hooks/useAuth';
 import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useSelector } from '#src-app/store';
-import { processSelector, processActions } from '#src-app/store/slices/Process';
+import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 const useProcessInstanceMapSocket = () => {
@@ -17,10 +17,6 @@ const useProcessInstanceMapSocket = () => {
     const dispatch = useDispatch();
     const socket = useContext(SocketContext);
     const { allActiveMap }= useSelector(processInstanceSelector);
-    const { all } = useSelector(processSelector);
-
-    const findProcessById = (processId: number) =>
-        all.page.content.find((process) => process.id === processId);
 
     useEffect(() => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
@@ -32,15 +28,15 @@ const useProcessInstanceMapSocket = () => {
             ) {
                 const lastRun = (new Date()).toISOString();
                 dispatch(processActions.updateProcessPage({
-                    ...findProcessById(processInstance.process.id),
+                    id: processInstance.process.id,
                     lastRun
                 }));
             }
 
             if (user.roles.includes(Role.ROLE_ADMIN)
-                || processInstance.process.isPublic
-                || processInstance.process.createdBy.id === user.id
+                || processInstance.user.id === user.id
             ) dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
+
         });
 
         return () => {

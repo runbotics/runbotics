@@ -18,6 +18,8 @@
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Ikona startu",
     "Component.Tile.Process.Header.Alt.SquareIcon": "Ikona kwadratu",
+    "Component.Tile.Process.Header.Tooltip.RunProcess": "Uruchom proces",
+    "Component.Tile.Process.Header.Tooltip.AbortProcess": "Zatrzymaj proces",
     "Component.Tile.Process.Update.Success": "Pomyślnie zaktualizowano proces {{ name }}",
     "Component.Tile.Process.Update.Failed": "Nie udało się zaktualizować procesu {{ name }}",
     "Component.Tile.Process.Settings.AriaLabel": "Ustawienia",

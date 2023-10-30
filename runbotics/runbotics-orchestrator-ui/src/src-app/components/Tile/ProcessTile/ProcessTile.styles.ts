@@ -24,6 +24,11 @@ export const RunBox = styled.button(({ theme }) => `
     border: 0;
     background-color: ${theme.palette.primary.light};
     cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: ${theme.palette.primary.dark};
+    }
 `);
 
 export const Description = styled(Typography)`

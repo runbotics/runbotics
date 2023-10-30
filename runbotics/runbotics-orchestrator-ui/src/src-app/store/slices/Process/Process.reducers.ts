@@ -20,7 +20,9 @@ export const updateProcessPage = (
     action: PayloadAction<IProcess>
 ) => {
     state.all.page.content = state.all.page.content.map((process) =>
-        process.id === action.payload.id ? action.payload : process
+        process.id === action.payload.id
+            ? { ...process, ...action.payload }
+            : process
     );
 };
 
