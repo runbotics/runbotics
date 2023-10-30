@@ -9,8 +9,7 @@ import moment from 'moment';
 import { IProcess } from 'runbotics-common';
 
 import { TileAvatar, DATE_FORMAT } from '#src-app/components/Tile';
-import { ProcessTileActions } from '#src-app/components/Tile/ProcessTile';
-
+import ProcessTileActions from '#src-app/components/Tile/ProcessTile/ProcessTileActions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 const filterOperators = getGridStringOperators().filter(({ value }) => value === 'contains');

@@ -8,10 +8,13 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
+import { VARIABLE_NAME_PATTERN } from '#src-app/types/format';
+
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
+import { applyModelerElement } from '../../helpers/elementManipulation';
 import { BPMNHelper, BpmnSubProcess } from '../../helpers/elementParameters';
 import ActionLabelForm from '../ActionLabelForm';
 import customWidgets from '../widgets';
-import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 interface LoopParameters {
     input: {
@@ -36,10 +39,9 @@ const LoopActionRenderer: FC = () => {
     );
 
     const isLoopElement = (element: unknown): element is BpmnSubProcess =>
-        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !==
-        undefined;
+        (element as BpmnSubProcess)?.businessObject?.loopCharacteristics !== undefined;
 
-    const CUSTOM_FORMATS = { variableName: /(^\$.+)|(^#.+)/ };
+    const CUSTOM_FORMATS = { variableName: VARIABLE_NAME_PATTERN };
 
     const defaultFormData = React.useMemo(() => {
         if (!isLoopElement(selectedElement)) return null;
@@ -56,8 +58,7 @@ const LoopActionRenderer: FC = () => {
 
         if (
             parseInt(
-                selectedElement.businessObject.loopCharacteristics
-                    ?.loopCardinality?.body
+                selectedElement.businessObject.loopCharacteristics?.loopCardinality?.body
             )
         ) {
             defaultParameters.input.iterations =
@@ -86,11 +87,9 @@ const LoopActionRenderer: FC = () => {
 
     const handleSubmit = (formState: IFormData) => {
         if (!isLoopElement(selectedElement)) return;
-
-        const bpmnHelper = BPMNHelper.from(modeler);
-        const { loopType } = formState.formData.input;
+        const { loopType, collection } = formState.formData.input;
         const { loopCharacteristics } = selectedElement.businessObject;
-        const { loopCardinality, collection } = loopCharacteristics;
+        const { loopCardinality } = loopCharacteristics;
 
         for (const [key, value] of Object.entries(formState.formData.input)) {
             loopCharacteristics[key] = value;
@@ -103,9 +102,18 @@ const LoopActionRenderer: FC = () => {
         if (loopType === LoopType.COLLECTION && collection) {
             loopCardinality.body = formatLoopBody(collection);
         }
-        
-        bpmnHelper.updateBusinessObject(selectedElement);
         dispatch(processActions.addAppliedAction(selectedElement.id));
+        applyModelerElement({
+            modeler: modeler,
+            element: selectedElement,
+            action: selectedAction,
+            additionalParameters: {
+                input: formState.formData.input,
+                output: formState.formData.output,
+                disabled: formState.formData.disabled,
+                runFromHere: formState.formData.runFromHere
+            }
+        });
     };
 
     const updateLabel = (label: string) => {

@@ -5,12 +5,15 @@ import { Button, TextField, Grid } from '@mui/material';
 import { utils } from '@rjsf/core';
 import dynamic from 'next/dynamic';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
 
+import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
+import { TooltipTextFieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
 
-const ElementAwareAutocompleteWidget = dynamic(() => import('../ElementAwareAutocompleteWidget'), { ssr: false });
+const CustomTextWidget = dynamic(() => import('../CustomTextWidget'), { ssr: false });
 
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 const MAIN_FIELD_PREDEFINED_LABEL = 'newKey';
@@ -38,9 +41,9 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     // If any action schema has property "additionalProperties" then this custom map component "AdditionalPropertiesField" is rendered.
     if (!isAdditional) {
         return <>{children}</>;
-    };
+    }
 
-    const { mainFieldLabel, subFieldLabel } = schema;
+    const { mainFieldLabel, mainFieldInfo, subFieldLabel, subFieldInfo } = schema;
     const formProps = children.props.children[0].props.children[0].props;
     const formData = formProps.formData;
     const subFieldValue = (typeof formData === 'string' && formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
@@ -55,35 +58,45 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
     return (
         <Grid container key={`${id}-key`} alignItems="center" spacing={3}>
             <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    required={isRequired}
-                    variant="outlined"
-                    label={mainFieldLabel ? mainFieldLabel : 'Key'}
-                    size="medium"
-                    defaultValue={mainFieldValue}
-                    disabled={isDisabled}
-                    id={`${id}-key`}
-                    name={`${id}-key`}
-                    onBlur={!readonly ? handleBlur : undefined}
-                    onChange={handleMainFieldChange}
-                    type="text"
-                    InputLabelProps={{ shrink: true }}
-                    error={isMainFieldErrorDisplayed}
-                    helperText={isMainFieldErrorDisplayed ? errorMessage : null}
-                />
+                <TooltipTextFieldWrapper>
+                    <TextField
+                        fullWidth
+                        required={isRequired}
+                        variant="outlined"
+                        label={mainFieldLabel ? mainFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key')}
+                        size="medium"
+                        defaultValue={mainFieldValue}
+                        disabled={isDisabled}
+                        id={`${id}-key`}
+                        name={`${id}-key`}
+                        onBlur={!readonly ? handleBlur : undefined}
+                        onChange={handleMainFieldChange}
+                        type="text"
+                        InputLabelProps={{ shrink: true }}
+                        error={isMainFieldErrorDisplayed}
+                        helperText={isMainFieldErrorDisplayed ? errorMessage : null}
+                    />
+                    <If condition={Boolean(mainFieldInfo)}>
+                        <InfoButtonTooltip message={mainFieldInfo}/>
+                    </If>
+                </TooltipTextFieldWrapper>
             </Grid>
             <Grid item xs={12}>
-                <ElementAwareAutocompleteWidget
-                    {...formProps}
-                    required={isRequired}
-                    customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
-                    label={subFieldLabel ? subFieldLabel : 'Value'}
-                    defaultValue={subFieldValue}
-                    value={subFieldValue}
-                    disabled={isDisabled}
-                    type="text"
-                />
+                <TooltipTextFieldWrapper>
+                    <CustomTextWidget
+                        {...formProps}
+                        required={isRequired}
+                        customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
+                        label={subFieldLabel ? subFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value')}
+                        defaultValue={subFieldValue}
+                        value={subFieldValue}
+                        disabled={isDisabled}
+                        type="text"
+                    />
+                    <If condition={Boolean(subFieldInfo)}>
+                        <InfoButtonTooltip message={subFieldInfo} />
+                    </If>
+                </TooltipTextFieldWrapper>
             </Grid>
             <Grid item>
                 <Button color="secondary" disabled={isDisabled} onClick={onDropPropertyClick(label)}>

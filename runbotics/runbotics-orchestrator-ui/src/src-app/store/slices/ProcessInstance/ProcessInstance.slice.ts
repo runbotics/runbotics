@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../index';
 import buildProcessInstanceExtraReducers from './ProcessInstance.extraReducers';
 import * as reducers from './ProcessInstance.reducers';
 import { ProcessInstanceState } from './ProcessInstance.state';
 import * as processInstanceThunks from './ProcessInstance.thunks';
+import { RootState } from '../../index';
 
 export const initialState: ProcessInstanceState = {
+    allActiveMap: {},
     active: {
         orchestratorProcessInstanceId: null,
         processInstance: null,

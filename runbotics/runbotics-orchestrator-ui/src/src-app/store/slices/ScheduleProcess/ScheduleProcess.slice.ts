@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RootState } from '../../index';
 import buildScheduleProcessExtraReducers from './ScheduleProcess.extraReducers';
 import { ScheduleProcessState } from './ScheduleProcess.state';
 import * as scheduleProcessThunks from './ScheduleProcess.thunks';
+import { RootState } from '../../index';
 
 const initialState: ScheduleProcessState = {
     loading: false,

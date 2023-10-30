@@ -14,7 +14,7 @@ import _ from 'lodash';
 
 import useDebounce from '#src-app/hooks/useDebounce';
 import { translate } from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 
 import { ModelerError, processActions } from '#src-app/store/slices/Process';
 
@@ -52,7 +52,7 @@ function ErrorListTemplate(props: ErrorListProps) {
     return <Alert severity="error">{alertMessage}</Alert>;
 }
 
-const DEBOUNCE_TIME = 500;
+const DEBOUNCE_TIME = 400;
 const initialFormState = {
     id: null,
     formData: null,
@@ -68,6 +68,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const isFormDirtyRef = useRef(isFormDirty);
     const editModeRef = useRef(editMode);
     const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
+    const { selectedElement } = useSelector(state => state.process.modeler);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
         setEditMode(false);
@@ -76,10 +77,10 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
 
     const handleChange = (e: IChangeEvent<FormData>) => {
         setEditMode(true);
-        setFormState({
-            ...formState,
+        setFormState(prevState => ({
+            ...prevState,
             formData: { ...e.formData, validationError: e.errors?.length > 0 },
-        });
+        }));
         if (!editMode) {
             dispatch(processActions.removeAppliedAction(props.id));
         }
@@ -93,10 +94,11 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     }, [formState, editMode, isFormDirty]);
 
     useEffect(() => {
-        setFormState({
+        setFormState(prevState => ({
+            ...prevState,
             id: props.id,
             formData: props.formData,
-        });
+        }));
     }, [props.formData, props.id]);
 
     useEffect(() => {
@@ -130,6 +132,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
                             formData={formState.formData}
                             onChange={handleChange}
                             FieldTemplate={FieldTemplate}
+                            formContext={{ selectedElement }}
                         >
                             <Button type="submit" style={{ display: 'none' }} />
                         </Form>

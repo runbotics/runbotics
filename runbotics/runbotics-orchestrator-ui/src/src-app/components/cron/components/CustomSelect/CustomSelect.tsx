@@ -2,11 +2,11 @@ import React, { useMemo, useCallback, FC } from 'react';
 
 import { MenuItem } from '@mui/material';
 
+import { StyledSelect } from './CustomSelect.styles';
+import { CustomSelectProps } from './CustomSelect.types';
 import { parsePartArray, partToString, formatValue } from '../../converter';
 import DEFAULT_LOCALE_EN from '../../locale';
 import { sort } from '../../utils';
-import { StyledSelect } from './CustomSelect.styles';
-import { CustomSelectProps } from './CustomSelect.types';
 
 const CustomSelect: FC<CustomSelectProps> = ({
     value,

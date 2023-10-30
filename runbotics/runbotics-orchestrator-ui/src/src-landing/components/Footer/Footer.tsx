@@ -7,8 +7,8 @@ import Image from 'next/image';
 import runboticsLogoSrc from '#public/images/runBoticsLogo/logo-mini-sqr.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import Navbar from '../Navbar';
 import styles from './Footer.module.scss';
+import Navbar from '../Navbar';
 
 const Footer: FC = () => {
     const { translate } = useTranslations();

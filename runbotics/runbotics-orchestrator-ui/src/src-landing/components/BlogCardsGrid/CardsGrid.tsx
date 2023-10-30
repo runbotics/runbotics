@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import { BlogPost } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 
+import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
-import styles from './CardsGrid.module.scss';
 
 
 interface CardsGridProps {

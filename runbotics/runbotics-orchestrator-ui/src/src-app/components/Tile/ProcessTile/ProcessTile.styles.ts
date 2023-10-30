@@ -1,52 +1,35 @@
 import {
-    CardContent, SvgIcon, CardActionArea, Typography,
+    CardActionArea,
+    Typography
 } from '@mui/material';
 import styled from 'styled-components';
-
-export const StyledSvg = styled(SvgIcon)(({ theme }) => `
-    margin-left: ${theme.spacing(2)};
-    margin-right: ${theme.spacing(1)};
-`);
-
-export const StyledContent = styled(CardContent)`
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    grid-template-rows: repeat(2, auto);
-    justify-items: start;
-    justify-content: space-evenly;
-    width: 100%;
-
-    padding: 0 1.5rem 1rem 1.5rem;
-    gap: 1rem;
-`;
-
-export const Footer = styled.div`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    padding: 0.625rem 0.875rem;
-    gap: 2rem;
-
-    & > button {
-        padding: 0.3125rem;
-    }
-`;
-
-export const IconsWrapper = styled.div`
-    display: flex;
-    align-items: center;
-`;
 
 export const StyledCardActionArea = styled(CardActionArea)`
     && {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
         height: 100%;
         width: 100%;
     }
 `;
+
+export const RunBox = styled.button(({ theme }) => `
+    display: flex;
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    border: 0;
+    background-color: ${theme.palette.primary.light};
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: ${theme.palette.primary.dark};
+    }
+`);
 
 export const Description = styled(Typography)`
     && {

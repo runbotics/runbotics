@@ -1,6 +1,12 @@
 import { JSONSchema7 } from 'json-schema';
 
-type JSONSchema7Labels = JSONSchema7 & { mainFieldLabel?: string, subFieldLabel?: string }; 
+type FieldsWithInfo = {
+    mainFieldLabel?: string,
+    mainFieldInfo?: string,
+    subFieldLabel?: string,
+    subFieldInfo?: string
+};
+type JSONSchema7Labels = JSONSchema7 & FieldsWithInfo;
 
 export interface AdditionalPropertiesFieldProps {
     children: React.ReactElement;

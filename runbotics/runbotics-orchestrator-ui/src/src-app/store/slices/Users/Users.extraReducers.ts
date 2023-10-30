@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
-import { getAll } from './Users.thunks';
+import { getAll, getAllNotActivatedByPage, getAllActivatedByPage, updateNotActivated, updateActivated, partialUpdate, deleteUser } from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
@@ -15,6 +15,74 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAll.rejected, (state) => {
             state.loading = false;
+        })
+
+        // PARTIAL ACCOUNT UPDATE
+        .addCase(partialUpdate.pending, (state) => {
+            state.userUpdate.loading = true;
+        })
+        .addCase(partialUpdate.fulfilled, (state) => {
+            state.userUpdate.loading = false;
+        })
+        .addCase(partialUpdate.rejected, (state) => {
+            state.userUpdate.loading = false;
+        })
+
+        // GET ALL ACTIVATED
+        .addCase(getAllActivatedByPage.pending, (state) => {
+            state.activated.loading = true;
+        })
+        .addCase(getAllActivatedByPage.fulfilled, (state, action) => {
+            state.activated.loading = false;
+            state.activated.allByPage = { ...action.payload };
+        })
+        .addCase(getAllActivatedByPage.rejected, (state) => {
+            state.activated.loading = false;
+        })
+
+        // GET ALL NOT ACTIVATED
+        .addCase(getAllNotActivatedByPage.pending, (state) => {
+            state.notActivated.loading = true;
+        })
+        .addCase(getAllNotActivatedByPage.fulfilled, (state, action) => {
+            state.notActivated.loading = false;
+            state.notActivated.allByPage = { ...action.payload };
+        })
+        .addCase(getAllNotActivatedByPage.rejected, (state) => {
+            state.notActivated.loading = false;
+        })
+
+        // PATCH UPDATE NOT ACTIVATED USERS
+        .addCase(updateNotActivated.pending, (state) => {
+            state.notActivated.loading = true;
+        })
+        .addCase(updateNotActivated.fulfilled, (state) => {
+            state.notActivated.loading = false;
+        })
+        .addCase(updateNotActivated.rejected, (state) => {
+            state.notActivated.loading = false;
+        })
+
+        // PATCH UPDATE ACTIVATED USERS
+        .addCase(updateActivated.pending, (state) => {
+            state.activated.loading = true;
+        })
+        .addCase(updateActivated.fulfilled, (state) => {
+            state.activated.loading = false;
+        })
+        .addCase(updateActivated.rejected, (state) => {
+            state.activated.loading = false;
+        })
+
+        // DELETE USER
+        .addCase(deleteUser.pending, (state) => {
+            state.userDelete.loading = true;
+        })
+        .addCase(deleteUser.fulfilled, (state) => {
+            state.userDelete.loading = false;
+        })
+        .addCase(deleteUser.rejected, (state) => {
+            state.userDelete.loading = false;
         });
 };
 

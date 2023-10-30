@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { IoClientModule } from 'nestjs-io-client';
+import { IoClient, IoClientModule } from 'nestjs-io-client';
 import { AuthService } from './auth/auth.service';
 
 import { ConfigModule, ServerConfigService } from '#config';
@@ -9,6 +9,10 @@ import { RunboticsLogger } from '#logger';
 import { ProcessListener } from './listeners/process.listener';
 import { WebsocketLogsService } from './websocket-logs.service';
 import { WebsocketService } from './websocket.service';
+import { MessageQueueService } from './queue/message-queue.service';
+import { LoopHandlerService } from '#core/bpm/loop-handler';
+import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
+
 
 @Module({
     imports: [
@@ -37,7 +41,13 @@ import { WebsocketService } from './websocket.service';
         AuthService,
         ProcessListener,
         WebsocketLogsService,
+        LoopHandlerService,
+        MessageQueueService,
         WebsocketService,
+        RuntimeSubscriptionsService,
     ],
+    exports: [
+        WebsocketService
+    ]
 })
 export class WebsocketModule {}

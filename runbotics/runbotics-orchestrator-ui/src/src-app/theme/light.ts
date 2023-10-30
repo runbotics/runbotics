@@ -1,4 +1,4 @@
-import blueGrey from '@mui/material/colors/blueGrey';
+import { blueGrey } from '@mui/material/colors';
 import { ThemeOptions } from '@mui/material/styles';
 
 import { softShadows } from './shadows';
@@ -34,6 +34,9 @@ export const lightTheme: ThemeOptions = {
         },
         infoIcon: {
             default: blueGrey[600],
+        },
+        button: {
+            danger: blueGrey[700],
         },
         tag: {
             variable: blueGrey[100],

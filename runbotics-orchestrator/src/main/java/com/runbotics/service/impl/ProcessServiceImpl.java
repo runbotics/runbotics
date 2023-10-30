@@ -1,12 +1,13 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Process;
 import com.runbotics.domain.*;
+import com.runbotics.domain.Process;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
 import com.runbotics.service.ProcessService;
+import com.runbotics.service.TagService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
 import com.runbotics.service.dto.ProcessDTO;
@@ -14,19 +15,21 @@ import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
 import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -36,11 +39,11 @@ import java.util.stream.Collectors;
 public class ProcessServiceImpl implements ProcessService {
 
     private final Logger log = LoggerFactory.getLogger(ProcessServiceImpl.class);
-
+    private static final String ENTITY_NAME = "process";
     private final ProcessRepository processRepository;
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessMapper processMapper;
-
+    private final TagService tagService;
     private final UserService userService;
     private final BotCollectionService botCollectionService;
 
@@ -48,12 +51,14 @@ public class ProcessServiceImpl implements ProcessService {
         ProcessRepository processRepository,
         ProcessInstanceRepository processInstanceRepository,
         ProcessMapper processMapper,
+        TagService tagService,
         UserService userService,
         BotCollectionService botCollectionService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
         this.processMapper = processMapper;
+        this.tagService = tagService;
         this.userService = userService;
         this.botCollectionService = botCollectionService;
     }
@@ -67,9 +72,7 @@ public class ProcessServiceImpl implements ProcessService {
             User user = userService.getUserWithAuthorities().get();
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
-            process.setExecutionsCount(0L);
-            process.setFailureExecutionsCount(0L);
-            process.setSuccessExecutionsCount(0L);
+            process.setEditor(user);
         }
         if (process.getBotCollection() == null) {
             process.setBotCollection(botCollectionService.getPublicCollection());
@@ -78,7 +81,23 @@ public class ProcessServiceImpl implements ProcessService {
             BotSystem any = new BotSystem(BotSystem.BotSystemName.ANY.value());
             process.setSystem(any);
         }
-        process = processRepository.save(process);
+
+        if (process.getTags() != null) {
+            if (process.getTags().size() > 15) {
+                throw new BadRequestAlertException("Tag limit of 15 exceeded", ENTITY_NAME, "tooManyTags");
+            }
+
+            Set<Tag> tags = tagService.filterTags(processDTO.getTags());
+            process.setTags(tags);
+        }
+
+        if (processDTO.getId() != null) {
+            List<Long> remainingTags = tagService.checkTagsToDelete(processDTO);
+            process = processRepository.save(process);
+            tagService.deleteUnusedTags(remainingTags);
+        } else {
+            process = processRepository.save(process);
+        }
         return processMapper.toDto(process);
     }
 
@@ -104,6 +123,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     processMapper.partialUpdate(existingProcess, processDTO);
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -113,11 +133,14 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
+        User requester = userService.getUserWithAuthorities().get();
         return processRepository
             .findById(processDiagramDTO.getId())
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
+                    existingProcess.setUpdated(ZonedDateTime.now());
+                    existingProcess.setEditor(requester);
                     return existingProcess;
                 }
             )
@@ -132,6 +155,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setIsAttended(processAttendedDTO.getIsAttended());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -146,6 +170,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setIsTriggerable(processTriggerDTO.getIsTriggerable());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -161,6 +186,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     existingProcess.setBotCollection(processDTO.getBotCollection());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -178,6 +204,7 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     existingProcess.setSystem(processDTO.getSystem());
+                    existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }
             )
@@ -237,7 +264,14 @@ public class ProcessServiceImpl implements ProcessService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Process : {}", id);
+        Optional<Process> process = processRepository.findById(id);
+        if (process.isEmpty()) {
+            throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
+        }
+
+        List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
+        tagService.deleteUnusedTags(remainingTags);
     }
 
     @Override

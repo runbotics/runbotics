@@ -8,8 +8,8 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import HistoryTable from '../../../components/tables/HistoryTable';
 import Header from './Header';
+import HistoryTable from '../../../components/tables/HistoryTable';
 
 
 const HistoryListView: VFC = () => {

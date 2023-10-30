@@ -1,7 +1,7 @@
-import { DesktopRunRequest } from 'runbotics-sdk';
-import { StatefulActionHandler } from 'runbotics-sdk';
-import { StatelessActionHandler } from 'runbotics-sdk';
-import { DesktopRunResponse } from 'runbotics-sdk';
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
+import { DesktopRunResponse } from '@runbotics/runbotics-sdk';
 // @ts-ignore
 import * as winax from 'winax';
 

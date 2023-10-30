@@ -7,7 +7,7 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
-  NODE_VERSION: 14.x
+  NODE_VERSION: 18.x
 
 jobs:
   changes-detection:
@@ -35,7 +35,7 @@ jobs:
             bot:
               - 'runbotics/runbotics-desktop/package.json'
             api:
-              - 'runbotics-orchestrator/package.json'
+              - 'runbotics-orchestrator/build.gradle'
 
   push-ui:
     needs: changes-detection
@@ -73,7 +73,7 @@ jobs:
           path: './runbotics/runbotics-orchestrator-ui/package.json'
 
       - name: Build and push image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./runbotics
           file: ./runbotics/Dockerfile
@@ -131,7 +131,7 @@ jobs:
           path: './runbotics/runbotics-scheduler/package.json'
 
       - name: Build and push image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./runbotics/common/deploy/runbotics-scheduler
           file: ./runbotics/common/deploy/runbotics-scheduler/Dockerfile
@@ -140,72 +140,64 @@ jobs:
             runbotics/runbotics-scheduler:latest
             runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
 
-  # push-bot:
-  #   needs: changes-detection
-  #   if: |
-  #     (github.ref == 'refs/heads/develop'
-  #     || github.ref == 'refs/heads/master'
-  #     || startsWith(github.ref, 'refs/heads/release/')
-  #     || startsWith(github.ref, 'refs/heads/hotfix/'))
-  #     && needs.changes-detection.outputs.bot == 'true'
+  push-bot:
+    needs: changes-detection
+    if: |
+      (github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || startsWith(github.ref, 'refs/heads/release/')
+      || startsWith(github.ref, 'refs/heads/hotfix/'))
+      && needs.changes-detection.outputs.bot == 'true'
 
-  #   runs-on: windows-latest
+    runs-on: ubuntu-latest
 
-  #   defaults:
-  #     run:
-  #       working-directory: ./runbotics/runbotics-desktop
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-desktop
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: Install Node $NODE_VERSION
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: $NODE_VERSION
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-  #     - name: Login to DockerHub
-  #       uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-  #     - name: Choco install build tools
-  #       run: choco install python visualcpp-build-tools -y
+      - name: Install dependencies
+        run: $RUSH install -t .
 
-  #     - name: Set npm config VS version
-  #       run: npm config set msvs_version 2017
+      - name: Build
+        run: $RUSH rebuild -t .
 
-  #     - name: Install dependencies
-  #       run: $RUSH install -t .
+      - name: Rush deploy
+        run: |
+          mkdir -p ../common/deploy/runbotics-desktop
+          $RUSH deploy \
+            --scenario runbotics-desktop \
+            --target-folder ../common/deploy/runbotics-desktop \
+            --overwrite
 
-  #     - name: Build
-  #       run: $RUSH rebuild -t .
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-desktop/package.json'
 
-  #     - name: Rush deploy
-  #       run: |
-  #         mkdir -p ../common/deploy/runbotics-desktop
-  #         $RUSH deploy --overwrite --target-folder ../common/deploy/runbotics-desktop
-
-  #     - name: Assign package version
-  #       uses: nyaa8/package-version@v1
-  #       with:
-  #         path: './runbotics/runbotics-desktop/package.json'
-
-  #     - name: Build and push image
-  #       run: |
-  #         cd ../common/deploy/runbotics-desktop
-  #         docker build -t 'runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}' -t runbotics/runbotics-desktop:latest .
-  #         docker push --all-tags runbotics/runbotics-desktop
-
-  #     - uses: docker/build-push-action@v2
-  #       with:
-  #         context: ./runbotics/common/deploy/runbotics-desktop
-  #         file: ./runbotics/common/deploy/runbotics-desktop/Dockerfile
-  #         push: true
-  #         tags: |
-  #           runbotics/runbotics-desktop:latest
-  #           runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./runbotics/common/deploy/runbotics-desktop
+          file: ./runbotics/common/deploy/runbotics-desktop/Dockerfile
+          push: true
+          tags: |
+            runbotics/runbotics-desktop:latest
+            runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}
 
   push-api:
     needs: changes-detection
@@ -252,11 +244,35 @@ jobs:
         run: gradle bootJar -Pprod jibDockerBuild
 
       - name: Assign package version
-        uses: nyaa8/package-version@v1
-        with:
-          path: './runbotics-orchestrator/package.json'
+        run: |
+          version=$(grep -m 1 -o 'version = "[^"]*"' build.gradle | awk -F'"' '{print $2}' | tr -d '\n')
+          echo "API_VERSION=$version" >> $GITHUB_ENV
 
       - name: Push image
         run: |
-          docker tag runbotics/runbotics-orchestrator:latest 'runbotics/runbotics-orchestrator:${{ env.PACKAGE_VERSION }}'
+          docker tag runbotics/runbotics-orchestrator:latest runbotics/runbotics-orchestrator:$API_VERSION
           docker push --all-tags runbotics/runbotics-orchestrator
+
+  dispatch-core:
+    needs: [push-ui, push-scheduler, push-api]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch deploy core
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.ACTION_DISPATCH }}
+          repository: runbotics/runbotics-deployment
+          event-type: core
+          client-payload: '{}'
+
+  dispatch-bot:
+      needs: [push-bot]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Dispatch deploy bot
+          uses: peter-evans/repository-dispatch@v2
+          with:
+            token: ${{ secrets.ACTION_DISPATCH }}
+            repository: runbotics/runbotics-deployment
+            event-type: bot
+            client-payload: '{}'

@@ -1,3 +1,5 @@
+import { SapAction, ActionRegex } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner, ActionSystem } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner, ActionSystem } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
-        id: 'sap.connect',
+        id: SapAction.CONNECT,
         label: translate('Process.Details.Modeler.Actions.Sap.Connect.Label'),
-        script: 'sap.connect',
+        script: SapAction.CONNECT,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -17,7 +19,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Connect.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             connectionName: {
@@ -54,9 +56,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.disconnect': {
-        id: 'sap.disconnect',
+        id: SapAction.DISCONNECT,
         label: translate('Process.Details.Modeler.Actions.Sap.Disconnect.Label'),
-        script: 'sap.disconnect',
+        script: SapAction.DISCONNECT,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -64,7 +66,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Disconnect.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {},
                         required: [],
@@ -81,9 +83,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
 
     'sap.startTransaction': {
-        id: 'sap.startTransaction',
+        id: SapAction.START_TRANSACTION,
         label: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Label'),
-        script: 'sap.startTransaction',
+        script: SapAction.START_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -91,7 +93,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             transaction: {
@@ -114,9 +116,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.endTransaction': {
-        id: 'sap.endTransaction',
+        id: SapAction.END_TRANSACTION,
         label: translate('Process.Details.Modeler.Actions.Sap.EndTransaction.Label'),
-        script: 'sap.endTransaction',
+        script: SapAction.END_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -134,9 +136,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.type': {
-        id: 'sap.type',
+        id: SapAction.TYPE,
         label: translate('Process.Details.Modeler.Actions.Sap.Type.Label'),
-        script: 'sap.type',
+        script: SapAction.TYPE,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -144,7 +146,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Type.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -172,9 +174,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.sendVKey': {
-        id: 'sap.sendVKey',
+        id: SapAction.SEND_VKEY,
         label: translate('Process.Details.Modeler.Actions.Sap.SendVKey.Label'),
-        script: 'sap.sendVKey',
+        script: SapAction.SEND_VKEY,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -182,7 +184,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SendVKey.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             virtualKey: {
@@ -273,9 +275,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.index': {
-        id: 'sap.index',
+        id: SapAction.INDEX,
         label: translate('Process.Details.Modeler.Actions.Sap.Index.Label'),
-        script: 'sap.index',
+        script: SapAction.INDEX,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -289,7 +291,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Index.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -300,13 +302,14 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Index.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.Index.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Sap.Index.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -315,6 +318,13 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -327,9 +337,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.readText': {
-        id: 'sap.readText',
+        id: SapAction.READ_TEXT,
         label: translate('Process.Details.Modeler.Actions.Sap.ReadText.Label'),
-        script: 'sap.readText',
+        script: SapAction.READ_TEXT,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         output: {
@@ -343,7 +353,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -354,13 +364,14 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                         required: ['target'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.Sap.ReadText.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -369,6 +380,13 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -381,9 +399,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.click': {
-        id: 'sap.click',
+        id: SapAction.CLICK,
         label: translate('Process.Details.Modeler.Actions.Sap.Click.Label'),
-        script: 'sap.click',
+        script: SapAction.CLICK,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -391,7 +409,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Click.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -414,9 +432,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.focus': {
-        id: 'sap.focus',
+        id: SapAction.FOCUS,
         label: translate('Process.Details.Modeler.Actions.Sap.Focus.Label'),
-        script: 'sap.focus',
+        script: SapAction.FOCUS,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -424,7 +442,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Focus.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -447,9 +465,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.doubleClick': {
-        id: 'sap.doubleClick',
+        id: SapAction.DOUBLE_CLICK,
         label: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Label'),
-        script: 'sap.doubleClick',
+        script: SapAction.DOUBLE_CLICK,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -457,7 +475,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -490,7 +508,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.Select.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -513,9 +531,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.openContextMenu': {
-        id: 'sap.openContextMenu',
+        id: SapAction.OPEN_CONTEXT_MENU,
         label: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Label'),
-        script: 'sap.openContextMenu',
+        script: SapAction.OPEN_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -523,7 +541,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -551,9 +569,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.selectFromContextMenu': {
-        id: 'sap.selectFromContextMenu',
+        id: SapAction.SELECT_FROM_CONTEXT_MENU,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Label'),
-        script: 'sap.selectFromContextMenu',
+        script: SapAction.SELECT_FROM_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -561,7 +579,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -589,9 +607,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.clickToolbarButton': {
-        id: 'sap.clickToolbarButton',
+        id: SapAction.CLICK_TOOLBAR_BUTTON,
         label: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label'),
-        script: 'sap.clickToolbarButton',
+        script: SapAction.CLICK_TOOLBAR_BUTTON,
         runner: Runner.DESKTOP_SCRIPT,
         system: ActionSystem.WINDOWS,
         form: {
@@ -599,7 +617,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {
@@ -627,16 +645,16 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'sap.selectTableRow': {
-        id: 'sap.selectTableRow',
+        id: SapAction.SELECT_TABLE_ROW,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.Label'),
-        script: 'sap.selectTableRow',
+        script: SapAction.SELECT_TABLE_ROW,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             target: {

@@ -9,10 +9,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
-import LanguageSwitcher from '../LanguageSwitcher';
-import Navbar from '../Navbar';
 import styles from './Header.module.scss';
 import LoginLink from './LoginLink';
+import LanguageSwitcher from '../LanguageSwitcher';
+import Navbar from '../Navbar';
 
 
 const Header = () => {

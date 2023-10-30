@@ -1,7 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { DesktopRunRequest, StatefulActionHandler } from 'runbotics-sdk';
-import { readdirSync } from 'fs';
+import { DesktopRunRequest, isStatefulActionHandler, isStatelessActionHandler } from '@runbotics/runbotics-sdk';
+import { readdirSync, existsSync, Dirent } from 'fs';
 import path from 'path';
 
 import ImportActionHandler from '#action/import';
@@ -13,15 +13,16 @@ import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
 import CsvActionHandler from '#action/csv';
 import GeneralActionHandler from '#action/general';
-import SharepointExcelActionHandler from '#action/sharepoint/excel';
-import SharepointFileActionHandler from '#action/sharepoint/file';
+import { CloudExcelActionHandler } from '#action/microsoft/automation/excel';
+import { CloudFileActionHandler } from '#action/microsoft/automation/file';
 import ApiRequestHandler from '#action/api-request';
 import ApplicationActionHandler from '#action/application';
 import AsanaActionHandler from '#action/asana';
 import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
-import SapActionHandler from '#action/sap';
+import DesktopActionHandler from '#action/desktop';
+import VisualBasicActionHandler from '#action/visual-basic';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
@@ -31,6 +32,7 @@ import {
     ExternalActionWorkerMap, ExternalHandlersMap, HandlersInstancesMap, InternalHandlersInstancesMap
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
+import { ImageActionHandler } from '#action/image';
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
@@ -61,10 +63,12 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
-        private readonly sapActionHandler: SapActionHandler,
-        private readonly sharepointExcelActionHandler: SharepointExcelActionHandler,
-        private readonly sharepointFileActionHandler: SharepointFileActionHandler,
+        private readonly cloudExcelActionHandler: CloudExcelActionHandler,
+        private readonly cloudFileActionHandler: CloudFileActionHandler,
         private readonly variableActionHandler: VariablesActionHandler,
+        private readonly desktopActionHandler: DesktopActionHandler,
+        private readonly visualBasicActionHandler: VisualBasicActionHandler,
+        private readonly imageActionHandler: ImageActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -82,10 +86,12 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
             .set('typescript', javaScriptActionHandler)
-            .set('sap', sapActionHandler)
-            .set('sharepointExcel', sharepointExcelActionHandler)
-            .set('sharepointFile', sharepointFileActionHandler)
-            .set('variables', variableActionHandler);
+            .set('cloudExcel', cloudExcelActionHandler)
+            .set('cloudFile', cloudFileActionHandler)
+            .set('variables', variableActionHandler)
+            .set('desktop', desktopActionHandler)
+            .set('visualBasic', visualBasicActionHandler)
+            .set('image', imageActionHandler);
     }
 
     async onModuleInit() {
@@ -95,17 +101,11 @@ export class DesktopRunnerService implements OnModuleInit {
         // } else {
         //     this.logger.warn('Hot reload is on! Remember to turn it off in production env.');
         // }
-        try {
-            await this.loadExternalModule('runbotics-actions-windows');
-        } catch(e) {
-            this.logger.error('Error loading extensions from runbotics-actions-windows', e);
-        }
 
         await this.loadExtensionsDirModules();
 
-        this.runtimeService.processChange().subscribe(async (data) => {
-            const isRootProcessFinished = FINISHED_PROCESS_STATUSES.includes(data.eventType)
-                && !data.processInstance.rootProcessInstanceId;
+        this.runtimeService.processChange().subscribe(async data => {
+            const isRootProcessFinished = FINISHED_PROCESS_STATUSES.includes(data.eventType) && !data.processInstance.rootProcessInstanceId;
             if (!isRootProcessFinished) return;
 
             await this.clearHandlers();
@@ -123,8 +123,8 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter((dirent) => dirent.isDirectory())
-                .map((dirent) => dirent.name);
+                .filter(directoryEntry => this.detectExtensions(directoryEntry, this.serverConfigService.extensionsDirPath))
+                .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
             for (const extension of extensions) {
@@ -145,17 +145,15 @@ export class DesktopRunnerService implements OnModuleInit {
 
             const handlersNames = Array.from(this.processHandlersInstancesMap.keys()).join(', ');
             this.logger.log(`Tearing down action handlers sessions [${handlersNames}]`);
-            await Promise.allSettled(Array.from(this.processHandlersInstancesMap.values())
-                .map(handlerInstance => {
-                    if(handlerInstance
-                        && handlerInstance instanceof StatefulActionHandler
-                        && handlerInstance.tearDown
-                    ) {
+            await Promise.allSettled(
+                Array.from(this.processHandlersInstancesMap.values()).map(handlerInstance => {
+                    if (isStatefulActionHandler(handlerInstance)) {
                         return handlerInstance.tearDown();
                     } else {
                         this.logger.error(`No tear down method in handler ${handlerInstance.constructor.name}`);
                     }
-                }));
+                })
+            );
         } catch (e) {
             this.logger.error('Error clearing handler', e);
         } finally {
@@ -210,7 +208,7 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, handler] of this.internalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                handlerInstance = handler; 
+                handlerInstance = handler;
                 this.processHandlersInstancesMap.set(handler.constructor.name, handlerInstance);
 
                 return await handlerInstance.run(request);
@@ -219,7 +217,7 @@ export class DesktopRunnerService implements OnModuleInit {
             for (const [key, handler] of this.externalHandlersMap) {
                 if (!request.script.startsWith(key + '.')) continue;
 
-                // handler is just a source code of action handler class, so the name is available directly in handler object  
+                // handler is just a source code of action handler class, so the name is available directly in handler object
                 const activeProcessInstance = this.processHandlersInstancesMap.get(handler.name);
                 handlerInstance = activeProcessInstance ?? new handler();
 
@@ -227,25 +225,43 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.processHandlersInstancesMap.set(handlerInstance.constructor.name, handlerInstance);
                 return await handlerInstance.run(request);
             }
+
+            this.logger.error(`[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] handler not found`);
+
+            throw new Error(`No handler found for action ${request.script}`);
         } catch (e) {
             this.logger.error(
                 `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Error running script`,
                 e.message,
-                e,
+                e
             );
             throw e;
         } finally {
-            const isStatefulActionHandler = handlerInstance instanceof StatefulActionHandler;
-            if (handlerInstance && !isStatefulActionHandler) {
+            if (isStatelessActionHandler(handlerInstance)) {
                 this.logger.warn(
                     `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Tearing down instance of stateless handler: ${handlerInstance.constructor.name}`
                 );
                 this.processHandlersInstancesMap.delete(handlerInstance.constructor.name);
             }
         }
+    }
 
-        const notFoundErrorMessage = `[${request.processInstanceId}] [${request.executionContext.id}] [${request.script}] Script ${request.script} not found`;
-        this.logger.error(notFoundErrorMessage);
-        throw new Error(notFoundErrorMessage);
+    private checkDirectoryIncludes(directoryPath: string, directoryName: string, expectedFiles: string[]): boolean {
+        const isPresent = expectedFiles.every(fileSystemEntry => {
+            const path = directoryPath + '\\' + directoryName + '\\' + fileSystemEntry;
+            return existsSync(path);
+        });
+
+        return isPresent;
+    }
+
+    private detectExtensions(directoryEntry: Dirent, extensionsPath: string) {
+        return directoryEntry.isDirectory()
+            && !directoryEntry.name.startsWith('.')
+            && this.checkDirectoryIncludes(
+                extensionsPath,
+                directoryEntry.name,
+                ['dist', 'node_modules', 'package.json']
+            );
     }
 }

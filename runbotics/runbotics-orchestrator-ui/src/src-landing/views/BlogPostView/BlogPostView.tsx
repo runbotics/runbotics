@@ -1,6 +1,5 @@
 import { VFC } from 'react';
 
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,8 +12,8 @@ import PostHeader from '#src-landing/components/PostHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 import Typography from '#src-landing/components/Typography';
 
-import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import styles from './BlogPostView.module.scss';
+import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 
 interface Props {
     post: BlogPost;
@@ -32,41 +31,35 @@ const BlogPostView: VFC<Props> = ({ post }) => {
     ));
 
     return (
-        <>
-            <Head>
-                <title>{`${post.title} | Runbotics Blog`}</title>
-                <meta property="og:image" content={post.featuredImage?.url} />
-            </Head>
-            <Layout>
-                <div className={styles.blogWrapper}>
-                    <PostHeader {...postHeaderProps} />
-                    <div className={styles.breadCrumbsWrapper}>
-                        <BreadcrumbsSection postTitle={post.title} />
-                    </div>
-                    <article className={styles.contentArticle}>
-                        <RichTextRenderer content={body} />
-                        <div className={styles.tagsWrapper}>
-                            <Image
-                                src={TagIcon}
-                                width={24}
-                                height={24}
-                                className={styles.tag}
-                                alt="tag icon"
-                            />
-                            <Typography
-                                font="Roboto"
-                                className={`${styles.h4} ${styles.tag}`}
-                                variant="h4"
-                            >
-                                {translate('Blog.Post.Tags')}
-                            </Typography>
-                            {tags}
-                        </div>
-                        <BlogSharePanel />
-                    </article>
+        <Layout>
+            <div className={styles.blogWrapper}>
+                <PostHeader {...postHeaderProps} />
+                <div className={styles.breadCrumbsWrapper}>
+                    <BreadcrumbsSection postTitle={post.title} />
                 </div>
-            </Layout>
-        </>
+                <article className={styles.contentArticle}>
+                    <RichTextRenderer content={body} />
+                    <div className={styles.tagsWrapper}>
+                        <Image
+                            src={TagIcon}
+                            width={24}
+                            height={24}
+                            className={styles.tag}
+                            alt="tag icon"
+                        />
+                        <Typography
+                            font="Roboto"
+                            className={`${styles.h4} ${styles.tag}`}
+                            variant="h4"
+                        >
+                            {translate('Blog.Post.Tags')}
+                        </Typography>
+                        {tags}
+                    </div>
+                    <BlogSharePanel />
+                </article>
+            </div>
+        </Layout>
     );
 };
 

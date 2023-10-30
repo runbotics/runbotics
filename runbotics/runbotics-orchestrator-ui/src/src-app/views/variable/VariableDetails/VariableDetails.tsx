@@ -18,9 +18,7 @@ import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
 
-import { Form, Title, Content } from '../../utils/FormDialog.styles';
 
-import { VariableType } from '../Variable.types';
 
 import {
     VariableDetailsProps,
@@ -32,6 +30,8 @@ import {
 import { initialVariableState, mapVariableToInnerState } from './VariableDetails.utils';
 
 import VariableDetailsForm from './VariableDetailsForm';
+import { Form, Title, Content } from '../../utils/FormDialog.styles';
+import { VariableType } from '../Variable.types';
 
 
 

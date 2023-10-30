@@ -1,4 +1,4 @@
-import React, { VFC, useState, useContext } from 'react';
+import React, { VFC, useState, useContext, FC } from 'react';
 
 import {
     Button,
@@ -37,7 +37,13 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
             page,
             size: pageSize,
             filter: {
-                contains: { ...(search.trim() && { name: search.trim() }) },
+                contains: {
+                    ...(search.trim() && {
+                        name: search.trim(),
+                        createdByName: search.trim(),
+                        tagName: search.trim()
+                    })
+                },
             },
         }));
         enqueueSnackbar(translate('Process.Delete.SuccessMessage', { name: props.process.name }), {
@@ -64,7 +70,12 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                 >
                     {translate('Common.Cancel')}
                 </Button>
-                <Button variant="contained" color="primary" autoFocus onClick={handleSubmit}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    autoFocus
+                    onClick={handleSubmit}
+                >
                     {translate('Common.Confirm')}
                 </Button>
             </DialogActions>
@@ -76,7 +87,7 @@ type DeleteProcessProps = {
     process: IProcess;
 };
 
-const DeleteProcess = (props: DeleteProcessProps) => {
+const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
     const [show, setShow] = useState(false);
     const { translate } = useTranslations();
 
@@ -88,7 +99,7 @@ const DeleteProcess = (props: DeleteProcessProps) => {
         <>
             <MenuItem onClick={() => setShow(true)}>{translate('Process.Delete.ActionName')}</MenuItem>
             <DeleteProcessDialog
-                process={props.process}
+                process={process}
                 open={show}
                 onClose={() => setShow(false)}
                 onDelete={handleDelete}

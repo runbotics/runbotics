@@ -18,7 +18,6 @@ import {
 
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-import useTranslations from '../useTranslations';
 import {
     CommandStackEvent,
     EventBusEvent,
@@ -29,6 +28,7 @@ import {
     validateElement,
     validateStartEvents,
 } from './useModelerListener.validation';
+import useTranslations from '../useTranslations';
 
 const ELEMENTS_PROPERTIES_WHITELIST = [
     BpmnElementType.SERVICE_TASK,
@@ -43,7 +43,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
     );
-
+    
     const handleInvalidStartEvent = ({ errorType, nameKey, elementId }) => {
         dispatch(
             processActions.setError({
@@ -230,6 +230,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             setCurrentTab(null);
             dispatch(processActions.removeAppliedAction(event.element.id));
             dispatch(processActions.removeError(event.element.id));
+            dispatch(processActions.removeCustomValidationError(event.element.id));
             const relatedError = store
                 .getState()
                 .process.modeler.errors.find((error) =>

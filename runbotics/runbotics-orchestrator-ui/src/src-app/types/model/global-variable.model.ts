@@ -1,5 +1,7 @@
-import { VariableType } from '../../views/variable/Variable.types';
 import { IUser } from './user.model';
+import { VariableType } from '../../views/variable/Variable.types';
+
+export type UserDTO = Pick<IUser, 'id' | 'login'>;
 
 export interface IGlobalVariable {
     id?: number;
@@ -9,4 +11,5 @@ export interface IGlobalVariable {
     value: string | null;
     lastModified?: string | null;
     user?: IUser | null;
+    creator?: UserDTO | null;
 }

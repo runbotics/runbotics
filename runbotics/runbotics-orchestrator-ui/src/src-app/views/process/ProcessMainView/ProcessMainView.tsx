@@ -8,6 +8,7 @@ import { FeatureKey, Role } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
+import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -31,6 +32,8 @@ const ProcessMainView: FC = () => {
     const { translate } = useTranslations();
     const { user } = useAuth();
     const isGuest = useRole([Role.ROLE_GUEST]);
+    const isProcessOwner = useOwner();
+    const isAdmin = useRole([Role.ROLE_ADMIN]);
 
     useEffect(() => () => {
         dispatch(processActions.resetDraft());
@@ -41,18 +44,21 @@ const ProcessMainView: FC = () => {
             value: ProcessTab.BUILD,
             label: translate('Process.MainView.Tabs.Build.Title'),
             featureKeys: [FeatureKey.PROCESS_BUILD_VIEW],
+            show: true,
         },
         {
             value: ProcessTab.RUN,
             label: translate('Process.MainView.Tabs.Run.Title'),
             featureKeys: [FeatureKey.PROCESS_RUN_VIEW],
+            show: true,
         },
         {
             value: ProcessTab.CONFIGURE,
             label: translate('Process.MainView.Tabs.Configure.Title'),
             featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
+            show: process?.isPublic ? (isAdmin || isProcessOwner(process.createdBy?.id)) : true,
         },
-    ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys));
+    ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys) && processTab.show);
 
     const handleMainTabsChange = (processTab: ProcessTab) => {
         router.push({ pathname: `/app/processes/${id}/${processTab}` });

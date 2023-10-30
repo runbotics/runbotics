@@ -38,6 +38,7 @@ import {
     initializeBpmnDiagram,
     Wrapper,
 } from '.';
+import { getBpmnModelerConfig } from './BpmnModeler.config';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
 import ModelerToolboxPanel from '../../ModelerPanels/ModelerToolboxPanel';
 import RunSavePanel from '../../ModelerPanels/RunSavePanel';
@@ -45,7 +46,6 @@ import SidebarNavigationPanel from '../../SidebarNavigationPanel';
 import ActionFormPanel from '../ActionFormPanel';
 import ActionListPanel from '../ActionListPanel';
 import emptyBpmn from '../extensions/config/empty.bpmn';
-import { getBpmnModelerConfig } from './BpmnModeler.config';
 
 const initialCommandStackInfo: CommandStackInfo = {
     commandStackIdx: -1,
@@ -76,6 +76,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             appliedActivities,
             errors,
             imported,
+            customValidationErrors,
         } = useSelector((state) => state.process.modeler);
 
         useNavigationLock(
@@ -116,6 +117,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         modeler,
                         commandStack,
                         errors,
+                        customValidationErrors,
                         imported,
                     })
                 )
@@ -128,6 +130,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             commandStack.commandStackSize,
             imported,
             selectedElement,
+            customValidationErrors,
+            errors,
         ]);
 
         useImperativeHandle(

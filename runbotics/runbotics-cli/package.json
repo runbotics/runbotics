@@ -1,6 +1,6 @@
 {
     "name": "@runbotics/runbotics-cli",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "license": "MIT",
     "author": {
         "name": "runbotics",
@@ -12,6 +12,8 @@
     "scripts": {
         "build": "microbundle --target node --format esm --no-compress",
         "start": "node dist/index.esm.js",
+        "link-cli": "yarn --global link ./runbotics-cli",
+        "unlink-cli": "yarn --global unlink ./runbotics-cli",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint \"src/**/*.ts\" --fix"
     },

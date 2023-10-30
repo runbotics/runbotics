@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC } from 'react';
 
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
@@ -10,12 +10,24 @@ import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
-import { AccessUtility, hasFeatureKeyAccess } from '../utils/Secured';
+import { AccessUtility, hasFeatureKeyAccess, hasRoleAccess } from '../utils/Secured';
 
 const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
 
-// eslint-disable-next-line react/display-name
-export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options?: AccessUtility) => (props: any) => {
+interface AuthGuardParams {
+    Component: FC,
+    featureKeys?: FeatureKey[],
+    userRoles?: Role[],
+    options?: AccessUtility
+}
+
+export const withAuthGuard = ({
+    Component,
+    featureKeys,
+    userRoles,
+    options
+    // eslint-disable-next-line react/display-name
+}: AuthGuardParams) => (props: any) => {
     const { isAuthenticated: isAuthed, isInitialized, user } = useAuth();
     const { draft } = useSelector(processSelector);
     const router = useRouter();
@@ -47,9 +59,10 @@ export const withAuthGuard = (Component: FC, featureKeys?: FeatureKey[], options
             return <LoadingScreen />;
         }
 
-        if (!featureKeys || hasFeatureKeyAccess(user, featureKeys, options)) {
-            return <Component {...props} />;
-        }
+        if (
+            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options) 
+            && hasRoleAccess(user, userRoles ? userRoles : [])
+        ) { return <Component {...props} />; }
 
         router.replace('/404');
     }

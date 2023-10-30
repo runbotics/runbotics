@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-import Typography from '../Typography';
 import styles from './CardBadge.module.scss';
+import Typography from '../Typography';
 
 interface CardBadgeProps {
     text: string;

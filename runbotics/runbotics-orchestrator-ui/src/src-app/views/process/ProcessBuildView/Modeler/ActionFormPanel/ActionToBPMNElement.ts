@@ -2,6 +2,8 @@ import BpmnModeler from 'bpmn-js/lib/Modeler';
 import { JSONSchema7 } from 'json-schema';
 import _ from 'lodash';
 
+import { translate } from '#src-app/hooks/useTranslations';
+
 import { IBpmnAction } from '../../../../../Actions/types';
 import {
     Parameter,
@@ -14,6 +16,7 @@ import {
     BPMNElement,
     CamundaInputOutputElement
 } from '../helpers/elementParameters';
+
 
 export enum TaskType {
     'ServiceTask' = 'ServiceTask',
@@ -232,7 +235,9 @@ export class ActionToBPMNElement {
             propertyName: 'outputParameters',
             referencePropertyName: null,
             objectsToAdd: parameters,
-            objectsToRemove: [...camundaInputOutputElement.outputParameters]
+            objectsToRemove: camundaInputOutputElement.outputParameters
+                ? [...camundaInputOutputElement.outputParameters]
+                : []
         };
         this.commandStack.execute(
             'properties-panel.update-businessobject-list',
@@ -254,7 +259,7 @@ export class ActionToBPMNElement {
         businessObject.label =
             action.id && action.id.slice(0, 8) !== 'external'
                 ? ''
-                : action.label;
+                : `${translate('Process.Details.Modeler.ActionsGroup.External')}: ${action.label}`;
         businessObject.implementation = action.runner;
         businessObject.validationError = false;
         businessObject.actionId = action.id;

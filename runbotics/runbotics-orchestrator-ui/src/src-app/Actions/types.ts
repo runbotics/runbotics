@@ -14,11 +14,6 @@ export enum ActionSystem {
     LINUX = 'Linux',
 }
 
-export enum CloudPath {
-    ROOT = 'root',
-    SITE = 'site',
-}
-
 export type IActionField = {
     id: string;
     label: string;
@@ -53,6 +48,7 @@ export type IBpmnAction = {
     label: string;
     translateKey?: string;
     system?: ActionSystem;
+    helperTextLabel?: string;
     input?: IActionInput;
     output?: IActionOutput;
     form?: IForm;

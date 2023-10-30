@@ -7,7 +7,6 @@ export const RUNBOTICS_CONFIG_RELATIVE_PATH = join('runbotics', 'common', 'confi
 export const SCHEDULER_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-scheduler', 'package.json');
 export const UI_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-orchestrator-ui', 'package.json');
 export const BOT_CONFIG_RELATIVE_PATH = join('runbotics', 'runbotics-desktop', 'package.json');
-export const API_CONFIG_RELATIVE_PATH = join('runbotics-orchestrator', 'package.json');
 
 export const MONOREPO_CONFIGS_RELATIVE_PATHS = [
     { name: 'scheduler', path: SCHEDULER_CONFIG_RELATIVE_PATH },

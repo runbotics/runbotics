@@ -6,7 +6,9 @@ import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.MailService;
+import com.runbotics.service.UserQueryService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.criteria.UserCriteria;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import com.runbotics.web.rest.errors.EmailAlreadyUsedException;
@@ -16,6 +18,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Collections;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,17 +70,27 @@ public class UserResource {
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
+    private static final String ENTITY_NAME = "user";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     private final UserService userService;
 
+    private final UserQueryService userQueryService;
+
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(
+        UserService userService,
+        UserQueryService userQueryService,
+        UserRepository userRepository,
+        MailService mailService
+    ) {
         this.userService = userService;
+        this.userQueryService = userQueryService;
         this.userRepository = userRepository;
         this.mailService = mailService;
     }
@@ -153,6 +166,28 @@ public class UserResource {
     }
 
     /**
+     * {@code PATCH /admin/users} : Partial updates given fields of an existing user, field will ignore if it is null
+     * @param id the id of the globalVariableDTO to save.
+     * @param adminUserDTO the User to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)}.
+     */
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<AdminUserDTO> partialUpdate(
+        @PathVariable(value = "id", required = true) Long id,
+        @NotNull @RequestBody AdminUserDTO adminUserDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update User partially : {}, {}", id, adminUserDTO);
+
+        Optional<AdminUserDTO> result = userService.partialUpdate(adminUserDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, adminUserDTO.getId().toString())
+        );
+    }
+
+    /**
      * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
      *
      * @param pageable the pagination information.
@@ -192,32 +227,54 @@ public class UserResource {
      * {@code GET /admin/users/not-activated} : get all not activated users with all the details - calling this are only allowed for the administrators.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     @GetMapping("/users/not-activated")
-    public ResponseEntity<List<AdminUserDTO>> getAllNotActiveUsers(Pageable pageable) {
-        log.debug("REST request to get all not activated User for an admin");
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsers(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all not activated User : {}, by criteria: {}", pageable, criteria);
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
 
-        final Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable);
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable, criteria);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
-     * {@code DELETE /admin/users/:login} : delete the "login" User.
+     * {@code GET /admin/users/activated} : get all activated users with all the details - calling this are only allowed for the administrators.
      *
-     * @param login the login of the user to delete.
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
+     */
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @GetMapping("/users/activated")
+    public ResponseEntity<Page<AdminUserDTO>> getAllActivatedUsers(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllActivatedUsers(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code DELETE /admin/users/:id} : delete the User based on id.
+     *
+     * @param id the id of the user to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/users/{login}")
+    @DeleteMapping("/users/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Void> deleteUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
-        log.debug("REST request to delete User: {}", login);
-        userService.deleteUser(login);
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "userManagement.deleted", login)).build();
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        log.debug("REST request to delete User: {}", id);
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "userManagement.deleted", id.toString())).build();
     }
 }

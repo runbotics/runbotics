@@ -1,6 +1,8 @@
 import { Injectable, LoggerService, OnModuleInit, Optional } from '@nestjs/common';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import { ServerConfigService } from '#config';
+import { getEnvValue } from '#utils/envReader';
 
 const LOG_LEVEL_VALUES: Record<LogLevel, number> = {
     debug: 4,
@@ -58,16 +60,18 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         return logger;
     }
 
-    constructor(@Optional() protected context?: string, @Optional() private readonly isTimestampEnabled = false) {}
+    constructor(
+        @Optional() protected context?: string, 
+        @Optional() private readonly isTimestampEnabled = false
+    ) {}
 
     onModuleInit() {
-        let logLevel;
-        if (!process.env.RUNBOTICS_LOGGER_LEVEL) {
+        let logLevel = getEnvValue('RUNBOTICS_LOGGER_LEVEL');
+        if (!logLevel) {
             console.log('No log level found, back to default: info');
             logLevel = 'info';
         } else {
-            console.log('Log level from env: ' + process.env.RUNBOTICS_LOGGER_LEVEL);
-            logLevel = process.env.RUNBOTICS_LOGGER_LEVEL;
+            console.log('Log level from env: ' + logLevel);
         }
 
         RunboticsLogger.winstonLogger = RunboticsLogger.createWinstonLogger(logLevel);
@@ -136,7 +140,7 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         const timestamp = RunboticsLogger.getTimestamp();
         // this.winstonLogger.log(type == 'error' ? 'error': 'info',  `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest)
 
-        switch (process.env.RUNBOTICS_LOGGER) {
+        switch (getEnvValue('RUNBOTICS_LOGGER')) {
             case 'winston':
                 this.winstonLogger.log(type, `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest);
                 RunboticsLogger.internalConsole[type](

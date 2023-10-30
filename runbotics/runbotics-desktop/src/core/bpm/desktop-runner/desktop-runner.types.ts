@@ -1,4 +1,4 @@
-import { StatefulActionHandler, StatelessActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { Worker } from 'worker_threads';
 
 // helper abstract class implementation type
@@ -23,9 +23,13 @@ export type InternalHandlerKey =
 | 'javascript'
 | 'typescript'
 | 'sap'
-| 'sharepointExcel'
-| 'sharepointFile'
-| 'variables';
+| 'cloudExcel'
+| 'cloudFile'
+| 'variables'
+| 'excel'
+| 'desktop'
+| 'visualBasic'
+| 'image';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

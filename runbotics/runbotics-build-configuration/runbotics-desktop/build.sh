@@ -13,5 +13,5 @@ else
 fi
 
 echo "[INFO] runbotics-desktop - Docker build started";
-docker build -t runbotics/runbotics-desktop:${PACKAGE_VERSION} -t runbotics/runbotics-desktop:latest .
+docker build --platform linux/amd64 -t runbotics/runbotics-desktop:${PACKAGE_VERSION} -t runbotics/runbotics-desktop:latest .
 echo "[INFO] runbotics-desktop - Docker build completed";

@@ -23,6 +23,7 @@ import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { SchedulerService } from '../scheduler/scheduler.service';
+import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -33,6 +34,7 @@ export class SchedulerProcessor {
         private readonly botService: BotService,
         private readonly processService: ProcessService,
         private readonly uiGateway: UiGateway,
+        private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
         private readonly schedulerService: SchedulerService
     ) {}
@@ -116,8 +118,7 @@ export class SchedulerProcessor {
         const processInstanceIdentifier =
             await this.processSchedulerService.startProcess(job.data, bot);
 
-        const busyBot = await this.botService.setBusy(bot);
-        this.uiGateway.server.emit(WsMessage.BOT_STATUS, busyBot);
+        await this.botGateway.setBotStatusBusy(bot);
 
         this.logger.log(
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,

@@ -39,7 +39,9 @@ public class GuestServiceImpl implements GuestService {
     }
 
     public boolean verifyGuestLimit(String guestIp) {
-        Optional<Guest> guestOptional = guestRepository.findById(guestIp);
+        Optional<Guest> guestOptional = guestRepository.findAll().stream()
+            .filter(guest -> passwordEncoder.matches(guestIp, guest.getIp()))
+            .findFirst();
         return guestOptional.isEmpty();
     }
 
@@ -76,7 +78,7 @@ public class GuestServiceImpl implements GuestService {
 
     private Guest createGuest(String guestIp, User user) {
         var guest = new Guest();
-        guest.setIp(guestIp);
+        guest.setIp(passwordEncoder.encode(guestIp));
         guest.setExecutionsCount(0);
         guest.setUser(user);
         return guest;

@@ -8,6 +8,7 @@
     "Variables.ListView.Table.Header.Type": "Rodzaj",
     "Variables.ListView.Table.Header.LastModified": "Ostatnio zmodyfikowany",
     "Variables.ListView.Table.Header.ModifiedBy": "Zmodyfikowany przez",
+    "Variables.ListView.Table.Header.CreatedBy": "Twórca",
     "Variables.ListView.Table.Actions.Edit": "Edytuj",
     "Variables.ListView.Table.Actions.Delete": "Usuń",
     "Variables.ListView.Action.Delete.Dialog.Title": "Usuń zmienną globalną",

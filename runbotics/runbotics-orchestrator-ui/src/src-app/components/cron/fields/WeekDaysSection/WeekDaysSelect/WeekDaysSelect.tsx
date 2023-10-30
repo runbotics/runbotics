@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { WeekDaysSelectProps } from './WeekDaysSelect.types';
 import CustomSelect from '../../../components/CustomSelect';
 import { UNITS, UnitIndex } from '../../../constants';
 import DEFAULT_LOCALE_EN from '../../../locale';
-import { WeekDaysSelectProps } from './WeekDaysSelect.types';
 
 const WeekDaysSelect = ({ 
     value, 

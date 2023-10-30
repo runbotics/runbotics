@@ -2,6 +2,7 @@ import { IScheduleProcess } from './schedule-process.model';
 import { IUser } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
+import { Tag } from './tag.model';
 
 export interface IProcess {
     id?: number;
@@ -13,14 +14,14 @@ export interface IProcess {
     isTriggerable?: boolean | null;
     created?: string | null;
     updated?: string | null;
-    executionsCount?: number | null;
-    successExecutionsCount?: number | null;
-    failureExecutionsCount?: number | null;
+    lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
     createdBy?: IUser | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
+    editor?: IUser | null;
+    tags?: Tag[];
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {

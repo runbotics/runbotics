@@ -22,9 +22,13 @@ declare module '@mui/material/styles' {
       tag: {
         variable: string,
         action: string,
+      };
+
+      button: {
+        danger: string,
       }
     }
-    
+
     interface PaletteOptions {
         infoIcon: {
             default: string
@@ -33,6 +37,10 @@ declare module '@mui/material/styles' {
         tag: {
             variable: string,
             action: string,
+        }
+
+        button: {
+          danger: string,
         }
     }
   }

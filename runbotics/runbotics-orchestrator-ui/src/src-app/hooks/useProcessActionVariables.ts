@@ -35,7 +35,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
         elements.forEach(
             element => {
                 if (element.actionId === 'loop.loop') {
-                    localLoops.push(element);
+                    localLoops.push({ ...element, scopeId: element.actionId });
                     return;
                 }
                 localVarsAssigningActions.push({ ...element, scopeId });
@@ -95,7 +95,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
             );
             
         return ({
-            varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions],
+            varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions, ...localLoops],
             updatedScopeTree
         });
     };
@@ -115,7 +115,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         
         if (!allLocalVarsActions || !canvas) {
-            return { inputActionVariables: [], outputActionVariables: [] };
+            return { inputActionVariables: [], outputActionVariables: [], loopVariables: [], allActionVariables: [] };
         }
 
         /**
@@ -136,12 +136,13 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 const inputVariables = variableInfo
                     .filter(
-                        (item: ActionVariableObject) => item.name === 'variable'
+                        (item: ExtensionElement) => item.name === 'variable'
                     )
-                    .map((item: ActionVariableObject) => ({
+                    .map((item: ExtensionElement) => ({
                         name: item.value,
                         value: item.name,
-                        scopeId: variable.scopeId
+                        scopeId: variable.scopeId,
+                        actionId: variable.id
                     }));
 
                 return inputVariables;
@@ -169,30 +170,43 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 const outputVariables = variableInfo
                     .filter(
-                        (item: ActionVariableObject) =>
+                        (item: ExtensionElement) =>
                             item.name === 'variableName'
                     )
-                    .map((item: ActionVariableObject) => ({
+                    .map((item: ExtensionElement) => ({
                         name: item.value,
                         value: item.name,
-                        scopeId: element.scopeId
+                        scopeId: element.scopeId,
+                        actionId: element.id
                     }));
 
                 return outputVariables;
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flat();
+            
+        const allActionVariables = [...inputActionVars, ...outputActionVars];
 
-        if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars };
+        if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars, loopVariables: [], allActionVariables };
+        
+        const loopIds = allVarsAssigningActions
+            .filter((element: ScopedModdleElement) => element.actionId === 'loop.loop')
+            .map((element: ScopedModdleElement) => element.id);
+        
+        const loopIterator = loopIds.includes(selectedElementParentId) ? [{ name: 'iterator', value: 'variable' }] : [];
             
         const parentScopes = getParentScopes(updatedScopeTree, selectedElementParentId);
-
-        if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [] };
+        if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [], loopVariables: [], allActionVariables: [] };
 
         const localInputActionVars = getParentScopesActionVars(parentScopes, inputActionVars);
         const localOutputActionVars = getParentScopesActionVars(parentScopes, outputActionVars);
 
-        return { inputActionVariables: localInputActionVars, outputActionVariables: localOutputActionVars };
+        return {
+            inputActionVariables: localInputActionVars,
+            outputActionVariables: localOutputActionVars,
+            loopVariables: [...loopIterator],
+            allActionVariables: [...allActionVariables, { name: 'iterator', value: 'variable' }],
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allLocalVarsActions, canvas, selectedElementParentId]);
     

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from 'runbotics-sdk';
+import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from '@runbotics/runbotics-sdk';
 
 export type LoopActionRequest =
 | DesktopRunRequest<'loop.init', LoopInitActionInput>;

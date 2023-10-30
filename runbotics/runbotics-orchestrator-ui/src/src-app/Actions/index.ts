@@ -1,25 +1,26 @@
-
-
 import getApiActions from './api.actions';
 import getApplicationActions from './application.actions';
 import getAsanaActions from './asana.actions';
 import getBeeOfficeActions from './beeOffice.actions';
 import getBrowserActions from './browser.actions';
+import getCloudExcelActions from './cloudExcel.actions';
+import getCloudFileActions from './cloudFile.actions';
 import getCsvActions from './csv.actions';
-import getDesktopOfficeActions from './desktopOffice.actions';
+import getDesktopActions from './desktop.actions';
+import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
+import getImageActions from './image.actions';
 import getJavascriptActions from './javascript.actions';
 import getJiraActions from './jira.actions';
 import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
+import getPowerPointActions from './powerpoint.actions';
 import getSapActions from './sap.actions';
-import getSharepointExcelActions from './sharepointExcel.actions';
-import getSharepointFileActions from './sharepointFile.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
-
+import getVisualBasicActions from './visualBasic.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),
@@ -30,9 +31,9 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getVariablesActions(),
     ...getFileActions(),
     ...getCsvActions(),
-    ...getSharepointExcelActions(),
-    ...getSharepointFileActions(),
-    ...getDesktopOfficeActions(),
+    ...getCloudExcelActions(),
+    ...getCloudFileActions(),
+    ...getPowerPointActions(),
     ...getBrowserActions(),
     ...getJavascriptActions(),
     ...getMailActions(),
@@ -40,6 +41,10 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getGoogleSheetsActions(),
     ...getJiraActions(),
     ...getApiActions(),
+    ...getExcelActions(),
+    ...getDesktopActions(),
+    ...getVisualBasicActions(),
+    ...getImageActions(),
 };
 
 export default internalBpmnActions;

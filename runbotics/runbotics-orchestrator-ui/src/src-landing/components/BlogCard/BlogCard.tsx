@@ -10,9 +10,9 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
 import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
 
+import styles from './BlogCard.module.scss';
 import CardBadge from '../CardBadge';
 import Typography from '../Typography';
-import styles from './BlogCard.module.scss';
 
 
 interface BlogCardProps {

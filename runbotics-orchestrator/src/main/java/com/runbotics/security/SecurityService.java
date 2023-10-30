@@ -3,6 +3,8 @@ package com.runbotics.security;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.FeatureKey;
 import com.runbotics.domain.User;
+import com.runbotics.service.GlobalVariableService;
+import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,9 +18,17 @@ public class SecurityService {
 
     private final Logger log = LoggerFactory.getLogger(SecurityService.class);
     private final UserService userService;
+    private final ProcessService processService;
+    private final GlobalVariableService globalVariableService;
 
-    public SecurityService(final UserService userService) {
+    public SecurityService(
+        final UserService userService,
+        final ProcessService processService,
+        final GlobalVariableService globalVariableService
+    ) {
         this.userService = userService;
+        this.processService = processService;
+        this.globalVariableService = globalVariableService;
     }
 
     @Transactional
@@ -37,5 +47,23 @@ public class SecurityService {
             log.warn("Access denied: User {} doesn't have feature key {}", currentUser.getLogin(), featureKey);
         }
         return isAllowed;
+    }
+
+    @Transactional
+    public boolean isProcessOwner(Long processId) {
+        Long processOwnerId = processService.findOne(processId).get().getCreatedBy().getId();
+        return this.isOwner(processOwnerId);
+    }
+
+    @Transactional
+    public boolean isGlobalVariableOwner(Long globalVariableId) {
+        Long globalVariableOwnerId = globalVariableService.findOne(globalVariableId).get().getCreator().getId();
+        return this.isOwner(globalVariableOwnerId);
+    }
+
+    private boolean isOwner(Long id) {
+        Long currentUserId = userService.getUserWithAuthorities().get().getId();
+        log.debug("Checking if user with id {} can modify", currentUserId);
+        return currentUserId.equals(id);
     }
 }

@@ -8,11 +8,11 @@ import { useDispatch } from '#src-app/store';
 
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';
 
-import ActionDetails from '../ActionDetails';
 
 import Header from './Header';
 
 import Results from './Results';
+import ActionDetails from '../ActionDetails';
 
 
 

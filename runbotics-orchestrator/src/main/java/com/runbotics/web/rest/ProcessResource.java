@@ -3,6 +3,7 @@ package com.runbotics.web.rest;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
@@ -128,7 +129,10 @@ public class ProcessResource {
      * or with status {@code 500 (Internal Server Error)} if the processDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')" +
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
+    )
     @PutMapping("/processes/{id}")
     public ResponseEntity<ProcessDTO> updateProcess(
         @PathVariable(value = "id", required = false) final Long id,
@@ -290,13 +294,11 @@ public class ProcessResource {
     @GetMapping("/processes-page")
     public ResponseEntity<Page<ProcessDTO>> getAllProcessesByPage(ProcessCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Processes by criteria: {}", criteria);
-        var requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
-        Page<ProcessDTO> page = processQueryService.findByCriteria(criteria, pageable);
-        List<ProcessDTO> withoutGuestProcesses = this.processQueryService.filterGuestProcessesByUserRole(page.getContent(), requester.getAuthorities().toString());
-        Page<ProcessDTO> filteredPage = new PageImpl<>(withoutGuestProcesses, pageable, page.getTotalElements());
 
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), filteredPage);
-        return ResponseEntity.ok().headers(headers).body(filteredPage);
+        User requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
+        Page<ProcessDTO> page = processQueryService.findBySearchField(criteria, pageable, requester);
+        HttpHeaders header = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(header).body(page);
     }
 
     /**
@@ -332,7 +334,10 @@ public class ProcessResource {
      * @param id the id of the processDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')" +
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
+    )
     @DeleteMapping("/processes/{id}")
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {
         log.debug("REST request to delete Process : {}", id);

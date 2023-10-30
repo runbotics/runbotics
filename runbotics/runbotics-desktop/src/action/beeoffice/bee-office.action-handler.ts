@@ -1,22 +1,19 @@
-import { StatelessActionHandler } from 'runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import { Injectable } from '@nestjs/common';
-import { externalAxios } from '#config';
+import { externalAxios, ServerConfigService } from '#config';
 import * as BeeOfficeTypes from './types';
 
 @Injectable()
 export default class BeeOfficeActionHandler extends StatelessActionHandler {
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
     async getBearerToken() {
-        const obj = {
-            grant_type: 'password',
-            username: process.env.BEE_USER,
-            password: process.env.BEE_PASS,
-            logsys: process.env.BEE_LOGSYS,
-        };
+        const obj = this.serverConfigService.beeAuth;
 
         const data = Object.keys(obj)
             .map((key, index) => `${key}=${encodeURIComponent(obj[key])}`)
@@ -28,7 +25,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
                 'content-type': 'application/x-www-form-urlencoded',
             },
             data,
-            url: `${process.env.BEE_URL}/Token`,
+            url: `${this.serverConfigService.beeUrl}/Token`,
             maxRedirects: 0,
         });
 
@@ -39,7 +36,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetEmployeeActionInput
     ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
-            `${process.env.BEE_URL}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
+            `${this.serverConfigService.beeUrl}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -55,7 +52,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetEmployeeByIdActionInput
     ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeByIdActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
-            `${process.env.BEE_URL}/api/employees/ID;ADD;eq;${input.id}`,
+            `${this.serverConfigService.beeUrl}/api/employees/ID;ADD;eq;${input.id}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -76,7 +73,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         };
         const method = input.method ? methods[input.method] : 'ct';
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${process.env.BEE_URL}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
+            `${this.serverConfigService.beeUrl}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -140,7 +137,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             leaveConfig_id: null,
         };
 
-        const response = await externalAxios.post(`${process.env.BEE_URL}/api/timetableactivity`, requestBody, {
+        const response = await externalAxios.post(`${this.serverConfigService.beeUrl}/api/timetableactivity`, requestBody, {
             headers: {
                 Authorization: 'Bearer ' + (await this.getBearerToken()),
             },
@@ -155,7 +152,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     ): Promise<BeeOfficeTypes.BeeOfficeGetScheduleActionOutput> {
         const limit = input.limit ? input.limit : 100;
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${process.env.BEE_URL}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
+            `${this.serverConfigService.beeUrl}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -171,7 +168,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeDeleteTimeTableActionInput,
     ): Promise<BeeOfficeTypes.BeeOfficeDeleteTimeTableActionOutput> {
         const response = await externalAxios.delete<any>(
-            `${process.env.BEE_URL}/api/timetableactivity/${input.timeTableActivity.ID}`,
+            `${this.serverConfigService.beeUrl}/api/timetableactivity/${input.timeTableActivity.ID}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -187,7 +184,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetActivityGroupsActionInput,
     ): Promise<BeeOfficeTypes.BeeOfficeGetActivityGroupsActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${process.env.BEE_URL}/api/activitygroup/name;ADD;eq;${input.group}`,
+            `${this.serverConfigService.beeUrl}/api/activitygroup/name;ADD;eq;${input.group}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
@@ -203,7 +200,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetActivitiesByURLParametersActionInput,
     ): Promise<BeeOfficeTypes.BeeOfficeGetActivitiesByURLParametersActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${process.env.BEE_URL}/api/activity/${input.query}`,
+            `${this.serverConfigService.beeUrl}/api/activity/${input.query}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),

@@ -8,8 +8,8 @@ import heroRobotHand from '#public/images/shapes/hero_robotic_hand.png';
 
 import { HERO_SECTION_ID } from '#src-landing/utils/utils';
 
-import { HERO_TITLE_ID } from '../HeroSection.utils';
 import styles from './HeroBackground.module.scss';
+import { HERO_TITLE_ID } from '../HeroSection.utils';
 
 const HeroBackground: FC = ({ children }) => (
     <section className={styles.root} id={HERO_SECTION_ID} aria-labelledby={HERO_TITLE_ID}>

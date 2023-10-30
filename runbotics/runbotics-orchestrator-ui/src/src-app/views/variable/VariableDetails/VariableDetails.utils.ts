@@ -4,9 +4,9 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
 
+import { Validator, VariableState, VariableValue } from './VariableDetails.types';
 import { VariableType } from '../Variable.types';
 
-import { Validator, VariableState, VariableValue } from './VariableDetails.types';
 
 
 

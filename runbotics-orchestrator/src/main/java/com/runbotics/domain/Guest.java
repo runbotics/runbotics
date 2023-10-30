@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity(name = "guest")
 public class Guest {
     @Id
-    @Column(name = "ip", length = 100)
+    @Column(name = "ip_hash", length = 100)
     String ip;
 
     @ManyToOne

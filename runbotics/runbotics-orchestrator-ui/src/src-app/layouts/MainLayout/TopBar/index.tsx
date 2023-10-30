@@ -5,13 +5,12 @@ import clsx from 'clsx';
 import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
-import { FeatureKey, Role } from 'runbotics-common';
+import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import Logo from '#src-app/components/utils/Logo/Logo';
 import useAuth from '#src-app/hooks/useAuth';
-import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';

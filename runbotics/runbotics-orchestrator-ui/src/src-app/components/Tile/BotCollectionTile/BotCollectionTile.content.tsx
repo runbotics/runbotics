@@ -9,9 +9,9 @@ import moment from 'moment';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { DATE_FORMAT } from '..';
 import { StyledContent } from './BotCollectionTile.styles';
 import { BotCollectionTileProps } from './BotCollectionTile.types';
+import { DATE_FORMAT } from '..';
 
 
 const BotCollectionTileContent: FunctionComponent<BotCollectionTileProps> = ({ botCollection }) => {

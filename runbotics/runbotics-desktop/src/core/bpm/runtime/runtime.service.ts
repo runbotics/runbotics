@@ -23,7 +23,7 @@ import {
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { EventEmitter } from 'events';
-import { mkdirSync, rmdirSync } from 'fs';
+import { mkdirSync, rmSync } from 'fs';
 
 import { RunboticsLogger } from '#logger';
 
@@ -43,6 +43,7 @@ import {
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -57,7 +58,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     constructor(
         @Inject(forwardRef(() => DesktopRunnerService))
         private desktopRunnerService: DesktopRunnerService,
-        private readonly loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService,
+        private readonly serverConfigService: ServerConfigService,
     ) {}
 
     onApplicationBootstrap() {
@@ -90,7 +92,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     private getTempDirPath() {
-        return `${process.cwd()}/temp`;
+        return this.serverConfigService.tempFolderPath;
     }
 
     private createTempDir() {
@@ -99,7 +101,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private cleanTempDir = async (processInstanceId: string): Promise<void> => {
         try {
-            rmdirSync(`${process.cwd()}/temp`, { recursive: true });
+            rmSync(this.getTempDirPath(), { recursive: true });
             this.logger.log(
                 `[${processInstanceId}] Deleted process instance temp directory`
             );
@@ -110,16 +112,18 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         }
     };
 
-    private logRuntimeObjects() {
-        const processInstancesLength = Object.keys(this.processInstances).length;
-        const enginesLength = Object.keys(this.engines).length;
-      
-        this.logger.warn(`Process instances: ${processInstancesLength} Engines: ${enginesLength}`);
+    public getRuntimeStatus() {
+        const processInstancesCount = Object.keys(this.processInstances).length;
+        const enginesCount = Object.keys(this.engines).length;
+    
+        return { processInstancesCount, enginesCount };
     }
 
     private async monitor() {
         setInterval(() => {
-            this.logRuntimeObjects();
+            const { processInstancesCount, enginesCount } = this.getRuntimeStatus();
+
+            this.logger.warn(`Process instances: ${processInstancesCount} Engines: ${enginesCount}`);
         }, 100000);
     }
     
@@ -376,12 +380,14 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         };
 
         const services = this.createEngineExecutionServices(processInstanceId);
+        const triggerData = request?.triggerData;
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
             variables: {
                 ...request.variables,
                 tempFolder: this.getTempDirPath(),
+                userEmail: triggerData && 'userEmail' in triggerData ? triggerData.userEmail : '',
             },
             listener,
         };
@@ -407,12 +413,15 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             };
         };
 
+        // passed to Camunda, helps store output variables in the scope of a single process
+        const processEnvironment = {};
+
         const engine = Engine({
             name: process.name,
             source: process.definition,
             // Logger: Logger as any,
             extensions: {
-                camunda: Camunda,
+                camunda: (activity) => Camunda(activity, processEnvironment),
             },
             // elements: runboticsElements,
             moddleOptions: {

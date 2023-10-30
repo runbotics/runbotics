@@ -12,13 +12,13 @@ import useQuery from '#src-app/hooks/useQuery';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 import { BotCollectionTab } from '../../../utils/bot-tab';
 
 import BotCollectionView from '../BotCollectionView';
 
 import BotListView from '../BotListView';
 
-import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 
 
 

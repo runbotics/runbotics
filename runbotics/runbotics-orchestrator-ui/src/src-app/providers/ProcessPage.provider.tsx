@@ -43,7 +43,13 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                 page,
                 size: pageSize,
                 filter: {
-                    contains: { ...(search.trim() && { name: search.trim() }) },
+                    contains: {
+                        ...(search.trim() && {
+                            name: search.trim(),
+                            createdByName: search.trim(),
+                            tagName: search.trim()
+                        })
+                    },
                 },
             }),
         );

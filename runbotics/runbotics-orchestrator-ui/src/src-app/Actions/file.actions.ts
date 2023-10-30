@@ -1,3 +1,5 @@
+import { FileAction, ActionRegex } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -7,9 +9,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getFileActions = (): Record<string, IBpmnAction> => ({
     'file.appendFile': {
-        id: 'file.appendFile',
+        id: FileAction.APPEND_FILE,
         label: translate('Process.Details.Modeler.Actions.File.AppendFile.Label'),
-        script: 'file.appendFile',
+        script: FileAction.APPEND_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -22,7 +24,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.AppendFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -62,9 +64,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.createFile': {
-        id: 'file.createFile',
+        id: FileAction.CREATE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.CreateFile.Label'),
-        script: 'file.createFile',
+        script: FileAction.CREATE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -77,7 +79,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.CreateFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -110,9 +112,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.removeFile': {
-        id: 'file.removeFile',
+        id: FileAction.REMOVE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.RemoveFile.Label'),
-        script: 'file.removeFile',
+        script: FileAction.REMOVE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -125,7 +127,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.RemoveFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -150,9 +152,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.readFile': {
-        id: 'file.readFile',
+        id: FileAction.READ_FILE,
         label: translate('Process.Details.Modeler.Actions.File.ReadFile.Label'),
-        script: 'file.readFile',
+        script: FileAction.READ_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -165,7 +167,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.ReadFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
@@ -176,13 +178,14 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         required: ['path'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.File.ReadFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.File.ReadFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.File.ReadFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -191,6 +194,13 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -203,9 +213,9 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
         },
     },
     'file.writeFile': {
-        id: 'file.writeFile',
+        id: FileAction.WRITE_FILE,
         label: translate('Process.Details.Modeler.Actions.File.WriteFile.Label'),
-        script: 'file.writeFile',
+        script: FileAction.WRITE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -218,7 +228,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.File.WriteFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {

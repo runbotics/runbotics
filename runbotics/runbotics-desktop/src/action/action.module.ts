@@ -18,10 +18,17 @@ import LoopActionHandler from './loop';
 import MailActionHandler from './mail';
 import { MicrosoftModule } from './microsoft';
 import JavaScriptActionHandler from './rce';
-import SapActionHandler from './sap';
-import SharepointExcelActionHandler from './sharepoint/excel';
-import SharepointFileActionHandler from './sharepoint/file';
 import VariableActionHandler from './variable';
+import { ExcelService } from './microsoft/excel';
+import DesktopActionHandler from './desktop';
+import VisualBasicActionHandler from './visual-basic';
+import { CloudExcelActionHandler } from './microsoft/automation/excel';
+import { OneDriveService } from './microsoft/one-drive';
+import { SharePointService } from './microsoft/share-point';
+import { MicrosoftGraphService } from './microsoft/microsoft-graph';
+import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
+import { CloudFileActionHandler } from './microsoft/automation/file';
+import { ImageActionHandler } from './image';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -38,10 +45,17 @@ const ALL_ACTION_HANDLERS = [
     LoopActionHandler,
     MailActionHandler,
     JavaScriptActionHandler,
-    SapActionHandler,
-    SharepointExcelActionHandler,
-    SharepointFileActionHandler,
+    CloudExcelActionHandler,
+    CloudFileActionHandler,
     VariableActionHandler,
+    ExcelService,
+    OneDriveService,
+    SharePointService,
+    MicrosoftGraphService,
+    MicrosoftAuthService,
+    DesktopActionHandler,
+    VisualBasicActionHandler,
+    ImageActionHandler,
 ];
 
 @Module({

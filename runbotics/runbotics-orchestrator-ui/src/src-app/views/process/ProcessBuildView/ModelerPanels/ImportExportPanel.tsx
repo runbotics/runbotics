@@ -9,14 +9,14 @@ import Secured from '#src-app/components/utils/Secured';
 import useProcessImport from '#src-app/hooks/useProcessImport';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import FloatingGroup from '../FloatingGroup';
-
-import { AdditionalInfo } from '../Modeler/BpmnModeler';
 import {
     FirstActionButton,
     ImportInput,
     StyledLabel,
 } from './ModelerPanels.styled';
+import FloatingGroup from '../FloatingGroup';
+
+import { AdditionalInfo } from '../Modeler/BpmnModeler';
 
 interface ImportExportPanelProps {
     onImport: (definition: string, additionalInfo: AdditionalInfo) => void;

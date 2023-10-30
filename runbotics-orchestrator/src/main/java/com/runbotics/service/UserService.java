@@ -8,14 +8,18 @@ import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
+import com.runbotics.service.criteria.UserCriteria;
+import com.runbotics.service.dto.AccountPartialUpdateDTO;
 import com.runbotics.service.dto.AdminUserDTO;
 import com.runbotics.service.dto.UserDTO;
-
+import com.runbotics.service.mapper.AccountPartialUpdateMapper;
+import com.runbotics.service.mapper.AdminUserMapper;
+import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -43,16 +47,30 @@ public class UserService {
 
     private final ProcessRepository processRepository;
 
+    private final UserMapper userMapper;
+
+    private final AccountPartialUpdateMapper accountPartialUpdateMapper;
+
+    private final AdminUserMapper adminUserMapper;
+
+    private static final String ENTITY_NAME = "user";
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
-        ProcessRepository processRepository
+        ProcessRepository processRepository,
+        UserMapper userMapper,
+        AccountPartialUpdateMapper accountPartialUpdateMapper,
+        AdminUserMapper adminUserMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.userMapper = userMapper;
+        this.accountPartialUpdateMapper = accountPartialUpdateMapper;
+        this.adminUserMapper = adminUserMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -224,9 +242,9 @@ public class UserService {
             .map(AdminUserDTO::new);
     }
 
-    public void deleteUser(String login) {
+    public void deleteUser(Long id) {
         userRepository
-            .findOneByLogin(login)
+            .findOneById(id)
             .ifPresent(
                 user -> {
                     userRepository.delete(user);
@@ -234,7 +252,9 @@ public class UserService {
                 }
             );
 
-        processRepository.deleteUnassignedPrivateProcesses();
+        if (processRepository.countUserProcesses(id) > 0) {
+            processRepository.deleteUnassignedPrivateProcesses();
+        }
     }
 
     public User saveUser(User user) {
@@ -266,6 +286,68 @@ public class UserService {
                     log.debug("Changed Information for User: {}", user);
                 }
             );
+    }
+
+    /**
+     * Update information for the current user.
+     *
+     * @param userDTO includes only fields available for the user to update
+     */
+    public void partialAccountUpdate(User user, AccountPartialUpdateDTO userDTO) {
+        accountPartialUpdateMapper.partialUpdate(user, userDTO);
+
+        userRepository.save(user);
+        log.debug("User information updated", user);
+    }
+
+    /**
+     * Partial update information for the current user.
+     * @param adminUserDTO additionally ignoring fields:
+     *                     imageUrl, createBy, createdDate,
+     *                     lastModifiedBy, lastModifiedDate,
+     *                     featureKeys
+     * @return updated user
+     */
+    public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
+        log.debug("Request to partially update User : {}", adminUserDTO);
+
+        excludeAdminUserDTOFields(adminUserDTO);
+        return userRepository
+            .findById(adminUserDTO.getId())
+            .map(
+                existingUser -> {
+                    userRepository.findOtherUserByLoginOrEmail(
+                        adminUserDTO.getId(),
+                        adminUserDTO.getEmail(),
+                        adminUserDTO.getLogin()
+                    )
+                    .ifPresent(user -> {
+                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                        } else {
+                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                        }
+                    });
+
+                    adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+
+                    if (adminUserDTO.getRoles() != null) {
+                        Set<Authority> managedAuthorities = existingUser.getAuthorities();
+                        managedAuthorities.clear();
+                        adminUserDTO
+                            .getRoles()
+                            .stream()
+                            .map(authorityRepository::findById)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .forEach(managedAuthorities::add);
+                    }
+
+                    return existingUser;
+                }
+            )
+            .map(userRepository::save)
+            .map(userMapper::userToAdminUserDTO);
     }
 
     @Transactional
@@ -312,8 +394,23 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable) {
-        return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+    public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
+        if (criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+        }
+        return userRepository
+            .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable, UserCriteria criteria) {
+        if (criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+        }
+        return userRepository
+            .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+            .map(AdminUserDTO::new);
     }
 
     /**
@@ -351,5 +448,31 @@ public class UserService {
             .filter(authority -> authority.getName().equals(AuthoritiesConstants.GUEST))
             .flatMap(guest -> guest.getUsers().stream().map(User::getId))
             .collect(Collectors.toList());
+    }
+
+    private void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
+        if (adminUserDTO.getImageUrl() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "imageUrl");
+        }
+
+        if (adminUserDTO.getCreatedBy() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "createdBy");
+        }
+
+        if (adminUserDTO.getCreatedDate() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "createdDate");
+        }
+
+        if (adminUserDTO.getLastModifiedBy() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "lastModifiedBy");
+        }
+
+        if (adminUserDTO.getLastModifiedDate() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "lastModifiedDate");
+        }
+
+        if (adminUserDTO.getFeatureKeys() != null) {
+            throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "featureKeys");
+        }
     }
 }

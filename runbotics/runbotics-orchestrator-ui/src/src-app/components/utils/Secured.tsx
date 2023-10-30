@@ -29,6 +29,8 @@ export const hasAuthorities = (user: User, authorities: any[]) => {
 };
 
 export const hasRoleAccess = (user: User, roles: Role[]) => {
+    if (roles.length === 0) return true;
+
     if (!user || !user.roles) 
     { return false; }
     
@@ -37,12 +39,12 @@ export const hasRoleAccess = (user: User, roles: Role[]) => {
     { if (!user.roles.includes(role)) 
     { return false; } }
         
-    
-
     return true;
 };
 
 export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[], options?: AccessUtility) => {
+    if (featureKeys.length === 0) return true;
+
     if (!user || !user.featureKeys || !user.roles) {
         return false;
     }

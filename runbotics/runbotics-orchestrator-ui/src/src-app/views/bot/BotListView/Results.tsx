@@ -34,10 +34,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { botActions } from '../../../store/slices/Bot';
-import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 import ActionBotButton from './ActionBotButton';
 import { classes, StyledCard } from './Results.styles';
+import { botActions } from '../../../store/slices/Bot';
+import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 
 
 
@@ -149,7 +149,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.System')}</TableCell>
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.Version')}</TableCell>
                                 <TableCell>{translate('Bot.ListView.Results.Table.Header.LastConnected')}</TableCell>
-                                <TableCell width={20} />
+                                <TableCell width={80} />
                             </TableRow>
                         </TableHead>
                         <TableBody>

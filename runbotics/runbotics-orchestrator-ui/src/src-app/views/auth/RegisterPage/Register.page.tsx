@@ -135,7 +135,7 @@ const RegisterPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = error.status >= 400 && error.status < 500 ? '4xx' : error.status;
+                const status = error.status >= 400 && error.status < 500 ? '4xx' : '5xx';
 
                 const errorKey = `Register.Error.${status}`;
 

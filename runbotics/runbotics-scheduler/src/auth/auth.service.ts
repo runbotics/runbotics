@@ -8,11 +8,12 @@ import { BotService } from '../database/bot/bot.service';
 import { UserService } from '../database/user/user.service';
 import { JWTPayload } from '../types';
 import { Logger } from '../utils/logger';
-import { BotStatus, IBot } from 'runbotics-common';
+import { BotStatus, BotSystem, IBot } from 'runbotics-common';
 import { BotSystemService } from '../database/bot-system/bot-system.service';
 import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
+import { Connection } from 'typeorm';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -29,6 +30,7 @@ export class AuthService {
         private readonly botSystemService: BotSystemService,
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
+        private readonly connection: Connection,
     ) {}
 
     validatePayload(payload: JWTPayload) {
@@ -38,6 +40,7 @@ export class AuthService {
     validateToken(token: string) {
         const secret = this.serverConfigService.secret;
         const jwtPayload = jwt.verify(token, secret) as JWTPayload;
+        this.logger.debug(`Validating token - ${jwtPayload.sub}`);
         return this.validatePayload(jwtPayload);
     }
 
@@ -115,6 +118,14 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
+        return this.validateBotConnection({client, isGuard})
+            .catch((error) => {
+                this.logger.error('Bot connection error', error);
+                return null;
+            });
+    }
+
+    async validateBotConnection({ client, isGuard }: ValidatorBotWsProps) {
         const { token, installationId, system, collection, version } = client.handshake.auth;
 
         this.validateParameterFromBot(token, 'empty token', client);
@@ -128,7 +139,10 @@ export class AuthService {
 
         this.validateParameterFromBot(user, 'user does not exist', client);
         this.validateParameterFromBot(installationId, 'missing installationId in bot data', client);
+
         this.validateParameterFromBot(system, 'missing system in bot data', client);
+        this.validateBotSystem(system, client);
+
         this.validateParameterFromBot(collection, 'missing collection in bot data', client);
 
         const collectionEntity = await this.botCollectionService.findById(collection);
@@ -143,11 +157,12 @@ export class AuthService {
                     this.logger.warn(`Bot cannot be registered. Provided version ${version} does not fulfill minimum ${this.serverConfigService.requiredBotVersion}`);
                     throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`);
                 }
-
+                this.logger.debug(`Bot can be registered`);
                 return bot;
             })
             .then((bot) => {
                 if (isGuard) return bot;
+                this.logger.debug(`Bot is not a guard`);
                 return bot
                     ? this.registerBot(bot, mutableBotParams)
                     : this.registerNewBot({ installationId, user, ...mutableBotParams });
@@ -162,13 +177,22 @@ export class AuthService {
     }
 
     private validateParameterFromBot(parameter, exceptionMessage: string, client: Socket) {
+        this.logger.debug(`Validating bot - ${exceptionMessage} (result:${!!parameter})`);
         if (!parameter) {
             client.disconnect();
             throw new WsException(exceptionMessage);
         }
     }
 
+    private validateBotSystem(system: BotSystem, client: Socket): void {
+        this.logger.debug(`Validating bot - system (result:${Object.values(BotSystem).includes(system)})`);
+        if (Object.values(BotSystem).includes(system)) return;
+        client.disconnect();
+        throw new WsException(`Bot system (${system}) is incompatible`);
+    }
+
     private validateBot(installationId: string) {
+        this.logger.debug(`Validating bot - installationId (${installationId})`);
         return this.botService.findByInstallationId(installationId);
     }
 
@@ -204,12 +228,34 @@ export class AuthService {
     }
 
     async unregisterBot(installationId: string) {
-        const bot = await this.botService.findByInstallationId(installationId);
-        bot.status = BotStatus.DISCONNECTED;
-        this.logger.log(`Bot ${bot.installationId} is unregistered`);
-        return this.botService.save(bot).catch(() => {
-            throw new WsException(`Bot ${bot.installationId} cannot be unregistered`);
-        });
+        const queryRunner = this.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const bot = await queryRunner.manager
+                .findOne(BotEntity, { where: { installationId: installationId }, relations: ['user', 'system', 'collection']});
+
+            bot.status = BotStatus.DISCONNECTED;
+
+            await queryRunner.manager
+                .createQueryBuilder()
+                .update(BotEntity)
+                .set({
+                   ...bot,
+                })
+                .where('id = :id', { id: bot.id })
+                .execute();
+
+            await queryRunner.commitTransaction();
+            this.logger.log(`Bot ${bot.installationId} has been unregistered`);
+            return bot;
+        } catch (err: unknown) {
+            this.logger.error('Process instance update error: rollback', err);
+            await queryRunner.rollbackTransaction();
+            throw new WsException(`Bot ${installationId} cannot be unregistered`);
+        } finally {
+            await queryRunner.release();
+        }
     }
 }
 

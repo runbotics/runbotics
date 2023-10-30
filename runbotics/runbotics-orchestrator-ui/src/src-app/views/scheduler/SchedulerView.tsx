@@ -81,26 +81,26 @@ const SchedulerView = () => {
 
     return (
         <InternalPage
-            title={translate('Scheduler.Meta.Title')}
+            title={translate('Scheduler.Common.Title')}
             sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
         >
             <Header />
             <Stack spacing={3}>
                 <SchedulerTableContainer<IProcessInstance>
                     columns={activeProcessColumns}
-                    title={translate('Scheduler.View.ActiveProcesses.Title')}
+                    title={translate('Scheduler.Common.Title')}
                     processes={activeJobs}
                     onRedirect={handleProcessInstanceRedirect}
                 />
                 <SchedulerTableContainer<QueueJob>
                     columns={waitingProcessColumns}
-                    title={translate('Scheduler.View.PendingProcesses.Title')}
+                    title={translate('Scheduler.Common.Title')}
                     processes={waitingJobs}
                     onRedirect={handleSchedulerJobRedirect}
                 />
                 <SchedulerTableContainer<ScheduledJob>
                     columns={scheduledProcessColumns}
-                    title={translate('Scheduler.View.ScheduledProcesses.Title')}
+                    title={translate('Scheduler.Common.Title')}
                     processes={scheduledJobs}
                     onRedirect={handleScheduledJobRedirect}
                     renderSubRow={renderScheduledJobSubRow}

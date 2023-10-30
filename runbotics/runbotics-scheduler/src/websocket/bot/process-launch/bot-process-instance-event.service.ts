@@ -16,8 +16,7 @@ import { ProcessInstanceEventEntity } from '#/database/process-instance-event/pr
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
 import { Injectable } from '@nestjs/common';
-import { getIsInstanceInterrupted } from './bot-process-instance.service.utils';
-import { BotWebSocketGateway } from '../bot.gateway';
+import { isInstanceInterrupted } from './bot-process-instance.service.utils';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -73,37 +72,7 @@ export class BotProcessEventService {
                     return null;
                 });
 
-            if(!processInstance) return;
-
-            if(getIsInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
-                const error = processInstance?.error;
-                const newStatus = 
-                    processInstance.status === ProcessInstanceStatus.TERMINATED
-                        ? ProcessInstanceEventStatus.TERMINATED
-                        : ProcessInstanceEventStatus.ERRORED;
-
-                const newProcessInstanceEvent = {
-                    ...processInstanceEvent,
-                    status: newStatus,
-                    finished: processInstance.updated,
-                    error,
-                };
-
-                this.upsertProcessInstanceEvent(
-                    queryRunner,
-                    newProcessInstanceEvent,
-                    processInstance,
-                    processInstanceEvent.status
-                );
-            } else {
-                this.upsertProcessInstanceEvent(
-                    queryRunner,
-                    processInstanceEvent,
-                    processInstance,
-                    processInstanceEvent.status
-                );
-            }
-
+            await this.updateProcessInstanceEventParams(queryRunner, processInstanceEvent, processInstance);
             await queryRunner.commitTransaction();
 
             const updatedProcessInstanceEvent =
@@ -136,6 +105,41 @@ export class BotProcessEventService {
             await queryRunner.rollbackTransaction();
         } finally {
             await queryRunner.release();
+        }
+    }
+
+    async updateProcessInstanceEventParams(
+        queryRunner: QueryRunner, processInstanceEvent: IProcessInstanceEvent, processInstance: IProcessInstance
+    ) {
+        if(!processInstance) return;
+
+        if(isInstanceInterrupted(processInstanceEvent.status, processInstance.status)) {
+            const error = processInstance.error;
+            const newStatus =
+                processInstance.status === ProcessInstanceStatus.TERMINATED
+                    ? ProcessInstanceEventStatus.TERMINATED
+                    : ProcessInstanceEventStatus.ERRORED;
+
+            const newProcessInstanceEvent = {
+                ...processInstanceEvent,
+                status: newStatus,
+                finished: processInstance.updated,
+                error,
+            };
+
+            this.upsertProcessInstanceEvent(
+                queryRunner,
+                newProcessInstanceEvent,
+                processInstance,
+                processInstanceEvent.status
+            );
+        } else {
+            this.upsertProcessInstanceEvent(
+                queryRunner,
+                processInstanceEvent,
+                processInstance,
+                processInstanceEvent.status
+            );
         }
     }
 

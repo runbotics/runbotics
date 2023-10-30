@@ -1,5 +1,7 @@
 package com.runbotics.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.runbotics.service.dto.ProcessDTOViews;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +15,7 @@ public class BotSystem {
     @Size(max = 50)
     @Id
     @Column(length = 50)
+    @JsonView(ProcessDTOViews.DefaultView.class)
     public String name;
 
     public BotSystem() {}

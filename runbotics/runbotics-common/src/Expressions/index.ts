@@ -69,17 +69,18 @@ export class Expressions {
 
             response.jexl = true;
 
-            const property = templatedString.replace(jexlPattern, (expressionMatch, innerProperty) => {
+            const property = templatedString.replace(
+                jexlPattern, (expressionMatch, innerProperty) => {
                     const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
-                    const isPropertyArray = Array.isArray(evaluatedProperty);
+                    const isPropertyCollection = this.checkIsCollection(evaluatedProperty);
 
-                    return isPropertyArray ? JSON.stringify(evaluatedProperty) : evaluatedProperty;
+                    return isPropertyCollection ? JSON.stringify(evaluatedProperty) : evaluatedProperty;
                 }
             );
 
             try {
                 const parsedProperty = JSON.parse(property);
-                if (Array.isArray(parsedProperty)) {
+                if (this.checkIsCollection(parsedProperty)) {
                     response.result = parsedProperty;
                 } else {
                     response.result = property;
@@ -117,6 +118,8 @@ export class Expressions {
                 return false;
             } else if (innerProperty === "null") {
                 return null;
+            } else if (innerProperty === "iterator") {
+                return context.environment.variables.content.index;
             } else {
                 const n = Number(innerProperty);
                 if (!isNaN(n)) return n;
@@ -129,7 +132,7 @@ export class Expressions {
                 expressionFnContext
             );
             if (expressionMatch.input === expressionMatch[0]) {
-                return contextValue;
+                return contextValue ?? String(contextValue);
             }
 
             result = result.replace(
@@ -149,5 +152,9 @@ export class Expressions {
     public static hasExpression(text) {
         if (!text) return false;
         return expressionPattern.test(text);
+    }
+
+    private static checkIsCollection(value) {
+        return Array.isArray(value) || typeof value === "object";
     }
 }

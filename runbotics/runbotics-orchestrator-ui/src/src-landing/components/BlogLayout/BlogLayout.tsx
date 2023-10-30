@@ -1,8 +1,8 @@
 import { FC } from 'react';
 
+import styles from './BlogLayout.module.scss';
 import BlogHeadImage from '../BlogHeadImage';
 
-import styles from './BlogLayout.module.scss';
 
 const BlogLayout: FC = ({ children }) => (
     <>

@@ -15,10 +15,10 @@ import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import ProcessPageProvider from '#src-app/providers/ProcessPage.provider';
 import { useSelector } from '#src-app/store';
 
-import GridView from '../GridView';
-import ProcessTable from '../ProcessTable/ProcessTable';
 import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
+import GridView from '../GridView';
+import ProcessTable from '../ProcessTable/ProcessTable';
 
 
 

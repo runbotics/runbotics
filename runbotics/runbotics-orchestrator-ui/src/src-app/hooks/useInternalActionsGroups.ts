@@ -3,19 +3,23 @@ import getApplicationActions from '#src-app/Actions/application.actions';
 import getAsanaActions from '#src-app/Actions/asana.actions';
 import getBeeOfficeActions from '#src-app/Actions/beeOffice.actions';
 import getBrowserActions from '#src-app/Actions/browser.actions';
+import getCloudExcelActions from '#src-app/Actions/cloudExcel.actions';
+import getCloudFileActions from '#src-app/Actions/cloudFile.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
-import getDesktopOfficeActions from '#src-app/Actions/desktopOffice.actions';
+import getDesktopActions from '#src-app/Actions/desktop.actions';
+import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
+import getImageActions from '#src-app/Actions/image.actions';
 import getJavascriptActions from '#src-app/Actions/javascript.actions';
 import getJiraActions from '#src-app/Actions/jira.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
+import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
-import getSharepointExcelActions from '#src-app/Actions/sharepointExcel.actions';
-import getSharepointFileActions from '#src-app/Actions/sharepointFile.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
+import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
@@ -29,115 +33,135 @@ const useInternalActionsGroups = (): Record<
     return {
         variables: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Variables'
+                'Process.Details.Modeler.ActionsGroup.Variables'
             ),
             items: Object.values(getVariablesActions())
         },
         general: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.General'
+                'Process.Details.Modeler.ActionsGroup.General'
             ),
             items: Object.values(getGeneralActions())
         },
         mail: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Mail'
+                'Process.Details.Modeler.ActionsGroup.Mail'
             ),
             items: Object.values(getMailActions())
         },
         browser: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Browser'
+                'Process.Details.Modeler.ActionsGroup.Browser'
             ),
             items: Object.values(getBrowserActions())
         },
         loop: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Loop'
+                'Process.Details.Modeler.ActionsGroup.Loop.Loop'
             ),
             items: Object.values(getLoopActions())
         },
         api: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.API'
+                'Process.Details.Modeler.ActionsGroup.Api'
             ),
             items: Object.values(getApiActions())
         },
         javascript: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.JavaScript'
+                'Process.Details.Modeler.ActionsGroup.JavaScript'
             ),
             items: Object.values(getJavascriptActions())
         },
+        desktop: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.Desktop'
+            ),
+            items: Object.values(getDesktopActions())
+        },
         asana: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Asana'
+                'Process.Details.Modeler.ActionsGroup.Asana'
             ),
             items: Object.values(getAsanaActions())
         },
         google: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Google'
+                'Process.Details.Modeler.ActionsGroup.Google'
             ),
             items: Object.values(getGoogleSheetsActions())
         },
         jira: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.JIRA'
+                'Process.Details.Modeler.ActionsGroup.Jira'
             ),
             items: Object.values(getJiraActions())
         },
         file: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.File'
+                'Process.Details.Modeler.ActionsGroup.File'
             ),
             items: Object.values(getFileActions())
         },
+        image: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Image'),
+            items: Object.values(getImageActions()),
+        },
         csv: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.CSV'
+                'Process.Details.Modeler.ActionsGroup.Csv'
             ),
             items: Object.values(getCsvActions())
         },
-        desktopOfficeActions: {
+        excel: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.DesktopOffice'
+                'Process.Details.Modeler.ActionsGroup.Excel'
             ),
-            items: Object.values(getDesktopOfficeActions())
+            items: Object.values(getExcelActions())
         },
-        sharepointExcel: {
+        powerPoint: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.SharePointExcel'
+                'Process.Details.Modeler.ActionsGroup.Powerpoint'
             ),
-            items: Object.values(getSharepointExcelActions())
+            items: Object.values(getPowerPointActions())
         },
-        sharepointFile: {
+        cloudExcel: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.SharePointFile'
+                'Process.Details.Modeler.ActionsGroup.CloudExcel'
             ),
-            items: Object.values(getSharepointFileActions())
+            items: Object.values(getCloudExcelActions())
+        },
+        cloudFile: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.CloudFile'
+            ),
+            items: Object.values(getCloudFileActions())
         },
         beeoffice: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.BeeOffice'
+                'Process.Details.Modeler.ActionsGroup.BeeOffice'
             ),
             items: Object.values(getBeeOfficeActions())
         },
         sap: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.SAP'
+                'Process.Details.Modeler.ActionsGroup.Sap'
             ),
             items: Object.values(getSapActions())
         },
         application: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.Application'
+                'Process.Details.Modeler.ActionsGroup.Application'
             ),
             items: Object.values(getApplicationActions())
         },
+        visualBasic: {
+            label: 'Visual Basic',
+            items: Object.values(getVisualBasicActions())
+        },
         external: {
             label: translate(
-                'Process.Details.Modeler.ActionPanel.ActionsGroup.External'
+                'Process.Details.Modeler.ActionsGroup.External'
             ),
             items: []
         }

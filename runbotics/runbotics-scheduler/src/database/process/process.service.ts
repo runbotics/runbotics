@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
 
-const relations = ['createdBy', 'system', 'botCollection', 'schedules'];
+const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor'];
 
 @Injectable()
 export class ProcessService {

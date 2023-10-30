@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 
-const ElementAwareAutocompleteWidget = dynamic(() => import('./ElementAwareAutocompleteWidget'), { ssr: false });
+const CustomTextWidget = dynamic(() => import('./CustomTextWidget'), { ssr: false });
 const GlobalVariableSelectWidget = dynamic(() => import('./GlobalVariableSelectWidget'), { ssr: false });
 const JsonViewWidget = dynamic(() => import('./JsonViewWidget'), { ssr: false });
 const EditorWidget = dynamic(() => import('./EditorWidget'), { ssr: false });
@@ -12,7 +12,7 @@ const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: fals
 const DatePickerWidget = dynamic(() => import('./DatePickerWidget'), { ssr: false });
 
 const customWidgets = {
-    TextWidget: ElementAwareAutocompleteWidget,
+    TextWidget: CustomTextWidget,
     ProcessNameSuggestionWidget,
     JsonViewWidget,
     EditorWidget,
@@ -21,7 +21,8 @@ const customWidgets = {
     FileDropzoneWidget,
     BrowserTargetWidget,
     TypographyWidget,
-    DatePickerWidget
+    DatePickerWidget,
+
 };
 
 export default customWidgets;

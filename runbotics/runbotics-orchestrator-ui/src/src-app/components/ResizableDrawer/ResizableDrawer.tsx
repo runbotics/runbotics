@@ -7,8 +7,8 @@ import { createPortal } from 'react-dom';
 
 import useWrappedState from '#src-app/hooks/useWrappedState';
 
-import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 import { Dragger, EventCatcher } from './ResizableDrawer.styled';
+import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 
 
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {

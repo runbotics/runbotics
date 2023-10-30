@@ -9,13 +9,13 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
+import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 import { IFormData } from '../../../../../../Actions/types';
 import {
     BpmnConnectionFactory,
     IBpmnConnection
 } from '../../helpers/elementParameters';
 import customWidgets from '../widgets';
-import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
 
 const ConnectionFormRenderer = () => {
     const { selectedElement } = useSelector(state => state.process.modeler);

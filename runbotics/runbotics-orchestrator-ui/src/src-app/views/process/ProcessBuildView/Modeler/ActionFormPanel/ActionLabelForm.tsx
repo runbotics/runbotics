@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import i18n from 'i18next';
 
+import { LabelGroup } from '#src-app/components/Label/Label.styles';
 import If from '#src-app/components/utils/If';
 import useTranslations, {
     checkIfKeyExists,
@@ -26,9 +27,10 @@ type Props = {
     onSubmit: (label: string) => void;
 };
 
+// eslint-disable-next-line max-lines-per-function
 const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     const { translate } = useTranslations();
-    const { selectedElement, selectedAction } = useSelector(
+    const { selectedElement, selectedAction, customValidationErrors } = useSelector(
         (state) => state.process.modeler
     );
 
@@ -38,20 +40,27 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
     });
     const actionId = selectedElement.businessObject?.actionId;
     const [translatedLabel, setTranslatedLabel] = useState(actionId);
-    const translationKey = `Process.Details.Modeler.Actions.${
-        actionId
-            ? capitalizeFirstLetter({
-                text: actionId,
-                lowerCaseRest: false,
-                delimiter: '.',
-                join: '.',
-            })
-            : ''
-    }.Label`;
+    const actionPartialTranslationKey = actionId
+        ? capitalizeFirstLetter({
+            text: actionId,
+            lowerCaseRest: false,
+            delimiter: '.',
+            join: '.',
+        })
+        : '';
+    const translationKey = `Process.Details.Modeler.Actions.${actionPartialTranslationKey}.Label`;
 
     useEffect(() => {
         if (checkIfKeyExists(translationKey)) {
-            setTranslatedLabel(translate(translationKey));
+            const mainActionGroup = actionPartialTranslationKey.split('.')[0];
+            const actionGroupPrefixTranslationKey = `Process.Details.Modeler.ActionsGroup.${mainActionGroup}`;
+
+            // @ts-ignore
+            const fullLabel = checkIfKeyExists(actionGroupPrefixTranslationKey)
+                ? `${translate(actionGroupPrefixTranslationKey)}: ${translate(translationKey)}`
+                : translate(translationKey);
+
+            setTranslatedLabel(fullLabel);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language, actionId]);
@@ -153,6 +162,39 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
         </>
     );
 
+    const ActionHelperTextLabel = () => (
+        <>
+            {selectedAction && selectedAction.helperTextLabel && (
+                <Alert
+                    severity="warning"
+                    sx={{
+                        mt: (theme) => theme.spacing(1),
+                        alignItems: 'center',
+                        width: 'fit-content'
+                    }}
+                >
+                    <LabelGroup>{selectedAction.helperTextLabel}</LabelGroup>
+                </Alert>
+            )}
+        </>
+    );
+
+    const CustomValidationError = () => (
+        <>
+            {customValidationErrors.length > 0 && (
+                <Alert
+                    severity="error"
+                    sx={{
+                        mt: (theme) => theme.spacing(1),
+                        alignItems: 'center'
+                    }}
+                >
+                    <LabelGroup>{translate('Process.BuildView.Modeler.Widgets.VariableNameIsTaken')}</LabelGroup>
+                </Alert>
+            )}
+        </>
+    );
+
     return (
         <>
             <If condition={formState.editing} else={<ActionNameLabel />}>
@@ -171,7 +213,9 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                     />
                 </form>
             </If>
+            <CustomValidationError />
             <ActionSystemLabel />
+            <ActionHelperTextLabel />
         </>
     );
 };

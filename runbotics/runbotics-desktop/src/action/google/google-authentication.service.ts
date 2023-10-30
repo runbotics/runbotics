@@ -3,12 +3,15 @@ import { google, sheets_v4 } from 'googleapis';
 import Sheets = sheets_v4.Sheets;
 import Schema$ValueRange = sheets_v4.Schema$ValueRange;
 import { RunboticsLogger } from '../../logger/RunboticsLogger';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export class GoogleAuthenticationService implements OnModuleInit {
     private readonly logger = new RunboticsLogger(GoogleAuthenticationService.name);
 
-    constructor() {}
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {}
 
     async initLogin() {
         const oauth2Client = new google.auth.OAuth2(
@@ -37,8 +40,8 @@ export class GoogleAuthenticationService implements OnModuleInit {
             'KAR6T2_qDA7c-co_pdbwLjRb',
             'http://localhost:3333',
         );
-        this.logger.log('token', process.env.GOOGLE_AUTHORIZATION_CODE);
-        const { tokens } = await oauth2Client.getToken(process.env.GOOGLE_AUTHORIZATION_CODE);
+        this.logger.log('token', this.serverConfigService.googleAuthCode);
+        const { tokens } = await oauth2Client.getToken(this.serverConfigService.googleAuthCode);
         this.logger.log('tokens', tokens);
         // oauth2Client.setCredentials(tokens)
 

@@ -13,11 +13,11 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { BotCollectionViewProps } from './BotCollectionView.types';
+import { ROWS_PER_PAGE_LIST_VIEW } from './BotCollectionView.utils';
 import BotCollectionTileAction from '../../../components/Tile/BotCollectionTile/BotCollectionTile.actions';
 import { useSelector } from '../../../store';
 import { botCollectionSelector } from '../../../store/slices/BotCollections';
-import { BotCollectionViewProps } from './BotCollectionView.types';
-import { ROWS_PER_PAGE_LIST_VIEW } from './BotCollectionView.utils';
 
 
 const BotCollectionListView: VFC<BotCollectionViewProps> = ({

@@ -5,9 +5,9 @@ import { MenuItem } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
 import { BotCollectionModifyProps } from './BotCollectionModify.types';
 import BotCollectionModifyDialog from './BotCollectionModifyDialog';
+import { getBotCollectionPageParams, getLimitByDisplayMode } from '../../BotCollectionView.utils';
 
 
 const BotCollectionModifyOption: FC<BotCollectionModifyProps> = ({ botCollection, displayMode }) => {

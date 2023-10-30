@@ -19,12 +19,11 @@ import { LoopHandlerService } from './bpm/loop-handler';
         RuntimeService,
         DesktopRunnerService,
         RuntimeSubscriptionsService,
-        LoopHandlerService
+        LoopHandlerService,
     ],
     exports: [
         RuntimeService,
         DesktopRunnerService,
-        RuntimeSubscriptionsService,
     ],
 })
 export class CoreModule {}

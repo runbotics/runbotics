@@ -1,36 +1,36 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { DesktopRunRequest, StatelessActionHandler } from 'runbotics-sdk';
-import { IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
-
+import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
+import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
+import getBotSystem from '#utils/botSystem';
 
 export type GeneralActionRequest =
-| DesktopRunRequest<'general.delay', DelayActionInput>
-| DesktopRunRequest<'general.startProcess', StartProcessActionInput>
-| DesktopRunRequest<'general.console.log', ConsoleLogActionInput>;
+| DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
+| DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
+| DesktopRunRequest<GeneralAction.CONSOLE_LOG, ConsoleLogActionInput>;
 
 // -- action
 export type StartProcessActionInput = {
     processId: number;
     variables: Record<string, any>;
 };
-export type StartProcessActionOutput = {};
+export type StartProcessActionOutput = object;
 
 // -- action
 export type DelayActionInput = {
     delay: number;
     unit: 'Milliseconds' | 'Seconds';
 };
-export type DelayActionOutput = {};
+export type DelayActionOutput = object;
 
 // -- action
 export type ConsoleLogActionInput = {
     variables: Record<string, any>;
 };
-export type ConsoleLogActionOutput = {};
+export type ConsoleLogActionOutput = object;
 
 @Injectable()
 export default class GeneralActionHandler extends StatelessActionHandler {
@@ -60,14 +60,22 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     }
 
     async startProcess(
-        request: DesktopRunRequest<'general.startProcess', StartProcessActionInput>
+        request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
         return new Promise(async (resolve, reject) => {
             const response = await orchestratorAxios.get<IProcess>(
                 `/api/processes/${request.input.processId}`,
                 { maxRedirects: 0 },
             );
+
             const process = response.data;
+            const processSystem = process.system.name;
+            const system = getBotSystem();
+
+            if (processSystem !== BotSystem.ANY && processSystem !== system) {
+                reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
+            }
+
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: process,
                 variables: request.input.variables,
@@ -105,11 +113,11 @@ export default class GeneralActionHandler extends StatelessActionHandler {
 
     run(request: GeneralActionRequest) {
         switch (request.script) {
-            case 'general.delay':
+            case GeneralAction.DELAY:
                 return this.delay(request.input);
-            case 'general.console.log':
+            case GeneralAction.CONSOLE_LOG:
                 return this.consoleLog(request.input);
-            case 'general.startProcess':
+            case GeneralAction.START_PROCESS:
                 return this.startProcess(request);
             default:
                 throw new Error('Action not found');

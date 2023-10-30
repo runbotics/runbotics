@@ -2,6 +2,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { IProcess } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
+import { Options, Variable } from '#src-app/hooks/useOptions';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { initialModelerState, initialState } from './Process.slice';
@@ -12,6 +13,17 @@ export const updateProcess = (
     action: PayloadAction<IProcess>
 ) => {
     state.all.byId[action.payload.id] = action.payload;
+};
+
+export const updateProcessPage = (
+    state: ProcessState,
+    action: PayloadAction<IProcess>
+) => {
+    state.all.page.content = state.all.page.content.map((process) =>
+        process.id === action.payload.id
+            ? { ...process, ...action.payload }
+            : process
+    );
 };
 
 export const setAppliedActions = (
@@ -85,16 +97,27 @@ export const setCommandStack = (
     state.modeler.commandStack = action.payload;
 };
 
+const handleSetError = (stateKey: string, state: ProcessState, action: PayloadAction<ModelerError>) => {
+    const errorIndex = state.modeler[stateKey].findIndex(
+        (error) => error.elementId === action.payload.elementId
+    );
+    if (errorIndex === -1) {
+        state.modeler[stateKey] = [...state.modeler[stateKey], action.payload];
+    }
+};
+
 export const setError = (
     state: ProcessState,
     action: PayloadAction<ModelerError>
 ) => {
-    const errorIndex = state.modeler.errors.findIndex(
-        (error) => error.elementId === action.payload.elementId
-    );
-    if (errorIndex === -1) {
-        state.modeler.errors = [...state.modeler.errors, action.payload];
-    }
+    handleSetError('errors', state, action);
+};
+
+export const setCustomValidationError = (
+    state: ProcessState,
+    action: PayloadAction<ModelerError>
+) => {
+    handleSetError('customValidationErrors', state, action);
 };
 
 export const resetDraft = (state: ProcessState) => {
@@ -115,19 +138,39 @@ export const setImported = (
     state.modeler.imported = action.payload;
 };
 
-export const removeError = (
-    state: ProcessState,
-    action: PayloadAction<string>
-) => {
-    state.modeler.errors = state.modeler.errors.filter(
+const handleRemoveError = (stateKey: string, state: ProcessState, action: PayloadAction<string>) => {
+    state.modeler[stateKey] = state.modeler[stateKey].filter(
         (error) => error.elementId !== action.payload
     );
 };
 
+export const removeError = (
+    state: ProcessState,
+    action: PayloadAction<string>
+) => {
+    handleRemoveError('errors', state, action);
+};
+
+export const removeCustomValidationError = (
+    state: ProcessState,
+    action: PayloadAction<string>
+) => {
+    handleRemoveError('customValidationErrors', state, action);
+};
+
 export const clearErrors = (state: ProcessState) => {
     state.modeler.errors = [];
+    state.modeler.customValidationErrors = [];
 };
 
 export const clearModelerState = (state: ProcessState) => {
     state.modeler = initialModelerState;
+};
+
+export const setOptions = (state: ProcessState, action: PayloadAction<Options>) => {
+    state.modeler.options = action.payload;
+};
+
+export const setVariables = (state: ProcessState, action: PayloadAction<Variable[]>) => {
+    state.modeler.variables = action.payload;
 };

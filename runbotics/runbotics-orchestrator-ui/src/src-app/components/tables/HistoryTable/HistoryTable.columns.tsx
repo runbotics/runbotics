@@ -11,13 +11,13 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
+import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
 import { useDispatch, useSelector } from '../../../store';
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
 import Label from '../../Label';
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column } from '../Table';
 import TableRowExpander from '../Table/TableRowExpander';
-import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
 
 
 
@@ -41,7 +41,7 @@ const useProcessInstanceColumns = (
         );
         dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
     };
-    
+
     const handleRowExpand = (currRow: ProcessInstanceRow) => {
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
         dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
@@ -79,7 +79,7 @@ const useProcessInstanceColumns = (
                 return (
                     <Label warning={value.warning} color={getProcessInstanceStatusColor(value.status)}>
                         {/* @ts-ignore */}
-                        {translate(`Component.HistoryTable.Status.${formattedStatus}`)}
+                        {translate(`Process.Instance.Status.${formattedStatus}`)}
                     </Label>
                 );
             },

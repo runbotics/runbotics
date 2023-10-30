@@ -3,8 +3,8 @@ import { FC } from 'react';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
-import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 import styles from './IntegrationContent.module.scss';
+import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 
 const IntegrationSection: FC = () => {
     const { translate } = useTranslations();

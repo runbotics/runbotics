@@ -1,3 +1,5 @@
+import { LoopAction, ActionRegex } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -5,9 +7,9 @@ import { IBpmnAction, Runner } from './types';
 // eslint-disable-next-line max-lines-per-function
 const getLoopActions = (): Record<string, IBpmnAction> => ({
     'loop.loop': {
-        id: 'loop.loop',
+        id: LoopAction.LOOP,
         label: translate('Process.Details.Modeler.Actions.Loop.Loop2.Label'),
-        script: 'loop.loop',
+        script: LoopAction.LOOP,
         runner: Runner.BPMN,
         output: {
             assignVariables: false,
@@ -18,11 +20,11 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             loopType: {
-                                title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Input'),
+                                title: translate('Process.Details.Modeler.Actions.Common.Input'),
                                 type: 'string',
                                 enum: ['Collection', 'Repeat'],
                                 default: ['Repeat'],
@@ -37,13 +39,14 @@ const getLoopActions = (): Record<string, IBpmnAction> => ({
                                                 enum: ['Collection'],
                                             },
                                             collection: {
-                                                title: translate('Process.Details.Modeler.Actions.Loop.Loop2.Variable'),
+                                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
                                                 type: 'string',
                                                 format: 'variableName',
                                             },
                                             elementVariable: {
                                                 title: translate('Process.Details.Modeler.Actions.Loop.Loop2.ElementVariable'),
                                                 type: 'string',
+                                                pattern: ActionRegex.VARIABLE_NAME,
                                             },
                                         },
                                         required: ['collection'],

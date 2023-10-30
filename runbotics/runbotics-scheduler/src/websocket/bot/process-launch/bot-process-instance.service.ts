@@ -7,7 +7,7 @@ import { ProcessInstanceEntity } from '#/database/process-instance/process-insta
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
-import { MailService } from '#/mail/mail.service';
+import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';
 import { NotificationService } from '#/microsoft/notification';
 
@@ -24,7 +24,7 @@ export class BotProcessService {
         private readonly processService: ProcessService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
-        private readonly mailService: MailService,
+        private readonly mailTriggerService: MailTriggerService,
         private readonly processFileService: ProcessFileService,
         private readonly notificationService: NotificationService,
     ) {}
@@ -37,20 +37,20 @@ export class BotProcessService {
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            const incrementedProcessInstance = await this.incrementExecutionCount(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: incrementedProcessInstance.id } });
+            const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
+            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastInstanceRunTime.id } });
 
             await queryRunner.manager.createQueryBuilder()
                 .insert()
                 .into(ProcessInstanceEntity)
-                .values({ ...incrementedProcessInstance })
-                .orUpdate(getProcessInstanceUpdateFieldsByStatus(incrementedProcessInstance.status, dbProcessInstance?.status), ['id'])
+                .values({ ...updatedLastInstanceRunTime })
+                .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastInstanceRunTime.status, dbProcessInstance?.status), ['id'])
                 .execute();
 
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
-
+            
             if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
@@ -59,7 +59,7 @@ export class BotProcessService {
                 if (isEmailTriggerData(processInstance.triggerData) && processInstance.triggerData.emailId)
                     await this.notificationService.sendProcessResultMail(processInstance);
                 else
-                    await this.mailService.sendProcessResultMail(processInstance);
+                    await this.mailTriggerService.sendProcessResultMail(processInstance);
             }
 
             if (isProcessInstanceFinished(processInstance.status)) {
@@ -70,6 +70,25 @@ export class BotProcessService {
             await queryRunner.rollbackTransaction();
         } finally {
             await queryRunner.release();
+        }
+    }
+    async handleAdditionalProcessInstanceInfos(processInstance: IProcessInstance) {
+        if (!processInstance.rootProcessInstanceId) {
+            this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
+        }
+        if (isProcessInstanceFinished(processInstance.status)) {
+            await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
+        }
+        await this.updateProcessLastRunTime(processInstance);
+    }
+
+    async updateProcessLastRunTime(processInstance: IProcessInstance) {
+        if (!processInstance?.process?.id) return;
+        const process = await this.processService.findById(processInstance.process.id);
+        
+        if (process && processInstance.created) {
+            process.lastRun = processInstance.created;
+            await this.processService.save(process);
         }
     }
 
@@ -112,13 +131,12 @@ export class BotProcessService {
         const newProcessInstance = { ...instanceToSave };
         const dbProcessInstance = await this.processInstanceService.findById(instanceToSave.id);
         if (dbProcessInstance) {
-            newProcessInstance.created = dbProcessInstance.created;
             newProcessInstance.user = dbProcessInstance.user;
         }
         return { newProcessInstance, bot: newProcessInstance.bot };
     }
 
-    private async incrementExecutionCount(
+    private async updateProcessParams(
         processInstance: IProcessInstance,
         instanceToSave: IProcessInstance,
         bot: IBot,
@@ -126,43 +144,21 @@ export class BotProcessService {
         const newProcessInstance = {...instanceToSave};
 
         const newBot = {...bot};
-        newBot.status = BotStatus.BUSY;
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS) {
+            newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
-            await this.incrementExecutionCountInStartedProcess(newProcessInstance);
+        } else if (processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+            await this.updateProcessLastRunTime(processInstance);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
-            newProcessInstance.input = processInstance.input;
-            if(!newProcessInstance.rootProcessInstanceId) {
+            if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
                 newBot.status = BotStatus.CONNECTED;
             }
-            await this.incrementExecutionsByProcessStatus(processInstance);
         }
-        if(!newProcessInstance.rootProcessInstanceId) {
+        if (!newProcessInstance.rootProcessInstanceId) {
             await this.botService.save(newBot);
             this.uiGateway.server.emit(WsMessage.BOT_STATUS, newBot);
         }
         return newProcessInstance;
-    }
-
-    private async incrementExecutionCountInStartedProcess(processInstance: IProcessInstance) {
-        if(!processInstance?.process?.id) return;
-        const process = await this.processService.findById(processInstance.process.id);
-        if (process) {
-            process.executionsCount++;
-            await this.processService.save(process);
-        }
-    }
-
-    private async incrementExecutionsByProcessStatus(processInstance: IProcessInstance) {
-        const process = await this.processService.findById(processInstance?.process?.id);
-        if (process) {
-            if (processInstance.status === ProcessInstanceStatus.COMPLETED) {
-                process.successExecutionsCount++;
-            } else if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-                process.failureExecutionsCount++;
-            }
-        }
-        await this.processService.save(process);
     }
 }

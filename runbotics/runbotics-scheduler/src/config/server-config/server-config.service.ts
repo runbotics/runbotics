@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import {
-    DatabaseSettings, EmailConfig, EmailTriggerConfig, MicrosoftAuth, RedisSettings,
+    DatabaseSettings, EmailConfig, EmailTriggerConfig, MailConfig, MicrosoftAuth, RedisSettings,
 } from './server-config.types';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class ServerConfigService {
             }
         };
     }
-    
+
     get writeEmailTriggerConfig(): EmailConfig {
         return {
             host: this.configService.get('BASIC_EMAIL_TRIGGER_WRITE_HOST'),
@@ -96,6 +96,15 @@ export class ServerConfigService {
             clientSecret: this.configService.get('MS_CLIENT_SECRET'),
             username: this.configService.get('MS_USERNAME'),
             password: this.configService.get('MS_PASSWORD'),
+        };
+    }
+
+    get mailConfig(): MailConfig {
+        return {
+            mailHost: this.configService.get('MAIL_HOST'),
+            mailPort: this.configService.get('MAIL_PORT'),
+            mailUsername: this.configService.get('MAIL_USERNAME'),
+            mailPassword: this.configService.get('MAIL_PASSWORD'),
         };
     }
 

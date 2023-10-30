@@ -6,9 +6,9 @@ import { IBotCollection } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import BotCollectionDeleteDialog from './BotCollectionDeleteDialog';
 import { CollectionsDisplayMode } from '../../../BotBrowseView/BotBrowseView.utils';
 import { getLimitByDisplayMode, getBotCollectionPageParams } from '../../BotCollectionView.utils';
-import BotCollectionDeleteDialog from './BotCollectionDeleteDialog';
 
 
 interface DeleteBotCollectionProps {

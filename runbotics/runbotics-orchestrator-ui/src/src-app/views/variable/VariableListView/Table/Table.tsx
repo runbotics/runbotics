@@ -14,9 +14,9 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { globalVariableActions, globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
 
-import { VariableDetailState } from '../../Variable.types';
 import DeleteGlobalVariableDialog from './DeleteGlobalVariableDialog';
 import useGlobalVariablesColumns from './useGlobalVariablesColumns';
+import { VariableDetailState } from '../../Variable.types';
 
 
 
@@ -58,6 +58,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         onEdit,
         hasDeleteVariableAccess,
         hasEditVariableAccess,
+        globalVariables,
     });
 
     useEffect(() => {

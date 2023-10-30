@@ -1,3 +1,5 @@
+import { CsvAction, ActionRegex } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
@@ -6,10 +8,10 @@ import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getCsvActions: () => Record<string, IBpmnAction> = () => ({
-    'import.csv': {
-        id: 'import.csv',
+    'csv.import': {
+        id: CsvAction.IMPORT,
         label: translate('Process.Details.Modeler.Actions.Import.Csv.Label'),
-        script: 'import.csv',
+        script: CsvAction.IMPORT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -22,33 +24,41 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.Import.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             file: {
                                 type: 'string',
                                 format: 'data-url',
-                                title: translate('Process.Details.Modeler.Actions.CSV.Import.SingleFile'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.Import.SingleFile'),
                             },
                         },
                         required: [],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.Import.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.Import.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.Import.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
                             },
                         },
                         required: ['variableName'],
+                        pattern: ActionRegex.VARIABLE_NAME,
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {},
@@ -59,9 +69,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.appendFile': {
-        id: 'csv.appendFile',
+        id: CsvAction.APPEND_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Label'),
-        script: 'csv.appendFile',
+        script: CsvAction.APPEND_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -74,32 +84,33 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Path'),
                                 type: 'string',
                             },
                             content: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Content'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Content'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.AppendFile.Separator'),
                                 type: 'string',
                             },
                         },
                         required: ['path', 'content', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.AppendFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.AppendFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -108,6 +119,13 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -122,9 +140,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.readFile': {
-        id: 'csv.readFile',
+        id: CsvAction.READ_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Label'),
-        script: 'csv.readFile',
+        script: CsvAction.READ_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -137,28 +155,29 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Path'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.ReadFile.Separator'),
                                 type: 'string',
                             },
                         },
                         required: ['path', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.ReadFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.ReadFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -167,6 +186,13 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
@@ -180,9 +206,9 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'csv.writeFile': {
-        id: 'csv.writeFile',
+        id: CsvAction.WRITE_FILE,
         label: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Label'),
-        script: 'csv.writeFile',
+        script: CsvAction.WRITE_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -195,32 +221,33 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Input'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
                             path: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Path'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Path'),
                                 type: 'string',
                             },
                             content: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Content'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Content'),
                                 type: 'string',
                             },
                             separator: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Separator'),
+                                title: translate('Process.Details.Modeler.Actions.Csv.WriteFile.Separator'),
                                 type: 'string',
                             },
                         },
                         required: ['path', 'content', 'separator'],
                     },
                     output: {
-                        title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Output'),
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.CSV.WriteFile.Variable'),
-                                description: translate('Process.Details.Modeler.Actions.CSV.WriteFile.VariableText'),
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
                             },
                         },
                         required: ['variableName'],
@@ -229,6 +256,13 @@ const getCsvActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {

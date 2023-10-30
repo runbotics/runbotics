@@ -1,6 +1,6 @@
 import { writeFile, writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
-import { StatefulActionHandler } from 'runbotics-sdk';
+import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
@@ -11,7 +11,7 @@ import { RunboticsLogger } from '#logger';
 
 import { RunIndex } from './IndexAction';
 import * as BrowserTypes from './types';
-import { generatePdf, Target } from './utils';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -19,13 +19,15 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
     private session: WebDriver = null;
 
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
     
     private async getFirefoxSession(isHeadless: boolean | undefined, isWin?: boolean) {
         const driversPath = process.cwd();
-        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
+        const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
         this.logger.log('geckoDriver', geckoDriver);
 
         process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
@@ -33,7 +35,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         let optionsFF = new firefox.Options()
             .setPreference('xpinstall.signatures.required', false)
             .setPreference('devtools.console.stdout.content', true)
-            .setBinary(process.env['CFG_FIREFOX_BIN']);
+            .setBinary(this.serverConfigService.cfgFirefoxBin);
 
         if (isHeadless) {
             optionsFF = optionsFF.headless();
@@ -65,7 +67,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
         return new Builder()
             .forBrowser('chrome')
-            .usingServer(process.env.CHROME_ADDRESS)
+            .usingServer(this.serverConfigService.chromeAddress)
             .setChromeOptions(chromeOptions)
             .build();
     }
@@ -85,7 +87,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const isWin = process.platform === 'win32';
         this.logger.log('isWin', isWin);
 
-        this.session = await (process.env.CHROME_ADDRESS
+        this.session = await (this.serverConfigService.chromeAddress
             ? this.getChromeSession(input.headless)
             : this.getFirefoxSession(input.headless, isWin));
 
@@ -243,34 +245,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         }
     }
 
-    private async printToPdf(
-        input: BrowserTypes.BrowserPrintToPdfActionInput,
-    ): Promise<BrowserTypes.BrowserPrintToPdfActionOutput> {
-        // Prince requires absolute path
-        const fileName = path.join(process.cwd(), 'temp', uuidv4());
-        let target: Target;
-
-        if (input.target === 'URL' && input.url) {
-            target = { url: input.url };
-        }
-
-        if (input.target === 'Session') {
-            target = { content: await this.session?.executeScript('return document.body.outerHTML') };
-        }
-        try {
-            const pdfBuffer = await generatePdf(target, {});
-            writeFile(`${fileName}.pdf`, Buffer.from(pdfBuffer), 'binary', (error) => {
-                if (error) throw error;
-                this.logger.log(`File saved successfully at ${fileName}.pdf`);
-            });
-        } catch (error) {
-            this.logger.error('Error occurred while printing to pdf', error);
-            throw error;
-        }
-
-        return `${fileName}.pdf`;
-    }
-
     private isBrowserOpen() {
         if (!this.session) {
             throw new Error('The browser is not running');
@@ -298,9 +272,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.selenium.select':
                 this.isBrowserOpen();
                 return this.doSelect(request.input);
-            case 'browser.selenium.printToPdf':
-                this.isBrowserOpen();
-                return this.printToPdf(request.input);
             case 'browser.selenium.takeScreenshot':
                 this.isBrowserOpen();
                 return this.takeScreenshot(request.input);
