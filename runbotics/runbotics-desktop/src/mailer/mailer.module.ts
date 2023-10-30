@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
 import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ServerConfigService } from '#config';
 
 @Module({
     imports: [
         NestMailerModule.forRootAsync({
-            useFactory: () => ({
+            useFactory: (serverConfigService: ServerConfigService) => ({
                 transport: {
-                    host: process.env.MAIL_HOST,
-                    port: Number(process.env.MAIL_PORT),
+                    host: serverConfigService.mailHost,
+                    port: Number(serverConfigService.mailPort),
                     secure: false, // upgrade later with STARTTLS
                     tls: { rejectUnauthorized: false },
                     auth: {
-                        user: process.env.MAIL_USERNAME,
-                        pass: process.env.MAIL_PASSWORD,
+                        user: serverConfigService.mailUsername,
+                        pass: serverConfigService.mailPassword,
                     },
                 },
                 defaults: {
@@ -27,7 +28,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
                     },
                 },
             }),
+            inject: [ServerConfigService],
         }),
     ],
+    providers: [ServerConfigService],
 })
 export class MailerModule {}

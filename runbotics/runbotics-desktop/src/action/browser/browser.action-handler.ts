@@ -11,6 +11,7 @@ import { RunboticsLogger } from '#logger';
 
 import { RunIndex } from './IndexAction';
 import * as BrowserTypes from './types';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -18,13 +19,15 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
     private session: WebDriver = null;
 
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
     
     private async getFirefoxSession(isHeadless: boolean | undefined, isWin?: boolean) {
         const driversPath = process.cwd();
-        const geckoDriver = driversPath + '/' + process.env['CFG_GECKO_DRIVER'];
+        const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
         this.logger.log('geckoDriver', geckoDriver);
 
         process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
@@ -32,7 +35,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         let optionsFF = new firefox.Options()
             .setPreference('xpinstall.signatures.required', false)
             .setPreference('devtools.console.stdout.content', true)
-            .setBinary(process.env['CFG_FIREFOX_BIN']);
+            .setBinary(this.serverConfigService.cfgFirefoxBin);
 
         if (isHeadless) {
             optionsFF = optionsFF.headless();
@@ -64,7 +67,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
         return new Builder()
             .forBrowser('chrome')
-            .usingServer(process.env.CHROME_ADDRESS)
+            .usingServer(this.serverConfigService.chromeAddress)
             .setChromeOptions(chromeOptions)
             .build();
     }
@@ -84,7 +87,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const isWin = process.platform === 'win32';
         this.logger.log('isWin', isWin);
 
-        this.session = await (process.env.CHROME_ADDRESS
+        this.session = await (this.serverConfigService.chromeAddress
             ? this.getChromeSession(input.headless)
             : this.getFirefoxSession(input.headless, isWin));
 

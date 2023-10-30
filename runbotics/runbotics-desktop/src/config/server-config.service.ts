@@ -48,16 +48,72 @@ export class ServerConfigService {
         return this.getEnvValue('RUNBOTICS_BOT_COLLECTION');
     }
 
-    get system(): string {
-        return this.getEnvValue('RUNBOTICS_BOT_SYSTEM');
-    }
-
     get version(): string {
         return version;
     }
 
     get logger(): string {
         return this.getEnvValue('RUNBOTICS_LOGGER');
+    }
+
+    get cfgGeckoDriver(): string {
+        return this.getEnvValue('CFG_GECKO_DRIVER');
+    }
+
+    get cfgFirefoxBin(): string {
+        return this.getEnvValue('CFG_FIREFOX_BIN');
+    }
+
+    get chromeAddress(): string {
+        return this.getEnvValue('CHROME_ADDRESS');
+    }
+
+    get mailUsername(): string {
+        return this.getEnvValue('MAIL_USERNAME');
+    }
+
+    get mailPassword(): string {
+        return this.getEnvValue('MAIL_PASSWORD');
+    }
+
+    get mailHost(): string {
+        return this.getEnvValue('MAIL_HOST');
+    }
+
+    get mailPort(): string {
+        return this.getEnvValue('MAIL_PORT');
+    }
+
+    get googleRefreshToken(): string {
+        return this.getEnvValue('GOOGLE_REFRESH_TOKEN');
+    }
+
+    get googleAuthCode(): string {
+        return this.getEnvValue('GOOGLE_AUTHORIZATION_CODE');
+    }
+
+    get jiraUsername(): string {
+        return this.getEnvValue('JIRA_USERNAME');
+    }
+
+    get jiraPassword(): string {
+        return this.getEnvValue('JIRA_PASSWORD');
+    }
+
+    get jiraUrl(): string {
+        return this.getEnvValue('JIRA_URL');
+    }
+
+    get jiraA41Username(): string {
+        return this.getEnvValue('JIRA_A41_USERNAME');
+    }
+
+    get jiraA41Token(): string {
+        return this.getEnvValue('JIRA_A41_TOKEN');
+    }
+
+    get jiraA41Url(): string {
+        return this.getEnvValue('JIRA_A41_URL');
     }
 
     get microsoftAuth(): MicrosoftAuth {
@@ -70,16 +126,26 @@ export class ServerConfigService {
         };
     }
 
+    get beeAuth() {
+        return {
+            grant_type: 'password',
+            username: this.getEnvValue('BEE_USER'),
+            password: this.getEnvValue('BEE_PASS'),
+            logsys: this.getEnvValue('BEE_LOGSYS'),
+        };
+    }
+
+    get beeUrl() {
+        return this.getEnvValue('BEE_URL');
+    }
+
     get tempFolderPath(): string {
         return `${process.cwd()}/temp`;
     }
 
     private getEnvValue(key: string): string | undefined {
         const configValue = this.configService.get(key);
-        const isEncrypted: boolean = JSON.parse(this.configService.get('ENCRYPTED'));
-        if (isEncrypted && configValue) {
-            return decrypt(configValue, this.configService.get('ENC_KEY'));
-        }
-        return configValue;
+        const encKey = this.configService.get('ENC_KEY');
+        return (encKey && configValue) ? decrypt(configValue, encKey) : configValue;
     }
 }

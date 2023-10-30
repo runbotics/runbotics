@@ -3,6 +3,7 @@ import { DesktopRunRequest, DesktopRunResponse, StatelessActionHandler } from '@
 import { google, sheets_v4 } from 'googleapis';
 import Schema$ValueRange = sheets_v4.Schema$ValueRange;
 import Sheets = sheets_v4.Sheets;
+import { ServerConfigService } from '#config';
 
 export type GoogleActionRequest = 
 | DesktopRunRequest<'google.sheets.write', GoogleSheetWriteActionInput>;
@@ -15,13 +16,15 @@ export type GoogleSheetWriteActionOutput = any;
 
 @Injectable()
 export default class GoogleActionHandler extends StatelessActionHandler {
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
     async write(input: GoogleSheetWriteActionInput): Promise<GoogleSheetWriteActionOutput> {
         const tokens = {
-            refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+            refresh_token: this.serverConfigService.googleRefreshToken,
             scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
             token_type: 'Bearer',
         };
