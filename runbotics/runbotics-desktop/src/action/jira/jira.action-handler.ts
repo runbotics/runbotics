@@ -1,7 +1,7 @@
 import { StatelessActionHandler, DesktopRunRequest, DesktopRunResponse } from '@runbotics/runbotics-sdk';
 import { Injectable } from '@nestjs/common';
 import moment from 'moment';
-import { externalAxios } from '#config';
+import { externalAxios, ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
 
 export type JIRAActionRequest =
@@ -70,7 +70,9 @@ type JiraUser = {
 export default class JiraActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(JiraActionHandler.name);
 
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
@@ -82,14 +84,14 @@ export default class JiraActionHandler extends StatelessActionHandler {
         try {
             const basicAuth = input.isAll41JIRA
                 ? 'Basic ' +
-                Buffer.from(process.env['JIRA_A41_USERNAME'] + ':' + process.env['JIRA_A41_TOKEN']).toString('base64')
+                Buffer.from(this.serverConfigService.jiraA41Username + ':' + this.serverConfigService.jiraA41Token).toString('base64')
                 : 'Basic ' +
-                Buffer.from(process.env['JIRA_USERNAME'] + ':' + process.env['JIRA_PASSWORD']).toString('base64');
+                Buffer.from(this.serverConfigService.jiraUsername + ':' + this.serverConfigService.jiraPassword).toString('base64');
 
             const responseUsers = await externalAxios.get<JiraUser[]>(
                 input.isAll41JIRA
-                    ? process.env.JIRA_A41_URL + `/rest/api/3/user/search?query=${input.email}`
-                    : process.env.JIRA_URL + `/rest/api/2/user/search?maxResults=10&startAt=0&username=${input.email}`,
+                    ? this.serverConfigService.jiraA41Url + `/rest/api/3/user/search?query=${input.email}`
+                    : this.serverConfigService.jiraUrl + `/rest/api/2/user/search?maxResults=10&startAt=0&username=${input.email}`,
                 {
                     headers: {
                         Authorization: basicAuth,
@@ -122,7 +124,7 @@ export default class JiraActionHandler extends StatelessActionHandler {
             )}%27&fields=summary%2Cworklog%2Cissuetype%2Cparent%2Cproject%2Cstatus%2Ctimeoriginalestimate%2Ctimeestimate&maxResults=1000`;
 
             const response = await externalAxios.get<IssueList>(
-                input.isAll41JIRA ? process.env.JIRA_A41_URL + param : process.env.JIRA_URL + param,
+                input.isAll41JIRA ? this.serverConfigService.jiraA41Url + param : this.serverConfigService.jiraUrl + param,
                 {
                     headers: {
                         Authorization: basicAuth,
@@ -134,8 +136,8 @@ export default class JiraActionHandler extends StatelessActionHandler {
             for (const issue of response.data.issues) {
                 const issueDetailsResponse = await externalAxios.get<Issue>(
                     input.isAll41JIRA
-                        ? process.env.JIRA_A41_URL + `/rest/api/2/issue/${issue.key}`
-                        : process.env.JIRA_URL + `/rest/api/2/issue/${issue.key}`,
+                        ? this.serverConfigService.jiraA41Url + `/rest/api/2/issue/${issue.key}`
+                        : this.serverConfigService.jiraUrl + `/rest/api/2/issue/${issue.key}`,
                     {
                         headers: {
                             Authorization: basicAuth,
@@ -146,8 +148,8 @@ export default class JiraActionHandler extends StatelessActionHandler {
 
                 const taskWorklogListResponse = await externalAxios.get<WorklogList>(
                     input.isAll41JIRA
-                        ? process.env.JIRA_A41_URL + `/rest/api/2/issue/${issue.key}/worklog`
-                        : process.env.JIRA_URL + `/rest/api/2/issue/${issue.key}/worklog`,
+                        ? this.serverConfigService.jiraA41Url + `/rest/api/2/issue/${issue.key}/worklog`
+                        : this.serverConfigService.jiraUrl + `/rest/api/2/issue/${issue.key}/worklog`,
                     {
                         headers: {
                             Authorization: basicAuth,

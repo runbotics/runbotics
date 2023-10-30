@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
+import { ServerConfigService } from '#config';
 
 export type MailActionRequest =
 | DesktopRunRequest<'mail.send', MailSendActionInput>;
@@ -17,7 +18,10 @@ export type MailSendActionOutput = any;
 
 @Injectable()
 export default class MailActionHandler extends StatelessActionHandler {
-    constructor(private readonly mailerService: MailerService) {
+    constructor(
+        private readonly mailerService: MailerService,
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
@@ -36,7 +40,7 @@ export default class MailActionHandler extends StatelessActionHandler {
             await this.mailerService.sendMail({
                 to: input.to,
                 cc: input.cc,
-                from: process.env.MAIL_USERNAME, // sender address
+                from: this.serverConfigService.mailUsername, // sender address
                 subject: input.subject,
                 // text: input.content, // plaintext body
                 html: content, // HTML body content
@@ -52,7 +56,7 @@ export default class MailActionHandler extends StatelessActionHandler {
             await this.mailerService.sendMail({
                 to: input.to,
                 cc: input.cc,
-                from: process.env.MAIL_USERNAME, // sender address
+                from: this.serverConfigService.mailUsername, // sender address
                 subject: input.subject,
                 // text: input.content, // plaintext body
                 html: content, // HTML body content
