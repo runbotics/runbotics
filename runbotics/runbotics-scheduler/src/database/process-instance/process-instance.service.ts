@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {Repository, MoreThan} from 'typeorm';
 import {ProcessInstanceEntity} from './process-instance.entity';
 import {IProcessInstance, ProcessInstanceStatus} from 'runbotics-common';
 
@@ -22,7 +22,16 @@ export class ProcessInstanceService {
     }
 
     findActiveByBotId(id: number): Promise<IProcessInstance[]> {
-        return this.processInstanceRepository.find({ where: { bot: { id }, status: ProcessInstanceStatus.IN_PROGRESS } });
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        return this.processInstanceRepository.find({
+            where: {
+                bot: { id },
+                status: ProcessInstanceStatus.IN_PROGRESS,
+                created: MoreThan(date.toISOString())
+            },
+            relations
+        });
     }
 
     save(process: IProcessInstance) {
