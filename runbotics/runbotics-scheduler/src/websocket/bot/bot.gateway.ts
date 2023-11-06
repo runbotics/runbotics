@@ -108,6 +108,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
 
+        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
+            const process = await this.processService.findById(processInstance.process.id);
+
+            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
+        }
+
         if(
             processInstance.status === ProcessInstanceStatus.ERRORED ||
             processInstance.status === ProcessInstanceStatus.TERMINATED
@@ -115,10 +121,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
             await this.guestService.decrementExecutionsCount(processInstance.user.id);
             this.logger.log('Restored user\'s executions-count because of process interruption');
-
-            const process = await this.processService.findById(processInstance.process.id);
-
-            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
