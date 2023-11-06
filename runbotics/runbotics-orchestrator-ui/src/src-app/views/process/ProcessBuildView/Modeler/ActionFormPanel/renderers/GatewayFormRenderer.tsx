@@ -1,0 +1,155 @@
+import React, { ChangeEvent } from 'react';
+
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+
+import { useModelerContext } from '#src-app/hooks/useModelerContext';
+import useTranslations from '#src-app/hooks/useTranslations';
+
+import { useSelector } from '#src-app/store';
+
+import { ExpressionTextField, FlowExpression, GatewayFormMenu } from './GatewayFormRenderer.styles';
+
+import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../helpers/elementParameters';
+
+import FlowLabelForm from '../FlowLabelForm';
+
+
+const GatewayFormRenderer = () => {
+    const COLOR_RB = '#FBB040';
+    const COLOR_BLACK = '#000000';
+    
+    const { selectedElement } = useSelector(state => state.process.modeler);
+    const { modeler } = useModelerContext();
+    const gateway: IBpmnGateway = selectedElement as IBpmnGateway;
+    const { translate } = useTranslations();
+
+    const [defaultFlow, setDefaultFlow] = React.useState(gateway.businessObject.default?.id);
+    
+    const createInitExpressions = () => {
+        const expressionsArray = gateway.outgoing
+            .map((flow) => ({
+                [flow.id]: flow.businessObject.conditionExpression?.body
+            }));
+        return Object.assign({}, ...expressionsArray);
+    };
+    
+    const [expressions, setExpressions] = React.useState(createInitExpressions());
+    
+    const setDefaultConnection = (outgoing: IBpmnConnection) => {
+        setDefaultFlow(outgoing.id);
+        BpmnConnectionFactory.from(modeler).setDefaultConnection(outgoing, gateway);
+    };
+    
+    const handleFlowChanged = (value: string, id: string) => {
+        gateway.outgoing.forEach((outgoing) => {
+            if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
+                BpmnConnectionFactory.from(modeler).setConditionExpression(
+                    outgoing,
+                    value
+                );
+                setExpressions({...expressions, [id]: value});
+            }
+        });
+    };
+    
+    const getOutgoingById = (id: string) => 
+        gateway.outgoing.find((outgoing) => outgoing.id === id);
+
+    const handleOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+        const outgoing = getOutgoingById(event.target.name);
+        if (outgoing) {
+            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, COLOR_RB);
+        }
+    };
+    
+    const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+        const outgoing = getOutgoingById(event.target.name);
+        if (outgoing) {
+            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, COLOR_BLACK);
+        }
+    };
+    
+    const handleExpressionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        handleFlowChanged(event.target.value, event.target.name);
+    };
+    
+    const handleDefaultFlowChange = (event: ChangeEvent<HTMLInputElement>) => {
+        gateway.outgoing.forEach((outgoing) => {
+            if (event.target.value === outgoing.id && expressions) {
+                setDefaultConnection(outgoing);
+                BpmnConnectionFactory.from(modeler).setConditionExpression(
+                    outgoing,
+                    expressions[outgoing.id]
+                );
+            }
+        });
+    };
+    
+    const handleNameChange = (inputValue: string, flow: IBpmnConnection) => {
+        BpmnConnectionFactory.from(modeler).setConnectionName(flow, inputValue);
+        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, COLOR_BLACK);
+    };
+
+    const handleCancel = (flow: IBpmnConnection) => {
+        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, COLOR_BLACK);
+    };
+
+    return (
+        <>
+            <Grid item xs={12}>
+                <Box px={2} pt={1}>
+                    <Typography variant="h4" gutterBottom>
+                        {gateway.id}
+                    </Typography>
+                </Box>
+            </Grid>
+            <GatewayFormMenu>
+                <FormControl fullWidth>
+                    <InputLabel id="default-flow-select-input-label">Default flow</InputLabel>
+                    <Select
+                        labelId="default-flow-select-label"
+                        id="default-flow-select"
+                        value={defaultFlow}
+                        label="Default"
+                        onChange={handleDefaultFlowChange}
+                        onFocus={handleOnFocus}
+                        onBlur={handleOnBlur}
+                    >
+                        {
+                            gateway.outgoing.map((outgoing) => (
+                                <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
+                                    {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
+                                </MenuItem>
+                            ))
+                        }
+                    </Select>
+                </FormControl>
+                {
+                    gateway.outgoing.map((outgoing) => (
+                        <FlowExpression key={'flow-expression-' + outgoing.id}>
+                            <FlowLabelForm 
+                                onSubmit={(label) => handleNameChange(label, outgoing)} 
+                                selectedElement={outgoing}
+                                onCancel={() => handleCancel(outgoing)}
+                                onFocus={handleOnFocus}
+                            />
+                            <ExpressionTextField
+                                fullWidth
+                                label={`${translate(
+                                    'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
+                                )}`}
+                                name={outgoing.id}
+                                value={outgoing.businessObject.conditionExpression?.body}
+                                onChange={handleExpressionChange}
+                                onBlur={handleOnBlur}
+                                onFocus={handleOnFocus}
+                            />
+                        </FlowExpression>
+                    ))
+                }
+            </GatewayFormMenu>
+        </>
+    );
+};
+
+export default GatewayFormRenderer;

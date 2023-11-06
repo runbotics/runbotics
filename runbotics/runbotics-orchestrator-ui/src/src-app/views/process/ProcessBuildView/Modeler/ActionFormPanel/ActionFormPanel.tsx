@@ -10,6 +10,7 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import ActionFormRenderer from './renderers/ActionFormRenderer';
 import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
+import GatewayFormRenderer from './renderers/GatewayFormRenderer';
 import LoopActionRenderer from './renderers/LoopActionRenderer';
 import internalBpmnActions from '../../../../../Actions';
 
@@ -64,6 +65,9 @@ const ActionFormPanel: FC = () => {
             {selectedAction && !CustomRenderer && <ActionFormRenderer />}
             {!selectedAction && is(selectedElement, 'bpmn:SequenceFlow') && (
                 <ConnectionFormRenderer />
+            )}
+            {!selectedAction && is(selectedElement, 'bpmn:ExclusiveGateway') && (
+                <GatewayFormRenderer />
             )}
         </Grid>
     );

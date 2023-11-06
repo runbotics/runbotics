@@ -34,6 +34,7 @@ const ELEMENTS_PROPERTIES_WHITELIST = [
     BpmnElementType.SERVICE_TASK,
     BpmnElementType.SEQUENCE_FLOW,
     BpmnElementType.SUBPROCESS,
+    BpmnElementType.EXCLUSIVE_GATEWAY,
 ];
 
 // eslint-disable-next-line max-lines-per-function

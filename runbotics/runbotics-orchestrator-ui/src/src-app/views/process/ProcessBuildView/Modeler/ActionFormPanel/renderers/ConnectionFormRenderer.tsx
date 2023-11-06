@@ -4,13 +4,14 @@ import { Box, Grid, Typography } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
+import { IFormData } from '#src-app/Actions/types';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { IFormData } from '../../../../../../Actions/types';
+
 import {
     BpmnConnectionFactory,
     IBpmnConnection
