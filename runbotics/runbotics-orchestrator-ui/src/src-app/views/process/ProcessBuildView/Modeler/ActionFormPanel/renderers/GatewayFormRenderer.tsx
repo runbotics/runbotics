@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 
-import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -15,23 +16,22 @@ import FlowLabelForm from '../FlowLabelForm';
 
 
 const GatewayFormRenderer = () => {
-    const COLOR_RB = '#FBB040';
-    const COLOR_BLACK = '#000000';
-    
+    const theme = useTheme();
     const { selectedElement } = useSelector(state => state.process.modeler);
     const { modeler } = useModelerContext();
-    const gateway: IBpmnGateway = selectedElement as IBpmnGateway;
+    const gateway = selectedElement as IBpmnGateway;
     const { translate } = useTranslations();
 
     const [defaultFlow, setDefaultFlow] = React.useState(gateway.businessObject.default?.id);
     
-    const createInitExpressions = () => {
-        const expressionsArray = gateway.outgoing
-            .map((flow) => ({
-                [flow.id]: flow.businessObject.conditionExpression?.body
-            }));
-        return Object.assign({}, ...expressionsArray);
-    };
+    const createInitExpressions = () =>
+        gateway.outgoing.reduce((initExpressions, flow) => {
+            const expression = flow.businessObject.conditionExpression?.body;
+            if (expression !== undefined) {
+                initExpressions[flow.id] = expression;
+            }
+            return initExpressions;
+        }, {});
     
     const [expressions, setExpressions] = React.useState(createInitExpressions());
     
@@ -58,14 +58,14 @@ const GatewayFormRenderer = () => {
     const handleOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
         const outgoing = getOutgoingById(event.target.name);
         if (outgoing) {
-            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, COLOR_RB);
+            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.primary.main);
         }
     };
     
     const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const outgoing = getOutgoingById(event.target.name);
         if (outgoing) {
-            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, COLOR_BLACK);
+            BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.common.black);
         }
     };
     
@@ -87,11 +87,11 @@ const GatewayFormRenderer = () => {
     
     const handleNameChange = (inputValue: string, flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionName(flow, inputValue);
-        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, COLOR_BLACK);
+        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
 
     const handleCancel = (flow: IBpmnConnection) => {
-        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, COLOR_BLACK);
+        BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
 
     return (
@@ -105,12 +105,13 @@ const GatewayFormRenderer = () => {
             </Grid>
             <GatewayFormMenu>
                 <FormControl fullWidth>
-                    <InputLabel id="default-flow-select-input-label">Default flow</InputLabel>
+                    <InputLabel id="default-flow-select-input-label">{
+                        translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow')}
+                    </InputLabel>
                     <Select
                         labelId="default-flow-select-label"
                         id="default-flow-select"
                         value={defaultFlow}
-                        label="Default"
                         onChange={handleDefaultFlowChange}
                         onFocus={handleOnFocus}
                         onBlur={handleOnBlur}

@@ -61,12 +61,10 @@ const FlowLabelForm: VFC<Props> = ({ onSubmit, selectedElement, onCancel, onFocu
     };
 
     const EditButtons = () => {
-        const isSameAsBefore =
-            formState.label === selectedElement.businessObject.label;
-
+        const isEqual = formState.label === selectedElement.businessObject.label;
         return (
             <>
-                <IconButton disabled={isSameAsBefore} type="submit">
+                <IconButton disabled={isEqual} type="submit">
                     <DoneIcon />
                 </IconButton>
                 <IconButton onClick={handleCloseForm}>
