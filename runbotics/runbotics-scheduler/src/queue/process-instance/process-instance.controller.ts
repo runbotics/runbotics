@@ -1,4 +1,4 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, InternalServerErrorException, Param, Post } from '@nestjs/common';
 import { ProcessInstanceSchedulerService } from './process-instance.scheduler.service';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -15,8 +15,15 @@ export class ProcessInstanceController {
     async startProcess(
         @Param('processInstanceId') processInstanceId: string
     ) {
-        this.logger.log(`=> Terminating process instance ${processInstanceId}`);
-        await this.processInstanceSchedulerService.terminateProcessInstance(processInstanceId);
-        this.logger.log(`<= Process instance ${processInstanceId} successfully terminated`);
+        try {
+            this.logger.log(`=> Terminating process instance ${processInstanceId}`);
+            await this.processInstanceSchedulerService.terminateProcessInstance(processInstanceId);
+            this.logger.log(`<= Process instance ${processInstanceId} successfully terminated`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                throw new InternalServerErrorException(error.message);
+            }
+            this.logger.log(`<= Process instance ${processInstanceId} failed to terminate`, error);
+        }
     }
 }

@@ -31,6 +31,7 @@ export class TriggerController {
                 input,
                 user: request.user,
                 trigger: { name: TriggerEvent.API },
+                triggerData: { userEmail: request.user.email }
             });
             this.logger.log(`<= Process ${processId} successfully started`);
 

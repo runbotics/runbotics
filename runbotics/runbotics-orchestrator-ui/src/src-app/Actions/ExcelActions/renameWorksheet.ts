@@ -1,4 +1,4 @@
-import { ExcelAction, ActionRegex } from 'runbotics-common';
+import { ExcelAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -21,12 +21,10 @@ const getActionRenameWorksheet = (): IBpmnAction => ({
                         worksheet: {
                             title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_WORKSHEET_NAME,
                         },
                         newName: {
                             title: translate('Process.Details.Modeler.Actions.Excel.RenameWorksheet.NewName'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_WORKSHEET_NAME,
                         },
                     },
                     required: ['newName'],

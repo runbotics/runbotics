@@ -89,7 +89,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.connections.delete(bot.id);
 
-        await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
+        // await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -97,15 +97,15 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     async processListener(
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
-    ) {
+        ) {
+        const installationId = socket.bot.installationId;
+        this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
+
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
             processInstance.status === ProcessInstanceStatus.INITIALIZING) {
             await this.setBotStatusBusy(socket.bot);
         }
 
-        const installationId = socket.bot.installationId;
-
-        this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
 
         if (processInstance.status === ProcessInstanceStatus.ERRORED) {
