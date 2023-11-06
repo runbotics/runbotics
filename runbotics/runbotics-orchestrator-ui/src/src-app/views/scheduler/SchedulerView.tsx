@@ -71,7 +71,7 @@ const SchedulerView = () => {
             );
 
         return (
-            <DataTableRow isSubRow>
+            <DataTableRow $isSubRow>
                 <TableCell colSpan={row.cells.length}>
                     {humanReadableCron(row.original.cron)}
                 </TableCell>

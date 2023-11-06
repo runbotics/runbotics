@@ -20,7 +20,6 @@ import styled from 'styled-components';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
@@ -108,8 +107,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const { pathname } = useRouter();
 
     const processInstances = useSelector(processInstanceSelector);
-    const { orchestratorProcessInstanceId, processInstance, eventsMap } =
-        processInstances.active;
+    const { processInstance, eventsMap } = processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
     const isProcessAttended =
         process?.isAttended && Boolean(process?.executionInfo);
@@ -123,8 +121,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     useEffect(() => {
         setStarted(isProcessActive(processId, currentProcessInstance));
     }, [processId, currentProcessInstance]);
-
-    useProcessInstanceSocket({ orchestratorProcessInstanceId });
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);

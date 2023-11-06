@@ -133,9 +133,10 @@ const Table = <T extends object>({
                 return (
                     <React.Fragment key={rowKey}>
                         <DataTableRow
-                            isClickable={Boolean(onRowClick)}
-                            isRowSelected={row.isSelected}
-                            isSubRow={row.depth > 0}
+                            key={row.id}
+                            $isClickable={Boolean(onRowClick)}
+                            $isRowSelected={row.isSelected}
+                            $isSubRow={row.depth > 0}
                         >
                             {renderCells(row)}
                         </DataTableRow>
@@ -148,15 +149,17 @@ const Table = <T extends object>({
 
         const dummyRows: JSX.Element[] = [];
         const dummyRowsLength = TABLE_PAGE_SIZES[0] - dataRows.length;
-        for (let i = dummyRowsLength; i > 0; i--)
-        { dummyRows.push(
-            <TableRow
-                sx={{
-                    minHeight: `${TABLE_ROW_HEIGHT}px`,
-                    height: `${TABLE_ROW_HEIGHT}px`,
-                }}
-            />,
-        ); }
+        for (let i = dummyRowsLength; i > 0; i--) {
+            dummyRows.push(
+                <TableRow
+                    key={`dummy-row-${i}`}
+                    sx={{
+                        minHeight: `${TABLE_ROW_HEIGHT}px`,
+                        height: `${TABLE_ROW_HEIGHT}px`,
+                    }}
+                />,
+            );
+        }
 
         return [...dataRows, ...dummyRows];
     };

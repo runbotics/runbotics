@@ -147,7 +147,11 @@ export class QueueService implements OnModuleInit {
         const scheduledProcesses = await this.scheduleProcessService.findAll();
         await Promise.all(
             scheduledProcesses
-                .map(process => this.createScheduledJob({ ...process, trigger: { name: TriggerEvent.SCHEDULER } }))
+                .map(process => this.createScheduledJob({
+                    ...process,
+                    trigger: { name: TriggerEvent.SCHEDULER },
+                    triggerData: { userEmail: process.user.email },
+                }))
         );
         this.logger.log(`Created ${scheduledProcesses.length} schedule(s)`);
         this.logger.log('Queue successfully initialized');

@@ -6,6 +6,10 @@ import { IProcess } from 'runbotics-common';
 
 const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor'];
 
+interface PartialUpdateProcess extends IProcess {
+    id: IProcess['id'];
+}
+
 @Injectable()
 export class ProcessService {
     constructor(
@@ -20,5 +24,9 @@ export class ProcessService {
     async save(process: IProcess) {
         await this.processRepository.save(process);
         return process;
+    }
+
+    partialUpdate(process: PartialUpdateProcess) {
+        return this.processRepository.update({ id: process.id }, process);
     }
 }

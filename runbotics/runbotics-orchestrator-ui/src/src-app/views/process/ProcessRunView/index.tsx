@@ -10,9 +10,11 @@ import HistoryTable from '#src-app/components/tables/HistoryTable';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
 import { currentProcessSelector, processActions } from '#src-app/store/slices/Process';
+import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -49,6 +51,9 @@ const ProcessRunView: FC = () => {
     const hasAddScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_ADD]);
 
     const { translate } = useTranslations();
+    const processInstances = useSelector(processInstanceSelector);
+    const { orchestratorProcessInstanceId } = processInstances.active;
+    useProcessInstanceSocket({ orchestratorProcessInstanceId });
     
     useEffect(() => {
         if (hasReadSchedulesAccess)

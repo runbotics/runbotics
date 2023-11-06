@@ -131,7 +131,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName',
                                 ),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
                             },
                         },
                         required: ['worksheetName'],
@@ -200,7 +199,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             cell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
                             isStringExpected: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.IsStringExpected'),
@@ -273,12 +271,10 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             startCell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.StartCell'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_CELL_ADDRESS
                             },
                             endCell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.EndCell'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_CELL_ADDRESS
                             },
                             isStringExpected: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.IsStringExpected'),
@@ -358,7 +354,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.WorksheetName',
                                 ),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_WORKSHEET_NAME
                             },
                         },
                     },
@@ -458,7 +453,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             startCell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_CELL_ADDRESS,
                             },
                             values: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values'),
@@ -572,12 +566,10 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             startColumn: {
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.StartColumn'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_COLUMN_NAME
                             },
                             endColumn: {
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.EndColumn'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_COLUMN_NAME
                             }
                         },
                         required: ['startColumn'],
@@ -625,7 +617,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             worksheet: {
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet'),
                                 type: 'string',
-                                pattern: ActionRegex.EXCEL_COLUMN_NAME
                             }
                         },
                         required: ['rowRange'],
