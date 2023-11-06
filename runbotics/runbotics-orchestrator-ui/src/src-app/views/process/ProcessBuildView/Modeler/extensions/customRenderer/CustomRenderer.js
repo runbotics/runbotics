@@ -75,6 +75,18 @@ export default class CustomRenderer extends BaseRenderer {
             y: height / 2,
         });
 
+        var actionName = svgCreate("text");
+
+        svgAttr(actionName, {
+            fill: '#b3b3b3',
+            transform: `translate(${transformX}, ${transformY})`,
+            textAnchor: "middle",
+            dominantBaseline: "middle",
+            fontWeight: 500,
+            x: width / 2 - 75,
+            y: (height + 45) / 2,
+        });
+
         const actionId = label.actionId;
 
         if (actionId) {
@@ -101,6 +113,17 @@ export default class CustomRenderer extends BaseRenderer {
             );
 
             svgAppend(parentNode, text);
+
+            if (label.title !== '') {
+                svgAppend(
+                    actionName,
+                    document.createTextNode(
+                        translatedLabel || label.actionId
+                    )
+                )
+
+                svgAppend(parentNode, actionName);
+            }
         }
 
     }
