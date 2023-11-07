@@ -7,20 +7,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Stack, TextField, Typography } from '@mui/material';
 
 import If from '#src-app/components/utils/If';
-import useTranslations from '#src-app/hooks/useTranslations';
 
-import { IBpmnConnection } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+import {
+    FlowLabelFormStyled
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/FlowLabelForm.styles';
+import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 type Props = {
+    formLabel: string;
     onSubmit: (label: string) => void;
-    selectedElement: IBpmnConnection;
-    onCancel: () => void;
-    onFocus: (event: React.FocusEvent<HTMLInputElement>) => void;
+    selectedElement: BPMNElement;
+    onCancel?: () => void;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
 };
 
-const FlowLabelForm: VFC<Props> = ({ onSubmit, selectedElement, onCancel, onFocus }) => {
-    const { translate } = useTranslations();
-
+const FlowLabelForm: VFC<Props> = ({ formLabel, onSubmit, selectedElement, onCancel, onFocus }) => {
     const [formState, setFormState] = useState({
         editing: false,
         label: selectedElement.businessObject.name as string,
@@ -57,7 +58,9 @@ const FlowLabelForm: VFC<Props> = ({ onSubmit, selectedElement, onCancel, onFocu
             editing: false,
             label: selectedElement.businessObject.name as string,
         });
-        onCancel();
+        if (onCancel) {
+            onCancel();
+        }
     };
 
     const EditButtons = () => {
@@ -91,13 +94,11 @@ const FlowLabelForm: VFC<Props> = ({ onSubmit, selectedElement, onCancel, onFocu
     );
 
     return (
-        <>
+        <FlowLabelFormStyled>
             <If condition={formState.editing} else={<FlowNameLabel />}>
                 <form onSubmit={handleSubmit}>
                     <TextField
-                        label={translate(
-                            'Process.Details.Modeler.ActionPanel.Form.FlowName.Title'
-                        )}
+                        label={formLabel}
                         variant="outlined"
                         value={formState.label}
                         name={selectedElement.id}
@@ -110,7 +111,7 @@ const FlowLabelForm: VFC<Props> = ({ onSubmit, selectedElement, onCancel, onFocu
                     />
                 </form>
             </If>
-        </>
+        </FlowLabelFormStyled>
     );
 };
 

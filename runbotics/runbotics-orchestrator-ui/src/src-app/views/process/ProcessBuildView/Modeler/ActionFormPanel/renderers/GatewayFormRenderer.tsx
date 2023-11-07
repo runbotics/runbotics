@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 
-import { Box, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
@@ -8,7 +8,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-import { ExpressionTextField, FlowExpression, GatewayFormMenu } from './GatewayFormRenderer.styles';
+import { FlowExpression, GatewayFormMenu } from './GatewayFormRenderer.styles';
 
 import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../helpers/elementParameters';
 
@@ -85,21 +85,29 @@ const GatewayFormRenderer = () => {
         });
     };
     
-    const handleNameChange = (inputValue: string, flow: IBpmnConnection) => {
+    const handleConnectionNameChange = (inputValue: string, flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionName(flow, inputValue);
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
+    };
+    
+    const handleNameChange = (inputValue: string) => {
+        BpmnConnectionFactory.from(modeler).setGatewayName(gateway, inputValue);
     };
 
     const handleCancel = (flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
-
+    
     return (
         <>
             <Grid item xs={12}>
                 <Box px={2} pt={1}>
                     <Typography variant="h4" gutterBottom>
-                        {gateway.id}
+                        <FlowLabelForm
+                            formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
+                            onSubmit={handleNameChange}
+                            selectedElement={gateway}
+                        />
                     </Typography>
                 </Box>
             </Grid>
@@ -128,13 +136,14 @@ const GatewayFormRenderer = () => {
                 {
                     gateway.outgoing.map((outgoing) => (
                         <FlowExpression key={'flow-expression-' + outgoing.id}>
-                            <FlowLabelForm 
-                                onSubmit={(label) => handleNameChange(label, outgoing)} 
+                            <FlowLabelForm
+                                formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
+                                onSubmit={(name) => handleConnectionNameChange(name, outgoing)} 
                                 selectedElement={outgoing}
                                 onCancel={() => handleCancel(outgoing)}
                                 onFocus={handleOnFocus}
                             />
-                            <ExpressionTextField
+                            <TextField
                                 fullWidth
                                 label={`${translate(
                                     'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'

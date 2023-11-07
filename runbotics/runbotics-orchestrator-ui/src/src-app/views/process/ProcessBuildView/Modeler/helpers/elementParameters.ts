@@ -270,6 +270,10 @@ export class BpmnConnectionFactory {
     setDefaultConnection(connection: IBpmnConnection, gateway: IBpmnGateway) {
         this.modeling.updateProperties(gateway, { default: connection });
     }
+
+    setGatewayName(gateway: IBpmnGateway, name: string) {
+        this.modeling.updateProperties(gateway, { name });
+    }
 }
 
 export class BPMNHelper {
