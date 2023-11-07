@@ -104,7 +104,7 @@ const GatewayFormRenderer = () => {
                 <Box px={2} pt={1}>
                     <Typography variant="h4" gutterBottom>
                         <FlowLabelForm
-                            formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
+                            formLabel={translate('Process.Details.Modeler.ActionPanel.Form.GatewayName.Title')}
                             onSubmit={handleNameChange}
                             selectedElement={gateway}
                         />
