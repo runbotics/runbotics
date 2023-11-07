@@ -13,7 +13,8 @@ public class UserProcessPK implements Serializable {
     @Column(name = "process_id")
     Long processId;
 
-    public UserProcessPK() {}
+    public UserProcessPK() {
+    }
 
     public UserProcessPK(Long userId, Long processId) {
         this.userId = userId;

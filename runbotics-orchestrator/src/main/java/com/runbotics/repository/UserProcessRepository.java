@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -16,13 +15,6 @@ import java.util.Optional;
  */
 @Repository
 public interface UserProcessRepository extends JpaRepository<UserProcess, UserProcessPK>, JpaSpecificationExecutor<UserProcess> {
-
-    @Modifying
-    @Query(
-        value = "INSERT INTO jhi_user_process VALUES (?1, ?2, ?3)",
-        nativeQuery = true
-    )
-    UserProcess saveByIdUserIdAndIdProcessId(Long userId, Long processId, ZonedDateTime subscribedAt);
 
     Optional<UserProcess> findByIdUserIdAndIdProcessId(Long userId, Long processId);
 

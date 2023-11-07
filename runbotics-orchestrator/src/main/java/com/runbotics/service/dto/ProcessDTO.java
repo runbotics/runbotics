@@ -9,6 +9,7 @@ import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.runbotics.domain.UserProcess;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -224,7 +225,9 @@ public class ProcessDTO implements Serializable {
 
     public Set<UserProcess> getNotifications() { return notifications; }
 
-    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
+    public void setNotifications(Set<UserProcess> notifications) {
+        this.notifications = notifications;
+    }
 
     @Override
     public boolean equals(Object o) {

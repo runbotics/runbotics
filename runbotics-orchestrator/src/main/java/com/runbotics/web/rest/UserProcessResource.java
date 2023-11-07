@@ -62,14 +62,14 @@ public class UserProcessResource {
     /**
      * {@code DELETE /process-notifications} : deletes a subscription for process notification.
      *
-     * @param userId id of the user related to the subscription to delete.
+     * @param userId    id of the user related to the subscription to delete.
      * @param processId id of the process related to the subscription to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/process-notifications")
     public ResponseEntity<Void> deleteProcessSubscription(
         @RequestParam(value = "userId", required = true) Long userId,
-        @RequestParam(value = "processId",required = true) Long processId
+        @RequestParam(value = "processId", required = true) Long processId
     ) {
         log.debug("REST request to create subscription for process notification with userId and processId: {} {}", userId, processId);
 

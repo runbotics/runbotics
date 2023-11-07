@@ -11,7 +11,8 @@ import java.time.ZonedDateTime;
 @Table(name = "jhi_user_process")
 public class UserProcess implements Serializable {
 
-    public UserProcess() {}
+    public UserProcess() {
+    }
 
     public UserProcess(User user, Process process, ZonedDateTime subscribedAt) {
         this.user = user;

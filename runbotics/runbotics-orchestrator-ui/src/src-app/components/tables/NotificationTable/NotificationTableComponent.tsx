@@ -39,14 +39,12 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
     return (
         <StyledWrapper>
             <DataGrid
-                sx={{flex: 1}}
                 autoHeight
                 columns={notificationTableColumns}
                 rows={subscribersList ?? []}
                 rowCount={subscribersList.length ?? 0}
                 loading={false}
                 disableSelectionOnClick
-                rowsPerPageOptions={ROWS_PER_PAGE}
                 localeText={{
                     noRowsLabel: translate('Process.Edit.Table.Results.Error')
                 }}

@@ -89,8 +89,8 @@ public class Process implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "tag_process",
-        joinColumns = { @JoinColumn(name = "process_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "tag_id", referencedColumnName = "id") }
+        joinColumns = {@JoinColumn(name = "process_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")}
     )
     @BatchSize(size = 20)
     private Set<Tag> tags = new HashSet<>();
@@ -103,7 +103,6 @@ public class Process implements Serializable {
     private Set<GlobalVariable> globalVariables = new HashSet<>();
 
     @OneToMany(mappedBy = "process")
-    @Fetch(FetchMode.JOIN)
     private Set<UserProcess> notifications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -330,9 +329,13 @@ public class Process implements Serializable {
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    public Set<UserProcess> getNotifications() { return notifications; }
+    public Set<UserProcess> getNotifications() {
+        return notifications;
+    }
 
-    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
+    public void setNotifications(Set<UserProcess> notifications) {
+        this.notifications = notifications;
+    }
 
     @Override
     public boolean equals(Object o) {

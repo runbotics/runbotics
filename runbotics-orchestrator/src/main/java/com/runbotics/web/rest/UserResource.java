@@ -224,44 +224,6 @@ public class UserResource {
     }
 
     /**
-     * {@code GET /users/process-subscribers/:processId} : get all users who subscribed to process - calling this are only allowed for the administrators.
-     *
-     * @param pageable the pagination information.
-     * @param processId criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
-     */
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    @GetMapping("/users/process-subscribers/{processId}")
-    public void getAllProcessSubscribers(
-        @PathVariable(value = "processId", required = true) Long processId,
-        Pageable pageable
-    ) {
-        log.debug("REST request to get all User who subscribed to the process with id: {}, by page: {}", processId, pageable);
-//        if (!onlyContainsAllowedProperties(pageable)) {
-//            return ResponseEntity.badRequest().build();
-//        }
-
-//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-//        return new ResponseEntity<>(page, headers, HttpStatus.OK);
-    }
-
-    @PostMapping("/users/{userId}/process-subscribers/{processId}")
-    public void addNewProcessSubscriber(
-        @PathVariable(value = "userId", required = true) Long userId,
-        @PathVariable(value = "processId", required = true) Long processId
-    ) {
-        log.debug("REST add new User with id: {}, who subscribed to the process with id: {}", userId, processId);
-//        if (!onlyContainsAllowedProperties(pageable)) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//
-//        Page<AdminUserDTO> page = userService.getAllNotActivatedUsers(pageable);
-//
-//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-//        return new ResponseEntity<>(page, headers, HttpStatus.OK);
-    }
-
-    /**
      * {@code GET /admin/users/not-activated} : get all not activated users with all the details - calling this are only allowed for the administrators.
      *
      * @param pageable the pagination information.

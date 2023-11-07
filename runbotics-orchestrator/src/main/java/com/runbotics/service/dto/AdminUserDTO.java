@@ -3,6 +3,7 @@ package com.runbotics.service.dto;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.UserProcess;
 import com.runbotics.domain.User;
+
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class AdminUserDTO {
 
     private Set<String> featureKeys;
 
-    private  Set<UserProcess> notifications;
+    private Set<UserProcess> notifications;
 
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
@@ -73,7 +74,7 @@ public class AdminUserDTO {
         this.lastModifiedDate = user.getLastModifiedDate();
         this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
         this.featureKeys = user.getAuthorities().stream().flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName())).collect(Collectors.toSet());
-        this.notifications = new HashSet<>(user.getNotifications());
+        this.notifications = user.getNotifications();
     }
 
     public AdminUserDTO(String login) {
@@ -192,9 +193,13 @@ public class AdminUserDTO {
         this.roles = roles;
     }
 
-    public  Set<UserProcess> getNotifications() { return notifications; }
+    public Set<UserProcess> getNotifications() {
+        return notifications;
+    }
 
-    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
+    public void setNotifications(Set<UserProcess> notifications) {
+        this.notifications = notifications;
+    }
 
     // prettier-ignore
     @Override

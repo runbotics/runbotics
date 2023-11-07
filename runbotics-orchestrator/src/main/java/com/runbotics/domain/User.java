@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.runbotics.config.Constants;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -90,14 +92,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "jhi_user_authority",
-        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @Fetch(FetchMode.JOIN)
     private Set<UserProcess> notifications = new HashSet<>();
 
     public Long getId() {
@@ -107,6 +108,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Set<String> getRoles() {
         return new HashSet<String>();
     }
@@ -212,9 +214,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
-    public Set<UserProcess> getNotifications() { return notifications; }
+    public Set<UserProcess> getNotifications() {
+        return notifications;
+    }
 
-    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
+    public void setNotifications(Set<UserProcess> notifications) {
+        this.notifications = notifications;
+    }
 
     @Override
     public boolean equals(Object o) {
