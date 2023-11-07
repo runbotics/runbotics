@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 /**
@@ -15,6 +20,9 @@ import org.hibernate.annotations.Type;
  */
 @Entity
 @Table(name = "process")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
 public class Process implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,6 +101,10 @@ public class Process implements Serializable {
         joinColumns = @JoinColumn(name = "process_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
     private Set<GlobalVariable> globalVariables = new HashSet<>();
+
+    @OneToMany(mappedBy = "process")
+    @Fetch(FetchMode.JOIN)
+    private Set<UserProcess> notifications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -317,6 +329,10 @@ public class Process implements Serializable {
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Set<UserProcess> getNotifications() { return notifications; }
+
+    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
 
     @Override
     public boolean equals(Object o) {

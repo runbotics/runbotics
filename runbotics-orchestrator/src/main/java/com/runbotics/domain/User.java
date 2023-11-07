@@ -1,6 +1,8 @@
 package com.runbotics.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.runbotics.config.Constants;
 import java.io.Serializable;
 import java.time.Instant;
@@ -14,12 +16,17 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * A user.
  */
 @Entity
 @Table(name = "jhi_user")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,6 +95,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     )
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @Fetch(FetchMode.JOIN)
+    private Set<UserProcess> notifications = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -200,6 +211,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    public Set<UserProcess> getNotifications() { return notifications; }
+
+    public  void setNotifications(Set<UserProcess> notifications) { this.notifications = notifications; }
 
     @Override
     public boolean equals(Object o) {
