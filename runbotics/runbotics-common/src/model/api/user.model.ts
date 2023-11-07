@@ -1,4 +1,5 @@
 import { IAuthority } from './authority.model';
+import { UserProcess } from './user-process.model';
 
 export interface IUser {
     id?: number;
@@ -14,4 +15,5 @@ export interface IUser {
     lastModifiedBy?: string;
     lastModifiedDate?: string | null;
     password?: string;
+    notifications?: UserProcess[];
 }

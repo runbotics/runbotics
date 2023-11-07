@@ -13,6 +13,8 @@ import {
     getProcessesPage,
     partialUpdateProcess,
     createGuestProcess,
+    subscribeProcessNotifications,
+    unsubscribeProcessNotifications
 } from './Process.thunks';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
@@ -107,6 +109,28 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.draft.process = action.payload;
         })
         .addCase(partialUpdateProcess.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+        })
+
+        // SUBSCRIBE PROCESS NOTIFICATIONS
+        .addCase(subscribeProcessNotifications.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(subscribeProcessNotifications.fulfilled, (state) => {
+            state.all.loading = false;
+        })
+        .addCase(subscribeProcessNotifications.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+        })
+
+        // UNSUBSCRIBE PROCESS NOTIFICATIONS
+        .addCase(unsubscribeProcessNotifications.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(unsubscribeProcessNotifications.fulfilled, (state) => {
+            state.all.loading = false;
+        })
+        .addCase(unsubscribeProcessNotifications.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         });
 };

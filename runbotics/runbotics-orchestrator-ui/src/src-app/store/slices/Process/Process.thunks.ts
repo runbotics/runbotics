@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 
-import { IProcess, Tag } from 'runbotics-common';
+import { IProcess, Tag, UserProcess } from 'runbotics-common';
 
 
 import { RootState } from '#src-app/store';
@@ -147,4 +147,15 @@ export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
     'tags/getByName',
     (params) => Axios.get<Tag[]>(buildPageURL(params, '/api/tags'))
         .then((response) => response.data)
+);
+
+export const subscribeProcessNotifications = createAsyncThunk<UserProcess, UserProcess['id']>(
+    'processes/subscribeProcessNotifications',
+    (userProcess) => Axios.post<UserProcess>('/api/process-notifications', userProcess)
+        .then((response) => response.data)
+);
+
+export const unsubscribeProcessNotifications = createAsyncThunk<void, UserProcess['id']>(
+    'processes/unsubscribeProcessNotifications',
+    ({ userId, processId }) => Axios.delete(`/api/process-notifications?userId=${userId}&processId=${processId}`)
 );

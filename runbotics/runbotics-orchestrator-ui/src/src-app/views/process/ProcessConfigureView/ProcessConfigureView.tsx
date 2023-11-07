@@ -1,10 +1,13 @@
-import React, { useEffect, useState, VFC } from 'react';
+import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection } from 'runbotics-common';
 
+import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
+import { notificationTableColumns } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.utils';
 import If from '#src-app/components/utils/If';
+import useAuth from '#src-app/hooks/useAuth';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -21,9 +24,13 @@ import {
     Container,
     AttendancePaper,
     StyledPaper,
+    ContainerWrapper,
 } from './ProcessConfigureView.styles';
+import ProcessNotificationComponent from './ProcessNotificationComponent';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 
+
+// eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { process } = useSelector((state) => state.process.draft);
@@ -38,6 +45,28 @@ const ProcessConfigureView: VFC = () => {
 		useState<IBotCollection>(process?.botCollection);
     const [attended, setAttended] = useState(process?.isAttended);
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
+
+    const { user } = useAuth();
+    const [subscribed, setSubscribed] = useState(() =>
+        Boolean(user.notifications.find(notification => notification.id.processId === processId))
+    );
+
+    console.log({notifications: user.notifications});
+    console.log({process: process.notifications});
+
+    const notificationTableRows = useMemo(() => {
+        // TODO: need to be refactored
+        if (process.notifications !== undefined) {
+            return process.notifications.map(notification => ({
+                id: notification.id.userId,
+                user: notification.id.userId,
+                subscribedAt: notification.subscribedAt,
+                actions: 'action'
+            }));
+        }
+
+        return [];
+    }, [process]);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
@@ -89,8 +118,22 @@ const ProcessConfigureView: VFC = () => {
         await fetchProcess();
     };
 
+    const handleSubscriptionChange = async (subscriptionState: boolean) => {
+        if (subscriptionState) {
+            await dispatch(
+                processActions.subscribeProcessNotifications({ userId: user.id, processId })
+            );
+        } else {
+            await dispatch(
+                processActions.unsubscribeProcessNotifications({ userId: user.id, processId })
+            );
+        }
+        setSubscribed(subscriptionState);
+        await fetchProcess();
+    };
+
     const attendedBox = (
-        <Box width="fit-content">
+        <Box>
             <AttendancePaper>
                 <ProcessAttendedComponent
                     isProcessAttended={attended}
@@ -101,37 +144,51 @@ const ProcessConfigureView: VFC = () => {
     );
 
     return (
-        <Container>
-            <Box width="fit-content">
-                <StyledPaper elevation={1}>
-                    <BotSystemComponent
-                        selectedBotSystem={selectedBotSystem}
-                        onSelectBotSystem={handleSelectBotSystem}
-                    />
-                </StyledPaper>
-            </Box>
-            <Box width="fit-content">
-                <StyledPaper elevation={1}>
-                    <BotCollectionComponent
-                        selectedBotCollection={selectedBotCollection}
-                        onSelectBotCollection={handleSelectBotCollection}
-                    />
-                </StyledPaper>
-            </Box>
-            <If condition={isScheduled} else={attendedBox}>
-                <Tooltip title={translate('Process.Configure.Attended.Schedule.Message')} placement="top">
-                    {attendedBox}
-                </Tooltip>
-            </If>
-            <Box width="fit-content">
-                <StyledPaper>
-                    <ProcessTriggerableComponent
-                        isProcessTriggerable={triggerable}
-                        onTriggerableChange={handleTriggerableChange}
-                    />
-                </StyledPaper>
-            </Box>
-        </Container>
+        <ContainerWrapper>
+            <Container>
+                <Box>
+                    <StyledPaper elevation={1}>
+                        <BotSystemComponent
+                            selectedBotSystem={selectedBotSystem}
+                            onSelectBotSystem={handleSelectBotSystem}
+                        />
+                    </StyledPaper>
+                </Box>
+                <Box>
+                    <StyledPaper elevation={1}>
+                        <BotCollectionComponent
+                            selectedBotCollection={selectedBotCollection}
+                            onSelectBotCollection={handleSelectBotCollection}
+                        />
+                    </StyledPaper>
+                </Box>
+                <If condition={isScheduled} else={attendedBox}>
+                    <Tooltip title={translate('Process.Configure.Attended.Schedule.Message')} placement="top">
+                        {attendedBox}
+                    </Tooltip>
+                </If>
+                <Box>
+                    <StyledPaper>
+                        <ProcessTriggerableComponent
+                            isProcessTriggerable={triggerable}
+                            onTriggerableChange={handleTriggerableChange}
+                        />
+                    </StyledPaper>
+                </Box>
+                <Box>
+                    <StyledPaper>
+                        <ProcessNotificationComponent
+                            isProcessSubscribed={subscribed}
+                            onSubscriptionChange={handleSubscriptionChange}
+                        />
+                    </StyledPaper>
+                </Box>
+            </Container>
+            <NotificationTableComponent
+                notificationTableColumns={notificationTableColumns}
+                subscribersList={notificationTableRows}
+            />
+        </ContainerWrapper>
     );
 };
 
