@@ -156,7 +156,9 @@ const useInternalActionsGroups = (): Record<
             items: Object.values(getApplicationActions())
         },
         visualBasic: {
-            label: 'Visual Basic',
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.VisualBasic'
+            ),
             items: Object.values(getVisualBasicActions())
         },
         external: {
