@@ -1,9 +1,10 @@
 package com.runbotics.domain;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
-import com.runbotics.service.impl.ProcessInstanceEntityListener;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -20,7 +21,6 @@ import org.hibernate.annotations.TypeDef;
  */
 @Entity
 @Table(name = "process_instance")
-@EntityListeners(ProcessInstanceEntityListener.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class ProcessInstance implements Serializable {
