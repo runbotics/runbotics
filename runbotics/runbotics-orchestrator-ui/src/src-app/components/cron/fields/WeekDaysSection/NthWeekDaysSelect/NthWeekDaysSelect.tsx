@@ -7,7 +7,7 @@ import DEFAULT_LOCALE_EN from '../../../locale';
 
 const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({ 
     value, 
-    setValue, 
+    setValue,
     locale, 
     humanizeLabels, 
     disabled, 
@@ -21,7 +21,8 @@ const NthWeekDaysSelect: FC<NthWeekDaysSelectProps>= ({
         if(!isOneWeekDaySelected) {
             setValue([]); 
         }
-    }, [isOneWeekDaySelected, setValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOneWeekDaySelected]);
 
     return (
         <CustomSelect

@@ -123,7 +123,13 @@ export class DesktopRunnerService implements OnModuleInit {
         let currentExtensionName: string;
         try {
             const extensions = readdirSync(this.serverConfigService.extensionsDirPath, { withFileTypes: true })
-                .filter(directoryEntry => this.detectExtensions(directoryEntry, this.serverConfigService.extensionsDirPath))
+                .filter(directoryEntry => {
+                    const isValidActionsDirectory = this.detectExtensions(directoryEntry, this.serverConfigService.extensionsDirPath);
+                    if (!isValidActionsDirectory) {
+                        this.logger.warn(`Directory "${this.serverConfigService.extensionsDirPath}/${directoryEntry.name}" is not a valid actions directory`);
+                    }
+                    return isValidActionsDirectory;
+                })
                 .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of extensions found: ' + extensions.length);
 
