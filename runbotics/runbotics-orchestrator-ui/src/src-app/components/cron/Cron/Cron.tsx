@@ -38,79 +38,65 @@ const Cron: FC<CronProps> = ({
     const [isError, setIsError] = useState<boolean>(false);
     const localeJSON = JSON.stringify(locale);
     
-    useEffect(
-        () => {            
+    useEffect(() => {            
+        setValuesFromCronString({
+            cronString: value,
+            setIsError,
+            onError,
+            internalValueRef,
+            firstRender: true,
+            locale,
+            setPeriod,
+            cronDispatch
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+    useEffect(() => {
+        if (value !== internalValueRef.current) { 
             setValuesFromCronString({
                 cronString: value,
                 setIsError,
                 onError,
                 internalValueRef,
-                firstRender: true,
+                firstRender: false,
                 locale,
                 setPeriod,
                 cronDispatch
             });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value, localeJSON, shortcuts]);
 
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
-    );
-    
-    useEffect(
-        () => {
-            if (value !== internalValueRef.current)
-            { 
-                setValuesFromCronString({
-                    cronString: value,
-                    setIsError,
-                    onError,
-                    internalValueRef,
-                    firstRender: false,
-                    locale,
-                    setPeriod,
-                    cronDispatch
-                });
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [value, localeJSON, shortcuts],
-    );
+    useEffect(() => {
+        // Only change the value if a user touched a field
+        if (period || Object.values(cronState).some((arr) => arr.length > 0)) {
+            const cron = getCronStringFromValues(
+                period || defaultPeriodRef.current,
+                cronState,
+                humanizeValue,
+            );
 
-    useEffect(
-        () => {
-            // Only change the value if a user touched a field
-            if (period || Object.values(cronState).some((arr) => arr.length > 0)) {
-                const cron = getCronStringFromValues(
-                    period || defaultPeriodRef.current,
-                    cronState,
-                    humanizeValue,
-                );
-
-                setValue(cron);
-                internalValueRef.current = cron;
-
-                onError && onError(undefined);
-                setIsError(false);
-            }
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [period, cronState, humanizeValue],
-    );
-
-    const handleClear = useCallback(
-        () => {
-            cronDispatch({ 
-                type: CRON_ACTIONS.CLEAR_ALL,
-            });
-
-            period ? setPeriod(period) : setPeriod(defaultPeriodRef.current);
+            setValue(cron);
+            internalValueRef.current = cron;
 
             onError && onError(undefined);
             setIsError(false);
-        },
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [period, cronState, humanizeValue]);
+
+    const handleClear = useCallback(() => {
+        cronDispatch({ 
+            type: CRON_ACTIONS.CLEAR_ALL,
+        });
+
+        period ? setPeriod(period) : setPeriod(defaultPeriodRef.current);
+
+        onError && onError(undefined);
+        setIsError(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [period, setValue, onError],
-    );
+    }, [period, setValue, onError]);
 
     const periodForRender = period || defaultPeriodRef.current;
     const isYearPeriodDisplayed = periodForRender === PeriodType.YEAR;

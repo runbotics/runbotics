@@ -83,7 +83,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        await this.botLifecycleService.handleProcessInstanceInterruption(bot);
+        // await this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 

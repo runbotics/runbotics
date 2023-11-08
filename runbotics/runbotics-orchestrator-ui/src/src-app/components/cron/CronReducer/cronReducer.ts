@@ -1,6 +1,8 @@
 import { CRON_ACTIONS, CronActionProps, CronStateProps } from './cronReducer.types';
 
-export const cronReducer = (state: CronStateProps, action: CronActionProps): CronStateProps => {
+export const cronReducer = (
+    state: CronStateProps, action: CronActionProps,
+): CronStateProps => {
     const newValue = action?.payload?.newValue;
     const newState = action?.payload?.newState;
 
