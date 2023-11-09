@@ -275,9 +275,9 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Async
     public void deleteProcessLeftovers() {
-        log.debug("Deleting leftovers old Processes has started");
+        log.debug("Starting remove leftovers of old processes");
         processInstanceRepository.deleteInstancesWithoutProcess();
-        log.debug("Deleting leftovers old Processes has finished");
+        log.debug("Successfully finished remove leftovers of old processes");
     }
 
     @Override
