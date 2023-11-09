@@ -2,12 +2,15 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection } from 'runbotics-common';
+import { IBotSystem, IBotCollection, UserProcess, Role } from 'runbotics-common';
 
+import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
-import { notificationTableColumns } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.utils';
+import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
+import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -26,14 +29,13 @@ import {
     StyledPaper,
     ContainerWrapper,
 } from './ProcessConfigureView.styles';
-import ProcessNotificationComponent from './ProcessNotificationComponent';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { process } = useSelector((state) => state.process.draft);
+    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector((state) => state.process);
     const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
@@ -46,31 +48,29 @@ const ProcessConfigureView: VFC = () => {
     const [attended, setAttended] = useState(process?.isAttended);
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
+    const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { user } = useAuth();
-    const [subscribed, setSubscribed] = useState(() =>
-        Boolean(user.notifications.find(notification => notification.id.processId === processId))
-    );
+    const [subscribed, setSubscribed] = useState(false);
 
-    console.log({notifications: user.notifications});
-    console.log({process: process.notifications});
+    const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
 
     const notificationTableRows = useMemo(() => {
-        // TODO: need to be refactored
-        if (process.notifications !== undefined) {
-            return process.notifications.map(notification => ({
-                id: notification.id.userId,
-                user: notification.id.userId,
-                subscribedAt: notification.subscribedAt,
-                actions: 'action'
+        if(processSubscriptions.length) {
+            return processSubscriptions.map<ProcessNotificationRow>((sub: UserProcess) => ({
+                id: sub.userId,
+                userId: sub.userId,
+                processId: sub.processId,
+                user: sub.user.login,
+                subscribedAt: sub.subscribedAt,
             }));
         }
-
         return [];
-    }, [process]);
+    }, [processSubscriptions]);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
+        dispatch(processActions.getProcessSubscriptionInfo(processId));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -83,6 +83,10 @@ const ProcessConfigureView: VFC = () => {
 
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
     }, [process]);
+
+    useEffect(() => {
+        setSubscribed(Boolean(processSubscriptions.find(sub => sub.userId === user.id)));
+    }, [processSubscriptions]);
 
     const fetchProcess = async () => {
         await dispatch(processActions.fetchProcessById(process.id));
@@ -119,18 +123,20 @@ const ProcessConfigureView: VFC = () => {
     };
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
-        if (subscriptionState) {
-            await dispatch(
-                processActions.subscribeProcessNotifications({ userId: user.id, processId })
-            );
-        } else {
-            await dispatch(
-                processActions.unsubscribeProcessNotifications({ userId: user.id, processId })
-            );
-        }
-        setSubscribed(subscriptionState);
-        await fetchProcess();
+        subscriptionState
+            ? await dispatch(processActions.subscribeProcessNotifications({ userId: user.id, processId }))
+            : await dispatch(processActions.unsubscribeProcessNotifications({ userId: user.id, processId }));
+
+        await dispatch(processActions.getProcessSubscriptionInfo(processId));
     };
+
+    async function handleDeleteSubscription(subscriberInfo: ProcessNotificationRow) {
+        await dispatch(processActions.unsubscribeProcessNotifications({
+            userId: subscriberInfo.userId,
+            processId,
+        }));
+        await dispatch(processActions.getProcessSubscriptionInfo(processId));
+    }
 
     const attendedBox = (
         <Box>
@@ -177,17 +183,21 @@ const ProcessConfigureView: VFC = () => {
                 </Box>
                 <Box>
                     <StyledPaper>
-                        <ProcessNotificationComponent
-                            isProcessSubscribed={subscribed}
+                        <NotificationSwitchComponent
+                            isSubscribed={subscribed}
                             onSubscriptionChange={handleSubscriptionChange}
+                            label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                         />
                     </StyledPaper>
                 </Box>
             </Container>
-            <NotificationTableComponent
-                notificationTableColumns={notificationTableColumns}
-                subscribersList={notificationTableRows}
-            />
+            <If condition={isAdmin}>
+                <NotificationTableComponent
+                    notificationTableColumns={notificationTableColumns}
+                    subscribersList={notificationTableRows ?? []}
+                    loading={loading}
+                />
+            </If>
         </ContainerWrapper>
     );
 };

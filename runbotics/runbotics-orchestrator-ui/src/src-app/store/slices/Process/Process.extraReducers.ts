@@ -14,7 +14,8 @@ import {
     partialUpdateProcess,
     createGuestProcess,
     subscribeProcessNotifications,
-    unsubscribeProcessNotifications
+    unsubscribeProcessNotifications,
+    getProcessSubscriptionInfo
 } from './Process.thunks';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
@@ -131,6 +132,18 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
         .addCase(unsubscribeProcessNotifications.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+        })
+
+        // GET ALL PROCESS SUBSCRIPTIONS
+        .addCase(getProcessSubscriptionInfo.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getProcessSubscriptionInfo.fulfilled, (state, action) => {
+            state.all.loading = false;
+            state.draft.processSubscriptions = action.payload;
+        })
+        .addCase(getProcessSubscriptionInfo.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         });
 };

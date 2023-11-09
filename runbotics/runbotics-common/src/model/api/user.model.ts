@@ -15,5 +15,4 @@ export interface IUser {
     lastModifiedBy?: string;
     lastModifiedDate?: string | null;
     password?: string;
-    notifications?: UserProcess[];
 }

@@ -23,7 +23,6 @@ export interface IProcess {
     botCollection?: IBotCollection | null;
     editor?: IUser | null;
     tags?: Tag[];
-    notifications?: UserProcess[];
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {

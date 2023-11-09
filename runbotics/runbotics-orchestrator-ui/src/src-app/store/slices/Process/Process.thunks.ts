@@ -149,13 +149,19 @@ export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
         .then((response) => response.data)
 );
 
-export const subscribeProcessNotifications = createAsyncThunk<UserProcess, UserProcess['id']>(
+export const subscribeProcessNotifications = createAsyncThunk<UserProcess, Pick<UserProcess, 'userId' | 'processId'>>(
     'processes/subscribeProcessNotifications',
     (userProcess) => Axios.post<UserProcess>('/api/process-notifications', userProcess)
         .then((response) => response.data)
 );
 
-export const unsubscribeProcessNotifications = createAsyncThunk<void, UserProcess['id']>(
+export const unsubscribeProcessNotifications = createAsyncThunk<void, Pick<UserProcess, 'userId' | 'processId'>>(
     'processes/unsubscribeProcessNotifications',
     ({ userId, processId }) => Axios.delete(`/api/process-notifications?userId=${userId}&processId=${processId}`)
+);
+
+export const getProcessSubscriptionInfo = createAsyncThunk<UserProcess[], UserProcess['processId']>(
+    'processes/getProcessSubscriptionInfo',
+    (processId) => Axios.get<UserProcess[]>(`/api/process-notifications/${processId}`)
+        .then((response) => response.data)
 );
