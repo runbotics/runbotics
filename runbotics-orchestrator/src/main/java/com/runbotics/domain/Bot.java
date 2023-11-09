@@ -1,11 +1,14 @@
 package com.runbotics.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.runbotics.modules.bot.entity.BotStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Bot.
@@ -48,6 +51,10 @@ public class Bot implements Serializable {
     @ManyToOne
     @JoinColumn(name = "collection_id")
     private BotCollection collection;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "bot")
+    private Set<UserBot> userBotNotifications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -145,6 +152,14 @@ public class Bot implements Serializable {
 
     public void setCollection(BotCollection collection) {
         this.collection = collection;
+    }
+
+    public Set<UserBot> getUserBotNotifications() {
+        return userBotNotifications;
+    }
+
+    public void setUserBotNotifications(Set<UserBot> userBotNotifications) {
+        this.userBotNotifications = userBotNotifications;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
