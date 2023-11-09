@@ -3,6 +3,8 @@ import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
 import { IBot, IProcess, IProcessInstance } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
+import { BotService } from '#/database/bot/bot.service';
+import { ProcessService } from '#/database/process/process.service';
 
 export type SendMailInput = {
     to: string;
@@ -20,6 +22,8 @@ export class MailService {
 
     constructor(
         private readonly mailerService: MailerService,
+        private readonly botService: BotService,
+        private readonly processService: ProcessService
     ) {}
 
     public async sendMail(input: SendMailInput) {
@@ -53,18 +57,32 @@ export class MailService {
     }
 
     public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
-        await this.sendMail({
-            to: bot.user.email ?? '',
-            subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\n\nBest regards,\nRunBotics`,
-        });
+        const disconnectedBot = await this.botService.findById(bot.id);
+
+        if (disconnectedBot.subscribers && disconnectedBot.subscribers.length) {
+            const subscribers = disconnectedBot.subscribers;
+            const emailAddresses = subscribers.map(({ email }) => email).join(',');
+
+            await this.sendMail({
+                to: emailAddresses ?? '',
+                subject: NOTIFICATION_MAIL_SUBJECT,
+                content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\n\nBest regards,\nRunBotics`,
+            });
+        }
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
-        await this.sendMail({
-            to: process.createdBy.email ?? '',
-            subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
-        });
+        const failedProcess = await this.processService.findById(process.id);
+
+        if (failedProcess.subscribers && failedProcess.subscribers.length) {
+            const subscribers = failedProcess.subscribers;
+            const emailAddresses = subscribers.map(({ email }) => email).join(',');
+
+            await this.sendMail({
+                to: emailAddresses ?? '',
+                subject: NOTIFICATION_MAIL_SUBJECT,
+                content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
+            });
+        }
     }
 }

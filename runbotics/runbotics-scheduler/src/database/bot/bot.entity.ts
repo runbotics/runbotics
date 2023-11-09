@@ -1,6 +1,21 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn, Generated } from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryColumn,
+    ManyToOne,
+    JoinColumn,
+    Generated,
+    ManyToMany,
+    JoinTable,
+} from 'typeorm';
 import { UserEntity } from '../user/user.entity';
-import { BotStatus, IBot, IUser, IBotCollection, IBotSystem } from 'runbotics-common';
+import {
+    BotStatus,
+    IBot,
+    IUser,
+    IBotCollection,
+    IBotSystem,
+} from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
@@ -9,33 +24,40 @@ import { dateTransformer, numberTransformer } from '../database.utils';
 export class BotEntity implements IBot {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
-        id: number;
+    id: number;
 
     @Column({ transformer: dateTransformer })
-        created: string;
+    created: string;
 
     @Column({ name: 'installation_id', unique: true })
-        installationId: string;
+    installationId: string;
 
     @Column({ name: 'last_connected', transformer: dateTransformer })
-        lastConnected: string;
+    lastConnected: string;
 
     @Column()
-        status: BotStatus;
+    status: BotStatus;
 
     @Column()
-        version: string;
+    version: string;
 
     @ManyToOne(() => BotSystemEntity)
     @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
-        system: IBotSystem;
+    system: IBotSystem;
 
     @ManyToOne(() => UserEntity)
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-        user: IUser;
+    user: IUser;
 
     @ManyToOne(() => BotCollectionEntity)
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
-        collection: IBotCollection;
+    collection: IBotCollection;
 
+    @ManyToMany(() => UserEntity)
+    @JoinTable({
+        name: 'jhi_user_bot',
+        joinColumn: { name: 'bot_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    })
+    subscribers: IUser[];
 }
