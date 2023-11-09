@@ -15,17 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class UserProcessServiceImpl implements UserProcessService {
 
     private final Logger log = LoggerFactory.getLogger(UserProcessServiceImpl.class);
-
     private static final String ENTITY_NAME = "jhi_user_process";
     private final UserProcessRepository userProcessRepository;
     private final UserRepository userRepository;
@@ -48,18 +45,23 @@ public class UserProcessServiceImpl implements UserProcessService {
 
         UserProcess userProcess = userProcessMapper.toEntity(userProcessDTO);
         userProcess.setSubscribedAt(ZonedDateTime.now());
-
-//        Set<UserProcess> notifications = new HashSet<>(Collections.singleton(userProcess));
-//        user.setNotifications(notifications);
-//        process.setNotifications(notifications);
-//        log.debug("Request to save notifications: {} {}", user.getNotifications(), process.getNotifications());
-
         userProcess.setUser(user);
         userProcess.setProcess(process);
 
         UserProcess userProcessRepositoryResponse = userProcessRepository.save(userProcess);
 
         return userProcessMapper.toDto(userProcessRepositoryResponse);
+    }
+
+    @Override
+    public List<UserProcessDTO> getAllSubscriptionsByProcessId(Long processId) {
+        log.debug("Request to get all process subscriptions by processId: {}", processId);
+
+        return userProcessRepository
+            .findAllWhereIdProcessId(processId)
+            .stream()
+            .map(userProcessMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -271,7 +271,6 @@ public class ProcessDTO implements Serializable {
             ", schedules=" + schedules +
             ", editor=" + editor +
             ", tags=" + tags +
-            ", notifications=" + notifications +
             '}';
     }
 }

@@ -1,5 +1,8 @@
 package com.runbotics.service.dto;
 
+import com.runbotics.domain.Process;
+import com.runbotics.domain.User;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -8,12 +11,16 @@ public class UserProcessDTO implements Serializable {
 
     private Long userId;
     private Long processId;
+    private User user;
+    private Process process;
     private ZonedDateTime subscribedAt;
 
-    public UserProcessDTO(Long userId, Long processId, ZonedDateTime subscribedAt) {
+    public UserProcessDTO(Long userId, Long processId, ZonedDateTime subscribedAt, User user, Process process) {
         this.userId = userId;
         this.processId = processId;
         this.subscribedAt = subscribedAt;
+        this.user = user;
+        this.process = process;
     }
 
     public void setUserId(Long userId) {
@@ -32,6 +39,22 @@ public class UserProcessDTO implements Serializable {
         return processId;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
     public void setSubscribedAt(ZonedDateTime subscribedAt) {
         this.subscribedAt = subscribedAt;
     }
@@ -45,20 +68,22 @@ public class UserProcessDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserProcessDTO that = (UserProcessDTO) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(processId, that.processId) && Objects.equals(subscribedAt, that.subscribedAt);
+        return Objects.equals(userId, that.userId) && Objects.equals(processId, that.processId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, processId, subscribedAt);
+        return Objects.hash(userId, processId);
     }
 
     @Override
     public String toString() {
-        return "ProcessNotificationDTO{" +
+        return "UserProcessDTO{" +
             "userId=" + userId +
             ", processId=" + processId +
             ", subscribedAt=" + subscribedAt +
+            ", user=" + user +
+            ", process=" + process +
             '}';
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,6 +18,12 @@ import java.util.Optional;
 public interface UserProcessRepository extends JpaRepository<UserProcess, UserProcessPK>, JpaSpecificationExecutor<UserProcess> {
 
     Optional<UserProcess> findByIdUserIdAndIdProcessId(Long userId, Long processId);
+
+    @Query(
+        value = "SELECT * FROM jhi_user ju INNER JOIN jhi_user_process jup ON ju.id = jup.user_id WHERE jup.process_id = ?1",
+        nativeQuery = true
+    )
+    List<UserProcess> findAllWhereIdProcessId(Long processId);
 
     @Modifying
     @Query(

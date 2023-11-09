@@ -1,7 +1,6 @@
 package com.runbotics.domain;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,11 +23,13 @@ public class UserProcess implements Serializable {
     @EmbeddedId
     private UserProcessPK id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     @MapsId("userId")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "process_id")
     @MapsId("processId")

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +32,26 @@ public class UserProcessResource {
         UserProcessRepository userProcessRepository) {
         this.userProcessService = userProcessService;
         this.userProcessRepository = userProcessRepository;
+    }
+
+    /**
+     * {@code GET /process-notifications/{processId}} : gets all subscriptions for processId.
+     *
+     * @param processId process id to get all filtered subscriptions.
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the subscriptions.
+     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the processId was not provided.
+     */
+    @GetMapping("/process-notifications/{processId}")
+    public ResponseEntity<List<UserProcessDTO>> getAllProcessSubscriptions(@Valid @PathVariable Long processId) {
+        log.debug("REST request to get all subscriptions for process notification with id: {}", processId);
+
+        if (processId == null) {
+            throw new BadRequestAlertException("To get all process subscriptions processId must be provided", ENTITY_NAME, "idNotExists");
+        }
+
+        List<UserProcessDTO> result = userProcessService.getAllSubscriptionsByProcessId(processId);
+
+        return ResponseEntity.ok().body(result);
     }
 
     /**
@@ -83,7 +104,7 @@ public class UserProcessResource {
 
         userProcessService.delete(userProcess);
         return ResponseEntity
-            .ok()
+            .noContent()
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, userProcess.toString()))
             .build();
     }
