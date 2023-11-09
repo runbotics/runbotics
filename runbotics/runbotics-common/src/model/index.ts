@@ -18,3 +18,4 @@ export * from './api/queue.model';
 export * from './api/guest.model';
 export * from './api/tag.model';
 export * from './api/user-process.model';
+export * from './api/user-bot.model';

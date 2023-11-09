@@ -1,4 +1,4 @@
-import { IBot } from 'runbotics-common';
+import { IBot, UserBot } from 'runbotics-common';
 
 import { Page } from '../../../utils/types/page';
 
@@ -8,5 +8,6 @@ export interface BotState {
         byId: Record<string, IBot>;
         allIds: string[];
         page: Page<IBot> | null;
+        botSubscriptions: UserBot[];
     };
 }

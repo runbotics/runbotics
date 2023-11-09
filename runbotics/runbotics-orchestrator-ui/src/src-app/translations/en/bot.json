@@ -35,6 +35,17 @@
     "Bot.Details.Meta.Title": "Bot",
     "Bot.Details.Tabs.History.TabName": "History",
     "Bot.Details.Tabs.Logs.TabName": "Logs",
+    "Bot.Details.Tabs.Configure.TabName": "Configure",
+
+    "Bot.Edit.Table.Columns.User": "User",
+    "Bot.Edit.Table.Columns.SubscribedAt": "Subscribed at",
+    "Bot.Edit.Table.Columns.Actions": "Actions",
+    "Bot.Edit.Table.Columns.Actions.Delete": "Delete",
+    "Bot.Edit.Table.View.SearchBarPlaceholder": "Search",
+    "Bot.Edit.Table.View.Header": "Subscribers",
+    "Bot.Edit.Table.Results.Error": "No subscribers found",
+
+    "Bot.Edit.Form.Fields.IsSubscribed.Label": "Is process subscribed",
 
     "Bot.ListView.Table.Header.Name": "Name",
     "Bot.ListView.Table.Header.Creator": "Creator",

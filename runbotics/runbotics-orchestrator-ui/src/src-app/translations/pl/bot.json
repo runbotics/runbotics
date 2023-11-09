@@ -36,6 +36,17 @@
     "Bot.Details.Meta.Title": "Bot",
     "Bot.Details.Tabs.History.TabName": "Historia",
     "Bot.Details.Tabs.Logs.TabName": "Logi",
+    "Bot.Details.Tabs.Configure.TabName": "Konfiguruj",
+
+    "Bot.Edit.Table.Columns.User": "Użytkownik",
+    "Bot.Edit.Table.Columns.SubscribedAt": "Zasubskrybowano",
+    "Bot.Edit.Table.Columns.Actions": "Akcje",
+    "Bot.Edit.Table.Columns.Actions.Delete": "Usuń",
+    "Bot.Edit.Table.View.SearchBarPlaceholder": "Szukaj",
+    "Bot.Edit.Table.View.Header": "Subskrybenci",
+    "Bot.Edit.Table.Results.Error": "Nie znaleziono subskrybentów",
+
+    "Bot.Edit.Form.Fields.IsSubscribed.Label": "Czy proces jest subskrybowany",
 
     "Bot.ListView.Table.Header.Name": "Nazwa",
     "Bot.ListView.Table.Header.Creator": "Twórca",
