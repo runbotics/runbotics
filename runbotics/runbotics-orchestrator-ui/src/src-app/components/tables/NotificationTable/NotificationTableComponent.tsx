@@ -22,7 +22,7 @@ const StyledWrapper = styled.div`
 
 interface NotificationTableProps {
     notificationTableColumns: GridColDef[];
-    subscribersList: BotNotificationRow[] | ProcessNotificationRow[];
+    subscribersList: (BotNotificationRow | ProcessNotificationRow)[];
     loading?: boolean;
 }
 
