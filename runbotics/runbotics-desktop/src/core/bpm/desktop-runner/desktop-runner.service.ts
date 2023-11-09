@@ -126,7 +126,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 .filter(directoryEntry => {
                     const isValidActionsDirectory = this.detectExtensions(directoryEntry, this.serverConfigService.extensionsDirPath);
                     if (!isValidActionsDirectory) {
-                        this.logger.warn(`Directory "${this.serverConfigService.extensionsDirPath}/${directoryEntry.name}" is not a valid actions directory`);
+                        this.logger.warn(`Path "${this.serverConfigService.extensionsDirPath}/${directoryEntry.name}" is not a valid actions directory`);
                     }
                     return isValidActionsDirectory;
                 })
@@ -254,8 +254,8 @@ export class DesktopRunnerService implements OnModuleInit {
 
     private checkDirectoryIncludes(directoryPath: string, directoryName: string, expectedFiles: string[]): boolean {
         const isPresent = expectedFiles.every(fileSystemEntry => {
-            const path = directoryPath + '\\' + directoryName + '\\' + fileSystemEntry;
-            return existsSync(path);
+            const entryPath = directoryPath + path.sep + directoryName + path.sep + fileSystemEntry;
+            return existsSync(entryPath);
         });
 
         return isPresent;
