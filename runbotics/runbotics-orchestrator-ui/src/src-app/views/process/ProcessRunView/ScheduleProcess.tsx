@@ -3,7 +3,7 @@ import React, { FC, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, DialogActions, Paper, Tooltip } from '@mui/material';
 import _ from 'lodash';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, ControllerProps, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import * as yup from 'yup';
 
@@ -62,18 +62,16 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     });
     const { translate } = useTranslations();
     const { isAttended } = useSelector(currentProcessSelector);
+    const currentLocale = useCurrentLocale();
 
-    const renderCronComponent = (props) => {
-        const splitted = _.split(props.value, ' ');
+    const renderCronComponent = (props: Parameters<ControllerProps['render']>[number]) => {
+        const splitted = _.split(props.field.value, ' ');
         const cron5Digit = _.join(splitted.slice(1), ' ');
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const currentLocale = useCurrentLocale();
 
         return (
             <Cron
                 value={cron5Digit}
-                setValue={(cron) => props.onChange(`${splitted[0]} ${cron}`)}
+                setValue={(cron) => props.field.onChange(`${splitted[0]} ${cron}`)}
                 locale={currentLocale}
                 disabled={isAttended}
             />
@@ -90,11 +88,15 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     const tooltipMessage = isAttended ? translate('Process.Schedule.Tooltip.Attended') : translate('Common.Schedule');
 
     const submitButton = (
-        <SubmitButton disabled={isSubmitButtonDisabled} type="submit" variant="contained" color="primary">
+        <SubmitButton
+            disabled={isSubmitButtonDisabled}
+            type="submit"
+            variant="contained"
+            color="primary"
+        >
             {translate('Common.Schedule')}
         </SubmitButton>
     );
-
 
     return (
         <Box>
@@ -102,7 +104,11 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 <form onSubmit={handleSubmit(onProcessScheduler)}>
                     <DialogActions>
                         <StyledBox display="flex" gap="0.5rem" alignContent="center">
-                            <Controller name="cron" control={control} render={renderCronComponent}/>
+                            <Controller
+                                name="cron"
+                                control={control}
+                                render={renderCronComponent}
+                            />
                             <If condition={isSubmitButtonDisabled} else={submitButton}>
                                 <Tooltip
                                     title={tooltipMessage}

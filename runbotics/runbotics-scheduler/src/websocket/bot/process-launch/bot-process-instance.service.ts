@@ -87,8 +87,7 @@ export class BotProcessService {
         const process = await this.processService.findById(processInstance.process.id);
         
         if (process && processInstance.created) {
-            process.lastRun = processInstance.created;
-            await this.processService.save(process);
+            await this.processService.partialUpdate({ id: process.id, lastRun: processInstance.created });
         }
     }
 

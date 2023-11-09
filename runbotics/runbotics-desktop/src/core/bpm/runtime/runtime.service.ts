@@ -170,6 +170,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 const processInstance = {
                     ...this.processInstances[processInstanceId],
                     status: ProcessInstanceStatus.IN_PROGRESS,
+                    variables: {
+                        ...this.processInstances[processInstanceId].variables,
+                        ...execution.environment.variables,
+                    },
                 };
                 this.processInstances[processInstanceId] = processInstance;
                 this.processEventBus.publish({

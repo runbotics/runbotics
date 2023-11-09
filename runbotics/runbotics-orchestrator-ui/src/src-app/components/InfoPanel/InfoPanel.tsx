@@ -28,7 +28,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
 
     useEffect(() => () => {
         dispatch(processInstanceEventActions.resetAll());
-    });
+    }, []);
 
     return (
         <Box display="flex" flexDirection="column" height="100%">

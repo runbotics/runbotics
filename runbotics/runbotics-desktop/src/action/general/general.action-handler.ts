@@ -94,7 +94,10 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                                 variables: {},
                             };
                             try {
-                                result.variables = data.processInstance.variables;
+                                result.variables = { ...data.processInstance.variables, ...data.processInstance.output };
+                                delete result.variables['fields'];
+                                delete result.variables['content'];
+                                delete result.variables['properties'];
                             } catch (e) {
                                 this.logger.error('Error getting result', e);
                             }
