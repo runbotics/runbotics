@@ -17,8 +17,6 @@ import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
-import java.util.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -272,6 +271,13 @@ public class ProcessServiceImpl implements ProcessService {
         List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
         tagService.deleteUnusedTags(remainingTags);
+    }
+
+    @Async
+    public void deleteProcessLeftovers() {
+        log.debug("Starting remove leftovers of old processes");
+        processInstanceRepository.deleteInstancesWithoutProcess();
+        log.debug("Successfully finished remove leftovers of old processes");
     }
 
     @Override

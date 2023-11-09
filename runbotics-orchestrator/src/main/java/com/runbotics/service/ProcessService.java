@@ -75,6 +75,11 @@ public interface ProcessService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    /**
+     * Delete ProcessInstances with null values in process_id column (what should been set during deleting process).
+     *
+     */
+    void deleteProcessLeftovers();
 
     void deleteUnassignedPrivateProcesses();
 }

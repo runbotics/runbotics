@@ -9,18 +9,14 @@ import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCriteria;
-import com.runbotics.service.UserService;
 import com.runbotics.service.dto.*;
-import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import com.runbotics.domain.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -342,6 +338,7 @@ public class ProcessResource {
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {
         log.debug("REST request to delete Process : {}", id);
         processService.delete(id);
+        processService.deleteProcessLeftovers();
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
