@@ -48,7 +48,11 @@ export class ScheduleProcessController {
 
         const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process };
         const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
-        await this.queueService.createScheduledJob({ ...newScheduleProcess, trigger: { name: TriggerEvent.SCHEDULER } });
+        await this.queueService.createScheduledJob({
+            ...newScheduleProcess,
+            trigger: { name: TriggerEvent.SCHEDULER },
+            triggerData: { userEmail: request.user.email }
+        });
 
         this.logger.log(`<= Creation successful: schedule process ${newScheduleProcess.id}`);
         return newScheduleProcess;

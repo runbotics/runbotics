@@ -755,6 +755,9 @@ importers:
       '@types/json-schema':
         specifier: ^7.0.7
         version: 7.0.12
+      '@types/jsonwebtoken':
+        specifier: ^8.5.1
+        version: 8.5.9
       '@types/lodash':
         specifier: ^4.14.158
         version: 4.14.197
@@ -5300,7 +5303,7 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 17.0.45
+      '@types/node': 18.17.13
     dev: true
 
   /@types/bpmn-moddle@5.1.6:
@@ -5391,7 +5394,7 @@ packages:
   /@types/express-serve-static-core@4.17.36:
     resolution: {integrity: sha512-zbivROJ0ZqLAtMzgzIUC4oNqDG9iF0lSsAqpOD9kbs5xcIM3dTiyuHvBc7R8MtWBp3AAWGaovJa+wzWPjLYW7Q==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.17.13
       '@types/qs': 6.9.8
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -5499,7 +5502,7 @@ packages:
   /@types/jsonwebtoken@8.5.9:
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.17.13
     dev: true
 
   /@types/jwt-decode@2.2.1:
@@ -5667,7 +5670,7 @@ packages:
   /@types/redis@2.8.32:
     resolution: {integrity: sha512-7jkMKxcGq9p242exlbsVzuJb57KqHRhNl4dHoQu2Y5v9bCAbtIXXH0R3HleSQW4CTOqpHIYUW3t6tpUj4BVQ+w==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.17.13
     dev: true
 
   /@types/redux-form@8.3.5:
@@ -5719,7 +5722,7 @@ packages:
     dependencies:
       '@types/http-errors': 2.0.1
       '@types/mime': 3.0.1
-      '@types/node': 17.0.45
+      '@types/node': 18.17.13
     dev: true
 
   /@types/slate-react@0.22.9:

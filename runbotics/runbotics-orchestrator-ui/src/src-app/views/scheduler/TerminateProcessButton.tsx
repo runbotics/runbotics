@@ -10,6 +10,7 @@ import {
     SvgIcon,
     Typography,
 } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 import { X as CancelIcon } from 'react-feather';
 
@@ -45,6 +46,7 @@ const TerminateProcessButton: VFC<TerminateProcessButtonProps> = ({ id, processN
     const handleTerminate = async () => {
         setShow(false);
         await dispatch(schedulerActions.terminateActiveJob({ jobId: id }))
+            .then(unwrapResult)
             .catch(() => {
                 enqueueSnackbar(translate('Scheduler.ActiveProcess.Terminate.Failed', { processName }), {
                     variant: 'error',

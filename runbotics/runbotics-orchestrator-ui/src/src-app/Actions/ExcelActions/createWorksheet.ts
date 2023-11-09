@@ -27,7 +27,6 @@ const getActionCreateWorksheet = (): IBpmnAction => ({
                         name: {
                             title: translate('Process.Details.Modeler.Actions.Excel.CreateWorksheet.Name'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_WORKSHEET_NAME,
                         },
                     },
                 },

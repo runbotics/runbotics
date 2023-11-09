@@ -83,13 +83,13 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
 
-        await this.botLifecycleService.handleProcessInstanceInterruption(bot);
+        // await this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
         this.connections.delete(bot.id);
 
-        await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
+        // await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -97,16 +97,22 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     async processListener(
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
-    ) {
+        ) {
+        const installationId = socket.bot.installationId;
+        this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
+
         if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
             processInstance.status === ProcessInstanceStatus.INITIALIZING) {
             await this.setBotStatusBusy(socket.bot);
         }
 
-        const installationId = socket.bot.installationId;
-
-        this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
+
+        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
+            const process = await this.processService.findById(processInstance.process.id);
+
+            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
+        }
 
         if(
             processInstance.status === ProcessInstanceStatus.ERRORED ||
@@ -115,10 +121,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
             await this.guestService.decrementExecutionsCount(processInstance.user.id);
             this.logger.log('Restored user\'s executions-count because of process interruption');
-
-            const process = await this.processService.findById(processInstance.process.id);
-
-            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
         }
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);

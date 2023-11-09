@@ -10,9 +10,11 @@ import HistoryTable from '#src-app/components/tables/HistoryTable';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { currentProcessSelector, processActions } from '#src-app/store/slices/Process';
+import { currentProcessSelector } from '#src-app/store/slices/Process';
+import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -49,6 +51,9 @@ const ProcessRunView: FC = () => {
     const hasAddScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_ADD]);
 
     const { translate } = useTranslations();
+    const processInstances = useSelector(processInstanceSelector);
+    const { orchestratorProcessInstanceId } = processInstances.active;
+    useProcessInstanceSocket({ orchestratorProcessInstanceId });
     
     useEffect(() => {
         if (hasReadSchedulesAccess)
@@ -59,24 +64,21 @@ const ProcessRunView: FC = () => {
     }, [processId]);
 
     const handleProcessSchedule = async (data: Record<string, string>) => {
-        await dispatch(
-            scheduleProcessActions.scheduleProcess({
-                cron: data.cron,
-                process: {
-                    id: processId,
-                },
-            })
-        );
-        dispatch(processActions.fetchProcessById(processId));
+        await dispatch(scheduleProcessActions.scheduleProcess({
+            cron: data.cron,
+            process: {
+                id: processId,
+            },
+        }));
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
 
-    if (
-        !process ||
-        process.id?.toString() !== id ||
-        loading === LoadingType.PENDING
-    )
-    { return <LoadingScreen />; }
+    if (!process
+        || process.id?.toString() !== id
+        || loading === LoadingType.PENDING
+    ) {
+        return <LoadingScreen />;
+    }
 
     return (
         <Grid sx={{ padding: '24px' }}>

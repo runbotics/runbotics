@@ -1,16 +1,12 @@
 import React, { useEffect, useState, VFC } from 'react';
 
 import { Box } from '@mui/material';
-
-
-
-
+import { useSearchParams } from 'next/navigation';
 
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useLoading from '#src-app/hooks/useLoading';
 import useProcessSearch from '#src-app/hooks/useProcessSearch';
-import useQuery from '#src-app/hooks/useQuery';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import ProcessPageProvider from '#src-app/providers/ProcessPage.provider';
 import { useSelector } from '#src-app/store';
@@ -20,19 +16,15 @@ import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './Pro
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
 
-
-
-
-
 const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
     const [displayMode, setDisplayMode] = useState(ProcessListDisplayMode.GRID);
     const showLoading = useLoading(isStoreLoading, LOADING_DEBOUNCE);
-    const query = useQuery();
+    const searchParams = useSearchParams();
 
-    const pageFromUrl = query.get('page');
+    const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
-    const pageSizeFromUrl = query.get('pageSize');
+    const pageSizeFromUrl = searchParams.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.GRID);
     const { handleSearch, search, handleAdvancedSearch, searchField, clearSearch } = useProcessSearch(pageSize, page);
     const replaceQueryParams = useReplaceQueryParams();

@@ -16,7 +16,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
         <StyledContent ref={contentBoxRef}>
             <StyledContainer>
                 <StyledBox>
-                    <Typography color='textPrimary' variant='h6'>
+                    <Typography color='textPrimary' variant='h6' fontWeight={600}>
                         {translate('Component.Tile.Process.Content.LastRun')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
@@ -27,7 +27,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                     </Typography>
                 </StyledBox>
                 <StyledBox>
-                    <Typography color='textPrimary' variant='h6'>
+                    <Typography color='textPrimary' variant='h6' fontWeight={600}>
                         {translate('Component.Tile.Process.Content.Updated')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
@@ -38,7 +38,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
             <VerticalLine/>
             <StyledContainer>
                 <StyledBox>
-                    <Typography color='textPrimary' variant='h6'>
+                    <Typography color='textPrimary' variant='h6' fontWeight={600}>
                         {translate('Component.Tile.Process.Content.Creator')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
@@ -52,7 +52,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                     </Typography>
                 </StyledBox>
                 <StyledBox>
-                    <Typography color='textPrimary' variant='h6'>
+                    <Typography color='textPrimary' variant='h6' fontWeight={600}>
                         {translate('Component.Tile.Process.Content.Editor')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
