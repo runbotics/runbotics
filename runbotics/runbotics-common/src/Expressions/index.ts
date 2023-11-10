@@ -80,13 +80,9 @@ export class Expressions {
 
             try {
                 const parsedProperty = JSON.parse(property);
-                if (this.checkIsCollection(parsedProperty)) {
-                    response.result = parsedProperty;
-                } else {
-                    response.result = property;
-                }
+                response.result = parsedProperty;
             } catch (error) {
-                response.result = property;
+                response.result = property === 'undefined' ? undefined : property;
             }
 
             if (property === "true") {
@@ -132,7 +128,7 @@ export class Expressions {
                 expressionFnContext
             );
             if (expressionMatch.input === expressionMatch[0]) {
-                return contextValue ?? String(contextValue);
+                return contextValue;
             }
 
             result = result.replace(
