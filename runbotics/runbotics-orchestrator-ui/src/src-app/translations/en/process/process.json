@@ -223,7 +223,7 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Process": "Process",
     "Process.Details.Modeler.Actions.General.StartProcess.ProcessInput": "Process input",
     "Process.Details.Modeler.Actions.General.StartProcess.ProcessInput.Tooltip": "Provide static data or variable",
-    "Process.Details.Modeler.Actions.General.StartProcess.ProcessInput.LinkToProcess": "See the process",
+    "Process.Details.Modeler.Actions.General.StartProcess.ProcessInput.LinkToProcess": "Go to the process",
     "Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem": "System of selected process is not compatible",
     "Process.Details.Modeler.Actions.Google.Sheets.Write.Label": "Google Sheets Write",
     "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Values",
