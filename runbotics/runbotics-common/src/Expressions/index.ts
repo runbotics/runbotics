@@ -80,13 +80,9 @@ export class Expressions {
 
             try {
                 const parsedProperty = JSON.parse(property);
-                if (this.checkIsCollection(parsedProperty)) {
-                    response.result = parsedProperty;
-                } else {
-                    response.result = property;
-                }
+                response.result = parsedProperty;
             } catch (error) {
-                response.result = undefined;
+                response.result = property === 'undefined' ? undefined : property;
             }
 
             if (property === "true") {
