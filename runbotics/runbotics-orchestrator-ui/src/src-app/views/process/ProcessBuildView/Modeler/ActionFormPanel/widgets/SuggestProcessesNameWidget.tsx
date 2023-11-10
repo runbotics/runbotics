@@ -1,10 +1,12 @@
 import React, { FC, useMemo, useEffect, useState } from 'react';
 
-import { TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete, Button } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
+import { useRouter } from 'next/router';
 import { BotSystem } from 'runbotics-common';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
@@ -15,6 +17,7 @@ interface ProcessOption {
 }
 
 const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
+    const router = useRouter();
     const dispatch = useDispatch();
     const { byId: processes } = useSelector((state) => state.process.all);
     const [customError, setCustomError] = useState('');
@@ -71,6 +74,10 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
         return process ? `#${process.id} - ${process.name}` : '';
     };
 
+    const handleRedirect = () => {
+        router.push(`/app/processes/${props.value}/build`);
+    };
+
     useEffect(() => {
         const selectedProcess = value && options.find(option => option.id === value.id);
         selectedProcess && selectedProcess.disabled
@@ -79,24 +86,39 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     }, [options, value]);
 
     return (
-        <Autocomplete
-            value={value ?? null}
-            options={options}
-            getOptionLabel={(option: ProcessOption) => getLabel(option.id)}
-            getOptionDisabled={(option: ProcessOption) => option.disabled}
-            isOptionEqualToValue={(option, valueOption) => option.id === valueOption.id}
-            onChange={onChange}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    variant="outlined"
-                    label={label}
-                    InputLabelProps={{ shrink: true }}
-                    error={!!props.rawErrors || !!customError}
-                    helperText={!props.rawErrors && customError}
-                />
-            )}
-        />
+        <>
+            <Autocomplete
+                value={value ?? null}
+                options={options}
+                getOptionLabel={(option: ProcessOption) => getLabel(option.id)}
+                getOptionDisabled={(option: ProcessOption) => option.disabled}
+                isOptionEqualToValue={(option, valueOption) => option.id === valueOption.id}
+                onChange={onChange}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label={label}
+                        InputLabelProps={{ shrink: true }}
+                        error={!!props.rawErrors || !!customError}
+                        helperText={!props.rawErrors && customError}
+                    />
+                )}
+            />
+            <If
+                condition={Boolean(value?.id)}
+            >
+                <Button
+                    color='secondary'
+                    variant='contained'
+                    sx={{ marginTop: '15px' }}
+                    onClick={handleRedirect}
+                >
+                    {translate('Process.Details.Modeler.Actions.General.StartProcess.ProcessInput.LinkToProcess')}
+                </Button>
+
+            </If>
+        </>
     );
 };
 
