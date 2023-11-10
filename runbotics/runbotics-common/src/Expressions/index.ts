@@ -86,7 +86,7 @@ export class Expressions {
                     response.result = property;
                 }
             } catch (error) {
-                response.result = property;
+                response.result = undefined;
             }
 
             if (property === "true") {
@@ -132,7 +132,7 @@ export class Expressions {
                 expressionFnContext
             );
             if (expressionMatch.input === expressionMatch[0]) {
-                return contextValue ?? String(contextValue);
+                return contextValue;
             }
 
             result = result.replace(
