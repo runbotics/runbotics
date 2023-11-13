@@ -163,6 +163,8 @@
 
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Zapisz akcję",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Wprować zmienne dla",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Wybierz widget",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.CopyMessage": "Widget skopiowany do schowka! Wklej go do uiSchema.",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success": "Udało się dodać {{ name }} do formularza",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed": "Nie udało się dodać {{ name }} do formularza",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success": "Udało się usunąć {{ name }} z formularza",
