@@ -163,6 +163,9 @@
 
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Save action",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Input variables for",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Pick a widget",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Copy widget",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.CopyMessage": "Widget copied!",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success": "Successfully added {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed": "Failed to add {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success": "Successfully deleted {{ name }} attended form",
