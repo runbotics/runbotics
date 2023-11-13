@@ -105,7 +105,6 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     const isDeleteDisabled = !process?.executionInfo;
 
     const [selectedWidget, setSelectedWidget] = useState('');
-    const [showCopyMessage, setShowCopyMessage] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -126,18 +125,22 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
         setDraft(e.formData);
     };
 
-    const copyWidgetToClipboard = (e: SelectChangeEvent<string>) => {
+    const handleSelectChange = (e: SelectChangeEvent<string>) => {
         setSelectedWidget(e.target.value);
+    };
+
+    const copyWidgetToClipboard = (e) => {
         const copyObject = {
-            customWidget: {
-                'ui:widget': e.target.value
+            '<field name>': {
+                'ui:widget': selectedWidget
             }
         };
 
         navigator.clipboard.writeText(JSON.stringify(copyObject).slice(1, -1));
-
-        setShowCopyMessage(true);
-        setTimeout(() => { setShowCopyMessage(false); }, 6000);
+        e.target.innerText = translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.CopyMessage');
+        setTimeout(() => {
+            e.target.innerText = translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text');
+        }, 3000);
     };
 
     const deleteButton = (
@@ -218,7 +221,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                         label={translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label')}
                         sx={selectInputStyle}
                         value={selectedWidget}
-                        onChange={copyWidgetToClipboard}
+                        onChange={handleSelectChange}
                     >
                         {Object.keys(customWidgets).map(widget =>
                             <MenuItem
@@ -229,13 +232,13 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                             </MenuItem>
                         )}
                     </Select>
-                    <If condition={showCopyMessage}>
-                        <Typography
-                            color='primary'
-                        >
-                            {translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.CopyMessage')}
-                        </Typography>
-                    </If>
+                    <Button
+                        variant='contained'
+                        disabled={!selectedWidget}
+                        onClick={copyWidgetToClipboard}
+                    >
+                        {translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text')}
+                    </Button>
                 </FormControl>
             </DialogContent>
             <DialogActions>
