@@ -206,7 +206,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                     </Grid>
                 </Grid>
                 <FormControl
-                    sx={{ flexDirection: 'row', alignItems: 'center' }}
+                    sx={{ flexDirection: 'row', alignItems: 'center', marginTop: '5px' }}
                 >
                     <InputLabel
                         sx={selectInputStyle}
