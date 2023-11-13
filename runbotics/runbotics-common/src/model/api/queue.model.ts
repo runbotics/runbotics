@@ -20,3 +20,5 @@ export interface ScheduledProcess extends InstantProcess {
     id: number;
     cron: string;
 }
+
+export type JobData = InstantProcess & Partial<ScheduledProcess>;
