@@ -1,0 +1,133 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="depcikm" id="20231114265129-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification_type"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notification_type">
+            <column name="type" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231114265129-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="notification_type"/>
+            <columnExists tableName="notification_type" columnName="type"/>
+        </preConditions>
+        <insert tableName="notification_type">
+            <column name="type">BOT_DISCONNECTED</column>
+        </insert>
+        <insert tableName="notification_type">
+            <column name="type">PROCESS_ERROR</column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231114265129-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification_process"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notification_process">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="process_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231114265129-4">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="notification_process"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_type_notification_process"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_user_id_notification_process"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_id_notification_process"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="notification_process"
+                                 baseColumnNames="type"
+                                 constraintName="fk_type_notification_process"
+                                 referencedTableName="notification_type"
+                                 referencedColumnNames="type"/>
+        <addForeignKeyConstraint baseTableName="notification_process"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_id_notification_process"
+                                 referencedTableName="jhi_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="notification_process"
+                                 baseColumnNames="process_id"
+                                 constraintName="fk_process_id_notification_process"
+                                 referencedTableName="process"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231108197380-5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification_bot"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notification_bot">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bot_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231114197380-6">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="notification_bot"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_type_notification_bot"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_user_id_notification_bot"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_bot_id_notification_bot"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="notification_bot"
+                                 baseColumnNames="type"
+                                 constraintName="fk_type_notification_bot"
+                                 referencedTableName="notification_type"
+                                 referencedColumnNames="type"/>
+        <addForeignKeyConstraint baseTableName="notification_bot"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_id_notification_bot"
+                                 referencedTableName="jhi_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="notification_bot"
+                                 baseColumnNames="bot_id"
+                                 constraintName="fk_bot_id_notification_bot"
+                                 referencedTableName="bot"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

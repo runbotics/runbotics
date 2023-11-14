@@ -1,9 +1,9 @@
 package com.runbotics.web.rest;
 
-import com.runbotics.domain.UserProcess;
-import com.runbotics.repository.UserProcessRepository;
-import com.runbotics.service.UserProcessService;
-import com.runbotics.service.dto.UserProcessDTO;
+import com.runbotics.domain.NotificationProcess;
+import com.runbotics.repository.NotificationProcessRepository;
+import com.runbotics.service.NotificationProcessService;
+import com.runbotics.service.dto.NotificationProcessDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,25 +13,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class UserProcessResource {
+public class NotificationProcessResource {
 
-    private static final String ENTITY_NAME = "jhi_user_process";
-    private final Logger log = LoggerFactory.getLogger(UserProcessResource.class);
+    private static final String ENTITY_NAME = "notification_process";
+    private final Logger log = LoggerFactory.getLogger(NotificationProcessResource.class);
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-    private final UserProcessService userProcessService;
-    private final UserProcessRepository userProcessRepository;
+    private final NotificationProcessService notificationProcessService;
+    private final NotificationProcessRepository notificationProcessRepository;
 
-    public UserProcessResource(
-        UserProcessService userProcessService,
-        UserProcessRepository userProcessRepository) {
-        this.userProcessService = userProcessService;
-        this.userProcessRepository = userProcessRepository;
+    public NotificationProcessResource(
+        NotificationProcessService notificationProcessService,
+        NotificationProcessRepository notificationProcessRepository) {
+        this.notificationProcessService = notificationProcessService;
+        this.notificationProcessRepository = notificationProcessRepository;
     }
 
     /**
@@ -42,14 +41,14 @@ public class UserProcessResource {
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the processId was not provided.
      */
     @GetMapping("/process-notifications/{processId}")
-    public ResponseEntity<List<UserProcessDTO>> getAllProcessSubscriptions(@Valid @PathVariable Long processId) {
+    public ResponseEntity<List<NotificationProcessDTO>> getAllProcessSubscriptions(@PathVariable Long processId) {
         log.debug("REST request to get all subscriptions for process notification with id: {}", processId);
 
         if (processId == null) {
             throw new BadRequestAlertException("To get all process subscriptions processId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        List<UserProcessDTO> result = userProcessService.getAllSubscriptionsByProcessId(processId);
+        List<NotificationProcessDTO> result = notificationProcessService.getAllSubscriptionsByProcessId(processId);
 
         return ResponseEntity.ok().body(result);
     }
@@ -57,23 +56,23 @@ public class UserProcessResource {
     /**
      * {@code POST /process-notifications} : creates a new subscription for process notification.
      *
-     * @param userProcessDTO the subscription to create.
+     * @param notificationProcessDTO the subscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new subscription.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or processId was not provided.
      */
     @PostMapping("/process-notifications")
-    public ResponseEntity<UserProcessDTO> createProcessSubscription(@Valid @RequestBody UserProcessDTO userProcessDTO) {
-        log.debug("REST request to create subscription for process notification: {}", userProcessDTO);
+    public ResponseEntity<NotificationProcessDTO> createProcessSubscription(@RequestBody NotificationProcessDTO notificationProcessDTO) {
+        log.debug("REST request to create subscription for process notification: {}", notificationProcessDTO);
 
-        if (userProcessDTO.getUserId() == null) {
+        if (notificationProcessDTO.getUserId() == null) {
             throw new BadRequestAlertException("To create new process subscription userId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        if (userProcessDTO.getProcessId() == null) {
+        if (notificationProcessDTO.getProcessId() == null) {
             throw new BadRequestAlertException("To create new process subscription processId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        UserProcessDTO result = userProcessService.save(userProcessDTO);
+        NotificationProcessDTO result = notificationProcessService.save(notificationProcessDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.toString()))
@@ -94,18 +93,18 @@ public class UserProcessResource {
     ) {
         log.debug("REST request to create subscription for process notification with userId and processId: {} {}", userId, processId);
 
-        UserProcess userProcess = userProcessRepository
-            .findByIdUserIdAndIdProcessId(userId, processId)
+        NotificationProcess notificationProcess = notificationProcessRepository
+            .findByUserIdAndProcessId(userId, processId)
             .orElse(null);
 
-        if (userProcess == null) {
+        if (notificationProcess == null) {
             throw new BadRequestAlertException("Subscription with this userId and processIs not exist", ENTITY_NAME, "idNotExist");
         }
 
-        userProcessService.delete(userProcess);
+        notificationProcessService.delete(notificationProcess);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, userProcess.toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, notificationProcess.toString()))
             .build();
     }
 }

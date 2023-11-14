@@ -1,9 +1,9 @@
 package com.runbotics.web.rest;
 
-import com.runbotics.domain.UserBot;
-import com.runbotics.repository.UserBotRepository;
-import com.runbotics.service.UserBotService;
-import com.runbotics.service.dto.UserBotDTO;
+import com.runbotics.domain.NotificationBot;
+import com.runbotics.repository.NotificationBotRepository;
+import com.runbotics.service.NotificationBotService;
+import com.runbotics.service.dto.NotificationBotDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,23 +13,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class UserBotResource {
+public class NotificationBotResource {
 
-    private static final String ENTITY_NAME = "jhi_user_bot";
-    private final Logger log = LoggerFactory.getLogger(UserBotResource.class);
+    private static final String ENTITY_NAME = "notification_bot";
+    private final Logger log = LoggerFactory.getLogger(NotificationBotResource.class);
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-    private final UserBotService userBotService;
-    private final UserBotRepository userBotRepository;
+    private final NotificationBotService notificationBotService;
+    private final NotificationBotRepository notificationBotRepository;
 
-    public UserBotResource(UserBotService userBotService, UserBotRepository userBotRepository) {
-        this.userBotService = userBotService;
-        this.userBotRepository = userBotRepository;
+    public NotificationBotResource(NotificationBotService notificationBotService, NotificationBotRepository notificationBotRepository) {
+        this.notificationBotService = notificationBotService;
+        this.notificationBotRepository = notificationBotRepository;
     }
 
     /**
@@ -40,14 +39,14 @@ public class UserBotResource {
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the botId was not provided.
      */
     @GetMapping("/bot-notifications/{botId}")
-    public ResponseEntity<List<UserBotDTO>> getAllBotSubscriptions(@Valid @PathVariable Long botId) {
+    public ResponseEntity<List<NotificationBotDTO>> getAllBotSubscriptions(@PathVariable Long botId) {
         log.debug("REST request to get all subscriptions for bot notification with id: {}", botId);
 
         if (botId == null) {
             throw new BadRequestAlertException("To get all bot subscriptions botId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        List<UserBotDTO> result = userBotService.getAllSubscriptionsByBotId(botId);
+        List<NotificationBotDTO> result = notificationBotService.getAllSubscriptionsByBotId(botId);
 
         return ResponseEntity.ok().body(result);
     }
@@ -55,23 +54,23 @@ public class UserBotResource {
     /**
      * {@code POST /bot-notifications} : creates a new subscription for bot notification.
      *
-     * @param userBotDTO the subscription to create.
+     * @param notificationBotDTO the subscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new subscription.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or botId was not provided.
      */
     @PostMapping("/bot-notifications")
-    public ResponseEntity<UserBotDTO> createBotSubscription(@Valid @RequestBody UserBotDTO userBotDTO) {
-        log.debug("REST request to create subscription for bot notification: {}", userBotDTO);
+    public ResponseEntity<NotificationBotDTO> createBotSubscription(@RequestBody NotificationBotDTO notificationBotDTO) {
+        log.debug("REST request to create subscription for bot notification: {}", notificationBotDTO);
 
-        if (userBotDTO.getUserId() == null) {
+        if (notificationBotDTO.getUserId() == null) {
             throw new BadRequestAlertException("To create new bot subscription userId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        if (userBotDTO.getBotId() == null) {
+        if (notificationBotDTO.getBotId() == null) {
             throw new BadRequestAlertException("To create new bot subscription botId must be provided", ENTITY_NAME, "idNotExists");
         }
 
-        UserBotDTO result = userBotService.save(userBotDTO);
+        NotificationBotDTO result = notificationBotService.save(notificationBotDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.toString()))
@@ -92,18 +91,18 @@ public class UserBotResource {
     ) {
         log.debug("REST request to create subscription for bot notification with userId and botId: {} {}", userId, botId);
 
-        UserBot userBot = userBotRepository
-            .findByIdUserIdAndIdBotId(userId, botId)
+        NotificationBot notificationBot = notificationBotRepository
+            .findByUserIdAndBotId(userId, botId)
             .orElse(null);
 
-        if (userBot == null) {
+        if (notificationBot == null) {
             throw new BadRequestAlertException("Subscription with this userId and processIs not exist", ENTITY_NAME, "idNotExist");
         }
 
-        userBotService.delete(userBot);
+        notificationBotService.delete(notificationBot);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, userBot.toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, notificationBot.toString()))
             .build();
     }
 }

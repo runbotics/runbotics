@@ -93,11 +93,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private Set<UserProcess> userProcessNotifications = new HashSet<>();
+    private Set<NotificationProcess> processNotifications = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private Set<UserBot> userBotNotifications = new HashSet<>();
+    private Set<NotificationBot> notificationBots = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -212,20 +212,20 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
-    public Set<UserProcess> getUserProcessNotifications() {
-        return userProcessNotifications;
+    public Set<NotificationProcess> getProcessNotifications() {
+        return processNotifications;
     }
 
-    public void setUserProcessNotifications(Set<UserProcess> userProcessNotifications) {
-        this.userProcessNotifications = userProcessNotifications;
+    public void setProcessNotifications(Set<NotificationProcess> processNotifications) {
+        this.processNotifications = processNotifications;
     }
 
-    public Set<UserBot> getUserBotNotifications() {
-        return userBotNotifications;
+    public Set<NotificationBot> getBotNotifications() {
+        return notificationBots;
     }
 
-    public void setUserBotNotifications(Set<UserBot> userBotNotifications) {
-        this.userBotNotifications = userBotNotifications;
+    public void setBotNotifications(Set<NotificationBot> notificationBots) {
+        this.notificationBots = notificationBots;
     }
 
     @Override

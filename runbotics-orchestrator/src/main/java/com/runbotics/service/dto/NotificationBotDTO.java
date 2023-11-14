@@ -7,20 +7,32 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-public class UserBotDTO implements Serializable {
+public class NotificationBotDTO implements Serializable {
 
+    private Long id;
     private Long userId;
     private Long botId;
     private User user;
     private Bot bot;
-    private ZonedDateTime subscribedAt;
+    private String type;
+    private ZonedDateTime createdAt;
 
-    public UserBotDTO(Long userId, Long botId, User user, Bot bot, ZonedDateTime subscribedAt) {
+    public NotificationBotDTO(Long id, Long userId, Long botId, User user, Bot bot, String type, ZonedDateTime createdAt) {
+        this.id = id;
         this.userId = userId;
         this.botId = botId;
         this.user = user;
         this.bot = bot;
-        this.subscribedAt = subscribedAt;
+        this.type = type;
+        this.createdAt = createdAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -55,20 +67,31 @@ public class UserBotDTO implements Serializable {
         this.bot = bot;
     }
 
-    public ZonedDateTime getSubscribedAt() {
-        return subscribedAt;
+    public String getType() {
+        return type;
     }
 
-    public void setSubscribedAt(ZonedDateTime subscribedAt) {
-        this.subscribedAt = subscribedAt;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserBotDTO that = (UserBotDTO) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(botId, that.botId);
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof NotificationBotDTO)) {
+            return false;
+        }
+        return id != null && id.equals(((NotificationBotDTO) o).id);
     }
 
     @Override
@@ -78,12 +101,14 @@ public class UserBotDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "UserBotDTO{" +
-            "userId=" + userId +
+        return "NotificationBotDTO{" +
+            "id=" + id +
+            ", userId=" + userId +
             ", botId=" + botId +
             ", user=" + user +
             ", bot=" + bot +
-            ", subscribedAt=" + subscribedAt +
+            ", createdAt=" + createdAt +
+            ", type=" + type +
             '}';
     }
 }

@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
 
 import org.hibernate.annotations.Type;
@@ -98,7 +97,7 @@ public class Process implements Serializable {
     private Set<GlobalVariable> globalVariables = new HashSet<>();
 
     @OneToMany(mappedBy = "process")
-    private Set<UserProcess> userProcessNotifications = new HashSet<>();
+    private Set<NotificationProcess> processNotifications = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -324,12 +323,12 @@ public class Process implements Serializable {
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    public Set<UserProcess> getUserProcessNotifications() {
-        return userProcessNotifications;
+    public Set<NotificationProcess> getProcessNotifications() {
+        return processNotifications;
     }
 
-    public void setUserProcessNotifications(Set<UserProcess> userProcessNotifications) {
-        this.userProcessNotifications = userProcessNotifications;
+    public void setProcessNotifications(Set<NotificationProcess> processNotifications) {
+        this.processNotifications = processNotifications;
     }
 
     @Override
