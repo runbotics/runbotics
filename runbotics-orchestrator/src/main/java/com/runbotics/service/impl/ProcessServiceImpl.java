@@ -6,6 +6,7 @@ import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.BotCollectionService;
+import com.runbotics.service.GlobalVariableService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.TagService;
 import com.runbotics.service.UserService;
@@ -16,12 +17,14 @@ import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.runbotics.utils.XmlExtractor.extractGlobalVariableIds;
 
 /**
  * Service Implementation for managing {@link Process}.
@@ -45,6 +50,7 @@ public class ProcessServiceImpl implements ProcessService {
     private final TagService tagService;
     private final UserService userService;
     private final BotCollectionService botCollectionService;
+    private final GlobalVariableService globalVariableService;
 
     public ProcessServiceImpl(
         ProcessRepository processRepository,
@@ -52,7 +58,8 @@ public class ProcessServiceImpl implements ProcessService {
         ProcessMapper processMapper,
         TagService tagService,
         UserService userService,
-        BotCollectionService botCollectionService
+        BotCollectionService botCollectionService,
+        GlobalVariableService globalVariableService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
@@ -60,6 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
         this.tagService = tagService;
         this.userService = userService;
         this.botCollectionService = botCollectionService;
+        this.globalVariableService = globalVariableService;
     }
 
     @Override
@@ -209,6 +217,17 @@ public class ProcessServiceImpl implements ProcessService {
             )
             .map(processRepository::save)
             .map(processMapper::toDto);
+    }
+
+    @Override
+    public Optional<ProcessDTO> updateGlobalVariables(Long processId, String processDefinition) {
+        List<Long> globalVariableIds = extractGlobalVariableIds(processDefinition);
+        return processRepository
+            .findById(processId)
+            .map(process -> process.updateGlobalVariables(globalVariableService.findByIds(globalVariableIds)))
+            .map(processRepository::save)
+            .map(processMapper::toDto);
+
     }
 
     @Override

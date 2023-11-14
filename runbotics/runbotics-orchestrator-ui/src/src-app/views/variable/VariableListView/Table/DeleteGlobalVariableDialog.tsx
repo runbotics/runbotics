@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
+import { DeleteRejectType } from '#src-app/views/variable/Variable.types';
 
 import { DeleteDialogState } from './Table';
 
@@ -32,68 +33,89 @@ type DeleteActionDialogProps = {
 };
 
 const DeleteGlobalVariableDialog:
-FC<DeleteActionDialogProps> = ({ deleteDialogState: { globalVariable, open }, onClose }) => {
-    const dispatch = useDispatch();
-    const { translate, translateHTML } = useTranslations();
-    const { enqueueSnackbar } = useSnackbar();
+    FC<DeleteActionDialogProps> = ({ deleteDialogState: { globalVariable, open }, onClose }) => {
+        const dispatch = useDispatch();
+        const { translate, translateHTML } = useTranslations();
+        const { enqueueSnackbar } = useSnackbar();
 
-    const handleDelete = () => {
-        if (!globalVariable) return;
+        const successSnackbar = () => enqueueSnackbar(
+            <span>
+                {translateHTML(
+                    'Variables.ListView.Action.Delete.Message.Success',
+                    { name: globalVariable.name },
+                )}
+            </span>,
+            { variant: 'success' },
+        );
 
-        dispatch(globalVariableActions.deleteGlobalVariable({ id: globalVariable.id }))
-            .then(() => {
-                enqueueSnackbar(
-                    <span>
-                        {translateHTML(
-                            'Variables.ListView.Action.Delete.Message.Success',
-                            { name: globalVariable.name },
-                        )}
-                    </span>,
-                    { variant: 'success' },
-                );
-            })
-            .catch(() => {
-                enqueueSnackbar(
-                    <span>
-                        {translateHTML(
-                            'Variables.ListView.Action.Delete.Message.Error',
-                            { name: globalVariable.name },
-                        )}
-                    </span>,
-                    { variant: 'error' },
-                );
-            });
-        onClose();
-    };
+        const errorSnackbar = () => enqueueSnackbar(
+            <span>
+                {translateHTML(
+                    'Variables.ListView.Action.Delete.Message.Error',
+                    { name: globalVariable.name },
+                )}
+            </span>,
+            { variant: 'error' },
+        );
 
-    return (
-        <StyledDialog open={open} onClose={onClose} maxWidth="lg">
-            <DialogTitle>
-                <Typography variant="h3">{translate('Variables.ListView.Action.Delete.Dialog.Title')}</Typography>
-            </DialogTitle>
-            <DialogContent className={classes.content}>
-                <Typography variant="body1">
+        const errorProcessUsesVariableSnackbar = (response: DeleteRejectType) => enqueueSnackbar(
+            <span>
+                {translateHTML(
+                    'Variables.ListView.Action.Delete.Message.Processes.Error',
                     {
-                        translateHTML(
-                            'Variables.ListView.Action.Delete.Dialog.Confirmation',
-                            { name: globalVariable?.name },
-                        )
+                        name: globalVariable.name, processNames: response.payload.response.data.toString()
+                    },
+                )}
+            </span>,
+            { variant: 'error' },
+        );
+
+        const handleDelete = () => {
+            if (!globalVariable) return;
+
+            dispatch(globalVariableActions.deleteGlobalVariable({ id: globalVariable.id }))
+                .then((value) => {
+                    const response = value as DeleteRejectType;
+                    if (response.payload?.response?.data) {
+                        errorProcessUsesVariableSnackbar(response);
+                    } else {
+                        successSnackbar();
                     }
-                </Typography>
-            </DialogContent>
-            <DialogActions>
-                <Button
-                    color="primary"
-                    onClick={onClose}
-                >
-                    {translate('Common.Cancel')}
-                </Button>
-                <Button variant="contained" color="primary" autoFocus onClick={handleDelete}>
-                    {translate('Common.Delete')}
-                </Button>
-            </DialogActions>
-        </StyledDialog>
-    );
-};
+                })
+                .catch(() => {
+                    errorSnackbar();
+                });
+            onClose();
+        };
+
+        return (
+            <StyledDialog open={open} onClose={onClose} maxWidth="lg">
+                <DialogTitle>
+                    <Typography variant="h3">{translate('Variables.ListView.Action.Delete.Dialog.Title')}</Typography>
+                </DialogTitle>
+                <DialogContent className={classes.content}>
+                    <Typography variant="body1">
+                        {
+                            translateHTML(
+                                'Variables.ListView.Action.Delete.Dialog.Confirmation',
+                                { name: globalVariable?.name },
+                            )
+                        }
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={onClose}
+                    >
+                        {translate('Common.Cancel')}
+                    </Button>
+                    <Button variant="contained" color="primary" autoFocus onClick={handleDelete}>
+                        {translate('Common.Delete')}
+                    </Button>
+                </DialogActions>
+            </StyledDialog>
+        );
+    };
 
 export default DeleteGlobalVariableDialog;

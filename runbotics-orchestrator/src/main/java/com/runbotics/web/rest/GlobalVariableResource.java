@@ -195,7 +195,7 @@ public class GlobalVariableResource {
     }
 
     /**
-     * {@code DELETE  /global-variables/:id} : delete the "id" globalVariable.
+     * {@code DELETE  /global-variables/:id} : delete the "id" globalVariable. GlobalVariable couldn't be associated with any Process.
      *
      * @param id the id of the globalVariableDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
@@ -205,12 +205,18 @@ public class GlobalVariableResource {
         "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
     )
     @DeleteMapping("/global-variables/{id}")
-    public ResponseEntity<Void> deleteGlobalVariable(@PathVariable Long id) {
+    public ResponseEntity<List<String>> deleteGlobalVariable(@PathVariable Long id) {
         log.debug("REST request to delete GlobalVariable : {}", id);
-        globalVariableService.delete(id);
+        List<String> associatedProcesses = globalVariableService.getProcessNamesAssociatedWithGlobalVariable(id);
+        if (associatedProcesses.isEmpty()) {
+            globalVariableService.delete(id);
+            return ResponseEntity
+                .noContent()
+                .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+                .build();
+        }
         return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
+            .badRequest()
+            .body(associatedProcesses);
     }
 }

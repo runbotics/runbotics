@@ -12,6 +12,7 @@ import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.*;
 import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
+import com.runbotics.utils.XmlExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.runbotics.utils.XmlExtractor.extractGlobalVariableIds;
 
 /**
  * REST controller for managing {@link com.runbotics.domain.Process}.
@@ -188,6 +191,8 @@ public class ProcessResource {
     ) throws URISyntaxException {
         log.debug("REST request to update diagram in Process: {}", id);
         checkProcessForEdit(id, processDiagramDTO);
+
+        processService.updateGlobalVariables(id, processDiagramDTO.getDefinition());
         Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
 
         return ResponseUtil.wrapOrNotFound(

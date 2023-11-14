@@ -1,0 +1,45 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="litwind" id="20231113649171-1">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_global_variable"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_global_variable">
+            <column name="process_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="global_variable_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="litwind" id="20231113649171-2">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_global_variable_process_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="process_global_variable"
+                                 baseColumnNames="process_id"
+                                 referencedTableName="process"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_process_global_variable_process_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="process_global_variable"
+                                 baseColumnNames="global_variable_id"
+                                 referencedTableName="global_variable"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_process_global_variable_global_variable_id"
+                                 onDelete="RESTRICT"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
