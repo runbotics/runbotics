@@ -17,5 +17,5 @@ export * from './api/trigger-event.model';
 export * from './api/queue.model';
 export * from './api/guest.model';
 export * from './api/tag.model';
-export * from './api/user-process.model';
-export * from './api/user-bot.model';
+export * from './api/notification-process.model';
+export * from './api/notification-bot.model';

@@ -1,5 +1,4 @@
 import { IAuthority } from './authority.model';
-import { UserProcess } from './user-process.model';
 
 export interface IUser {
     id?: number;

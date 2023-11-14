@@ -1,10 +1,12 @@
 import { IBot } from "./bot.model";
 import { IUser } from "./user.model";
 
-export interface UserBot {
+export interface NotificationBot {
+    id: number;
     userId: number;
     botId: number;
     user: IUser;
     bot: IBot;
-    subscribedAt: string;
+    type: string;
+    createdAt: string;
 }
