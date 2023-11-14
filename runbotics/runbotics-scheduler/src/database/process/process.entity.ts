@@ -82,7 +82,7 @@ export class ProcessEntity implements IProcess {
 
     @ManyToMany(() => UserEntity)
     @JoinTable({
-        name: 'jhi_user_process',
+        name: 'notification_process',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })

@@ -55,7 +55,7 @@ export class BotEntity implements IBot {
 
     @ManyToMany(() => UserEntity)
     @JoinTable({
-        name: 'jhi_user_bot',
+        name: 'notification_bot',
         joinColumn: { name: 'bot_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
