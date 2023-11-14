@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection, UserProcess, Role } from 'runbotics-common';
+import { IBotSystem, IBotCollection, NotificationProcess, Role } from 'runbotics-common';
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
@@ -18,7 +18,7 @@ import { botCollectionActions } from '#src-app/store/slices/BotCollections';
 
 import { botSystemsActions } from '#src-app/store/slices/BotSystem';
 
-import { processActions } from '#src-app/store/slices/Process';
+import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
@@ -35,7 +35,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector((state) => state.process);
+    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
     const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
@@ -54,18 +54,14 @@ const ProcessConfigureView: VFC = () => {
 
     const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
 
-    const notificationTableRows = useMemo(() => {
-        if(processSubscriptions.length) {
-            return processSubscriptions.map<ProcessNotificationRow>((sub: UserProcess) => ({
-                id: sub.userId,
-                userId: sub.userId,
-                processId: sub.processId,
-                user: sub.user.login,
-                subscribedAt: sub.subscribedAt,
-            }));
-        }
-        return [];
-    }, [processSubscriptions]);
+    const notificationTableRows = useMemo(() => processSubscriptions
+        .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
+            id: sub.userId,
+            userId: sub.userId,
+            processId: sub.processId,
+            user: sub.user.login,
+            subscribedAt: sub.createdAt,
+        })), [processSubscriptions]);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());

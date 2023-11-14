@@ -3,7 +3,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 
-import { Role, UserBot } from 'runbotics-common';
+import { Role, NotificationBot } from 'runbotics-common';
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 
@@ -16,13 +16,13 @@ import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
-import { botActions } from '#src-app/store/slices/Bot';
+import { botActions, botSelector } from '#src-app/store/slices/Bot';
 
 import { Container, ContainerWrapper, StyledPaper } from './BotDetailsView.styles';
 
 const BotConfigure: FC = () => {
     const dispatch = useDispatch();
-    const { bots: { botSubscriptions, loading } } = useSelector((state) => state.bot);
+    const { bots: { botSubscriptions, loading } } = useSelector(botSelector);
     const router = useRouter();
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { user } = useAuth();
@@ -32,18 +32,14 @@ const BotConfigure: FC = () => {
 
     const notificationTableColumns = useBotNotificationColumns({ onDelete: handleDeleteSubscription });
 
-    const notificationTableRows = useMemo(() => {
-        if(botSubscriptions.length) {
-            return botSubscriptions.map<BotNotificationRow>((sub: UserBot) => ({
-                id: sub.userId,
-                userId: sub.userId,
-                botId: sub.botId,
-                user: sub.user.login,
-                subscribedAt: sub.subscribedAt,
-            }));
-        }
-        return [];
-    }, [botSubscriptions]);
+    const notificationTableRows = useMemo(() => botSubscriptions
+        .map<BotNotificationRow>((sub: NotificationBot) => ({
+            id: sub.userId,
+            userId: sub.userId,
+            botId: sub.botId,
+            user: sub.user.login,
+            subscribedAt: sub.createdAt,
+        })), [botSubscriptions]);
 
     const handleGetBotSubscribers = async () => {
         dispatch(botActions.getBotSubscriptionInfo(botId));

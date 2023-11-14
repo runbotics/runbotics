@@ -1,17 +1,17 @@
-import { IUser, UserBot, UserProcess } from 'runbotics-common';
+import { IUser, NotificationBot, NotificationProcess } from 'runbotics-common';
 
 export interface ProcessNotificationRow {
     id: number;
-    userId: UserProcess['userId'];
-    processId: UserProcess['processId'];
+    userId: NotificationProcess['userId'];
+    processId: NotificationProcess['processId'];
     user: IUser['email'];
-    subscribedAt: UserProcess['subscribedAt'];
+    subscribedAt: NotificationProcess['createdAt'];
 }
 
 export interface BotNotificationRow {
     id: number;
-    userId: UserBot['userId'];
-    botId: UserBot['botId'];
+    userId: NotificationBot['userId'];
+    botId: NotificationBot['botId'];
     user: IUser['email'];
-    subscribedAt: UserBot['subscribedAt'];
+    subscribedAt: NotificationBot['createdAt'];
 }

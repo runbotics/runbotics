@@ -64,7 +64,7 @@ export class MailService {
             const emailAddresses = subscribers.map(({ email }) => email).join(',');
 
             await this.sendMail({
-                to: emailAddresses ?? '',
+                to: emailAddresses,
                 subject: NOTIFICATION_MAIL_SUBJECT,
                 content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\n\nBest regards,\nRunBotics`,
             });
@@ -79,7 +79,7 @@ export class MailService {
             const emailAddresses = subscribers.map(({ email }) => email).join(',');
 
             await this.sendMail({
-                to: emailAddresses ?? '',
+                to: emailAddresses,
                 subject: NOTIFICATION_MAIL_SUBJECT,
                 content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
             });

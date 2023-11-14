@@ -3,22 +3,13 @@ import React, { ChangeEvent, VFC, useMemo, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-import styled from 'styled-components';
-
 import useTranslations from '#src-app/hooks/useTranslations';
 import { StyledHeaderGrid } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.styles';
 import { DefaultPageValue } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.utils';
 import { StyledActionsContainer, StyledTextField } from '#src-app/views/users/UsersListView/UsersListView.styles';
 
+import { StyledWrapper } from './NotificationTableComponent.styles';
 import { BotNotificationRow, ProcessNotificationRow } from './NotificationTableComponent.types';
-
-const StyledWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    padding-left: 0;
-    width: 100%;
-`;
 
 interface NotificationTableProps {
     notificationTableColumns: GridColDef[];
@@ -68,8 +59,8 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
             <DataGrid
                 autoHeight
                 columns={notificationTableColumns}
-                rows={filteredSubscribersList ?? []}
-                rowCount={filteredSubscribersList.length ?? 0}
+                rows={filteredSubscribersList}
+                rowCount={filteredSubscribersList.length}
                 loading={loading}
                 disableSelectionOnClick
                 pageSize={DefaultPageValue.PAGE_SIZE}
