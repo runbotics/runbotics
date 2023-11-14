@@ -140,8 +140,8 @@ public class GlobalVariable implements Serializable {
         this.user = user;
     }
 
-    public Set<Process> processes() {
-        return this.processes;
+    public void setProcesses(Set<Process> processes) {
+        this.processes = processes;
     }
 
     public User getCreator() {
