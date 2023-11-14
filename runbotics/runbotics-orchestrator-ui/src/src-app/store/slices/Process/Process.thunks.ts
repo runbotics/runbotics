@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 
-import { IProcess, Tag, UserProcess } from 'runbotics-common';
+import { IProcess, Tag, NotificationProcess } from 'runbotics-common';
 
 
 import { RootState } from '#src-app/store';
@@ -149,19 +149,19 @@ export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
         .then((response) => response.data)
 );
 
-export const subscribeProcessNotifications = createAsyncThunk<UserProcess, Pick<UserProcess, 'userId' | 'processId'>>(
+export const subscribeProcessNotifications = createAsyncThunk<NotificationProcess, Pick<NotificationProcess, 'userId' | 'processId'>>(
     'processes/subscribeProcessNotifications',
-    (userProcess) => Axios.post<UserProcess>('/api/process-notifications', userProcess)
+    (userProcess) => Axios.post<NotificationProcess>('/api/process-notifications', userProcess)
         .then((response) => response.data)
 );
 
-export const unsubscribeProcessNotifications = createAsyncThunk<void, Pick<UserProcess, 'userId' | 'processId'>>(
+export const unsubscribeProcessNotifications = createAsyncThunk<void, Pick<NotificationProcess, 'userId' | 'processId'>>(
     'processes/unsubscribeProcessNotifications',
     ({ userId, processId }) => Axios.delete(`/api/process-notifications?userId=${userId}&processId=${processId}`)
 );
 
-export const getProcessSubscriptionInfo = createAsyncThunk<UserProcess[], UserProcess['processId']>(
+export const getProcessSubscriptionInfo = createAsyncThunk<NotificationProcess[], NotificationProcess['processId']>(
     'processes/getProcessSubscriptionInfo',
-    (processId) => Axios.get<UserProcess[]>(`/api/process-notifications/${processId}`)
+    (processId) => Axios.get<NotificationProcess[]>(`/api/process-notifications/${processId}`)
         .then((response) => response.data)
 );
