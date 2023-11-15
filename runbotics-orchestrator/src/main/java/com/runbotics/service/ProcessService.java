@@ -42,7 +42,7 @@ public interface ProcessService {
     Optional<ProcessDTO> updateBotCollection(ProcessDTO processDTO);
 
     Optional<ProcessDTO> updateBotSystem(ProcessDTO processDTO);
-    Optional<ProcessDTO> updateGlobalVariables(Long processId, String processDefinition);
+    Optional<ProcessDTO> updateGlobalVariables(Long processId, List<String> globalVariableIds);
 
     List<ProcessDTO> findUserProcesses(User user);
 

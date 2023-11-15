@@ -11,7 +11,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 
 import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
 
-import { StartProcessResponse } from './Process.state';
+import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
@@ -93,7 +93,7 @@ export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValu
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateDiagram = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'definition'>, { rejectValue: any }>(
+export const updateDiagram = createAsyncThunk<IProcess, UpdateDiagramRequest, { rejectValue: any }>(
     'processes/updateDiagram',
     (process, { rejectWithValue }) => Axios.patch<IProcess>(`/api/processes/${process.id}/diagram`, process)
         .then((response) => response.data)

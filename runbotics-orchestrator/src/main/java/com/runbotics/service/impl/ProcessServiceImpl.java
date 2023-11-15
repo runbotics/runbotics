@@ -220,8 +220,8 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateGlobalVariables(Long processId, String processDefinition) {
-        List<Long> globalVariableIds = extractGlobalVariableIds(processDefinition);
+    public Optional<ProcessDTO> updateGlobalVariables(Long processId, List<String> variableIds) {
+        List<Long> globalVariableIds = mapStringIdsToLong(variableIds);
         return processRepository
             .findById(processId)
             .map(process -> process.updateGlobalVariables(globalVariableService.findByIds(globalVariableIds)))
@@ -331,5 +331,13 @@ public class ProcessServiceImpl implements ProcessService {
         Authority adminAuthority = new Authority();
         adminAuthority.setName(AuthoritiesConstants.GUEST);
         return adminAuthority;
+    }
+
+    private List<Long> mapStringIdsToLong(List<String> stringIds) {
+        return stringIds.stream()
+            .map(String::trim)
+            .mapToLong(Long::parseLong)
+            .boxed()
+            .collect(Collectors.toList());
     }
 }

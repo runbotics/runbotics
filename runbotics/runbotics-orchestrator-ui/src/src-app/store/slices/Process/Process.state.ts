@@ -54,6 +54,12 @@ export interface ProcessState {
     };
 }
 
+export interface UpdateDiagramRequest {
+    id?: number;
+    definition?: string | null;
+    globalVariableIds?: string[];
+}
+
 export type StartProcessResponse = Pick<
     IProcessInstance,
     'orchestratorProcessInstanceId'

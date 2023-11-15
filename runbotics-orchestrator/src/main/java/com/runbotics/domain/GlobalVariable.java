@@ -1,5 +1,7 @@
 package com.runbotics.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -42,6 +44,7 @@ public class GlobalVariable implements Serializable {
     private User user;
 
     @ManyToMany(mappedBy = "globalVariables")
+    @JsonIgnore
     private Set<Process> processes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -210,6 +210,14 @@ public class ProcessDTO implements Serializable {
         this.tags = tags;
     }
 
+    public Set<GlobalVariableDTO> getGlobalVariables() {
+        return globalVariables;
+    }
+
+    public void setGlobalVariables(Set<GlobalVariableDTO> globalVariables) {
+        this.globalVariables = globalVariables;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
-import { DeleteRejectType } from '#src-app/views/variable/Variable.types';
+import { DeleteRejectResponse } from '#src-app/views/variable/Variable.types';
 
 import { DeleteDialogState } from './Table';
 
@@ -58,12 +58,12 @@ const DeleteGlobalVariableDialog:
             { variant: 'error' },
         );
 
-        const errorProcessUsesVariableSnackbar = (response: DeleteRejectType) => enqueueSnackbar(
+        const errorProcessUsesVariableSnackbar = (processNames: string[]) => enqueueSnackbar(
             <span>
                 {translateHTML(
                     'Variables.ListView.Action.Delete.Message.Processes.Error',
                     {
-                        name: globalVariable.name, processNames: response.payload.response.data.toString()
+                        name: globalVariable.name, processNames: processNames.toString()
                     },
                 )}
             </span>,
@@ -74,10 +74,10 @@ const DeleteGlobalVariableDialog:
             if (!globalVariable) return;
 
             dispatch(globalVariableActions.deleteGlobalVariable({ id: globalVariable.id }))
-                .then((value) => {
-                    const response = value as DeleteRejectType;
-                    if (response.payload?.response?.data) {
-                        errorProcessUsesVariableSnackbar(response);
+                .then((response) => {
+                    const rejectResponse = response as DeleteRejectResponse;
+                    if (rejectResponse.payload) {
+                        errorProcessUsesVariableSnackbar(rejectResponse.payload);
                     } else {
                         successSnackbar();
                     }

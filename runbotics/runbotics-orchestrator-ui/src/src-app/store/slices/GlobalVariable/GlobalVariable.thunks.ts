@@ -32,13 +32,9 @@ export const updateGlobalVariable = createAsyncThunk<IGlobalVariable,
         },
     );
 
-export const deleteGlobalVariable = createAsyncThunk<void, { id: number }, { state: RootState }>(
+export const deleteGlobalVariable = createAsyncThunk<string[], { id: number }, { state: RootState }>(
     'globalVariables/deleteGlobalVariable',
-    async ({ id }, { rejectWithValue }) => {
-        try {
-            return await Axios.delete(`/api/global-variables/${id}`);
-        } catch(error) {
-            return rejectWithValue(error);
-        }
-    },
+    ({ id }, { rejectWithValue }) => Axios.delete(`/api/global-variables/${id}`)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
 );
