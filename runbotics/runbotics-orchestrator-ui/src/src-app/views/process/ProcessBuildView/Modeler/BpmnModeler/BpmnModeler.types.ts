@@ -1,5 +1,5 @@
-import { IProcess } from 'runbotics-common';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
+import { IProcess } from 'runbotics-common';
 
 export interface ModelerImperativeHandle {
     export: () => Promise<string>;
