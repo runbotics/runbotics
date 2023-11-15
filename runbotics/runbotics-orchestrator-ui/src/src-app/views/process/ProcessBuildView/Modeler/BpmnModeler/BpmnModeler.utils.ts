@@ -185,3 +185,25 @@ export const getActivitiyById = (modeler: BpmnIoModeler, id: string): BPMNElemen
 
 export const areActivitiesInSync = (modelerActivities, appliedActivities) =>
     _.isEqual(_.sortBy(modelerActivities), _.sortBy(appliedActivities));
+
+
+/**
+ * For the given modeler retrieved unique global variable IDs.
+ *
+ * @param  {BpmnIoModeler} modeler
+ */
+export const retrieveGlobalVariableIds = (modeler: BpmnIoModeler): string[] => {
+    const globalVariableBusinessObjectValues = modeler.get('elementRegistry')
+        .filter((element) => element.type === 'bpmn:ServiceTask')
+        .filter((element) => element.businessObject?.actionId === 'variables.assignGlobalVariable')
+        .map((element) => element.businessObject?.extensionElements?.values).flat();
+
+    const allGlobalVariableIds = globalVariableBusinessObjectValues
+        .filter((value) => value.$type === 'camunda:InputOutput')
+        .map((value) => value.inputParameters).flat()
+        .filter((inputParams) => inputParams.name === 'globalVariables')
+        .map((inputParams) => inputParams.definition?.items).flat()
+        .map((item) => item.value);
+
+    return Array.from(new Set(allGlobalVariableIds));
+}

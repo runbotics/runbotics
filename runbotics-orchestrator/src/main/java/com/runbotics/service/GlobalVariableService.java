@@ -1,9 +1,12 @@
 package com.runbotics.service;
 
+import com.runbotics.domain.GlobalVariable;
 import com.runbotics.service.dto.GlobalVariableDTO;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Interface for managing {@link com.runbotics.domain.GlobalVariable}.
@@ -47,4 +50,20 @@ public interface GlobalVariableService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get name of processes which use this globalVariable.
+     *
+     * @param id the id of the entity.
+     */
+    List<String> getProcessNamesAssociatedWithGlobalVariable(Long id);
+
+
+    /**
+     * Get GlobalVariable set of entities.
+     *
+     * @param globalVariableIds the ids of the entities.
+     */
+    List<GlobalVariable> findByIds(List<Long> globalVariableIds);
+
 }

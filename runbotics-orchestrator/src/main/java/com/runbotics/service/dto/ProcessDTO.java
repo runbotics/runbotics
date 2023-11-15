@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
+
+import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * A DTO for the {@link Process} entity.
@@ -69,6 +70,9 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<TagDTO> tags;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private Set<GlobalVariableDTO> globalVariables;
 
     public Long getId() {
         return id;
@@ -204,6 +208,14 @@ public class ProcessDTO implements Serializable {
 
     public void setTags(Set<TagDTO> tags) {
         this.tags = tags;
+    }
+
+    public Set<GlobalVariableDTO> getGlobalVariables() {
+        return globalVariables;
+    }
+
+    public void setGlobalVariables(Set<GlobalVariableDTO> globalVariables) {
+        this.globalVariables = globalVariables;
     }
 
     @Override

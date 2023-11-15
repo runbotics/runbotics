@@ -3,8 +3,8 @@ package com.runbotics.domain;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.BatchSize;
@@ -87,6 +87,13 @@ public class Process implements Serializable {
     @BatchSize(size = 20)
     private Set<Tag> tags = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+        name = "process_global_variable",
+        joinColumns = @JoinColumn(name = "process_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
+    private Set<GlobalVariable> globalVariables = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -164,6 +171,11 @@ public class Process implements Serializable {
 
     public Process isTriggerable(Boolean isTriggerable) {
         this.isTriggerable = isTriggerable;
+        return this;
+    }
+
+    public Process updateGlobalVariables(List<GlobalVariable> globalVariables) {
+        this.globalVariables = new HashSet<>(globalVariables);
         return this;
     }
 
@@ -294,6 +306,14 @@ public class Process implements Serializable {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Set<GlobalVariable> getGlobalVariables() {
+        return this.globalVariables;
+    }
+
+    public void setGlobalVariables(Set<GlobalVariable> globalVariables) {
+        this.globalVariables = globalVariables;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

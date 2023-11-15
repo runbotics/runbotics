@@ -1,3 +1,4 @@
+import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import { IProcess } from 'runbotics-common';
 
 export interface ModelerImperativeHandle {
@@ -9,7 +10,7 @@ export interface ModelerProps {
     readOnly?: boolean;
     offsetTop: number | null;
     process: IProcess;
-    onSave: () => void;
+    onSave: (modeler: BpmnIoModeler) => void;
     onImport: (definition: string, additionalInfo: AdditionalInfo) => void;
     onExport: () => void;
 }

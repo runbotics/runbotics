@@ -2,6 +2,8 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box, DialogContent } from '@mui/material';
 
+import BpmnIoModeler from 'bpmn-js/lib/Modeler';
+
 import { saveAs } from 'file-saver';
 
 import moment from 'moment';
@@ -29,7 +31,9 @@ import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/
 import BpmnModeler, {
     AdditionalInfo,
     ModelerImperativeHandle,
+    retrieveGlobalVariableIds,
 } from './Modeler/BpmnModeler';
+
 import { StyledCard } from './ProcessBuildView.styled';
 
 const BORDER_SIZE = 2;
@@ -82,13 +86,16 @@ const ProcessBuildView: FC = () => {
         if (node) setOffSet(node.offsetTop + BORDER_SIZE);
     }, []);
 
-    const onSave = async () => {
+    const onSave = async (modeler: BpmnIoModeler) => {
         try {
             const definition = await BpmnModelerRef.current.export();
+            const globalVariableIds = retrieveGlobalVariableIds(modeler);
+
             await dispatch(
                 processActions.updateDiagram({
                     id: process.id,
                     definition,
+                    globalVariableIds,
                 })
             );
 

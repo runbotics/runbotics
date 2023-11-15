@@ -185,9 +185,11 @@ public class ProcessResource {
     public ResponseEntity<ProcessDTO> processSetDiagram(
         @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody @Valid ProcessDiagramUpdateDTO processDiagramDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update diagram in Process: {}", id);
         checkProcessForEdit(id, processDiagramDTO);
+
+        processService.updateGlobalVariables(id, processDiagramDTO.getGlobalVariableIds());
         Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
 
         return ResponseUtil.wrapOrNotFound(
