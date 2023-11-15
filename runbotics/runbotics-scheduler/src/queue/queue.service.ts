@@ -15,7 +15,14 @@ import { Logger } from '#/utils/logger';
 import { StartProcessRequest, StartProcessResponse } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
-    IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent, Role,
+    IProcess,
+    WsMessage,
+    ScheduledProcess,
+    InstantProcess,
+    ProcessInput,
+    TriggerEvent,
+    Role,
+    JobData,
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
@@ -27,7 +34,7 @@ export class QueueService implements OnModuleInit {
     private readonly logger = new Logger(QueueService.name);
 
     constructor(
-        @InjectQueue('scheduler') private readonly processQueue: Queue,
+        @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
         private readonly processService: ProcessService,
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly botSchedulerService: BotSchedulerService,
@@ -97,7 +104,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log(`Job with id: ${id} successfully deleted`);
     }
 
-    async deleteQueueJobsBySchedule(id: string) {
+    async deleteQueueJobsBySchedule(id: JobData['id']) {
         const jobs = await this.processQueue.getJobs(['delayed', 'waiting', 'active', 'paused'])
             .then(jobs => jobs.filter(job => job.data.id === id));
 
@@ -213,7 +220,7 @@ export class QueueService implements OnModuleInit {
             return;
         }
 
-        await this.deleteQueueJobsBySchedule(id.toString());
+        await this.deleteQueueJobsBySchedule(id);
 
         await this.processQueue.removeRepeatableByKey(scheduledJob.key);
         this.uiGateway.server.emit(WsMessage.REMOVE_SCHEDULE_PROCESS, scheduledJob);
