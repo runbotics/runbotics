@@ -1,7 +1,11 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.*;
+import com.runbotics.domain.Authority;
+import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
+import com.runbotics.domain.ProcessConstants;
+import com.runbotics.domain.Tag;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -17,14 +21,6 @@ import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,7 +29,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.runbotics.utils.XmlExtractor.extractGlobalVariableIds;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Process}.
