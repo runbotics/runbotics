@@ -56,44 +56,46 @@ export class ProcessListener {
 
     @EventListener(BotWsMessage.START_PROCESS)
     async startProcess(data: StartProcessMessageBody, ackCallback: (payload?: any) => void) {
-        this.logger.log(`=> Incoming message to start process (id: ${data.processId})`);
+        try {
+            this.logger.log(`=> Incoming message to start process (id: ${data.processId})`);
 
-        const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
+            const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
 
-        if (processInstancesCount > 0) {
-            const errorMessage = 'Process is already running';
+            if (processInstancesCount > 0) {
+                const errorMessage = 'Process is already running';
+                ackCallback({ errorMessage });
 
-            this.logger.error(`<= ${errorMessage}}`);
+                throw new Error(errorMessage);
+            }
 
-            ackCallback({ errorMessage });
+            ackCallback();
 
-            throw new Error(errorMessage);
-        }
+            const { processId, input, ...rest } = data;
+            const process = await orchestratorAxios
+                .get<IProcess>(`/api/processes/${processId}`, { maxRedirects: 0 })
+                .then((response) => {
+                    this.logger.log('Starting process: ' + response.data.name);
+                    return response.data;
+                })
+                .catch((error) => {
+                    this.logger.error(
+                        `<= Error fetching process details (id: ${processId})`,
+                        error
+                    );
+                    throw error;
+                });
 
-        ackCallback();
-
-        const { processId, input, ...rest } = data;
-        const process = await orchestratorAxios
-            .get<IProcess>(`/api/processes/${processId}`, { maxRedirects: 0 })
-            .then((response) => {
-                this.logger.log('Starting process: ' + response.data.name);
-                return response.data;
-            })
-            .catch((error) => {
-                this.logger.error(
-                    `<= Error fetching process details (id: ${processId})`,
-                    error
-                );
-                throw error;
+            await this.runtimeService.startProcessInstance({
+                process,
+                variables: input?.variables ?? {},
+                ...rest,
             });
 
-        await this.runtimeService.startProcessInstance({
-            process,
-            variables: input?.variables ?? {},
-            ...rest,
-        });
+            this.logger.log(`<= Process successfully started (id: ${processId})`);
 
-        this.logger.log(`<= Process successfully started (id: ${processId})`);
+        } catch (error) {
+            this.logger.error(error);
+        }
     }
 
     @EventListener(BotWsMessage.TERMINATE)
