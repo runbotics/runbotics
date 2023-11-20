@@ -1,5 +1,5 @@
-import { NotificationType } from "../../notifications";
 import { IBot } from "./bot.model";
+import { NotificationType } from "./notification-type.model";
 import { IUser } from "./user.model";
 
 export interface NotificationBot {
