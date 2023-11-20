@@ -62,13 +62,8 @@ export class ProcessListener {
             const { processInstancesCount } = this.runtimeService.getRuntimeStatus();
 
             if (processInstancesCount > 0) {
-                const errorMessage = 'Process is already running';
-                ackCallback({ errorMessage });
-
-                throw new Error(errorMessage);
+                throw new Error('Process is already running');
             }
-
-            ackCallback();
 
             const { processId, input, ...rest } = data;
             const process = await orchestratorAxios
@@ -78,10 +73,6 @@ export class ProcessListener {
                     return response.data;
                 })
                 .catch((error) => {
-                    this.logger.error(
-                        `<= Error fetching process details (id: ${processId})`,
-                        error
-                    );
                     throw error;
                 });
 
@@ -93,8 +84,12 @@ export class ProcessListener {
 
             this.logger.log(`<= Process successfully started (id: ${processId})`);
 
+            ackCallback();
+
         } catch (error) {
-            this.logger.error(error);
+            this.logger.error(`<= Failed to start process (id: ${data.processId})`, error);
+
+            ackCallback({ errorMessage: error.message });
         }
     }
 

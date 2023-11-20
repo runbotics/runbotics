@@ -35,8 +35,8 @@ export class WebsocketService {
     private async send(installationId: string, message: BotWsMessage, body?: any) {
         const server = this.botWebSocketGateway.server;
         const response = await server
-            .in(installationId)
-            .timeout(5000)
+            .to(installationId)
+            .timeout(10000)
             .emitWithAck(message, body);
 
         if (hasErrorMessage(response[0])) {
