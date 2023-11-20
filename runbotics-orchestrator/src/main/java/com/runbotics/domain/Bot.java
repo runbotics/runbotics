@@ -1,14 +1,11 @@
 package com.runbotics.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.runbotics.modules.bot.entity.BotStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Bot.
