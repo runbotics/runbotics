@@ -1,6 +1,7 @@
 package com.runbotics.service.dto;
 
 import com.runbotics.domain.Bot;
+import com.runbotics.domain.NotificationType;
 import com.runbotics.domain.User;
 
 import java.io.Serializable;
@@ -10,17 +11,13 @@ import java.util.Objects;
 public class NotificationBotDTO implements Serializable {
 
     private Long id;
-    private Long userId;
-    private Long botId;
     private User user;
     private Bot bot;
-    private String type;
+    private NotificationType type;
     private ZonedDateTime createdAt;
 
-    public NotificationBotDTO(Long id, Long userId, Long botId, User user, Bot bot, String type, ZonedDateTime createdAt) {
+    public NotificationBotDTO(Long id, User user, Bot bot, NotificationType type, ZonedDateTime createdAt) {
         this.id = id;
-        this.userId = userId;
-        this.botId = botId;
         this.user = user;
         this.bot = bot;
         this.type = type;
@@ -33,22 +30,6 @@ public class NotificationBotDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getBotId() {
-        return botId;
-    }
-
-    public void setBotId(Long botId) {
-        this.botId = botId;
     }
 
     public User getUser() {
@@ -67,11 +48,11 @@ public class NotificationBotDTO implements Serializable {
         this.bot = bot;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 
@@ -96,15 +77,13 @@ public class NotificationBotDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, botId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "NotificationBotDTO{" +
             "id=" + id +
-            ", userId=" + userId +
-            ", botId=" + botId +
             ", user=" + user +
             ", bot=" + bot +
             ", createdAt=" + createdAt +

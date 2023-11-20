@@ -15,20 +15,15 @@ public class NotificationBot implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
-
-    @Column(name = "bot_id", insertable = false, updatable = false)
-    private Long botId;
-
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Bot bot;
 
-    @Column(name = "type")
-    private String type;
+    @ManyToOne
+    @JoinColumn(name = "type", referencedColumnName = "type")
+    private NotificationType type;
 
     @Column(name = "created_at")
     private ZonedDateTime createdAt;
@@ -39,22 +34,6 @@ public class NotificationBot implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getBotId() {
-        return botId;
-    }
-
-    public void setBotId(Long botId) {
-        this.botId = botId;
     }
 
     public User getUser() {
@@ -73,11 +52,11 @@ public class NotificationBot implements Serializable {
         this.bot = bot;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 

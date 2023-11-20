@@ -1,9 +1,6 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Bot;
-import com.runbotics.domain.NotificationBot;
-import com.runbotics.domain.NotificationType;
-import com.runbotics.domain.User;
+import com.runbotics.domain.*;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.repository.NotificationBotRepository;
 import com.runbotics.repository.UserRepository;
@@ -41,11 +38,17 @@ public class NotificationBotServiceImpl implements NotificationBotService {
     public NotificationBotDTO save(NotificationBotDTO notificationBotDTO) {
         log.debug("Request to save bot subscription: {}", notificationBotDTO);
 
-        User user = userRepository.findById(notificationBotDTO.getUserId()).orElseThrow();
-        Bot bot = botRepository.findById(notificationBotDTO.getBotId()).orElseThrow();
+        Long userId = notificationBotDTO.getUser().getId();
+        Long botId = notificationBotDTO.getBot().getId();
+
+        User user = userRepository.findById(userId).orElseThrow();
+        Bot bot = botRepository.findById(botId).orElseThrow();
 
         NotificationBot notificationBot = notificationBotMapper.toEntity(notificationBotDTO);
-        notificationBot.setType(NotificationType.NotificationTypeName.BOT.value());
+
+        NotificationType notificationType = new NotificationType(NotificationType.NotificationTypeName.BOT.value());
+        notificationBot.setType(notificationType);
+
         notificationBot.setCreatedAt(ZonedDateTime.now());
         notificationBot.setUser(user);
         notificationBot.setBot(bot);

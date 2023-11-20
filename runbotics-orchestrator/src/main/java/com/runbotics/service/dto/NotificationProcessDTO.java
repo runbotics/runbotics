@@ -1,5 +1,6 @@
 package com.runbotics.service.dto;
 
+import com.runbotics.domain.NotificationType;
 import com.runbotics.domain.Process;
 import com.runbotics.domain.User;
 
@@ -10,17 +11,13 @@ import java.util.Objects;
 public class NotificationProcessDTO implements Serializable {
 
     private Long id;
-    private Long userId;
-    private Long processId;
     private User user;
     private Process process;
-    private String type;
+    private NotificationType type;
     private ZonedDateTime createdAt;
 
-    public NotificationProcessDTO(Long id, Long userId, Long processId, User user, Process process, String type, ZonedDateTime createdAt) {
+    public NotificationProcessDTO(Long id, User user, Process process, NotificationType type, ZonedDateTime createdAt) {
         this.id = id;
-        this.userId = userId;
-        this.processId = processId;
         this.user = user;
         this.process = process;
         this.type = type;
@@ -33,22 +30,6 @@ public class NotificationProcessDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(Long processId) {
-        this.processId = processId;
     }
 
     public User getUser() {
@@ -67,11 +48,11 @@ public class NotificationProcessDTO implements Serializable {
         this.process = process;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(NotificationType type) {
         this.type = type;
     }
 
@@ -96,15 +77,13 @@ public class NotificationProcessDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, processId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "NotificationProcessDTO{" +
             "id=" + id +
-            ", userId=" + userId +
-            ", processId=" + processId +
             ", user=" + user +
             ", process=" + process +
             ", createdAt=" + createdAt +

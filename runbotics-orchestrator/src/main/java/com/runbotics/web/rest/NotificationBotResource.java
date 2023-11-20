@@ -62,12 +62,12 @@ public class NotificationBotResource {
     public ResponseEntity<NotificationBotDTO> createBotSubscription(@RequestBody NotificationBotDTO notificationBotDTO) {
         log.debug("REST request to create subscription for bot notification: {}", notificationBotDTO);
 
-        if (notificationBotDTO.getUserId() == null) {
-            throw new BadRequestAlertException("To create new bot subscription userId must be provided", ENTITY_NAME, "idNotExists");
+        if (notificationBotDTO.getUser() == null) {
+            throw new BadRequestAlertException("To create new bot subscription user must be provided", ENTITY_NAME, "userNotExists");
         }
 
-        if (notificationBotDTO.getBotId() == null) {
-            throw new BadRequestAlertException("To create new bot subscription botId must be provided", ENTITY_NAME, "idNotExists");
+        if (notificationBotDTO.getBot() == null) {
+            throw new BadRequestAlertException("To create new bot subscription bot must be provided", ENTITY_NAME, "botNotExists");
         }
 
         NotificationBotDTO result = notificationBotService.save(notificationBotDTO);
@@ -80,23 +80,19 @@ public class NotificationBotResource {
     /**
      * {@code DELETE /bot-notifications} : deletes a subscription for bot notification.
      *
-     * @param userId id of the user related to the subscription to delete.
-     * @param botId  id of the bot related to the subscription to delete.
+     * @param id id of the user related to the subscription to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/bot-notifications")
-    public ResponseEntity<Void> deleteProcessSubscription(
-        @RequestParam(value = "userId", required = true) Long userId,
-        @RequestParam(value = "botId", required = true) Long botId
-    ) {
-        log.debug("REST request to create subscription for bot notification with userId and botId: {} {}", userId, botId);
+    @DeleteMapping("/bot-notifications/{id}")
+    public ResponseEntity<Void> deleteProcessSubscription(@PathVariable Long id) {
+        log.debug("REST request to delete subscription for bot notification with id: {}", id);
 
         NotificationBot notificationBot = notificationBotRepository
-            .findByUserIdAndBotId(userId, botId)
+            .findById(id)
             .orElse(null);
 
         if (notificationBot == null) {
-            throw new BadRequestAlertException("Subscription with this userId and processIs not exist", ENTITY_NAME, "idNotExist");
+            throw new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist");
         }
 
         notificationBotService.delete(notificationBot);

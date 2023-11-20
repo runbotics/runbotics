@@ -51,14 +51,13 @@ const ProcessConfigureView: VFC = () => {
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { user } = useAuth();
     const [subscribed, setSubscribed] = useState(false);
+    const [currentProcessSubscription, setCurrentProcessSubscription] = useState<NotificationProcess | undefined>();
 
     const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
 
     const notificationTableRows = useMemo(() => processSubscriptions
         .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
-            id: sub.userId,
-            userId: sub.userId,
-            processId: sub.processId,
+            id: sub.id,
             user: sub.user.login,
             subscribedAt: sub.createdAt,
         })), [processSubscriptions]);
@@ -81,7 +80,9 @@ const ProcessConfigureView: VFC = () => {
     }, [process]);
 
     useEffect(() => {
-        setSubscribed(Boolean(processSubscriptions.find(sub => sub.userId === user.id)));
+        const subscription = processSubscriptions.find(sub => sub.user.id === user.id);
+        setCurrentProcessSubscription(subscription);
+        setSubscribed(Boolean(subscription));
     }, [processSubscriptions]);
 
     const fetchProcess = async () => {
@@ -120,17 +121,14 @@ const ProcessConfigureView: VFC = () => {
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(processActions.subscribeProcessNotifications({ userId: user.id, processId }))
-            : await dispatch(processActions.unsubscribeProcessNotifications({ userId: user.id, processId }));
+            ? await dispatch(processActions.subscribeProcessNotifications({ user, process }))
+            : await dispatch(processActions.unsubscribeProcessNotifications(currentProcessSubscription.id));
 
         await dispatch(processActions.getProcessSubscriptionInfo(processId));
     };
 
-    async function handleDeleteSubscription(subscriberInfo: ProcessNotificationRow) {
-        await dispatch(processActions.unsubscribeProcessNotifications({
-            userId: subscriberInfo.userId,
-            processId,
-        }));
+    async function handleDeleteSubscription(subscriptionInfo: ProcessNotificationRow) {
+        await dispatch(processActions.unsubscribeProcessNotifications(subscriptionInfo.id));
         await dispatch(processActions.getProcessSubscriptionInfo(processId));
     }
 

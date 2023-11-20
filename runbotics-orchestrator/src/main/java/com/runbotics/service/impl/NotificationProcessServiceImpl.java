@@ -1,9 +1,7 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.NotificationType;
+import com.runbotics.domain.*;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.User;
-import com.runbotics.domain.NotificationProcess;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.NotificationProcessRepository;
 import com.runbotics.repository.UserRepository;
@@ -41,11 +39,17 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
     public NotificationProcessDTO save(NotificationProcessDTO notificationProcessDTO) {
         log.debug("Request to save process subscription: {}", notificationProcessDTO);
 
-        User user = userRepository.findById(notificationProcessDTO.getUserId()).orElseThrow();
-        Process process = processRepository.findById(notificationProcessDTO.getProcessId()).orElseThrow();
+        Long userId = notificationProcessDTO.getUser().getId();
+        Long processId = notificationProcessDTO.getProcess().getId();
+
+        User user = userRepository.findById(userId).orElseThrow();
+        Process process = processRepository.findById(processId).orElseThrow();
 
         NotificationProcess notificationProcess = notificationProcessMapper.toEntity(notificationProcessDTO);
-        notificationProcess.setType(NotificationType.NotificationTypeName.PROCESS.value());
+
+        NotificationType notificationType = new NotificationType(NotificationType.NotificationTypeName.PROCESS.value());
+        notificationProcess.setType(notificationType);
+
         notificationProcess.setCreatedAt(ZonedDateTime.now());
         notificationProcess.setUser(user);
         notificationProcess.setProcess(process);

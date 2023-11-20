@@ -45,7 +45,7 @@
     "Bot.Edit.Table.View.Header": "Subscribers",
     "Bot.Edit.Table.Results.Error": "No subscribers found",
 
-    "Bot.Edit.Form.Fields.IsSubscribed.Label": "Is process subscribed",
+    "Bot.Edit.Form.Fields.IsSubscribed.Label": "Notify about failure",
 
     "Bot.ListView.Table.Header.Name": "Name",
     "Bot.ListView.Table.Header.Creator": "Creator",

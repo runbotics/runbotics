@@ -64,12 +64,12 @@ public class NotificationProcessResource {
     public ResponseEntity<NotificationProcessDTO> createProcessSubscription(@RequestBody NotificationProcessDTO notificationProcessDTO) {
         log.debug("REST request to create subscription for process notification: {}", notificationProcessDTO);
 
-        if (notificationProcessDTO.getUserId() == null) {
-            throw new BadRequestAlertException("To create new process subscription userId must be provided", ENTITY_NAME, "idNotExists");
+        if (notificationProcessDTO.getUser() == null) {
+            throw new BadRequestAlertException("To create new process subscription user must be provided", ENTITY_NAME, "userNotExists");
         }
 
-        if (notificationProcessDTO.getProcessId() == null) {
-            throw new BadRequestAlertException("To create new process subscription processId must be provided", ENTITY_NAME, "idNotExists");
+        if (notificationProcessDTO.getProcess() == null) {
+            throw new BadRequestAlertException("To create new process subscription process must be provided", ENTITY_NAME, "processNotExists");
         }
 
         NotificationProcessDTO result = notificationProcessService.save(notificationProcessDTO);
@@ -82,23 +82,19 @@ public class NotificationProcessResource {
     /**
      * {@code DELETE /process-notifications} : deletes a subscription for process notification.
      *
-     * @param userId    id of the user related to the subscription to delete.
-     * @param processId id of the process related to the subscription to delete.
+     * @param id id of the subscription to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/process-notifications")
-    public ResponseEntity<Void> deleteProcessSubscription(
-        @RequestParam(value = "userId", required = true) Long userId,
-        @RequestParam(value = "processId", required = true) Long processId
-    ) {
-        log.debug("REST request to create subscription for process notification with userId and processId: {} {}", userId, processId);
+    @DeleteMapping("/process-notifications/{id}")
+    public ResponseEntity<Void> deleteProcessSubscription(@PathVariable Long id) {
+        log.debug("REST request to delete subscription for process notification with id: {}", id);
 
         NotificationProcess notificationProcess = notificationProcessRepository
-            .findByUserIdAndProcessId(userId, processId)
+            .findById(id)
             .orElse(null);
 
         if (notificationProcess == null) {
-            throw new BadRequestAlertException("Subscription with this userId and processIs not exist", ENTITY_NAME, "idNotExist");
+            throw new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist");
         }
 
         notificationProcessService.delete(notificationProcess);

@@ -22,21 +22,21 @@ import { Container, ContainerWrapper, StyledPaper } from './BotDetailsView.style
 
 const BotConfigure: FC = () => {
     const dispatch = useDispatch();
-    const { bots: { botSubscriptions, loading } } = useSelector(botSelector);
+    const { bots: { botSubscriptions, loading, byId } } = useSelector(botSelector);
     const router = useRouter();
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { user } = useAuth();
     const { id } = router.query;
     const botId = Number(id);
+    const bot = byId[botId];
     const [subscribed, setSubscribed] = useState(false);
+    const [currentBotSubscription, setCurrentBotSubscription] = useState<NotificationBot | undefined>();
 
     const notificationTableColumns = useBotNotificationColumns({ onDelete: handleDeleteSubscription });
 
     const notificationTableRows = useMemo(() => botSubscriptions
         .map<BotNotificationRow>((sub: NotificationBot) => ({
-            id: sub.userId,
-            userId: sub.userId,
-            botId: sub.botId,
+            id: sub.id,
             user: sub.user.login,
             subscribedAt: sub.createdAt,
         })), [botSubscriptions]);
@@ -50,22 +50,21 @@ const BotConfigure: FC = () => {
     }, [botId]);
 
     useEffect(() => {
-        setSubscribed(Boolean(botSubscriptions.find(sub => sub.userId === user.id)));
+        const subscription = botSubscriptions.find(sub => sub.user.id === user.id);
+        setCurrentBotSubscription(subscription);
+        setSubscribed(Boolean(subscription));
     }, [botSubscriptions]);
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(botActions.subscribeBotNotifications({ userId: user.id, botId }))
-            : await dispatch(botActions.unsubscribeBotNotifications({ userId: user.id, botId }));
+            ? await dispatch(botActions.subscribeBotNotifications({ user, bot }))
+            : await dispatch(botActions.unsubscribeBotNotifications(currentBotSubscription.id));
 
         await handleGetBotSubscribers();
     };
 
     async function handleDeleteSubscription(botInfo: BotNotificationRow) {
-        await dispatch(botActions.unsubscribeBotNotifications({
-            userId: botInfo.userId,
-            botId,
-        }));
+        await dispatch(botActions.unsubscribeBotNotifications(botInfo.id));
         await handleGetBotSubscribers();
     }
 

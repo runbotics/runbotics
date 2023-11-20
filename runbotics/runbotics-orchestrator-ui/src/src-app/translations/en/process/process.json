@@ -27,7 +27,7 @@
     "Process.Edit.Form.Fields.Public.Label": "Public:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Is process attended",
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Is process triggerable",
-    "Process.Edit.Form.Fields.IsSubscribed.Label": "Is process subscribed",
+    "Process.Edit.Form.Fields.IsSubscribed.Label": "Notify about failure",
     "Process.Edit.Form.Fields.Placeholder.TagSearch": "Search for tag",
     "Process.Edit.Form.Fields.Error.Required": "Field is required",
     "Process.Edit.Form.Fields.SearchTag.TagNotFound": "No results",

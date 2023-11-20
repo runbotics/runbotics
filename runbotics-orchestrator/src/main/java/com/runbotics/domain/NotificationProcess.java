@@ -17,20 +17,15 @@ public class NotificationProcess implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
-
-    @Column(name = "process_id", insertable = false, updatable = false)
-    private Long processId;
-
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Process process;
 
-    @Column(name = "type")
-    private String type;
+    @ManyToOne
+    @JoinColumn(name = "type", referencedColumnName = "type")
+    private NotificationType type;
 
     @Column(name = "created_at")
     private ZonedDateTime createdAt;
@@ -41,22 +36,6 @@ public class NotificationProcess implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(Long processId) {
-        this.processId = processId;
     }
 
     public User getUser() {
@@ -75,13 +54,11 @@ public class NotificationProcess implements Serializable {
         this.process = process;
     }
 
-    public String getType() {
+    public NotificationType getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public void setType(NotificationType type) { this.type = type; }
 
     public ZonedDateTime getCreatedAt() {
         return createdAt;
