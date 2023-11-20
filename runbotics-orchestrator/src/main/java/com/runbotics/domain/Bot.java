@@ -52,10 +52,6 @@ public class Bot implements Serializable {
     @JoinColumn(name = "collection_id")
     private BotCollection collection;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "bot")
-    private Set<NotificationBot> botNotifications = new HashSet<>();
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -152,14 +148,6 @@ public class Bot implements Serializable {
 
     public void setCollection(BotCollection collection) {
         this.collection = collection;
-    }
-
-    public Set<NotificationBot> getBotNotifications() {
-        return botNotifications;
-    }
-
-    public void setBotNotifications(Set<NotificationBot> botNotifications) {
-        this.botNotifications = botNotifications;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -96,9 +96,6 @@ public class Process implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
     private Set<GlobalVariable> globalVariables = new HashSet<>();
 
-    @OneToMany(mappedBy = "process")
-    private Set<NotificationProcess> processNotifications = new HashSet<>();
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -322,14 +319,6 @@ public class Process implements Serializable {
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    public Set<NotificationProcess> getProcessNotifications() {
-        return processNotifications;
-    }
-
-    public void setProcessNotifications(Set<NotificationProcess> processNotifications) {
-        this.processNotifications = processNotifications;
-    }
 
     @Override
     public boolean equals(Object o) {

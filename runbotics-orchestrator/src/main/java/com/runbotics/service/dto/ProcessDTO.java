@@ -8,7 +8,6 @@ import com.runbotics.domain.Process;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import com.runbotics.domain.UserProcess;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -75,9 +74,6 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<GlobalVariableDTO> globalVariables;
-
-    @JsonView(ProcessDTOViews.DefaultView.class)
-    private  Set<UserProcess> notifications;
 
     public Long getId() {
         return id;
@@ -221,12 +217,6 @@ public class ProcessDTO implements Serializable {
 
     public void setGlobalVariables(Set<GlobalVariableDTO> globalVariables) {
         this.globalVariables = globalVariables;
-    }
-
-    public Set<UserProcess> getNotifications() { return notifications; }
-
-    public void setNotifications(Set<UserProcess> notifications) {
-        this.notifications = notifications;
     }
 
     @Override
