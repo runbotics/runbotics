@@ -108,6 +108,7 @@ const FlowLabelForm: VFC<Props> = ({ formLabel, onSubmit, selectedElement, onCan
                         sx={{ mt: (theme) => theme.spacing(2) }}
                         InputProps={{ endAdornment: <EditButtons /> }}
                         onFocus={onFocus}
+                        autoFocus={formState.editing}
                     />
                 </form>
             </If>

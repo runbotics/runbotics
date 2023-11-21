@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { IoClient, IoClientModule } from 'nestjs-io-client';
+import { IoClientModule } from 'nestjs-io-client';
 import { AuthService } from './auth/auth.service';
 
 import { ConfigModule, ServerConfigService } from '#config';
@@ -12,6 +12,7 @@ import { WebsocketService } from './websocket.service';
 import { MessageQueueService } from './queue/message-queue.service';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
+import { CacheModule } from '#core/websocket/cache/cache.module';
 
 
 @Module({
@@ -36,6 +37,7 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
             },
         }),
         forwardRef(() => CoreModule),
+        CacheModule,
     ],
     providers: [
         AuthService,
