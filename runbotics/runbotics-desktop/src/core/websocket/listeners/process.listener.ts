@@ -71,9 +71,6 @@ export class ProcessListener {
                 .then((response) => {
                     this.logger.log('Starting process: ' + response.data.name);
                     return response.data;
-                })
-                .catch((error) => {
-                    throw error;
                 });
 
             await this.runtimeService.startProcessInstance({
