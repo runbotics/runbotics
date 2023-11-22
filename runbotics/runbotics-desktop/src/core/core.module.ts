@@ -7,7 +7,6 @@ import { RuntimeService } from './bpm/runtime';
 import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
-import { CacheModule } from '#core/websocket/cache/cache.module';
 
 
 @Module({
@@ -15,7 +14,6 @@ import { CacheModule } from '#core/websocket/cache/cache.module';
         ScheduleModule.forRoot(),
         forwardRef(() => ActionModule),
         forwardRef(() => WebsocketModule),
-        CacheModule,
     ],
     providers: [
         RuntimeService,

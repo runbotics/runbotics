@@ -41,12 +41,12 @@ import {
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
     BpmnExecutionEventMessageExtendedApi,
-    BpmnProcessInstance,
+    BpmnProcessInstance, BpmnExecutionEventMessageExtendedContent,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
 import { ServerConfigService } from '#config';
-import { IdNameCacheService } from '#core/websocket/cache/id-name-cache.service';
+import { StorageService } from '#config';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -63,7 +63,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         private desktopRunnerService: DesktopRunnerService,
         private readonly loopHandlerService: LoopHandlerService,
         private readonly serverConfigService: ServerConfigService,
-        private readonly idNameCacheService: IdNameCacheService,
+        private readonly storageService: StorageService,
     ) {}
 
     onApplicationBootstrap() {
@@ -268,7 +268,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('flow.take', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if (this.isSequenceFlowAfterGateway(api)) {
+            if (this.isSequenceFlowAfterGateway(api?.content)) {
                 this.activityEventBus.publish({
                     processInstance,
                     eventType: ProcessInstanceEventStatus.COMPLETED,
@@ -578,13 +578,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ? api.name : api.id;
-        this.idNameCacheService.setValue(api.id, gatewayName);
+        this.storageService.setValue(api.id, gatewayName);
     };
 
-    private isSequenceFlowAfterGateway = (api: BpmnExecutionEventMessageExtendedApi) => (
-        api.content &&
-        api.content.type === BpmnElementType.SEQUENCE_FLOW &&
-        api.content.isSequenceFlow &&
-        api.content.sourceId.includes('Gateway_')
+    private isSequenceFlowAfterGateway = (content: BpmnExecutionEventMessageExtendedContent) => (
+        content &&
+        content.type === BpmnElementType.SEQUENCE_FLOW &&
+        content.isSequenceFlow &&
+        content.sourceId.includes('Gateway_')
     );
 }

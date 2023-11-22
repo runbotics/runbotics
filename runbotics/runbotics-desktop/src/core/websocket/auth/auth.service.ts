@@ -36,7 +36,7 @@ export class AuthService {
 
         const token = response.data['id_token'];
         orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        await this.storageService.setItem('token', token);
+        this.storageService.setValue('token', token);
         const installationId = await this.getInstallationId();
         this.logger.log('<= Authenticated with server: ' + this.serverConfigService.entrypointUrl);
 
@@ -61,7 +61,7 @@ export class AuthService {
     }
 
     async getInstallationId() {
-        const response = await this.storageService.getItem('installationId');
+        const response = this.storageService.getValue('installationId');
         let installationId;
         if (response && response['installationId']) {
             installationId = response['installationId'];
@@ -69,7 +69,7 @@ export class AuthService {
             installationId = this.serverConfigService.installationId;
         } else {
             installationId = uuidv4();
-            await this.storageService.setItem('installationId', installationId);
+            this.storageService.setValue('installationId', installationId);
         }
         return installationId;
     }

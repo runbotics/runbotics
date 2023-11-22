@@ -12,7 +12,6 @@ import { WebsocketService } from './websocket.service';
 import { MessageQueueService } from './queue/message-queue.service';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
-import { CacheModule } from '#core/websocket/cache/cache.module';
 
 
 @Module({
@@ -37,7 +36,6 @@ import { CacheModule } from '#core/websocket/cache/cache.module';
             },
         }),
         forwardRef(() => CoreModule),
-        CacheModule,
     ],
     providers: [
         AuthService,

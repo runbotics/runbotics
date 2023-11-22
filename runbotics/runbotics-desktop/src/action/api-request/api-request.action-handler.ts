@@ -25,7 +25,7 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
     public asyncInit = async () => {
         const setupAxiosInterceptors = (onUnauthenticated: any) => {
             const onRequestSuccess = async (config: any) => {
-                const token = await this.storageService.getItem('token');
+                const token = this.storageService.getValue('token');
                 if (!config.headers.Authorization && token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
