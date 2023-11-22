@@ -25,13 +25,9 @@ import { GuestService } from '#/database/guest/guest.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/database/process/process.service';
 
-type BotId = number;
-type SocketId = string;
-
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
-    private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
     private CONNECTION_TIMEOUT = 20_000;
 
@@ -48,14 +44,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly processService: ProcessService,
     ) {}
 
-    get connectedBotsCount() {
-        return this.connections.size;
-    }
-
-    getConnectedBotSocketId(botId: number) {
-        return this.connections.get(botId);
-    }
-
     async handleConnection(client: Socket) {
         this.logger.log(`Bot ${client.id} is trying to establish connection`);
         const connectionTimeout = this.setConnectionTimeout(client);
@@ -69,7 +57,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
             this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
 
-            this.connections.set(bot.id, client.id);
+            client.join(bot.installationId);
         }
     }
 
@@ -86,8 +74,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         // await this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
-
-        this.connections.delete(bot.id);
 
         // await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
