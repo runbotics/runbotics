@@ -31,6 +31,7 @@ import { ProcessModule } from '#/database/process/process.module';
         Logger,
         BotModule,
         ProcessModule,
+        UserModule,
     ],
     providers: [MailService],
     exports: [MailService],

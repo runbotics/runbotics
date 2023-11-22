@@ -1,18 +1,17 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
+import { Dialog } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 
-import { Role, NotificationBot } from 'runbotics-common';
+import { NotificationBot } from 'runbotics-common';
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
 import { BotNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useBotNotificationColumns from '#src-app/components/tables/NotificationTable/useBotNotificationColumns';
-import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
-import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
@@ -24,13 +23,13 @@ const BotConfigure: FC = () => {
     const dispatch = useDispatch();
     const { bots: { botSubscriptions, loading, byId } } = useSelector(botSelector);
     const router = useRouter();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { user } = useAuth();
     const { id } = router.query;
     const botId = Number(id);
     const bot = byId[botId];
     const [subscribed, setSubscribed] = useState(false);
     const [currentBotSubscription, setCurrentBotSubscription] = useState<NotificationBot | undefined>();
+    const [open, setOpen] = useState(false);
 
     const notificationTableColumns = useBotNotificationColumns({ onDelete: handleDeleteSubscription });
 
@@ -74,20 +73,26 @@ const BotConfigure: FC = () => {
                 <Box>
                     <StyledPaper>
                         <NotificationSwitchComponent
+                            onClick={() => setOpen(true)}
                             isSubscribed={subscribed}
                             onSubscriptionChange={handleSubscriptionChange}
                             label={translate('Bot.Edit.Form.Fields.IsSubscribed.Label')}
+                            tooltip={translate('Bot.Edit.Form.Fields.IsSubscribed.Tooltip')}
                         />
                     </StyledPaper>
                 </Box>
             </Container>
-            <If condition={isAdmin}>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)}
+                maxWidth={false}
+            >
                 <NotificationTableComponent
                     notificationTableColumns={notificationTableColumns}
                     subscribersList={notificationTableRows ?? []}
                     loading={loading}
                 />
-            </If>
+            </Dialog>
         </ContainerWrapper>
     );
 };

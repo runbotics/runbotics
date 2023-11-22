@@ -6,7 +6,7 @@ export const Container = styled.div`
     flex-direction: column;
     padding: 1.5rem;
     gap: 1rem;
-    min-width: 350px;
+    min-width: 375px;
 `;
 
 export const StyledPaper = styled(Paper)`

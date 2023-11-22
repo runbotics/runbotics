@@ -57,7 +57,6 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
                 />
             </StyledActionsContainer>
             <DataGrid
-                autoHeight
                 columns={notificationTableColumns}
                 rows={filteredSubscribersList}
                 rowCount={filteredSubscribersList.length}

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { IUser } from 'runbotics-common';
+import { IUser, Role } from 'runbotics-common';
 
 const relations = ['authorities'];
 
@@ -15,6 +15,17 @@ export class UserService {
 
     findAll(): Promise<IUser[]> {
         return this.userRepository.find({ relations });
+    }
+
+    findAllByRole(role: Role): Promise<IUser[]> {
+        return this.userRepository.find({
+            where: {
+                authorities: {
+                    name: role,
+                },
+            },
+            relations,
+        });
     }
 
     findById(id: number): Promise<IUser> {

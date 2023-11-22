@@ -27,6 +27,7 @@
     "Process.Edit.Form.Fields.Public.Label": "Publiczny:",
     "Process.Edit.Form.Fields.IsAttended.Label": "Czy proces jest zajęty",
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Czy proces można uruchomić",
+    "Process.Edit.Form.Fields.IsSubscribed.Tooltip": "Ustawienia powiadomień procesu",
     "Process.Edit.Form.Fields.IsSubscribed.Label": "Powiadom o niepowodzeniu",
     "Process.Edit.Form.Fields.Placeholder.TagSearch": "Szukaj tagów",
     "Process.Edit.Form.Fields.Error.Required": "Pole jest wymagane",

@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IBot, IProcess, IProcessInstance } from 'runbotics-common';
+import { IBot, IProcess, IProcessInstance, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
+import { UserService } from '#/database/user/user.service';
+import { mergeArrays } from '#/utils/mergeArrays';
 
 export type SendMailInput = {
     to: string;
@@ -23,7 +25,8 @@ export class MailService {
     constructor(
         private readonly mailerService: MailerService,
         private readonly botService: BotService,
-        private readonly processService: ProcessService
+        private readonly processService: ProcessService,
+        private readonly userService: UserService
     ) {}
 
     public async sendMail(input: SendMailInput) {
@@ -73,16 +76,46 @@ export class MailService {
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
+        const processCreatorEmail = failedProcess.createdBy.email;
+        const subscribers = failedProcess.subscribers;
 
-        if (failedProcess.subscribers && failedProcess.subscribers.length) {
-            const subscribers = failedProcess.subscribers;
-            const emailAddresses = subscribers.map(({ email }) => email).join(',');
+        const sendMailInput: SendMailInput = {
+            to: '',
+            subject: NOTIFICATION_MAIL_SUBJECT,
+            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
+        };
 
-            await this.sendMail({
-                to: emailAddresses,
-                subject: NOTIFICATION_MAIL_SUBJECT,
-                content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
-            });
+        if (!failedProcess.isPublic) {
+            const admins = await this.userService.findAllByRole(Role.ROLE_ADMIN);
+            const adminsIds = admins.map(admin => admin.id);
+            const filteredSubscribers =
+                subscribers && subscribers.length
+                    ? subscribers.reduce((acc, subscriber) => {
+                            if (adminsIds.includes(subscriber.id)) {
+                                acc.push(subscriber.email);
+                            }
+                            return acc;
+                        }, [])
+                    : [];
+
+            const emailAddresses = mergeArrays([
+                processCreatorEmail,
+                ...filteredSubscribers,
+            ]).join(',');
+
+            await this.sendMail({ ...sendMailInput, to: emailAddresses });
+        } else {
+            const subscribersAddresses =
+                subscribers && subscribers.length
+                    ? subscribers.map(({ email }) => email)
+                    : [];
+
+            const emailAddresses = mergeArrays([
+                processCreatorEmail,
+                ...subscribersAddresses,
+            ]).join(',');
+
+            await this.sendMail({...sendMailInput, to: emailAddresses });
         }
     }
 }
