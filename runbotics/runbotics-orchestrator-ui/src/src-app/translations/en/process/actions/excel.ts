@@ -72,6 +72,15 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Macro name',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Run Macro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Macro Parameters',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Label': 'Range to HTML table',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath': 'File path',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange': 'Cell range',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange.Info': 'Cell range to crate html table.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow': 'Table header',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow.Info': 'Row selected from the range, which will be displayed as table header, e.g. "123". If not provided, the first row from the range is selected.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath.Info': 'Absolute path to file, e.g. C:/RunBotics/excel/example.xlsx.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output': 'HTML table',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output.Info': 'HTML table returned in type string',
 };
 
 

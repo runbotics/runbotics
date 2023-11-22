@@ -74,6 +74,15 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Nazwa makra',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Makro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Parametry Makra',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Label': 'Zakres do tabeli HTML',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath': 'Ścieżka do pliku',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange': 'Zakres komórek',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange.Info': 'Zakres komórek do utworzenia tabeli HTML.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow': 'Nagłówek tabeli',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow.Info': 'Wiersz wybrany z zakresu komórek, który zostanie wyświetlony jako nagłówek tabeli, np. "123". Jeśli nie określono, wybrany zostanie pierwszy wiersz z zakresu komórek.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath.Info': 'Ścieżka absolutna do pliku, np. C:/RunBotics/excel/example.xlsx.',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output': 'Tabela HTML',
+    'Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output.Info': 'Tabela HTML zwrócona w typie string.',
 };
 
 export default excelActionsTranslations;

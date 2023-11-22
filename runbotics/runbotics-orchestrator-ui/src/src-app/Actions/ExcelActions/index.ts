@@ -13,6 +13,7 @@ import getActionInsertColumnsBefore from './insertColumnsBefore';
 import getActionInsertRowAfter from './insertRowAfter';
 import getActionInsertRowBefore from './insertRowBefore';
 import getActionOpen from './open';
+import getRangeToHtmlAction from './rangeToHtml';
 import getActionReadTable from './readTable';
 import getActionRenameWorksheet from './renameWorksheet';
 import getActionRunMacro from './runMacro';
@@ -45,7 +46,8 @@ const excelActions = {
     getActionWorksheetExists,
     getActionDeleteRows,
     getActionRunMacro,
-    getActionExportToCsv
+    getActionExportToCsv,
+    getRangeToHtmlAction
 };
 
 export default excelActions;
