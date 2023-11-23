@@ -147,9 +147,7 @@
         "eslint": "8.26.0",
         "cross-env": "^7.0.3",
         "eslint-config-prettier": "~8.6.0",
-        "eslint-plugin-prettier": "~4.2.1",
-        "ts-node": "10.9.1",
-        "tsconfig-paths": "~4.2.0"
+        "eslint-plugin-prettier": "~4.2.1"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
