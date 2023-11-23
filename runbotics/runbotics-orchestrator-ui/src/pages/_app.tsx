@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import moment from 'moment';
-import { default as NextApp, AppProps as PageProps } from 'next/app';
+import { AppContext, default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
 
 import { I18nextProvider } from 'react-i18next';
@@ -11,6 +11,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
+import { isCached, recreateCache } from '#contentful/blog-main';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 
 import MainLayout from '#src-app/layouts/MainLayout';
@@ -39,6 +40,12 @@ interface AppProps extends PageProps {
 moment.locale(DEFAULT_LANG);
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
+
+(async function initializeBlogCache() {
+    if (!isCached('en') || !isCached('pl')) {
+        await recreateCache();
+    }
+})();
 
 function App(props: AppProps) {
     const {
@@ -82,8 +89,14 @@ function App(props: AppProps) {
     );
 }
 
-App.getInitialProps = async (context) => {
+App.getInitialProps = async (context: AppContext) => {
     const pageProps = await NextApp.getInitialProps(context);
+
+    if (!isCached('en') || !isCached('pl')) {
+        await recreateCache();
+    } else {
+        context.ctx.res.setHeader('X-Cache', 'HIT');
+    }
 
     return {
         ...pageProps,

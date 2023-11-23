@@ -8,8 +8,8 @@
     "license": "MIT",
     "sideEffects": false,
     "scripts": {
-        "start": "cross-env NODE_ENV=production ts-node ./src/server.ts",
-        "start:dev": "cross-env NODE_ENV=development ts-node ./src/server.ts",
+        "start": "next start",
+        "start:dev": "next dev",
         "start:debug": "cross-env NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "lint": "next lint",
