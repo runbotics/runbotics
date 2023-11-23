@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
+import { BpmnExecutionEventMessageExtendedApi, DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
     BotWsMessage,
@@ -11,7 +11,7 @@ import {
     BpmnElementType,
     ProcessInstanceStep,
 } from 'runbotics-common';
-import { IActivityOwner } from '#core/bpm/bpmn.types';
+import { IActivityOwner, IBehaviour } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
@@ -41,9 +41,9 @@ export class RuntimeSubscriptionsService {
                         created: dayjs().toISOString(),
                         processInstance: event.processInstance,
                         executionId: event.activity.executionId,
-                        input: JSON.stringify({
-                            ...desktopTask?.input,
-                        }),
+                        input: this.sanitizeVariable(
+                            JSON.stringify({ ...desktopTask?.input })
+                        ),
                         status: event.eventType,
                         error: event.activity.content.error?.description,
                         script: desktopTask.input?.script,
@@ -132,9 +132,11 @@ export class RuntimeSubscriptionsService {
                         case ProcessInstanceEventStatus.COMPLETED:
                         case ProcessInstanceEventStatus.STOPPED:
                         case ProcessInstanceEventStatus.ERRORED:
-                            processInstanceEvent.output = JSON.stringify({
-                                ...desktopTask?.output,
-                            });
+                            if (!this.isLoopSubprocess(event.activity, eventBehavior)) {
+                                processInstanceEvent.output = this.sanitizeVariable(
+                                    JSON.stringify({ ...desktopTask?.output })
+                                );
+                            }
                             processInstanceEvent.finished =
                                 dayjs().toISOString();
                             break;
@@ -188,9 +190,9 @@ export class RuntimeSubscriptionsService {
                     break;
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
-                        processInstance.input = JSON.stringify({
-                            variables: event.processInstance.variables,
-                        });
+                        processInstance.input = this.sanitizeVariable(
+                            JSON.stringify({ variables: event.processInstance.variables })
+                        );
                     } catch (e) {
                         this.logger.error('Error preparing input');
                         processInstance.input = JSON.stringify({
@@ -213,20 +215,17 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = JSON.stringify({
-                            output: event.processInstance.output,
-                            variables: variables,
-                        });
+                        processInstance.output = this.sanitizeVariable(
+                            JSON.stringify({
+                                output: event.processInstance.output,
+                                variables: variables,
+                            })
+                        );
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({
                             result: 'Error preparing output',
                         });
-                    } finally {
-                        if (processInstance.output.length > 10000)
-                            processInstance.output = JSON.stringify({
-                                message: 'Exceeded max length',
-                            });
                     }
                     break;
             }
@@ -238,5 +237,15 @@ export class RuntimeSubscriptionsService {
 
             this.websocketService.emitMessage(message);
         });
+    }
+
+    private sanitizeVariable(variableToCheck: string): string {
+        if (variableToCheck && variableToCheck.length > 10000)
+            return JSON.stringify({ message: 'Exceeded max length' });
+        return variableToCheck;
+    }
+
+    private isLoopSubprocess(activity: BpmnExecutionEventMessageExtendedApi, eventBehavior: IBehaviour): boolean {
+        return BpmnElementType.SUBPROCESS === activity.content.type && eventBehavior.actionId === 'loop.loop';
     }
 }

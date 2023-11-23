@@ -8,7 +8,7 @@ import {
     WebSocketServer,
 
 } from '@nestjs/websockets';
-import { HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpStatus, OnModuleInit, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
@@ -29,7 +29,7 @@ type BotId = number;
 type SocketId = string;
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
-export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
+export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnModuleInit {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
     private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
@@ -47,6 +47,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly mailService: MailService,
         private readonly processService: ProcessService,
     ) {}
+
+    onModuleInit() {
+        if (this.server && this.server.engine) {
+            this.server.engine.opts.maxHttpBufferSize = 2_000_000;
+        }
+    }
 
     get connectedBotsCount() {
         return this.connections.size;
