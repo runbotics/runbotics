@@ -17,6 +17,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     handleOnBlur,
     handleOnFocus,
     name,
+    autofocus,
 }) => {
     const [open, setOpen] = useState(false);
     const optionValues = React.useMemo(
@@ -79,7 +80,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     helperText={customErrors ? customErrors[0] : null}
                     onBlur={handleOnBlur}
                     onFocus={handleOnFocus}
-                    autoFocus={true}
+                    autoFocus={autofocus ?? true}
                 />
             )}
         />

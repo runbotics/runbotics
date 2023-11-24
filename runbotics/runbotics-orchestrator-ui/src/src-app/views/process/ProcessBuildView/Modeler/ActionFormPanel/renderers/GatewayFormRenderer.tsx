@@ -159,9 +159,11 @@ const GatewayFormRenderer = () => {
                                 label={`${translate(
                                     'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
                                 )}`}
-                                autofocus={true}
                                 value={outgoing.businessObject.conditionExpression?.body}
                                 name={outgoing.id}
+                                disabled={false}
+                                required={false}
+                                autofocus={false}
                             />
                         </FlowExpression>
                     ))
