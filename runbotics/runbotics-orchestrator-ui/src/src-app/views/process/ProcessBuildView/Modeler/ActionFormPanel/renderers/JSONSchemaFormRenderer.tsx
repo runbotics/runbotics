@@ -21,9 +21,6 @@ import { ModelerError, processActions } from '#src-app/store/slices/Process';
 import { IFormData } from '../../../../../../Actions/types';
 import AutocompleteWidget from '../widgets/AutocompleteWidget';
 import FieldTemplate from '../widgets/FieldTemplate';
-import {
-    AutocompleteWidgetProps
-} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget/AutocompleteWidget.types';
 
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any>>;
 
@@ -35,7 +32,6 @@ interface FormState {
     formData: IFormData;
 }
 
-// @ts-ignore
 interface FormPropsExtended extends FormProps<any> {
     panel?: ReactNode;
     onSubmit?: (
@@ -44,7 +40,6 @@ interface FormPropsExtended extends FormProps<any> {
         error?: ModelerError
     ) => void;
     name?: string;
-    widgets?: { [name: string]: Widget | AutocompleteWidgetProps };
 }
 
 function ErrorListTemplate(props: ErrorListProps) {
