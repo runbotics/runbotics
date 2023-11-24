@@ -43,9 +43,7 @@ export class RuntimeSubscriptionsService {
                         created: dayjs().toISOString(),
                         processInstance: event.processInstance,
                         executionId: event.activity.executionId,
-                        input: this.sanitizeVariable(
-                            JSON.stringify({ ...desktopTask?.input })
-                        ),
+                        input: this.sanitizeVariable({ ...desktopTask?.input }),
                         status: event.eventType,
                         error: event.activity.content.error?.description,
                         script: desktopTask.input?.script,
@@ -142,9 +140,7 @@ export class RuntimeSubscriptionsService {
                         case ProcessInstanceEventStatus.STOPPED:
                         case ProcessInstanceEventStatus.ERRORED:
                             if (!this.isLoopSubprocess(event.activity, eventBehavior)) {
-                                processInstanceEvent.output = this.sanitizeVariable(
-                                    JSON.stringify({ ...desktopTask?.output })
-                                );
+                                processInstanceEvent.output = this.sanitizeVariable({ ...desktopTask?.output });
                             }
                             processInstanceEvent.finished =
                                 dayjs().toISOString();
@@ -201,7 +197,7 @@ export class RuntimeSubscriptionsService {
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
                         processInstance.input = this.sanitizeVariable(
-                            JSON.stringify({ variables: event.processInstance.variables })
+                            { variables: event.processInstance.variables }
                         );
                     } catch (e) {
                         this.logger.error('Error preparing input');
@@ -225,12 +221,10 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = this.sanitizeVariable(
-                            JSON.stringify({
-                                output: event.processInstance.output,
-                                variables: variables,
-                            })
-                        );
+                        processInstance.output = this.sanitizeVariable({
+                            output: event.processInstance.output,
+                            variables: variables,
+                        });
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({
@@ -249,7 +243,8 @@ export class RuntimeSubscriptionsService {
         });
     }
 
-    private sanitizeVariable(variableToCheck: string): string {
+    private sanitizeVariable(variable: any): string {
+        const variableToCheck: string = JSON.stringify(variable);
         if (variableToCheck && variableToCheck.length > 10000)
             return JSON.stringify({ message: 'Exceeded max length' });
         return variableToCheck;
