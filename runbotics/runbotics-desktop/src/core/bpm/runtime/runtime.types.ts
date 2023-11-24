@@ -25,6 +25,8 @@ export interface IActivityEventData {
 }
 
 export interface DesktopTask extends BpmnExecutionEventMessageContent {
+    name?: string;
+    sourceId?: string;
     input?: Record<string, string> & {
         script: string;
     };
@@ -68,6 +70,9 @@ export interface BpmnExecutionEventMessageContentError {
 
 export interface BpmnExecutionEventMessageExtendedContent extends BpmnExecutionEventMessageContent {
     error?: BpmnExecutionEventMessageContentError;
+    isSequenceFlow: boolean;
+    sequenceId: string;
+    sourceId: string;
 }
 
 export interface BpmnExecutionEventMessageExtendedApi extends BpmnExecutionEventMessageApi {

@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { IoClient, IoClientModule } from 'nestjs-io-client';
+import { IoClientModule } from 'nestjs-io-client';
 import { AuthService } from './auth/auth.service';
 
 import { ConfigModule, ServerConfigService } from '#config';

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
 export const FlowLabelFormStyled = styled.div`
-    margin: 12px 0;
+    width: 100%;
+    margin-bottom: 6px;
 `;

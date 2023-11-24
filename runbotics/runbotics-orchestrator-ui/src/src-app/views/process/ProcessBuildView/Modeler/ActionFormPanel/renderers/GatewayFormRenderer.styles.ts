@@ -17,3 +17,10 @@ export const GatewayFormMenu = styled.div`
     margin: 20px 10px;
     padding-right: 12px;
 `;
+
+export const GatewayTitle = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+`
