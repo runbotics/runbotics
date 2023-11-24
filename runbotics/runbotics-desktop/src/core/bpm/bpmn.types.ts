@@ -1,6 +1,6 @@
 import { BpmnEngine, BpmnEngineExecutionEnvironment } from 'bpmn-engine';
 
-interface IBehaviour {
+export interface IBehaviour {
     $type: string;
     id: string;
     actionId: string;
