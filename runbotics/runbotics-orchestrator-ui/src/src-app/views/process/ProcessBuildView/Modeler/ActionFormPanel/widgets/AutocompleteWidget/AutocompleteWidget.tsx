@@ -4,6 +4,11 @@ import { TextField, Autocomplete } from '@mui/material';
 
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
+const inputDetailsDefault = {
+    isComplete: true,
+    replacePart: ''
+};
+
 const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     disabled,
     autocompleteOptions,
@@ -20,6 +25,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     autofocus,
 }) => {
     const [open, setOpen] = useState(false);
+    const [inputDetails, setInputDetails] = useState(inputDetailsDefault);
     const optionValues = React.useMemo(
         () => ({
             'ui:options': Object.values(autocompleteOptions).map((option) => option.value),
@@ -27,11 +33,42 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         [autocompleteOptions]
     );
 
+    const analyzeInput = (input: string) => {
+        const variableRegex = /[#$]\{([^{}]*)\}?/g;
+        if (!input) return inputDetailsDefault;
+
+        const matches = [...input.matchAll(variableRegex)];
+        if (!matches.length) return inputDetailsDefault;
+
+        const autocompleteResult = matches.find(match => !(optionValues['ui:options'].includes(match[0])));
+        if (autocompleteResult) {
+            return {
+                isComplete: false,
+                replacePart: autocompleteResult[0]
+            };
+        }
+        return inputDetailsDefault;
+    };
+
+    const checkNestedVariables = (input: string) => {
+        const characters = input.split('');
+        let openBracketNumber = 0;
+
+        for (const char of characters) {
+            if (char === '{') openBracketNumber++;
+            else if (char === '}') openBracketNumber = 0;
+
+            if (openBracketNumber > 1) return true;
+        };
+        return false;
+    };
+
     const handleInputChange = (event: any, newInputValue: string) => {
         if (
             event &&
             newInputValue &&
-            (newInputValue.startsWith('$') || newInputValue.startsWith('#'))
+            !checkNestedVariables(newInputValue) &&
+            !analyzeInput(newInputValue).isComplete
         ) {
             setOpen(true);
         } else {
@@ -43,7 +80,8 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         setOpen(false);
     };
 
-    const handleChange = (event: any, newValue: any) => {
+    const handleChange = (event: any, newValue: string) => {
+        setInputDetails(analyzeInput(newValue));
         if (handleEvent) {
             onChange(event);
         } else {
@@ -51,22 +89,44 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }
     };
 
+    const handleAutocomplete = (event: any, newValue: string) => {
+        if (newValue === null) {
+            onChange('');
+            return;
+        }
+
+        if (newValue !== '') {
+            let targetReplace = inputDetails.replacePart;
+            if (targetReplace.charAt(targetReplace.length - 1) === '}') {
+                targetReplace = targetReplace.slice(0, -1);
+            }
+
+            const assertionRegex = new RegExp(`\\${targetReplace}($|})`);
+            const replacedValue = value.replace(assertionRegex, newValue);
+            onChange(replacedValue || undefined);
+        }
+    };
+
     return (
         <Autocomplete
             fullWidth
-            autoSelect
-            autoComplete
             disableCloseOnSelect={false}
-            autoHighlight
             open={open}
             freeSolo
             value={value || ''}
-            onChange={handleChange}
+            onChange={handleAutocomplete}
             onClose={handleOnClose}
             disabled={disabled}
             groupBy={(option) => autocompleteOptions[option].group}
             onInputChange={handleInputChange}
             options={optionValues['ui:options'] as any[]}
+            filterOptions={(options, _) => options.filter(option => {
+                const targetPart = inputDetails.replacePart;
+                const targetReplace = targetPart.charAt(targetPart.length - 1) === '}'
+                    ? targetPart.slice(0, -1) : targetPart;
+
+                return option.includes(targetReplace);
+            })}
             renderInput={(params) => (
                 <TextField
                     {...params}
