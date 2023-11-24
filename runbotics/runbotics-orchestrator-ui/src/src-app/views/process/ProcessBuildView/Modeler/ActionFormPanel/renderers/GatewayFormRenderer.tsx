@@ -1,12 +1,16 @@
 import React, { ChangeEvent } from 'react';
 
-import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
+import useOptions from '#src-app/hooks/useOptions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
+
+import AutocompleteWidget
+    from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget';
 
 import { FlowExpression, GatewayFormMenu, GatewayTitle } from './GatewayFormRenderer.styles';
 
@@ -17,6 +21,7 @@ import FlowLabelForm from '../FlowLabelForm';
 
 const GatewayFormRenderer = () => {
     const theme = useTheme();
+    const { options } = useOptions();
     const { selectedElement } = useSelector(state => state.process.modeler);
     const { modeler } = useModelerContext();
     const gateway = selectedElement as IBpmnGateway;
@@ -145,16 +150,18 @@ const GatewayFormRenderer = () => {
                                 onCancel={() => handleCancel(outgoing)}
                                 onFocus={handleOnFocus}
                             />
-                            <TextField
-                                fullWidth
+                            <AutocompleteWidget
+                                handleEvent={true}
+                                onChange={handleExpressionChange}
+                                autocompleteOptions={options}
+                                handleOnBlur={handleOnBlur}
+                                handleOnFocus={handleOnFocus}
                                 label={`${translate(
                                     'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
                                 )}`}
-                                name={outgoing.id}
+                                autofocus={true}
                                 value={outgoing.businessObject.conditionExpression?.body}
-                                onChange={handleExpressionChange}
-                                onBlur={handleOnBlur}
-                                onFocus={handleOnFocus}
+                                name={outgoing.id}
                             />
                         </FlowExpression>
                     ))

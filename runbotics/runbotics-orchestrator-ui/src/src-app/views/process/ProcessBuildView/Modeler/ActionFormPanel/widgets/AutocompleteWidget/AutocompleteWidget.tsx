@@ -12,7 +12,11 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     value,
     customErrors,
     rawErrors,
-    onChange
+    onChange,
+    handleEvent,
+    handleOnBlur,
+    handleOnFocus,
+    name,
 }) => {
     const [open, setOpen] = useState(false);
     const optionValues = React.useMemo(
@@ -39,8 +43,13 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     };
 
     const handleChange = (event: any, newValue: any) => {
-        onChange(newValue || undefined);
+        if (handleEvent) {
+            onChange(event);
+        } else {
+            onChange(newValue || undefined);
+        }
     };
+
     return (
         <Autocomplete
             fullWidth
@@ -63,10 +72,14 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     variant="outlined"
                     required={required}
                     label={label}
+                    name={name ? name : label}
                     onChange={(event) => handleChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
+                    onBlur={handleOnBlur}
+                    onFocus={handleOnFocus}
+                    autoFocus={true}
                 />
             )}
         />
