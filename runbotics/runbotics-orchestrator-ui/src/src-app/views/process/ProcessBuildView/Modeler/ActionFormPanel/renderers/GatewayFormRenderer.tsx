@@ -8,7 +8,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-import { FlowExpression, GatewayFormMenu } from './GatewayFormRenderer.styles';
+import { FlowExpression, GatewayFormMenu, GatewayTitle } from './GatewayFormRenderer.styles';
 
 import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../helpers/elementParameters';
 
@@ -23,7 +23,7 @@ const GatewayFormRenderer = () => {
     const { translate } = useTranslations();
 
     const [defaultFlow, setDefaultFlow] = React.useState(gateway.businessObject.default?.id);
-    
+
     const createInitExpressions = () =>
         gateway.outgoing.reduce((initExpressions, flow) => {
             const expression = flow.businessObject.conditionExpression?.body;
@@ -32,14 +32,14 @@ const GatewayFormRenderer = () => {
             }
             return initExpressions;
         }, {});
-    
+
     const [expressions, setExpressions] = React.useState(createInitExpressions());
-    
+
     const setDefaultConnection = (outgoing: IBpmnConnection) => {
         setDefaultFlow(outgoing.id);
         BpmnConnectionFactory.from(modeler).setDefaultConnection(outgoing, gateway);
     };
-    
+
     const handleFlowChanged = (value: string, id: string) => {
         gateway.outgoing.forEach((outgoing) => {
             if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
@@ -47,12 +47,12 @@ const GatewayFormRenderer = () => {
                     outgoing,
                     value
                 );
-                setExpressions({...expressions, [id]: value});
+                setExpressions({ ...expressions, [id]: value });
             }
         });
     };
-    
-    const getOutgoingById = (id: string) => 
+
+    const getOutgoingById = (id: string) =>
         gateway.outgoing.find((outgoing) => outgoing.id === id);
 
     const handleOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -61,18 +61,18 @@ const GatewayFormRenderer = () => {
             BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.primary.main);
         }
     };
-    
+
     const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const outgoing = getOutgoingById(event.target.name);
         if (outgoing) {
             BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.common.black);
         }
     };
-    
+
     const handleExpressionChange = (event: ChangeEvent<HTMLInputElement>) => {
         handleFlowChanged(event.target.value, event.target.name);
     };
-    
+
     const handleDefaultFlowChange = (event: ChangeEvent<HTMLInputElement>) => {
         gateway.outgoing.forEach((outgoing) => {
             if (event.target.value === outgoing.id && expressions) {
@@ -84,12 +84,12 @@ const GatewayFormRenderer = () => {
             }
         });
     };
-    
+
     const handleConnectionNameChange = (inputValue: string, flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionName(flow, inputValue);
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
-    
+
     const handleNameChange = (inputValue: string) => {
         BpmnConnectionFactory.from(modeler).setGatewayName(gateway, inputValue);
     };
@@ -97,11 +97,12 @@ const GatewayFormRenderer = () => {
     const handleCancel = (flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
-    
+
     return (
         <>
+
             <Grid item xs={12}>
-                <Box px={2} pt={1}>
+                <GatewayTitle>
                     <Typography variant="h4" gutterBottom>
                         <FlowLabelForm
                             formLabel={translate('Process.Details.Modeler.ActionPanel.Form.GatewayName.Title')}
@@ -109,15 +110,16 @@ const GatewayFormRenderer = () => {
                             selectedElement={gateway}
                         />
                     </Typography>
-                </Box>
+                </GatewayTitle>
             </Grid>
             <GatewayFormMenu>
                 <FormControl fullWidth>
-                    <InputLabel id="default-flow-select-input-label">{
-                        translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow')}
+                    <InputLabel id="default-flow-select-input-label">
+                        {translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow')}
                     </InputLabel>
                     <Select
-                        labelId="default-flow-select-label"
+                        labelId="default-flow-select-input-label"
+                        label={translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow')}
                         id="default-flow-select"
                         value={defaultFlow}
                         onChange={handleDefaultFlowChange}
@@ -138,7 +140,7 @@ const GatewayFormRenderer = () => {
                         <FlowExpression key={'flow-expression-' + outgoing.id}>
                             <FlowLabelForm
                                 formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
-                                onSubmit={(name) => handleConnectionNameChange(name, outgoing)} 
+                                onSubmit={(name) => handleConnectionNameChange(name, outgoing)}
                                 selectedElement={outgoing}
                                 onCancel={() => handleCancel(outgoing)}
                                 onFocus={handleOnFocus}

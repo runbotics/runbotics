@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
 import { WebsocketService } from '../websocket.service';
+import { StorageService } from '#config';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
@@ -23,7 +24,8 @@ export class RuntimeSubscriptionsService {
         @Inject(forwardRef(() => WebsocketService))
         private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
-        private readonly loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService,
+        private readonly storageService: StorageService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -83,9 +85,16 @@ export class RuntimeSubscriptionsService {
                             processInstanceEvent.step =
                                 ProcessInstanceStep.START;
                             break;
-                        case BpmnElementType.EXCLUSIVE_GATEWAY:
-                            processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = 'Gateway';
+                        case BpmnElementType.SEQUENCE_FLOW:
+                            // eslint-disable-next-line no-case-declarations
+                            const gatewayName = this.storageService.getValue(desktopTask.sourceId);
+                            // eslint-disable-next-line no-case-declarations
+                            const sequenceName = desktopTask.name ? desktopTask.name : desktopTask.id;
+
+                            processInstanceEvent.log = `SequenceFlow (after Gateway): ${event.activity.content.type} ${event.eventType}`;
+                            processInstanceEvent.step = `${gatewayName}: ${sequenceName}`;
+                            processInstanceEvent.executionId = event.activity.content.sequenceId;
+                            this.storageService.removeValue(desktopTask.sourceId);
                             break;
                         case BpmnElementType.SUBPROCESS:
                             //eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -146,6 +155,7 @@ export class RuntimeSubscriptionsService {
                         this.loopHandlerService.isLoopEvent(event.activity)
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT;
+
                     //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     //@ts-ignore
                     const message: Message = {

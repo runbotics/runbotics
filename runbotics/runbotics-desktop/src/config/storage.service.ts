@@ -1,34 +1,28 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '../logger/RunboticsLogger';
 
 @Injectable()
 export class StorageService {
     private readonly logger = new RunboticsLogger(StorageService.name);
-    private memory: Record<string, any> = {};
+    private readonly storage: Map<string, string>;
 
-    constructor() {}
-
-    public removeItem(key: string): Promise<void> {
-        return new Promise<void>(async (resolve) => {
-            delete this.memory[key];
-            resolve();
-        });
+    constructor() {
+        if (!this.storage) {
+            this.storage = new Map<string, string>();
+        }
     }
 
-    public setItem(key: string, value: any): Promise<any> {
+    setValue(key: string, value: string): void {
         this.logger.log('Setting item in storage ' + key);
-
-        return new Promise<any>(async (resolve) => {
-            this.memory[key] = value;
-            resolve({});
-        });
+        this.storage.set(key, value);
     }
 
-    public getItem(key: string, initialValue?: any): Promise<any> {
+    getValue(key: string): string {
         this.logger.log('Getting item from storage ' + key);
-        return new Promise(async (resolve) => {
-            const result = this.memory[key];
-            resolve(result);
-        });
+        return this.storage.get(key);
+    }
+
+    removeValue(key: string): void {
+        this.storage.delete(key);
     }
 }
