@@ -1,7 +1,12 @@
 import React, { FC, useState } from 'react';
 
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { TextField, Autocomplete } from '@mui/material';
 
+import If from '#src-app/components/utils/If';
+
+import { StyledBox, StyledButton } from './AutocompleteWidget.styles';
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
 const inputDetailsDefault = {
@@ -9,6 +14,7 @@ const inputDetailsDefault = {
     replacePart: ''
 };
 
+// eslint-disable-next-line max-lines-per-function
 const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     disabled,
     autocompleteOptions,
@@ -26,6 +32,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [inputDetails, setInputDetails] = useState(inputDetailsDefault);
+    const [isExternalOpen, setIsExternalOpen] = useState(false);
     const optionValues = React.useMemo(
         () => ({
             'ui:options': Object.values(autocompleteOptions).map((option) => option.value),
@@ -95,6 +102,13 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
             return;
         }
 
+        if (isExternalOpen) {
+            const replacedValue = value + newValue;
+            onChange(replacedValue);
+            setIsExternalOpen(false);
+            return;
+        }
+
         if (newValue !== '') {
             let targetReplace = inputDetails.replacePart;
             if (targetReplace.charAt(targetReplace.length - 1) === '}') {
@@ -107,43 +121,62 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }
     };
 
-    return (
-        <Autocomplete
-            fullWidth
-            disableCloseOnSelect={false}
-            open={open}
-            freeSolo
-            value={value || ''}
-            onChange={handleAutocomplete}
-            onClose={handleOnClose}
-            disabled={disabled}
-            groupBy={(option) => autocompleteOptions[option].group}
-            onInputChange={handleInputChange}
-            options={optionValues['ui:options'] as any[]}
-            filterOptions={(options, _) => options.filter(option => {
-                const targetPart = inputDetails.replacePart;
-                const targetReplace = targetPart.charAt(targetPart.length - 1) === '}'
-                    ? targetPart.slice(0, -1) : targetPart;
+    const handleExternalOpen = () => {
+        setInputDetails(prevState => ({ ...prevState, replacePart: '' }));
+        setIsExternalOpen(!isExternalOpen);
+    };
 
-                return option.includes(targetReplace);
-            })}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    variant="outlined"
-                    required={required}
-                    label={label}
-                    name={name ? name : label}
-                    onChange={(event) => handleChange(event, event.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    error={Boolean(customErrors) || Boolean(rawErrors)}
-                    helperText={customErrors ? customErrors[0] : null}
-                    onBlur={handleOnBlur}
-                    onFocus={handleOnFocus}
-                    autoFocus={autofocus ?? true}
-                />
-            )}
-        />
+    return (
+        <StyledBox>
+            <Autocomplete
+                fullWidth
+                disableCloseOnSelect={false}
+                open={open || isExternalOpen}
+                freeSolo
+                value={value || ''}
+                // name={name ? name : label}
+                onChange={handleAutocomplete}
+                onClose={handleOnClose}
+                onBlur={handleOnBlur}
+                onFocus={handleOnFocus}
+                autoFocus={autofocus ?? true}
+                disabled={disabled}
+                groupBy={(option) => autocompleteOptions[option].group}
+                onInputChange={handleInputChange}
+                options={optionValues['ui:options'] as any[]}
+                filterOptions={(options, _) => options.filter(option => {
+                    const targetPart = inputDetails.replacePart;
+                    const targetReplace = targetPart.charAt(targetPart.length - 1) === '}'
+                        ? targetPart.slice(0, -1) : targetPart;
+
+                    return option.includes(targetReplace);
+                })}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        required={required}
+                        label={label}
+                        onChange={(event) => handleChange(event, event.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                        error={Boolean(customErrors) || Boolean(rawErrors)}
+                        helperText={customErrors ? customErrors[0] : null}
+                    />
+                )}
+            />
+            <StyledButton
+                variant='contained'
+                color='secondary'
+                onClick={handleExternalOpen}
+            >
+                <If
+                    condition={isExternalOpen}
+                    else={<KeyboardArrowUpIcon/>}
+                >
+                    <KeyboardArrowDownIcon/>
+                </If>
+            </StyledButton>
+        </StyledBox>
     );
 };
 
