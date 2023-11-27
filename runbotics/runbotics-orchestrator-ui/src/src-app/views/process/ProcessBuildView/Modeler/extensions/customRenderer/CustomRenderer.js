@@ -114,7 +114,7 @@ export default class CustomRenderer extends BaseRenderer {
 
             svgAppend(parentNode, text);
 
-            if (label.title !== '') {
+            if (label.title !== '' && !label.actionId.startsWith('external.')) {
                 svgAppend(
                     actionName,
                     document.createTextNode(
