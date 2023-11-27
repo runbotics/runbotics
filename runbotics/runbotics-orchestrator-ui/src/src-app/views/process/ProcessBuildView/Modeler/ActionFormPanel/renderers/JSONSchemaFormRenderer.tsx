@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import { Box, Button, Grid, Alert } from '@mui/material';
-import { ErrorListProps, FormProps, IChangeEvent, withTheme } from '@rjsf/core';
+import { ErrorListProps, FormProps, IChangeEvent, Widget, withTheme } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import _ from 'lodash';
 
