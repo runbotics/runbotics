@@ -18,7 +18,7 @@ import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../help
 
 import FlowLabelForm from '../FlowLabelForm';
 
-
+// eslint-disable-next-line max-lines-per-function
 const GatewayFormRenderer = () => {
     const theme = useTheme();
     const { options } = useOptions();
@@ -105,7 +105,6 @@ const GatewayFormRenderer = () => {
 
     return (
         <>
-
             <Grid item xs={12}>
                 <GatewayTitle>
                     <Typography variant="h4" gutterBottom>
@@ -151,6 +150,7 @@ const GatewayFormRenderer = () => {
                                 onFocus={handleOnFocus}
                             />
                             <AutocompleteWidget
+                                id={'autocomplete-text-field-' + outgoing.id}
                                 handleEvent={true}
                                 onChange={handleExpressionChange}
                                 autocompleteOptions={options}
@@ -164,6 +164,18 @@ const GatewayFormRenderer = () => {
                                 disabled={false}
                                 required={false}
                                 autofocus={false}
+                                readonly={false}
+                                multiple={false}
+                                // WidgetProps required to be passed to the AutocompleteWidget
+                                schema={{}}
+                                uiSchema={{}}
+                                rawErrors={null}
+                                placeholder={''}
+                                options={{}}
+                                formContext={{}}
+                                registry={null}
+                                onBlur={null}
+                                onFocus={null}
                             />
                         </FlowExpression>
                     ))
