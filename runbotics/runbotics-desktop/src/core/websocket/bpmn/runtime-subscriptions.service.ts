@@ -247,7 +247,7 @@ export class RuntimeSubscriptionsService {
         const variableToCheck: string = JSON.stringify(variable);
         if (variableToCheck && variableToCheck.length > 100_000)
             return JSON.stringify(
-                { message: 'Exceeded max length', partOfResponse: variableToCheck.slice(0, 100_000)}
+                { message: 'Exceeded max length', partialResponse: variableToCheck.slice(0, 100_000)}
             );
         return variableToCheck;
     }
