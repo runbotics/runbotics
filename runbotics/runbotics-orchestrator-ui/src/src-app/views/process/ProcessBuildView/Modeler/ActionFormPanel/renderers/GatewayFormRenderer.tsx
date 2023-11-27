@@ -164,18 +164,6 @@ const GatewayFormRenderer = () => {
                                 disabled={false}
                                 required={false}
                                 autofocus={false}
-                                readonly={false}
-                                multiple={false}
-                                // WidgetProps required to be passed to the AutocompleteWidget
-                                schema={{}}
-                                uiSchema={{}}
-                                rawErrors={null}
-                                placeholder={''}
-                                options={{}}
-                                formContext={{}}
-                                registry={null}
-                                onBlur={null}
-                                onFocus={null}
                             />
                         </FlowExpression>
                     ))

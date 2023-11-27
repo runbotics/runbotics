@@ -2,7 +2,7 @@ import { WidgetProps } from '@rjsf/core';
 
 import { Options } from '#src-app/hooks/useOptions';
 
-export interface AutocompleteWidgetProps extends WidgetProps {
+export interface AutocompleteWidgetProps extends Partial<WidgetProps> {
     customErrors?: string[];
     autocompleteOptions: Options;
     handleEvent?: boolean;
