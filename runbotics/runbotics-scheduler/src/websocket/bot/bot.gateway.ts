@@ -20,7 +20,6 @@ import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
-import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/database/process/process.service';
@@ -38,7 +37,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botProcessEventService: BotProcessEventService,
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
-        private readonly botLifecycleService: BotLifecycleService,
         private readonly guestService: GuestService,
         private readonly mailService: MailService,
         private readonly processService: ProcessService,
