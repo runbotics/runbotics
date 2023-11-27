@@ -37,7 +37,8 @@ USER node
 # Set necessary environment variables.
 ENV NODE_ENV=production \
     NPM_CONFIG_PREFIX=/home/node/.npm-global \
-    PATH=$PATH:/home/node/.npm-global/bin:/home/node/node_modules/.bin:$PATH
+    PATH=$PATH:/home/node/.npm-global/bin:/home/node/node_modules/.bin:$PATH \
+    NODE_OPTIONS=--max_old_space_size=4096
 
 # Change ownership of the working directory to the node:node user:group
 # This ensures that npm install can be executed successfully with the correct permissions
