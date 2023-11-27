@@ -4,7 +4,7 @@ import { Options } from '#src-app/hooks/useOptions';
 
 export interface AutocompleteWidgetProps extends Partial<WidgetProps> {
     customErrors?: string[];
-    autocompleteOptions: Options;
+    autocompleteOptions?: Options;
     handleEvent?: boolean;
     name?: string;
     handleOnFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
