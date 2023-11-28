@@ -5,6 +5,7 @@ import { IProcessInstance } from './process-instance.model';
 
 export interface ProcessInput {
     variables: Record<string, any>;
+    notificationUrl?: string;
 }
 
 export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;

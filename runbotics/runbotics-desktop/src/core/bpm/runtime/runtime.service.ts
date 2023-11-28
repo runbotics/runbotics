@@ -141,6 +141,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             id: processInstanceId,
             status: ProcessInstanceStatus.INITIALIZING,
             ...(request.userId && { user: { id: request.userId } }),
+            ...(request.notificationUrl && {
+                processInstanceNotification: {
+                    notificationUrl: request.notificationUrl,
+                },
+            }),
         };
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
@@ -296,6 +301,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 const processInstance = {
                     ...this.processInstances[processInstanceId],
                     status: ProcessInstanceStatus.ERRORED,
+                    error: error.message,
                 };
 
                 // TODO need to fine real output

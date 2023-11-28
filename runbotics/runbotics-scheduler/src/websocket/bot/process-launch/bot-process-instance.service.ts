@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceNotification, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { Connection } from 'typeorm';
+import Axios from 'axios';
 
 import { Logger } from '#/utils/logger';
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
@@ -50,7 +51,7 @@ export class BotProcessService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
-            
+
             if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
             }
@@ -72,6 +73,7 @@ export class BotProcessService {
             await queryRunner.release();
         }
     }
+
     async handleAdditionalProcessInstanceInfos(processInstance: IProcessInstance) {
         if (!processInstance.rootProcessInstanceId) {
             this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
@@ -85,9 +87,30 @@ export class BotProcessService {
     async updateProcessLastRunTime(processInstance: IProcessInstance) {
         if (!processInstance?.process?.id) return;
         const process = await this.processService.findById(processInstance.process.id);
-        
+
         if (process && processInstance.created) {
             await this.processService.partialUpdate({ id: process.id, lastRun: processInstance.created });
+        }
+    }
+
+    async notifyAboutProcessInstanceStatus(processInstance: IProcessInstance) {
+        const statusList = [
+            ProcessInstanceStatus.INITIALIZING,
+            ProcessInstanceStatus.COMPLETED,
+            ProcessInstanceStatus.TERMINATED,
+            ProcessInstanceStatus.ERRORED,
+        ];
+
+        if (statusList.includes(processInstance.status)) {
+            const processInstanceNotification: ProcessInstanceNotification = {
+                status: processInstance?.status,
+                updated: processInstance?.updated,
+                output: processInstance?.output,
+                process: processInstance?.process,
+                error: processInstance?.error,
+            };
+
+            await Axios.post(processInstance?.notificationUrl, processInstanceNotification);
         }
     }
 

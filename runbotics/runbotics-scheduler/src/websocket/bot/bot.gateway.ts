@@ -114,6 +114,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             this.logger.log('Restored user\'s executions-count because of process interruption');
         }
 
+        if (processInstance?.notificationUrl) {
+            await this.botProcessService.notifyAboutProcessInstanceStatus(processInstance);
+        }
+
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
         return HttpStatus.OK;

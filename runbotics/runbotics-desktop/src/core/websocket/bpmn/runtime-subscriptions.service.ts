@@ -182,6 +182,7 @@ export class RuntimeSubscriptionsService {
                 updated: dayjs().toISOString(),
                 process: {
                     id: Number(event.processInstance.process.id),
+                    name: event.processInstance.process.name,
                 },
                 user: event.processInstance.user,
                 rootProcessInstanceId:
@@ -189,6 +190,7 @@ export class RuntimeSubscriptionsService {
                 trigger: event.processInstance.trigger,
                 triggerData: event.processInstance.triggerData,
                 error: event.processInstance.error,
+                notificationUrl: event.processInstance.notificationUrl,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:

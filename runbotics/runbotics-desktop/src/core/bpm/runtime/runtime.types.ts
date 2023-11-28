@@ -43,6 +43,7 @@ export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnviro
 
 export interface IProcessParams {
     variables: Record<string, any>;
+    notificationUrl?: string;
 }
 
 export interface IStartProcessInstance extends IProcessParams, Omit<StartProcessMessageBody, 'processId' | 'input'> {
