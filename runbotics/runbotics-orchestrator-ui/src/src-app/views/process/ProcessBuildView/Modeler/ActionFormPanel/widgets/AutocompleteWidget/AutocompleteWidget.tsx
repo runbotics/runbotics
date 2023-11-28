@@ -133,12 +133,8 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
             open={open || isExternalOpen}
             freeSolo
             value={value || ''}
-            // name={name ? name : label}
             onChange={handleAutocomplete}
             onClose={handleOnClose}
-            onBlur={handleOnBlur}
-            onFocus={handleOnFocus}
-            autoFocus={autofocus ?? true}
             disabled={disabled}
             groupBy={(option) => autocompleteOptions[option].group}
             onInputChange={handleInputChange}
@@ -156,6 +152,10 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     variant="outlined"
                     required={required}
                     label={label}
+                    name={name ? name : label}
+                    onBlur={handleOnBlur}
+                    onFocus={handleOnFocus}
+                    autoFocus={autofocus ?? true}
                     onChange={(event) => handleChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
