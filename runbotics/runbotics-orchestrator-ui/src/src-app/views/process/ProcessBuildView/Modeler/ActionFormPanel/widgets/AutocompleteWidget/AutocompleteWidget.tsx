@@ -95,7 +95,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         } else {
             onChange(newValue || undefined);
         }
-    }
+    };
 
     const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => {
         setInputAutocompleteState(checkInputMatches(newValue));
@@ -123,7 +123,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
 
             const assertionRegex = new RegExp(`\\${targetReplace}($|})`);
             const replacedValue = value.replace(assertionRegex, newValue);
-            onChange(replacedValue || undefined);
+            handleChange(replacedValue);
         }
     };
 

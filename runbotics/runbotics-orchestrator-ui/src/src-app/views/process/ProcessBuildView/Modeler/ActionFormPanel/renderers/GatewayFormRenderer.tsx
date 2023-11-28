@@ -162,7 +162,7 @@ const GatewayFormRenderer = () => {
                                 label={`${translate(
                                     'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
                                 )}`}
-                                value={outgoing.businessObject.conditionExpression?.body}
+                                value={outgoing.businessObject.conditionExpression?.body ?? ''}
                                 name={outgoing.id}
                                 disabled={false}
                                 required={false}
