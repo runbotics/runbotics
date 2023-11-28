@@ -11,6 +11,9 @@ import { useSelector } from '#src-app/store';
 
 import AutocompleteWidget
     from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget';
+import {
+    NewValueWithName
+} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget/AutocompleteWidget.types';
 
 import { FlowExpression, GatewayFormMenu, GatewayTitle } from './GatewayFormRenderer.styles';
 
@@ -74,8 +77,8 @@ const GatewayFormRenderer = () => {
         }
     };
 
-    const handleExpressionChange = (event: ChangeEvent<HTMLInputElement>) => {
-        handleFlowChanged(event.target.value, event.target.name);
+    const handleExpressionChange = (newValueWithName: NewValueWithName) => {
+        handleFlowChanged(newValueWithName.value, newValueWithName.name);
     };
 
     const handleDefaultFlowChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -151,7 +154,7 @@ const GatewayFormRenderer = () => {
                             />
                             <AutocompleteWidget
                                 id={'autocomplete-text-field-' + outgoing.id}
-                                handleEvent={true}
+                                withName={true}
                                 onChange={handleExpressionChange}
                                 autocompleteOptions={options}
                                 handleOnBlur={handleOnBlur}

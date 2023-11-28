@@ -23,7 +23,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     customErrors,
     rawErrors,
     onChange,
-    handleEvent,
+    withName,
     handleOnBlur,
     handleOnFocus,
     name,
@@ -86,24 +86,31 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         setOpen(false);
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => {
-        setInputAutocompleteState(checkInputMatches(newValue));
-        if (handleEvent) {
-            onChange(event);
+    const handleChange = (newValue: string) => {
+        if (withName) {
+            onChange({
+                name,
+                value: newValue
+            });
         } else {
             onChange(newValue || undefined);
         }
+    }
+
+    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => {
+        setInputAutocompleteState(checkInputMatches(newValue));
+        handleChange(newValue || undefined);
     };
 
     const handleAutocomplete = (event: React.ChangeEvent<HTMLSelectElement>, newValue: string) => {
         if (newValue === null) {
-            onChange('');
+            handleChange('');
             return;
         }
 
         if (isExternalOpen) {
             const replacedValue = value + newValue;
-            onChange(replacedValue);
+            handleChange(replacedValue);
             setIsExternalOpen(false);
             return;
         }
@@ -156,7 +163,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     onBlur={handleOnBlur}
                     onFocus={handleOnFocus}
                     autoFocus={autofocus ?? true}
-                    onChange={(event) => handleChange(event, event.target.value)}
+                    onChange={(event) => handleTextChange(event, event.target.value)}
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
