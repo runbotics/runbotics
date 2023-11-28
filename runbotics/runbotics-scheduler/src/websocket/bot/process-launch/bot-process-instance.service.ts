@@ -95,7 +95,6 @@ export class BotProcessService {
 
     async notifyAboutProcessInstanceStatus(processInstance: IProcessInstance) {
         const statusList = [
-            ProcessInstanceStatus.INITIALIZING,
             ProcessInstanceStatus.COMPLETED,
             ProcessInstanceStatus.TERMINATED,
             ProcessInstanceStatus.ERRORED,
@@ -104,13 +103,14 @@ export class BotProcessService {
         if (statusList.includes(processInstance.status)) {
             const processInstanceNotification: ProcessInstanceNotification = {
                 status: processInstance?.status,
-                updated: processInstance?.updated,
+                started: processInstance?.created,
+                finished: processInstance?.updated,
                 output: processInstance?.output,
                 process: processInstance?.process,
                 error: processInstance?.error,
             };
 
-            await Axios.post(processInstance?.notificationUrl, processInstanceNotification);
+            await Axios.post(processInstance?.callbackUrl, processInstanceNotification);
         }
     }
 

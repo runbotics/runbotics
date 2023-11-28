@@ -180,6 +180,7 @@ export class RuntimeSubscriptionsService {
                 // @ts-ignore
                 status: event.eventType.toString(),
                 updated: dayjs().toISOString(),
+                created: event.processInstance.created,
                 process: {
                     id: Number(event.processInstance.process.id),
                     name: event.processInstance.process.name,
@@ -190,11 +191,11 @@ export class RuntimeSubscriptionsService {
                 trigger: event.processInstance.trigger,
                 triggerData: event.processInstance.triggerData,
                 error: event.processInstance.error,
-                notificationUrl: event.processInstance.notificationUrl,
+                callbackUrl: event.processInstance.callbackUrl,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:
-                    processInstance.created = dayjs().toISOString();
+                    processInstance.created = processInstance.created ?? dayjs().toISOString();
                     break;
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {

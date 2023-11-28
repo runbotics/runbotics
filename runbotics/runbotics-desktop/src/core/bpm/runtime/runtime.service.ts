@@ -23,6 +23,7 @@ import {
     BpmnElementType,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 import { EventEmitter } from 'events';
 import { mkdirSync, rmSync } from 'fs';
 
@@ -140,12 +141,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...request,
             id: processInstanceId,
             status: ProcessInstanceStatus.INITIALIZING,
+            created: dayjs().toISOString(),
             ...(request.userId && { user: { id: request.userId } }),
-            ...(request.notificationUrl && {
-                processInstanceNotification: {
-                    notificationUrl: request.notificationUrl,
-                },
-            }),
+            ...(request.callbackUrl && { callbackUrl: request.callbackUrl }),
         };
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
