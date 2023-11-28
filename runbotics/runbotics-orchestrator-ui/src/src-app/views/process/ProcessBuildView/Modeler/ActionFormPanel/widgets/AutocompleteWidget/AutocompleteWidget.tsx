@@ -2,14 +2,13 @@ import React, { FC, useState } from 'react';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete, InputAdornment, IconButton } from '@mui/material';
 
 import If from '#src-app/components/utils/If';
 
-import { StyledBox, StyledButton } from './AutocompleteWidget.styles';
 import { AutocompleteWidgetProps } from './AutocompleteWidget.types';
 
-const inputDetailsDefault = {
+const INPUT_AUTOCOMPLETE_DEFAULT = {
     isComplete: true,
     replacePart: ''
 };
@@ -31,7 +30,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     autofocus,
 }) => {
     const [open, setOpen] = useState(false);
-    const [inputDetails, setInputDetails] = useState(inputDetailsDefault);
+    const [inputAutocompleteState, setInputAutocompleteState] = useState(INPUT_AUTOCOMPLETE_DEFAULT);
     const [isExternalOpen, setIsExternalOpen] = useState(false);
     const optionValues = React.useMemo(
         () => ({
@@ -40,12 +39,12 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         [autocompleteOptions]
     );
 
-    const analyzeInput = (input: string) => {
+    const checkInputMatches = (input: string) => {
         const variableRegex = /[#$]\{([^{}]*)\}?/g;
-        if (!input) return inputDetailsDefault;
+        if (!input) return INPUT_AUTOCOMPLETE_DEFAULT;
 
         const matches = [...input.matchAll(variableRegex)];
-        if (!matches.length) return inputDetailsDefault;
+        if (!matches.length) return INPUT_AUTOCOMPLETE_DEFAULT;
 
         const autocompleteResult = matches.find(match => !(optionValues['ui:options'].includes(match[0])));
         if (autocompleteResult) {
@@ -54,7 +53,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                 replacePart: autocompleteResult[0]
             };
         }
-        return inputDetailsDefault;
+        return INPUT_AUTOCOMPLETE_DEFAULT;
     };
 
     const checkNestedVariables = (input: string) => {
@@ -75,7 +74,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
             event &&
             newInputValue &&
             !checkNestedVariables(newInputValue) &&
-            !analyzeInput(newInputValue).isComplete
+            !checkInputMatches(newInputValue).isComplete
         ) {
             setOpen(true);
         } else {
@@ -88,7 +87,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     };
 
     const handleChange = (event: any, newValue: string) => {
-        setInputDetails(analyzeInput(newValue));
+        setInputAutocompleteState(checkInputMatches(newValue));
         if (handleEvent) {
             onChange(event);
         } else {
@@ -110,7 +109,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }
 
         if (newValue !== '') {
-            let targetReplace = inputDetails.replacePart;
+            let targetReplace = inputAutocompleteState.replacePart;
             if (targetReplace.charAt(targetReplace.length - 1) === '}') {
                 targetReplace = targetReplace.slice(0, -1);
             }
@@ -122,61 +121,65 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     };
 
     const handleExternalOpen = () => {
-        setInputDetails(prevState => ({ ...prevState, replacePart: '' }));
+        setInputAutocompleteState(prevState => ({ ...prevState, replacePart: '' }));
         setIsExternalOpen(!isExternalOpen);
     };
 
     return (
-        <StyledBox>
-            <Autocomplete
-                fullWidth
-                disableCloseOnSelect={false}
-                open={open || isExternalOpen}
-                freeSolo
-                value={value || ''}
-                // name={name ? name : label}
-                onChange={handleAutocomplete}
-                onClose={handleOnClose}
-                onBlur={handleOnBlur}
-                onFocus={handleOnFocus}
-                autoFocus={autofocus ?? true}
-                disabled={disabled}
-                groupBy={(option) => autocompleteOptions[option].group}
-                onInputChange={handleInputChange}
-                options={optionValues['ui:options'] as any[]}
-                filterOptions={(options, _) => options.filter(option => {
-                    const targetPart = inputDetails.replacePart;
-                    const targetReplace = targetPart.charAt(targetPart.length - 1) === '}'
-                        ? targetPart.slice(0, -1) : targetPart;
+        <Autocomplete
+            fullWidth
+            disableCloseOnSelect={false}
+            disableClearable={true}
+            open={open || isExternalOpen}
+            freeSolo
+            value={value || ''}
+            // name={name ? name : label}
+            onChange={handleAutocomplete}
+            onClose={handleOnClose}
+            onBlur={handleOnBlur}
+            onFocus={handleOnFocus}
+            autoFocus={autofocus ?? true}
+            disabled={disabled}
+            groupBy={(option) => autocompleteOptions[option].group}
+            onInputChange={handleInputChange}
+            options={optionValues['ui:options'] as any[]}
+            filterOptions={(options, _) => options.filter(option => {
+                const targetPart = inputAutocompleteState.replacePart;
+                const targetReplace = targetPart.charAt(targetPart.length - 1) === '}'
+                    ? targetPart.slice(0, -1) : targetPart;
 
-                    return option.includes(targetReplace);
-                })}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="outlined"
-                        required={required}
-                        label={label}
-                        onChange={(event) => handleChange(event, event.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        error={Boolean(customErrors) || Boolean(rawErrors)}
-                        helperText={customErrors ? customErrors[0] : null}
-                    />
-                )}
-            />
-            <StyledButton
-                variant='contained'
-                color='secondary'
-                onClick={handleExternalOpen}
-            >
-                <If
-                    condition={isExternalOpen}
-                    else={<KeyboardArrowUpIcon/>}
-                >
-                    <KeyboardArrowDownIcon/>
-                </If>
-            </StyledButton>
-        </StyledBox>
+                return option.includes(targetReplace);
+            })}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    variant="outlined"
+                    required={required}
+                    label={label}
+                    onChange={(event) => handleChange(event, event.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                    error={Boolean(customErrors) || Boolean(rawErrors)}
+                    helperText={customErrors ? customErrors[0] : null}
+                    InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                            <InputAdornment position='end'>
+                                <IconButton
+                                    onClick={handleExternalOpen}
+                                >
+                                    <If
+                                        condition={isExternalOpen}
+                                        else={<KeyboardArrowUpIcon/>}
+                                    >
+                                        <KeyboardArrowDownIcon/>
+                                    </If>
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            )}
+        />
     );
 };
 
