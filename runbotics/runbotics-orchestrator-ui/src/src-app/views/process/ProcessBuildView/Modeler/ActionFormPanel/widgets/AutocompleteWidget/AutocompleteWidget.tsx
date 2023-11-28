@@ -40,13 +40,13 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     );
 
     const checkInputMatches = (input: string) => {
-        const variableRegex = /[#$]\{([^{}]*)\}?/g;
+        const variablesRegex = /[#$]\{([^{}]*)\}?/g;
         if (!input) return INPUT_AUTOCOMPLETE_DEFAULT;
 
-        const matches = [...input.matchAll(variableRegex)];
-        if (!matches.length) return INPUT_AUTOCOMPLETE_DEFAULT;
+        const incompleteVariables = [...input.matchAll(variablesRegex)];
+        if (!incompleteVariables.length) return INPUT_AUTOCOMPLETE_DEFAULT;
 
-        const autocompleteResult = matches.find(match => !(optionValues['ui:options'].includes(match[0])));
+        const autocompleteResult = incompleteVariables.find(variable => !(optionValues['ui:options'].includes(variable[0])));
         if (autocompleteResult) {
             return {
                 isComplete: false,
@@ -69,7 +69,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         return false;
     };
 
-    const handleInputChange = (event: any, newInputValue: string) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, newInputValue: string) => {
         if (
             event &&
             newInputValue &&
@@ -86,7 +86,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         setOpen(false);
     };
 
-    const handleChange = (event: any, newValue: string) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => {
         setInputAutocompleteState(checkInputMatches(newValue));
         if (handleEvent) {
             onChange(event);
@@ -95,7 +95,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }
     };
 
-    const handleAutocomplete = (event: any, newValue: string) => {
+    const handleAutocomplete = (event: React.ChangeEvent<HTMLSelectElement>, newValue: string) => {
         if (newValue === null) {
             onChange('');
             return;
@@ -129,7 +129,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         <Autocomplete
             fullWidth
             disableCloseOnSelect={false}
-            disableClearable={true}
+            disableClearable
             open={open || isExternalOpen}
             freeSolo
             value={value || ''}
