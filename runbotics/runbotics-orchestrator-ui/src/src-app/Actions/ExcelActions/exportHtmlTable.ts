@@ -4,10 +4,10 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { ActionSystem, IBpmnAction, Runner } from '../types';
 
-const getRangeToHtmlAction = (): IBpmnAction => ({
-    id: ExcelAction.RANGE_TO_HTML_TABLE,
-    label: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Label'),
-    script: ExcelAction.RANGE_TO_HTML_TABLE,
+const getActionExportHtmlTable = (): IBpmnAction => ({
+    id: ExcelAction.EXPORT_HTML_TABLE,
+    label: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Label'),
+    script: ExcelAction.EXPORT_HTML_TABLE,
     runner: Runner.DESKTOP_SCRIPT,
     system: ActionSystem.WINDOWS,
     output: {
@@ -25,16 +25,16 @@ const getRangeToHtmlAction = (): IBpmnAction => ({
                     type: 'object',
                     properties: {
                         filePath: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath'),
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.FilePath'),
                             type: 'string',
                         },
                         cellRange: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange'),
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange'),
                             type: 'string',
                             pattern: ActionRegex.EXCEL_CELL_RANGE,
                         },
                         headerRow: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow'),
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow'),
                             type: 'string',
                             pattern: ActionRegex.EXCEL_ROW_NUMBER,
                         },
@@ -50,7 +50,7 @@ const getRangeToHtmlAction = (): IBpmnAction => ({
                     type: 'object',
                     properties: {
                         variableName: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output'),
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output'),
                             type: 'string',
                             pattern: ActionRegex.VARIABLE_NAME,
                         }
@@ -63,17 +63,17 @@ const getRangeToHtmlAction = (): IBpmnAction => ({
             input: {
                 filePath: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.FilePath.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.FilePath.Info'),
                     },
                 },
                 cellRange: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.CellRange.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange.Info'),
                     },
                 },
                 headerRow: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.HeaderRow.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow.Info'),
                     },
                 },
                 worksheet: {
@@ -85,7 +85,7 @@ const getRangeToHtmlAction = (): IBpmnAction => ({
             output: {
                 variableName: {
                     'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.RangeToHtmlTable.Output.Info'),
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output.Info'),
                     },
                 },
             },
@@ -99,4 +99,4 @@ const getRangeToHtmlAction = (): IBpmnAction => ({
     },
 });
 
-export default getRangeToHtmlAction;
+export default getActionExportHtmlTable;

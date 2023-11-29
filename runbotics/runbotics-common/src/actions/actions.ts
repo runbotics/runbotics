@@ -206,7 +206,7 @@ export enum ExcelAction {
     SAVE = 'excel.save',
     CLOSE = 'excel.close',
     EXPORT_TO_CSV = 'excel.exportToCsv',
-    RANGE_TO_HTML_TABLE = 'excel.rangeToHtmlTable'
+    EXPORT_HTML_TABLE = 'excel.exportHtmlTable'
 }
 
 export enum DesktopAction {

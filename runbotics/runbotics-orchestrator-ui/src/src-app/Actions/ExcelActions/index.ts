@@ -4,6 +4,7 @@ import getActionCreateWorksheet from './createWorksheet';
 import getActionDeleteColumns from './deleteColumns';
 import getActionDeleteRows from './deleteRows';
 import getActionDeleteWorksheet from './deleteWorksheet';
+import getActionExportHtmlTable from './exportHtmlTable';
 import getActionExportToCsv from './exportToCsv';
 import getActionFindFirstEmptyRow from './findFirstEmptyRow';
 import getActionGetCell from './getCell';
@@ -13,7 +14,6 @@ import getActionInsertColumnsBefore from './insertColumnsBefore';
 import getActionInsertRowAfter from './insertRowAfter';
 import getActionInsertRowBefore from './insertRowBefore';
 import getActionOpen from './open';
-import getRangeToHtmlAction from './rangeToHtml';
 import getActionReadTable from './readTable';
 import getActionRenameWorksheet from './renameWorksheet';
 import getActionRunMacro from './runMacro';
@@ -47,7 +47,7 @@ const excelActions = {
     getActionDeleteRows,
     getActionRunMacro,
     getActionExportToCsv,
-    getRangeToHtmlAction
+    getActionExportHtmlTable
 };
 
 export default excelActions;
