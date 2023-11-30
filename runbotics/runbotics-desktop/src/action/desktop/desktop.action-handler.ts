@@ -83,6 +83,11 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     async type(input: DesktopTypeActionInput): Promise<void> {
+        if (typeof input.text === 'number') {
+            await keyboard.type(`${input.text}`);
+            return;
+        }
+
         const optionalKey = input.text.substring(KEY_REFERENCE.length);
         if (input.text.startsWith(KEY_REFERENCE) && Object.keys(Key).includes(optionalKey)) {
             await keyboard.type(Key[optionalKey]);
