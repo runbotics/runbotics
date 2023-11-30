@@ -92,12 +92,6 @@ function App(props: AppProps) {
 App.getInitialProps = async (context: AppContext) => {
     const pageProps = await NextApp.getInitialProps(context);
 
-    if (!isCached('en') || !isCached('pl')) {
-        await recreateCache();
-    } else {
-        context.ctx.res.setHeader('X-Cache', 'HIT');
-    }
-
     return {
         ...pageProps,
         runboticsEntrypointUrl: publicRuntimeConfig.runboticsEntrypointUrl,

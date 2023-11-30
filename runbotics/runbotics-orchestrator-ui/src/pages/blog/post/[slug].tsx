@@ -22,11 +22,13 @@ interface Params extends Record<string, string> {
     slug: string;
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, locale, res }) => {
     const language = locale as Language;
 
     if (!isCached(language)) {
         await recreateCache();
+    } else {
+        res.setHeader('X-Cache', 'HIT');
     }
 
     const post = getSinglePostCache(language, params.slug);

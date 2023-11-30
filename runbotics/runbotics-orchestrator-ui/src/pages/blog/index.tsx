@@ -2,7 +2,7 @@ import { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getBlogMainCache, recreateCache } from '#contentful/blog-main';
+import { getBlogMainCache, isCached, recreateCache } from '#contentful/blog-main';
 
 import {
     BlogPost,
@@ -42,9 +42,16 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
 
 export default BlogPage;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, res }) => {
     const language = locale as Language;
-    const cache = getBlogMainCache(language) ?? await recreateCache(language);
+
+    if (!isCached(language)) {
+        await recreateCache();
+    } else {
+        res.setHeader('X-Cache', 'HIT');
+    }
+
+    const cache = getBlogMainCache(language);
 
     const metadata: MetadataTags = {
         title: 'RunBotics | Blog',
