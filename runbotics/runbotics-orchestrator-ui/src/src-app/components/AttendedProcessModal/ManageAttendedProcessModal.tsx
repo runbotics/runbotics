@@ -26,9 +26,10 @@ import {
 } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
-import { IProcess } from 'runbotics-common';
+import { IProcess, FeatureKey } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
@@ -61,15 +62,6 @@ const schema: JSONSchema7 = {
         }
     },
     required: ['form']
-};
-
-const uiSchema: UiSchema = {
-    form: {
-        'ui:widget': 'EditorWidget',
-        'ui:options': {
-            language: 'json'
-        }
-    }
 };
 
 function isJsonValid(str) {
@@ -105,6 +97,17 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     const isDeleteDisabled = !process?.executionInfo;
 
     const [selectedWidget, setSelectedWidget] = useState('');
+    const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
+
+    const uiSchema: UiSchema = {
+        form: {
+            'ui:widget': 'EditorWidget',
+            'ui:options': {
+                language: 'json',
+                readonly: !hasEditProcessAttendAccess
+            }
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -150,8 +153,18 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                 onDelete();
                 setOpen(false);
             }}
-            disabled={isDeleteDisabled}>
+            disabled={isDeleteDisabled}
+        >
             {translate('Common.Delete')}
+        </Button>
+    );
+
+    const cancelButton = (
+        <Button
+            color="primary"
+            onClick={() => setOpen(false)}
+        >
+            {translate('Common.Cancel')}
         </Button>
     );
 
@@ -242,28 +255,28 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <If condition={isDeleteDisabled} else={deleteButton}>
-                    <Tooltip
-                        title={translate(
-                            'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip'
-                        )}>
-                        <span>{deleteButton}</span>
-                    </Tooltip>
+                <If condition={hasEditProcessAttendAccess} else={cancelButton}>
+                    <If condition={isDeleteDisabled} else={deleteButton}>
+                        <Tooltip
+                            title={translate(
+                                'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip'
+                            )}>
+                            <span>{deleteButton}</span>
+                        </Tooltip>
+                    </If>
+                    {cancelButton}
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        variant="contained"
+                        color="primary"
+                        autoFocus
+                        onClick={() => {
+                            submitFormRef.current.click();
+                        }}>
+                        {translate('Common.Save')}
+                    </Button>
                 </If>
-                <Button color="primary" onClick={() => setOpen(false)}>
-                    {translate('Common.Cancel')}
-                </Button>
-                <Button
-                    type="submit"
-                    disabled={loading}
-                    variant="contained"
-                    color="primary"
-                    autoFocus
-                    onClick={() => {
-                        submitFormRef.current.click();
-                    }}>
-                    {translate('Common.Save')}
-                </Button>
             </DialogActions>
         </Dialog>
     );

@@ -12,6 +12,9 @@ const EditorWidget: FC<WidgetProps> = (props) => {
     const language: string = props.uiSchema['ui:options']?.language
         ? (props.uiSchema['ui:options']?.language as string)
         : 'typescript';
+    const isReadOnly = props.uiSchema['ui:options']?.readonly
+        ? true : false;
+
     const handleEditorDidMount = (editor, monacoInstance) => {
         editorRef.current = editor;
         editor.addAction({
@@ -62,6 +65,9 @@ const EditorWidget: FC<WidgetProps> = (props) => {
             defaultValue={props.value}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
+            options={{
+                readOnly: isReadOnly
+            }}
         />
     );
 };

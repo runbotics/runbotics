@@ -161,7 +161,7 @@
     "Component.Cron.Locale.AltMonths.November": "LIS",
     "Component.Cron.Locale.AltMonths.December": "GRU",
 
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Zapisz akcję",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Formularz startowy procesu",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Wprować zmienne dla",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Wybierz widget",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Skopiuj widget",
