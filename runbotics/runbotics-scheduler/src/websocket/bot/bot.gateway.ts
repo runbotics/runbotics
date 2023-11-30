@@ -28,7 +28,7 @@ import { ProcessService } from '#/database/process/process.service';
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnModuleInit {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
     @WebSocketServer() server: Server;
-    private CONNECTION_TIMEOUT = 20_000;
+    private CONNECTION_TIMEOUT = 60_000;
 
     constructor(
         private readonly authService: AuthService,
@@ -45,6 +45,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     onModuleInit() {
         if (this.server && this.server.engine) {
             this.server.engine.opts.maxHttpBufferSize = 2_000_000;
+            this.server.engine.opts.transports = ['websocket'];
         }
     }
 
@@ -185,9 +186,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
     private setConnectionTimeout(client: Socket) {
         return setTimeout(() => {
-            this.logger.log(`Connection timeout reached (${(this.CONNECTION_TIMEOUT / 1_000)}s). Client is disconnecting...`);
+            this.logger.log(`Connection timeout reached (${(this.CONNECTION_TIMEOUT / 1_000)}s). Bot is disconnecting...`);
             if (client) {
-                client.disconnect(true);
+                client.disconnect();
             }
         }, this.CONNECTION_TIMEOUT);
     }
