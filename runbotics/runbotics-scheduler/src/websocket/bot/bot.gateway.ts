@@ -45,7 +45,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     onModuleInit() {
         if (this.server && this.server.engine) {
             this.server.engine.opts.maxHttpBufferSize = 2_000_000;
-            this.server.engine.opts.transports = ['websocket'];
+            // this.server.engine.opts.transports = ['websocket'];
         }
     }
 
