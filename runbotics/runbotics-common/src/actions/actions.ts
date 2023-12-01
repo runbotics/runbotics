@@ -13,11 +13,12 @@ export enum ActionRegex {
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+',
-    EXCEL_ROW_NUMBER = '[\\d]+',
+    EXCEL_ROW_NUMBER = '^\\d+$',
     EXCEL_SPLIT_ADDRESS = '[!:]',
     EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
-    EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$'
+    EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
+    EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$'
 }
 
 export enum ACTION_GROUP {
@@ -204,7 +205,8 @@ export enum ExcelAction {
     DELETE_ROWS = 'excel.deleteRows',
     SAVE = 'excel.save',
     CLOSE = 'excel.close',
-    EXPORT_TO_CSV = 'excel.exportToCsv'
+    EXPORT_TO_CSV = 'excel.exportToCsv',
+    EXPORT_HTML_TABLE = 'excel.exportHtmlTable'
 }
 
 export enum DesktopAction {

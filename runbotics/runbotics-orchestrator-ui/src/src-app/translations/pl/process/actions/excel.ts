@@ -74,6 +74,13 @@ const excelActionsTranslations: typeof englishExcelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Nazwa makra',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Makro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Parametry Makra',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Label': 'Eksport tabeli HTML',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange': 'Zakres komórek',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange.Info': 'Zakres komórek do utworzenia tabeli HTML.',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow': 'Nagłówek tabeli',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow.Info': 'Wiersz wybrany z zakresu komórek, który zostanie wyświetlony jako nagłówek tabeli, np. "123". Jeśli nie określono, wybrany zostanie pierwszy wiersz z zakresu komórek.',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output': 'Tabela HTML',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output.Info': 'Tabela HTML zwrócona w typie string.',
 };
 
 export default excelActionsTranslations;

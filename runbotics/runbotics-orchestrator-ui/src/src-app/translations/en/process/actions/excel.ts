@@ -72,6 +72,13 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Macro name',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Run Macro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Macro Parameters',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Label': 'Export HTML table',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange': 'Cell range',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange.Info': 'Cell range to crate html table.',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow': 'Table header',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow.Info': 'Row selected from the range, which will be displayed as table header, e.g. "123". If not provided, the first row from the range is selected.',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output': 'HTML table',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output.Info': 'HTML table returned in type string',
 };
 
 
