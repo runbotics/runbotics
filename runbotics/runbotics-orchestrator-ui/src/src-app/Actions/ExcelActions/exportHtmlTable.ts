@@ -24,10 +24,6 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
                     type: 'object',
                     properties: {
-                        filePath: {
-                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.FilePath'),
-                            type: 'string',
-                        },
                         cellRange: {
                             title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange'),
                             type: 'string',
@@ -43,7 +39,7 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
                             type: 'string',
                         },
                     },
-                    required: ['filePath', 'cellRange'],
+                    required: ['cellRange'],
                 },
                 output: {
                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -61,11 +57,6 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
         uiSchema: {
             'ui:order': ['input', 'output'],
             input: {
-                filePath: {
-                    'ui:options': {
-                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.FilePath.Info'),
-                    },
-                },
                 cellRange: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange.Info'),
@@ -92,7 +83,6 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
         },
         formData: {
             input: {
-                filePath: undefined,
                 cellRange: undefined,
             },
         },
