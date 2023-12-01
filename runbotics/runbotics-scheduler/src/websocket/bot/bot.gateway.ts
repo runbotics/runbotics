@@ -99,12 +99,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
 
-        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-            const process = await this.processService.findById(processInstance.process.id);
-
-            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
-        }
-
         if(
             processInstance.status === ProcessInstanceStatus.ERRORED ||
             processInstance.status === ProcessInstanceStatus.TERMINATED
@@ -113,6 +107,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.guestService.decrementExecutionsCount(processInstance.user.id);
             this.logger.log('Restored user\'s executions-count because of process interruption');
         }
+
+        await this.handleProcessInstanceNotification(processInstance);
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
@@ -191,5 +187,17 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
                 client.disconnect();
             }
         }, this.CONNECTION_TIMEOUT);
+    }
+
+    private async handleProcessInstanceNotification(processInstance: IProcessInstance) {
+        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
+            const process = await this.processService.findById(processInstance.process.id);
+
+            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
+        }
+
+        if (processInstance?.callbackUrl) {
+            await this.botProcessService.notifyAboutProcessInstanceStatus(processInstance);
+        }
     }
 }

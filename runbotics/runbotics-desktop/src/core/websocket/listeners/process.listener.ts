@@ -73,10 +73,14 @@ export class ProcessListener {
                     return response.data;
                 });
 
+            const variables = input?.variables ?? {};
+            const callbackUrl = input?.callbackUrl;
+
             await this.runtimeService.startProcessInstance({
                 process,
-                variables: input?.variables ?? {},
+                variables,
                 ...rest,
+                ...(callbackUrl && { callbackUrl }),
             });
 
             this.logger.log(`<= Process successfully started (id: ${processId})`);
