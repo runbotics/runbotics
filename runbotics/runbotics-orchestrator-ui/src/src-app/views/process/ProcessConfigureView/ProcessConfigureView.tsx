@@ -23,7 +23,6 @@ import {
     StyledPaper,
 } from './ProcessConfigureView.styles';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
-import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
@@ -97,7 +96,6 @@ const ProcessConfigureView: VFC = () => {
                     isProcessAttended={attended}
                     onAttendedChange={handleAttendanceChange}
                 />
-                <ManageProcessForm />
             </AttendancePaper>
         </Box>
     );

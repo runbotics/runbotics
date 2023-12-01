@@ -161,7 +161,7 @@
     "Component.Cron.Locale.AltMonths.November": "NOV",
     "Component.Cron.Locale.AltMonths.December": "DEC",
 
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Save action",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Attendance form of process",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Input variables for",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Pick a widget",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Copy widget",
