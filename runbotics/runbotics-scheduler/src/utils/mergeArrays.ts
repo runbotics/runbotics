@@ -1,6 +1,6 @@
 export const mergeArraysWithoutDuplicates = (valuesToMerge: unknown[]) => {
     const uniqueValues = new Set(valuesToMerge);
-    const nowDuplicatesArray = Array.from(uniqueValues);
+    const noDuplicatesArray = Array.from(uniqueValues);
 
-    return nowDuplicatesArray;
+    return noDuplicatesArray;
 };
