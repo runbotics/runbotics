@@ -165,3 +165,9 @@ export const getProcessSubscriptionInfo = createAsyncThunk<NotificationProcess[]
     (processId) => Axios.get<NotificationProcess[]>(`/api/process-notifications/${processId}`)
         .then((response) => response.data)
 );
+
+export const getProcessSubscriptionInfoByProcessIdAndUserId = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
+    'processes/getProcessSubscriptionInfoByProcessIdAndUserId',
+    ({ processId, userId }) => Axios.get<NotificationProcess>(`/api/process-notifications?processId=${processId}&userId=${userId}`)
+        .then((response) => response.data)
+);

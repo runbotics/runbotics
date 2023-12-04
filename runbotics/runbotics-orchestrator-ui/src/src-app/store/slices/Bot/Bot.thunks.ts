@@ -56,3 +56,9 @@ export const getBotSubscriptionInfo = createAsyncThunk<NotificationBot[], IBot['
     (botId) => Axios.get<NotificationBot[]>(`/api/bot-notifications/${botId}`)
         .then((response) => response.data)
 );
+
+export const getBotSubscriptionInfoByBotIdAndUserId = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
+    'bot/getBotSubscriptionInfoByBotIdAndUserId',
+    ({ botId, userId }) => Axios.get<NotificationBot>(`/api/bot-notifications?botId=${botId}&userId=${userId}`)
+        .then((response) => response.data)
+);

@@ -21,14 +21,14 @@ import { Container, ContainerWrapper, StyledPaper } from './BotDetailsView.style
 
 const BotConfigure: FC = () => {
     const dispatch = useDispatch();
-    const { bots: { botSubscriptions, loading, byId } } = useSelector(botSelector);
+    const { bots: { botSubscriptions, currentBotSubscription, loading, byId } } = useSelector(botSelector);
     const router = useRouter();
     const { user } = useAuth();
     const { id } = router.query;
+    const userId = user.id;
     const botId = Number(id);
     const bot = byId[botId];
     const [subscribed, setSubscribed] = useState(false);
-    const [currentBotSubscription, setCurrentBotSubscription] = useState<NotificationBot | undefined>();
     const [open, setOpen] = useState(false);
 
     const notificationTableColumns = useBotNotificationColumns({ onDelete: handleDeleteSubscription });
@@ -41,7 +41,8 @@ const BotConfigure: FC = () => {
         })), [botSubscriptions]);
 
     const handleGetBotSubscribers = async () => {
-        dispatch(botActions.getBotSubscriptionInfo(botId));
+        await dispatch(botActions.getBotSubscriptionInfo(botId));
+        await dispatch(botActions.getBotSubscriptionInfoByBotIdAndUserId({ botId, userId }));
     };
 
     useEffect(() => {
@@ -49,10 +50,8 @@ const BotConfigure: FC = () => {
     }, [botId]);
 
     useEffect(() => {
-        const subscription = botSubscriptions.find(sub => sub.user.id === user.id);
-        setCurrentBotSubscription(subscription);
-        setSubscribed(Boolean(subscription));
-    }, [botSubscriptions]);
+        setSubscribed(Boolean(currentBotSubscription));
+    }, [currentBotSubscription]);
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
@@ -90,6 +89,7 @@ const BotConfigure: FC = () => {
                 <NotificationTableComponent
                     notificationTableColumns={notificationTableColumns}
                     subscribersList={notificationTableRows ?? []}
+                    onClose={() => setOpen(false)}
                     loading={loading}
                 />
             </Dialog>

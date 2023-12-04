@@ -44,7 +44,8 @@ export interface ProcessState {
         loading: LoadingType;
         currentRequestId: any;
         error: any;
-        processSubscriptions: NotificationProcess[]
+        processSubscriptions: NotificationProcess[];
+        currentProcessSubscription: NotificationProcess;
     };
     modeler: ModelerState;
     all: {

@@ -170,5 +170,9 @@
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed": "Failed to add {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success": "Successfully deleted {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Failed": "Failed to delete {{ name }} attended form",
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Attendance is not defined for this process yet"
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Attendance is not defined for this process yet",
+
+    "Component.NotificationTable.View.Header": "Subscribers",
+    "Component.NotificationTable.View.SearchBarPlaceholder": "Search",
+    "Component.NotificationTable.Results.Error": "No subscribers found"
 }

@@ -1,26 +1,28 @@
 import React, { ChangeEvent, VFC, useMemo, useState } from 'react';
 
-import { Grid, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import useTranslations from '#src-app/hooks/useTranslations';
-import { StyledHeaderGrid } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.styles';
 import { DefaultPageValue } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.utils';
 import { StyledActionsContainer, StyledTextField } from '#src-app/views/users/UsersListView/UsersListView.styles';
 
-import { StyledWrapper } from './NotificationTableComponent.styles';
+import { StyledHeaderWrapper, StyledWrapper } from './NotificationTableComponent.styles';
 import { BotNotificationRow, ProcessNotificationRow } from './NotificationTableComponent.types';
 
 interface NotificationTableProps {
     notificationTableColumns: GridColDef[];
     subscribersList: (BotNotificationRow | ProcessNotificationRow)[];
     loading?: boolean;
+    onClose: () => void;
 }
 
 const NotificationTableComponent: VFC<NotificationTableProps> = ({
     notificationTableColumns,
     subscribersList,
     loading,
+    onClose,
 }) => {
     const { translate } = useTranslations();
     const [search, setSearch] = useState('');
@@ -36,21 +38,22 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
 
     return (
         <StyledWrapper>
-            <StyledHeaderGrid
-                container
-                spacing={3}
-                marginBottom={0}
-            >
+            <StyledHeaderWrapper>
                 <Grid item>
                     <Typography variant="h3" color="textPrimary">
-                        {translate('Process.Edit.Table.View.Header')}
+                        {translate('Component.NotificationTable.View.Header')}
                     </Typography>
                 </Grid>
-            </StyledHeaderGrid>
+                <Grid item>
+                    <IconButton onClick={onClose}>
+                        <CloseIcon />
+                    </IconButton>
+                </Grid>
+            </StyledHeaderWrapper>
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
-                    placeholder={translate('Process.Edit.Table.View.SearchBarPlaceholder')}
+                    placeholder={translate('Component.NotificationTable.View.SearchBarPlaceholder')}
                     size='small'
                     value={search}
                     onChange={handleSearch}
@@ -64,7 +67,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
                 disableSelectionOnClick
                 pageSize={DefaultPageValue.PAGE_SIZE}
                 localeText={{
-                    noRowsLabel: translate('Process.Edit.Table.Results.Error')
+                    noRowsLabel: translate('Component.NotificationTable.Results.Error')
                 }}
             />
         </StyledWrapper>

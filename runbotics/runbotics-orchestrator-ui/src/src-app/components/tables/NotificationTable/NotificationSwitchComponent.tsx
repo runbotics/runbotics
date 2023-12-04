@@ -44,7 +44,7 @@ const NotificationSwitchComponent: VFC<NotificationSwitchProps> = ({ label, tool
             <If condition={isAdmin}>
                 <Tooltip title={tooltip}>
                     <IconButton
-                        onClick={() => onClick()}
+                        onClick={onClick}
                         sx={{
                             marginLeft: 'auto',
                             height: '1.75rem',

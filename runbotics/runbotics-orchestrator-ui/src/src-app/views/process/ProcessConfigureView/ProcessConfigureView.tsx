@@ -34,7 +34,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
+    const { draft: { process, processSubscriptions, currentProcessSubscription }, all: { loading } } = useSelector(processSelector);
     const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
@@ -48,9 +48,9 @@ const ProcessConfigureView: VFC = () => {
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
     const { user } = useAuth();
+    const userId = user.id;
     const [open, setOpen] = useState(false);
     const [subscribed, setSubscribed] = useState(false);
-    const [currentProcessSubscription, setCurrentProcessSubscription] = useState<NotificationProcess | undefined>();
 
     const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
 
@@ -61,10 +61,15 @@ const ProcessConfigureView: VFC = () => {
             subscribedAt: sub.createdAt,
         })), [processSubscriptions]);
 
+    const handleGetProcessSubscribers = async () => {
+        await dispatch(processActions.getProcessSubscriptionInfo(processId));
+        await dispatch(processActions.getProcessSubscriptionInfoByProcessIdAndUserId({ processId, userId }));
+    };
+
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
-        dispatch(processActions.getProcessSubscriptionInfo(processId));
+        handleGetProcessSubscribers();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -79,10 +84,8 @@ const ProcessConfigureView: VFC = () => {
     }, [process]);
 
     useEffect(() => {
-        const subscription = processSubscriptions.find(sub => sub.user.id === user.id);
-        setCurrentProcessSubscription(subscription);
-        setSubscribed(Boolean(subscription));
-    }, [processSubscriptions]);
+        setSubscribed(Boolean(currentProcessSubscription));
+    }, [currentProcessSubscription]);
 
     const fetchProcess = async () => {
         await dispatch(processActions.fetchProcessById(process.id));
@@ -123,12 +126,12 @@ const ProcessConfigureView: VFC = () => {
             ? await dispatch(processActions.subscribeProcessNotifications({ user, process }))
             : await dispatch(processActions.unsubscribeProcessNotifications(currentProcessSubscription.id));
 
-        await dispatch(processActions.getProcessSubscriptionInfo(processId));
+        await handleGetProcessSubscribers();
     };
 
     async function handleDeleteSubscription(subscriptionInfo: ProcessNotificationRow) {
         await dispatch(processActions.unsubscribeProcessNotifications(subscriptionInfo.id));
-        await dispatch(processActions.getProcessSubscriptionInfo(processId));
+        await handleGetProcessSubscribers();
     }
 
     const attendedBox = (
@@ -194,6 +197,7 @@ const ProcessConfigureView: VFC = () => {
                 <NotificationTableComponent
                     notificationTableColumns={notificationTableColumns}
                     subscribersList={notificationTableRows ?? []}
+                    onClose={() => setOpen(false)}
                     loading={loading}
                 />
             </Dialog>

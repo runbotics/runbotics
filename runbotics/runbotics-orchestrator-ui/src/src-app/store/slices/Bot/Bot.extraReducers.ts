@@ -10,6 +10,7 @@ import {
     subscribeBotNotifications,
     unsubscribeBotNotifications,
     getBotSubscriptionInfo,
+    getBotSubscriptionInfoByBotIdAndUserId,
 } from './Bot.thunks';
 
 const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
@@ -74,12 +75,18 @@ const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
         .addCase(subscribeBotNotifications.fulfilled, (state) => {
             state.bots.loading = false;
         })
+        .addCase(subscribeBotNotifications.rejected, (state) => {
+            state.bots.loading = false;
+        })
 
         // UNSUBSCRIBE BOT NOTIFICATIONS
         .addCase(unsubscribeBotNotifications.pending, (state) => {
             state.bots.loading = true;
         })
         .addCase(unsubscribeBotNotifications.fulfilled, (state) => {
+            state.bots.loading = false;
+        })
+        .addCase(unsubscribeBotNotifications.rejected, (state) => {
             state.bots.loading = false;
         })
 
@@ -90,6 +97,21 @@ const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
         .addCase(getBotSubscriptionInfo.fulfilled, (state, action) => {
             state.bots.loading = false;
             state.bots.botSubscriptions = action.payload;
+        })
+        .addCase(getBotSubscriptionInfo.rejected, (state) => {
+            state.bots.loading = false;
+        })
+
+        // GET BOT SUBSCRIPTION BY BOT_ID AND USER_ID
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.pending, (state) => {
+            state.bots.loading = true;
+        })
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.fulfilled, (state, action) => {
+            state.bots.loading = false;
+            state.bots.currentBotSubscription = action.payload;
+        })
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.rejected, (state) => {
+            state.bots.loading = false;
         });
 };
 

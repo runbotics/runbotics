@@ -15,7 +15,8 @@ import {
     createGuestProcess,
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
-    getProcessSubscriptionInfo
+    getProcessSubscriptionInfo,
+    getProcessSubscriptionInfoByProcessIdAndUserId
 } from './Process.thunks';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
@@ -122,6 +123,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(subscribeProcessNotifications.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
+            state.all.loading = false;
         })
 
         // UNSUBSCRIBE PROCESS NOTIFICATIONS
@@ -133,6 +135,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(unsubscribeProcessNotifications.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
+            state.all.loading = false;
         })
 
         // GET ALL PROCESS SUBSCRIPTIONS
@@ -145,6 +148,20 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(getProcessSubscriptionInfo.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
+            state.all.loading = false;
+        })
+
+        // GET ALL PROCESS SUBSCRIPTIONS
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.fulfilled, (state, action) => {
+            state.all.loading = false;
+            state.draft.currentProcessSubscription = action.payload;
+        })
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+            state.all.loading = false;
         });
 };
 

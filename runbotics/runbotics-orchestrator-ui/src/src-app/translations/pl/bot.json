@@ -42,9 +42,6 @@
     "Bot.Edit.Table.Columns.SubscribedAt": "Zasubskrybowano",
     "Bot.Edit.Table.Columns.Actions": "Akcje",
     "Bot.Edit.Table.Columns.Actions.Delete": "Usuń",
-    "Bot.Edit.Table.View.SearchBarPlaceholder": "Szukaj",
-    "Bot.Edit.Table.View.Header": "Subskrybenci",
-    "Bot.Edit.Table.Results.Error": "Nie znaleziono subskrybentów",
 
     "Bot.Edit.Form.Fields.IsSubscribed.Tooltip": "Ustawienia powiadomień bota",
     "Bot.Edit.Form.Fields.IsSubscribed.Label": "Powiadom o niepowodzeniu",
