@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { IBotCollection } from 'runbotics-common';
 import { BotCollectionEntity } from './bot-collection.entity';
 
-const relations = [ 'createdByUser', 'user' ];
+const relations = [ 'createdByUser', 'users' ];
 
 @Injectable()
 export class BotCollectionService {
