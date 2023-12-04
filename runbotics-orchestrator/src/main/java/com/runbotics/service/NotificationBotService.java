@@ -4,6 +4,7 @@ import com.runbotics.domain.NotificationBot;
 import com.runbotics.service.dto.NotificationBotDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NotificationBotService {
     /**
@@ -20,6 +21,13 @@ public interface NotificationBotService {
      */
     List<NotificationBotDTO> getAllSubscriptionsByBotId(Long botId);
 
+    /**
+     * Get subscription for bot notification
+     *
+     * @param botId
+     * @param userId
+     */
+    Optional<NotificationBotDTO> getSubscriptionByBotIdAndUserId(Long botId, Long userId);
 
     /**
      * Removes subscription for bot notifications

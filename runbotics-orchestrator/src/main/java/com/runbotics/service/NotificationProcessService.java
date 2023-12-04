@@ -4,6 +4,7 @@ import com.runbotics.domain.NotificationProcess;
 import com.runbotics.service.dto.NotificationProcessDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NotificationProcessService {
     /**
@@ -20,6 +21,13 @@ public interface NotificationProcessService {
      */
     List<NotificationProcessDTO> getAllSubscriptionsByProcessId(Long processId);
 
+    /**
+     * Get subscription for process notification
+     *
+     * @param processId
+     * @param userId
+     */
+    Optional<NotificationProcessDTO> getSubscriptionByProcessIdAndUserId(Long processId, Long userId);
 
     /**
      * Removes subscription for process notifications

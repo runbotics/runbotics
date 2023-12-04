@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -49,6 +51,33 @@ public class NotificationBotResource {
         List<NotificationBotDTO> result = notificationBotService.getAllSubscriptionsByBotId(botId);
 
         return ResponseEntity.ok().body(result);
+    }
+
+    /**
+     * {@code GET /bot-notifications} : gets subscription for botId and userId.
+     *
+     * @param botId id to get subscription by processId
+     * @param userId id to get subscription by userId
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the subscriptions.
+     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the botId was not provided.
+     */
+    @GetMapping("/bot-notifications")
+    public ResponseEntity<Optional<NotificationBotDTO>> getSubscriptionByBotIdAndUserId(
+        @RequestParam Long botId,
+        @RequestParam Long userId
+    ) {
+        log.debug("REST request to get subscription for bot notification with botId and userId: {} {}", botId, userId);
+
+        if (botId == null) {
+            throw new BadRequestAlertException("To get bot subscription botId must be provided", ENTITY_NAME, "idNotExists");
+        }
+
+        if (userId == null) {
+            throw new BadRequestAlertException("To get bot subscription userId must be provided", ENTITY_NAME, "idNotExists");
+        }
+
+        return ResponseEntity.ok()
+            .body(notificationBotService.getSubscriptionByBotIdAndUserId(botId, userId));
     }
 
     /**
@@ -89,11 +118,9 @@ public class NotificationBotResource {
 
         NotificationBot notificationBot = notificationBotRepository
             .findById(id)
-            .orElse(null);
-
-        if (notificationBot == null) {
-            throw new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist");
-        }
+            .orElseThrow(
+                () -> new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist")
+            );
 
         notificationBotService.delete(notificationBot);
         return ResponseEntity

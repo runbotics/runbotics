@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -54,6 +56,33 @@ public class NotificationProcessResource {
     }
 
     /**
+     * {@code GET /process-notifications} : gets subscription for processId and userId.
+     *
+     * @param processId id to get subscription by processId
+     * @param userId id to get subscription by userId
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the subscriptions.
+     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the processId was not provided.
+     */
+    @GetMapping("/process-notifications")
+    public ResponseEntity<Optional<NotificationProcessDTO>> getSubscriptionByProcessIdAndUserId(
+        @RequestParam Long processId,
+        @RequestParam Long userId
+    ) {
+        log.debug("REST request to get subscription for process notification with processId and userId: {} {}", processId, userId);
+
+        if (processId == null) {
+            throw new BadRequestAlertException("To get process subscription processId must be provided", ENTITY_NAME, "idNotExists");
+        }
+
+        if (userId == null) {
+            throw new BadRequestAlertException("To get process subscription userId must be provided", ENTITY_NAME, "idNotExists");
+        }
+
+        return ResponseEntity.ok()
+            .body(notificationProcessService.getSubscriptionByProcessIdAndUserId(processId, userId));
+    }
+
+    /**
      * {@code POST /process-notifications} : creates a new subscription for process notification.
      *
      * @param notificationProcessDTO the subscription to create.
@@ -91,11 +120,9 @@ public class NotificationProcessResource {
 
         NotificationProcess notificationProcess = notificationProcessRepository
             .findById(id)
-            .orElse(null);
-
-        if (notificationProcess == null) {
-            throw new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist");
-        }
+            .orElseThrow(
+                () -> new BadRequestAlertException("Subscription with provided id not exist", ENTITY_NAME, "idNotExist")
+            );
 
         notificationProcessService.delete(notificationProcess);
         return ResponseEntity

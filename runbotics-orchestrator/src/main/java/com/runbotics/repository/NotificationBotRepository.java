@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface NotificationBotRepository extends JpaRepository<NotificationBot, Long> {
 
-    Optional<NotificationBot> findByUserIdAndBotId(Long userId, Long botId);
+    Optional<NotificationBot> findOneByBotIdAndUserId(Long botId, Long userId);
 
     List<NotificationBot> findAllByBotId(Long botId);
 }

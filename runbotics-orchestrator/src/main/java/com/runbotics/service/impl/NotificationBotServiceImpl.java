@@ -1,6 +1,7 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.*;
+import com.runbotics.modules.bot.exception.BotNotFoundException;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.repository.NotificationBotRepository;
 import com.runbotics.repository.UserRepository;
@@ -9,11 +10,13 @@ import com.runbotics.service.dto.NotificationBotDTO;
 import com.runbotics.service.mapper.NotificationBotMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +44,12 @@ public class NotificationBotServiceImpl implements NotificationBotService {
         Long userId = notificationBotDTO.getUser().getId();
         Long botId = notificationBotDTO.getBot().getId();
 
-        User user = userRepository.findById(userId).orElseThrow();
-        Bot bot = botRepository.findById(botId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UsernameNotFoundException("Could not found user with id " + userId + " in the database")
+        );
+        Bot bot = botRepository.findById(botId).orElseThrow(
+            () -> new BotNotFoundException(botId)
+        );
 
         NotificationBot notificationBot = notificationBotMapper.toEntity(notificationBotDTO);
 
@@ -67,6 +74,15 @@ public class NotificationBotServiceImpl implements NotificationBotService {
             .stream()
             .map(notificationBotMapper::toDto)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<NotificationBotDTO> getSubscriptionByBotIdAndUserId(Long botId, Long userId) {
+        log.debug("Request to get bot subscriptions by botId: {}", botId);
+
+        return notificationBotRepository
+            .findOneByBotIdAndUserId(botId, userId)
+            .map(notificationBotMapper::toDto);
     }
 
     @Override

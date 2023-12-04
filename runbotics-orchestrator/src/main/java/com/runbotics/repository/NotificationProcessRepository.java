@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface NotificationProcessRepository extends JpaRepository<NotificationProcess, Long>, JpaSpecificationExecutor<NotificationProcess> {
 
-    Optional<NotificationProcess> findByUserIdAndProcessId(Long userId, Long processId);
+    Optional<NotificationProcess> findOneByProcessIdAndUserId(Long processId, Long userId);
 
     List<NotificationProcess> findAllByProcessId(Long processId);
 }

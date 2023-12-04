@@ -7,9 +7,11 @@ import com.runbotics.repository.NotificationProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.service.NotificationProcessService;
 import com.runbotics.service.dto.NotificationProcessDTO;
+import com.runbotics.service.exception.ProcessNotFoundException;
 import com.runbotics.service.mapper.NotificationProcessMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +44,12 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
         Long userId = notificationProcessDTO.getUser().getId();
         Long processId = notificationProcessDTO.getProcess().getId();
 
-        User user = userRepository.findById(userId).orElseThrow();
-        Process process = processRepository.findById(processId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow(
+            () -> new UsernameNotFoundException("Could not found user with id " + userId + " in the database")
+        );
+        Process process = processRepository.findById(processId).orElseThrow(
+            () -> new ProcessNotFoundException(processId)
+        );
 
         NotificationProcess notificationProcess = notificationProcessMapper.toEntity(notificationProcessDTO);
 
@@ -68,6 +74,15 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
             .stream()
             .map(notificationProcessMapper::toDto)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<NotificationProcessDTO> getSubscriptionByProcessIdAndUserId(Long processId, Long userId) {
+        log.debug("Request to get process subscription by processId and userId: {} {}", processId, userId);
+
+        return notificationProcessRepository
+            .findOneByProcessIdAndUserId(processId, userId)
+            .map(notificationProcessMapper::toDto);
     }
 
     @Override
