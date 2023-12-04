@@ -56,7 +56,7 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
         try {
             const method = input.method ?? 'GET';
             if (['PUT', 'POST', 'PATCH'].includes(method)) {
-                body = JSON.parse(input.body);
+                body = typeof input.body === 'object' ? input.body : JSON.parse(input.body);
             }
             if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
                 const qs = await import('qs');
