@@ -27,12 +27,14 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
                         cellRange: {
                             title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_CELL_RANGE,
                         },
                         headerRow: {
                             title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow'),
                             type: 'string',
-                            pattern: ActionRegex.EXCEL_ROW_NUMBER,
+                        },
+                        rowLevel: {
+                            title: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.RowLevel'),
+                            type: 'string',
                         },
                         worksheet: {
                             title: translate('Process.Details.Modeler.Actions.Excel.Worksheet'),
@@ -65,6 +67,11 @@ const getActionExportHtmlTable = (): IBpmnAction => ({
                 headerRow: {
                     'ui:options': {
                         info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow.Info'),
+                    },
+                },
+                rowLevel: {
+                    'ui:options': {
+                        info: translate('Process.Details.Modeler.Actions.Excel.ExportHtmlTable.RowLevel.Info'),
                     },
                 },
                 worksheet: {
