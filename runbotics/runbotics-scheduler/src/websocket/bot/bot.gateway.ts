@@ -181,7 +181,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
                 return HttpStatus.OK;
             })
             .catch(error => {
-                return HttpStatus.BAD_REQUEST;
+                return HttpStatus.INTERNAL_SERVER_ERROR;
             });
 
         return result;
