@@ -8,3 +8,8 @@ export interface StartProcessMessageBody {
     trigger: ITriggerEvent;
     triggerData?: UserTriggerData;
 }
+
+export interface KeepAliveStatus {
+    intervalId: NodeJS.Timer;
+    isActive: boolean;
+}

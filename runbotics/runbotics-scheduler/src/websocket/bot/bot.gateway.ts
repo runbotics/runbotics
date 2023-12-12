@@ -14,7 +14,12 @@ import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
 import { BotLogService } from './bot-log.service';
 import { BotProcessService } from '#/websocket/bot/process-launch/bot-process-instance.service';
-import { BotStatus, BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import {
+    BotStatus, BotWsMessage, IBot,
+    IProcessInstance, IProcessInstanceEvent,
+    IProcessInstanceLoopEvent, ProcessInstanceEventStatus,
+    ProcessInstanceStatus, WsMessage
+} from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
 import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
@@ -161,6 +166,25 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`=> Saving logs from bot ${installationId} in a file`);
         this.botLogService.writeLogsToFile(client.bot.id, logs);
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
+    }
+
+    @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.KEEP_ALIVE)
+    async processKeepAliveEventListener(
+        @ConnectedSocket() socket: BotAuthSocket,
+    ) {
+        const result = await this.botService.findById(socket.bot.id)
+            .then(bot => {
+                if (bot.status === BotStatus.DISCONNECTED)
+                    this.botService.save({ ...bot, status: BotStatus.CONNECTED });
+
+                return HttpStatus.OK;
+            })
+            .catch(error => {
+                return HttpStatus.BAD_REQUEST;
+            });
+
+        return result;
     }
 
     async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
