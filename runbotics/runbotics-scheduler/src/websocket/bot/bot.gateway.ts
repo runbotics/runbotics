@@ -173,18 +173,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
     async processKeepAliveEventListener(
         @ConnectedSocket() socket: BotAuthSocket,
     ) {
-        const result = await this.botService.findById(socket.bot.id)
-            .then(bot => {
-                if (bot.status === BotStatus.DISCONNECTED)
-                    this.botService.save({ ...bot, status: BotStatus.CONNECTED });
-
-                return HttpStatus.OK;
-            })
-            .catch(error => {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
-            });
-
-        return result;
+        await this.botService.updateConnectedBotStatus(socket.bot.id);
     }
 
     async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
