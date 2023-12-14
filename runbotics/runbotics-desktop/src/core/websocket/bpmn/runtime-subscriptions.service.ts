@@ -11,7 +11,7 @@ import {
     BpmnElementType,
     ProcessInstanceStep,
 } from 'runbotics-common';
-import { IActivityOwner, IBehaviour } from '#core/bpm/bpmn.types';
+import { ActivityOwner, Behaviour } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
@@ -51,7 +51,7 @@ export class RuntimeSubscriptionsService {
 
                 try {
                     const eventBehavior = (
-                        event.activity.owner as IActivityOwner
+                        event.activity.owner as ActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
@@ -259,7 +259,7 @@ export class RuntimeSubscriptionsService {
         return variableToCheck;
     }
 
-    private isLoopSubprocess(activity: BpmnExecutionEventMessageExtendedApi, eventBehavior: IBehaviour): boolean {
+    private isLoopSubprocess(activity: BpmnExecutionEventMessageExtendedApi, eventBehavior: Behaviour): boolean {
         return BpmnElementType.SUBPROCESS === activity.content.type && eventBehavior.actionId === 'loop.loop';
     }
 }

@@ -1,28 +1,28 @@
 import { BpmnEngine, BpmnEngineExecutionEnvironment } from 'bpmn-engine';
 
-export interface IBehaviour {
+export interface Behaviour {
     $type: string;
     id: string;
     actionId: string;
     label: string;
-    conditionExpression?: IFormalExpression;
+    conditionExpression?: FormalExpression;
 }
 
-export interface IFormalExpression {
+export interface FormalExpression {
     $type: string;
     body?: string;
 }
 
-export interface IOutboundSequence {
-    behaviour: IBehaviour;
+export interface OutboundSequence {
+    behaviour: Behaviour;
     isDefault?: boolean;
 }
 
-export interface IActivityOwner extends BpmnEngine {
-    behaviour?: IBehaviour;
-    outbound: IOutboundSequence[];
+export interface ActivityOwner extends BpmnEngine {
+    behaviour?: Behaviour;
+    outbound: OutboundSequence[];
 }
-export interface IEnvironment extends BpmnEngineExecutionEnvironment {
+export interface Environment extends BpmnEngineExecutionEnvironment {
     runbotic: {
         disabled?: boolean;
     };

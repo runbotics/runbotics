@@ -33,7 +33,7 @@ import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
 import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
-import { IActivityOwner, IEnvironment, IOutboundSequence } from '../bpmn.types';
+import { ActivityOwner, Environment, OutboundSequence } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -192,7 +192,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         );
 
         listener.on('activity.start', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+            if ((api.environment as Environment).runbotic?.disabled) return;
 
             if (this.loopHandlerService.shouldSkipElement(api)) return;
 
@@ -204,7 +204,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             }
 
             if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY &&
-                !this.isAnySequencesWithoutExpression(api.owner as IActivityOwner)) {
+                !this.isAnySequenceWithoutExpression(api.owner as ActivityOwner)) {
                 this.saveGatewayNameInCache(api);
                 return;
             }
@@ -222,7 +222,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.end', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+            if ((api.environment as Environment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
             if (this.loopHandlerService.shouldSkipElement(api)) return;
@@ -401,7 +401,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
                 (api.content as DesktopTask)?.input?.script ?? api.content.type;
-            const activityLabel = (api.owner as IActivityOwner).behaviour.label;
+            const activityLabel = (api.owner as ActivityOwner).behaviour.label;
 
             const baseLogPrefix = `[${processInstanceId}] [${api.executionId}] [${activityType}]`;
 
@@ -582,12 +582,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         definition.environment.assignVariables(globalVariables);
     }
 
-    public isAnySequencesWithoutExpression = (owner: IActivityOwner) => owner.outbound
-        .find(outbound => this.isSequenceWithoutExpression(outbound));
+    public isAnySequenceWithoutExpression = (owner: ActivityOwner) => owner.outbound
+        .some(outbound => this.isSequenceWithoutExpression(outbound));
 
-    private isSequenceWithoutExpression = (outbound: IOutboundSequence): boolean => !outbound?.isDefault &&
-        (outbound?.behaviour?.conditionExpression?.body === null || 
-            outbound?.behaviour?.conditionExpression?.body === undefined);
+    private isSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
+        !outbound?.behaviour?.conditionExpression?.body;
     
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ?? api.id;
