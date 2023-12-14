@@ -33,7 +33,7 @@ import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
 import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
-import { IActivityOwner, IEnvironment } from '../bpmn.types';
+import { IActivityOwner, IEnvironment, IOutboundSequence } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -203,8 +203,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 );
             }
 
-            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY
-                && !this.isAnySequenceWithoutExpression(api.owner as IActivityOwner)) {
+            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY &&
+                !this.isAnySequencesWithoutExpression(api.owner as IActivityOwner)) {
                 this.saveGatewayNameInCache(api);
                 return;
             }
@@ -283,6 +283,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
         // @ts-ignore
         engine.once('error', (error) => {
+            this.swapEmptyFlowExpressionErrorMessage(error);
             try {
                 this.logger.error(
                     `[${processInstanceId}] process.error`,
@@ -581,6 +582,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         definition.environment.assignVariables(globalVariables);
     }
 
+    public isAnySequencesWithoutExpression = (owner: IActivityOwner) => owner.outbound
+        .find(outbound => this.isSequenceWithoutExpression(outbound));
+
+    private isSequenceWithoutExpression = (outbound: IOutboundSequence): boolean => !outbound?.isDefault &&
+        (outbound?.behaviour?.conditionExpression?.body === null || 
+            outbound?.behaviour?.conditionExpression?.body === undefined);
+    
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ?? api.id;
         this.storageService.setValue(api.id, gatewayName);
@@ -593,7 +601,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         content.sourceId.includes('Gateway_')
     );
 
-    private isAnySequenceWithoutExpression = (owner: IActivityOwner) => owner.outbound
-        .map(out => out?.behaviour?.conditionExpression)
-        .some(expression => expression.body === null || expression.body === undefined);
+    private swapEmptyFlowExpressionErrorMessage = (error: Error) => {
+        if (error.message.includes('Condition expression without body is unsupported')) {
+            error.message = 'Empty condition in sequence flow is not supported';
+        }
+    };
 }

@@ -15,6 +15,7 @@ export interface IFormalExpression {
 
 export interface IOutboundSequence {
     behaviour: IBehaviour;
+    isDefault?: boolean;
 }
 
 export interface IActivityOwner extends BpmnEngine {

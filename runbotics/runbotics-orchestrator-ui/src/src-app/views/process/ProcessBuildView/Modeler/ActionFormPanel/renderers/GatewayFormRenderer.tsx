@@ -106,6 +106,10 @@ const GatewayFormRenderer = () => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
 
+    const isSequenceWithoutExpression = (outgoing: IBpmnConnection) => {
+        return gateway.businessObject.default.id === outgoing.id || outgoing.businessObject.conditionExpression?.body;
+    }
+
     const emptyExpressionError = translate('Process.Details.Modeler.ActionPanel.Form.Connection.Empty.Expression');
 
     return (
@@ -166,7 +170,7 @@ const GatewayFormRenderer = () => {
                                 )}`}
                                 value={outgoing.businessObject.conditionExpression?.body ?? ''}
                                 name={outgoing.id}
-                                customErrors={outgoing.businessObject.conditionExpression?.body ? undefined : [emptyExpressionError]}
+                                customErrors={isSequenceWithoutExpression(outgoing) ? undefined : [emptyExpressionError]}
                                 disabled={false}
                                 required={false}
                                 autofocus={false}
