@@ -106,6 +106,8 @@ const GatewayFormRenderer = () => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
 
+    const emptyExpressionError = translate('Process.Details.Modeler.ActionPanel.Form.Connection.Empty.Expression');
+
     return (
         <>
             <Grid item xs={12}>
@@ -164,6 +166,7 @@ const GatewayFormRenderer = () => {
                                 )}`}
                                 value={outgoing.businessObject.conditionExpression?.body ?? ''}
                                 name={outgoing.id}
+                                customErrors={outgoing.businessObject.conditionExpression?.body ? undefined : [emptyExpressionError]}
                                 disabled={false}
                                 required={false}
                                 autofocus={false}

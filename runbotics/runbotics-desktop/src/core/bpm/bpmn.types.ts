@@ -5,10 +5,21 @@ export interface IBehaviour {
     id: string;
     actionId: string;
     label: string;
+    conditionExpression?: IFormalExpression;
+}
+
+export interface IFormalExpression {
+    $type: string;
+    body?: string;
+}
+
+export interface IOutboundSequence {
+    behaviour: IBehaviour;
 }
 
 export interface IActivityOwner extends BpmnEngine {
     behaviour?: IBehaviour;
+    outbound: IOutboundSequence[];
 }
 export interface IEnvironment extends BpmnEngineExecutionEnvironment {
     runbotic: {

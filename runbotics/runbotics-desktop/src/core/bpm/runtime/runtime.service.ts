@@ -203,7 +203,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 );
             }
 
-            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) {
+            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY
+                && !this.isAnySequenceWithoutExpression(api.owner as IActivityOwner)) {
                 this.saveGatewayNameInCache(api);
                 return;
             }
@@ -279,6 +280,24 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 });
             }
         });
+        
+        //todo remove it
+        function stringify(obj) {
+            let cache = [];
+            let str = JSON.stringify(obj, function(key, value) {
+                if (typeof value === "object" && value !== null) {
+                    if (cache.indexOf(value) !== -1) {
+                        // Circular reference found, discard key
+                        return;
+                    }
+                    // Store value in our collection
+                    cache.push(value);
+                }
+                return value;
+            });
+            cache = null; // reset the cache
+            return str;
+        }
 
         // @ts-ignore
         engine.once('error', (error) => {
@@ -581,7 +600,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
-        const gatewayName = api.name ? api.name : api.id;
+        const gatewayName = api.name ?? api.id;
         this.storageService.setValue(api.id, gatewayName);
     };
 
@@ -591,4 +610,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         content.isSequenceFlow &&
         content.sourceId.includes('Gateway_')
     );
+
+    private isAnySequenceWithoutExpression = (owner: IActivityOwner) => owner.outbound
+        .map(out => out?.behaviour?.conditionExpression)
+        .some(expression => expression.body === null || expression.body === undefined);
 }

@@ -112,6 +112,10 @@ export class RuntimeSubscriptionsService {
                             }
                             break;
 
+                        case BpmnElementType.EXCLUSIVE_GATEWAY:
+                            processInstanceEvent.step = `${event.activity.name ?? event.activity.id}`;
+                            break;
+
                         default:
                             processInstanceEvent.log = `?? Activity: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = 'Activity';
