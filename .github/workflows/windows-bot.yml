@@ -1,16 +1,19 @@
-name: Run on merge to develop
+name: New Workflow
+
 on:
   push:
     branches:
-      - develop
+      - feature/new-workflow
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Run a one-line script
-      run: echo "This workflow has run successfully!"
+      - name: Run Your Build Step
+        # Add your build/test commands here
+        run: |
+          echo "Running build/test commands..."
