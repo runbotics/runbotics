@@ -1,19 +1,96 @@
-name: New Workflow
+name: Windows Bot build
 
 on:
   push:
-    branches:
-      - feature/RPA-1097
+    branches: ['develop', 'master', 'feature/RPA-1097'] # todo remove feature/RPA-1097
+  workflow_dispatch:
+
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+  # PNPM: node ../common/scripts/install-run-pnpm.js
+  NODE_VERSION: 18.x
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  changes-detection:
+    runs-on: windows-latest
+
+    outputs:
+      bot: ${{ steps.filter.outputs.bot }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Run Your Build Step
-        # Add your build/test commands here
+      - name: Assign paths to scenarios
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            bot:
+              - 'runbotics/runbotics-desktop/package.json'
+  push-bot:
+    needs: changes-detection # todo uncomment lines below
+    # if: |
+      # (github.ref == 'refs/heads/develop'
+      # || github.ref == 'refs/heads/master'
+      # || startsWith(github.ref, 'refs/heads/release/')
+      # || startsWith(github.ref, 'refs/heads/hotfix/'))
+      # && needs.changes-detection.outputs.bot == 'true'
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-desktop
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: $RUSH install -t .
+
+      - name: Build
+        run: $RUSH rebuild -t .
+
+      - name: Rush deploy
         run: |
-          echo "Running build/test commands..."
+          mkdir -p ../common/deploy/runbotics-desktop
+          $RUSH deploy \
+            --scenario runbotics-desktop \
+            --target-folder ../common/deploy/runbotics-desktop \
+            --overwrite
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-desktop/package.json'
+
+      - name: Install rb-sdk
+        run: |
+          cd runbotics-sdk && \
+            pnpm install --ignore-scripts && \
+            cd ..
+
+      - name: Install rb-common
+        run: |
+          cd runbotics-common && \
+            pnpm install --ignore-scripts && \
+            cd ..
+
+      - name: Install npmrc
+        run: |
+          cp .npmrc ./runbotics-desktop && \
+            cd runbotics-desktop && \
+            pnpm add runbotics-common@file:../runbotics-common \
+                @runbotics/runbotics-sdk@file:../runbotics-sdk \
+                --ignore-scripts && \
+            pnpm install --ignore-scripts && cd ..
+
+      - name: Build rb-desktop
+        run: |
+          cd runbotics-desktop && \
+            pnpm electron-builder && cd ..
