@@ -3,7 +3,7 @@ name: New Workflow
 on:
   push:
     branches:
-      - feature/new-workflow
+      - feature/RPA-1097
 
 jobs:
   build:
