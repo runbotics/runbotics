@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
+import { JSONSchema7 } from 'json-schema';
 
-const tryGetSchema = (executionInfo: string) => {
+const tryGetSchema = (executionInfo: string): JSONSchema7 => {
     try {
         const form = JSON.parse(executionInfo);
         const schema = form.schema;
