@@ -34,13 +34,13 @@ public class NotificationBotResource {
     }
 
     /**
-     * {@code GET /bot-notifications/{botId}} : gets all subscriptions for botId.
+     * {@code GET /bots/{botId}/notifications} : gets all subscriptions for botId.
      *
      * @param botId bot id to get all filtered subscriptions.
      * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the subscriptions.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the botId was not provided.
      */
-    @GetMapping("/bot-notifications/{botId}")
+    @GetMapping("/bots/{botId}/notifications")
     public ResponseEntity<List<NotificationBotDTO>> getAllBotSubscriptions(@PathVariable Long botId) {
         log.debug("REST request to get all subscriptions for bot notification with id: {}", botId);
 

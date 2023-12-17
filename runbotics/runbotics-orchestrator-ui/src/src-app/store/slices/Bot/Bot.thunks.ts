@@ -53,7 +53,7 @@ export const unsubscribeBotNotifications = createAsyncThunk<void, NotificationBo
 
 export const getBotSubscriptionInfo = createAsyncThunk<NotificationBot[], IBot['id']>(
     'bot/getBotSubscriptionInfo',
-    (botId) => Axios.get<NotificationBot[]>(`/api/bot-notifications/${botId}`)
+    (botId) => Axios.get<NotificationBot[]>(`/api/bots/${botId}/notifications`)
         .then((response) => response.data)
 );
 

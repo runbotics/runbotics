@@ -36,13 +36,13 @@ public class NotificationProcessResource {
     }
 
     /**
-     * {@code GET /process-notifications/{processId}} : gets all subscriptions for processId.
+     * {@code GET /processes/{processId}/notifications} : gets all subscriptions for processId.
      *
      * @param processId process id to get all filtered subscriptions.
      * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body the subscriptions.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the processId was not provided.
      */
-    @GetMapping("/process-notifications/{processId}")
+    @GetMapping("/processes/{processId}/notifications")
     public ResponseEntity<List<NotificationProcessDTO>> getAllProcessSubscriptions(@PathVariable Long processId) {
         log.debug("REST request to get all subscriptions for process notification with id: {}", processId);
 
