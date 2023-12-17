@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.BatchSize;
+
 import org.hibernate.annotations.Type;
 
 /**
@@ -81,8 +83,8 @@ public class Process implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "tag_process",
-        joinColumns = { @JoinColumn(name = "process_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "tag_id", referencedColumnName = "id") }
+        joinColumns = {@JoinColumn(name = "process_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")}
     )
     @BatchSize(size = 20)
     private Set<Tag> tags = new HashSet<>();

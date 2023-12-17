@@ -80,7 +80,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
-        // await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
+        await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)

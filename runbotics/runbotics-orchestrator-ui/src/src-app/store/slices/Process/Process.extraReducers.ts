@@ -13,6 +13,10 @@ import {
     getProcessesPage,
     partialUpdateProcess,
     createGuestProcess,
+    subscribeProcessNotifications,
+    unsubscribeProcessNotifications,
+    getProcessSubscriptionInfo,
+    getProcessSubscriptionInfoByProcessIdAndUserId
 } from './Process.thunks';
 
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
@@ -108,6 +112,56 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(partialUpdateProcess.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
+        })
+
+        // SUBSCRIBE PROCESS NOTIFICATIONS
+        .addCase(subscribeProcessNotifications.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(subscribeProcessNotifications.fulfilled, (state) => {
+            state.all.loading = false;
+        })
+        .addCase(subscribeProcessNotifications.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+            state.all.loading = false;
+        })
+
+        // UNSUBSCRIBE PROCESS NOTIFICATIONS
+        .addCase(unsubscribeProcessNotifications.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(unsubscribeProcessNotifications.fulfilled, (state) => {
+            state.all.loading = false;
+        })
+        .addCase(unsubscribeProcessNotifications.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+            state.all.loading = false;
+        })
+
+        // GET ALL PROCESS SUBSCRIPTIONS
+        .addCase(getProcessSubscriptionInfo.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getProcessSubscriptionInfo.fulfilled, (state, action) => {
+            state.all.loading = false;
+            state.draft.processSubscriptions = action.payload;
+        })
+        .addCase(getProcessSubscriptionInfo.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+            state.all.loading = false;
+        })
+
+        // GET ALL PROCESS SUBSCRIPTIONS
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.fulfilled, (state, action) => {
+            state.all.loading = false;
+            state.draft.currentProcessSubscription = action.payload;
+        })
+        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+            state.all.loading = false;
         });
 };
 

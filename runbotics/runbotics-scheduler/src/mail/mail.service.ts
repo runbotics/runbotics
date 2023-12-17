@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IBot, IProcess, IProcessInstance } from 'runbotics-common';
+import { IBot, IProcess, IProcessInstance, IUser, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
+import { BotService } from '#/database/bot/bot.service';
+import { ProcessService } from '#/database/process/process.service';
+import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
+import { ServerConfigService } from '#/config/server-config';
 
 export type SendMailInput = {
-    to: string;
+    to?: string;
     cc?: string;
+    bcc?: string;
     subject: string;
     content: string;
     attachment?: string;
@@ -20,19 +25,29 @@ export class MailService {
 
     constructor(
         private readonly mailerService: MailerService,
+        private readonly botService: BotService,
+        private readonly processService: ProcessService,
+        private readonly serverConfigService: ServerConfigService
     ) {}
 
     public async sendMail(input: SendMailInput) {
         const sendMailOptions: ISendMailOptions = {
-            to: input.to,
             from: process.env.MAIL_USERNAME,
             subject: input.subject,
             text: input.content,
         };
 
+        const to = input.to;
+        if (to) {
+            sendMailOptions['to'] = to;
+        }
         const cc = input.cc;
         if (cc) {
             sendMailOptions['cc'] = cc;
+        }
+        const bcc = input.bcc;
+        if (bcc) {
+            sendMailOptions['bcc'] = bcc;
         }
 
         const attachment = input.attachment;
@@ -47,24 +62,75 @@ export class MailService {
         }
 
         await this.mailerService.sendMail(sendMailOptions)
-            .catch(error => {
-                this.logger.error(`Failed to send the mail with error: ${error.message}`);
-            });
+        .catch(error => {
+        this.logger.error(`Failed to send the mail with error: ${error.message}`);
+        });
     }
 
     public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
-        await this.sendMail({
-            to: bot.user.email ?? '',
+        const disconnectedBot = await this.botService.findById(bot.id);
+        const botAssignedUserEmail = disconnectedBot.user.email;
+        const subscribers = disconnectedBot.subscribers ?? [];
+
+        const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\n\nBest regards,\nRunBotics`,
-        });
+            content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
+        };
+
+        if (disconnectedBot.collection.name !== 'Public') {
+            const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
+                const botCollectionAssignedUser = disconnectedBot.collection.users
+                    .find(user => user.id === subscriber.id);
+
+                botCollectionAssignedUser && acc.push(subscriber.email);
+
+                return acc;
+            }, []);
+
+            await this.handleNotificationEmail(sendMailInput, [ botAssignedUserEmail, ...filteredSubscribers ]);
+        } else {
+            await this.handlePublicProcessesAndBotsNotificationEmail(subscribers, sendMailInput, botAssignedUserEmail);
+        }
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
-        await this.sendMail({
-            to: process.createdBy.email ?? '',
+        const failedProcess = await this.processService.findById(process.id);
+        const processCreatorEmail = failedProcess.createdBy.email;
+        const subscribers = failedProcess.subscribers ?? [];
+
+        const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\n\nBest regards,\nRunBotics`,
-        });
+            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
+        };
+
+        if (!failedProcess.isPublic) {
+            const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
+                const adminSubscriber = subscriber.authorities
+                    .find(authority => authority.name === Role.ROLE_ADMIN);
+
+                adminSubscriber && acc.push(subscriber.email);
+
+                return acc;
+            }, []);
+
+            await this.handleNotificationEmail(sendMailInput, [ processCreatorEmail, ...filteredSubscribers ]);
+        } else {
+            await this.handlePublicProcessesAndBotsNotificationEmail(subscribers, sendMailInput, processCreatorEmail);
+        }
+    }
+
+    private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
+        const emailAddresses = mergeArraysWithoutDuplicates(addresses).join(',');
+
+        await this.sendMail({ ...emailInput, bcc: emailAddresses });
+    }
+
+    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: IUser[], emailInput: SendMailInput, assignedUserEmail: string) {
+        const subscribersAddresses =
+            subscribers && subscribers.length
+                ? subscribers.map(({ email }) => email)
+                : [];
+
+        await this.handleNotificationEmail(emailInput, [ assignedUserEmail, ...subscribersAddresses ]);
     }
 }

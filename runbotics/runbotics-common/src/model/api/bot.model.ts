@@ -13,4 +13,5 @@ export interface IBot {
     status?: BotStatus;
     collection?: IBotCollection;
     version?: string | null;
+    subscribers?: IUser[];
 }
