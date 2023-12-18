@@ -262,6 +262,22 @@ public class ProcessResource {
         );
     }
 
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_OUTPUT_TYPE_EDIT + "')")
+    @PatchMapping(value = "/processes/{id}/output-type")
+    public ResponseEntity<ProcessDTO> processSetOutputType(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody ProcessDTO processDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update output type for the Process : {}, {}", id, processDTO);
+        checkProcessForEdit(id, processDTO);
+        Optional<ProcessDTO> result = processService.updateOutputType(processDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+        );
+    }
+
     /**
      * {@code GET  /processes} : get all the processes.
      *

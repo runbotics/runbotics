@@ -1,0 +1,62 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="depcikm" id="20231215807052-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="process_output"/>
+            </not>
+        </preConditions>
+        <createTable tableName="process_output">
+            <column name="type" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+        <insert tableName="process_output">
+            <column name="type">JSON_OBJECT</column>
+        </insert>
+        <insert tableName="process_output">
+            <column name="type">PLAIN_TEXT</column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231215807052-2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="process" columnName="output_type"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_process_output_type"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="process">
+            <column name="output_type" type="varchar(50)" defaultValue="JSON_OBJECT" defaultOnNull="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="output_type"
+                                 baseTableName="process"
+                                 constraintName="fk_process_output_type"
+                                 referencedColumnNames="type"
+                                 referencedTableName="process_output"/>
+    </changeSet>
+
+    <changeSet author="depcikm" id="20231215807052-3">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+            <tableExists tableName="feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO feature_key(name) VALUES
+            ('PROCESS_OUTPUT_TYPE_READ'),
+            ('PROCESS_OUTPUT_TYPE_EDIT')
+            ON CONFLICT DO NOTHING;
+        </sql>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN','PROCESS_OUTPUT_TYPE_READ'),
+            ('ROLE_ADMIN','PROCESS_OUTPUT_TYPE_EDIT'),
+            ('ROLE_USER','PROCESS_OUTPUT_TYPE_READ'),
+            ('ROLE_USER','PROCESS_OUTPUT_TYPE_EDIT')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -15,6 +15,8 @@ public final class FeatureKeyConstants {
     public static final String PROCESS_BOT_COLLECTION_READ = "PROCESS_BOT_COLLECTION_READ";
     public static final String PROCESS_BOT_SYSTEM_EDIT = "PROCESS_BOT_SYSTEM_EDIT";
     public static final String PROCESS_BOT_SYSTEM_READ = "PROCESS_BOT_SYSTEM_READ";
+    public static final String PROCESS_OUTPUT_TYPE_EDIT = "PROCESS_OUTPUT_TYPE_EDIT";
+    public static final String PROCESS_OUTPUT_TYPE_READ = "PROCESS_OUTPUT_TYPE_READ";
     public static final String PROCESS_IS_ATTENDED_EDIT = "PROCESS_IS_ATTENDED_EDIT";
     public static final String PROCESS_IS_ATTENDED_READ = "PROCESS_IS_ATTENDED_READ";
 
