@@ -33,7 +33,7 @@ import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
 import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
-import { IActivityOwner, IEnvironment } from '../bpmn.types';
+import { ActivityOwner, Environment, OutboundSequence } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -192,7 +192,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         );
 
         listener.on('activity.start', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+            if ((api.environment as Environment).runbotic?.disabled) return;
 
             if (this.loopHandlerService.shouldSkipElement(api)) return;
 
@@ -204,7 +204,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             }
 
             if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) {
-                this.saveGatewayNameInCache(api);
+                prepareGatewayToFlowProcess(api);
                 return;
             }
 
@@ -221,7 +221,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('activity.end', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+            if ((api.environment as Environment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
             if (this.loopHandlerService.shouldSkipElement(api)) return;
@@ -396,10 +396,26 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             }
         });
 
+        const prepareGatewayToFlowProcess = (api: BpmnExecutionEventMessageExtendedApi) => {
+            if (this.getSequencesWithoutExpression(api.owner as ActivityOwner).length === 0) {
+                this.saveGatewayNameInCache(api);
+                return;
+            } else {
+                this.activityEventBus.publish({
+                    processInstance,
+                    eventType: ProcessInstanceEventStatus.ERRORED,
+                    activity: api,
+                    iteratorName: this.loopHandlerService.getIteratorNameById(
+                        api.content.parent.executionId
+                    ),
+                });
+            }
+        }
+
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
                 (api.content as DesktopTask)?.input?.script ?? api.content.type;
-            const activityLabel = (api.owner as IActivityOwner).behaviour.label;
+            const activityLabel = (api.owner as ActivityOwner).behaviour.label;
 
             const baseLogPrefix = `[${processInstanceId}] [${api.executionId}] [${activityType}]`;
 
@@ -580,8 +596,15 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         definition.environment.assignVariables(globalVariables);
     }
 
+    public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound
+        .filter(outbound => this.isSequenceWithoutExpression(outbound))
+        .map(outbound => outbound.behaviour.name ?? outbound.behaviour.id);
+
+    private isSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
+        !outbound?.behaviour?.conditionExpression?.body;
+
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
-        const gatewayName = api.name ? api.name : api.id;
+        const gatewayName = api.name ?? api.id;
         this.storageService.setValue(api.id, gatewayName);
     };
 

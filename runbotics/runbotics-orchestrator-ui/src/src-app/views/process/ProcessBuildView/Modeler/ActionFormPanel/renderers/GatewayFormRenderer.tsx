@@ -106,6 +106,11 @@ const GatewayFormRenderer = () => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
 
+    const isSequenceWithoutExpression = (outgoing: IBpmnConnection) =>
+        gateway.businessObject.default.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
+
+    const emptyExpressionError = translate('Process.Edit.Form.Fields.Error.Required');
+
     return (
         <>
             <Grid item xs={12}>
@@ -164,6 +169,7 @@ const GatewayFormRenderer = () => {
                                 )}`}
                                 value={outgoing.businessObject.conditionExpression?.body ?? ''}
                                 name={outgoing.id}
+                                customErrors={isSequenceWithoutExpression(outgoing) ? undefined : [emptyExpressionError]}
                                 disabled={false}
                                 required={false}
                                 autofocus={false}
