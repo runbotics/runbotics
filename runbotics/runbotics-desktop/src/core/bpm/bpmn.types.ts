@@ -3,6 +3,7 @@ import { BpmnEngine, BpmnEngineExecutionEnvironment } from 'bpmn-engine';
 export interface Behaviour {
     $type: string;
     id: string;
+    name: string;
     actionId: string;
     label: string;
     conditionExpression?: FormalExpression;

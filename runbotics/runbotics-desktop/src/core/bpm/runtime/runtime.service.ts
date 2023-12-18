@@ -203,9 +203,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 );
             }
 
-            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY &&
-                !this.isAnySequenceWithoutExpression(api.owner as ActivityOwner)) {
-                this.saveGatewayNameInCache(api);
+            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) {
+                prepareGatewayToFlowProcess(api);
                 return;
             }
 
@@ -283,7 +282,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
         // @ts-ignore
         engine.once('error', (error) => {
-            this.swapEmptyFlowExpressionErrorMessage(error);
             try {
                 this.logger.error(
                     `[${processInstanceId}] process.error`,
@@ -397,6 +395,22 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 listener = null;
             }
         });
+
+        const prepareGatewayToFlowProcess = (api: BpmnExecutionEventMessageExtendedApi) => {
+            if (this.getSequencesWithoutExpression(api.owner as ActivityOwner).length === 0) {
+                this.saveGatewayNameInCache(api);
+                return;
+            } else {
+                this.activityEventBus.publish({
+                    processInstance,
+                    eventType: ProcessInstanceEventStatus.ERRORED,
+                    activity: api,
+                    iteratorName: this.loopHandlerService.getIteratorNameById(
+                        api.content.parent.executionId
+                    ),
+                });
+            }
+        }
 
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
@@ -582,12 +596,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         definition.environment.assignVariables(globalVariables);
     }
 
-    public isAnySequenceWithoutExpression = (owner: ActivityOwner) => owner.outbound
-        .some(outbound => this.isSequenceWithoutExpression(outbound));
+    public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound
+        .filter(outbound => this.isSequenceWithoutExpression(outbound))
+        .map(outbound => outbound.behaviour.name ?? outbound.behaviour.id);
 
     private isSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
         !outbound?.behaviour?.conditionExpression?.body;
-    
+
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ?? api.id;
         this.storageService.setValue(api.id, gatewayName);
@@ -599,10 +614,4 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         content.isSequenceFlow &&
         content.sourceId.includes('Gateway_')
     );
-
-    private swapEmptyFlowExpressionErrorMessage = (error: Error) => {
-        if (error.message.includes('Condition expression without body is unsupported')) {
-            error.message = 'Empty condition in sequence flow is not supported';
-        }
-    };
 }

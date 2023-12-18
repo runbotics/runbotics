@@ -113,7 +113,12 @@ export class RuntimeSubscriptionsService {
                             break;
 
                         case BpmnElementType.EXCLUSIVE_GATEWAY:
-                            processInstanceEvent.step = `${event.activity.name ?? event.activity.id}`;
+                            // eslint-disable-next-line no-case-declarations
+                            const sequencesWithoutExpression = this.runtimeService.getSequencesWithoutExpression(event.activity.owner as ActivityOwner);
+                            if (sequencesWithoutExpression.length > 0) {
+                                processInstanceEvent.step = `${event.activity.name ?? event.activity.id}`;
+                                processInstanceEvent.error = 'Empty condition in sequence flows: ' + sequencesWithoutExpression.join(', ');
+                            }
                             break;
 
                         default:
