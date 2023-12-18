@@ -32,6 +32,7 @@ export interface ModelerState {
     variables: Variable[];
     isSaveDisabled: boolean;
     selectedElement?: BPMNElement;
+    currentProcessOutputElement?: BPMNElement;
     selectedAction?: IBpmnAction;
     passedInVariables?: string[];
     commandStack: CommandStackInfo;

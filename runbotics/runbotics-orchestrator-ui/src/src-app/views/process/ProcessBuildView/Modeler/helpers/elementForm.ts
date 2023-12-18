@@ -37,7 +37,9 @@ export const getFormData = (
     if (!selectedElement) return null;
     let selectedAction = action;
     if (!action) selectedAction = getActionFromElement(selectedElement);
-    const { runFromHere, disabled } = selectedElement.businessObject;
+    const { runFromHere, disabled, processOutput } = selectedElement.businessObject;
+
+    const hasOutput = selectedAction.form.schema.properties.output;
 
     const defaultParameters = {
         ...selectedAction?.form.formData,
@@ -67,6 +69,11 @@ export const getFormData = (
             }
         }
     );
+
+    if (hasOutput) {
+        defaultParameters.processOutput = processOutput;
+    }
+
     return defaultParameters;
 };
 
@@ -78,21 +85,36 @@ export const getFormSchema = (
     let selectedAction = action;
     if (!action) selectedAction = getActionFromElement(selectedElement);
 
+    const hasOutput = selectedAction.form.schema.properties.output;
+
+    const additionalProperties = {
+        disabled: {
+            type: 'boolean',
+            title: translate(
+                'Process.Details.Modeler.ActionPanel.Form.Disabled.Title'
+            )
+        },
+        runFromHere: {
+            type: 'boolean',
+            title: translate(
+                'Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'
+            )
+        },
+    } as JSONSchema7['properties'];
+
+    if (hasOutput) {
+        additionalProperties.processOutput = {
+            type: 'boolean',
+            title: translate(
+                'Process.Details.Modeler.ActionPanel.Form.ProcessOutput.Title'
+            )
+        };
+    }
+
     return {
         ...selectedAction?.form.schema,
         properties: {
-            disabled: {
-                type: 'boolean',
-                title: translate(
-                    'Process.Details.Modeler.ActionPanel.Form.Disabled.Title'
-                )
-            },
-            runFromHere: {
-                type: 'boolean',
-                title: translate(
-                    'Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'
-                )
-            },
+            ...additionalProperties,
             ...selectedAction?.form.schema.properties
         }
     };
@@ -106,11 +128,21 @@ export const getFormUiSchema = (
     let selectedAction = action;
     if (!action) selectedAction = getActionFromElement(selectedElement);
 
+    const hasOutput = selectedAction.form.schema.properties.output;
     const cloned = { ...selectedAction.form.uiSchema };
+
     if (cloned['ui:order']) {
         cloned['ui:order'] = [
             'disabled',
-            'runFromHere',
+            'runFromHere'
+        ];
+
+        if (hasOutput) {
+            cloned['ui:order'].push('processOutput');
+        }
+
+        cloned['ui:order'] = [
+            ...cloned['ui:order'],
             ...selectedAction.form.uiSchema['ui:order']
         ];
     }

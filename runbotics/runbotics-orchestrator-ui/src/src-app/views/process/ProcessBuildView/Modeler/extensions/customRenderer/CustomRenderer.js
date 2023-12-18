@@ -18,13 +18,15 @@ import store from "../../../../../../store";
 import internalBpmnActions from "../../../../../../Actions";
 import { translate, checkIfKeyExists } from "#src-app/hooks/useTranslations";
 import { capitalizeFirstLetter } from "#src-app/utils/text";
+import { lightTheme } from "#src-app/theme/light";
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 5,
     COLOR_RED = "#ff5e5e",
     COLOR_GREY = "#e0e0e0",
     COLOR_DEFAULT = "#bbbbbb",
-    COLOR_BLACK = "#000000"
+    COLOR_BLACK = "#000000",
+    COLOR_ORANGE_SECONDARY = lightTheme.palette.secondary.main
 
 export default class CustomRenderer extends BaseRenderer {
     constructor(eventBus, bpmnRenderer) {
@@ -128,9 +130,10 @@ export default class CustomRenderer extends BaseRenderer {
 
     }
     pickColor(businessObject) {
-        const { disabled, validationError } = businessObject;
+        const { disabled, validationError, processOutput } = businessObject;
         if (disabled) return COLOR_GREY;
         if (validationError) return COLOR_RED;
+        if (processOutput) return COLOR_ORANGE_SECONDARY;
         return COLOR_DEFAULT;
     }
     pickStrokeColor(businessObject) {
@@ -144,7 +147,7 @@ export default class CustomRenderer extends BaseRenderer {
         const label = this.getLabel(element);
         const businessObject = getBusinessObject(element);
         const { disabled } = businessObject;
-
+        // debugger;
         if (is(element, "bpmn:Task")) {
             drawRect(
                 parentNode,

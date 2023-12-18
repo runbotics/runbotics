@@ -93,6 +93,13 @@ export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValu
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
+export const updateProcessOutputType = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+    'processes/output-type',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/output-type`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
 export const updateDiagram = createAsyncThunk<IProcess, UpdateDiagramRequest, { rejectValue: any }>(
     'processes/updateDiagram',
     (process, { rejectWithValue }) => Axios.patch<IProcess>(`/api/processes/${process.id}/diagram`, process)

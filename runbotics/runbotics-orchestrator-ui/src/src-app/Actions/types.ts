@@ -32,6 +32,7 @@ export type IFormData = Record<string, any> & {
     output?: Record<string, any>;
     disabled?: boolean;
     runFromHere?: boolean;
+    processOutput?: boolean;
     validationError?: boolean;
 };
 export type IForm = {
@@ -53,3 +54,8 @@ export type IBpmnAction = {
     output?: IActionOutput;
     form?: IForm;
 };
+
+export type FormState = {
+    id: string;
+    formData: IFormData;
+}

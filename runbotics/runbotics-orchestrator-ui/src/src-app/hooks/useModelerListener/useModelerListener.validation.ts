@@ -9,7 +9,7 @@ import {
     getFormData,
     getFormSchema,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementForm';
-import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+import { BPMNElement, BPMNElementRegistry } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import {
     ModelerSyncParams,
@@ -22,6 +22,18 @@ export const getModelerActivities = (elements: BPMNElement[]) =>
     _.sortBy(
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
+
+export const getModelerActivitiesElementsWithOutput = (elements: BPMNElementRegistry) =>
+    Object.entries(elements)?.reduce<BPMNElementRegistry>((acc, [elmKey, elmValue]) => {
+        if (elmKey.startsWith('Activity') &&
+            elmValue.element.businessObject.extensionElements.values[0]?.outputParameters) {
+            return {
+                ...acc,
+                [elmKey]: elmValue,
+            };
+        }
+        return acc;
+    }, {});
 
 export const isModelerSync = ({
     modeler,

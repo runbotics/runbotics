@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Box, Grid } from '@mui/material';
 
-import { IFormData } from '#src-app/Actions/types';
+import { FormState } from '#src-app/Actions/types';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -85,7 +85,7 @@ const LoopActionRenderer: FC = () => {
         return `${collectionName.slice(0, -1)}.length}`;
     };
 
-    const handleSubmit = (formState: IFormData) => {
+    const handleSubmit = (formState: FormState) => {
         if (!isLoopElement(selectedElement)) return;
         const { loopType, collection } = formState.formData.input;
         const { loopCharacteristics } = selectedElement.businessObject;
@@ -111,7 +111,8 @@ const LoopActionRenderer: FC = () => {
                 input: formState.formData.input,
                 output: formState.formData.output,
                 disabled: formState.formData.disabled,
-                runFromHere: formState.formData.runFromHere
+                runFromHere: formState.formData.runFromHere,
+                processOutput: formState.formData.processOutput
             }
         });
     };
