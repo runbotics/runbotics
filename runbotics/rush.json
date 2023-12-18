@@ -367,6 +367,16 @@
             "projectFolder": "runbotics-desktop",
             "shouldPublish": true
         },
+//        {
+//            "packageName": "runbotics-desktop-2",
+//            "projectFolder": "runbotics-desktop-2",
+//            "shouldPublish": true
+//        },
+//        {
+//            "packageName": "runbotics-desktop-3",
+//            "projectFolder": "runbotics-desktop-3",
+//            "shouldPublish": true
+//        },
         {
             "packageName": "runbotics-orchestrator-ui",
             "projectFolder": "runbotics-orchestrator-ui",

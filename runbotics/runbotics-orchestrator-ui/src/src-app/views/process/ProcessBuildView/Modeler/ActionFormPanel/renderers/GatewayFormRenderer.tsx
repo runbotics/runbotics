@@ -107,7 +107,7 @@ const GatewayFormRenderer = () => {
     };
 
     const isSequenceWithoutExpression = (outgoing: IBpmnConnection) =>
-        gateway.businessObject.default.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
+        gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
 
     const emptyExpressionError = translate('Process.Edit.Form.Fields.Error.Required');
 
