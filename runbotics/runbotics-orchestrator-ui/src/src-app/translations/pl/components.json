@@ -170,5 +170,9 @@
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed": "Nie udało się dodać {{ name }} do formularza",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success": "Udało się usunąć {{ name }} z formularza",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Failed": "Nie udało się usunąć {{ name }} z formularza",
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Frekwencja nie jest jeszcze zdefiniowana dla tego procesu"
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Frekwencja nie jest jeszcze zdefiniowana dla tego procesu",
+
+    "Component.NotificationTable.View.Header": "Subskrybenci",
+    "Component.NotificationTable.View.SearchBarPlaceholder": "Szukaj",
+    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów"
 }

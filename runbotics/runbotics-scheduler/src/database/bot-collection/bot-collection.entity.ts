@@ -46,6 +46,6 @@ export class BotCollectionEntity implements IBotCollection {
         joinColumn: { name: 'bot_collection_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' }
     })
-        user: IUser[];
+        users: IUser[];
 
 }

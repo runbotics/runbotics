@@ -13,6 +13,8 @@ const initialState: BotState = {
         byId: {},
         allIds: [],
         page: null,
+        botSubscriptions: [],
+        currentBotSubscription: null,
     },
 };
 

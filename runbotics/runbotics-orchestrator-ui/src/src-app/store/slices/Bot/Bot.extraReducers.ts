@@ -3,7 +3,14 @@ import { IBot } from 'runbotics-common';
 
 import { BotState } from './Bot.state';
 import {
-    deleteById, getAll, getPage, getById,
+    deleteById,
+    getAll,
+    getPage,
+    getById,
+    subscribeBotNotifications,
+    unsubscribeBotNotifications,
+    getBotSubscriptionInfo,
+    getBotSubscriptionInfoByBotIdAndUserId,
 } from './Bot.thunks';
 
 const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
@@ -58,6 +65,52 @@ const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
             delete state.bots.byId[action.meta.arg.id];
         })
         .addCase(deleteById.rejected, (state) => {
+            state.bots.loading = false;
+        })
+
+        // SUBSCRIBE BOT NOTIFICATIONS
+        .addCase(subscribeBotNotifications.pending, (state) => {
+            state.bots.loading = true;
+        })
+        .addCase(subscribeBotNotifications.fulfilled, (state) => {
+            state.bots.loading = false;
+        })
+        .addCase(subscribeBotNotifications.rejected, (state) => {
+            state.bots.loading = false;
+        })
+
+        // UNSUBSCRIBE BOT NOTIFICATIONS
+        .addCase(unsubscribeBotNotifications.pending, (state) => {
+            state.bots.loading = true;
+        })
+        .addCase(unsubscribeBotNotifications.fulfilled, (state) => {
+            state.bots.loading = false;
+        })
+        .addCase(unsubscribeBotNotifications.rejected, (state) => {
+            state.bots.loading = false;
+        })
+
+        // GET ALL BOT SUBSCRIPTIONS
+        .addCase(getBotSubscriptionInfo.pending, (state) => {
+            state.bots.loading = true;
+        })
+        .addCase(getBotSubscriptionInfo.fulfilled, (state, action) => {
+            state.bots.loading = false;
+            state.bots.botSubscriptions = action.payload;
+        })
+        .addCase(getBotSubscriptionInfo.rejected, (state) => {
+            state.bots.loading = false;
+        })
+
+        // GET BOT SUBSCRIPTION BY BOT_ID AND USER_ID
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.pending, (state) => {
+            state.bots.loading = true;
+        })
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.fulfilled, (state, action) => {
+            state.bots.loading = false;
+            state.bots.currentBotSubscription = action.payload;
+        })
+        .addCase(getBotSubscriptionInfoByBotIdAndUserId.rejected, (state) => {
             state.bots.loading = false;
         });
 };

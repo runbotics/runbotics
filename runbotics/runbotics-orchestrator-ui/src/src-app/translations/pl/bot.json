@@ -36,6 +36,15 @@
     "Bot.Details.Meta.Title": "Bot",
     "Bot.Details.Tabs.History.TabName": "Historia",
     "Bot.Details.Tabs.Logs.TabName": "Logi",
+    "Bot.Details.Tabs.Configure.TabName": "Konfiguruj",
+
+    "Bot.Edit.Table.Columns.User": "Użytkownik",
+    "Bot.Edit.Table.Columns.SubscribedAt": "Zasubskrybowano",
+    "Bot.Edit.Table.Columns.Actions": "Akcje",
+    "Bot.Edit.Table.Columns.Actions.Delete": "Usuń",
+
+    "Bot.Edit.Form.Fields.IsSubscribed.Tooltip": "Ustawienia powiadomień bota",
+    "Bot.Edit.Form.Fields.IsSubscribed.Label": "Powiadom o niepowodzeniu",
 
     "Bot.ListView.Table.Header.Name": "Nazwa",
     "Bot.ListView.Table.Header.Creator": "Twórca",
