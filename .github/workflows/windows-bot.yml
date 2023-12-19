@@ -78,13 +78,13 @@ jobs:
       - name: Install rb-sdk
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-sdk && `
-            pnpm install --ignore-scripts && `
+            pnpm install --no-frozen-lockfile --ignore-scripts && `
             cd ..
 
       - name: Install rb-common
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-common && `
-            pnpm install --ignore-scripts && `
+            pnpm install --no-frozen-lockfile --ignore-scripts && `
             cd ..
 
       - name: Install npmrc
