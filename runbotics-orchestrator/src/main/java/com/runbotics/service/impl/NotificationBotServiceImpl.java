@@ -6,6 +6,7 @@ import com.runbotics.repository.BotRepository;
 import com.runbotics.repository.NotificationBotRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.service.NotificationBotService;
+import com.runbotics.service.dto.NotificationBotCreateDTO;
 import com.runbotics.service.dto.NotificationBotDTO;
 import com.runbotics.service.mapper.NotificationBotMapper;
 import org.slf4j.Logger;
@@ -38,11 +39,11 @@ public class NotificationBotServiceImpl implements NotificationBotService {
     }
 
     @Override
-    public NotificationBotDTO save(NotificationBotDTO notificationBotDTO) {
-        log.debug("Request to save bot subscription: {}", notificationBotDTO);
+    public NotificationBotDTO save(NotificationBotCreateDTO notificationBotCreateDTO) {
+        log.debug("Request to save bot subscription: {}", notificationBotCreateDTO);
 
-        Long userId = notificationBotDTO.getUser().getId();
-        Long botId = notificationBotDTO.getBot().getId();
+        Long userId = notificationBotCreateDTO.getUserId();
+        Long botId = notificationBotCreateDTO.getBotId();
 
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UsernameNotFoundException("Could not found user with id " + userId + " in the database")
@@ -51,7 +52,7 @@ public class NotificationBotServiceImpl implements NotificationBotService {
             () -> new BotNotFoundException(botId)
         );
 
-        NotificationBot notificationBot = notificationBotMapper.toEntity(notificationBotDTO);
+        NotificationBot notificationBot = new NotificationBot();
 
         NotificationType notificationType = new NotificationType(NotificationType.NotificationTypeName.BOT.value());
         notificationBot.setType(notificationType);

@@ -3,6 +3,7 @@ package com.runbotics.web.rest;
 import com.runbotics.domain.NotificationBot;
 import com.runbotics.repository.NotificationBotRepository;
 import com.runbotics.service.NotificationBotService;
+import com.runbotics.service.dto.NotificationBotCreateDTO;
 import com.runbotics.service.dto.NotificationBotDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -83,23 +84,23 @@ public class NotificationBotResource {
     /**
      * {@code POST /bot-notifications} : creates a new subscription for bot notification.
      *
-     * @param notificationBotDTO the subscription to create.
+     * @param notificationBotCreateDTO the subscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new subscription.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or botId was not provided.
      */
     @PostMapping("/bot-notifications")
-    public ResponseEntity<NotificationBotDTO> createBotSubscription(@RequestBody NotificationBotDTO notificationBotDTO) {
-        log.debug("REST request to create subscription for bot notification: {}", notificationBotDTO);
+    public ResponseEntity<NotificationBotDTO> createBotSubscription(@RequestBody NotificationBotCreateDTO notificationBotCreateDTO) {
+        log.debug("REST request to create subscription for bot notification: {}", notificationBotCreateDTO);
 
-        if (notificationBotDTO.getUser() == null) {
-            throw new BadRequestAlertException("To create new bot subscription user must be provided", ENTITY_NAME, "userNotExists");
+        if (notificationBotCreateDTO.getUserId() == null) {
+            throw new BadRequestAlertException("To create new bot subscription userId must be provided", ENTITY_NAME, "userIdNotExists");
         }
 
-        if (notificationBotDTO.getBot() == null) {
-            throw new BadRequestAlertException("To create new bot subscription bot must be provided", ENTITY_NAME, "botNotExists");
+        if (notificationBotCreateDTO.getBotId() == null) {
+            throw new BadRequestAlertException("To create new botId subscription bot must be provided", ENTITY_NAME, "botIdNotExists");
         }
 
-        NotificationBotDTO result = notificationBotService.save(notificationBotDTO);
+        NotificationBotDTO result = notificationBotService.save(notificationBotCreateDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.toString()))

@@ -1,23 +1,12 @@
 package com.runbotics.service.impl;
 
-import com.runbotics.domain.Authority;
-import com.runbotics.domain.BotSystem;
+import com.runbotics.domain.*;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.ProcessConstants;
-import com.runbotics.domain.Tag;
-import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
-import com.runbotics.service.BotCollectionService;
-import com.runbotics.service.GlobalVariableService;
-import com.runbotics.service.ProcessService;
-import com.runbotics.service.TagService;
-import com.runbotics.service.UserService;
-import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
-import com.runbotics.service.dto.ProcessDTO;
-import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
-import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
+import com.runbotics.service.*;
+import com.runbotics.service.dto.*;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -53,6 +42,7 @@ public class ProcessServiceImpl implements ProcessService {
     private final UserService userService;
     private final BotCollectionService botCollectionService;
     private final GlobalVariableService globalVariableService;
+    private final NotificationProcessService notificationProcessService;
 
     public ProcessServiceImpl(
         ProcessRepository processRepository,
@@ -61,7 +51,8 @@ public class ProcessServiceImpl implements ProcessService {
         TagService tagService,
         UserService userService,
         BotCollectionService botCollectionService,
-        GlobalVariableService globalVariableService
+        GlobalVariableService globalVariableService,
+        NotificationProcessService notificationProcessService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
@@ -70,6 +61,7 @@ public class ProcessServiceImpl implements ProcessService {
         this.userService = userService;
         this.botCollectionService = botCollectionService;
         this.globalVariableService = globalVariableService;
+        this.notificationProcessService = notificationProcessService;
     }
 
     @Override
@@ -288,6 +280,8 @@ public class ProcessServiceImpl implements ProcessService {
         if (process.isEmpty()) {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
+
+        notificationProcessService.deleteUnusedByProcessId(id);
 
         List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
