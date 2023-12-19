@@ -89,7 +89,7 @@ jobs:
 
       - name: Install npmrc
         run: |
-          cp ../.npmrc ./runbotics-desktop && `
+          cp ../common/deploy/runbotics-desktop/.npmrc ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
             # cd runbotics-desktop && `
             pnpm add runbotics-common@file:../runbotics-common `
                 @runbotics/runbotics-sdk@file:../runbotics-sdk `
