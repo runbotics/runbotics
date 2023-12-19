@@ -28,7 +28,7 @@ export class WebsocketService implements OnApplicationBootstrap {
             this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, () => {
-            if(message.payload.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
+            if(message.payload?.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
                 this.messageService.clear();
                 return;
             }
@@ -37,4 +37,9 @@ export class WebsocketService implements OnApplicationBootstrap {
         });
     }
 
+    async emitMessageWithoutQueue(
+        message: Message
+    ) {
+        this.io.emit(message.event, message.payload);
+    }
 }

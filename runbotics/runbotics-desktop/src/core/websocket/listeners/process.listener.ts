@@ -15,13 +15,15 @@ import { RunboticsLogger } from '#logger';
 import { delay, SECOND } from '#utils';
 
 import { AuthService } from '../auth/auth.service';
-import { StartProcessMessageBody } from './process.listener.types';
-import { MessageQueueService } from '../queue/message-queue.service';
+import { StartProcessMessageBody, KeepAliveStatus } from './process.listener.types';
+import { initKeepAliveStatus } from './process.listener.utils';
+import { MessageQueueService, Message } from '../queue/message-queue.service';
 import { WebsocketService } from '../websocket.service';
 
 @Injectable()
 export class ProcessListener {
     private readonly logger = new RunboticsLogger(ProcessListener.name);
+    private keepAliveStatus: KeepAliveStatus = initKeepAliveStatus;
 
     constructor(
         @InjectIoClientProvider() private readonly io: IoClient,
@@ -31,12 +33,32 @@ export class ProcessListener {
         private readonly websocketService: WebsocketService
     ) {}
 
+    private beginKeepAliveInterval() {
+        const intervalId = setInterval(() => {
+            const message: Message = {
+                event: BotWsMessage.KEEP_ALIVE,
+                payload: null
+            };
+
+            this.websocketService.emitMessageWithoutQueue(message);
+        }, 60000);
+
+        this.keepAliveStatus = { intervalId, isActive: true };
+    }
+
+    private clearKeepAliveInterval() {
+        clearInterval(this.keepAliveStatus.intervalId);
+        this.keepAliveStatus = initKeepAliveStatus;
+    }
+
     @OnConnect()
     connect() {
         this.logger.log(`Connected to Scheduler (id: ${this.io.id})`);
         this.queueService
             .getAll()
             .forEach((element) => this.websocketService.emitMessage(element, true));
+
+        this.beginKeepAliveInterval();
     }
 
     @OnConnectError()
@@ -48,6 +70,7 @@ export class ProcessListener {
 
     @OnDisconnect()
     async disconnect(reason: IoClient.DisconnectReason) {
+        this.clearKeepAliveInterval();
         this.logger.error('Scheduler connection has been closed: ', reason);
         await delay(5 * SECOND);
         this.io.auth = await this.authService.getCredentials();

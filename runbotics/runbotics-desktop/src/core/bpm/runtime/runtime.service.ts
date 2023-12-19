@@ -129,7 +129,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             const { processInstancesCount, enginesCount } = this.getRuntimeStatus();
 
             this.logger.warn(`Process instances: ${processInstancesCount} Engines: ${enginesCount}`);
-        }, 100000);
+        }, 60000);
     }
 
     public startProcessInstance = async (
