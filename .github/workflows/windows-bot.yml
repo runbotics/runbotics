@@ -7,9 +7,9 @@ on:
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
-  # PNPM: node ../common/scripts/install-run-pnpm.js
   NODE_VERSION: 18.x
-
+  # PNPM: node ../common/scripts/install-run-pnpm.js
+  
 jobs:
   changes-detection:
     runs-on: windows-latest
@@ -28,7 +28,7 @@ jobs:
           filters: |
             bot:
               - 'runbotics/runbotics-desktop/package.json'
-  push-bot:
+  build-bot:
     needs: changes-detection # todo uncomment lines below
     # if: |
       # (github.ref == 'refs/heads/develop'
@@ -52,14 +52,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Running script install-run-rush.js
-        run: cat $RUSH
+        run: echo  ${{ env.RUSH }}
 
 
       - name: Install dependencies
-        run: "& '$RUSH' install -t ."
+        run:  ${{ env.RUSH }} install -t .
 
       - name: Build
-        run: $RUSH rebuild -t .
+        run: ${{ env.RUSH }} rebuild -t .
 
       - name: Rush deploy
         run: |
