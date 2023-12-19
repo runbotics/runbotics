@@ -70,7 +70,7 @@ jobs:
           path: './runbotics/runbotics-desktop/package.json'
 
       - name: Navigate to /runbotics/common/deploy/runbotics-desktop/
-      - run: cd ../common/deploy/runbotics-desktop/
+        run: cd ../common/deploy/runbotics-desktop/
 
       - name: Install rb-sdk
         run: |
