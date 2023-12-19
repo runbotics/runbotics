@@ -7,6 +7,7 @@ on:
 
 env:
   NODE_VERSION: 18.x
+  PNPM_VERSION: 8.x
   RUSH: node ../common/scripts/install-run-rush.js
   PNPM: node ../common/scripts/install-run-pnpm.js
   
@@ -53,8 +54,8 @@ jobs:
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
-          with:
-            version: 8
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
         run:  ${{ env.RUSH }} install -t .
