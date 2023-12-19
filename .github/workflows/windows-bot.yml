@@ -57,7 +57,7 @@ jobs:
 
 
       - name: Install dependencies
-        run: $RUSH install -t .
+        run: Invoke-Expression -Command '$RUSH install -t .'
 
       - name: Build
         run: $RUSH rebuild -t .
