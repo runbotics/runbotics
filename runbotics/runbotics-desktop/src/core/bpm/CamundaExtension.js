@@ -50,8 +50,10 @@ export function Camunda(activity, processEnvironment) {
         //     // behaviour.Service = ServiceImplementation
         // }
         if (activity.type === 'bpmn:ServiceTask') {
+            const disabled = activity.behaviour.disabled;
             activity.environment.runbotic = {
-                disabled: activity.behaviour.disabled,
+                disabled,
+                ...(!disabled && { processOutput: activity.behaviour.processOutput })
             };
         } else if (activity.type === 'bpmn:BoundaryEvent') {
             // do nothing when boundary event as it clears service task assigned state
