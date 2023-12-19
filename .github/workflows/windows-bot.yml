@@ -60,9 +60,9 @@ jobs:
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-desktop
-          ${{ env.RUSH }} deploy \
-            --scenario runbotics-desktop \
-            --target-folder ../common/deploy/runbotics-desktop \
+          ${{ env.RUSH }} deploy `
+            --scenario runbotics-desktop `
+            --target-folder ../common/deploy/runbotics-desktop `
             --overwrite
       - name: Assign package version
         uses: nyaa8/package-version@v1
