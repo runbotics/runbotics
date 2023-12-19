@@ -40,7 +40,7 @@ export class ProcessListener {
                 payload: null
             };
 
-            this.websocketService.emitMessage(message, true);
+            this.websocketService.emitMessageWithoutQueue(message);
         }, 60000);
 
         this.keepAliveStatus = { intervalId, isActive: true };

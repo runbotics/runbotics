@@ -37,4 +37,9 @@ export class WebsocketService implements OnApplicationBootstrap {
         });
     }
 
+    async emitMessageWithoutQueue(
+        message: Message
+    ) {
+        this.io.emit(message.event, message.payload);
+    }
 }
