@@ -3,6 +3,7 @@ import { Logger } from '../../utils/logger';
 import { BotService } from '../../database/bot/bot.service';
 import { BotStatus, IUser, WsMessage } from 'runbotics-common';
 import { UiGateway } from '../../websocket/ui/ui.gateway';
+import { NotificationBotService } from '#/database/notification-bot/notification-bot.service';
 
 
 @Injectable()
@@ -10,8 +11,11 @@ export class BotSchedulerService {
 
     private readonly logger = new Logger(BotSchedulerService.name);
 
-    constructor(private readonly botService: BotService,
-                private readonly uiGateway: UiGateway) {}
+    constructor(
+        private readonly botService: BotService,
+        private readonly uiGateway: UiGateway,
+        private readonly notificationBotService: NotificationBotService,
+    ) {}
 
     async getBotStatusForUser(user: IUser) {
         this.logger.log(`Getting bot status for user ${user.login}`);
@@ -40,6 +44,11 @@ export class BotSchedulerService {
     }
 
     async deleteById(id) {
+        const botNotifications = await this.notificationBotService.findAllByBotId(id);
+        Promise.allSettled(botNotifications
+            .map(botNotification => this.notificationBotService
+                    .delete(botNotification.id)));
+
         return this.botService.delete(id).then(() => {
             this.uiGateway.server.emit(WsMessage.BOT_DELETE, id);
             this.logger.log(`<== Bot ${id} deleted successfully`);
