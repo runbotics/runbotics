@@ -149,7 +149,7 @@ export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
         .then((response) => response.data)
 );
 
-export const subscribeProcessNotifications = createAsyncThunk<NotificationProcess, { user: IUser, process: IProcess }>(
+export const subscribeProcessNotifications = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
     'processes/subscribeProcessNotifications',
     (userProcess) => Axios.post<NotificationProcess>('/api/process-notifications', userProcess)
         .then((response) => response.data)
