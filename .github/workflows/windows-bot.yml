@@ -77,8 +77,10 @@ jobs:
 
       - name: Install rb-sdk
         run: |
-            pnpm cache clear --force && `
-            pnpm install --ignore-scripts --no-frozen-lockfile ../common/deploy/runbotics-desktop/runbotics-sdk/`
+            pnpm install `
+              --ignore-scripts `
+              --no-frozen-lockfile `
+              ../common/deploy/runbotics-desktop/runbotics-sdk/
 
       - name: Install rb-common
         run: |
