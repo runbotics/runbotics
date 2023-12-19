@@ -72,25 +72,25 @@ jobs:
       - name: Install rb-sdk
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-sdk && `
-            pnpm install --ignore-scripts && `
+            ${{ env.PNPM }} install --ignore-scripts && `
             cd ..
 
       - name: Install rb-common
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-common && `
-            pnpm install --ignore-scripts && `
+            ${{ env.PNPM }} install --ignore-scripts && `
             cd ..
 
       - name: Install npmrc
         run: |
           cp ../.npmrc ./runbotics-desktop && `
             # cd runbotics-desktop && `
-            pnpm add runbotics-common@file:../runbotics-common `
+            ${{ env.PNPM }} add runbotics-common@file:../runbotics-common `
                 @runbotics/runbotics-sdk@file:../runbotics-sdk `
                 --ignore-scripts && `
-            pnpm install --ignore-scripts && cd ..
+            ${{ env.PNPM }} install --ignore-scripts && cd ..
 
       - name: Build rb-desktop
         run: |
           # cd runbotics-desktop && `
-            pnpm electron-builder && cd ..
+            ${{ env.PNPM }} electron-builder && cd ..
