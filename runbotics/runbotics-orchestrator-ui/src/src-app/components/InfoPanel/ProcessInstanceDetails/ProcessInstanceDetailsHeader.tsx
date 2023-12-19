@@ -37,11 +37,15 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
     const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
 
     const isProcessOutput = useMemo(() => {
-        const processInstanceOutput = JSON.parse(processInstance.output);
-        return !!(processInstanceOutput &&
-            Object.values(processInstanceOutput.output).length &&
-            currentProcessOutputElement);
-    }, [processInstance.output, currentProcessOutputElement]);
+        if (processInstance && processInstance?.output) {
+            const processInstanceOutput = JSON.parse(processInstance.output);
+            return !!(processInstanceOutput &&
+                processInstance?.output.length &&
+                currentProcessOutputElement &&
+                !currentProcessOutputElement.businessObject.disabled);
+        }
+        return false;
+    }, [processInstance, currentProcessOutputElement]);
 
     const processOutput = useMemo(() => {
         if (isProcessOutput && currentProcessOutputElement) {
@@ -52,7 +56,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
                 .outputParameters[1]
                 .name;
 
-            const processOutputVariableValue = JSON.parse(processInstance.output).output[processOutputVariableName];
+            const processOutputVariableValue = JSON.parse(processInstance.output)[processOutputVariableName];
 
             switch (process.outputType.type) {
                 case ProcessOutputType.PLAIN_TEXT:
