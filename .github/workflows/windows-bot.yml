@@ -53,11 +53,12 @@ jobs:
 
       - name: Running script install-run-rush.js
         run: |
-          cat "../common/scripts/install-run-rush.js"
+          cat "../common/scripts/install-run-rush.js" && \
+          cat $RUSH
 
 
       - name: Install dependencies
-        run: Invoke-Expression -Command '$RUSH install -t .'
+        run: "& '$RUSH' install -t ."
 
       - name: Build
         run: $RUSH rebuild -t .
