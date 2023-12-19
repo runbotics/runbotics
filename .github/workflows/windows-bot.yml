@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 env:
-  RUSH: node ../common/scripts/install-run-rush.js
   NODE_VERSION: 18.x
-  # PNPM: node ../common/scripts/install-run-pnpm.js
+  RUSH: node ../common/scripts/install-run-rush.js
+  PNPM: node ../common/scripts/install-run-pnpm.js
   
 jobs:
   changes-detection:
@@ -51,10 +51,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Running script install-run-rush.js
-        run: echo  ${{ env.RUSH }}
-
-
       - name: Install dependencies
         run:  ${{ env.RUSH }} install -t .
 
@@ -64,7 +60,7 @@ jobs:
       - name: Rush deploy
         run: |
           mkdir -p ../common/deploy/runbotics-desktop
-          $RUSH deploy \
+          ${{ env.RUSH }} deploy \
             --scenario runbotics-desktop \
             --target-folder ../common/deploy/runbotics-desktop \
             --overwrite
@@ -72,6 +68,9 @@ jobs:
         uses: nyaa8/package-version@v1
         with:
           path: './runbotics/runbotics-desktop/package.json'
+
+      - name: Navigate to /runbotics/common/deploy/runbotics-desktop/
+      - run: cd ../common/deploy/runbotics-desktop/
 
       - name: Install rb-sdk
         run: |
