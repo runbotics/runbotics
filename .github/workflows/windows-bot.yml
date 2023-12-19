@@ -51,6 +51,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Running script install-run-rush.js:
+        run: |
+          cat "../common/scripts/install-run-rush.js"
+
+
       - name: Install dependencies
         run: $RUSH install -t .
 
