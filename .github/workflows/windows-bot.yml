@@ -7,7 +7,7 @@ on:
 
 env:
   NODE_VERSION: 18.x
-  PNPM_VERSION: 8.x
+  PNPM_VERSION: 8.7.x
   RUSH: node ../common/scripts/install-run-rush.js
   PNPM: node ../common/scripts/install-run-pnpm.js
   
@@ -77,15 +77,12 @@ jobs:
 
       - name: Install rb-sdk
         run: |
-          cd ../common/deploy/runbotics-desktop/runbotics-sdk && `
-            pnpm install --no-frozen-lockfile --ignore-scripts && `
-            cd ..
+            pnpm cache clear --force && `
+            pnpm install --ignore-scripts --no-frozen-lockfile ../common/deploy/runbotics-desktop/runbotics-sdk/`
 
       - name: Install rb-common
         run: |
-          cd ../common/deploy/runbotics-desktop/runbotics-common && `
-            pnpm install --no-frozen-lockfile --ignore-scripts && `
-            cd ..
+          pnpm install --ignore-scripts --no-frozen-lockfile ../common/deploy/runbotics-desktop/runbotics-sdk/
 
       - name: Install npmrc
         run: |
