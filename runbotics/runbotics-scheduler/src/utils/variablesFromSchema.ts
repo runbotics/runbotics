@@ -1,6 +1,22 @@
+import { BadRequestException } from '@nestjs/common';
 import { JSONSchema7 } from 'json-schema';
 
-function getVariablesFromSchema(schema: JSONSchema7, requiredOnly = false): string[] {
+const tryGetSchema = (executionInfo: string): JSONSchema7 => {
+    try {
+        const form = JSON.parse(executionInfo);
+        const schema = form.schema;
+        if (schema === undefined)
+            throw new BadRequestException('Form object is not containing schema');
+
+        return schema;
+    } catch(err) {
+        throw new BadRequestException(err);
+    }
+};
+
+function getVariablesFromSchema(executionInfo: string, requiredOnly = false): string[] {
+    const schema = tryGetSchema(executionInfo);
+
     if (requiredOnly) {
         return schema?.required ?? [];
     } else {
