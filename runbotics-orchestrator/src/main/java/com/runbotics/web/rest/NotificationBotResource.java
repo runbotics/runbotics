@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
 import javax.swing.text.html.Option;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,7 +91,9 @@ public class NotificationBotResource {
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or botId was not provided.
      */
     @PostMapping("/bot-notifications")
-    public ResponseEntity<NotificationBotDTO> createBotSubscription(@RequestBody NotificationBotCreateDTO notificationBotCreateDTO) {
+    public ResponseEntity<NotificationBotDTO> createBotSubscription(
+            @NotNull @RequestBody @Valid NotificationBotCreateDTO notificationBotCreateDTO
+    ) {
         log.debug("REST request to create subscription for bot notification: {}", notificationBotCreateDTO);
 
         if (notificationBotCreateDTO.getUserId() == null) {

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
 import javax.swing.text.html.Option;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +93,9 @@ public class NotificationProcessResource {
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or processId was not provided.
      */
     @PostMapping("/process-notifications")
-    public ResponseEntity<NotificationProcessDTO> createProcessSubscription(@RequestBody NotificationProcessCreateDTO notificationProcessCreateDTO) {
+    public ResponseEntity<NotificationProcessDTO> createProcessSubscription(
+            @NotNull @RequestBody @Valid NotificationProcessCreateDTO notificationProcessCreateDTO
+    ) {
         log.debug("REST request to create subscription for process notification: {}", notificationProcessCreateDTO);
 
         if (notificationProcessCreateDTO.getUserId() == null) {

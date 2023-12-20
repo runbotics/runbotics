@@ -92,11 +92,4 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
 
         notificationProcessRepository.delete(notificationProcess);
     }
-
-    @Override
-    public void deleteUnusedByProcessId(Long processId) {
-        notificationProcessRepository
-            .findAllByProcessId(processId)
-            .forEach(this::delete);
-    }
 }

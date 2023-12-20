@@ -36,11 +36,4 @@ public interface NotificationProcessService {
      * @param notificationProcess
      */
     void delete(NotificationProcess notificationProcess);
-
-    /**
-     * Removes all unused subscriptions for process notifications
-     *
-     * @param processId
-     */
-    void deleteUnusedByProcessId(Long processId);
 }

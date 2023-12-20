@@ -42,7 +42,6 @@ public class ProcessServiceImpl implements ProcessService {
     private final UserService userService;
     private final BotCollectionService botCollectionService;
     private final GlobalVariableService globalVariableService;
-    private final NotificationProcessService notificationProcessService;
 
     public ProcessServiceImpl(
         ProcessRepository processRepository,
@@ -51,8 +50,7 @@ public class ProcessServiceImpl implements ProcessService {
         TagService tagService,
         UserService userService,
         BotCollectionService botCollectionService,
-        GlobalVariableService globalVariableService,
-        NotificationProcessService notificationProcessService
+        GlobalVariableService globalVariableService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
@@ -61,7 +59,6 @@ public class ProcessServiceImpl implements ProcessService {
         this.userService = userService;
         this.botCollectionService = botCollectionService;
         this.globalVariableService = globalVariableService;
-        this.notificationProcessService = notificationProcessService;
     }
 
     @Override
@@ -280,8 +277,6 @@ public class ProcessServiceImpl implements ProcessService {
         if (process.isEmpty()) {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
-
-        notificationProcessService.deleteUnusedByProcessId(id);
 
         List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
