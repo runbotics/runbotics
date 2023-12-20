@@ -16,7 +16,6 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
-import { NotificationBotModule } from './notification-bot/notification-bot.module';
 
 @Module({
     imports: [
@@ -50,7 +49,6 @@ import { NotificationBotModule } from './notification-bot/notification-bot.modul
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
-        NotificationBotModule,
     ],
     exports: [
         AuthorityModule,
@@ -67,7 +65,6 @@ import { NotificationBotModule } from './notification-bot/notification-bot.modul
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
-        NotificationBotModule,
     ],
 })
 export class DatabaseModule { }
