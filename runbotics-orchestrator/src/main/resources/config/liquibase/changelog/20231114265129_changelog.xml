@@ -20,6 +20,7 @@
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="notification_type"/>
             <columnExists tableName="notification_type" columnName="type"/>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM notification_type</sqlCheck>
         </preConditions>
         <insert tableName="notification_type">
             <column name="type">BOT_DISCONNECTED</column>
@@ -88,7 +89,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet author="depcikm" id="20231108197380-5">
+    <changeSet author="depcikm" id="20231114265129-5">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="notification_bot"/>
@@ -113,7 +114,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet author="depcikm" id="20231114197380-6">
+    <changeSet author="depcikm" id="20231114265129-6">
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="notification_bot"/>
             <not>
