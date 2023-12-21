@@ -6,6 +6,7 @@ import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.NotificationProcessRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.service.NotificationProcessService;
+import com.runbotics.service.dto.NotificationProcessCreateDTO;
 import com.runbotics.service.dto.NotificationProcessDTO;
 import com.runbotics.service.exception.ProcessNotFoundException;
 import com.runbotics.service.mapper.NotificationProcessMapper;
@@ -38,11 +39,11 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
     }
 
     @Override
-    public NotificationProcessDTO save(NotificationProcessDTO notificationProcessDTO) {
-        log.debug("Request to save process subscription: {}", notificationProcessDTO);
+    public NotificationProcessDTO save(NotificationProcessCreateDTO notificationProcessCreateDTO) {
+        log.debug("Request to save process subscription: {}", notificationProcessCreateDTO);
 
-        Long userId = notificationProcessDTO.getUser().getId();
-        Long processId = notificationProcessDTO.getProcess().getId();
+        Long userId = notificationProcessCreateDTO.getUserId();
+        Long processId = notificationProcessCreateDTO.getProcessId();
 
         User user = userRepository.findById(userId).orElseThrow(
             () -> new UsernameNotFoundException("Could not found user with id " + userId + " in the database")
@@ -51,7 +52,7 @@ public class NotificationProcessServiceImpl implements NotificationProcessServic
             () -> new ProcessNotFoundException(processId)
         );
 
-        NotificationProcess notificationProcess = notificationProcessMapper.toEntity(notificationProcessDTO);
+        NotificationProcess notificationProcess = new NotificationProcess();
 
         NotificationType notificationType = new NotificationType(NotificationType.NotificationTypeName.PROCESS.value());
         notificationProcess.setType(notificationType);

@@ -3,6 +3,7 @@ package com.runbotics.web.rest;
 import com.runbotics.domain.NotificationProcess;
 import com.runbotics.repository.NotificationProcessRepository;
 import com.runbotics.service.NotificationProcessService;
+import com.runbotics.service.dto.NotificationProcessCreateDTO;
 import com.runbotics.service.dto.NotificationProcessDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
 import javax.swing.text.html.Option;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,23 +88,17 @@ public class NotificationProcessResource {
     /**
      * {@code POST /process-notifications} : creates a new subscription for process notification.
      *
-     * @param notificationProcessDTO the subscription to create.
+     * @param notificationProcessCreateDTO the subscription to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new subscription.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the userId or processId was not provided.
      */
     @PostMapping("/process-notifications")
-    public ResponseEntity<NotificationProcessDTO> createProcessSubscription(@RequestBody NotificationProcessDTO notificationProcessDTO) {
-        log.debug("REST request to create subscription for process notification: {}", notificationProcessDTO);
+    public ResponseEntity<NotificationProcessDTO> createProcessSubscription(
+            @NotNull @RequestBody @Valid NotificationProcessCreateDTO notificationProcessCreateDTO
+    ) {
+        log.debug("REST request to create subscription for process notification: {}", notificationProcessCreateDTO);
 
-        if (notificationProcessDTO.getUser() == null) {
-            throw new BadRequestAlertException("To create new process subscription user must be provided", ENTITY_NAME, "userNotExists");
-        }
-
-        if (notificationProcessDTO.getProcess() == null) {
-            throw new BadRequestAlertException("To create new process subscription process must be provided", ENTITY_NAME, "processNotExists");
-        }
-
-        NotificationProcessDTO result = notificationProcessService.save(notificationProcessDTO);
+        NotificationProcessDTO result = notificationProcessService.save(notificationProcessCreateDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.toString()))

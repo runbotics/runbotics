@@ -55,7 +55,7 @@ const BotConfigure: FC = () => {
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(botActions.subscribeBotNotifications({ user, bot }))
+            ? await dispatch(botActions.subscribeBotNotifications({ botId, userId }))
             : await dispatch(botActions.unsubscribeBotNotifications(currentBotSubscription.id));
 
         await handleGetBotSubscribers();

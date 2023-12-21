@@ -72,12 +72,20 @@
                                  baseColumnNames="user_id"
                                  constraintName="fk_user_id_notification_process"
                                  referencedTableName="jhi_user"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"/>
         <addForeignKeyConstraint baseTableName="notification_process"
                                  baseColumnNames="process_id"
                                  constraintName="fk_process_id_notification_process"
                                  referencedTableName="process"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet author="depcikm" id="20231108197380-5">
@@ -123,11 +131,19 @@
                                  baseColumnNames="user_id"
                                  constraintName="fk_user_id_notification_bot"
                                  referencedTableName="jhi_user"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"/>
         <addForeignKeyConstraint baseTableName="notification_bot"
                                  baseColumnNames="bot_id"
                                  constraintName="fk_bot_id_notification_bot"
                                  referencedTableName="bot"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="id"
+                                 deferrable="false"
+                                 initiallyDeferred="false"
+                                 validate="true"
+                                 onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

@@ -40,7 +40,7 @@ export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: numb
         .then((response) => response.data.logs),
 );
 
-export const subscribeBotNotifications = createAsyncThunk<NotificationBot, { user: IUser, bot: IBot }>(
+export const subscribeBotNotifications = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
     'bot/subscribeBotNotifications',
     (userBot) => Axios.post<NotificationBot>('/api/bot-notifications', userBot)
         .then((response) => response.data)

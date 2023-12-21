@@ -123,7 +123,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(processActions.subscribeProcessNotifications({ user, process }))
+            ? await dispatch(processActions.subscribeProcessNotifications({ processId, userId }))
             : await dispatch(processActions.unsubscribeProcessNotifications(currentProcessSubscription.id));
 
         await handleGetProcessSubscribers();

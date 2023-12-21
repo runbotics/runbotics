@@ -1,6 +1,7 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.NotificationProcess;
+import com.runbotics.service.dto.NotificationProcessCreateDTO;
 import com.runbotics.service.dto.NotificationProcessDTO;
 
 import java.util.List;
@@ -10,9 +11,9 @@ public interface NotificationProcessService {
     /**
      * Creates subscription for process notifications
      *
-     * @param notificationProcessDTO
+     * @param notificationProcessCreateDTO
      */
-    NotificationProcessDTO save(NotificationProcessDTO notificationProcessDTO);
+    NotificationProcessDTO save(NotificationProcessCreateDTO notificationProcessCreateDTO);
 
     /**
      * Gets all subscription for process notifications
