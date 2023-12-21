@@ -81,11 +81,15 @@ jobs:
         run: |
             pnpm install `
               --ignore-scripts `
+              --dir `
               ../common/deploy/runbotics-desktop/runbotics-sdk/
 
       - name: Install rb-common
         run: |
-          pnpm install --ignore-scripts ../common/deploy/runbotics-desktop/runbotics-sdk/
+          pnpm install `
+              --ignore-scripts `
+              --dir `
+              ../common/deploy/runbotics-desktop/runbotics-sdk/
 
       - name: Install npmrc
         run: |
