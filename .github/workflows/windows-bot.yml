@@ -100,10 +100,6 @@ jobs:
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
             pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
-          # pnpm add `
-          #   runbotics-common@file:../common/deploy/runbotics-desktop/runbotics-common `
-          #   @runbotics/runbotics-sdk@file:../common/deploy/runbotics-desktop/runbotics-sdk `
-          #   --ignore-scripts`
       - name: Run pnpm install
         run: |
           pnpm install `
@@ -113,5 +109,5 @@ jobs:
 
       - name: Build rb-desktop
         run: |
-          # cd runbotics-desktop && `
-            pnpm electron-builder && cd ..
+          cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
+            pnpm electron-builder
