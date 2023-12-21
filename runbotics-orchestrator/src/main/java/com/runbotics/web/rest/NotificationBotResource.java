@@ -96,14 +96,6 @@ public class NotificationBotResource {
     ) {
         log.debug("REST request to create subscription for bot notification: {}", notificationBotCreateDTO);
 
-        if (notificationBotCreateDTO.getUserId() == null) {
-            throw new BadRequestAlertException("To create new bot subscription userId must be provided", ENTITY_NAME, "userIdNotExists");
-        }
-
-        if (notificationBotCreateDTO.getBotId() == null) {
-            throw new BadRequestAlertException("To create new botId subscription bot must be provided", ENTITY_NAME, "botIdNotExists");
-        }
-
         NotificationBotDTO result = notificationBotService.save(notificationBotCreateDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)

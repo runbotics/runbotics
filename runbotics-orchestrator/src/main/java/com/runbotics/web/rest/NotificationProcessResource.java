@@ -98,14 +98,6 @@ public class NotificationProcessResource {
     ) {
         log.debug("REST request to create subscription for process notification: {}", notificationProcessCreateDTO);
 
-        if (notificationProcessCreateDTO.getUserId() == null) {
-            throw new BadRequestAlertException("To create new process subscription userId must be provided", ENTITY_NAME, "userIdNotExists");
-        }
-
-        if (notificationProcessCreateDTO.getProcessId() == null) {
-            throw new BadRequestAlertException("To create new process subscription processId must be provided", ENTITY_NAME, "processIdNotExists");
-        }
-
         NotificationProcessDTO result = notificationProcessService.save(notificationProcessCreateDTO);
         return ResponseEntity
             .status(HttpStatus.CREATED)
