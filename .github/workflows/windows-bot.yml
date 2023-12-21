@@ -97,11 +97,11 @@ jobs:
             ../common/deploy/runbotics-desktop/.npmrc `
             ../common/deploy/runbotics-desktop/runbotics-desktop/ `
       - name: Add rb-common and rb-sdk to pnpm
-        run: |
-          pnpm add `
-            runbotics-common@file:../common/deploy/runbotics-desktop/runbotics-common `
-            @runbotics/runbotics-sdk@file:../common/deploy/runbotics-desktop/runbotics-sdk `
-            --ignore-scripts`
+        run: pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
+          # pnpm add `
+          #   runbotics-common@file:../common/deploy/runbotics-desktop/runbotics-common `
+          #   @runbotics/runbotics-sdk@file:../common/deploy/runbotics-desktop/runbotics-sdk `
+          #   --ignore-scripts`
       - name: Run pnpm install
         run: |
           pnpm install `
