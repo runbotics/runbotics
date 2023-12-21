@@ -94,11 +94,10 @@ jobs:
       - name: Install npmrc
         run: |
           cp ../common/deploy/runbotics-desktop/.npmrc ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
-            # cd runbotics-desktop && `
-            pnpm add runbotics-common@file:../runbotics-common `
-                @runbotics/runbotics-sdk@file:../runbotics-sdk `
+            pnpm add runbotics-common@file:../common/deploy/runbotics-common `
+                @runbotics/runbotics-sdk@file:../common/deploy/runbotics-sdk `
                 --ignore-scripts && `
-            pnpm install --ignore-scripts && cd ..
+            pnpm install --ignore-scripts --dir ../common/deploy/runbotics-desktop/runbotics-desktop/
 
       - name: Build rb-desktop
         run: |
