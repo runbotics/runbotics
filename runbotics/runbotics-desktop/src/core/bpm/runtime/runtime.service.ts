@@ -65,7 +65,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         private readonly loopHandlerService: LoopHandlerService,
         private readonly serverConfigService: ServerConfigService,
         private readonly storageService: StorageService,
-    ) {}
+    ) { }
 
     onApplicationBootstrap() {
         this.monitor();
@@ -535,8 +535,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                             input: desktopTask.input,
                             processInstanceId,
                             rootProcessInstanceId:
-                            this.processInstances[processInstanceId]
-                                .rootProcessInstanceId,
+                                this.processInstances[processInstanceId]
+                                    .rootProcessInstanceId,
                             userId: this.processInstances[processInstanceId].user
                                 ?.id,
                             executionContext,

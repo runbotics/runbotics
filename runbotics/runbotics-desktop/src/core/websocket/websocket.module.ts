@@ -53,4 +53,4 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
         WebsocketService
     ]
 })
-export class WebsocketModule {}
+export class WebsocketModule { }

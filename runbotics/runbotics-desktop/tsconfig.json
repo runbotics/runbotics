@@ -15,6 +15,9 @@
         "skipLibCheck": true,
         "allowJs": true,
         "resolveJsonModule": true,
+        "types": [
+            "vitest/globals"
+        ],
         "paths": {
             "#action": [
                 "action"

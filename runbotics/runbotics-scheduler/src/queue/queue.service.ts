@@ -40,7 +40,7 @@ export class QueueService implements OnModuleInit {
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
         private readonly serverConfigService: ServerConfigService,
-    ) {}
+    ) { }
 
     async onModuleInit() {
         await this.initializeQueue();
@@ -229,7 +229,7 @@ export class QueueService implements OnModuleInit {
     }
 
     private async deleteAllJobs() {
-        const jobs = await this.processQueue.getJobs(['active', 'delayed','paused', 'waiting']);
+        const jobs = await this.processQueue.getJobs(['active', 'delayed', 'paused', 'waiting']);
         await Promise.all(jobs.map(job => job.remove()));
     }
 
