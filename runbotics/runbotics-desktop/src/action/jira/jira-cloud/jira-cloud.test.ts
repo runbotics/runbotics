@@ -19,8 +19,8 @@ describe('JiraCloudActionHandler', () => {
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         userEnv: 'JIRA_CLOUD_USERNAME',
-        dateStart: '2023-11-12',
-        dateEnd: '2023-11-14'
+        startDate: '2023-11-12',
+        endDate: '2023-11-14'
     };
 
     beforeEach(async () => {
@@ -202,19 +202,19 @@ describe('JiraCloudActionHandler', () => {
 
         it('should throw wrong datePeriod properties', async () => {
             await expect(() => jiraCloudActionHandler.getWorklog({
-                ...getWorklogInputPeriod, dateStart: '',
+                ...getWorklogInputPeriod, startDate: '',
             })).rejects.toThrowError(ZodError);
             await expect(() => jiraCloudActionHandler.getWorklog({
-                ...getWorklogInputPeriod, dateStart: undefined,
+                ...getWorklogInputPeriod, startDate: undefined,
             })).rejects.toThrowError(ZodError);
             await expect(() => jiraCloudActionHandler.getWorklog({
-                ...getWorklogInputPeriod, dateEnd: '',
+                ...getWorklogInputPeriod, endDate: '',
             })).rejects.toThrowError(ZodError);
             await expect(() => jiraCloudActionHandler.getWorklog({
-                ...getWorklogInputPeriod, dateEnd: undefined,
+                ...getWorklogInputPeriod, endDate: undefined,
             })).rejects.toThrowError(ZodError);
             await expect(() => jiraCloudActionHandler.getWorklog({
-                ...getWorklogInputPeriod, dateStart: '', dateEnd: '',
+                ...getWorklogInputPeriod, startDate: '', endDate: '',
             })).rejects.toThrowError(ZodError);
         });
     });

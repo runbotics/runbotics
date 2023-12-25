@@ -36,8 +36,8 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             endDate = dayjs(input.date).endOf('day');
         }
         if (isWorklogPeriod(input)) {
-            startDate = dayjs(input.dateStart).startOf('day');
-            endDate = dayjs(input.dateEnd).endOf('day');
+            startDate = dayjs(input.startDate).startOf('day');
+            endDate = dayjs(input.endDate).endOf('day');
         }
 
         const jiraUser = await this.getJiraUser(input);
@@ -100,8 +100,8 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             };
         } else if (isWorklogPeriod(input)) {
             timeParam = {
-                startedBefore: dayjs(input.dateEnd).endOf('day').valueOf(),
-                startedAfter: dayjs(input.dateStart).startOf('day').valueOf(),
+                startedBefore: dayjs(input.endDate).endOf('day').valueOf(),
+                startedAfter: dayjs(input.startDate).startOf('day').valueOf(),
             };
         }
 
@@ -125,8 +125,8 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             const date = dayjs(input.date).format('YYYY-MM-DD');
             dateCondition = `worklogDate=${date}`;
         } else if (isWorklogPeriod(input)) {
-            const start = dayjs(input.dateStart).format('YYYY-MM-DD');
-            const end = dayjs(input.dateEnd).format('YYYY-MM-DD');
+            const start = dayjs(input.startDate).format('YYYY-MM-DD');
+            const end = dayjs(input.endDate).format('YYYY-MM-DD');
             dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
         }
 
@@ -161,7 +161,7 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             },
         );
 
-        if (data.length == 0) {
+        if (data.length === 0) {
             throw new Error(`User ${input.email} not found`);
         }
 
@@ -178,7 +178,7 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
 
     run(request: JiraActionRequest) {
         switch (request.script) {
-            case JiraServerAction.GET_WORKLOG:
+            case JiraServerAction.GET_USER_WORKLOGS:
                 return this.getWorklog(request.input);
             default:
                 throw new Error('Action not found');

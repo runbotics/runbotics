@@ -3,7 +3,7 @@ import { JiraServerAction } from 'runbotics-common';
 import { GetWorklogInput, Page } from '../jira.types';
 
 export type JiraActionRequest =
-    | DesktopRunRequest<JiraServerAction.GET_WORKLOG, GetWorklogInput>;
+    | DesktopRunRequest<JiraServerAction.GET_USER_WORKLOGS, GetWorklogInput>;
 
 
 export interface JiraUser {

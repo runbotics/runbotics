@@ -99,11 +99,11 @@ export enum GoogleAction {
 }
 
 export enum JiraCloudAction {
-    GET_WORKLOG = 'jiraCloud.getWorklog',
+    GET_USER_WORKLOGS = 'jiraCloud.getUserWorklogs',
 }
 
 export enum JiraServerAction {
-    GET_WORKLOG = 'jiraServer.getWorklog',
+    GET_USER_WORKLOGS = 'jiraServer.getUserWorklogs',
 }
 
 export enum FileAction {

@@ -14,8 +14,8 @@ export const isWorklogBase = (
 export const isWorklogPeriod = (
     data: unknown
 ): data is WorklogPeriod => isWorklogBase(data)
-&& 'dateStart' in data && typeof data.dateStart === 'string'
-&& 'dateEnd' in data && typeof data.dateEnd === 'string';
+&& 'startDate' in data && typeof data.startDate === 'string'
+&& 'endDate' in data && typeof data.endDate === 'string';
 
 export const isWorklogDay = (
     data: unknown
@@ -37,8 +37,8 @@ export const worklogDaySchema = z.object({
 });
 
 export const worklogPeriodSchema = z.object({
-    dateStart: dateValidator('dateStart'),
-    dateEnd: dateValidator('dateEnd'),
+    startDate: dateValidator('startDate'),
+    endDate: dateValidator('endDate'),
 });
 
 export const getWorklogInputSchema = getWorklogInputBaseSchema.and(worklogDaySchema)

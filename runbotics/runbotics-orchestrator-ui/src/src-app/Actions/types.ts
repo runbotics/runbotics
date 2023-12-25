@@ -9,6 +9,11 @@ export enum Runner {
     NO_RUNNER = '',
 }
 
+export enum JiraDateMode {
+    Date = 'Date',
+    Period = 'Period',
+}
+
 export enum ActionSystem {
     WINDOWS = 'Windows',
     LINUX = 'Linux',
