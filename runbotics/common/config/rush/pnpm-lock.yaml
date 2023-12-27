@@ -179,6 +179,9 @@ importers:
       ws:
         specifier: ^7.4.5
         version: 7.5.9
+      zod:
+        specifier: ~3.22.4
+        version: 3.22.4
     devDependencies:
       '@nestjs/cli':
         specifier: ^9.1.8
@@ -195,9 +198,6 @@ importers:
       '@types/bpmn-moddle':
         specifier: ^5.1.6
         version: 5.1.6
-      '@types/jest':
-        specifier: ^27.0.2
-        version: 27.5.2
       '@types/lodash':
         specifier: ^4.14.158
         version: 4.14.197
@@ -210,9 +210,6 @@ importers:
       '@types/selenium-webdriver':
         specifier: ^4.0.12
         version: 4.1.16
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.12
       '@types/uuid':
         specifier: ^8.3.0
         version: 8.3.4
@@ -222,6 +219,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^5.48.0
         version: 5.62.0(eslint@8.48.0)(typescript@4.9.5)
+      '@vitest/coverage-istanbul':
+        specifier: ^0.29.8
+        version: 0.29.8(vitest@0.29.8)
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -231,15 +231,6 @@ importers:
       eslint:
         specifier: ^8.31.0
         version: 8.48.0
-      jest:
-        specifier: ^27.2.5
-        version: 27.5.1(ts-node@10.9.1)
-      supertest:
-        specifier: ^6.1.3
-        version: 6.3.3
-      ts-jest:
-        specifier: ^27.0.3
-        version: 27.1.5(@babel/core@7.22.11)(@types/jest@27.5.2)(jest@27.5.1)(typescript@4.9.5)
       ts-loader:
         specifier: ^9.4.2
         version: 9.4.4(typescript@4.9.5)(webpack@5.88.2)
@@ -249,6 +240,15 @@ importers:
       tsconfig-paths:
         specifier: ^4.1.2
         version: 4.2.0
+      vite:
+        specifier: ^4.2.1
+        version: 4.4.9(@types/node@18.17.13)
+      vite-tsconfig-paths:
+        specifier: ~4.2.1
+        version: 4.2.2(typescript@4.9.5)(vite@4.4.9)
+      vitest:
+        specifier: ^0.29.8
+        version: 0.29.8
 
   ../../runbotics-orchestrator-ui:
     dependencies:
@@ -5469,13 +5469,6 @@ packages:
       '@types/istanbul-lib-report': 3.0.0
     dev: true
 
-  /@types/jest@27.5.2:
-    resolution: {integrity: sha512-mpT8LJJ4CMeeahobofYWIjFo0xonRS/HfxnVEPMPFSQdGUt1uHCnoPT7Zhb+sjDU2wz0oKV0OLUR0WzrHNgfeA==}
-    dependencies:
-      jest-matcher-utils: 27.5.1
-      pretty-format: 27.5.1
-    dev: true
-
   /@types/jexl@2.3.1:
     resolution: {integrity: sha512-D7htNp+ka5xdEfHeAQaukzXeDt9SMdHP55WFI0gT7iR7W+3FB4PrzUtuYklgpKdutGqc31UAjh65eHLUsIZyNA==}
     dev: true
@@ -6299,6 +6292,7 @@ packages:
 
   /abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
     dev: true
 
   /abbrev@1.1.1:
@@ -8525,6 +8519,7 @@ packages:
   /domexception@2.0.1:
     resolution: {integrity: sha512-yxJ2mFy/sibVQlu5qHjOkf9J3K6zgmCxgJ94u2EdvDOV09H+32LtRswEcUsmUWN72pVLOEnTSRaIVVzVQgS0dg==}
     engines: {node: '>=8'}
+    deprecated: Use your platform's native DOMException instead
     dependencies:
       webidl-conversions: 5.0.0
     dev: true
@@ -11357,7 +11352,7 @@ packages:
       pretty-format: 27.5.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.1(@types/node@18.17.13)(typescript@4.9.5)
+      ts-node: 10.9.1(@types/node@17.0.45)(typescript@5.2.2)
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -12329,6 +12324,7 @@ packages:
 
   /loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
+    deprecated: Please upgrade to 2.3.7 which fixes GHSA-4q6p-r6v2-jvc5
     dependencies:
       get-func-name: 2.0.0
     dev: true
@@ -17185,41 +17181,6 @@ packages:
       utf8-byte-length: 1.0.4
     dev: true
 
-  /ts-jest@27.1.5(@babel/core@7.22.11)(@types/jest@27.5.2)(jest@27.5.1)(typescript@4.9.5):
-    resolution: {integrity: sha512-Xv6jBQPoBEvBq/5i2TeSG9tt/nqkbpcurrEG1b+2yfBrcJelOZF9Ml6dmyMh7bcW9JyFbRYpR5rxROSlBLTZHA==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    hasBin: true
-    peerDependencies:
-      '@babel/core': '>=7.0.0-beta.0 <8'
-      '@types/jest': ^27.0.0
-      babel-jest: '>=27.0.0 <28'
-      esbuild: '*'
-      jest: ^27.0.0
-      typescript: '>=3.8 <5.0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@types/jest':
-        optional: true
-      babel-jest:
-        optional: true
-      esbuild:
-        optional: true
-    dependencies:
-      '@babel/core': 7.22.11
-      '@types/jest': 27.5.2
-      bs-logger: 0.2.6
-      fast-json-stable-stringify: 2.1.0
-      jest: 27.5.1(ts-node@10.9.1)
-      jest-util: 27.5.1
-      json5: 2.2.3
-      lodash.memoize: 4.1.2
-      make-error: 1.3.6
-      semver: 7.5.4
-      typescript: 4.9.5
-      yargs-parser: 20.2.9
-    dev: true
-
   /ts-jest@27.1.5(@babel/core@7.22.11)(jest@27.5.1)(typescript@5.2.2):
     resolution: {integrity: sha512-Xv6jBQPoBEvBq/5i2TeSG9tt/nqkbpcurrEG1b+2yfBrcJelOZF9Ml6dmyMh7bcW9JyFbRYpR5rxROSlBLTZHA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -17343,6 +17304,19 @@ packages:
       typescript: 4.9.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
+
+  /tsconfck@2.1.2(typescript@4.9.5):
+    resolution: {integrity: sha512-ghqN1b0puy3MhhviwO2kGF8SeMDNhEbnKxjK7h6+fvY9JAxqvXi8y5NAHSQv687OVboS2uZIByzGd45/YxrRHg==}
+    engines: {node: ^14.13.1 || ^16 || >=18}
+    hasBin: true
+    peerDependencies:
+      typescript: ^4.3.5 || ^5.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.9.5
     dev: true
 
   /tsconfig-paths-webpack-plugin@4.0.1:
@@ -17903,6 +17877,23 @@ packages:
       - terser
     dev: true
 
+  /vite-tsconfig-paths@4.2.2(typescript@4.9.5)(vite@4.4.9):
+    resolution: {integrity: sha512-dq0FjyxHHDnp0uS3P12WEOX2W7NeuLzX9AWP38D7Zw2CTbFErapwQVlCiT5DMJcVWKQ1MMdTe92PZl/rBQ7qcw==}
+    peerDependencies:
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+    dependencies:
+      debug: 4.3.4(supports-color@5.5.0)
+      globrex: 0.1.2
+      tsconfck: 2.1.2(typescript@4.9.5)
+      vite: 4.4.9(@types/node@18.17.13)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
+
   /vite@4.4.9(@types/node@17.0.45):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -17932,6 +17923,42 @@ packages:
         optional: true
     dependencies:
       '@types/node': 17.0.45
+      esbuild: 0.18.20
+      postcss: 8.4.29
+      rollup: 3.28.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    dev: true
+
+  /vite@4.4.9(@types/node@18.17.13):
+    resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.17.13
       esbuild: 0.18.20
       postcss: 8.4.29
       rollup: 3.28.1
@@ -18521,4 +18548,8 @@ packages:
 
   /zlibjs@0.3.1:
     resolution: {integrity: sha512-+J9RrgTKOmlxFSDHo0pI1xM6BLVUv+o0ZT9ANtCxGkjIVCCUdx9alUF8Gm+dGLKbkkkidWIHFDZHDMpfITt4+w==}
+    dev: false
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false

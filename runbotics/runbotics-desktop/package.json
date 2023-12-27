@@ -72,7 +72,8 @@
         "vm2": "^3.9.16",
         "winston": "^3.4.0",
         "winston-daily-rotate-file": "^4.6.0",
-        "ws": "^7.4.5"
+        "ws": "^7.4.5",
+        "zod": "~3.22.4"
     },
     "build": {
         "productName": "RunBotics",

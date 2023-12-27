@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { JiraServerAction } from 'runbotics-common';
 import _ from 'lodash';
 import dayjs from 'dayjs';
+import type { ZodError } from 'zod';
 
 import { externalAxios } from '#config';
 import { RunboticsLogger } from '#logger';
@@ -29,7 +30,15 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
     async getWorklog(rawInput: GetWorklogInput) {
         let startDate, endDate;
 
-        const input = getWorklogInputSchema.parse(rawInput);
+        const input = await getWorklogInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                const fieldErrors = error.formErrors.fieldErrors;
+                if (Object.keys(fieldErrors).length > 0) {
+                    throw new Error(Object.values(fieldErrors)[0][0]);
+                } else {
+                    throw new Error(error.issues[0].message);
+                }
+            });
 
         if (isWorklogDay(input)) {
             startDate = dayjs(input.date).startOf('day');
@@ -168,10 +177,10 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
         return data[0];
     }
 
-    private getBasicAuthHeader(data: Pick<GetWorklogBase, 'passwordEnv' | 'userEnv'>) {
+    private getBasicAuthHeader(data: Pick<GetWorklogBase, 'passwordEnv' | 'usernameEnv'>) {
         return {
             Authorization: 'Basic ' + Buffer.from(
-                `${process.env[data.userEnv]}:${process.env[data.passwordEnv]}`
+                `${process.env[data.usernameEnv]}:${process.env[data.passwordEnv]}`
             ).toString('base64')
         };
     }

@@ -7,7 +7,7 @@ export const isWorklogBase = (
 ): data is GetWorklogBase => data
 && typeof data === 'object'
 && 'originEnv' in data && typeof data.originEnv === 'string'
-&& 'userEnv' in data && typeof data.userEnv === 'string'
+&& 'usernameEnv' in data && typeof data.usernameEnv === 'string'
 && 'passwordEnv' in data && typeof data.passwordEnv === 'string'
 && 'email' in data && typeof data.email === 'string';
 
@@ -22,23 +22,38 @@ export const isWorklogDay = (
 ): data is WorklogDay => isWorklogBase(data)
 && 'date' in data && typeof data.date === 'string';
 
-const dateValidator = (property: string) => z.string({ required_error: `${property} property is missing` })
-    .refine(date => dayjs(date).isValid(), `${property} is not a valid date`);
+const dateValidator = (property: string) => z.string({
+    required_error: `${property} property is missing`
+})
+    .refine(
+        date => dayjs(date).isValid(),
+        date => ({ message: `${property}: "${date}" is not a valid date` }),
+    );
+
+const envValidator = (property: string) => z.string({
+    required_error: `${property} property is missing`
+})
+    .refine(
+        env => Boolean(process.env[env]) && typeof process.env[env] === 'string',
+        env => ({ message: `${property}: "${env}" is empty or does not exist` })
+    );
 
 export const getWorklogInputBaseSchema = z.object({
-    originEnv: z.string({ required_error: 'originEnv property is missing' }),
-    userEnv: z.string({ required_error: 'userEnv property is missing' }),
-    passwordEnv: z.string({ required_error: 'passwordEnv property is missing' }),
-    email: z.string({ required_error: 'email property is missing' }).email(),
+    originEnv: envValidator('Origin'),
+    usernameEnv: envValidator('Username'),
+    passwordEnv: envValidator('Password'),
+    email: z.string({ required_error: 'Email property is missing' }).email(),
 });
 
 export const worklogDaySchema = z.object({
-    date: dateValidator('date'),
+    mode: z.literal('date').optional(),
+    date: dateValidator('Date'),
 });
 
 export const worklogPeriodSchema = z.object({
-    startDate: dateValidator('startDate'),
-    endDate: dateValidator('endDate'),
+    mode: z.literal('period').optional(),
+    startDate: dateValidator('Start Date'),
+    endDate: dateValidator('End Date'),
 });
 
 export const getWorklogInputSchema = getWorklogInputBaseSchema.and(worklogDaySchema)

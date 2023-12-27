@@ -8,8 +8,14 @@ import { IBpmnAction, Runner } from './types';
 
 const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
     const dateMode = {
-        date: translate('Process.Details.Modeler.Actions.Common.Date'),
-        period: translate('Process.Details.Modeler.Actions.Common.Period'),
+        date: {
+            title: translate('Process.Details.Modeler.Actions.Common.Date'),
+            value: 'date',
+        },
+        period: {
+            title: translate('Process.Details.Modeler.Actions.Common.Period'),
+            value: 'period'
+        }
     } as const;
 
     return ({
@@ -36,7 +42,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                     title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Origin'),
                                     type: 'string',
                                 },
-                                userEnv: {
+                                usernameEnv: {
                                     title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Username'),
                                     type: 'string',
                                 },
@@ -51,8 +57,9 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                 mode: {
                                     title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.DateMode'),
                                     type: 'string',
-                                    enum: [dateMode.date, dateMode.period],
-                                    default: dateMode.date,
+                                    enum: [dateMode.date.value, dateMode.period.value],
+                                    enumNames: [dateMode.date.title, dateMode.period.title],
+                                    default: dateMode.date.value,
                                 },
                             },
                             dependencies: {
@@ -60,7 +67,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                     oneOf: [{
                                         properties: {
                                             mode: {
-                                                enum: [dateMode.date],
+                                                enum: [dateMode.date.value],
                                             },
                                             date: {
                                                 title: translate('Process.Details.Modeler.Actions.Common.Date'),
@@ -71,7 +78,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                     }, {
                                         properties: {
                                             mode: {
-                                                enum: [dateMode.period],
+                                                enum: [dateMode.period.value],
                                             },
                                             startDate: {
                                                 title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.StartDate'),
@@ -86,7 +93,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'userEnv', 'passwordEnv', 'email']
+                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'email']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),

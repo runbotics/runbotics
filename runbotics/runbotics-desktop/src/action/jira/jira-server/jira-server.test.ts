@@ -10,14 +10,14 @@ describe('JiraServerActionHandler', () => {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
-        userEnv: 'JIRA_CLOUD_USERNAME',
+        usernameEnv: 'JIRA_CLOUD_USERNAME',
         date: '2023-11-12',
     };
     const getWorklogInputPeriod: GetWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
-        userEnv: 'JIRA_CLOUD_USERNAME',
+        usernameEnv: 'JIRA_CLOUD_USERNAME',
         startDate: '2023-11-12',
         endDate: '2023-11-14'
     };
@@ -202,25 +202,25 @@ describe('JiraServerActionHandler', () => {
         it('should throw wrong date property', async () => {
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputDate, date: ''
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
         });
 
         it('should throw wrong datePeriod properties', async () => {
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputPeriod, startDate: '',
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputPeriod, startDate: undefined,
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputPeriod, endDate: '',
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputPeriod, endDate: undefined,
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
             await expect(() => jiraServerActionHandler.getWorklog({
                 ...getWorklogInputPeriod, startDate: '', endDate: '',
-            })).rejects.toThrowError(ZodError);
+            })).rejects.toThrowError();
         });
     });
 });
