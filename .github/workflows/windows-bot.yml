@@ -114,7 +114,6 @@ jobs:
           password: '${{ secrets.CERT_PASSWORD }}'
           folder: '../common/deploy/runbotics-desktop'
           recursive: true
-          runs-on: windows-latest
 
       - name: Build rb-desktop
         run: |
