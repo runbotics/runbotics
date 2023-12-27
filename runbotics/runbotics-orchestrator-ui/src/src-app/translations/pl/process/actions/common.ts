@@ -6,6 +6,9 @@ const commonActionsTranslations: typeof englishCommonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.VariableName': 'Nazwa zmiennej',
     'Process.Details.Modeler.Actions.Common.VariableName.Info': 'Przypisz daną wyjściową do zmiennej',
     'Process.Details.Modeler.Actions.Common.Value': 'Wartość',
+    'Process.Details.Modeler.Actions.Common.Email': 'Email',
+    'Process.Details.Modeler.Actions.Common.Date': 'Data',
+    'Process.Details.Modeler.Actions.Common.Period': 'Okres',
 };
 
 export default commonActionsTranslations;

@@ -93,11 +93,11 @@ const useInternalActionsGroups = (): Record<
             items: Object.values(getGoogleSheetsActions())
         },
         jiraCloud: {
-            label: 'Jira Cloud',
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraCloud'),
             items: Object.values(getJiraCloudActions())
         },
         jiraServer: {
-            label: 'Jira Server',
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraServer'),
             items: Object.values(getJiraServerActions())
         },
         file: {
