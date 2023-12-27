@@ -186,7 +186,10 @@ public class GlobalVariableResource {
      * @param id the id of the globalVariableDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the globalVariableDTO, or with status {@code 404 (Not Found)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_READ + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_READ + "')" +
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
+    )
     @GetMapping("/global-variables/{id}")
     public ResponseEntity<GlobalVariableDTO> getGlobalVariable(@PathVariable Long id) {
         log.debug("REST request to get GlobalVariable : {}", id);

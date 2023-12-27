@@ -3,11 +3,18 @@ import Axios from 'axios';
 
 import { RootState } from '#src-app/store';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { PageRequestParams } from '#src-app/utils/types/page';
+import URLBuilder from '#src-app/utils/URLBuilder';
 
-export const getGlobalVariables = createAsyncThunk<IGlobalVariable[], void, { state: RootState }>(
+const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
+    .url(url)
+    .params(params)
+    .build();
+
+export const getGlobalVariables = createAsyncThunk<IGlobalVariable[], PageRequestParams, { state: RootState }>(
     'globalVariables/getGlobalVariables',
-    async () => {
-        const response = await Axios.get('/api/global-variables');
+    async (params) => {
+        const response = await Axios.get(buildPageURL(params, '/api/global-variables'));
         return response.data;
     },
 );
