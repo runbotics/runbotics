@@ -1,8 +1,10 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.Bot;
+import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.service.BotService;
+import com.runbotics.service.criteria.BotCriteria;
 import com.runbotics.service.dto.BotDTO;
 import com.runbotics.service.mapper.BotMapper;
 import org.slf4j.Logger;
@@ -90,13 +92,15 @@ public class BotServiceImpl implements BotService {
         botRepository.deleteById(id);
     }
 
-    @Override
-    public Page<BotDTO> getBotsWithCollection(Pageable pageable, List<String> collectionsNames, String login) {
-        if (collectionsNames.isEmpty()) {
-            return botRepository.getAllAvailableToCurrentUser(pageable, login)
+    public Page<BotDTO> getBotsForUser(BotCriteria criteria, Pageable page, User user) {
+        if (criteria.getCollection() != null) {
+            List<String> names = criteria.getCollection().getIn();
+            return this.botRepository
+                .getAllByUserAndWithSelectedCollections(page, user.getId(), names)
                 .map(botMapper::toDto);
         }
-        return botRepository.getAllAvailableToCurrentUserWithTags(pageable, login, collectionsNames)
+        return this.botRepository
+            .getAllByUser(page, user.getId())
             .map(botMapper::toDto);
     }
 }
