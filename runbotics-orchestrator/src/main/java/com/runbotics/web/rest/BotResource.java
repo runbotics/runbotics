@@ -1,9 +1,12 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotQueryService;
 import com.runbotics.service.BotService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.BotCriteria;
 import com.runbotics.service.dto.BotDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +54,18 @@ public class BotResource {
 
     private final BotQueryService botQueryService;
 
-    public BotResource(BotService botService, BotRepository botRepository, BotQueryService botQueryService) {
+    private final UserService userService;
+
+    public BotResource(
+        BotService botService,
+        BotRepository botRepository,
+        BotQueryService botQueryService,
+        UserService userService
+    ) {
         this.botService = botService;
         this.botRepository = botRepository;
         this.botQueryService = botQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -80,9 +92,16 @@ public class BotResource {
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
     @GetMapping("/bots-page")
     public ResponseEntity<Page<BotDTO>> getAllBots(BotCriteria criteria, Pageable pageable) {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         log.debug("REST request to get Bots by criteria: {}", criteria);
-        Page<BotDTO> page = botQueryService.findByCriteria(criteria, pageable, currentUsername);
+        User requester = userService.getUserWithAuthorities().orElseThrow(
+            () -> new AccessDeniedException("User cannot be recognized")
+        );
+        boolean hasRequesterRoleAdmin = requester.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+
+        Page<BotDTO> page = hasRequesterRoleAdmin
+            ? botQueryService.findByCriteria(criteria, pageable)
+            : botService.getBotsForUser(criteria, pageable, requester);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);
     }

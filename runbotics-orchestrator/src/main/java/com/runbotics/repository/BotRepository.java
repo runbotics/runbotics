@@ -24,15 +24,22 @@ public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificatio
     Optional<Bot> findByInstallationId(String installationId);
 
     @Query(value =
-            "SELECT DISTINCT b FROM Bot b " +
-            "LEFT JOIN b.collection.users u " +
-            "WHERE (b.collection.name IN :names) AND (:login = u.login OR b.collection.createdBy.login = :login)")
-    Page<Bot> getAllAvailableToCurrentUserWithTags(Pageable pageable, String login, List<String> names);
+        "SELECT DISTINCT b FROM Bot b " +
+        "WHERE b.collection.name IN :collectionNames"
+    )
+    Page<Bot> getAllWithSelectedCollections(Pageable pageable, List<String> collectionNames);
 
     @Query(value =
-            "SELECT DISTINCT b FROM Bot b " +
-            "LEFT JOIN b.collection.users u " +
-            "WHERE :login = u.login OR b.collection.createdBy.login = :login")
-    Page<Bot> getAllAvailableToCurrentUser(Pageable pageable, String login);
+        "SELECT DISTINCT b FROM Bot b " +
+        "LEFT JOIN b.collection.users u " +
+        "WHERE u.id = :userId OR b.collection.createdBy.id = :userId OR b.collection.name LIKE 'Public'"
+    )
+    Page<Bot> getAllByUser(Pageable pageable, Long userId);
 
+    @Query(value =
+        "SELECT DISTINCT b FROM Bot b " +
+        "LEFT JOIN b.collection.users u " +
+        "WHERE (u.id = :userId OR b.collection.createdBy.id = :userId) AND b.collection.name IN :collectionNames"
+    )
+    Page<Bot> getAllByUserAndWithSelectedCollections(Pageable pageable, Long userId, List<String> collectionNames);
 }
