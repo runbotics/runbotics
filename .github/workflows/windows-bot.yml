@@ -110,19 +110,6 @@ jobs:
       - name: List files 1/2
         run: ls '../common/deploy/runbotics-desktop/runbotics-desktop/'
 
-      - name: List files 2/2
-        run: ls './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/'
-
-      - name: List files 3/2
-        run: ls '../runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
-
-      - name: Sign bot
-        uses: dlemstra/code-sign-action@v1
-        with:
-          certificate: '${{ secrets.CERT_BASE64 }}'
-          password: '${{ secrets.CERT_PASSWORD }}'
-          folder: './common/deploy/runbotics-desktop/runbotics-desktop/release/'
-          recursive: true
       # - name: Sign bot
       #   uses: DanaBear/code-sign-action@v4
       #   with:
@@ -131,10 +118,20 @@ jobs:
       #     folder: '../common/deploy/runbotics-desktop'
       #     recursive: true
 
-      - name: List files 2/2
-        run: ls
-
       - name: Build rb-desktop
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
             pnpm electron-builder
+
+      - name: List files 2/2
+        run: |
+          ls `
+          ls ./common/deploy/runbotics-desktop/runbotics-desktop/release/
+        
+      - name: Sign bot
+        uses: dlemstra/code-sign-action@v1
+        with:
+          certificate: '${{ secrets.CERT_BASE64 }}'
+          password: '${{ secrets.CERT_PASSWORD }}'
+          folder: './common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          recursive: true
