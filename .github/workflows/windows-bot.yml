@@ -108,14 +108,20 @@ jobs:
             ../common/deploy/runbotics-desktop/runbotics-desktop/
 
       - name: List files 1/2
-        run: ls
+        run: ls '../common/deploy/runbotics-desktop/runbotics-desktop/'
+
+      - name: List files 2/2
+        run: ls './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/'
+
+      - name: List files 3/2
+        run: ls '../runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
 
       - name: Sign bot
         uses: dlemstra/code-sign-action@v1
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: '../common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          folder: './common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
       # - name: Sign bot
       #   uses: DanaBear/code-sign-action@v4
