@@ -120,15 +120,8 @@ jobs:
 
       - name: Set default sign to false
         run: |
-          $packageJsonPath = "./package.json" `
-          $iconLine = '"icon": "./public/icons/runbotics-512x512.png",' `
-          $verifyUpdateCodeSignatureLine = '"verifyUpdateCodeSignature": false' `
-          if (Select-String -Path $packageJsonPath -Pattern $iconLine) { `
-            (Get-Content $packageJsonPath) -replace $iconLine, "$iconLine`r`n$verifyUpdateCodeSignatureLine" | Set-Content $packageJsonPath `
+            (Get-Content $packageJsonPath) -replace '"icon": "./public/icons/runbotics-512x512.png",', '"icon": "./public/icons/runbotics-512x512.png",`r`n"verifyUpdateCodeSignature": false' | Set-Content "./package.json" `
             Write-Host "Added verifyUpdateCodeSignature line after icon line in package.json" `
-          } else { ` 
-            Write-Error "Error: Icon line not found in package.json" `
-          }
 
       - name: Build rb-desktop
         run: |
