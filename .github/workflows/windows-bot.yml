@@ -107,6 +107,9 @@ jobs:
             --dir `
             ../common/deploy/runbotics-desktop/runbotics-desktop/
 
+      - name: List files 1/2
+        run: ls
+
       - name: Sign bot
         uses: dlemstra/code-sign-action@v1
         with:
@@ -121,6 +124,9 @@ jobs:
       #     password: '${{ secrets.CERT_PASSWORD }}'
       #     folder: '../common/deploy/runbotics-desktop'
       #     recursive: true
+
+      - name: List files 2/2
+        run: ls
 
       - name: Build rb-desktop
         run: |
