@@ -1,10 +1,12 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.User;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.GlobalVariableQueryService;
 import com.runbotics.service.GlobalVariableService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.GlobalVariableCriteria;
 import com.runbotics.service.dto.GlobalVariableDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,14 +50,18 @@ public class GlobalVariableResource {
 
     private final GlobalVariableQueryService globalVariableQueryService;
 
+    private final UserService userService;
+
     public GlobalVariableResource(
         GlobalVariableService globalVariableService,
         GlobalVariableRepository globalVariableRepository,
-        GlobalVariableQueryService globalVariableQueryService
+        GlobalVariableQueryService globalVariableQueryService,
+        UserService userService
     ) {
         this.globalVariableService = globalVariableService;
         this.globalVariableRepository = globalVariableRepository;
         this.globalVariableQueryService = globalVariableQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -162,7 +169,15 @@ public class GlobalVariableResource {
     @GetMapping("/global-variables")
     public ResponseEntity<List<GlobalVariableDTO>> getAllGlobalVariables(GlobalVariableCriteria criteria, Pageable pageable) {
         log.debug("REST request to get GlobalVariables by criteria: {}", criteria);
-        Page<GlobalVariableDTO> page = globalVariableQueryService.findByCriteria(criteria, pageable);
+        User requester = userService.getUserWithAuthorities().orElseThrow(
+            () -> new AccessDeniedException("User cannot be recognized")
+        );
+        boolean hasRequesterRoleAdmin = requester.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+
+        Page<GlobalVariableDTO> page = hasRequesterRoleAdmin
+            ? globalVariableQueryService.findByCriteria(criteria, pageable)
+            : globalVariableService.getByRequester(pageable, requester.getId());
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

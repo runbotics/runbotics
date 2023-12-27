@@ -62,8 +62,8 @@ export default class VariableActionHandler extends StatelessActionHandler {
         return actionInput;
     }
 
-    private async fetchGlobalVariable(globalVariableId: number): Promise<AxiosResponse<IGlobalVariable>> {
-        return await orchestratorAxios.get(`/api/global-variables/${globalVariableId}`);
+    private fetchGlobalVariable(globalVariableId: number): Promise<AxiosResponse<IGlobalVariable>> {
+        return orchestratorAxios.get(`/api/global-variables/${globalVariableId}`);
     }
 
     private async assignGlobalVariable (
@@ -73,10 +73,10 @@ export default class VariableActionHandler extends StatelessActionHandler {
         const globalVariableIds = request.input.globalVariables;
         for (const globalVariableId of globalVariableIds) {
             const { data: globalVariable } = await this.fetchGlobalVariable(globalVariableId);
-            if (globalVariable.creator.id === userId) {
-                const input = this.mapGlobalVariableToActionInput(globalVariable);
-                await this.assignVariable({ ...request, input });
-            }
+            if (globalVariable.creator.id !== userId)
+                throw new Error('One of global variables does not belong to the user');
+            const input = this.mapGlobalVariableToActionInput(globalVariable);
+            await this.assignVariable({ ...request, input });
         }
     }
 

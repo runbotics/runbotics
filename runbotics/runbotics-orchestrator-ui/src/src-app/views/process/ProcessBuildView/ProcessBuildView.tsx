@@ -11,15 +11,13 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
-import { FeatureKey, Role } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
-import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
-import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';
@@ -43,8 +41,6 @@ const SNACKBAR_DURATION = 1500;
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
-    const { user } = useAuth();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { createRbexFile } = useProcessExport();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -64,12 +60,7 @@ const ProcessBuildView: FC = () => {
         if (!hasAdvancedActionsAccess) return;
         hasActionsAccess && dispatch(getActions());
 
-        const userGlobalVariables = isAdmin ? {} : {
-            filter: {
-                equals: { 'creatorId': user.id },
-            }
-        };
-        dispatch(globalVariableActions.getGlobalVariables(userGlobalVariables));
+        dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);
 

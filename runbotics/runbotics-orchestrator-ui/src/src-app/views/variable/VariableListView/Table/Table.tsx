@@ -2,13 +2,11 @@ import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState
 
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { FeatureKey, Role } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
-import useAuth from '#src-app/hooks/useAuth';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import useRole from '#src-app/hooks/useRole';
 import { useDispatch, useSelector } from '#src-app/store';
 import { globalVariableActions, globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
@@ -33,8 +31,6 @@ const initialDeleteDialogState: DeleteDialogState = {
 
 const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState }) => {
     const dispatch = useDispatch();
-    const { user } = useAuth();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
     const { globalVariables, loading } = useSelector(globalVariableSelector);
     const [deleteDialogState, setDeleteDialogState] = useState<DeleteDialogState>(initialDeleteDialogState);
     const hasDeleteVariableAccess = useFeatureKey([FeatureKey.GLOBAL_VARIABLE_DELETE]);
@@ -61,12 +57,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     });
 
     useEffect(() => {
-        const userGlobalVariables = isAdmin ? {} : {
-            filter: {
-                equals: { 'creatorId': user.id },
-            }
-        };
-        dispatch(globalVariableActions.getGlobalVariables(userGlobalVariables));
+        dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

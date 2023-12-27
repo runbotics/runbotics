@@ -107,12 +107,6 @@ public class GlobalVariableQueryService extends QueryService<GlobalVariable> {
                         buildSpecification(criteria.getUserId(), root -> root.join(GlobalVariable_.user, JoinType.LEFT).get(User_.id))
                     );
             }
-            if (criteria.getCreatorId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getCreatorId(), root -> root.join(GlobalVariable_.creator, JoinType.LEFT).get(User_.id))
-                    );
-            }
         }
         return specification;
     }

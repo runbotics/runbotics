@@ -39,8 +39,6 @@ public class GlobalVariableCriteria implements Serializable, Criteria {
 
     private LongFilter userId;
 
-    private LongFilter creatorId;
-
     public GlobalVariableCriteria() {}
 
     public GlobalVariableCriteria(GlobalVariableCriteria other) {
@@ -51,7 +49,6 @@ public class GlobalVariableCriteria implements Serializable, Criteria {
         this.value = other.value == null ? null : other.value.copy();
         this.lastModified = other.lastModified == null ? null : other.lastModified.copy();
         this.userId = other.userId == null ? null : other.userId.copy();
-        this.creatorId = other.creatorId == null ? null : other.creatorId.copy();
     }
 
     @Override
@@ -162,21 +159,6 @@ public class GlobalVariableCriteria implements Serializable, Criteria {
 
     public void setUserId(LongFilter userId) {
         this.userId = userId;
-    }
-
-    public LongFilter creatorId() {
-        if (creatorId == null) {
-            creatorId = new LongFilter();
-        }
-        return creatorId;
-    }
-
-    public LongFilter getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(LongFilter creatorId) {
-        this.creatorId = creatorId;
     }
 
     @Override
