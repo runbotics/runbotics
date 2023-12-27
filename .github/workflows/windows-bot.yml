@@ -112,9 +112,11 @@ jobs:
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
+          certificatesha1: '${{ secrets.CERT_SHA }}'
           certificatename: '${{ secrets.CERT_NAME }}'
           folder: '../common/deploy/runbotics-desktop'
           recursive: true
+          runs-on: windows-latest
 
       - name: Build rb-desktop
         run: |
