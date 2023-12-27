@@ -107,6 +107,15 @@ jobs:
             --dir `
             ../common/deploy/runbotics-desktop/runbotics-desktop/
 
+      - name: Sign bot
+        uses: DanaBear/code-sign-action@v4
+        with:
+          certificate: '${{ secrets.CERT_BASE64 }}'
+          password: '${{ secrets.CERT_PASSWORD }}'
+          certificatename: '${{ secrets.CERT_NAME }}'
+          folder: '../common/deploy/runbotics-desktop'
+          recursive: true
+
       - name: Build rb-desktop
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
