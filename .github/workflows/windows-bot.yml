@@ -112,7 +112,7 @@ jobs:
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: 'files'
+          folder: '.\'
           recursive: true
       # - name: Sign bot
       #   uses: DanaBear/code-sign-action@v4
