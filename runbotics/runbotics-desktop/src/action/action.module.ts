@@ -13,7 +13,8 @@ import FileActionHandler from './file';
 import GeneralActionHandler from './general';
 import GoogleActionHandler from './google';
 import ImportActionHandler from './import';
-import JiraActionHandler from './jira';
+import JiraCloudActionHandler from './jira/jira-cloud';
+import JiraServerActionHandler from './jira/jira-server';
 import LoopActionHandler from './loop';
 import MailActionHandler from './mail';
 import { MicrosoftModule } from './microsoft';
@@ -41,7 +42,8 @@ const ALL_ACTION_HANDLERS = [
     GeneralActionHandler,
     GoogleActionHandler,
     ImportActionHandler,
-    JiraActionHandler,
+    JiraCloudActionHandler,
+    JiraServerActionHandler,
     LoopActionHandler,
     MailActionHandler,
     JavaScriptActionHandler,
@@ -67,4 +69,4 @@ const ALL_ACTION_HANDLERS = [
     providers: ALL_ACTION_HANDLERS,
     exports: ALL_ACTION_HANDLERS,
 })
-export class ActionModule {}
+export class ActionModule { }

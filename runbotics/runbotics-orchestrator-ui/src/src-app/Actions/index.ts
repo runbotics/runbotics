@@ -13,7 +13,8 @@ import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
 import getImageActions from './image.actions';
 import getJavascriptActions from './javascript.actions';
-import getJiraActions from './jira.actions';
+import getJiraCloudActions from './jira-cloud.actions';
+import getJiraServerActions from './jira-server.actions';
 import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
 import getPowerPointActions from './powerpoint.actions';
@@ -39,7 +40,8 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getMailActions(),
     ...getAsanaActions(),
     ...getGoogleSheetsActions(),
-    ...getJiraActions(),
+    ...getJiraCloudActions(),
+    ...getJiraServerActions(),
     ...getApiActions(),
     ...getExcelActions(),
     ...getDesktopActions(),
