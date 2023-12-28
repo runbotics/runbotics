@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,8 +88,15 @@ public class BotCollectionServiceImpl implements BotCollectionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<BotCollectionDTO> findAll(Pageable pageable) {
+    public List<BotCollectionDTO> findAll() {
         log.debug("Request to get all BotCollections");
+        return botCollectionRepository.findAll().stream().map(botCollectionMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BotCollectionDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all BotCollections by page");
         return botCollectionRepository.findAll(pageable).map(botCollectionMapper::toDto);
     }
 
@@ -107,35 +115,38 @@ public class BotCollectionServiceImpl implements BotCollectionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BotCollectionDTO> findAllForUser(String username) {
-        log.debug("Request to get all collections for current user : {}", username);
+    public List<BotCollectionDTO> findAllForUser(User user) {
+        log.debug("Request to get all collections for current user : {}", user.getEmail());
         BotCollection publicCollection = getPublicCollection();
         BotCollection guestCollection = getGuestCollection();
 
-        return getCollectionsForUser(username, publicCollection, guestCollection);
+        return getCollectionsForUser(user.getId(), publicCollection, guestCollection);
     }
 
     @Transactional(readOnly = true)
     public Page<BotCollectionDTO> findPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user) {
         log.debug("Request to get page collections for user : {}", user.getEmail());
         Long userId = user.getId();
+        List<String> commonCollections = getCommonCollections();
 
         if (criteria.getName() != null) {
             String collectionName = criteria.getName().getContains();
-            return botCollectionRepository.getAllByUserAndByName(pageable, userId, collectionName)
+            return botCollectionRepository
+                .getAllByUserAndByName(pageable, userId, collectionName, commonCollections)
                 .map(botCollectionMapper::toDto);
         }
         if (criteria.getCreatedByName() != null) {
             String createdByName = criteria.getCreatedByName().getContains();
-            return botCollectionRepository.getAllByUserAndByCreatedBy(pageable, userId, createdByName)
+            return botCollectionRepository
+                .getAllByUserAndByCreatedBy(pageable, userId, createdByName, commonCollections)
                 .map(botCollectionMapper::toDto);
         }
-        return botCollectionRepository.getAllByUser(pageable, userId)
+        return botCollectionRepository.getAllByUser(pageable, userId, commonCollections)
             .map(botCollectionMapper::toDto);
     }
 
-    private List<BotCollectionDTO> getCollectionsForUser(String username, BotCollection publicCollection, BotCollection guestCollection) {
-        List<BotCollection> collectionsForUser = botCollectionRepository.findDistinctByCreatedByLoginOrUsers_Login(username, username);
+    private List<BotCollectionDTO> getCollectionsForUser(Long userId, BotCollection publicCollection, BotCollection guestCollection) {
+        List<BotCollection> collectionsForUser = botCollectionRepository.getAllByUser(userId);
 
         if (isCollectionInCollectionForUser(publicCollection, collectionsForUser)) {
             collectionsForUser.add(publicCollection);
@@ -150,5 +161,12 @@ public class BotCollectionServiceImpl implements BotCollectionService {
 
     private boolean isCollectionInCollectionForUser(BotCollection collection, List<BotCollection> collectionsForUser) {
         return !collectionsForUser.stream().map(BotCollection::getId).collect(Collectors.toList()).contains(collection.getId());
+    }
+
+    private List<String> getCommonCollections() {
+        return Arrays.asList(
+            BotCollectionConstants.PUBLIC_COLLECTION,
+            BotCollectionConstants.GUEST_COLLECTION
+        );
     }
 }

@@ -20,13 +20,15 @@ public interface BotCollectionService {
 
     BotCollection getGuestCollection();
 
+    List<BotCollectionDTO> findAll();
+
     Page<BotCollectionDTO> findAll(Pageable pageable);
 
     Optional<BotCollectionDTO> findOne(UUID id);
 
     void delete(UUID id);
 
-    List<BotCollectionDTO> findAllForUser(String username);
+    List<BotCollectionDTO> findAllForUser(User user);
 
     Page<BotCollectionDTO> findPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user);
 }

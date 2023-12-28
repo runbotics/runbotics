@@ -1,6 +1,7 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.Bot;
+import com.runbotics.domain.BotCollectionConstants;
 import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.service.BotService;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,14 +95,23 @@ public class BotServiceImpl implements BotService {
     }
 
     public Page<BotDTO> getBotsForUser(BotCriteria criteria, Pageable page, User user) {
+        List<String> commonCollections = getCommonCollections();
+
         if (criteria.getCollection() != null) {
             List<String> names = criteria.getCollection().getIn();
             return this.botRepository
-                .getAllByUserAndWithSelectedCollections(page, user.getId(), names)
+                .getAllByUserAndWithSelectedCollections(page, user.getId(), names, commonCollections)
                 .map(botMapper::toDto);
         }
         return this.botRepository
-            .getAllByUser(page, user.getId())
+            .getAllByUser(page, user.getId(), commonCollections)
             .map(botMapper::toDto);
+    }
+
+    private List<String> getCommonCollections() {
+        return Arrays.asList(
+            BotCollectionConstants.PUBLIC_COLLECTION,
+            BotCollectionConstants.GUEST_COLLECTION
+        );
     }
 }
