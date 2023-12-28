@@ -1,13 +1,13 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.Bot;
-import com.runbotics.domain.BotCollectionConstants;
 import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.service.BotService;
 import com.runbotics.service.criteria.BotCriteria;
 import com.runbotics.service.dto.BotDTO;
 import com.runbotics.service.mapper.BotMapper;
+import com.runbotics.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -95,7 +95,7 @@ public class BotServiceImpl implements BotService {
     }
 
     public Page<BotDTO> getBotPageForUser(BotCriteria criteria, Pageable page, User user) {
-        List<String> commonCollections = getCommonCollections();
+        List<String> commonCollections = Utils.getCommonBotCollections();
 
         if (criteria.getCollection() != null) {
             List<String> names = criteria.getCollection().getIn();
@@ -106,12 +106,5 @@ public class BotServiceImpl implements BotService {
         return this.botRepository
             .findAllByUser(page, user.getId(), commonCollections)
             .map(botMapper::toDto);
-    }
-
-    private List<String> getCommonCollections() {
-        return Arrays.asList(
-            BotCollectionConstants.PUBLIC_COLLECTION,
-            BotCollectionConstants.GUEST_COLLECTION
-        );
     }
 }
