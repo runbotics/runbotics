@@ -10,10 +10,7 @@ import com.runbotics.service.mapper.BotCollectionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import javax.persistence.criteria.JoinType;
 
 @Service
 public class BotCollectionServiceImpl implements BotCollectionService {
@@ -120,13 +115,22 @@ public class BotCollectionServiceImpl implements BotCollectionService {
         return getCollectionsForUser(username, publicCollection, guestCollection);
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public Page<BotCollectionDTO> findPageForUser(String username, Pageable pageable) {
-        log.debug("Request to get page collections for user : {}", username);
-        
-        return botCollectionRepository
-            .findDistinctByCreatedByLoginOrUsers_Login(username, username, pageable)
+    public Page<BotCollectionDTO> findPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user) {
+        log.debug("Request to get page collections for user : {}", user.getEmail());
+        Long userId = user.getId();
+
+        if (criteria.getName() != null) {
+            String collectionName = criteria.getName().getContains();
+            return botCollectionRepository.getAllByUserAndByName(pageable, userId, collectionName)
+                .map(botCollectionMapper::toDto);
+        }
+        if (criteria.getCreatedByName() != null) {
+            String createdByName = criteria.getCreatedByName().getContains();
+            return botCollectionRepository.getAllByUserAndByCreatedBy(pageable, userId, createdByName)
+                .map(botCollectionMapper::toDto);
+        }
+        return botCollectionRepository.getAllByUser(pageable, userId)
             .map(botCollectionMapper::toDto);
     }
 
