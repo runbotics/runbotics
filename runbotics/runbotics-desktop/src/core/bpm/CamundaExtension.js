@@ -7,6 +7,7 @@ export default {
 };
 
 export function Camunda(activity, processEnvironment) {
+    const jexlPattern = /#{(.+?)}/g;
     const { broker, environment, type, behaviour } = activity;
 
     return {
@@ -114,6 +115,11 @@ export function Camunda(activity, processEnvironment) {
                 if (data.definition.entries) {
                     data.definition.entries.forEach((entry) => {
                         let key = data.name + '.' + entry.key;
+
+                        const valueKey = jexlPattern.exec(entry.value);
+                        if (data.name === 'functionParams' && valueKey !== null) {
+                            entry.value = '${environment.variables.' + valueKey[1] + '}';
+                        }
                         let value = environment.resolveExpression(entry.value, message);
                         lodash.setWith(writeTo, key, value);
                     });

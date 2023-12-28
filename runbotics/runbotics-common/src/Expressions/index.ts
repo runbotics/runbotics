@@ -30,6 +30,11 @@ export class Expressions {
         expressionFnContext
     ) {
         Expressions.initialize();
+
+        if (Expressions.isOutputVariableToSave(templatedString, context)) {
+            context.environment.variables[`${context.environment.output?.variableName}`] = context.content.output[0];
+        }
+
         let jexlResult = Expressions.tryResolveJexlExpression(
             templatedString,
             context,
@@ -46,8 +51,15 @@ export class Expressions {
         } else {
             result = jexlResult.result;
         }
-
         return result;
+    }
+
+    private static isOutputVariableToSave(templatedString, context) {
+        return templatedString &&
+            templatedString.includes('content.output') &&
+            context?.content?.output?.length > 0 &&
+            context?.content?.output[0] &&
+            context.environment.output?.variableName;
     }
 
     private static tryResolveJexlExpression(
