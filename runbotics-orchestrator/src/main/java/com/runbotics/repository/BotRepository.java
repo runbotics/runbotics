@@ -27,14 +27,14 @@ public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificatio
         "SELECT DISTINCT b FROM Bot b " +
         "WHERE b.collection.name IN :collectionNames"
     )
-    Page<Bot> getAllWithSelectedCollections(Pageable pageable, List<String> collectionNames);
+    Page<Bot> findAllByCollectionNames(Pageable pageable, List<String> collectionNames);
 
     @Query(value =
         "SELECT DISTINCT b FROM Bot b " +
         "LEFT JOIN b.collection.users u " +
         "WHERE u.id = :userId OR b.collection.createdBy.id = :userId OR b.collection.name IN :commonCollections"
     )
-    Page<Bot> getAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
+    Page<Bot> findAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
 
     @Query(value =
         "SELECT DISTINCT b FROM Bot b " +
@@ -42,7 +42,7 @@ public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificatio
         "WHERE (u.id = :userId OR b.collection.createdBy.id = :userId OR b.collection.name IN :commonCollections)" +
         "AND b.collection.name IN :collectionNames"
     )
-    Page<Bot> getAllByUserAndWithSelectedCollections(
+    Page<Bot> findAllByUserAndByCollectionNames(
         Pageable pageable,
         Long userId,
         List<String> collectionNames,

@@ -62,7 +62,7 @@ public class BotQueryService extends QueryService<Bot> {
         if (criteria.getCollection() != null) {
             log.debug("find by criteria with collections filter : {}, page: {}", criteria, page);
             return this.botRepository
-                .getAllWithSelectedCollections(
+                .findAllByCollectionNames(
                     page, criteria.getCollection().getIn()
                 ).map(botMapper::toDto);
         }

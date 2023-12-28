@@ -55,5 +55,5 @@ public interface BotService {
 
     List<BotDTO> saveAll(List<BotDTO> bots);
 
-    Page<BotDTO> getBotsForUser(BotCriteria criteria, Pageable page, User user);
+    Page<BotDTO> getBotPageForUser(BotCriteria criteria, Pageable page, User user);
 }

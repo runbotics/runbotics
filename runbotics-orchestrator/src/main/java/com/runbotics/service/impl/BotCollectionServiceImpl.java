@@ -115,7 +115,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BotCollectionDTO> findAllForUser(User user) {
+    public List<BotCollectionDTO> getAllForUser(User user) {
         log.debug("Request to get all collections for current user : {}", user.getEmail());
         BotCollection publicCollection = getPublicCollection();
         BotCollection guestCollection = getGuestCollection();
@@ -124,7 +124,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BotCollectionDTO> findPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user) {
+    public Page<BotCollectionDTO> getPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user) {
         log.debug("Request to get page collections for user : {}", user.getEmail());
         Long userId = user.getId();
         List<String> commonCollections = getCommonCollections();
@@ -132,21 +132,21 @@ public class BotCollectionServiceImpl implements BotCollectionService {
         if (criteria.getName() != null) {
             String collectionName = criteria.getName().getContains();
             return botCollectionRepository
-                .getAllByUserAndByName(pageable, userId, collectionName, commonCollections)
+                .findAllByUserAndByCollectionName(pageable, userId, collectionName, commonCollections)
                 .map(botCollectionMapper::toDto);
         }
         if (criteria.getCreatedByName() != null) {
             String createdByName = criteria.getCreatedByName().getContains();
             return botCollectionRepository
-                .getAllByUserAndByCreatedBy(pageable, userId, createdByName, commonCollections)
+                .findAllByUserAndByCreatedByName(pageable, userId, createdByName, commonCollections)
                 .map(botCollectionMapper::toDto);
         }
-        return botCollectionRepository.getAllByUser(pageable, userId, commonCollections)
+        return botCollectionRepository.findAllByUser(pageable, userId, commonCollections)
             .map(botCollectionMapper::toDto);
     }
 
     private List<BotCollectionDTO> getCollectionsForUser(Long userId, BotCollection publicCollection, BotCollection guestCollection) {
-        List<BotCollection> collectionsForUser = botCollectionRepository.getAllByUser(userId);
+        List<BotCollection> collectionsForUser = botCollectionRepository.findAllByUser(userId);
 
         if (isCollectionInCollectionForUser(publicCollection, collectionsForUser)) {
             collectionsForUser.add(publicCollection);
