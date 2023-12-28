@@ -3,6 +3,7 @@ package com.runbotics.web.rest;
 import com.runbotics.domain.BotCollectionConstants;
 import com.runbotics.domain.User;
 import com.runbotics.repository.BotCollectionRepository;
+import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotCollectionQueryService;
 import com.runbotics.service.BotCollectionService;
@@ -206,8 +207,15 @@ public class BotCollectionResource {
         User currentUser = userService.getUserWithAuthorities().get();
 
         log.debug("REST request to get page collections for user : {}", currentUser.getLogin());
-        Page<BotCollectionDTO> botCollectionDTOS = botCollectionQueryService.findByCriteria(criteria,currentUser, pageable);
-        return ResponseEntity.ok().body(botCollectionDTOS);
+
+        boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+
+        Page<BotCollectionDTO> page = hasRequesterRoleAdmin
+            ? botCollectionQueryService.findByCriteria(criteria, pageable)
+            : botCollectionService.findPageForUser(criteria, pageable, currentUser);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page);
     }
 
     boolean isPublicOrGuest(UUID id){
