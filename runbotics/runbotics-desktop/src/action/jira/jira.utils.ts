@@ -43,6 +43,7 @@ export const getWorklogInputBaseSchema = z.object({
     usernameEnv: envValidator('Username'),
     passwordEnv: envValidator('Password'),
     email: z.string({ required_error: 'Email property is missing' }).email(),
+    groupByDay: z.boolean().optional(),
 });
 
 export const worklogDaySchema = z.object({

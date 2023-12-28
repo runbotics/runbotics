@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import JiraCloudActionHandler from './jira-cloud.action-handler';
 import { GetWorklogInput } from '../jira.types';
-import { IssueWorklogResponse, JiraUser, SimpleIssue, WorklogResponse } from './jira-cloud.types';
+import { IssueWorklogResponse, CloudJiraUser, SearchIssue, WorklogResponse } from './jira-cloud.types';
 import { ZodError } from 'zod';
 
 describe('JiraCloudActionHandler', () => {
@@ -37,7 +37,7 @@ describe('JiraCloudActionHandler', () => {
     });
 
     describe('GetWorklog', () => {
-        const jiraUser: JiraUser = {
+        const jiraUser: CloudJiraUser = {
             accountId: 'john-doe-identifier',
             accountType: '',
             active: true,
@@ -47,7 +47,7 @@ describe('JiraCloudActionHandler', () => {
             self: 'madeUpUrl',
             timeZone: 'Warsaw',
         };
-        const jiraIssue: SimpleIssue = {
+        const jiraIssue: SearchIssue = {
             expand: 'someFields',
             self: 'madeUpUrl',
             fields: {

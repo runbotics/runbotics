@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
 
     const cache = getBlogMainCache(language);
 
-    const blogPosts = cache.posts?.slice(0, 3) ?? [];
+    const blogPosts = cache?.posts?.slice(0, 3) ?? [];
 
     const metadata: MetadataTags = {
         description: 'RunBotics - Home',
