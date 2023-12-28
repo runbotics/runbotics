@@ -19,72 +19,24 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
 
     List<BotCollection> findDistinctByCreatedByLoginOrUsers_Login(String login, String login1);
 
-    Page<BotCollection> findDistinctByCreatedByLoginOrUsers_Login(String login, String login1, Pageable pageable);
-
-    Page<BotCollection> findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsers_Login(
-        boolean publicBotsIncluded,
-        String login,
-        String login1,
-        Pageable pageable
-    );
+    @Query(value =
+        "SELECT DISTINCT bc FROM BotCollection bc " +
+        "LEFT JOIN bc.users u " +
+        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public') AND bc.name LIKE %:collectionName%"
+    )
+    Page<BotCollection> getAllByUserAndByName(Pageable pageable, Long userId, String collectionName);
 
     @Query(value =
-        "SELECT DISTINCT " +
-            "id, " +
-            "name, " +
-            "description, " +
-            "public_bots_included, " +
-            "created, " +
-            "updated, " +
-            "created_by " +
-            "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
-            "WHERE user_id = :id OR created_by = :id OR name IN ('Public','Guest')",
-        countQuery =
-            "SELECT DISTINCT " +
-                "count(*) " +
-                "FROM (bot_collection_user as b RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
-                "WHERE user_id = :id OR created_by = :id OR name IN ('Public','Guest')"
-        , nativeQuery = true
+        "SELECT DISTINCT bc FROM BotCollection bc " +
+        "LEFT JOIN bc.users u " +
+        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public') AND bc.createdBy.email LIKE %:createdByName%"
     )
-    Page<BotCollection> findAllUserCollections(
-        Long id,
-        Pageable pageable
-    );
+    Page<BotCollection> getAllByUserAndByCreatedBy(Pageable pageable, Long userId, String createdByName);
 
-    @Query(
-        value =
-            "SELECT DISTINCT * FROM ( " +
-                "SELECT DISTINCT " +
-                "id, " +
-                "name, " +
-                "description, " +
-                "public_bots_included, " +
-                "created, " +
-                "updated, " +
-                "created_by " +
-                "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
-                "WHERE (user_id = :id OR created_by = :id OR name IN ('Public','Guest'))) as collections WHERE name ILIKE %:collectionName%",
-        countQuery =
-            "SELECT DISTINCT count(*) FROM ( " +
-                "SELECT DISTINCT " +
-                "id, " +
-                "name, " +
-                "description, " +
-                "public_bots_included, " +
-                "created, " +
-                "updated, " +
-                "created_by " +
-                "FROM (bot_collection_user RIGHT JOIN bot_collection ON created_by = user_id) AS collections " +
-                "WHERE (user_id = :id OR created_by = :id OR name IN ('Public','Guest'))) as collections WHERE name ILIKE %:collectionName%",
-
-        nativeQuery = true
+    @Query(value =
+        "SELECT DISTINCT bc FROM BotCollection bc " +
+        "LEFT JOIN bc.users u " +
+        "WHERE u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public'"
     )
-    Page<BotCollection> findAllUserCollectionsByNames(
-        Long id,
-        String collectionName,
-        Pageable pageable
-    );
-
-    Page<BotCollection> findDistinctByCreatedByLoginContains(String login, Pageable pageable);
-
+    Page<BotCollection> getAllByUser(Pageable pageable, Long userId);
 }
