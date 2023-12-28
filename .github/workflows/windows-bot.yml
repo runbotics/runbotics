@@ -122,7 +122,9 @@ jobs:
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' && `
           (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",)', "`$1`r`n" | Set-Content .\package.json && `
-          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false," | Set-Content .\package.json && `
+          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false" | Set-Content .\package.json && `
+          cat ./package.json && `
+          (Get-Content .\package.json) | Where-Object { $_ -notmatch '"certificateFile": "./cert/selfsigncert.pfx",' -and $_ -notmatch '"certificatePassword": ".*",' } | Set-Content .\package.json && `
           cat ./package.json && `
           pnpm electron-builder
 
