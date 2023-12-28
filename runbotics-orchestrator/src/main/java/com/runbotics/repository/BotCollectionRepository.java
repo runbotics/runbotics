@@ -17,26 +17,43 @@ import org.springframework.stereotype.Repository;
 public interface BotCollectionRepository extends JpaRepository<BotCollection, UUID>, JpaSpecificationExecutor<BotCollection> {
     BotCollection getBotCollectionByName(String name);
 
-    List<BotCollection> findDistinctByCreatedByLoginOrUsers_Login(String login, String login1);
+    @Query(value =
+        "SELECT DISTINCT bc FROM BotCollection bc " +
+        "LEFT JOIN bc.users u " +
+        "WHERE u.id = :userId OR bc.createdBy.id = :userId"
+    )
+    List<BotCollection> getAllByUser(Long userId);
 
     @Query(value =
         "SELECT DISTINCT bc FROM BotCollection bc " +
         "LEFT JOIN bc.users u " +
-        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public') AND bc.name LIKE %:collectionName%"
+        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections) " +
+        "AND bc.name LIKE %:collectionName%"
     )
-    Page<BotCollection> getAllByUserAndByName(Pageable pageable, Long userId, String collectionName);
+    Page<BotCollection> getAllByUserAndByName(
+        Pageable pageable,
+        Long userId,
+        String collectionName,
+        List<String> commonCollections
+    );
 
     @Query(value =
         "SELECT DISTINCT bc FROM BotCollection bc " +
         "LEFT JOIN bc.users u " +
-        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public') AND bc.createdBy.email LIKE %:createdByName%"
+        "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections) " +
+        "AND bc.createdBy.email LIKE %:createdByName%"
     )
-    Page<BotCollection> getAllByUserAndByCreatedBy(Pageable pageable, Long userId, String createdByName);
+    Page<BotCollection> getAllByUserAndByCreatedBy(
+        Pageable pageable,
+        Long userId,
+        String createdByName,
+        List<String> commonCollections
+    );
 
     @Query(value =
         "SELECT DISTINCT bc FROM BotCollection bc " +
         "LEFT JOIN bc.users u " +
-        "WHERE u.id = :userId OR bc.createdBy.id = :userId OR bc.name LIKE 'Public'"
+        "WHERE u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections"
     )
-    Page<BotCollection> getAllByUser(Pageable pageable, Long userId);
+    Page<BotCollection> getAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
 }

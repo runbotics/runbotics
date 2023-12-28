@@ -196,18 +196,21 @@ public class BotCollectionResource {
 
     @GetMapping("bot-collection/current-user")
     public ResponseEntity<List<BotCollectionDTO>> getBotCollectionsForCurrentUser() {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("REST request to get all collections for user : {}", currentUsername);
-        List<BotCollectionDTO> botCollectionDTOS = botCollectionService.findAllForUser(currentUsername);
-        return ResponseEntity.ok().body(botCollectionDTOS);
+        User currentUser = userService.getUserWithAuthorities().get();
+        log.debug("REST request to get all collections for user : {}", currentUser.getEmail());
+        boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+
+        List<BotCollectionDTO> botCollection = hasRequesterRoleAdmin
+            ? botCollectionService.findAll()
+            : botCollectionService.findAllForUser(currentUser);
+
+        return ResponseEntity.ok().body(botCollection);
     }
 
     @GetMapping("bot-collection-page/current-user")
     public ResponseEntity<Page<BotCollectionDTO>> getBotCollectionsPageForCurrentUser(Pageable pageable, BotCollectionCriteria criteria) {
         User currentUser = userService.getUserWithAuthorities().get();
-
         log.debug("REST request to get page collections for user : {}", currentUser.getLogin());
-
         boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
 
         Page<BotCollectionDTO> page = hasRequesterRoleAdmin
