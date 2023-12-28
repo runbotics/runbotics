@@ -118,21 +118,23 @@ jobs:
       #     folder: '../common/deploy/runbotics-desktop'
       #     recursive: true
 
-      - name: Set default sign to false
+      - name: Set default sign to false & build rb-desktop
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' && `
-          cat ./package.json && `
           (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",)', "`$1`r`n" | Set-Content .\package.json && `
-          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false," | Set-Content .\package.json 
+          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false," | Set-Content .\package.json && `
+          cat ./package.json && `
+          pnpm electron-builder
 
-      - name: Build rb-desktop
-        run: |
-          cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
-            pnpm electron-builder
+      # - name: Build rb-desktop
+      #   run: |
+      #     cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
+      #     pnpm electron-builder
+            
 
       - name: List files 2/2
         run: |
-          ls `
+          ls && `
           ls ./common/deploy/runbotics-desktop/runbotics-desktop/release/
         
       - name: Sign bot
