@@ -94,17 +94,17 @@ public class BotServiceImpl implements BotService {
         botRepository.deleteById(id);
     }
 
-    public Page<BotDTO> getBotsForUser(BotCriteria criteria, Pageable page, User user) {
+    public Page<BotDTO> getBotPageForUser(BotCriteria criteria, Pageable page, User user) {
         List<String> commonCollections = getCommonCollections();
 
         if (criteria.getCollection() != null) {
             List<String> names = criteria.getCollection().getIn();
             return this.botRepository
-                .getAllByUserAndWithSelectedCollections(page, user.getId(), names, commonCollections)
+                .findAllByUserAndByCollectionNames(page, user.getId(), names, commonCollections)
                 .map(botMapper::toDto);
         }
         return this.botRepository
-            .getAllByUser(page, user.getId(), commonCollections)
+            .findAllByUser(page, user.getId(), commonCollections)
             .map(botMapper::toDto);
     }
 

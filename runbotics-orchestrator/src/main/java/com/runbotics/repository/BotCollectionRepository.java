@@ -22,7 +22,7 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
         "LEFT JOIN bc.users u " +
         "WHERE u.id = :userId OR bc.createdBy.id = :userId"
     )
-    List<BotCollection> getAllByUser(Long userId);
+    List<BotCollection> findAllByUser(Long userId);
 
     @Query(value =
         "SELECT DISTINCT bc FROM BotCollection bc " +
@@ -30,7 +30,7 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
         "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections) " +
         "AND bc.name LIKE %:collectionName%"
     )
-    Page<BotCollection> getAllByUserAndByName(
+    Page<BotCollection> findAllByUserAndByCollectionName(
         Pageable pageable,
         Long userId,
         String collectionName,
@@ -43,7 +43,7 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
         "WHERE (u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections) " +
         "AND bc.createdBy.email LIKE %:createdByName%"
     )
-    Page<BotCollection> getAllByUserAndByCreatedBy(
+    Page<BotCollection> findAllByUserAndByCreatedByName(
         Pageable pageable,
         Long userId,
         String createdByName,
@@ -55,5 +55,5 @@ public interface BotCollectionRepository extends JpaRepository<BotCollection, UU
         "LEFT JOIN bc.users u " +
         "WHERE u.id = :userId OR bc.createdBy.id = :userId OR bc.name IN :commonCollections"
     )
-    Page<BotCollection> getAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
+    Page<BotCollection> findAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
 }

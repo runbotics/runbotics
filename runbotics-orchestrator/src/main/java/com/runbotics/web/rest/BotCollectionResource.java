@@ -202,7 +202,7 @@ public class BotCollectionResource {
 
         List<BotCollectionDTO> botCollection = hasRequesterRoleAdmin
             ? botCollectionService.findAll()
-            : botCollectionService.findAllForUser(currentUser);
+            : botCollectionService.getAllForUser(currentUser);
 
         return ResponseEntity.ok().body(botCollection);
     }
@@ -210,12 +210,12 @@ public class BotCollectionResource {
     @GetMapping("bot-collection-page/current-user")
     public ResponseEntity<Page<BotCollectionDTO>> getBotCollectionsPageForCurrentUser(Pageable pageable, BotCollectionCriteria criteria) {
         User currentUser = userService.getUserWithAuthorities().get();
-        log.debug("REST request to get page collections for user : {}", currentUser.getLogin());
+        log.debug("REST request to get page collections for user : {}", currentUser.getEmail());
         boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
 
         Page<BotCollectionDTO> page = hasRequesterRoleAdmin
             ? botCollectionQueryService.findByCriteria(criteria, pageable)
-            : botCollectionService.findPageForUser(criteria, pageable, currentUser);
+            : botCollectionService.getPageForUser(criteria, pageable, currentUser);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);

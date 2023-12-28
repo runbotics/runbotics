@@ -28,7 +28,7 @@ public interface BotCollectionService {
 
     void delete(UUID id);
 
-    List<BotCollectionDTO> findAllForUser(User user);
+    List<BotCollectionDTO> getAllForUser(User user);
 
-    Page<BotCollectionDTO> findPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user);
+    Page<BotCollectionDTO> getPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user);
 }
