@@ -120,8 +120,10 @@ jobs:
 
       - name: Set default sign to false
         run: |
-            (Get-Content "./package.json") -replace '"icon": "./public/icons/runbotics-512x512.png",', '"icon": "./public/icons/runbotics-512x512.png",`r`n"verifyUpdateCodeSignature": false' | Set-Content "./package.json" `
-            Write-Host "Added verifyUpdateCodeSignature line after icon line in package.json" `
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/' && `
+          cat ./package.json && `
+          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",)', "`$1`r`n" | Set-Content .\package.json && `
+          (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false" | Set-Content .\package.json 
 
       - name: Build rb-desktop
         run: |
