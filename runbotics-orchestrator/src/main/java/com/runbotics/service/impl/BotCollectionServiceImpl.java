@@ -7,6 +7,7 @@ import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
+import com.runbotics.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -90,7 +91,11 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Transactional(readOnly = true)
     public List<BotCollectionDTO> findAll() {
         log.debug("Request to get all BotCollections");
-        return botCollectionRepository.findAll().stream().map(botCollectionMapper::toDto).collect(Collectors.toList());
+        return botCollectionRepository
+            .findAll()
+            .stream().
+            map(botCollectionMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -127,7 +132,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     public Page<BotCollectionDTO> getPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user) {
         log.debug("Request to get page collections for user : {}", user.getEmail());
         Long userId = user.getId();
-        List<String> commonCollections = getCommonCollections();
+        List<String> commonCollections = Utils.getCommonBotCollections();
 
         if (criteria.getName() != null) {
             String collectionName = criteria.getName().getContains();
@@ -160,13 +165,10 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     }
 
     private boolean isCollectionInCollectionForUser(BotCollection collection, List<BotCollection> collectionsForUser) {
-        return !collectionsForUser.stream().map(BotCollection::getId).collect(Collectors.toList()).contains(collection.getId());
-    }
-
-    private List<String> getCommonCollections() {
-        return Arrays.asList(
-            BotCollectionConstants.PUBLIC_COLLECTION,
-            BotCollectionConstants.GUEST_COLLECTION
-        );
+        return !collectionsForUser
+            .stream()
+            .map(BotCollection::getId)
+            .collect(Collectors.toList())
+            .contains(collection.getId());
     }
 }
