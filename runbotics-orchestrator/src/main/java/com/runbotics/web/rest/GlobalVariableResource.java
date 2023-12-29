@@ -1,5 +1,6 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -169,10 +169,10 @@ public class GlobalVariableResource {
     @GetMapping("/global-variables")
     public ResponseEntity<List<GlobalVariableDTO>> getAllGlobalVariables(GlobalVariableCriteria criteria, Pageable pageable) {
         log.debug("REST request to get GlobalVariables by criteria: {}", criteria);
-        User requester = userService.getUserWithAuthorities().orElseThrow(
-            () -> new AccessDeniedException("User cannot be recognized")
-        );
-        boolean hasRequesterRoleAdmin = requester.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+        User requester = userService.getUserWithAuthorities().get();
+        Authority adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.ADMIN);
+        boolean hasRequesterRoleAdmin = requester.getAuthorities().contains(adminAuthority);
 
         Page<GlobalVariableDTO> page = hasRequesterRoleAdmin
             ? globalVariableQueryService.findByCriteria(criteria, pageable)

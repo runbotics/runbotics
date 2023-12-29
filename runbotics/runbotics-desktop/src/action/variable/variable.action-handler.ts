@@ -69,12 +69,12 @@ export default class VariableActionHandler extends StatelessActionHandler {
     private async assignGlobalVariable (
         request: DesktopRunRequest<'variables.assignGlobalVariable', AssignGlobalVariableActionInput>
     ) {
-        const userId = request.userId;
         const globalVariableIds = request.input.globalVariables;
         for (const globalVariableId of globalVariableIds) {
-            const { data: globalVariable } = await this.fetchGlobalVariable(globalVariableId);
-            if (globalVariable.creator.id !== userId)
-                throw new Error('One of global variables does not belong to the user');
+            const { data: globalVariable } = await this.fetchGlobalVariable(globalVariableId)
+                .catch(() => {
+                    throw new Error('Unable to fetch global variable');
+                });
             const input = this.mapGlobalVariableToActionInput(globalVariable);
             await this.assignVariable({ ...request, input });
         }
