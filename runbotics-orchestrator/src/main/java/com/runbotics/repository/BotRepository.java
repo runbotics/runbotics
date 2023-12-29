@@ -32,14 +32,21 @@ public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificatio
     @Query(value =
         "SELECT DISTINCT b FROM Bot b " +
         "LEFT JOIN b.collection.users u " +
-        "WHERE u.id = :userId OR b.collection.createdBy.id = :userId OR b.collection.name IN :commonCollections"
+        "WHERE u.id = :userId " +
+            "OR b.collection.createdBy.id = :userId " +
+            "OR b.collection.name IN :commonCollections " +
+            "OR b.user.id = :userId"
     )
     Page<Bot> findAllByUser(Pageable pageable, Long userId, List<String> commonCollections);
 
     @Query(value =
         "SELECT DISTINCT b FROM Bot b " +
         "LEFT JOIN b.collection.users u " +
-        "WHERE (u.id = :userId OR b.collection.createdBy.id = :userId OR b.collection.name IN :commonCollections)" +
+        "WHERE (u.id = :userId " +
+            "OR b.collection.createdBy.id = :userId " +
+            "OR b.collection.name IN :commonCollections " +
+            "OR b.user.id = :userId" +
+        ") " +
         "AND b.collection.name IN :collectionNames"
     )
     Page<Bot> findAllByUserAndByCollectionNames(

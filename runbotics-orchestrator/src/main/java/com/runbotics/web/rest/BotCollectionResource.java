@@ -3,7 +3,6 @@ package com.runbotics.web.rest;
 import com.runbotics.domain.BotCollectionConstants;
 import com.runbotics.domain.User;
 import com.runbotics.repository.BotCollectionRepository;
-import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotCollectionQueryService;
 import com.runbotics.service.BotCollectionService;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -198,7 +196,7 @@ public class BotCollectionResource {
     public ResponseEntity<List<BotCollectionDTO>> getBotCollectionsForCurrentUser() {
         User currentUser = userService.getUserWithAuthorities().get();
         log.debug("REST request to get all collections for user : {}", currentUser.getEmail());
-        boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(currentUser);
 
         List<BotCollectionDTO> botCollection = hasRequesterRoleAdmin
             ? botCollectionService.findAll()
@@ -211,7 +209,7 @@ public class BotCollectionResource {
     public ResponseEntity<Page<BotCollectionDTO>> getBotCollectionsPageForCurrentUser(Pageable pageable, BotCollectionCriteria criteria) {
         User currentUser = userService.getUserWithAuthorities().get();
         log.debug("REST request to get page collections for user : {}", currentUser.getEmail());
-        boolean hasRequesterRoleAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(currentUser);
 
         Page<BotCollectionDTO> page = hasRequesterRoleAdmin
             ? botCollectionQueryService.findByCriteria(criteria, pageable)

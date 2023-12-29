@@ -2,7 +2,6 @@ package com.runbotics.web.rest;
 
 import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
-import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotQueryService;
 import com.runbotics.service.BotService;
@@ -84,7 +83,7 @@ public class BotResource {
     public ResponseEntity<Page<BotDTO>> getAllBots(BotCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Bots by criteria: {}", criteria);
         User requester = userService.getUserWithAuthorities().get();
-        boolean hasRequesterRoleAdmin = requester.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
 
         Page<BotDTO> page = hasRequesterRoleAdmin
             ? botQueryService.findByCriteria(criteria, pageable)
