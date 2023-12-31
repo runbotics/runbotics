@@ -1,0 +1,141 @@
+name: Build bot executable file
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'master'
+      - 'release/**'
+      - 'hotfix/**'
+      - 'feature/RPA-1097' # todo remove before merge to develop
+
+env:
+  NODE_VERSION: 18.x
+  PNPM_VERSION: 8.7.x
+  RUSH: node ../common/scripts/install-run-rush.js
+
+jobs:
+  changes-detection:
+    runs-on: windows-latest
+
+    outputs:
+      bot: ${{ steps.filter.outputs.bot }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Assign paths to scenarios
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            bot:
+              - 'runbotics/runbotics-desktop/package.json'
+  build-bot:
+    needs: changes-detection
+    if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-desktop
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Clone submodules
+        run: git submodule update --init --recursive
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run:  ${{ env.RUSH }} install -t .
+
+      - name: Build
+        run: ${{ env.RUSH }} rebuild -t .
+
+      - name: Rush deploy
+        run: |
+          mkdir -p ../common/deploy/runbotics-desktop
+          ${{ env.RUSH }} deploy `
+            --scenario runbotics-desktop `
+            --target-folder ../common/deploy/runbotics-desktop `
+            --overwrite
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-desktop/package.json'
+
+      - name: Install rb-sdk
+        run: |
+            pnpm install `
+              --ignore-scripts `
+              --dir `
+              ../common/deploy/runbotics-desktop/runbotics-sdk/
+
+      - name: Install rb-common
+        run: |
+          pnpm install `
+              --ignore-scripts `
+              --dir `
+              ../common/deploy/runbotics-desktop/runbotics-sdk/
+
+      - name: Copy .npmrc
+        run: |
+          cp `
+            ../common/deploy/runbotics-desktop/.npmrc `
+            ../common/deploy/runbotics-desktop/runbotics-desktop/
+
+      - name: Add rb-common and rb-sdk to pnpm
+        run: |
+          cd ../common/deploy/runbotics-desktop/runbotics-desktop/; `
+            pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
+
+      - name: Run pnpm install
+        run: |
+          pnpm install `
+            --ignore-scripts `
+            --dir `
+            ../common/deploy/runbotics-desktop/runbotics-desktop/
+
+      - name: Set default sign to false
+        run: |
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
+          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
+          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
+
+      - name: Build rb-desktop
+        run: |
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
+          pnpm electron-builder
+
+      - name: Sign bot
+        uses: dlemstra/code-sign-action@v1
+        with:
+          certificate: '${{ secrets.CERT_BASE64 }}'
+          password: '${{ secrets.CERT_PASSWORD }}'
+          folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          recursive: true
+
+      - name: Extract version from package.json
+        id: extract_version
+        run: echo "Bot version is $((Get-Content package.json | ConvertFrom-Json).version)"; `
+          echo "::set-output name=version::$((Get-Content package.json | ConvertFrom-Json).version)";
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: RunBotics-${{ steps.extract_version.outputs.version }}
+          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          if-no-files-found: error
