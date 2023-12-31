@@ -2,8 +2,13 @@ name: Windows Bot build
 
 on:
   push:
-    branches: ['develop', 'master', 'feature/RPA-1097'] # todo remove feature/RPA-1097
-  workflow_dispatch:
+    branches:
+      - 'develop'
+      - 'master'
+      - 'release/**'
+      - 'hotfix/**'
+    # paths:
+    #   - 'runbotics/runbotics-desktop/**'
 
 env:
   NODE_VERSION: 18.x
@@ -29,13 +34,8 @@ jobs:
             bot:
               - 'runbotics/runbotics-desktop/package.json'
   build-bot:
-    needs: changes-detection # todo uncomment lines below
-    # if: |
-      # (github.ref == 'refs/heads/develop'
-      # || github.ref == 'refs/heads/master'
-      # || startsWith(github.ref, 'refs/heads/release/')
-      # || startsWith(github.ref, 'refs/heads/hotfix/'))
-      # ; needs.changes-detection.outputs.bot == 'true'
+    needs: changes-detection
+    if: needs.changes-detection.outputs.bot == 'true'
     runs-on: windows-latest
 
     defaults:
@@ -72,6 +72,7 @@ jobs:
             --scenario runbotics-desktop `
             --target-folder ../common/deploy/runbotics-desktop `
             --overwrite
+            
       - name: Assign package version
         uses: nyaa8/package-version@v1
         with:
@@ -96,10 +97,12 @@ jobs:
           cp `
             ../common/deploy/runbotics-desktop/.npmrc `
             ../common/deploy/runbotics-desktop/runbotics-desktop/ `
+            
       - name: Add rb-common and rb-sdk to pnpm
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-desktop/ ; `
             pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
+            
       - name: Run pnpm install
         run: |
           pnpm install `
@@ -135,5 +138,5 @@ jobs:
         uses: actions/upload-artifact@v4.0.0
         with:
           name: RunBotics-${{ steps.extract_version.outputs.version }}
-          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/sdf'
           if-no-files-found: 'Could not find files under the given path'
