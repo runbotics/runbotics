@@ -17,7 +17,7 @@ env:
 jobs:
   changes-detection:
     runs-on: windows-latest
-
+    
     outputs:
       bot: ${{ steps.filter.outputs.bot }}
 
@@ -34,7 +34,7 @@ jobs:
               - 'runbotics/runbotics-desktop/package.json'
   build-bot:
     needs: changes-detection
-    if: needs.changes-detection.outputs.bot == 'true'
+    if: ${{ needs.changes-detection.outputs.bot == 'true' }}
     runs-on: windows-latest
 
     defaults:
