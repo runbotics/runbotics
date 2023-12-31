@@ -107,8 +107,8 @@ jobs:
             --dir `
             ../common/deploy/runbotics-desktop/runbotics-desktop/
 
-      - name: List files 1/2
-        run: ls '../common/deploy/runbotics-desktop/runbotics-desktop/'
+      # - name: List files 1/2
+      #   run: ls '../common/deploy/runbotics-desktop/runbotics-desktop/'
 
       # - name: Sign bot
       #   uses: DanaBear/code-sign-action@v4
@@ -118,34 +118,25 @@ jobs:
       #     folder: '../common/deploy/runbotics-desktop'
       #     recursive: true
 
-      - name: Set default sign to false & build rb-desktop
+      - name: Set default sign to false
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
           (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json ; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json ; `
-          pnpm electron-builder
+          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
           
-      # (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",)', "`$1`r`n" | Set-Content .\package.json && `
-      # (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false" | Set-Content .\package.json && `
-      # (Get-Content .\package.json) | Where-Object { $_ -notmatch '"certificateFile": "./cert/selfsigncert.pfx",' -and $_ -notmatch '"certificatePassword": ".*",' } | Set-Content .\package.json && `
-      # cat ./package.json && `
-      # pnpm electron-builder
-
-      # - name: Build rb-desktop
-      #   run: |
-      #     cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
-      #     pnpm electron-builder
+      - name: Build rb-desktop
+        run: |
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
+          pnpm electron-builder
             
-
       - name: List files 2/2
         run: |
-          ls && `
-          ls ./common/deploy/runbotics-desktop/runbotics-desktop/release/
+          ls ../common/deploy/runbotics-desktop/runbotics-desktop/release/
         
       - name: Sign bot
         uses: dlemstra/code-sign-action@v1
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: './common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          folder: '../common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
