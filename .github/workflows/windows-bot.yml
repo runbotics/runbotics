@@ -107,17 +107,6 @@ jobs:
             --dir `
             ../common/deploy/runbotics-desktop/runbotics-desktop/
 
-      # - name: List files 1/2
-      #   run: ls '../common/deploy/runbotics-desktop/runbotics-desktop/'
-
-      # - name: Sign bot
-      #   uses: DanaBear/code-sign-action@v4
-      #   with:
-      #     certificate: '${{ secrets.CERT_BASE64 }}'
-      #     password: '${{ secrets.CERT_PASSWORD }}'
-      #     folder: '../common/deploy/runbotics-desktop'
-      #     recursive: true
-
       - name: Set default sign to false
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
@@ -128,11 +117,7 @@ jobs:
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
           pnpm electron-builder
-            
-      - name: List files 2/2
-        run: |
-          ls ../common/deploy/runbotics-desktop/runbotics-desktop/release/
-        
+          
       - name: Sign bot
         uses: dlemstra/code-sign-action@v1
         with:
@@ -140,3 +125,16 @@ jobs:
           password: '${{ secrets.CERT_PASSWORD }}'
           folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
+
+      - name: Extract version from package.json
+        id: extract_version
+        run: echo "Bot version is $((Get-Content package.json | ConvertFrom-Json).version)"; `
+          echo "::set-output name=version::$((Get-Content package.json | ConvertFrom-Json).version)";
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: RunBotics-${{ steps.extract_version.outputs.version }}
+          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          error: 'Could not find files under the given path'
+          if-no-files-found: error
