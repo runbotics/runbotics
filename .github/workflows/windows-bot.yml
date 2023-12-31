@@ -138,5 +138,5 @@ jobs:
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: '../common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
