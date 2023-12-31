@@ -1,4 +1,4 @@
-name: Windows Bot build
+name: Build bot executable file
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'master'
       - 'release/**'
       - 'hotfix/**'
-      - 'feature/RPA-1097'
+      - 'feature/RPA-1097' # todo remove before merge to develop
 
 env:
   NODE_VERSION: 18.x
@@ -95,11 +95,11 @@ jobs:
         run: |
           cp `
             ../common/deploy/runbotics-desktop/.npmrc `
-            ../common/deploy/runbotics-desktop/runbotics-desktop/ `
+            ../common/deploy/runbotics-desktop/runbotics-desktop/
             
       - name: Add rb-common and rb-sdk to pnpm
         run: |
-          cd ../common/deploy/runbotics-desktop/runbotics-desktop/ ; `
+          cd ../common/deploy/runbotics-desktop/runbotics-desktop/; `
             pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
             
       - name: Run pnpm install
@@ -111,13 +111,13 @@ jobs:
 
       - name: Set default sign to false
         run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json ; `
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
+          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
           (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
           
       - name: Build rb-desktop
         run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
+          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
           pnpm electron-builder
           
       - name: Sign bot
@@ -137,5 +137,5 @@ jobs:
         uses: actions/upload-artifact@v4.0.0
         with:
           name: RunBotics-${{ steps.extract_version.outputs.version }}
-          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/sdf'
+          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           if-no-files-found: error
