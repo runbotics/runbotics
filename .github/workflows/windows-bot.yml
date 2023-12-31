@@ -7,8 +7,7 @@ on:
       - 'master'
       - 'release/**'
       - 'hotfix/**'
-    # paths:
-    #   - 'runbotics/runbotics-desktop/**'
+      - 'feature/RPA-1097'
 
 env:
   NODE_VERSION: 18.x
@@ -139,4 +138,4 @@ jobs:
         with:
           name: RunBotics-${{ steps.extract_version.outputs.version }}
           path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/sdf'
-          if-no-files-found: 'Could not find files under the given path'
+          if-no-files-found: error
