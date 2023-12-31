@@ -35,7 +35,7 @@ jobs:
       # || github.ref == 'refs/heads/master'
       # || startsWith(github.ref, 'refs/heads/release/')
       # || startsWith(github.ref, 'refs/heads/hotfix/'))
-      # && needs.changes-detection.outputs.bot == 'true'
+      # ; needs.changes-detection.outputs.bot == 'true'
     runs-on: windows-latest
 
     defaults:
@@ -98,7 +98,7 @@ jobs:
             ../common/deploy/runbotics-desktop/runbotics-desktop/ `
       - name: Add rb-common and rb-sdk to pnpm
         run: |
-          cd ../common/deploy/runbotics-desktop/runbotics-desktop/ && `
+          cd ../common/deploy/runbotics-desktop/runbotics-desktop/ ; `
             pnpm add runbotics-common@file:../runbotics-common @runbotics/runbotics-sdk@file:../runbotics-sdk --ignore-scripts
       - name: Run pnpm install
         run: |
@@ -136,5 +136,4 @@ jobs:
         with:
           name: RunBotics-${{ steps.extract_version.outputs.version }}
           path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
-          error: 'Could not find files under the given path'
-          if-no-files-found: error
+          if-no-files-found: 'Could not find files under the given path'
