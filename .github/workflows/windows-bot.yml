@@ -123,7 +123,7 @@ jobs:
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/' ; `
           (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json ; `
           (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json ; `
-          cat ./package.json
+          pnpm electron-builder
           
       # (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",)', "`$1`r`n" | Set-Content .\package.json && `
       # (Get-Content .\package.json -Raw) -replace '("icon": "./public/icons/runbotics-512x512.png",).*', "`$1`r`n    `"verifyUpdateCodeSignature`"`: false" | Set-Content .\package.json && `
