@@ -6,7 +6,7 @@
         </preConditions>
         <insert tableName="jhi_user">
             <column name="id">3</column>
-            <column name="login">runbotics</column>
+            <column name="login">RunBotics</column>
             <column name="password_hash">$2a$10$Ran/RqsenQiZ.s3VvLk9WOCzlM5MA5rpmJfoupre55sbFBhqoi1d.</column>
             <column name="first_name">RunBotics</column>
             <column name="last_name">RunBotics</column>
