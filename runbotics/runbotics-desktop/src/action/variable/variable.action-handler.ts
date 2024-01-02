@@ -62,9 +62,8 @@ export default class VariableActionHandler extends StatelessActionHandler {
         return actionInput;
     }
 
-    private async fetchGlobalVariable(globalVariableId: number): Promise<AssignVariableActionInput> {
-        const response: AxiosResponse<IGlobalVariable> = await orchestratorAxios.get(`/api/global-variables/${globalVariableId}`);
-        return this.mapGlobalVariableToActionInput(response.data);
+    private fetchGlobalVariable(globalVariableId: number): Promise<AxiosResponse<IGlobalVariable>> {
+        return orchestratorAxios.get(`/api/global-variables/${globalVariableId}`);
     }
 
     private async assignGlobalVariable (
@@ -72,7 +71,11 @@ export default class VariableActionHandler extends StatelessActionHandler {
     ) {
         const globalVariableIds = request.input.globalVariables;
         for (const globalVariableId of globalVariableIds) {
-            const input = await this.fetchGlobalVariable(globalVariableId);
+            const { data: globalVariable } = await this.fetchGlobalVariable(globalVariableId)
+                .catch((error) => {
+                    throw new Error(`An error occurred during ${globalVariable.id} fetch: ${error}`);
+                });
+            const input = this.mapGlobalVariableToActionInput(globalVariable);
             await this.assignVariable({ ...request, input });
         }
     }

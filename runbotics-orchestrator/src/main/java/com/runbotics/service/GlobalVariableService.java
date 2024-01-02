@@ -66,4 +66,12 @@ public interface GlobalVariableService {
      */
     List<GlobalVariable> findByIds(List<Long> globalVariableIds);
 
+    /**
+    * Get page of GlobalVariables by creator id.
+    *
+    * @param pageable the pagination information.
+    * @param id the id of the requesting user.
+    */
+    Page<GlobalVariableDTO> getByRequester(Pageable pageable, Long id);
+
 }

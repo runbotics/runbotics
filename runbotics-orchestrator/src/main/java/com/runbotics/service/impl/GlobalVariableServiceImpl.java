@@ -103,4 +103,10 @@ public class GlobalVariableServiceImpl implements GlobalVariableService {
     public List<GlobalVariable> findByIds(List<Long> globalVariableIds) {
         return globalVariableRepository.findAllById(globalVariableIds);
     }
+
+    public Page<GlobalVariableDTO> getByRequester(Pageable pageable, Long id) {
+        log.debug("Request to get GlobalVariables by user");
+        return globalVariableRepository.findAllByCreatorId(pageable, id)
+            .map(globalVariableMapper::toDto);
+    }
 }

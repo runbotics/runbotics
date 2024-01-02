@@ -2,6 +2,8 @@ package com.runbotics.repository;
 
 import com.runbotics.domain.GlobalVariable;
 import com.runbotics.domain.Process;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,6 @@ public interface GlobalVariableRepository extends JpaRepository<GlobalVariable, 
 
     @Query("select globalVariable.processes from GlobalVariable globalVariable where globalVariable.id = ?1")
     List<Process> getAssociatedProcesses(Long id);
+
+    Page<GlobalVariable> findAllByCreatorId(Pageable page, Long id);
 }
