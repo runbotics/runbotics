@@ -1,6 +1,5 @@
 package com.runbotics.web.rest;
 
-import com.runbotics.domain.Authority;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -170,9 +169,7 @@ public class GlobalVariableResource {
     public ResponseEntity<List<GlobalVariableDTO>> getAllGlobalVariables(GlobalVariableCriteria criteria, Pageable pageable) {
         log.debug("REST request to get GlobalVariables by criteria: {}", criteria);
         User requester = userService.getUserWithAuthorities().get();
-        Authority adminAuthority = new Authority();
-        adminAuthority.setName(AuthoritiesConstants.ADMIN);
-        boolean hasRequesterRoleAdmin = requester.getAuthorities().contains(adminAuthority);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
 
         Page<GlobalVariableDTO> page = hasRequesterRoleAdmin
             ? globalVariableQueryService.findByCriteria(criteria, pageable)

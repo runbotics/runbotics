@@ -72,8 +72,8 @@ export default class VariableActionHandler extends StatelessActionHandler {
         const globalVariableIds = request.input.globalVariables;
         for (const globalVariableId of globalVariableIds) {
             const { data: globalVariable } = await this.fetchGlobalVariable(globalVariableId)
-                .catch(() => {
-                    throw new Error('Unable to fetch global variable');
+                .catch((error) => {
+                    throw new Error(`An error occurred during ${globalVariable.id} fetch: ${error}`);
                 });
             const input = this.mapGlobalVariableToActionInput(globalVariable);
             await this.assignVariable({ ...request, input });
