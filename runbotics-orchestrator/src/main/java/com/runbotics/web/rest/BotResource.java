@@ -1,20 +1,15 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.User;
 import com.runbotics.repository.BotRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.BotQueryService;
 import com.runbotics.service.BotService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.BotCriteria;
 import com.runbotics.service.dto.BotDTO;
-import com.runbotics.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -50,10 +43,18 @@ public class BotResource {
 
     private final BotQueryService botQueryService;
 
-    public BotResource(BotService botService, BotRepository botRepository, BotQueryService botQueryService) {
+    private final UserService userService;
+
+    public BotResource(
+        BotService botService,
+        BotRepository botRepository,
+        BotQueryService botQueryService,
+        UserService userService
+    ) {
         this.botService = botService;
         this.botRepository = botRepository;
         this.botQueryService = botQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -80,9 +81,14 @@ public class BotResource {
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
     @GetMapping("/bots-page")
     public ResponseEntity<Page<BotDTO>> getAllBots(BotCriteria criteria, Pageable pageable) {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         log.debug("REST request to get Bots by criteria: {}", criteria);
-        Page<BotDTO> page = botQueryService.findByCriteria(criteria, pageable, currentUsername);
+        User requester = userService.getUserWithAuthorities().get();
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
+
+        Page<BotDTO> page = hasRequesterRoleAdmin
+            ? botQueryService.findByCriteria(criteria, pageable)
+            : botService.getBotPageForUser(criteria, pageable, requester);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);
     }
