@@ -9,12 +9,11 @@ import { externalAxios } from '#config';
 import { RunboticsLogger } from '#logger';
 
 import {
-    JiraActionRequest, Worklog, SimpleWorklog,
-    JiraUser, IssueWorklogResponse, SimpleJiraUser,
-    WorklogResponse, WorklogOutput
+    JiraActionRequest, SimpleWorklog,
+    ServerJiraUser, SimpleServerJiraUser, WorklogOutput
 } from './jira-server.types';
 import { getWorklogInputSchema, isWorklogDay, isWorklogPeriod } from '../jira.utils';
-import { GetWorklogBase, GetWorklogInput } from '../jira.types';
+import { GetWorklogBase, GetWorklogInput, IssueWorklogResponse, SearchIssue, Worklog, WorklogResponse } from '../jira.types';
 
 /**
  * @see https://docs.atlassian.com/software/jira/docs/api/REST/9.11.0
@@ -63,28 +62,26 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
                     .filter(worklog => worklog.author.key === jiraUser.key
                         && dayjs(worklog.started).isAfter(startDate)
                         && dayjs(worklog.started).isBefore(endDate))
-                    .map<WorklogOutput>(worklog => ({
-                        ...this.getSimpleWorklog(worklog),
-                        issue: {
-                            id: issue.id,
-                            key: issue.key,
-                            summary: issue.fields.summary,
-                            self: issue.self,
-                        },
-                    }));
+                    .map(worklog => this.mapWorklogOutput(worklog, issue));
             })
         )).flatMap(w => w);
 
-        return this.groupByDay(worklogs);
+        return input.groupByDay
+            ? this.groupByDay(worklogs)
+            : this.sortAscending(worklogs);
+    }
+
+    private sortAscending(worklogs: WorklogOutput[]) {
+        return worklogs.sort((a, b) => dayjs(a.started).isBefore(dayjs(b.started)) ? -1 : 1);
     }
 
     private groupByDay(worklogs: WorklogOutput[]) {
         const worklogsByDay = _.groupBy(worklogs, (worklog) => dayjs(worklog.started).format('DD-MM-YYYY'));
 
-        return Object.values(worklogsByDay);
+        return worklogsByDay;
     }
 
-    private getSimpleWorklog({ updateAuthor, issueId, comment, ...worklog }: Worklog): SimpleWorklog {
+    private getSimpleWorklog({ updateAuthor, issueId, comment, ...worklog }: Worklog<ServerJiraUser>): SimpleWorklog {
         return {
             ...worklog,
             timeSpentHours: worklog.timeSpentSeconds * 1.0 / 60 / 60,
@@ -92,11 +89,57 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
         };
     }
 
-    private getSimpleAuthor(author: JiraUser | Worklog['author']): SimpleJiraUser {
+    private getSimpleAuthor(author: ServerJiraUser | Worklog<ServerJiraUser>['author']): SimpleServerJiraUser {
         return {
             key: author.key,
             name: author.name,
             ...('emailAddress' in author && { emailAddress: author.emailAddress.toLowerCase() }),
+        };
+    }
+
+    private mapWorklogOutput(worklog: Worklog<ServerJiraUser>, issue: SearchIssue<ServerJiraUser>): WorklogOutput {
+        const { issuetype, parent, project, status, worklog: innerWorklog, ...issueDetails } = issue.fields;
+        return {
+            ...this.getSimpleWorklog(worklog),
+            issue: {
+                ...issueDetails,
+                id: issue.id,
+                key: issue.key,
+                summary: issue.fields.summary,
+                self: issue.self,
+                type: {
+                    id: issue.fields.issuetype.id,
+                    description: issue.fields.issuetype.description,
+                    self: issue.fields.issuetype.self,
+                    name: issue.fields.issuetype.name,
+                    subtask: issue.fields.issuetype.subtask,
+                }
+            },
+            parent: issue.fields.parent ? {
+                id: issue.fields.parent.id,
+                key: issue.fields.parent.key,
+                self: issue.fields.parent.self,
+                summary: issue.fields.parent.fields.summary,
+                type: {
+                    id: issue.fields.parent.fields.issuetype.id,
+                    description: issue.fields.parent.fields.issuetype.description,
+                    self: issue.fields.parent.fields.issuetype.self,
+                    name: issue.fields.parent.fields.issuetype.name,
+                    subtask: issue.fields.parent.fields.issuetype.subtask,
+                }
+            } : null,
+            project: {
+                id: issue.fields.project.id,
+                key: issue.fields.project.key,
+                name: issue.fields.project.name,
+                self: issue.fields.project.self,
+            },
+            labels: issue.fields.labels,
+            status: {
+                id: issue.fields.status.id,
+                name: issue.fields.status.name,
+                self: issue.fields.status.self,
+            },
         };
     }
 
@@ -114,7 +157,7 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             };
         }
 
-        return externalAxios.get<WorklogResponse>(
+        return externalAxios.get<WorklogResponse<ServerJiraUser>>(
             `${process.env[input.originEnv]}/rest/api/2/issue/${issueKey}/worklog`,
             {
                 headers: this.getBasicAuthHeader(input),
@@ -139,13 +182,13 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
         }
 
-        return externalAxios.get<IssueWorklogResponse>(
+        return externalAxios.get<IssueWorklogResponse<ServerJiraUser>>(
             `${process.env[input.originEnv]}/rest/api/2/search`,
             {
                 headers: this.getBasicAuthHeader(input),
                 params: {
                     jql: `${dateCondition} AND worklogAuthor=${author}`,
-                    fields: 'worklog,summary',
+                    fields: '*all,-watches,-votes,-timetracking,-reporter,-progress,-issuerestriction,-issuelinks,-fixVersions,-comment,-attachment,-aggregateprogress,-assignee,-creator,-description,-duedate,-environment,-lastViewed,-resolution,-resolutiondate,-security,-statuscategorychangedate,-subtasks,-versions,-workratio,-timespent,-timeoriginalestimate,-timeestimate,-aggregatetimespent,-aggregatetimeoriginalestimate,-aggregatetimeestimate',
                 },
                 maxRedirects: 0,
             },
@@ -157,7 +200,7 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
      * @throws when the specified user is not found
      */
     private async getJiraUser(input: GetWorklogBase) {
-        const { data } = await externalAxios.get<JiraUser[]>(
+        const { data } = await externalAxios.get<ServerJiraUser[]>(
             `${process.env[input.originEnv]}/rest/api/2/user/search`,
             {
                 params: {

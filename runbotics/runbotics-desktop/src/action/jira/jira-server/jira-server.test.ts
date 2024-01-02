@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import JiraServerActionHandler from './jira-server.action-handler';
 import { GetWorklogInput } from '../jira.types';
-import { IssueWorklogResponse, JiraUser, SimpleIssue, WorklogResponse } from './jira-server.types';
+import { IssueWorklogResponse, ServerJiraUser, SimpleIssue, WorklogResponse } from './jira-server.types';
 import { ZodError } from 'zod';
 
 describe('JiraServerActionHandler', () => {
@@ -36,7 +36,7 @@ describe('JiraServerActionHandler', () => {
     });
 
     describe('GetWorklog', () => {
-        const jiraUser: JiraUser = {
+        const jiraUser: ServerJiraUser = {
             key: 'john-doe-identifier',
             name: 'john-doe',
             deleted: false,

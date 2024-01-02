@@ -1,12 +1,11 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { JiraCloudAction } from 'runbotics-common';
-import { GetWorklogInput, Page } from '../jira.types';
+import { GetWorklogInput, Project, SimpleIssue, Status, Worklog } from '../jira.types';
 
 export type JiraActionRequest =
     | DesktopRunRequest<JiraCloudAction.GET_USER_WORKLOGS, GetWorklogInput>;
 
-
-export interface JiraUser {
+export interface CloudJiraUser {
     accountId: string;
     accountType: string;
     active: boolean;
@@ -17,56 +16,20 @@ export interface JiraUser {
     emailAddress: string;
 }
 
-export interface SimpleJiraUser {
-    accountId: JiraUser['accountId'];
-    emailAddress?: JiraUser['emailAddress'];
+export interface SimpleCloudJiraUser {
+    accountId: CloudJiraUser['accountId'];
+    emailAddress?: CloudJiraUser['emailAddress'];
 }
 
-export type Worklog = {
-    author: Omit<JiraUser, 'emailAddress'>;
-    created: string;
-    id: string;
-    issueId: string;
-    self: string;
-    started: string;
-    timeSpent: string;
-    timeSpentSeconds: number;
-    updateAuthor: Omit<JiraUser, 'emailAddress'>;
-    updated: string;
-};
-
-export interface SimpleWorklog extends Omit<Worklog, 'author' | 'updateAuthor' | 'issueId'> {
-    author: SimpleJiraUser;
+export interface SimpleWorklog extends Omit<Worklog<CloudJiraUser>, 'author' | 'updateAuthor' | 'issueId'> {
+    author: SimpleCloudJiraUser;
     timeSpentHours: number;
 }
 
-export interface WorklogResponse extends Page {
-    worklogs: Worklog[];
-}
-
-export interface IssueWorklogResponse extends Page {
-    expand: 'schema,names',
-    issues: SimpleIssue[],
-}
-
-export interface SimpleIssue {
-    expand: string,
-    fields: {
-        summary: string,
-        worklog: Page & {
-            worklogs: Worklog[],
-        },
-    },
-    id: string,
-    key: string,
-    self: string,
-}
-
 export interface WorklogOutput extends SimpleWorklog {
-    issue: {
-        id: string;
-        key: string;
-        summary: string;
-        self: string;
-    }
+    issue: SimpleIssue;
+    parent: SimpleIssue;
+    project: Partial<Project>;
+    labels: string[];
+    status: Partial<Status>;
 }

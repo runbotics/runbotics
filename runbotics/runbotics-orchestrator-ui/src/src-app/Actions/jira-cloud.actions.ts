@@ -54,6 +54,10 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     title: translate('Process.Details.Modeler.Actions.Common.Email'),
                                     type: 'string',
                                 },
+                                groupByDay: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.GroupByDay'),
+                                    type: 'boolean',
+                                },
                                 mode: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DateMode'),
                                     type: 'string',
