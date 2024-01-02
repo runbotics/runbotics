@@ -1,8 +1,7 @@
 import { Test } from '@nestjs/testing';
 import JiraServerActionHandler from './jira-server.action-handler';
-import { GetWorklogInput } from '../jira.types';
-import { IssueWorklogResponse, ServerJiraUser, SimpleIssue, WorklogResponse } from './jira-server.types';
-import { ZodError } from 'zod';
+import { GetWorklogInput, SearchIssue, IssueWorklogResponse, WorklogResponse } from '../jira.types';
+import { ServerJiraUser } from './jira-server.types';
 
 describe('JiraServerActionHandler', () => {
     let jiraServerActionHandler: JiraServerActionHandler;
@@ -11,15 +10,15 @@ describe('JiraServerActionHandler', () => {
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
-        date: '2023-11-12',
+        date: '12-11-2023',
     };
     const getWorklogInputPeriod: GetWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
-        startDate: '2023-11-12',
-        endDate: '2023-11-14'
+        startDate: '12-11-2023',
+        endDate: '14-11-2023'
     };
 
     beforeEach(async () => {
@@ -48,11 +47,58 @@ describe('JiraServerActionHandler', () => {
             self: 'madeUpUrl',
             timeZone: 'Warsaw',
         };
-        const jiraIssue: SimpleIssue = {
+        const issuetype: SearchIssue<ServerJiraUser>['fields']['issuetype'] = {
+            id: '1',
+            name: 'test',
+            self: 'madeUpUrl',
+            avatarId: 1,
+            description: '',
+            hierarchyLevel: 1,
+            iconUrl: '',
+            subtask: false,
+        };
+        const project: SearchIssue<ServerJiraUser>['fields']['project'] = {
+            id: '',
+            key: '',
+            name: '',
+            self: '',
+            projectCategory: {
+                id: '',
+                description: '',
+                name: '',
+                self: '',
+            },
+            avatarUrls: {},
+            projectTypeKey: '',
+            simplified: true,
+        };
+        const jiraIssue: SearchIssue<ServerJiraUser> = {
             expand: 'someFields',
             self: 'madeUpUrl',
             fields: {
                 summary: 'name of the jira ticket',
+                issuetype,
+                labels: [],
+                parent: {
+                    id: '',
+                    fields: {
+                        issuetype,
+                        project,
+                        labels: [],
+                        summary: '',
+                        worklog: {
+                            worklogs: [],
+                            maxResults: 20,
+                            startAt: 0,
+                            total: 4,
+                        },
+                        status: {},
+                    },
+                    key: '',
+                    self: '',
+                },
+                project,
+                status: {},
                 worklog: {
                     worklogs: [
                         { // valid jiraUser worklog
@@ -118,14 +164,14 @@ describe('JiraServerActionHandler', () => {
             id: '654321',
             key: 'RPA-1',
         };
-        const emptyUserIssuesWorklogs: IssueWorklogResponse = {
+        const emptyUserIssuesWorklogs: IssueWorklogResponse<ServerJiraUser> = {
             expand: 'schema,names',
             issues: [],
             maxResults: 100,
             startAt: 0,
             total: 0,
         };
-        const partialUserIssuesWorklogs: IssueWorklogResponse = {
+        const partialUserIssuesWorklogs: IssueWorklogResponse<ServerJiraUser> = {
             expand: 'schema,names',
             issues: [{
                 ...jiraIssue, fields: {
@@ -139,7 +185,7 @@ describe('JiraServerActionHandler', () => {
             startAt: 0,
             total: 1,
         };
-        const userIssuesWorklogs: IssueWorklogResponse = {
+        const userIssuesWorklogs: IssueWorklogResponse<ServerJiraUser> = {
             expand: 'schema,names',
             issues: [jiraIssue],
             maxResults: 100,
@@ -162,14 +208,24 @@ describe('JiraServerActionHandler', () => {
                 .toHaveLength(0);
         });
 
-        it('should return single worklog', async () => {
+        it('should return list with single worklog', async () => {
             vi.spyOn(JiraServerActionHandler.prototype as any, 'getUserIssueWorklogs')
                 .mockResolvedValue(userIssuesWorklogs);
 
             const worklogs = await jiraServerActionHandler.getWorklog(getWorklogInputDate);
             expect(worklogs).toHaveLength(1);
-            expect(worklogs[0]).toHaveLength(1);
-            expect(worklogs[0][0].timeSpentHours).toBe(4);
+            expect(worklogs[0].timeSpentHours).toBe(4);
+        });
+
+        it('should return single worklog map', async () => {
+            vi.spyOn(JiraServerActionHandler.prototype as any, 'getUserIssueWorklogs')
+                .mockResolvedValue(userIssuesWorklogs);
+
+            const worklogs = await jiraServerActionHandler.getWorklog({ ...getWorklogInputDate, groupByDay: true });
+            expectTypeOf(worklogs).toBeObject();
+            expectTypeOf(Object.keys(worklogs)[0]).toBeString();
+            expectTypeOf(Object.values(worklogs)[0]).toBeArray();
+            expect(worklogs['12-11-2023'][0].timeSpentHours).toBe(4);
         });
 
         it('should return worklog list', async () => {
@@ -178,10 +234,8 @@ describe('JiraServerActionHandler', () => {
 
             const worklogs = await jiraServerActionHandler.getWorklog(getWorklogInputPeriod);
             expect(worklogs).toHaveLength(2);
-            expect(worklogs[0]).toHaveLength(1);
-            expect(worklogs[1]).toHaveLength(1);
-            expect(worklogs[0][0].timeSpentHours).toBe(4);
-            expect(worklogs[1][0].timeSpentHours).toBe(4);
+            expect(worklogs[0].timeSpentHours).toBe(4);
+            expect(worklogs[1].timeSpentHours).toBe(4);
         });
 
         it('should call getIssueWorklogs', async () => {
@@ -193,7 +247,7 @@ describe('JiraServerActionHandler', () => {
                     maxResults: userIssuesWorklogs.issues[0].fields.worklog.maxResults,
                     total: userIssuesWorklogs.issues[0].fields.worklog.total,
                     startAt: userIssuesWorklogs.issues[0].fields.worklog.startAt,
-                } satisfies WorklogResponse);
+                } satisfies WorklogResponse<ServerJiraUser>);
 
             await jiraServerActionHandler.getWorklog(getWorklogInputDate);
             expect(getIssueWorklogsSpy).toHaveBeenCalledOnce();

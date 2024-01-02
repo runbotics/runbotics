@@ -12,7 +12,7 @@ import {
     JiraActionRequest, SimpleWorklog,
     ServerJiraUser, SimpleServerJiraUser, WorklogOutput
 } from './jira-server.types';
-import { getWorklogInputSchema, isWorklogDay, isWorklogPeriod } from '../jira.utils';
+import { AVAILABLE_FORMATS, getWorklogInputSchema, isWorklogDay, isWorklogPeriod } from '../jira.utils';
 import { GetWorklogBase, GetWorklogInput, IssueWorklogResponse, SearchIssue, Worklog, WorklogResponse } from '../jira.types';
 
 /**
@@ -40,12 +40,12 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
             });
 
         if (isWorklogDay(input)) {
-            startDate = dayjs(input.date).startOf('day');
-            endDate = dayjs(input.date).endOf('day');
+            startDate = dayjs(input.date, AVAILABLE_FORMATS).startOf('day');
+            endDate = dayjs(input.date, AVAILABLE_FORMATS).endOf('day');
         }
         if (isWorklogPeriod(input)) {
-            startDate = dayjs(input.startDate).startOf('day');
-            endDate = dayjs(input.endDate).endOf('day');
+            startDate = dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day');
+            endDate = dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day');
         }
 
         const jiraUser = await this.getJiraUser(input);
@@ -147,13 +147,13 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
         let timeParam: { startedBefore: number; startedAfter: number };
         if (isWorklogDay(input)) {
             timeParam = {
-                startedBefore: dayjs(input.date).endOf('day').valueOf(),
-                startedAfter: dayjs(input.date).startOf('day').valueOf(),
+                startedBefore: dayjs(input.date, AVAILABLE_FORMATS).endOf('day').valueOf(),
+                startedAfter: dayjs(input.date, AVAILABLE_FORMATS).startOf('day').valueOf(),
             };
         } else if (isWorklogPeriod(input)) {
             timeParam = {
-                startedBefore: dayjs(input.endDate).endOf('day').valueOf(),
-                startedAfter: dayjs(input.startDate).startOf('day').valueOf(),
+                startedBefore: dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day').valueOf(),
+                startedAfter: dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day').valueOf(),
             };
         }
 
@@ -174,11 +174,11 @@ export default class JiraServerActionHandler extends StatelessActionHandler {
     private getUserIssueWorklogs(author: string, input: GetWorklogInput) {
         let dateCondition = '';
         if (isWorklogDay(input)) {
-            const date = dayjs(input.date).format('YYYY-MM-DD');
+            const date = dayjs(input.date, AVAILABLE_FORMATS).format('YYYY-MM-DD');
             dateCondition = `worklogDate=${date}`;
         } else if (isWorklogPeriod(input)) {
-            const start = dayjs(input.startDate).format('YYYY-MM-DD');
-            const end = dayjs(input.endDate).format('YYYY-MM-DD');
+            const start = dayjs(input.startDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
+            const end = dayjs(input.endDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
             dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
         }
 

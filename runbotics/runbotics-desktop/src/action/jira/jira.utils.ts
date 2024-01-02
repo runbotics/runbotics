@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 import { GetWorklogBase, WorklogDay, WorklogPeriod } from './jira.types';
 import z from 'zod';
 
@@ -26,8 +28,8 @@ const dateValidator = (property: string) => z.string({
     required_error: `${property} property is missing`
 })
     .refine(
-        date => dayjs(date).isValid(),
-        date => ({ message: `${property}: "${date}" is not a valid date` }),
+        date => dayjs(date, AVAILABLE_FORMATS, true).isValid(),
+        date => ({ message: `${property}: "${date}" is not a valid date. Expected "DD-MM-YYYY", "DD/MM/YYYY" or "DD.MM.YYYY"` }),
     );
 
 const envValidator = (property: string) => z.string({
@@ -37,6 +39,8 @@ const envValidator = (property: string) => z.string({
         env => Boolean(process.env[env]) && typeof process.env[env] === 'string',
         env => ({ message: `${property}: "${env}" is empty or does not exist` })
     );
+
+export const AVAILABLE_FORMATS = ['DD.MM.YYYY', 'DD-MM-YYYY', 'DD/MM/YYYY'];
 
 export const getWorklogInputBaseSchema = z.object({
     originEnv: envValidator('Origin'),

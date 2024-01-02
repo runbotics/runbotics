@@ -80,7 +80,7 @@ export interface SearchIssue<User extends object> {
             worklogs: Worklog<User>[];
         };
         issuetype: IssueType;
-        parent: Omit<SearchIssue<User>, 'expand'>;
+        parent?: Omit<SearchIssue<User>, 'expand'>;
         project: Project;
         labels: string[];
         status: any;
