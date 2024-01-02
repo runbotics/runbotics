@@ -16,13 +16,26 @@
             <column name="created_by">system</column>
             <column name="last_modified_by">system</column>
         </insert>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="20240102187412-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <sqlCheck expectedResult="0">
+                    SELECT COUNT(*) FROM jhi_user_authority
+                    WHERE user_id = 3 AND authority_name LIKE 'ROLE_ADMIN'
+                </sqlCheck>
+                <sqlCheck expectedResult="1">SELECT COUNT(*) FROM jhi_user WHERE id = 3</sqlCheck>
+                <sqlCheck expectedResult="1">SELECT COUNT(*) FROM jhi_authority WHERE name LIKE 'ROLE_ADMIN'</sqlCheck>
+            </and>
+        </preConditions>
         <insert tableName="jhi_user_authority">
             <column name="user_id">3</column>
             <column name="authority_name">ROLE_ADMIN</column>
         </insert>
     </changeSet>
 
-    <changeSet author="gasiorowskaa" id="20240102187412-2">
+    <changeSet author="gasiorowskaa" id="20240102187412-3">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="1">SELECT COUNT(*) FROM bot_collection WHERE name LIKE 'Public'</sqlCheck>
         </preConditions>
