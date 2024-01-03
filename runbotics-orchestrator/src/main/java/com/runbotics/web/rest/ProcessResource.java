@@ -266,9 +266,9 @@ public class ProcessResource {
     @PatchMapping(value = "/processes/{id}/output-type")
     public ResponseEntity<ProcessDTO> processSetOutputType(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody ProcessDTO processDTO
+        @NotNull @RequestBody @Valid ProcessOutputTypeUpdateDTO processDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update output type for the Process : {}, {}", id, processDTO);
+        log.debug("REST request to update is attended used in Process {} to {}", processDTO, processDTO.getOutputType());
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateOutputType(processDTO);
 
@@ -407,6 +407,20 @@ public class ProcessResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, processTriggerDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!processRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+    }
+
+    private void checkProcessForEdit(long id, ProcessOutputTypeUpdateDTO processOutputTypeUpdateDTO) throws BadRequestAlertException {
+        if (processOutputTypeUpdateDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+
+        if (!Objects.equals(id, processOutputTypeUpdateDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 

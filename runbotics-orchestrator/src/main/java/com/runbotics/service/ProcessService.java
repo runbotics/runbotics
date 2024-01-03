@@ -1,10 +1,7 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.User;
-import com.runbotics.service.dto.ProcessAttendedUpdateDTO;
-import com.runbotics.service.dto.ProcessDTO;
-import com.runbotics.service.dto.ProcessDiagramUpdateDTO;
-import com.runbotics.service.dto.ProcessTriggerUpdateDTO;
+import com.runbotics.service.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -43,7 +40,7 @@ public interface ProcessService {
 
     Optional<ProcessDTO> updateBotSystem(ProcessDTO processDTO);
 
-    Optional<ProcessDTO> updateOutputType(ProcessDTO processDTO);
+    Optional<ProcessDTO> updateOutputType(ProcessOutputTypeUpdateDTO processDTO);
 
     Optional<ProcessDTO> updateGlobalVariables(Long processId, List<String> globalVariableIds);
 

@@ -108,8 +108,8 @@ export type BPMNElement = {
 export interface BPMNElementRegistry {
     [key: BPMNElement['id']]: {
         element: BPMNElement;
-        gfx: unknown | undefined;
-        secondaryGfx: unknown | undefined;
+        gfx: unknown;
+        secondaryGfx: unknown;
     }
 }
 

@@ -33,12 +33,6 @@ export const RunboticModdleDescriptor = {
                     type: "Boolean",
                     default: false,
                 },
-                {
-                    name: "processOutput",
-                    isAttr: true,
-                    type: "Boolean",
-                    default: false,
-                },
             ],
         },
         {

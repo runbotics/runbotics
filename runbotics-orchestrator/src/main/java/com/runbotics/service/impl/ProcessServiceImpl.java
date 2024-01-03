@@ -80,8 +80,8 @@ public class ProcessServiceImpl implements ProcessService {
             process.setSystem(any);
         }
         if (process.getOutputType() == null) {
-            ProcessOutput jsonObject = new ProcessOutput(ProcessOutput.ProcessOutputType.JSON_OBJECT.value());
-            process.setOutputType(jsonObject);
+            ProcessOutput json = new ProcessOutput(ProcessOutput.ProcessOutputType.JSON.value());
+            process.setOutputType(json);
         }
 
         if (process.getTags() != null) {
@@ -215,7 +215,7 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateOutputType(ProcessDTO processDTO) {
+    public Optional<ProcessDTO> updateOutputType(ProcessOutputTypeUpdateDTO processDTO) {
         log.info("Request to set output type for the Process to: {}", processDTO.getOutputType());
 
         return processRepository

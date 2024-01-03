@@ -147,7 +147,7 @@ export default class CustomRenderer extends BaseRenderer {
         const label = this.getLabel(element);
         const businessObject = getBusinessObject(element);
         const { disabled } = businessObject;
-        // debugger;
+
         if (is(element, "bpmn:Task")) {
             drawRect(
                 parentNode,

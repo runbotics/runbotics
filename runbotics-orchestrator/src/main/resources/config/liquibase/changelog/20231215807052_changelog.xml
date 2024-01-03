@@ -13,10 +13,10 @@
             </column>
         </createTable>
         <insert tableName="process_output">
-            <column name="type">JSON_OBJECT</column>
+            <column name="type">JSON</column>
         </insert>
         <insert tableName="process_output">
-            <column name="type">PLAIN_TEXT</column>
+            <column name="type">TEXT</column>
         </insert>
     </changeSet>
 
@@ -28,7 +28,7 @@
             </not>
         </preConditions>
         <addColumn tableName="process">
-            <column name="output_type" type="varchar(50)" defaultValue="JSON_OBJECT" defaultOnNull="true">
+            <column name="output_type" type="varchar(50)" defaultValue="JSON" defaultOnNull="true">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
