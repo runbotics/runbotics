@@ -56,13 +56,11 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
                 .outputParameters[1]
                 .name;
 
-            const processOutputVariableValue = JSON.parse(processInstance.output)[processOutputVariableName];
-
             switch (process.outputType.type) {
-                case ProcessOutputType.PLAIN_TEXT:
-                    return JSON.stringify(processOutputVariableValue);
+                case ProcessOutputType.TEXT:
+                    return processInstance.output;
                 default:
-                    return <ReactJson name={false} src={{ [processOutputVariableName]: processOutputVariableValue }} />;
+                    return <ReactJson name={false} src={{ [processOutputVariableName]: JSON.parse(processInstance.output) }} />;
             }
         }
         return null;
