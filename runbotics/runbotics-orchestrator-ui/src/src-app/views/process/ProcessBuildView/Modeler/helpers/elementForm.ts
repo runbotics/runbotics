@@ -87,7 +87,7 @@ export const getFormSchema = (
 
     const hasOutput = selectedAction.form.schema.properties.output;
 
-    const additionalProperties = {
+    const additionalProperties: JSONSchema7['properties'] = {
         disabled: {
             type: 'boolean',
             title: translate(
@@ -100,7 +100,7 @@ export const getFormSchema = (
                 'Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title'
             )
         },
-    } as JSONSchema7['properties'];
+    };
 
     if (hasOutput) {
         additionalProperties.processOutput = {
