@@ -48,6 +48,7 @@ import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
 import { ServerConfigService } from '#config';
 import { StorageService } from '#config';
+import LoopSubProcess from '#core/bpm/LoopSubProcessBehaviour';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -474,6 +475,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         // passed to Camunda, helps store output variables in the scope of a single process
         const processEnvironment = {};
 
+        const typeResolver = (activityTypes) => {
+            activityTypes['bpmn:SubProcess'] = LoopSubProcess;
+            return activityTypes;
+        };
+
         const engine = Engine({
             name: process.name,
             source: process.definition,
@@ -488,6 +494,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             expressions: {
                 resolveExpression: Expressions.resolveExpression,
             },
+            typeResolver,
         });
 
         this.engines[processInstanceId] = engine;
