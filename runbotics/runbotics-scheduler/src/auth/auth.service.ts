@@ -154,7 +154,7 @@ export class AuthService {
         this.validateParameterFromBot(collectionEntity, 'collection with id from bot doesn\'t exist', client);
 
         const botSystem = await this.botSystemService.findByName(system);
-        const mutableBotParams = { system: botSystem, collection: collectionEntity, version };
+        const mutableBotParams = { system: botSystem, collection: collectionEntity, version, user };
         const bot = await this.validateBot(installationId)
             .then(async (bot) => {
                 const isVersionFulfilled = await this.isBotMinimumVersionFulfilled(version);
@@ -170,7 +170,7 @@ export class AuthService {
                 // this.logger.debug('Bot is not a guard');
                 return bot
                     ? this.registerBot(bot, mutableBotParams)
-                    : this.registerNewBot({ installationId, user, ...mutableBotParams });
+                    : this.registerNewBot({ installationId, ...mutableBotParams });
             })
             .catch((error) => {
                 client.disconnect();
@@ -219,8 +219,9 @@ export class AuthService {
         });
     }
 
-    private registerBot(bot: IBot, { system, collection, version }: MutableBotParams) {
+    private registerBot(bot: IBot, { system, collection, version, user }: MutableBotParams) {
         const botToUpdate = { ...bot };
+        botToUpdate.user = user;
         botToUpdate.lastConnected = dayjs().toISOString();
         botToUpdate.status = BotStatus.CONNECTED;
         botToUpdate.system = system;

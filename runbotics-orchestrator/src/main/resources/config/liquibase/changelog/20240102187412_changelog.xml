@@ -6,7 +6,7 @@
         </preConditions>
         <insert tableName="jhi_user">
             <column name="id">3</column>
-            <column name="login">RunBotics</column>
+            <column name="login">runbotics</column>
             <column name="password_hash">$2a$10$Ran/RqsenQiZ.s3VvLk9WOCzlM5MA5rpmJfoupre55sbFBhqoi1d.</column>
             <column name="first_name">RunBotics</column>
             <column name="last_name">RunBotics</column>
@@ -42,6 +42,16 @@
         <update tableName="bot_collection">
             <column name="created_by" value="3"/>
             <where>name='Public'</where>
+        </update>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="20240102187412-4">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM bot_collection WHERE name LIKE 'Guest'</sqlCheck>
+        </preConditions>
+        <update tableName="bot_collection">
+            <column name="created_by" value="3"/>
+            <where>name='Guest'</where>
         </update>
     </changeSet>
 </databaseChangeLog>
