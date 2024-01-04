@@ -220,7 +220,9 @@ export class RuntimeSubscriptionsService {
                     break;
                 case ProcessInstanceStatus.COMPLETED:
                     try {
-                        processInstance.output = this.sanitizeVariable(event.processInstance.output);
+                        if (event.processInstance.processOutputSelected) {
+                            processInstance.output = this.sanitizeVariable(event.processInstance.output);
+                        }
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({

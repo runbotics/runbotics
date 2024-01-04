@@ -379,6 +379,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                         .value;
 
                     processInstance.output = execution.environment.output[processOutputName];
+                    processInstance.processOutputSelected = true;
                 } else {
                     processInstance.output = execution.environment.output;
                 }
