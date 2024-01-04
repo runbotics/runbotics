@@ -46,9 +46,7 @@ const ProcessMainViewManager: VFC = () => {
             router.replace('/404');
         }
 
-        if (Number.isNaN(processId)) return undefined;
-
-        if (draft.process?.id !== processId) {
+        if (!Number.isNaN(processId) && draft.process?.id !== processId) {
             dispatch(processActions.fetchProcessById(processId))
                 .then(unwrapResult)
                 .catch((response: AxiosResponse) => {
