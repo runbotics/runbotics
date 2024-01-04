@@ -225,10 +225,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             if ((api.environment as Environment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
-            if (this.loopHandlerService.shouldSkipElement(api)) {
-                await setLoopVariablesInProcess(api);
-                return;
-            }
+
+            if (this.loopHandlerService.shouldSkipElement(api)) return;
 
             if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) return;
 
@@ -415,16 +413,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 });
             }
         }
-
-        const setLoopVariablesInProcess = async (api: BpmnExecutionEventMessageExtendedApi) => {
-            const variables = {};
-            Object.entries(api.environment?.output).forEach(([key, value]) => {
-                if (key !== 'variableName') {
-                    variables[key] = value;
-                }
-            });
-            await this.assignVariables(processInstanceId, variables);
-        };
 
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =

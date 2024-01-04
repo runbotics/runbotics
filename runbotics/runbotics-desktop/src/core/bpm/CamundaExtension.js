@@ -117,7 +117,10 @@ export function Camunda(activity, processEnvironment) {
                         let key = data.name + '.' + entry.key;
 
                         const valueKey = jexlPattern.exec(entry.value);
-                        if (data.name === 'functionParams' && valueKey !== null) {
+
+                        if (data.name === 'functionParams' && entry.value === '#{iterator}') {
+                            entry.value = '${iterator}';
+                        } else if (data.name === 'functionParams' && valueKey !== null && entry.value !== '${iterator}') {
                             entry.value = '${environment.variables.' + valueKey[1] + '}';
                         }
                         let value = environment.resolveExpression(entry.value, message);
