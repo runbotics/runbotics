@@ -8,9 +8,10 @@ import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
-import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
+import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessConfigureView from '../ProcessConfigureView';
@@ -36,6 +37,10 @@ const ProcessMainViewManager: VFC = () => {
     const processId = Number(id);
     const hasViewAccess = useFeatureKey(isString(tab) ? [processViews[tab]] : []);
 
+    const processInstance = useSelector(processInstanceSelector);
+    const { orchestratorProcessInstanceId } = processInstance.active;
+    useProcessInstanceSocket({ orchestratorProcessInstanceId });
+
     useEffect(() => {
         if (!hasViewAccess) {
             router.replace('/404');
@@ -53,9 +58,7 @@ const ProcessMainViewManager: VFC = () => {
                 });
         }
 
-        return () => {
-            dispatch(processInstanceActions.resetActive());
-        };
+        return () => {};
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId, tab, hasViewAccess]);
 
