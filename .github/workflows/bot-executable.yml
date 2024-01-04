@@ -77,26 +77,12 @@ jobs:
         with:
           path: './runbotics/runbotics-desktop/package.json'
 
-      - name: Install rb-sdk
+      - name: Run electron-install script 
+        shell: bash
         run: |
-            pnpm install `
-              --ignore-scripts `
-              --dir `
-              ../common/deploy/runbotics-desktop/runbotics-sdk/
-
-      - name: Install rb-common
-        run: |
-          pnpm install `
-              --ignore-scripts `
-              --dir `
-              ../common/deploy/runbotics-desktop/runbotics-sdk/
-
-      - name: Copy .npmrc
-        run: |
-          cp `
-            ../common/deploy/runbotics-desktop/.npmrc `
-            ../common/deploy/runbotics-desktop/runbotics-desktop/
-
+            cd ../common/deploy/runbotics-desktop/ &&
+            ./electron-install.sh
+  
       - name: Add rb-common and rb-sdk to pnpm
         run: |
           cd ../common/deploy/runbotics-desktop/runbotics-desktop/; `
