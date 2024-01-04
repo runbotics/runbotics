@@ -32,9 +32,10 @@ jobs:
           filters: |
             bot:
               - 'runbotics/runbotics-desktop/package.json'
+              
   build-bot:
     needs: changes-detection
-    if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+    # if: ${{ needs.changes-detection.outputs.bot == 'true' }}
     runs-on: windows-latest
 
     defaults:
