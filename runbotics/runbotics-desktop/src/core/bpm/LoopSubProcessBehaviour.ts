@@ -1,13 +1,15 @@
-import { SubProcessBehaviour } from 'bpmn-elements/dist/src/tasks/SubProcess';
 import ProcessExecution from 'bpmn-elements/dist/src/process/ProcessExecution';
 import Activity from 'bpmn-elements/dist/src/activity/Activity';
 import { cloneContent } from 'bpmn-elements/dist/src/messageHelper';
 
+// This is copy of SubProcess/SubProcessBehaviour from bpmn-elements library.
+// Purpose of these functions is to save output variables after every iteration of the sub process in main process.
+// addListeners method has been modified and it is calling in method setLoopVariablesInProcess.
+
 export default function LoopSubProcess(activityDef, context) {
     const triggeredByEvent = activityDef.behaviour && activityDef.behaviour.triggeredByEvent;
 
-    // const subProcess = Activity(LoopSubProcessBehaviour, {...activityDef, isSubProcess: true, triggeredByEvent}, context); // << this one works well
-    const subProcess = Activity(createLoopSubProcessBehaviour(SubProcessBehaviour), {...activityDef, isSubProcess: true, triggeredByEvent}, context);
+    const subProcess = Activity(LoopSubProcessBehaviour, {...activityDef, isSubProcess: true, triggeredByEvent}, context);
 
     subProcess.getStartActivities = function getStartActivities(filterOptions) {
         return context.getStartActivities(filterOptions, activityDef.id);
@@ -24,63 +26,6 @@ export default function LoopSubProcess(activityDef, context) {
         const sequence = ProcessExecution(subProcess, context).shake(startId);
         message.content.sequence.push({...last, isSubProcess: true, sequence});
     }
-}
-
-function createLoopSubProcessBehaviour(originalBehaviour) {
-    return function LoopSubProcessBehaviour(activity, context) {
-        const originalInstance = originalBehaviour(activity, context);
-
-        originalInstance.addListeners = function (processExecution, executionId) {
-            const executionConsumerTag = `_sub-process-execution-${executionId}`;
-
-            originalInstance.broker.subscribeTmp('subprocess-execution', `execution.#.${executionId}`, onExecutionCompleted, {
-                noAck: true,
-                consumerTag: executionConsumerTag
-            });
-
-            function onExecutionCompleted(_, message) {
-                const content = message.content;
-                const messageType = message.properties.type;
-
-                if (message.fields.redelivered && message.properties.persistent === false) return;
-
-                switch (messageType) {
-                    case 'stopped': {
-                        originalInstance.broker.cancel(executionConsumerTag);
-                        break;
-                    }
-                    case 'discard': {
-                        originalInstance.broker.cancel(executionConsumerTag);
-                        originalInstance.broker.publish('execution', 'execute.discard', cloneContent(content));
-                        break;
-                    }
-                    case 'completed': {
-                        setLoopVariablesInProcess(content);
-                        originalInstance.broker.cancel(executionConsumerTag);
-                        originalInstance.broker.publish('execution', 'execute.completed', cloneContent(content));
-                        break;
-                    }
-                    case 'error': {
-                        originalInstance.broker.cancel(executionConsumerTag);
-
-                        const { error } = content;
-                        originalInstance.logger.error(`<${originalInstance.id}>`, error);
-                        originalInstance.broker.publish('execution', 'execute.error', cloneContent(content));
-                        break;
-                    }
-                }
-            }
-
-            function setLoopVariablesInProcess(content) {
-                Object.entries(content.output).forEach(([key, value]) => {
-                    if (key !== 'variableName') {
-                        originalInstance.environment.variables[key] = value;
-                    }
-                });
-            }
-        };
-        return originalInstance;
-    };
 }
 
 export function LoopSubProcessBehaviour(activity, context) {
@@ -210,9 +155,7 @@ export function LoopSubProcessBehaviour(activity, context) {
             return execution;
         }
 
-        // const subEnvironment = environment.clone({ output: {} });
         const subEnvironment = environment.clone({ output: {} });
-        // const subContext = context.clone(subEnvironment);
         const subContext = context.clone(subEnvironment);
 
         execution = ProcessExecution(activity, subContext);
@@ -231,7 +174,6 @@ export function LoopSubProcessBehaviour(activity, context) {
         function onExecutionCompleted(_, message) {
             const content = message.content;
             const messageType = message.properties.type;
-            
 
             if (message.fields.redelivered && message.properties.persistent === false) return;
 
@@ -290,22 +232,5 @@ export function LoopSubProcessBehaviour(activity, context) {
 
     function getExecutionById(executionId) {
         return processExecutions.find((pe) => pe.executionId === executionId);
-    }
-
-    function stringify(obj) {
-        let cache = [];
-        let str = JSON.stringify(obj, function(key, value) {
-            if (typeof value === 'object' && value !== null) {
-                if (cache.indexOf(value) !== -1) {
-                    // Circular reference found, discard key
-                    return;
-                }
-                // Store value in our collection
-                cache.push(value);
-            }
-            return value;
-        });
-        cache = null; // reset the cache
-        return str;
     }
 }
