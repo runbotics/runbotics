@@ -114,15 +114,10 @@ jobs:
           folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
 
-      - name: Extract version from package.json
-        id: extract_version
-        run: echo "Bot version is $((Get-Content package.json | ConvertFrom-Json).version)"; `
-          echo "::set-output name=version::$((Get-Content package.json | ConvertFrom-Json).version)";
-
       - name: Upload a Build Artifact
         if: startsWith(github.ref, 'refs/heads/release/')
         uses: actions/upload-artifact@v4.0.0
         with:
-          name: RunBotics-${{ steps.extract_version.outputs.version }}
+          name: RunBotics-${{ env.NODE_VERSION }}
           path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           if-no-files-found: error
