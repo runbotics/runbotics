@@ -221,7 +221,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             });
         });
 
-        listener.on('activity.end', async (api: BpmnExecutionEventMessageExtendedApi) => {
+        listener.on('activity.end', (api: BpmnExecutionEventMessageExtendedApi) => {
             if ((api.environment as Environment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
