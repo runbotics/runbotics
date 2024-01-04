@@ -98,8 +98,12 @@ export enum GoogleAction {
     SHEETS_WRITE = 'google.sheets.write',
 }
 
-export enum JiraAction {
-    GET_LOGGED_WORK_FOR_USER = 'jira.getLoggedWorkForUser',
+export enum JiraCloudAction {
+    GET_USER_WORKLOGS = 'jiraCloud.getUserWorklogs',
+}
+
+export enum JiraServerAction {
+    GET_USER_WORKLOGS = 'jiraServer.getUserWorklogs',
 }
 
 export enum FileAction {
@@ -240,7 +244,8 @@ export type AllActionIds =
     | JavascriptAction
     | AsanaAction
     | GoogleAction
-    | JiraAction
+    | JiraCloudAction
+    | JiraServerAction
     | FileAction
     | CsvAction
     | DesktopOfficeAction

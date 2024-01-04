@@ -126,6 +126,7 @@ const ProcessInstanceEventsDetailsTable: VFC<
                         {processInstanceEvent.output && (
                             <ReactJson
                                 src={JSON.parse(processInstanceEvent.output)}
+                                collapsed={2}
                             />
                         )}
                     </TableContainer>

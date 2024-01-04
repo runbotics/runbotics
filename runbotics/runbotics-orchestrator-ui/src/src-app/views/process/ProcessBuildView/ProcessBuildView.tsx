@@ -17,7 +17,6 @@ import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSche
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
-import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';
@@ -25,7 +24,6 @@ import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
 
 import BpmnModeler, {
@@ -52,13 +50,10 @@ const ProcessBuildView: FC = () => {
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
     const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
 
-    const processInstances = useSelector(processInstanceSelector);
-    const { orchestratorProcessInstanceId } = processInstances.active;
-    useProcessInstanceSocket({ orchestratorProcessInstanceId });
-
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
         hasActionsAccess && dispatch(getActions());
+
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);

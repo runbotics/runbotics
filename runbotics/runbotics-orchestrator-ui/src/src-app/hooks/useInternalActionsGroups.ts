@@ -13,7 +13,8 @@ import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
 import getImageActions from '#src-app/Actions/image.actions';
 import getJavascriptActions from '#src-app/Actions/javascript.actions';
-import getJiraActions from '#src-app/Actions/jira.actions';
+import getJiraCloudActions from '#src-app/Actions/jira-cloud.actions';
+import getJiraServerActions from '#src-app/Actions/jira-server.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
@@ -91,11 +92,13 @@ const useInternalActionsGroups = (): Record<
             ),
             items: Object.values(getGoogleSheetsActions())
         },
-        jira: {
-            label: translate(
-                'Process.Details.Modeler.ActionsGroup.Jira'
-            ),
-            items: Object.values(getJiraActions())
+        jiraCloud: {
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraCloud'),
+            items: Object.values(getJiraCloudActions())
+        },
+        jiraServer: {
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraServer'),
+            items: Object.values(getJiraServerActions())
         },
         file: {
             label: translate(

@@ -7,7 +7,8 @@ import path from 'path';
 import ImportActionHandler from '#action/import';
 import MailActionHandler from '#action/mail';
 import LoopActionHandler from '#action/loop';
-import JIRAActionHandler from '#action/jira';
+import JiraCloudActionHandler from '#action/jira/jira-cloud';
+import JiraServerActionHandler from '#action/jira/jira-server';
 import BeeOfficeActionHandler from '#action/beeoffice';
 import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
@@ -59,7 +60,8 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly generalActionHandler: GeneralActionHandler,
         private readonly googleActionHandler: GoogleActionHandler,
         private readonly importActionHandler: ImportActionHandler,
-        private readonly jiraActionHandler: JIRAActionHandler,
+        private readonly jiraCloudActionHandler: JiraCloudActionHandler,
+        private readonly jiraServerActionHandler: JiraServerActionHandler,
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
@@ -81,7 +83,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('general', generalActionHandler)
             .set('google', googleActionHandler)
             .set('import', importActionHandler)
-            .set('jira', jiraActionHandler)
+            .set('jiraCloud', jiraCloudActionHandler)
+            .set('jiraServer', jiraServerActionHandler)
             .set('loop', loopActionHandler)
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
