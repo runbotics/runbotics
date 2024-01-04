@@ -4,7 +4,7 @@ import { cloneContent } from 'bpmn-elements/dist/src/messageHelper';
 
 // This is copy of SubProcess/SubProcessBehaviour from bpmn-elements library.
 // Purpose of these functions is to save output variables after every iteration of the sub process in main process.
-// addListeners method has been modified and it is calling in method setLoopVariablesInProcess.
+// Only addListeners method has been modified and it is calling method setLoopVariablesInProcess.
 
 export default function LoopSubProcess(activityDef, context) {
     const triggeredByEvent = activityDef.behaviour && activityDef.behaviour.triggeredByEvent;

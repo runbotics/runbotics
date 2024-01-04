@@ -59,7 +59,7 @@ export class Expressions {
             templatedString.includes('content.output') &&
             context?.content?.output?.length > 0 &&
             context?.content?.output[0] &&
-            context.environment.output?.variableName;
+            context?.environment?.output?.variableName;
     }
 
     private static tryResolveJexlExpression(
