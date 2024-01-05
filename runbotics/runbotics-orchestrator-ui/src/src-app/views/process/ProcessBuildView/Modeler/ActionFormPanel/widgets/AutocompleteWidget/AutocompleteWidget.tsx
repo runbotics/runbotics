@@ -40,7 +40,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     );
 
     const checkInputMatches = (input: string) => {
-        const variablesRegex = /[#$]\{([^{}]*)\}?/g;
+        const variablesRegex = /[#]\{([^{}]*)?/g;
         if (!input) return INPUT_AUTOCOMPLETE_DEFAULT;
 
         const incompleteVariables = [...input.matchAll(variablesRegex)];
@@ -65,7 +65,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
             else if (char === '}') openBracketNumber = 0;
 
             if (openBracketNumber > 1) return true;
-        };
+        }
         return false;
     };
 
