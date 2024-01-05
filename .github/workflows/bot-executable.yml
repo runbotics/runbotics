@@ -6,6 +6,7 @@ on:
       - 'develop'
       - 'master'
       - 'release/**'
+      - 'hotfix/**'
       - 'feature/RPA-1097' # todo remove before merge to develop
 
 env:
