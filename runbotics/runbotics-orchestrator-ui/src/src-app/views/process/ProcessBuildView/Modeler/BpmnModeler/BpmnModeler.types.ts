@@ -291,5 +291,6 @@ export enum ModelerEvent {
     PROPERTIESPANEL_PROVIDERSCHANGED = 'propertiesPanel.providersChanged',
     CANVAS_RESIZED = 'canvas.resized',
     IMPORT_PARSE_COMPLETE = 'import.parse.complete',
+    IMPORT_DONE = 'import.done',
     COMMANDSTACK_CONNECTION_DELETE_POSTEXECUTED = 'commandStack.connection.delete.postExecuted',
 }

@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { IFormData } from '../../../../../../Actions/types';
+import { FormState } from '../../../../../../Actions/types';
 import {
     getFormData,
     getFormSchema,
@@ -25,7 +25,7 @@ import customWidgets from '../widgets';
 
 const ActionFormRenderer: FC = () => {
     const { modeler } = useModelerContext();
-    const { selectedElement, selectedAction, commandStack } = useSelector(
+    const { selectedElement, selectedAction, commandStack, currentProcessOutputElement } = useSelector(
         state => state.process.modeler
     );
     const dispatch = useDispatch();
@@ -50,8 +50,9 @@ const ActionFormRenderer: FC = () => {
         [selectedAction, selectedElement, commandStack.commandStackIdx]
     );
 
-    const handleSubmit = (event: IFormData) => {
+    const handleSubmit = (event: FormState) => {
         dispatch(processActions.addAppliedAction(selectedElement.id));
+        'processOutput' in event.formData && toggleProcessOutput(event);
         applyModelerElement({
             modeler: modeler,
             element: selectedElement,
@@ -60,7 +61,8 @@ const ActionFormRenderer: FC = () => {
                 input: event.formData.input,
                 output: event.formData.output,
                 disabled: event.formData.disabled,
-                runFromHere: event.formData.runFromHere
+                runFromHere: event.formData.runFromHere,
+                processOutput: event.formData.processOutput
             }
         });
     };
@@ -70,6 +72,28 @@ const ActionFormRenderer: FC = () => {
         const newElement = selectedElement;
         newElement.businessObject.label = label;
         bpmnHelper.updateBusinessObject(newElement);
+    };
+
+    const toggleProcessOutput = (event: FormState) => {
+        if (
+            defaultFormData.processOutput === false &&
+            event.formData.processOutput === true
+        ) {
+
+            if (currentProcessOutputElement) {
+                const bpmnHelper = BPMNHelper.from(modeler);
+                const newElement = currentProcessOutputElement;
+                newElement.businessObject.processOutput = false;
+                bpmnHelper.updateBusinessObject(newElement);
+            }
+
+            dispatch(processActions.setCurrentProcessOutputElement(selectedElement));
+        } else if (
+            defaultFormData.processOutput === true &&
+            event.formData.processOutput === false
+        ) {
+            dispatch(processActions.setCurrentProcessOutputElement(null));
+        }
     };
 
     return (

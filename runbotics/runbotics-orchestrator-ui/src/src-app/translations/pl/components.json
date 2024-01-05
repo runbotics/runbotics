@@ -16,6 +16,7 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
+    "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Ikona procesu triggerowalnego",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Ikona startu",
     "Component.Tile.Process.Header.Alt.SquareIcon": "Ikona kwadratu",
     "Component.Tile.Process.Header.Tooltip.RunProcess": "Uruchom proces",
@@ -161,7 +162,7 @@
     "Component.Cron.Locale.AltMonths.November": "LIS",
     "Component.Cron.Locale.AltMonths.December": "GRU",
 
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Formularz startowy procesu",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Formularz startowy: ",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Wprować zmienne dla",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Wybierz widget",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Skopiuj widget",

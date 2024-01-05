@@ -174,10 +174,10 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
             onClose={() => setOpen(false)}
             maxWidth="xl"
             fullWidth>
-            <DialogTitle>
+            <DialogTitle fontSize={20}>
                 {translate(
                     'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title'
-                )}{' '}
+                )}
                 {process.name}
             </DialogTitle>
             <DialogContent>

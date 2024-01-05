@@ -4,6 +4,8 @@ import { Box, Dialog, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection, NotificationProcess } from 'runbotics-common';
 
+import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
+
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
 import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
@@ -19,6 +21,8 @@ import { botSystemsActions } from '#src-app/store/slices/BotSystem';
 
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 
+import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
+
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
@@ -28,8 +32,8 @@ import {
     StyledPaper,
     ContainerWrapper,
 } from './ProcessConfigureView.styles';
+import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
-
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
@@ -39,6 +43,7 @@ const ProcessConfigureView: VFC = () => {
     const { id } = useRouter().query;
     const processId = Number(id);
 
+    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.outputType);
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
         process?.system
     );
@@ -69,6 +74,7 @@ const ProcessConfigureView: VFC = () => {
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
+        dispatch(processOutputActions.getAll());
         handleGetProcessSubscribers();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
@@ -81,6 +87,8 @@ const ProcessConfigureView: VFC = () => {
         if (process?.isAttended) setAttended(process.isAttended);
 
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
+
+        if (process?.outputType) setProcessOutputType(process.outputType);
     }, [process]);
 
     useEffect(() => {
@@ -89,6 +97,12 @@ const ProcessConfigureView: VFC = () => {
 
     const fetchProcess = async () => {
         await dispatch(processActions.fetchProcessById(process.id));
+    };
+
+    const handleSelectProcessOutputType = async (outputType: ProcessOutput) => {
+        await dispatch(processActions.updateProcessOutputType({ id: process.id, outputType }));
+        setProcessOutputType(outputType);
+        await fetchProcess();
     };
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
@@ -161,6 +175,14 @@ const ProcessConfigureView: VFC = () => {
                         <BotCollectionComponent
                             selectedBotCollection={selectedBotCollection}
                             onSelectBotCollection={handleSelectBotCollection}
+                        />
+                    </StyledPaper>
+                </Box>
+                <Box>
+                    <StyledPaper elevation={1}>
+                        <ProcessOutputComponent
+                            selectedProcessOutput={processOutputType}
+                            onSelectProcessOutput={handleSelectProcessOutputType}
                         />
                     </StyledPaper>
                 </Box>
