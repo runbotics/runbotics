@@ -63,7 +63,7 @@ export type CamundaInputOutputElement = ExtensionElement & {
 
 export type ExtensionElements = {
     $type: string;
-    values: ExtensionElement[];
+    values: CamundaInputOutputElement[];
 };
 
 export type BusinessObject = {
@@ -72,6 +72,7 @@ export type BusinessObject = {
     actionId: string;
     disabled: boolean;
     runFromHere: boolean;
+    processOutput: boolean;
     label: string;
     extensionElements?: ExtensionElements;
     runbotics?: string;
@@ -103,6 +104,14 @@ export type BPMNElement = {
     host?: BPMNElement;
     attachers?: BPMNElement[];
 };
+
+export interface BPMNElementRegistry {
+    [key: BPMNElement['id']]: {
+        element: BPMNElement;
+        gfx: unknown;
+        secondaryGfx: unknown;
+    }
+}
 
 export type BpmnFormalExpression = {
     $type: 'bpmn:FormalExpression';

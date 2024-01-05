@@ -96,6 +96,10 @@ public class Process implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
     private Set<GlobalVariable> globalVariables = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "output_type", referencedColumnName = "type")
+    private ProcessOutput outputType;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -318,6 +322,14 @@ public class Process implements Serializable {
         this.globalVariables = globalVariables;
     }
 
+    public ProcessOutput getOutputType() {
+        return outputType;
+    }
+
+    public void setOutputType(ProcessOutput outputType) {
+        this.outputType = outputType;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -359,6 +371,7 @@ public class Process implements Serializable {
             ", botCollection=" + botCollection +
             ", editor=" + editor +
             ", tags=" + tags +
+            ", outputType=" + outputType +
             '}';
     }
 }

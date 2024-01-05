@@ -22,6 +22,7 @@ interface ApplyModelerElementProps {
         output: { [key: string]: any };
         disabled?: boolean;
         runFromHere?: boolean;
+        processOutput?: boolean;
         validationError?: boolean;
     };
 }
@@ -78,6 +79,7 @@ export const applyModelerElement = ({
     }
 
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
+    element.businessObject.processOutput = additionalParameters?.processOutput;
 
     const data = {
         input: {
@@ -138,7 +140,7 @@ export const toggleValidationError = (
     newElement.businessObject.validationError = validationError;
     return new Promise<void>((resolve) => {
         setTimeout(() => {
-            bpmnHelper.updateBusinessObject(newElement);            
+            bpmnHelper.updateBusinessObject(newElement);
             resolve();
         }, 0);
     });

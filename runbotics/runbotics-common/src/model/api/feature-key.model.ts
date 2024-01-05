@@ -160,6 +160,12 @@ export enum FeatureKey {
 
     // Access to users page, manage users
     USERS_PAGE_READ = 'USERS_PAGE_READ',
+
+    // Allow to read process output types
+    PROCESS_OUTPUT_TYPE_READ = 'PROCESS_OUTPUT_TYPE_READ',
+
+    // Allow to edit process output types
+    PROCESS_OUTPUT_TYPE_EDIT = 'PROCESS_OUTPUT_TYPE_EDIT'
 }
 
 export interface IFeatureKey {

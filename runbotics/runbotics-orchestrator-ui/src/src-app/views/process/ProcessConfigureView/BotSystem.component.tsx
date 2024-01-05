@@ -12,7 +12,7 @@ import { useSelector } from '#src-app/store';
 import { botSystemsSelector } from '#src-app/store/slices/BotSystem';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { Wrapper } from './BotComponent.styles';
+import { StyledLabel, Wrapper } from './BotComponent.styles';
 
 interface BotSystemProps {
     selectedBotSystem: IBotSystem;
@@ -43,7 +43,9 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
         <If condition={hasReadBotSystemAccess}>
             <Wrapper>
                 <DevicesIcon />
-                {`${translate('Process.Run.BotSystem')}: `}
+                <StyledLabel>
+                    {`${translate('Process.Run.BotSystem')}: `}
+                </StyledLabel>
                 <Select
                     style={{ minWidth: '8rem', height: '1.75rem' }}
                     SelectDisplayProps={{

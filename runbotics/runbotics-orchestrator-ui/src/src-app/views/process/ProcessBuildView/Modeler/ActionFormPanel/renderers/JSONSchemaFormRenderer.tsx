@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { ModelerError, processActions } from '#src-app/store/slices/Process';
 
-import { IFormData } from '../../../../../../Actions/types';
+import { FormState } from '../../../../../../Actions/types';
 import AutocompleteWidget from '../widgets/AutocompleteWidget';
 import FieldTemplate from '../widgets/FieldTemplate';
 
@@ -27,10 +27,6 @@ const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any>>;
 const widgets = {
     Autocomplete: AutocompleteWidget,
 };
-interface FormState {
-    id: string;
-    formData: IFormData;
-}
 
 interface FormPropsExtended extends FormProps<any> {
     panel?: ReactNode;

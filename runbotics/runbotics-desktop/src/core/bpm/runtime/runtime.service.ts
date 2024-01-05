@@ -33,7 +33,7 @@ import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
 import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
-import { ActivityOwner, Environment, OutboundSequence } from '../bpmn.types';
+import { ActivityOwner, BpmnElement, Environment, OutboundSequence } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -240,6 +240,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 return;
             }
 
+            if ((api.environment as Environment).runbotic?.processOutput) {
+                engine.execution.environment.output.BPMNElementId = api.id;
+            }
+
             this.activityEventBus.publish({
                 processInstance,
                 eventType: ProcessInstanceEventStatus.COMPLETED,
@@ -361,7 +365,24 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 };
                 processInstance.variables =
                     execution.definitions[0]?.environment.variables;
-                processInstance.output = execution.environment.output;
+
+                const BPMNElementId =
+                    execution.environment.output.BPMNElementId;
+                if (BPMNElementId) {
+                    const BPMNElement =
+                        execution.definitions[0]?.getElementById(BPMNElementId) as BpmnElement;
+                    const processOutputName = BPMNElement
+                        .behaviour
+                        .extensionElements
+                        .values[0]
+                        .outputParameters[0]
+                        .value;
+
+                    processInstance.output = execution.environment.output[processOutputName];
+                } else {
+                    processInstance.output = execution.environment.output;
+                }
+
                 this.processInstances[processInstanceId] = processInstance;
 
                 setTimeout(() => {
@@ -410,7 +431,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     ),
                 });
             }
-        }
+        };
 
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
