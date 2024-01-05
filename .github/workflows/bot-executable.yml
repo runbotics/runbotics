@@ -126,7 +126,7 @@ jobs:
 
       - name: Create patch notes
         run: |
-          cd ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/; `
+          # cd ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/; `
           echo "## Bot version ${{ env.NODE_VERSION }}" >> patch_notes.md
           echo "## How to Set Up" >> patch_notes.md
           echo "1. Download the bot executable compressed folder to the machine where you want to execute the processes for your RunBotics web app instance." >> patch_notes.md
@@ -139,6 +139,7 @@ jobs:
         uses: actions/upload-artifact@v4.0.0
         with:
           name: patch-notes-${{ env.NODE_VERSION }}
-          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/patch_notes.md'
+          path: './patch_notes.md'
+          # path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/patch_notes.md'
         # if: startsWith(github.ref, 'refs/heads/release/') // todo uncomment
 
