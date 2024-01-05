@@ -379,7 +379,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                         .value;
 
                     processInstance.output = execution.environment.output[processOutputName];
-                    processInstance.processOutputSelected = true;
                 } else {
                     processInstance.output = execution.environment.output;
                 }
@@ -432,7 +431,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     ),
                 });
             }
-        }
+        };
 
         const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
