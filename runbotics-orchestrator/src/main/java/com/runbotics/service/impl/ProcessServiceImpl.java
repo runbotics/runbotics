@@ -79,6 +79,10 @@ public class ProcessServiceImpl implements ProcessService {
             BotSystem any = new BotSystem(BotSystem.BotSystemName.ANY.value());
             process.setSystem(any);
         }
+        if (process.getOutputType() == null) {
+            ProcessOutput json = new ProcessOutput(ProcessOutput.ProcessOutputType.JSON.value());
+            process.setOutputType(json);
+        }
 
         if (process.getTags() != null) {
             if (process.getTags().size() > 15) {
@@ -202,6 +206,23 @@ public class ProcessServiceImpl implements ProcessService {
                 existingProcess -> {
                     updateBotCollectionRelationsInDto(processDTO, existingProcess);
                     existingProcess.setSystem(processDTO.getSystem());
+                    existingProcess.setUpdated(ZonedDateTime.now());
+                    return existingProcess;
+                }
+            )
+            .map(processRepository::save)
+            .map(processMapper::toDto);
+    }
+
+    @Override
+    public Optional<ProcessDTO> updateOutputType(ProcessOutputTypeUpdateDTO processDTO) {
+        log.info("Request to set output type for the Process to: {}", processDTO.getOutputType());
+
+        return processRepository
+            .findById(processDTO.getId())
+            .map(
+                existingProcess -> {
+                    existingProcess.setOutputType(processDTO.getOutputType());
                     existingProcess.setUpdated(ZonedDateTime.now());
                     return existingProcess;
                 }

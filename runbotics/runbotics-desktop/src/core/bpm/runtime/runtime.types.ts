@@ -38,6 +38,7 @@ export interface DesktopTask extends BpmnExecutionEventMessageContent {
 export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnvironment {
     runbotic?: {
         disabled: boolean;
+        processOutput: boolean;
     };
 }
 

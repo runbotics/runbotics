@@ -206,4 +206,4 @@ export const retrieveGlobalVariableIds = (modeler: BpmnIoModeler): string[] => {
         .map((item) => item.value);
 
     return Array.from(new Set(allGlobalVariableIds));
-}
+};

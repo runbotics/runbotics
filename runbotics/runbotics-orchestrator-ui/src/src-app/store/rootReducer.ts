@@ -12,6 +12,7 @@ import { guestsReducer as guests } from './slices/Guests';
 import { processReducer as process } from './slices/Process';
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
+import { processOutputReducer as processOutput } from './slices/ProcessOutput';
 import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProcess';
 import { schedulerReducer as scheduler } from './slices/Scheduler';
 import { usersReducer as users } from './slices/Users';
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     scheduleProcess,
     scheduler,
     users,
+    processOutput,
 });
 
 export default rootReducer;

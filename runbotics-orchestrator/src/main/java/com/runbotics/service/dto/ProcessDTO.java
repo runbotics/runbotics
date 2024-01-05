@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
+import com.runbotics.domain.ProcessOutput;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
@@ -74,6 +75,9 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<GlobalVariableDTO> globalVariables;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private ProcessOutput outputType;
 
     public Long getId() {
         return id;
@@ -219,6 +223,14 @@ public class ProcessDTO implements Serializable {
         this.globalVariables = globalVariables;
     }
 
+    public ProcessOutput getOutputType() {
+        return outputType;
+    }
+
+    public void setOutputType(ProcessOutput outputType) {
+        this.outputType = outputType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -261,6 +273,7 @@ public class ProcessDTO implements Serializable {
             ", schedules=" + schedules +
             ", editor=" + editor +
             ", tags=" + tags +
+            ", outputType=" + outputType +
             '}';
     }
 }

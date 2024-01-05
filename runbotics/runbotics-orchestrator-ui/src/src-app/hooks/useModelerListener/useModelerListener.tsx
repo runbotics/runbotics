@@ -25,6 +25,7 @@ import {
 } from './useModelerListener.types';
 import {
     getModelerActivities,
+    getModelerActivitiesElementsWithOutput,
     validateElement,
     validateStartEvents,
 } from './useModelerListener.validation';
@@ -44,7 +45,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
     );
-    
+
     const handleInvalidStartEvent = ({ errorType, nameKey, elementId }) => {
         dispatch(
             processActions.setError({
@@ -109,6 +110,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         });
     };
 
+    // eslint-disable-next-line max-lines-per-function
     const modelerListener = (modeler: BpmnModeler) => ({
         [ModelerEvent.COMMANDSTACK_SHAPE_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
@@ -218,6 +220,15 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         },
         [ModelerEvent.CONNECTION_REMOVED]: () => {
             setCurrentTab(null);
+        },
+        [ModelerEvent.IMPORT_DONE]: () => {
+            const { _elements } = modeler.get('elementRegistry');
+            const activitiesWithOutput = getModelerActivitiesElementsWithOutput(_elements);
+            Object.values(activitiesWithOutput).forEach(({ element }) => {
+                if (element.businessObject.processOutput) {
+                    dispatch(processActions.setCurrentProcessOutputElement(element));
+                }
+            });
         },
         [ModelerEvent.ELEMENT_CLICK]: (event: EventBusEvent) => {
             if (ELEMENTS_PROPERTIES_WHITELIST.includes(event.element.type)) {

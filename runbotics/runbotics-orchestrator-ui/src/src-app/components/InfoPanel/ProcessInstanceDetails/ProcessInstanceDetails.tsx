@@ -2,8 +2,6 @@ import React, { useEffect, VFC } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
 
-import { ProcessInstanceStatus } from 'runbotics-common';
-
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
@@ -33,24 +31,11 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
         ? getActiveProcessInstanceIfMatch()
         : processInstanceState.active.processInstance;
 
-    const isProcessFinished =
-        processInstance?.status === ProcessInstanceStatus.COMPLETED ||
-        processInstance?.status === ProcessInstanceStatus.ERRORED ||
-        processInstance?.status === ProcessInstanceStatus.STOPPED;
-
     useEffect(() => {
         if (processInstanceId) dispatch(processInstanceActions.getProcessInstance({ processInstanceId }));
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
-
-    useEffect(
-        () => () => {
-            if (isProcessFinished) dispatch(processInstanceActions.resetActive());
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
-    );
 
     const loading =
         processInstanceState.all.loading ||

@@ -11,6 +11,7 @@ import { ModelerState, ProcessState } from './Process.state';
 import * as processThunks from './Process.thunks';
 
 export const initialModelerState: ModelerState = {
+    currentProcessOutputElement: null,
     selectedElement: null,
     selectedAction: null,
     isSaveDisabled: true,

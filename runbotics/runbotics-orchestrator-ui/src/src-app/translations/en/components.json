@@ -16,6 +16,7 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
+    "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Process triggerable icon",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Play icon",
     "Component.Tile.Process.Header.Alt.SquareIcon": "Square icon",
     "Component.Tile.Process.Header.Tooltip.RunProcess": "Run process",
@@ -161,7 +162,7 @@
     "Component.Cron.Locale.AltMonths.November": "NOV",
     "Component.Cron.Locale.AltMonths.December": "DEC",
 
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Attendance form of process",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Attendance form: ",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Input variables for",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Pick a widget",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Copy widget",
