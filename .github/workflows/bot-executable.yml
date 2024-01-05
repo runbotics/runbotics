@@ -34,7 +34,7 @@ jobs:
               
   build-bot:
     needs: changes-detection
-    # if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+    # if: ${{ needs.changes-detection.outputs.bot == 'true' }} // todo uncomment
     runs-on: windows-latest
 
     defaults:
@@ -114,10 +114,31 @@ jobs:
           folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
           recursive: true
 
-      - name: Upload a Build Artifact
-        if: startsWith(github.ref, 'refs/heads/release/')
+      - name: Upload bot artifact
+        id: upload-bot-executable-artifact
+        # if: startsWith(github.ref, 'refs/heads/release/') // todo uncomment
         uses: actions/upload-artifact@v4.0.0
         with:
           name: RunBotics-${{ env.NODE_VERSION }}
-          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+          path: |
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/
           if-no-files-found: error
+
+      - name: Create patch notes
+        run: |
+          cd ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/; `
+          echo "## Bot version ${{ env.NODE_VERSION }}" >> patch_notes.md
+          echo "## How to Set Up" >> patch_notes.md
+          echo "1. Download the bot executable compressed folder to the machine where you want to execute the processes for your RunBotics web app instance." >> patch_notes.md
+          echo "2. Unzip the file." >> patch_notes.md
+          echo "3. Create a .env file based on the runbotics/runbotics/runbotics-desktop/.env.development example and place it in the top directory of your unzipped folder." >> patch_notes.md
+          echo "4. Fill it with your credentials and settings." >> patch_notes.md
+          echo "5. Run <path/to/your/unzipped/folder>/win-unpacked/RunBotics-<version>.exe" >> patch_notes.md
+
+      - name: Upload patch notes
+        uses: actions/upload-artifact@v4.0.0
+        with:
+          name: patch-notes-${{ env.NODE_VERSION }}
+          path: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/patch_notes.md'
+        # if: startsWith(github.ref, 'refs/heads/release/') // todo uncomment
+
