@@ -11,12 +11,12 @@ import java.util.Objects;
 public class NotificationProcessDTO implements Serializable {
 
     private Long id;
-    private User user;
-    private Process process;
+    private UserDTO user;
+    private ProcessDTO process;
     private NotificationType type;
     private ZonedDateTime createdAt;
 
-    public NotificationProcessDTO(Long id, User user, Process process, NotificationType type, ZonedDateTime createdAt) {
+    public NotificationProcessDTO(Long id, UserDTO user, ProcessDTO process, NotificationType type, ZonedDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.process = process;
@@ -32,19 +32,19 @@ public class NotificationProcessDTO implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDTO user) {
         this.user = user;
     }
 
-    public Process getProcess() {
+    public ProcessDTO getProcess() {
         return process;
     }
 
-    public void setProcess(Process process) {
+    public void setProcess(ProcessDTO process) {
         this.process = process;
     }
 
@@ -84,8 +84,8 @@ public class NotificationProcessDTO implements Serializable {
     public String toString() {
         return "NotificationProcessDTO{" +
             "id=" + id +
-            ", user=" + user +
-            ", process=" + process +
+            ", userId=" + user.getId() +
+            ", processId=" + process.getId() +
             ", createdAt=" + createdAt +
             ", type=" + type +
             '}';

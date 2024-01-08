@@ -7,7 +7,10 @@ import org.mapstruct.Mapper;
 /**
  * Mapper for the entity {@link NotificationProcess} and its DTO {@link NotificationProcessDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {
+    UserMapper.class,
+    ProcessMapper.class
+})
 public interface NotificationProcessMapper extends EntityMapper<NotificationProcessDTO, NotificationProcess> {
 
     NotificationProcessDTO toDto(NotificationProcess notificationProcess);
