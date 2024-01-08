@@ -195,6 +195,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         listener.on('activity.start', (api: BpmnExecutionEventMessageExtendedApi) => {
             if ((api.environment as Environment).runbotic?.disabled) return;
 
+            if ((api.environment as Environment).runbotic?.processOutput) {
+                engine.execution.environment.output.BPMNElementId = api.id;
+            }
+
             if (this.loopHandlerService.shouldSkipElement(api)) return;
 
             if (this.loopHandlerService.getIteratorFromElement(api)) {
@@ -240,10 +244,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     activity: api,
                 });
                 return;
-            }
-
-            if ((api.environment as Environment).runbotic?.processOutput) {
-                engine.execution.environment.output.BPMNElementId = api.id;
             }
 
             this.activityEventBus.publish({
