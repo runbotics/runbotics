@@ -3,11 +3,6 @@ import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import { getEnvValue } from '#utils/envReader';
 
-export enum LoggerType {
-    CONSOLE_ONLY = 'consoleOnly',
-    CONSOLE_AND_FILE = 'consoleAndFile'
-}
-
 export enum LogLevel {
     DEBUG = 'debug',
     VERBOSE = 'verbose',
@@ -27,17 +22,31 @@ const LOG_LEVEL_VALUES: Record<LogLevel, number> = {
 @Injectable()
 export class RunboticsLogger implements LoggerService {
     private static lastTimestamp?: number;
-    private static loggerType: LoggerType;
+    private static logsFileEnabled: boolean;
     private static logLevel: LogLevel;
     protected static winstonLogger; // handler for files if files are allowed
     protected static internalConsole: any = RunboticsLogger.createInternalConsole();
 
-    private setLoggerType() {
-        const loggerType = getEnvValue('RUNBOTICS_LOGGER');
-        if (!loggerType || !Object.values<string>(LoggerType).includes(loggerType)) {
-            return LoggerType.CONSOLE_AND_FILE; // default LoggerType value
+    constructor(
+        @Optional() protected context?: string,
+        @Optional() private readonly isTimestampEnabled = false
+    ) {
+        if (RunboticsLogger.logsFileEnabled === undefined)
+            RunboticsLogger.logsFileEnabled = this.setLogsFile();
+
+        if (RunboticsLogger.logLevel === undefined)
+            RunboticsLogger.logLevel = this.setLogLevel();
+
+        if (RunboticsLogger.winstonLogger === undefined)
+            RunboticsLogger.winstonLogger = RunboticsLogger.createWinstonLogger();
+    }
+
+    private setLogsFile() {
+        const logsFileEnabled = getEnvValue('RUNBOTICS_LOGGER_FILE_MODE');
+        if (!logsFileEnabled || logsFileEnabled === 'false' ) {
+            return false; // logs in file not enabled by default
         } else {
-            return loggerType as LoggerType;
+            return true;
         }
     }
 
@@ -73,7 +82,7 @@ export class RunboticsLogger implements LoggerService {
     }
 
     private static createWinstonLogger() {
-        if (RunboticsLogger.loggerType !== LoggerType.CONSOLE_AND_FILE) return undefined;
+        if (!RunboticsLogger.logsFileEnabled) return undefined;
 
         const logger = winston.createLogger({
             levels: LOG_LEVEL_VALUES,
@@ -92,20 +101,6 @@ export class RunboticsLogger implements LoggerService {
             ],
         });
         return logger;
-    }
-
-    constructor(
-        @Optional() protected context?: string,
-        @Optional() private readonly isTimestampEnabled = false
-    ) {
-        if (RunboticsLogger.loggerType === undefined)
-            RunboticsLogger.loggerType = this.setLoggerType();
-
-        if (RunboticsLogger.logLevel === undefined)
-            RunboticsLogger.logLevel = this.setLogLevel();
-
-        if (RunboticsLogger.winstonLogger === undefined)
-            RunboticsLogger.winstonLogger = RunboticsLogger.createWinstonLogger();
     }
 
     get module() {
@@ -173,40 +168,16 @@ export class RunboticsLogger implements LoggerService {
         const timestamp = RunboticsLogger.getTimestamp();
         // this.winstonLogger.log(type == 'error' ? 'error': 'info',  `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest)
 
-        switch (RunboticsLogger.loggerType) {
-            case LoggerType.CONSOLE_AND_FILE:
-                if (!this.isLevelEnabled(type)) {
-                    return;
-                }
-                this.winstonLogger.log(type, `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest);
-                RunboticsLogger.internalConsole[type](
-                    `${colorPidMessage}${timestamp}   ${colorContextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-            case LoggerType.CONSOLE_ONLY:
-                if (!this.isLevelEnabled(type)) {
-                    return;
-                }
-                RunboticsLogger.internalConsole.info(
-                    `${type}: ${colorPidMessage}${timestamp}   ${colorContextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-            default:
-                if (!this.isLevelEnabled(type)) {
-                    return;
-                }
+        if (!this.isLevelEnabled(type)) return;
 
-                RunboticsLogger.internalConsole[type](
-                    `${colorPidMessage}${timestamp}   ${colorContextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-        }
+        RunboticsLogger.internalConsole[type](
+            `${colorPidMessage}${timestamp}   ${colorContextMessage} ` + firstLog,
+            ...rest,
+            `${timestampDiff}`,
+        );
+
+        if (RunboticsLogger.logsFileEnabled)
+            this.winstonLogger.log(type, `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest);
     }
 
     private static updateAndGetTimestampDiff(isTimeDiffEnabled?: boolean): string {
