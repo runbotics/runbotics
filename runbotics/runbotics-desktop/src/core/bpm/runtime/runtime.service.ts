@@ -277,7 +277,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
 
         listener.on('flow.take', (api: BpmnExecutionEventMessageExtendedApi) => {
-            if (this.isSequenceFlowAfterGateway(api?.content)) {
+            if (this.isSequenceFlowAfterGateway(api?.content) && !this.isSequenceWithoutExpression(api.owner)) {
                 this.activityEventBus.publish({
                     processInstance,
                     eventType: ProcessInstanceEventStatus.COMPLETED,
@@ -422,7 +422,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const prepareGatewayToFlowProcess = (api: BpmnExecutionEventMessageExtendedApi) => {
             if (this.getSequencesWithoutExpression(api.owner as ActivityOwner).length === 0) {
                 this.saveGatewayNameInCache(api);
-                return;
             } else {
                 this.activityEventBus.publish({
                     processInstance,
@@ -626,11 +625,14 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound
-        .filter(outbound => this.isSequenceWithoutExpression(outbound))
+        .filter(outbound => this.hasOutputSequenceWithoutExpression(outbound))
         .map(outbound => outbound.behaviour.name ?? outbound.behaviour.id);
 
-    private isSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
+    private hasOutputSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
         !outbound?.behaviour?.conditionExpression?.body;
+
+    public isSequenceWithoutExpression = (owner: ActivityOwner): boolean => !owner?.isDefault &&
+        !owner?.behaviour?.conditionExpression?.body;
 
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ?? api.id;

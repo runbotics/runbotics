@@ -218,7 +218,9 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                 }
             });
         },
-        [ModelerEvent.CONNECTION_REMOVED]: () => {
+        [ModelerEvent.CONNECTION_REMOVED]: (event: EventBusEvent) => {
+            dispatch(processActions.removeError(event.element.id));
+            dispatch(processActions.removeCustomValidationError(event.element.id));
             setCurrentTab(null);
         },
         [ModelerEvent.IMPORT_DONE]: () => {

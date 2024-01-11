@@ -41,6 +41,7 @@ export interface OutboundSequence {
 export interface ActivityOwner extends BpmnEngine {
     behaviour?: Behaviour;
     outbound: OutboundSequence[];
+    isDefault?: boolean;
 }
 export interface Environment extends RunBoticsExecutionEnvironment {}
 

@@ -6,6 +6,7 @@ import {
 
 import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
 import { StartProcessMessageBody } from '#core/websocket/listeners/process.listener.types';
+import { ActivityOwner } from '#core/bpm/bpmn.types';
 
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
@@ -79,6 +80,7 @@ export interface BpmnExecutionEventMessageExtendedContent extends BpmnExecutionE
 
 export interface BpmnExecutionEventMessageExtendedApi extends BpmnExecutionEventMessageApi {
     readonly content: BpmnExecutionEventMessageExtendedContent;
+    readonly owner: ActivityOwner;
 }
 
 export interface IBpmnEngineEvent<T> {
