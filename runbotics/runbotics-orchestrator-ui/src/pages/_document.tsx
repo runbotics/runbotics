@@ -4,6 +4,14 @@ import React from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
+import { isCached, recreateCache } from '#contentful/blog-main';
+
+(async function initializeBlogCache() {
+    if (!isCached('en') || !isCached('pl')) {
+        await recreateCache();
+    }
+})();
+
 class MyDocument extends Document {
     static async getInitialProps(ctx) {
         const styledComponentsSheet = new ServerStyleSheet();

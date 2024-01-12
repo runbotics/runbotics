@@ -11,7 +11,6 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
-import { isCached, recreateCache } from '#contentful/blog-main';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 
 import MainLayout from '#src-app/layouts/MainLayout';
@@ -40,12 +39,6 @@ interface AppProps extends PageProps {
 moment.locale(DEFAULT_LANG);
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
-(async function initializeBlogCache() {
-    if (!isCached('en') || !isCached('pl')) {
-        await recreateCache();
-    }
-})();
 
 function App(props: AppProps) {
     const {
