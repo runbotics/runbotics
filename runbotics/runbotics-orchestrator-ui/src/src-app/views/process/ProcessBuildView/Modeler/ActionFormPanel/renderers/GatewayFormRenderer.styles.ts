@@ -22,5 +22,5 @@ export const GatewayTitle = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    margin: 0 10px;
+    padding: 0 10px;
 `

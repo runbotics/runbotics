@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 
 import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -7,7 +7,8 @@ import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useOptions from '#src-app/hooks/useOptions';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
+import { ModelerErrorType, processActions } from '#src-app/store/slices/Process';
 
 import AutocompleteWidget
     from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget';
@@ -29,23 +30,48 @@ const GatewayFormRenderer = () => {
     const { modeler } = useModelerContext();
     const gateway = selectedElement as IBpmnGateway;
     const { translate } = useTranslations();
+    const dispatch = useDispatch();
+
+    const createInitExpressions = () => gateway.outgoing.reduce((initExpressions, flow) => {
+        if (flow.businessObject.conditionExpression === undefined) {
+            BpmnConnectionFactory.from(modeler).setConditionExpression(flow, null);
+            dispatch(processActions.setCustomValidationError({
+                elementId: flow.id,
+                elementName: `${flow.businessObject.name ?? flow.id}`,
+                type: ModelerErrorType.FORM_ERROR,
+            }));
+        }
+        const expression = flow.businessObject.conditionExpression?.body;
+        if (expression !== undefined) {
+            initExpressions[flow.id] = expression;
+        }
+        return initExpressions;
+    }, {});
 
     const [defaultFlow, setDefaultFlow] = React.useState(gateway.businessObject.default?.id);
-
-    const createInitExpressions = () =>
-        gateway.outgoing.reduce((initExpressions, flow) => {
-            const expression = flow.businessObject.conditionExpression?.body;
-            if (expression !== undefined) {
-                initExpressions[flow.id] = expression;
-            }
-            return initExpressions;
-        }, {});
-
     const [expressions, setExpressions] = React.useState(createInitExpressions());
+
+    const isSequenceWithExpression = (outgoing: IBpmnConnection) =>
+        gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
+
+    const validateFlows = () => {
+        gateway.outgoing.forEach((flow) => {
+            if (isSequenceWithExpression(flow)) {
+                dispatch(processActions.removeCustomValidationError(flow.id));
+            } else {
+                dispatch(processActions.setCustomValidationError({
+                    elementId: flow.id,
+                    elementName: `${flow.businessObject.name ?? flow.id}`,
+                    type: ModelerErrorType.FORM_ERROR,
+                }));
+            }
+        });
+    }
 
     const setDefaultConnection = (outgoing: IBpmnConnection) => {
         setDefaultFlow(outgoing.id);
         BpmnConnectionFactory.from(modeler).setDefaultConnection(outgoing, gateway);
+        validateFlows();
     };
 
     const handleFlowChanged = (value: string, id: string) => {
@@ -58,6 +84,7 @@ const GatewayFormRenderer = () => {
                 setExpressions({ ...expressions, [id]: value });
             }
         });
+        validateFlows();
     };
 
     const getOutgoingById = (id: string) =>
@@ -105,9 +132,6 @@ const GatewayFormRenderer = () => {
     const handleCancel = (flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionColor(flow, theme.palette.common.black);
     };
-
-    const isSequenceWithoutExpression = (outgoing: IBpmnConnection) =>
-        gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
 
     const emptyExpressionError = translate('Process.Edit.Form.Fields.Error.Required');
 
@@ -169,7 +193,7 @@ const GatewayFormRenderer = () => {
                                 )}`}
                                 value={outgoing.businessObject.conditionExpression?.body ?? ''}
                                 name={outgoing.id}
-                                customErrors={isSequenceWithoutExpression(outgoing) ? undefined : [emptyExpressionError]}
+                                customErrors={isSequenceWithExpression(outgoing) ? undefined : [emptyExpressionError]}
                                 disabled={false}
                                 required={false}
                                 autofocus={false}

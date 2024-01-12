@@ -86,11 +86,8 @@ export class RuntimeSubscriptionsService {
                         case BpmnElementType.SEQUENCE_FLOW:
                             // eslint-disable-next-line no-case-declarations
                             const gatewayName = this.storageService.getValue(desktopTask.sourceId);
-                            // eslint-disable-next-line no-case-declarations
-                            const sequenceName = desktopTask.name ? desktopTask.name : desktopTask.id;
-
                             processInstanceEvent.log = `SequenceFlow (after Gateway): ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = `${gatewayName}: ${sequenceName}`;
+                            processInstanceEvent.step = `${gatewayName}: ${desktopTask.name ?? desktopTask.id}`;
                             processInstanceEvent.executionId = event.activity.content.sequenceId;
                             this.storageService.removeValue(desktopTask.sourceId);
                             break;
@@ -115,9 +112,20 @@ export class RuntimeSubscriptionsService {
                         case BpmnElementType.EXCLUSIVE_GATEWAY:
                             // eslint-disable-next-line no-case-declarations
                             const sequencesWithoutExpression = this.runtimeService.getSequencesWithoutExpression(event.activity.owner as ActivityOwner);
+                            // eslint-disable-next-line no-case-declarations
+                            const activityName = event.activity.name ?? event.activity.id;
                             if (sequencesWithoutExpression.length > 0) {
-                                processInstanceEvent.step = `${event.activity.name ?? event.activity.id}`;
+                                processInstanceEvent.step = activityName;
                                 processInstanceEvent.error = 'Empty condition in sequence flows: ' + sequencesWithoutExpression.join(', ');
+                            } else {
+                                const errorDescription = event.activity.content.error.description
+                                    .split(' ')
+                                    .slice(1)
+                                    .join(' ');
+                                processInstanceEvent.step = activityName;
+                                processInstanceEvent.error = activityName
+                                    ? `${activityName}: ${errorDescription}`
+                                    : event.activity.content.error.description;
                             }
                             break;
 
