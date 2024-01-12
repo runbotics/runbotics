@@ -49,18 +49,11 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
     const processOutput = useMemo(() => {
         if (isProcessOutput && currentProcessOutputElement) {
-            const processOutputVariableName = currentProcessOutputElement
-                .businessObject
-                .extensionElements
-                .values[0]
-                .outputParameters[1]
-                .name;
-
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
                     return processInstance.output;
                 default:
-                    return <ReactJson name={false} src={{ [processOutputVariableName]: JSON.parse(processInstance.output) }} />;
+                    return <ReactJson name={false} src={JSON.parse(processInstance.output)} />;
             }
         }
         return null;
