@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC, useMemo } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 
 import {
     Autocomplete,
@@ -52,7 +52,6 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     const [botToDelete, setBotToDelete] = useState<IBot>(null);
 
     const onDelete = (bot: IBot) => {
-        console.log({bot});
         setOpen(true);
         setBotToDelete(bot);
     };
@@ -62,12 +61,6 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     };
 
     const columns = useBotListViewColumns({ onDelete });
-    const rows = page?.content ?? [];
-
-    // const rows = useMemo(() => {
-    //     console.log({page});
-    //     return (page && page.content) ?? [];
-    // }, [page]);
 
     const handlePageUpdate = () => {
         const params = {
@@ -85,7 +78,6 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     };
 
     useEffect(() => {
-        console.log({page});
         const pageNotAvailable = page && currentPage >= page.totalPages;
         if (pageNotAvailable) {
             setCurrentPage(0);
@@ -150,19 +142,14 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                     disableSelectionOnClick
                     rowHeight={80}
                     columns={columns}
-                    rows={rows}
-                    getRowId={(row) => {
-                        console.log({row});
-                        return row.id;
-                    }}
+                    rows={page?.content ?? []}
                     rowsPerPageOptions={[10, 20, 30]}
-                    rowCount={page ? page.totalElements : 0}
+                    rowCount={page?.totalElements ?? 0}
                     page={currentPage}
                     onPageChange={handlePageChange}
                     pageSize={limit}
                     onPageSizeChange={handleLimitChange}
                     paginationMode='server'
-                    filterMode='server'
                     loading={loadingBots || loadingCollections}
                     onCellClick={(param) => {
                         if (param.field !== 'actions') handleRedirect(param.row.id);
