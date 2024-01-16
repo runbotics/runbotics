@@ -93,6 +93,9 @@ export const BotsDataGridStyles = {
     '& .MuiDataGrid-cell:active': {
         outline: 0,
     },
+    '& .MuiDataGrid-cell:focus-within': {
+        outline: 0,
+    },
     '& .MuiDataGrid-columnHeader:focus': {
         outline: 0,
     }
