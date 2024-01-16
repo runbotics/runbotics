@@ -43,7 +43,7 @@ const disablePreviousElements = (
             newServiceTask.businessObject.disabled = true;
             bpmnHelper.updateBusinessObject(newServiceTask);
         });
-    } else {
+    } else if (runFromHere === false) {
         const found = findPreviousElements(element);
         const serviceTasks = found.filter(() =>
             is(element, 'bpmn:ServiceTask')
