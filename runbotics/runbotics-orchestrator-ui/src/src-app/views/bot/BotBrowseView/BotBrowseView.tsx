@@ -8,6 +8,7 @@ import If from '#src-app/components/utils/If';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 
+import useQuery from '#src-app/hooks/useQuery';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledContainer, StyledPage } from './BotBrowseView.styles';
@@ -17,15 +18,12 @@ import BotCollectionView from '../BotCollectionView';
 
 import BotListView from '../BotListView';
 
-
-
-
 const BotBrowseView: VFC = () => {
     const router = useRouter();
+    const { firstValueFrom } = useQuery();
     const tab = router.asPath.split('/').slice(-1)[0].split('?')[0];
     const { translate } = useTranslations();
-    const collectionIdQueryParam = router.query['collection'];
-    const collectionId = typeof collectionIdQueryParam === 'string' ? collectionIdQueryParam : null;
+    const collectionId = firstValueFrom('collection');
     const hasBotsCollectionTabAccess = useFeatureKey([FeatureKey.BOT_COLLECTION_READ]);
     const hasBotsTabAccess = useFeatureKey([FeatureKey.BOT_READ]);
 

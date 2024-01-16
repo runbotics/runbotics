@@ -29,9 +29,9 @@ const ActionBotButton: VFC<{ bot: IBot }> = ({ bot }) => {
             <IconButton aria-label="settings" onClick={handleClick}>
                 <MoreVertIcon />
             </IconButton>
-            <Menu id="bot-collection-tile-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
+            <Menu id="bot-collection-tile-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
                 <If condition={hasDeleteBotAccess}>
-                    <ActionBotButtonDelete name={name} id={id} />
+                    {/* <ActionBotButtonDelete name={name} id={id} /> */}
                 </If>
             </Menu>
         </>

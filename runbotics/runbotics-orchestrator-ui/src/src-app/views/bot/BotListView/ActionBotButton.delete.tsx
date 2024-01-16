@@ -1,7 +1,7 @@
-import React, { useState, VFC } from 'react';
+import React, { VFC } from 'react';
 
 import {
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Typography,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { IBot } from 'runbotics-common';
@@ -12,19 +12,22 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '../../../store';
 import { botActions } from '../../../store/slices/Bot';
 
+interface ActionBotButtonDelete {
+    bot: IBot;
+    open: boolean;
+    setOpen: (state: boolean) => void;
+    afterDelete: () => void;
+}
 
-const ActionBotButtonDelete: VFC<{ name: IBot['installationId']; id: IBot['id'] }> = ({ name, id }) => {
-    const [show, setShow] = useState(false);
+const ActionBotButtonDelete: VFC<ActionBotButtonDelete> = ({ bot, open, setOpen, afterDelete }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
 
-    const handleDelete = () => {
-        setShow(false);
-    };
+    const { id, installationId: name } = bot;
 
-    const changeVisibility = () => {
-        setShow((prevState) => !prevState);
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const handleSubmit = async () => {
@@ -46,13 +49,13 @@ const ActionBotButtonDelete: VFC<{ name: IBot['installationId']; id: IBot['id'] 
                     },
                 );
             });
-        handleDelete();
+        afterDelete();
+        handleClose();
     };
 
     return (
         <>
-            <MenuItem onClick={() => setShow(true)}>{translate('Bot.Actions.Delete.Title')}</MenuItem>
-            <Dialog open={show} onClose={changeVisibility} fullWidth maxWidth="sm">
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                 <DialogTitle>
                     {translate('Bot.Actions.Delete.TitleWithName', { name })}
                 </DialogTitle>
@@ -62,7 +65,7 @@ const ActionBotButtonDelete: VFC<{ name: IBot['installationId']; id: IBot['id'] 
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button color="primary" onClick={changeVisibility}>
+                    <Button color="primary" onClick={handleClose}>
                         {translate('Common.Cancel')}
                     </Button>
                     <Button variant="contained" color="primary" autoFocus onClick={handleSubmit}>
