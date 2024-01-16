@@ -96,6 +96,8 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     const [loading, setLoading] = useState(false);
     const isDeleteDisabled = !process?.executionInfo;
 
+    const { DatePickerWidget,FileDropzoneWidget, GlobalVariableSelectWidget } = customWidgets;
+    const filteredCustomWidgets = { DatePickerWidget, FileDropzoneWidget, GlobalVariableSelectWidget };
     const [selectedWidget, setSelectedWidget] = useState('');
     const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
 
@@ -236,7 +238,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                         value={selectedWidget}
                         onChange={handleSelectChange}
                     >
-                        {Object.keys(customWidgets).map(widget =>
+                        {Object.keys(filteredCustomWidgets).map(widget =>
                             <MenuItem
                                 key={widget}
                                 value={widget}
