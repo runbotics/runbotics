@@ -26,9 +26,9 @@ const BotCollectionView: VFC = () => {
     const [displayMode, setDisplayMode] = useState<CollectionsDisplayMode>(CollectionsDisplayMode.GRID);
 
     const router = useRouter();
-    const query = useQuery();
-    const pageFromUrl = query.get('page');
-    const pageSizeFromUrl = query.get('pageSize');
+    const  { firstValueFrom } = useQuery();
+    const pageFromUrl = firstValueFrom('page');
+    const pageSizeFromUrl = firstValueFrom('pageSize');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const [limit, setLimit] = useState(
         pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : getLimitByDisplayMode(displayMode),

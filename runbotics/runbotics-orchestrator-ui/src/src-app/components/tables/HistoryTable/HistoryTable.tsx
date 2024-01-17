@@ -39,10 +39,10 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const { page: processInstancePage, loadingPage } = processInstances.all;
     const router = useRouter();
     const { tab, id } = router.query;
-    const query = useQuery();
-    const pageFromUrl = query.get('page');
-    const pageSizeFromUrl = query.get('pageSize');
-    
+    const { firstValueFrom } = useQuery();
+    const pageFromUrl = firstValueFrom('page');
+    const pageSizeFromUrl = firstValueFrom('pageSize');
+
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);

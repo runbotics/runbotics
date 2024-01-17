@@ -1,75 +1,81 @@
-import React, { MouseEvent, useEffect, useState, FC, ChangeEvent } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 
 import {
     Autocomplete,
     Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
     TextField,
 } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import clsx from 'clsx';
 
-import moment from 'moment';
-
 import { useRouter } from 'next/router';
-import { BotStatus } from 'runbotics-common';
 
-
-
-
-
-import Label from '#src-app/components/Label';
-
+import { IBot } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
-import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useBotStatusSocket from '#src-app/hooks/useBotStatusSocket';
 import useQuery from '#src-app/hooks/useQuery';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
-import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import ActionBotButton from './ActionBotButton';
-import { classes, StyledCard } from './Results.styles';
+import ActionBotButtonDelete from './ActionBotButton';
+import { BotsDataGridStyles, classes, StyledCard } from './Results.styles';
+import useBotListViewColumns from './useBotListViewColumns';
 import { botActions } from '../../../store/slices/Bot';
 import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
-
-
-
 
 interface ResultsProps {
     className?: string;
     collectionId?: string;
 }
 
-const getBotStatusColor = (status: BotStatus) => {
-    if (status === BotStatus.CONNECTED) return 'success';
-    if (status === BotStatus.DISCONNECTED) return 'error';
-    return 'warning';
-};
-
 const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const query = useQuery();
-
-    const pageFromUrl = query.get('page');
-    const [currentPage, setCurrentPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
-    const pageSizeFromUrl = query.get('pageSize');
-    const [limit, setLimit] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
-    const { page, loading: loadingBots } = useSelector((state) => state.bot.bots);
-    const { botCollections, loading: loadingCollections } = useSelector((state) => state.botCollection);
-    const collectionName = botCollections?.find((collection) => collection.id === collectionId)?.name;
-    const getDefaultCollectionFilter = () => (collectionName ? [collectionName] : []);
-    const [collectionFilter, setCollectionFilter] = useState<string[]>(getDefaultCollectionFilter());
-    useBotStatusSocket();
+    const { firstValueFrom } = useQuery();
     const { translate } = useTranslations();
     const replaceQueryParams = useReplaceQueryParams();
+    useBotStatusSocket();
+
+    const { page, loading: loadingBots } = useSelector((state) => state.bot.bots);
+    const { botCollections, loading: loadingCollections } = useSelector((state) => state.botCollection);
+
+    const pageFromUrl = firstValueFrom('page');
+    const pageSizeFromUrl = firstValueFrom('pageSize');
+    const [currentPage, setCurrentPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
+    const [limit, setLimit] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
+    const collectionName = botCollections?.find((collection) => collection.id === collectionId)?.name;
+    const [collectionFilter, setCollectionFilter] = useState<string[]>(collectionName ? [collectionName] : []);
+
+    const [open, setOpen] = useState(false);
+    const [botToDelete, setBotToDelete] = useState<IBot>(null);
+
+    const onDelete = (bot: IBot) => {
+        setOpen(true);
+        setBotToDelete(bot);
+    };
+
+    const handleDialog = (state: boolean) => {
+        setOpen(state);
+    };
+
+    const columns = useBotListViewColumns({ onDelete });
+
+    const handlePageUpdate = () => {
+        const params = {
+            page: currentPage,
+            size: limit,
+            ...(collectionFilter.length && {
+                filter: {
+                    in: {
+                        collection: collectionFilter,
+                    },
+                },
+            }),
+        };
+        dispatch(botActions.getPage(params));
+    };
 
     useEffect(() => {
         const pageNotAvailable = page && currentPage >= page.totalPages;
@@ -81,42 +87,35 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
     }, [page]);
 
     useEffect(() => {
-        const params = {
-            page: currentPage,
-            size: limit,
-            ...(collectionFilter &&
-                collectionFilter.length && {
-                filter: {
-                    in: {
-                        collection: collectionFilter,
-                    },
-                },
-            }),
-        };
-        dispatch(botActions.getPage(params));
+        handlePageUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, limit, collectionFilter]);
 
-    const handlePageChange = (event: any, newPage: number): void => {
-        replaceQueryParams({ page: newPage, pageSize: limit });
+    useEffect(() => {
+        !collectionId && replaceQueryParams({ page: 0, pageSize: limit });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handlePageChange = (newPage: number): void => {
         setCurrentPage(newPage);
+        replaceQueryParams({ page: newPage, pageSize: limit });
     };
 
-    const handleLimitChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const handleLimitChange = (newLimit: number): void => {
         setCurrentPage(0);
-        replaceQueryParams({ page: 0, pageSize: parseInt(event.target.value, 10) });
-        setLimit(parseInt(event.target.value, 10));
+        setLimit(newLimit);
+        replaceQueryParams({ page: 0, pageSize: newLimit });
     };
 
-    const handleRedirect = (event: MouseEvent<HTMLTableCellElement>, botId: number) => {
+    const handleRedirect = (botId: number) => {
         router.push(`/app/bots/${botId}/details/logs`);
     };
 
-    const handleFilterCollection = (event, value) => {
+    const handleFilterCollection = (event, value: string[]) => {
+        setCurrentPage(0);
         setCollectionFilter(value);
+        replaceQueryParams({ page: 0, pageSize: limit });
     };
-
-    const getPageContent = () => (page && page.content) ?? [];
 
     return (
         <StyledCard className={clsx(classes.root, className)} {...rest}>
@@ -125,7 +124,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                     onChange={handleFilterCollection}
                     id="filter-bots-by-collections"
                     options={botCollections.map((collection) => collection.name)}
-                    getOptionLabel={(collectionNameLabel) => collectionNameLabel}
+                    getOptionLabel={(collectionNameLabel: string) => collectionNameLabel}
                     defaultValue={collectionFilter}
                     renderInput={(params) => (
                         <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
@@ -136,69 +135,35 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                 />
             </div>
             <Box minWidth={1200}>
-                <If condition={!(loadingBots || loadingCollections)} else={<LoadingScreen />}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.InstallationId')}</TableCell>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.User')}</TableCell>
-                                <TableCell sx={{ width: '11.25rem' }}>
-                                    {translate('Bot.ListView.Results.Table.Header.Status')}
-                                </TableCell>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.Collection')}</TableCell>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.System')}</TableCell>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.Version')}</TableCell>
-                                <TableCell>{translate('Bot.ListView.Results.Table.Header.LastConnected')}</TableCell>
-                                <TableCell width={80} />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {getPageContent().map((bot) => {
-                                const formattedStatus = capitalizeFirstLetter({ text: bot.status, lowerCaseRest: true, delimiter: /_| / });
-
-                                return (
-                                    <TableRow hover key={bot.installationId}>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            {bot.installationId}
-                                        </TableCell>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            {bot.user?.login}
-                                        </TableCell>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            <Label color={getBotStatusColor(bot.status)}>
-                                                {/* @ts-ignore */}
-                                                {translate(`Bot.ListView.Results.Table.Status.${formattedStatus}`)}
-                                            </Label>
-                                        </TableCell>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            {bot.collection?.name}
-                                        </TableCell>
-                                        <TableCell>{bot.system?.name ? capitalizeFirstLetter({ text: bot.system?.name }) : ''}</TableCell>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            {bot.version}
-                                        </TableCell>
-                                        <TableCell onClick={(ev) => handleRedirect(ev, bot.id)}>
-                                            {moment(bot.lastConnected).format('YYYY-MM-DD HH:mm')}
-                                        </TableCell>
-                                        <TableCell>
-                                            <ActionBotButton bot={bot} />
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </If>
-                <TablePagination
-                    component="div"
-                    count={page ? page.totalElements : 0}
-                    onPageChange={handlePageChange}
-                    onRowsPerPageChange={handleLimitChange}
-                    page={currentPage}
-                    rowsPerPage={limit}
+                <DataGrid
+                    sx={BotsDataGridStyles}
+                    autoHeight
+                    disableColumnSelector
+                    disableSelectionOnClick
+                    rowHeight={80}
+                    columns={columns}
+                    rows={page?.content ?? []}
                     rowsPerPageOptions={[10, 20, 30]}
+                    rowCount={page?.totalElements ?? 0}
+                    page={currentPage}
+                    onPageChange={handlePageChange}
+                    pageSize={limit}
+                    onPageSizeChange={handleLimitChange}
+                    paginationMode='server'
+                    loading={loadingBots || loadingCollections}
+                    onCellClick={(param) => {
+                        if (param.field !== 'actions') handleRedirect(param.row.id);
+                    }}
                 />
             </Box>
+            <If condition={Boolean(botToDelete)}>
+                <ActionBotButtonDelete
+                    bot={botToDelete}
+                    open={open}
+                    setOpen={handleDialog}
+                    onClose={handlePageUpdate}
+                />
+            </If>
         </StyledCard>
     );
 };

@@ -82,3 +82,21 @@ export const StyledCard = styled(Card)(({ theme }) => ({
         margin: 10,
     },
 }));
+
+export const BotsDataGridStyles = {
+    '& .MuiDataGrid-row:hover': {
+        cursor: 'pointer',
+    },
+    '& .MuiDataGrid-cell:focus': {
+        outline: 0,
+    },
+    '& .MuiDataGrid-cell:active': {
+        outline: 0,
+    },
+    '& .MuiDataGrid-cell:focus-within': {
+        outline: 0,
+    },
+    '& .MuiDataGrid-columnHeader:focus': {
+        outline: 0,
+    }
+};
