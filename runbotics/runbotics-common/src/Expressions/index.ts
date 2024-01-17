@@ -33,6 +33,9 @@ export class Expressions {
 
         if (Expressions.isOutputVariableToSave(templatedString, context)) {
             context.environment.variables[`${context.environment.output?.variableName}`] = context.content.output[0];
+        } else if (context.environment?.variables?.content?.type === 'bpmn:SubProcess') {
+            const elementVariableName = context.environment.variables?.content?.input?.elementVariable;
+            context.environment.variables[elementVariableName] = context.environment.variables?.content?.[elementVariableName];
         }
 
         let jexlResult = Expressions.tryResolveJexlExpression(

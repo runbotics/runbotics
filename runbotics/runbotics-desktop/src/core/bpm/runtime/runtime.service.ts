@@ -629,10 +629,10 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         .map(outbound => outbound.behaviour.name ?? outbound.behaviour.id);
 
     private hasOutputSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
-        !outbound?.behaviour?.conditionExpression?.body;
+        !outbound?.behaviour?.conditionExpression?.body?.trim();
 
     public isSequenceWithoutExpression = (owner: ActivityOwner): boolean => !owner?.isDefault &&
-        !owner?.behaviour?.conditionExpression?.body;
+        !owner?.behaviour?.conditionExpression?.body?.trim();
 
     private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
         const gatewayName = api.name ?? api.id;
