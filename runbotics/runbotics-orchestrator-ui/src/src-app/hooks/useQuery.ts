@@ -4,17 +4,17 @@ const useQuery = () => {
     const { query } = useRouter();
 
     const firstValueFrom = (param: string) => {
-        const valueOfQueryParam = query[param];
+        const queryParamValue = query[param];
 
-        if (Array.isArray(valueOfQueryParam)) {
-            return valueOfQueryParam[0];
+        if (Array.isArray(queryParamValue)) {
+            return queryParamValue[0];
         }
 
-        if (typeof valueOfQueryParam === 'string') {
-            return valueOfQueryParam;
+        if (typeof queryParamValue === 'string') {
+            return queryParamValue;
         }
 
-        return valueOfQueryParam;
+        return queryParamValue;
     };
 
     return {

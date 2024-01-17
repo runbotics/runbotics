@@ -19,7 +19,7 @@ import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
-import ActionBotButtonDelete from './ActionBotButton.delete';
+import ActionBotButtonDelete from './ActionBotButton';
 import { BotsDataGridStyles, classes, StyledCard } from './Results.styles';
 import useBotListViewColumns from './useBotListViewColumns';
 import { botActions } from '../../../store/slices/Bot';
@@ -161,7 +161,7 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
                     bot={botToDelete}
                     open={open}
                     setOpen={handleDialog}
-                    afterDelete={handlePageUpdate}
+                    onClose={handlePageUpdate}
                 />
             </If>
         </StyledCard>
