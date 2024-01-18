@@ -176,9 +176,9 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                                 >
                                     <If
                                         condition={isExternalOpen}
-                                        else={<KeyboardArrowUpIcon/>}
+                                        else={<KeyboardArrowDownIcon/>}
                                     >
-                                        <KeyboardArrowDownIcon/>
+                                        <KeyboardArrowUpIcon/>
                                     </If>
                                 </IconButton>
                             </InputAdornment>
