@@ -43,20 +43,24 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         if (isWorklogDay(input)) {
             startDate = dayjs(input.date, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.date, AVAILABLE_FORMATS).endOf('day');
+            this.logger.log(`Gathering worklogs for single date: ${input.date}`);
         }
         if (isWorklogPeriod(input)) {
             startDate = dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day');
+            this.logger.log(`Gathering worklogs for date period: ${input.startDate} - ${input.endDate}`);
         }
         if (isWorklogCollection(input)) {
             const { min, max, datesObjects } = getDatesCollectionBoundaries(input.dates);
             startDate = min.startOf('day');
             endDate = max.endOf('day');
             datesCollectionObjects = datesObjects;
+            this.logger.log(`Gathering worklogs for dates collection: ${input.dates.join(',')}`);
         }
 
         const jiraUser = await getJiraUser<ServerJiraUser>(input);
         const { issues } = await getUserIssueWorklogs<ServerJiraUser>(jiraUser.name, input);
+        this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
 
         const worklogs = (await Promise.all(issues
             .flatMap(async (issue) => {
@@ -64,7 +68,10 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 const isEveryWorklogPresent = worklogResponse.total <= worklogResponse.maxResults;
                 const { worklogs } = isEveryWorklogPresent
                     ? worklogResponse
-                    : (await getIssueWorklogs<ServerJiraUser>(issue.key, input));
+                    : await (() => {
+                        this.logger.log(`Fetching all worklogs for issue ${issue.key}`);
+                        return getIssueWorklogs<ServerJiraUser>(issue.key, input);
+                    })();
                 return worklogs
                     .filter(worklog => isAllowedDate<ServerJiraUser>({
                         worklog, startDate, endDate, jiraUser, dates: datesCollectionObjects

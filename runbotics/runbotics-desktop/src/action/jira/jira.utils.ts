@@ -58,7 +58,9 @@ const envValidator = (property: string) => z.string({
         env => ({ message: `${property}: "${env}" is empty or does not exist` })
     );
 
-export const AVAILABLE_FORMATS = ['D.M.YYYY', 'D-M-YYYY', 'D/M/YYYY', 'YYYY.M.D', 'YYYY-M-D', 'YYYY/M/D'];
+export const AVAILABLE_FORMATS = [
+    'D.M.YYYY', 'DD.MM.YYYY', 'D-M-YYYY', 'DD-MM-YYYY', 'D/M/YYYY', 'DD/MM/YYYY',
+    'YYYY.M.D', 'YYYY.MM.DD', 'YYYY-M-D', 'YYYY-MM-DD', 'YYYY/M/D', 'YYYY/MM/DD'];
 
 export const getWorklogInputBaseSchema = z.object({
     originEnv: envValidator('Origin'),
@@ -134,9 +136,10 @@ export const getUserIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(
         const end = dayjs(input.endDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
         dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
     } else if (isWorklogCollection(input)) {
-        dateCondition = input.dates
-            .map(date => `worklogDate=${dayjs(date, AVAILABLE_FORMATS).format('YYYY-MM-DD')}`)
-            .join(' AND ');
+        const mappedDates = input.dates
+            .map(date => dayjs(date, AVAILABLE_FORMATS).format('YYYY-MM-DD'))
+            .join(',');
+        dateCondition = `worklogDate in (${mappedDates})`;
     }
 
     return externalAxios.get<IssueWorklogResponse<T>>(
