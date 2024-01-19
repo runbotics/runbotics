@@ -9,6 +9,7 @@ const commonActionsTranslations: typeof englishCommonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.Email': 'Email',
     'Process.Details.Modeler.Actions.Common.Date': 'Data',
     'Process.Details.Modeler.Actions.Common.Period': 'Okres',
+    'Process.Details.Modeler.Actions.Common.Collection': 'Zbiór',
 };
 
 export default commonActionsTranslations;
