@@ -6,13 +6,14 @@ import * as jiraUtils from '../jira.utils';
 
 describe('JiraServerActionHandler', () => {
     let jiraServerActionHandler: JiraServerActionHandler;
+
     const getWorklogInputDate: GetWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'date',
-        date: '12-11-2023',
+        date: '2023-11-12',
     };
     const getWorklogInputPeriod: GetWorklogInput = {
         email: 'john.doe@runbotics.com',
@@ -20,8 +21,8 @@ describe('JiraServerActionHandler', () => {
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'period',
-        startDate: '12-11-2023',
-        endDate: '14-11-2023'
+        startDate: '2023-11-12',
+        endDate: '2023-11-14'
     };
     const getWorklogInputCollection: GetWorklogInput = {
         email: 'john.doe@runbotics.com',
@@ -29,7 +30,7 @@ describe('JiraServerActionHandler', () => {
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'collection',
-        dates: ['12-11-2023', '15-11-2023'],
+        dates: ['2023-11-12', '2023-11-15'],
     };
 
     beforeEach(async () => {
@@ -233,7 +234,7 @@ describe('JiraServerActionHandler', () => {
             expectTypeOf(worklogs).toBeObject();
             expectTypeOf(Object.keys(worklogs)[0]).toBeString();
             expectTypeOf(Object.values(worklogs)[0]).toBeArray();
-            expect(worklogs['12-11-2023'][0].timeSpentHours).toBe(4);
+            expect(worklogs['2023-11-12'][0].timeSpentHours).toBe(4);
         });
 
         it('should return worklog list', async () => {
