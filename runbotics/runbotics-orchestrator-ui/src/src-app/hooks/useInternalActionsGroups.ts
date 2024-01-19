@@ -22,6 +22,7 @@ import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import useTranslations from '#src-app/hooks/useTranslations';
+import getFolderActions from '../Actions/folder.actions';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
 
@@ -105,6 +106,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.File'
             ),
             items: Object.values(getFileActions())
+        },
+        folder: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Folder'),
+            items: Object.values(getFolderActions())
         },
         image: {
             label: translate('Process.Details.Modeler.ActionsGroup.Image'),

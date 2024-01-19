@@ -11,6 +11,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.JiraCloud': 'Jira Cloud',
     'Process.Details.Modeler.ActionsGroup.JiraServer': 'Jira Server',
     'Process.Details.Modeler.ActionsGroup.File': 'File',
+    'Process.Details.Modeler.ActionsGroup.Folder': 'Folder',
     'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
     'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
     'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',

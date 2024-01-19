@@ -40,6 +40,7 @@ export enum ACTION_GROUP {
     BEEOFFICE = 'beeoffice',
     SAP = 'sap',
     APPLICATION = 'application',
+    FOLDER = 'folder'
 }
 
 export enum VariableAction {
@@ -234,6 +235,10 @@ export enum ImageAction {
     GRAY_SCALE = 'image.grayscale',
 }
 
+export enum FolderAction {
+    DELETE = 'folder.delete',
+}
+
 export type AllActionIds =
     | VariableAction
     | GeneralAction
@@ -257,4 +262,5 @@ export type AllActionIds =
     | ExcelAction
     | DesktopAction
     | VisualBasicAction
-    | ImageAction;
+    | ImageAction
+    | FolderAction;

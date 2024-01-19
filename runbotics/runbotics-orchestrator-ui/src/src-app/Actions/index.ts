@@ -22,6 +22,7 @@ import getSapActions from './sap.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
 import getVisualBasicActions from './visualBasic.actions';
+import getFolderActions from './folder.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),
@@ -31,6 +32,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getGeneralActions(),
     ...getVariablesActions(),
     ...getFileActions(),
+    ...getFolderActions(),
     ...getCsvActions(),
     ...getCloudExcelActions(),
     ...getCloudFileActions(),
