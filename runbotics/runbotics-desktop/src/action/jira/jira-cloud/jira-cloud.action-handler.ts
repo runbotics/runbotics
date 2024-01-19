@@ -2,20 +2,20 @@ import { ZodError } from 'zod';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { Injectable } from '@nestjs/common';
 import { JiraCloudAction } from 'runbotics-common';
-import _ from 'lodash';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
-
-import { externalAxios } from '#config';
 import { RunboticsLogger } from '#logger';
 
 import {
-    JiraActionRequest, SimpleWorklog,
-    CloudJiraUser, SimpleCloudJiraUser, WorklogOutput,
+    JiraActionRequest, CloudJiraUser, SimpleCloudJiraUser
 } from './jira-cloud.types';
-import { AVAILABLE_FORMATS, getWorklogInputSchema, isWorklogDay, isWorklogPeriod } from '../jira.utils';
-import { GetWorklogBase, GetWorklogInput, IssueWorklogResponse, SearchIssue, Worklog, WorklogResponse } from '../jira.types';
+import {
+    AVAILABLE_FORMATS, getDatesCollectionBoundaries, getIssueWorklogs,
+    getJiraUser, getUserIssueWorklogs, getWorklogInputSchema, groupByDay,
+    isAllowedDate, isWorklogCollection, isWorklogDay, isWorklogPeriod, sortAscending
+} from '../jira.utils';
+import { GetWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -29,7 +29,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     async getWorklog(rawInput: GetWorklogInput) {
-        let startDate, endDate;
+        let startDate, endDate, datesCollectionObjects;
 
         const input = await getWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
@@ -49,9 +49,15 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
             startDate = dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day');
         }
+        if (isWorklogCollection(input)) {
+            const { min, max, datesObjects } = getDatesCollectionBoundaries(input.dates);
+            startDate = min.startOf('day');
+            endDate = max.endOf('day');
+            datesCollectionObjects = datesObjects;
+        }
 
-        const jiraUser = await this.getJiraUser(input);
-        const { issues } = await this.getUserIssueWorklogs(jiraUser.accountId, input);
+        const jiraUser = await getJiraUser<CloudJiraUser>(input);
+        const { issues } = await getUserIssueWorklogs<CloudJiraUser>(jiraUser.accountId, input);
 
         const worklogs = (await Promise.all(issues
             .flatMap(async (issue) => {
@@ -59,31 +65,23 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 const isEveryWorklogPresent = worklogResponse.total <= worklogResponse.maxResults;
                 const { worklogs } = isEveryWorklogPresent
                     ? worklogResponse
-                    : (await this.getIssueWorklogs(issue.key, input));
+                    : (await getIssueWorklogs<CloudJiraUser>(issue.key, input));
                 return worklogs
-                    .filter(worklog => worklog.author.accountId === jiraUser.accountId
-                        && dayjs(worklog.started).isAfter(startDate)
-                        && dayjs(worklog.started).isBefore(endDate))
+                    .filter(worklog => isAllowedDate<CloudJiraUser>({
+                        worklog, startDate, endDate, jiraUser, dates: datesCollectionObjects
+                    }))
                     .map(worklog => this.mapWorklogOutput(worklog, issue));
             })
         )).flatMap(w => w);
 
         return input.groupByDay
-            ? this.groupByDay(worklogs)
-            : this.sortAscending(worklogs);
+            ? groupByDay(worklogs)
+            : sortAscending(worklogs);
     }
 
-    private sortAscending(worklogs: WorklogOutput[]) {
-        return worklogs.sort((a, b) => dayjs(a.started).isBefore(dayjs(b.started)) ? -1 : 1);
-    }
-
-    private groupByDay(worklogs: WorklogOutput[]) {
-        const worklogsByDay = _.groupBy(worklogs, (worklog) => dayjs(worklog.started).format('DD-MM-YYYY'));
-
-        return worklogsByDay;
-    }
-
-    private getSimpleWorklog({ updateAuthor, issueId, ...worklog }: Worklog<CloudJiraUser>): SimpleWorklog {
+    private getSimpleWorklog({
+        updateAuthor, issueId, ...worklog
+    }: Worklog<CloudJiraUser>): SimpleWorklog<CloudJiraUser> {
         return {
             ...worklog,
             timeSpentHours: worklog.timeSpentSeconds * 1.0 / 60 / 60,
@@ -98,7 +96,9 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         };
     }
 
-    private mapWorklogOutput(worklog: Worklog<CloudJiraUser>, issue: SearchIssue<CloudJiraUser>): WorklogOutput {
+    private mapWorklogOutput(
+        worklog: Worklog<CloudJiraUser>, issue: SearchIssue<CloudJiraUser>
+    ): WorklogOutput<CloudJiraUser> {
         const { issuetype, parent, project, status, worklog: innerWorklog, ...issueDetails } = issue.fields;
         return {
             ...this.getSimpleWorklog(worklog),
@@ -141,91 +141,6 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 name: issue.fields.status.name,
                 self: issue.fields.status.self,
             },
-        };
-    }
-
-    private getIssueWorklogs(issueKey: string, input: GetWorklogInput) {
-        let timeParam: { startedBefore: number; startedAfter: number };
-        if (isWorklogDay(input)) {
-            timeParam = {
-                startedBefore: dayjs(input.date, AVAILABLE_FORMATS).endOf('day').valueOf(),
-                startedAfter: dayjs(input.date, AVAILABLE_FORMATS).startOf('day').valueOf(),
-            };
-        } else if (isWorklogPeriod(input)) {
-            timeParam = {
-                startedBefore: dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day').valueOf(),
-                startedAfter: dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day').valueOf(),
-            };
-        }
-
-        return externalAxios.get<WorklogResponse<CloudJiraUser>>(
-            `${process.env[input.originEnv]}/rest/api/2/issue/${issueKey}/worklog`,
-            {
-                headers: this.getBasicAuthHeader(input),
-                params: {
-                    ...timeParam,
-                    maxResults: 1000,
-                },
-                maxRedirects: 0,
-            },
-        )
-            .then(response => response.data);
-    }
-
-    private getUserIssueWorklogs(author: string, input: GetWorklogInput) {
-        let dateCondition = '';
-        if (isWorklogDay(input)) {
-            const date = dayjs(input.date, AVAILABLE_FORMATS).format('YYYY-MM-DD');
-            dateCondition = `worklogDate=${date}`;
-        } else if (isWorklogPeriod(input)) {
-            const start = dayjs(input.startDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
-            const end = dayjs(input.endDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
-            dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
-        }
-
-        return externalAxios.get<IssueWorklogResponse<CloudJiraUser>>(
-            `${process.env[input.originEnv]}/rest/api/2/search`,
-            {
-                headers: this.getBasicAuthHeader(input),
-                params: {
-                    jql: `${dateCondition} AND worklogAuthor=${author}`,
-                    fields: '*all,-watches,-votes,-timetracking,-reporter,-progress,-issuerestriction,-issuelinks,-fixVersions,-comment,-attachment,-aggregateprogress,-assignee,-creator,-description,-duedate,-environment,-lastViewed,-resolution,-resolutiondate,-security,-statuscategorychangedate,-subtasks,-versions,-workratio,-timespent,-timeoriginalestimate,-timeestimate,-aggregatetimespent,-aggregatetimeoriginalestimate,-aggregatetimeestimate',
-                },
-                maxRedirects: 0,
-            },
-        )
-            .then(response => response.data);
-    }
-
-    /**
-     * @throws when the specified user is not found
-     */
-    private async getJiraUser(input: GetWorklogBase) {
-        const { data } = await externalAxios.get<CloudJiraUser[]>(
-            `${process.env[input.originEnv]}/rest/api/2/user/search`,
-            {
-                params: {
-                    maxResults: 10,
-                    startAt: 0,
-                    query: input.email,
-                },
-                headers: this.getBasicAuthHeader(input),
-                maxRedirects: 0,
-            },
-        );
-
-        if (data.length === 0) {
-            throw new Error(`User ${input.email} not found`);
-        }
-
-        return data[0];
-    }
-
-    private getBasicAuthHeader(data: Pick<GetWorklogBase, 'passwordEnv' | 'usernameEnv'>) {
-        return {
-            Authorization: 'Basic ' + Buffer.from(
-                `${process.env[data.usernameEnv]}:${process.env[data.passwordEnv]}`
-            ).toString('base64')
         };
     }
 
