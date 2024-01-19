@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const ProcessOutputButton = styled(Button)({
@@ -11,3 +11,10 @@ export const ProcessOutputButton = styled(Button)({
         borderWidth: '2px',
     },
 });
+
+export const HeaderWrapper = styled(Grid)(({theme}) => `
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: ${theme.spacing(2)};
+`);

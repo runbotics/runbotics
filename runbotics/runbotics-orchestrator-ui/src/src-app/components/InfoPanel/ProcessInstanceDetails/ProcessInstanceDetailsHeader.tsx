@@ -1,9 +1,10 @@
 import React, { VFC, useMemo, useState } from 'react';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Box, Dialog, Grid, LinearProgress, Tooltip, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Dialog, Grid, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { IProcessInstance, ProcessInstanceStatus, ProcessOutputType } from 'runbotics-common';
+import { IProcessInstance, ProcessOutputType } from 'runbotics-common';
 
 import Label from '#src-app/components/Label';
 import If from '#src-app/components/utils/If';
@@ -14,7 +15,12 @@ import { formatTimeDiff } from '#src-app/utils/utils';
 
 import { Title } from '#src-app/views/utils/FormDialog.styles';
 
-import { ProcessOutputButton } from './ProcessInstanceDetailsHeader.styles';
+import { HeaderWrapper, ProcessOutputButton } from './ProcessInstanceDetailsHeader.styles';
+import {
+    isElementEnabled,
+    isProcessInstanceActive,
+    isProcessOutputValid,
+} from './ProcessInstanceDetailsHeader.utils';
 import { translate } from '../../../hooks/useTranslations';
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
@@ -22,11 +28,6 @@ const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 interface Props {
     processInstance: IProcessInstance;
 }
-
-const isProcessInstanceActive = (
-    status: ProcessInstanceStatus,
-) => status === ProcessInstanceStatus.INITIALIZING
-    || status === ProcessInstanceStatus.IN_PROGRESS;
 
 const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
     const [open, setOpen] = useState(false);
@@ -36,33 +37,40 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
     const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
 
-    const isProcessOutput = useMemo(() => {
-        if (processInstance && processInstance?.output) {
-            const processInstanceOutput = JSON.parse(processInstance.output);
-            return !!(processInstanceOutput &&
-                processInstance?.output.length &&
-                currentProcessOutputElement &&
-                !currentProcessOutputElement.businessObject.disabled);
-        }
-        return false;
-    }, [processInstance, currentProcessOutputElement]);
+    const isProcessOutput = useMemo(() =>
+        isProcessOutputValid(processInstance) &&
+        (isElementEnabled(currentProcessOutputElement) ||
+        processInstance?.isProcessOutput)
+    , [processInstance, currentProcessOutputElement]);
 
     const processOutput = useMemo(() => {
-        if (isProcessOutput && currentProcessOutputElement) {
+        if (isProcessOutput) {
+            const output: Record<string, unknown> =
+                JSON.parse(processInstance.output)?.output;
+
+            if (output === undefined) return null;
+
+            const processOutputVariableValue = Object.values(output)[0];
+
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
-                    return processInstance.output;
+                    return <pre>{JSON.stringify(processOutputVariableValue, null, 2)}</pre>;
+                case ProcessOutputType.HTML:
+                    if (typeof processOutputVariableValue !== 'string') {
+                        return translate('Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType');
+                    }
+
+                    const parser = new DOMParser();
+                    const parsedHtml = parser.parseFromString(processOutputVariableValue, 'text/html');
+
+                    return <pre>{parsedHtml.documentElement.outerHTML}</pre>;
                 default:
-                    return <ReactJson name={false} src={JSON.parse(processInstance.output)} />;
+                    return <ReactJson name={false} src={output}/>;
             }
         }
         return null;
-    }, [
-        isProcessOutput,
-        currentProcessOutputElement,
-        processInstance.output,
-        process.outputType
-    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ isProcessOutput, processInstance.output, process.outputType ]);
 
     return (
         <Grid container spacing={2}>
@@ -104,10 +112,25 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
                 </Grid>
             </If>
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <Title>
-                    {translate('Process.ProcessInstance.Details.Header.Dialog.Title')}
-                </Title>
-                <Box padding={3} paddingTop={1}>
+                <HeaderWrapper>
+                    <Grid item>
+                        <Title>
+                            {translate('Process.ProcessInstance.Details.Header.Dialog.Title')}
+                        </Title>
+                    </Grid>
+                    <Grid item paddingX={'1rem'}>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Grid>
+                </HeaderWrapper>
+                <Box
+                    padding={3}
+                    paddingTop={0}
+                    minHeight={250}
+                    minWidth={500}
+                    overflow={'auto'}
+                >
                     {processOutput}
                 </Box>
             </Dialog>

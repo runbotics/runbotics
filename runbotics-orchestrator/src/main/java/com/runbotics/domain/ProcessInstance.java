@@ -81,6 +81,9 @@ public class ProcessInstance implements Serializable {
     @Column(name = "warning")
     private Boolean warning;
 
+    @Column(name = "is_process_output")
+    private Boolean isProcessOutput;
+
     @ManyToOne
     @JoinColumn(name = "trigger", referencedColumnName = "name")
     private TriggerEvent trigger;
@@ -275,6 +278,14 @@ public class ProcessInstance implements Serializable {
         this.warning = warning;
     }
 
+    public Boolean getIsProcessOutput() {
+        return this.isProcessOutput;
+    }
+
+    public void setIsProcessOutput(Boolean isProcessOutput) {
+        this.isProcessOutput = isProcessOutput;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -310,6 +321,7 @@ public class ProcessInstance implements Serializable {
             ", trigger='" + getTrigger() + "'" +
             ", triggerData='" + getTriggerData() + "'" +
             ", hasSubprocesses='" + getHasSubprocesses() + "'" +
+            ", isProcessOutput='" + getIsProcessOutput() + "'" +
             "}";
     }
 }

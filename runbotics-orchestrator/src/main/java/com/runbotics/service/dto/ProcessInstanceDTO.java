@@ -50,6 +50,8 @@ public class ProcessInstanceDTO implements Serializable {
 
     private Boolean warning;
 
+    private Boolean isProcessOutput;
+
     public UUID getId() {
         return id;
     }
@@ -186,6 +188,14 @@ public class ProcessInstanceDTO implements Serializable {
         this.warning = warning;
     }
 
+    public Boolean getIsProcessOutput() {
+        return this.isProcessOutput;
+    }
+
+    public void setIsProcessOutput(Boolean isProcessOutput) {
+        this.isProcessOutput = isProcessOutput;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -226,6 +236,7 @@ public class ProcessInstanceDTO implements Serializable {
             ", trigger=" + getTrigger() +
             ", triggerData=" + getTriggerData() +
             ", hasSubprocesses=" + getHasSubprocesses() +
+            ", isProcessOutput='" + getIsProcessOutput() + "'" +
             "}";
     }
 }

@@ -227,15 +227,6 @@ export class RuntimeSubscriptionsService {
                     }
                     break;
                 case ProcessInstanceStatus.COMPLETED:
-                    try {
-                        processInstance.output = this.sanitizeVariable(event.processInstance.output);
-                    } catch (e) {
-                        this.logger.error('Error preparing output');
-                        processInstance.output = JSON.stringify({
-                            result: 'Error preparing output',
-                        });
-                    }
-                    break;
                 case ProcessInstanceStatus.STOPPED:
                 case ProcessInstanceStatus.ERRORED:
                     //eslint-disable-next-line no-case-declarations
@@ -259,6 +250,10 @@ export class RuntimeSubscriptionsService {
                         processInstance.output = JSON.stringify({
                             result: 'Error preparing output',
                         });
+                    }
+
+                    if (event.processInstance.isProcessOutput) {
+                        processInstance.isProcessOutput = event.processInstance.isProcessOutput;
                     }
                     break;
             }
