@@ -15,7 +15,11 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
         period: {
             title: translate('Process.Details.Modeler.Actions.Common.Period'),
             value: 'period'
-        }
+        },
+        collection: {
+            title: translate('Process.Details.Modeler.Actions.Common.Collection'),
+            value: 'collection'
+        },
     } as const;
 
     return ({
@@ -61,8 +65,8 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                 mode: {
                                     title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.DateMode'),
                                     type: 'string',
-                                    enum: [dateMode.date.value, dateMode.period.value],
-                                    enumNames: [dateMode.date.title, dateMode.period.title],
+                                    enum: [dateMode.date.value, dateMode.period.value, dateMode.collection.value],
+                                    enumNames: [dateMode.date.title, dateMode.period.title, dateMode.collection.title],
                                     default: dateMode.date.value,
                                 },
                             },
@@ -94,6 +98,17 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                             },
                                         },
                                         required: ['startDate', 'endDate'],
+                                    }, {
+                                        properties: {
+                                            mode: {
+                                                enum: [dateMode.collection.value],
+                                            },
+                                            dates: {
+                                                title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DatesList'),
+                                                type: 'string',
+                                            },
+                                        },
+                                        required: ['dates']
                                     }],
                                 },
                             },

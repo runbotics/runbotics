@@ -7,6 +7,7 @@ const commonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.Email': 'Email',
     'Process.Details.Modeler.Actions.Common.Date': 'Date',
     'Process.Details.Modeler.Actions.Common.Period': 'Period',
+    'Process.Details.Modeler.Actions.Common.Collection': 'Collection',
 };
 
 export default commonActionsTranslations;
