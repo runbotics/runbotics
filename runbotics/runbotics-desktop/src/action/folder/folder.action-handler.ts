@@ -12,7 +12,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(FolderActionHandler.name);
 
     constructor(
-        private serverConfigService: ServerConfigService,
+        private readonly serverConfigService: ServerConfigService,
     ) {
         super();
     }
@@ -20,22 +20,22 @@ export default class FolderActionHandler extends StatelessActionHandler {
     async deleteFolder(input: FolderDeleteActionInput) {
         const { name, recursive, path } = input;
 
-        const folderPath = path ? 
-            `${path}${pathPackage.sep}${name}` : 
-            `${this.serverConfigService.tempFolderPath}${pathPackage.sep}${name}`; 
+        const folderPath = path ?
+            `${path}${pathPackage.sep}${name}` :
+            `${this.serverConfigService.tempFolderPath}${pathPackage.sep}${name}`;
 
         try {
             fs.rmdirSync(folderPath, { recursive });
         } catch (e) {
             if (e.code === 'ENOENT') {
                 throw new Error(`Directory not found: ${folderPath}`);
-                } else if (e.code === 'EACCES' || e.code === 'EPERM') {
+            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
                 throw new Error(`Remove directory permission denied: ${folderPath}`);
-                } else if (e.code === 'ENOTEMPTY') {
+            } else if (e.code === 'ENOTEMPTY') {
                 throw new Error(`Cannot remove not empty directory without setting 'recursive' option: ${folderPath}`);
-                } else {
+            } else {
                 throw new Error(`Directory could not be removed. ${e}`);
-            }   
+            }
         }
     }
 
