@@ -9,6 +9,7 @@ import getCsvActions from './csv.actions';
 import getDesktopActions from './desktop.actions';
 import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
+import getFolderActions from './folder.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
 import getImageActions from './image.actions';
@@ -22,7 +23,6 @@ import getSapActions from './sap.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
 import getVisualBasicActions from './visualBasic.actions';
-import getFolderActions from './folder.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),

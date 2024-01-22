@@ -9,6 +9,7 @@ import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
+import getFolderActions from '#src-app/Actions/folder.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
 import getImageActions from '#src-app/Actions/image.actions';
@@ -21,8 +22,8 @@ import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
+
 import useTranslations from '#src-app/hooks/useTranslations';
-import getFolderActions from '../Actions/folder.actions';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
 

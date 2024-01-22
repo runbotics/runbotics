@@ -1,6 +1,7 @@
 import cloudFileActionsTranslations from './cloudFile';
 import commonActionsTranslations from './common';
 import excelActionsTranslations from './excel';
+import folderActionsTranslations from './folder';
 import actionGroupsTranslations from './groups';
 import imageActionsTranslations from './image';
 import jiraCloudActionsTranslations from './jiraCloud';
@@ -16,6 +17,7 @@ const processActionsTranslations = {
     ...imageActionsTranslations,
     ...jiraCloudActionsTranslations,
     ...jiraServerActionsTranslations,
+    ...folderActionsTranslations,
 };
 
 export default processActionsTranslations;
