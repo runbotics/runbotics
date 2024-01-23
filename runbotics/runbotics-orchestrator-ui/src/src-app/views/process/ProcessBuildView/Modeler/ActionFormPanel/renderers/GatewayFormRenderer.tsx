@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -52,7 +52,7 @@ const GatewayFormRenderer = () => {
     const [expressions, setExpressions] = React.useState(createInitExpressions());
 
     const isSequenceWithExpression = (outgoing: IBpmnConnection) =>
-        gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body);
+        gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body?.trim());
 
     const validateFlows = () => {
         gateway.outgoing.forEach((flow) => {

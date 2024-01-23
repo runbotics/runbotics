@@ -136,7 +136,7 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
                 const inputVariables = variableInfo
                     .filter(
-                        (item: ExtensionElement) => item.name === 'variable'
+                        (item: ExtensionElement) => item.name === 'variable' || item.name === 'elementVariable'
                     )
                     .map((item: ExtensionElement) => ({
                         name: item.value,
