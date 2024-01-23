@@ -1,9 +1,13 @@
 import z from 'zod';
-import { getWorklogInputBaseSchema, getWorklogInputSchema, worklogDaySchema, worklogPeriodSchema } from './jira.utils';
+import { getWorklogInputBaseSchema, getWorklogInputSchema, worklogCollectionSchema, worklogDaySchema, worklogPeriodSchema } from './jira.utils';
+import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
+import { ServerJiraUser, SimpleServerJiraUser } from './jira-server/jira-server.types';
+import { Dayjs } from 'dayjs';
 
 export type GetWorklogBase = z.infer<typeof getWorklogInputBaseSchema>
-export type WorklogDay = z.infer<typeof worklogDaySchema>
-export type WorklogPeriod = z.infer<typeof worklogPeriodSchema>
+export type WorklogDay = GetWorklogBase & z.infer<typeof worklogDaySchema>
+export type WorklogPeriod = GetWorklogBase & z.infer<typeof worklogPeriodSchema>
+export type WorklogCollection = GetWorklogBase & z.infer<typeof worklogCollectionSchema>
 export type GetWorklogInput = z.infer<typeof getWorklogInputSchema>
 
 export interface Page {
@@ -101,4 +105,30 @@ export interface SimpleIssue {
 export interface IssueWorklogResponse<User extends object> extends Page {
     expand: 'schema,names',
     issues: SearchIssue<User>[],
+}
+
+export type SimpleWorklog<T extends CloudJiraUser | ServerJiraUser> = T extends CloudJiraUser
+    ? Omit<Worklog<T>, 'author' | 'updateAuthor' | 'issueId'> & {
+        author: SimpleCloudJiraUser;
+        timeSpentHours: number;
+    }
+    : Omit<Worklog<T>, 'author' | 'updateAuthor' | 'issueId'> & {
+        author: SimpleServerJiraUser;
+        timeSpentHours: number;
+    };
+
+export type WorklogOutput<T extends CloudJiraUser | ServerJiraUser> = SimpleWorklog<T> & {
+    issue: SimpleIssue;
+    parent: SimpleIssue;
+    project: Partial<Project>;
+    labels: string[];
+    status: Partial<Status>;
+}
+
+export interface WorklogAllowedDateParams<T extends CloudJiraUser | ServerJiraUser> {
+    worklog: Worklog<T>;
+    startDate: Dayjs,
+    endDate: Dayjs,
+    jiraUser: T,
+    dates?: Dayjs[],
 }
