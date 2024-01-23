@@ -9,7 +9,7 @@ import store, { useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import getElementLabel from '#src-app/utils/getElementLabel';
 
-import { getActivitiyById } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
+import { getActivityById } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
 import { ModelerEvent } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler/BpmnModeler.types';
 import {
     applyModelerElement,
@@ -248,10 +248,10 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             const relatedError = store
                 .getState()
                 .process.modeler.errors.find((error) =>
-                    error.relatedElements.includes(event.element.id)
+                    error.relatedElements?.includes(event.element.id)
                 );
             if (relatedError) {
-                const elementToValidate = getActivitiyById(
+                const elementToValidate = getActivityById(
                     modeler,
                     relatedError.elementId
                 );

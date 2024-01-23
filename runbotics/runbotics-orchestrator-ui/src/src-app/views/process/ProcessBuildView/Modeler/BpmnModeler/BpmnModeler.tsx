@@ -102,7 +102,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             setPrevLanguage(i18n.language);
 
-            if (!offsetTop) return;
+            if (!offsetTop) return undefined;
 
             const bpmnModeler: BpmnIoModeler = new BpmnIoModeler(
                 getBpmnModelerConfig(offsetTop)
@@ -117,6 +117,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             }
 
             setModeler(bpmnModeler);
+
+            return () => {
+                for (const listenerKey in listeners) {
+                    eventBus.off(listenerKey, listeners[listenerKey]);
+                }
+            };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
