@@ -30,7 +30,8 @@ export type InternalHandlerKey =
     | 'excel'
     | 'desktop'
     | 'visualBasic'
-    | 'image';
+    | 'image'
+    | 'folder';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

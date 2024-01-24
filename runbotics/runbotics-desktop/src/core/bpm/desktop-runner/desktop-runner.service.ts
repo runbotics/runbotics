@@ -23,6 +23,7 @@ import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
 import DesktopActionHandler from '#action/desktop';
+import FolderActionHandler from '#action/folder';
 import VisualBasicActionHandler from '#action/visual-basic';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
@@ -71,6 +72,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly desktopActionHandler: DesktopActionHandler,
         private readonly visualBasicActionHandler: VisualBasicActionHandler,
         private readonly imageActionHandler: ImageActionHandler,
+        private readonly folderActionHandler: FolderActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -94,7 +96,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler)
             .set('visualBasic', visualBasicActionHandler)
-            .set('image', imageActionHandler);
+            .set('image', imageActionHandler)
+            .set('folder', folderActionHandler)
     }
 
     async onModuleInit() {
