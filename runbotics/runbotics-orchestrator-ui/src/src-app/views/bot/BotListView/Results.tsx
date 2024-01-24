@@ -8,6 +8,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import clsx from 'clsx';
 
+import _ from 'lodash';
 import { useRouter } from 'next/router';
 
 import { IBot } from 'runbotics-common';
@@ -71,7 +72,8 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
         const params = {
             page: currentPage,
             size: limit,
-            ...(collectionState.length && {
+            ...(!(_.isEmpty(mappedBotCollections)) &&
+                collectionState.length && {
                 filter: {
                     in: {
                         collection: collectionState.map((collectionId) =>
@@ -105,11 +107,6 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
         const pageNotAvailable = page && currentPage >= page.totalPages;
         if (pageNotAvailable) {
             setCurrentPage(0);
-            replaceQueryParams({
-                page: 0,
-                pageSize: limit,
-                collection: collectionState,
-            });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
