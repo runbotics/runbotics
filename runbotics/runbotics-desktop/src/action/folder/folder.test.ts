@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import FolderActionHandler from './folder.action-handler';
 import fs from 'fs';
 import path from 'path';
-import { FolderDeleteActionInput } from './folder.types';
+import { FolderDeleteActionInput, FolderDisplayFilesActionInput } from './folder.types';
 import { ServerConfigService } from '../../config';
 
 describe('FolderActionHandler', () => {
@@ -54,6 +54,23 @@ describe('FolderActionHandler', () => {
         expect(serverConfigService).toBeDefined();
     });
 
+    const createTestSubfolders = () => {
+        const subfolders = ['subfolder1', 'subfolder2', 'subfolder3', 'subfolder4', 'subfolder5', 'subfolder6'];
+        for (let i = 0; i < subfolders.length; i++) {
+            fs.mkdirSync(`${cwd}${path.sep}${testFolderName}${path.sep}${subfolders[i]}`);
+        }
+        return subfolders;
+    };
+
+    const removeTestSubfolders = (subfolders: string[]) => {
+        for (let i = 0; i < subfolders.length; i++) {
+            const fullPath = `${cwd}${path.sep}${testFolderName}${path.sep}${subfolders[i]}`;
+            if (fs.existsSync(fullPath)) {
+                fs.rmSync(fullPath, { recursive: true });
+            }
+        }
+    };
+
     describe('Delete folder', async () => {
         it('Should remove empty folder', async () => {
             const params: FolderDeleteActionInput = {
@@ -95,23 +112,6 @@ describe('FolderActionHandler', () => {
             ).toBeFalsy();
         });
 
-        const createTestSubfolders = () => {
-            const subfolders = ['subfolder1', 'subfolder2', 'subfolder3', 'subfolder4', 'subfolder5', 'subfolder6'];
-            for (let i = 0; i < subfolders.length; i++) {
-                fs.mkdirSync(`${cwd}${path.sep}${testFolderName}${path.sep}${subfolders[i]}`);
-            }
-            return subfolders;
-        };
-
-        const removeTestSubfolders = (subfolders: string[]) => {
-            for (let i = 0; i < subfolders.length; i++) {
-                const fullPath = `${cwd}${path.sep}${testFolderName}${path.sep}${subfolders[i]}`;
-                if (fs.existsSync(fullPath)) {
-                    fs.rmSync(fullPath, { recursive: true });
-                }
-            }
-        };
-
         it('Should remove subfolders recursively', async () => {
             const params: FolderDeleteActionInput = {
                 name: testFolderName,
@@ -143,6 +143,34 @@ describe('FolderActionHandler', () => {
             );
 
             removeTestSubfolders(subfolders);
+        });
+    });
+
+    describe('Display files', () => {
+        it('Should display content of folder', async () => {
+            const params: FolderDisplayFilesActionInput = {
+                name: testFolderName,
+                path: cwd,
+            };
+            const subfolders = createTestSubfolders();
+            const expectedOutput = ['subfolder1', 'subfolder2', 'subfolder3', 'subfolder4', 'subfolder5', 'subfolder6'];
+
+            const folderContent = await folderActionHandler.displayFiles(params);
+            expect(folderContent).toEqual(expectedOutput);
+
+            removeTestSubfolders(subfolders);
+        });        
+    
+        it('Should throw error if accessing non-existent folder', async () => {
+            const name = 'notExistingFile';
+            const params: FolderDisplayFilesActionInput = {
+                name,
+                path: cwd,
+            };
+    
+            await expect(folderActionHandler.displayFiles(params)).rejects.toThrowError(
+                `Directory not found: ${cwd}${path.sep}${name}`
+            );
         });
     });
 });

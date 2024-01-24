@@ -7,5 +7,13 @@ export type FolderDeleteActionInput = {
     path?: string;
 };
 
+export type FolderDisplayFilesActionInput = {
+    name: string;
+    path?: string;
+};
+
+export type FolderDisplayFilesActionOutput = string[] | null;
+
 export type FolderActionRequest =
-    | DesktopRunRequest<FolderAction.DELETE, FolderDeleteActionInput>;
+    | DesktopRunRequest<FolderAction.DELETE, FolderDeleteActionInput>
+    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput>;

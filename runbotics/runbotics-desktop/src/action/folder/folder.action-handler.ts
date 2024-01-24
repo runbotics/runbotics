@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { FolderAction } from 'runbotics-common';
-import { FolderActionRequest, FolderDeleteActionInput } from './folder.types';
+import { FolderActionRequest, FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderDisplayFilesActionOutput } from './folder.types';
 import fs from 'fs';
 import pathPackage from 'path';
 import { ServerConfigService } from '#config';
@@ -39,10 +39,30 @@ export default class FolderActionHandler extends StatelessActionHandler {
         }
     }
 
+    async displayFiles(input: FolderDisplayFilesActionInput): Promise<FolderDisplayFilesActionOutput | null> {
+        const { name, path } = input;
+        
+        const folderPath = path ?
+            `${path}${pathPackage.sep}${name}` :
+            `${this.serverConfigService.tempFolderPath}${pathPackage.sep}${name}`;
+
+        try {
+            return fs.readdirSync(folderPath);
+        } catch (e) {
+            if (e.code === 'ENOENT') {
+                throw new Error(`Directory not found: ${folderPath}`);
+            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
+                throw new Error(`Read directory permission denied: ${folderPath}`);
+            }
+        }
+    }
+
     run(request: FolderActionRequest) {
         switch (request.script) {
             case FolderAction.DELETE:
                 return this.deleteFolder(request.input);
+            case FolderAction.DISPLAY_FILES:
+                return this.displayFiles(request.input);
             default:
                 throw new Error('Action not found');
         }
