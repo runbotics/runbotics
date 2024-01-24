@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useMemo } from 'react';
 
 import {
     Autocomplete,
@@ -27,13 +27,12 @@ import { DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
 
 interface ResultsProps {
     className?: string;
-    collectionId?: string;
 }
 
-const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
+const Results: FC<ResultsProps> = ({ className, ...rest }) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { firstValueFrom } = useQuery();
+    const { firstValueFrom, allValuesFrom } = useQuery();
     const { translate } = useTranslations();
     const replaceQueryParams = useReplaceQueryParams();
     useBotStatusSocket();
@@ -43,10 +42,16 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
 
     const pageFromUrl = firstValueFrom('page');
     const pageSizeFromUrl = firstValueFrom('pageSize');
+    const collectionFromUrl = allValuesFrom('collection') ?? [];
     const [currentPage, setCurrentPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [limit, setLimit] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
-    const collectionName = botCollections?.find((collection) => collection.id === collectionId)?.name;
-    const [collectionFilter, setCollectionFilter] = useState<string[]>(collectionName ? [collectionName] : []);
+    const [collectionState, setCollectionState] = useState(collectionFromUrl);
+    const mappedBotCollections = useMemo(() =>
+        botCollections?.reduce((acc, collection) => ({
+            ...acc,
+            [collection.id]: collection.name,
+        }), {})
+    , [botCollections]);
 
     const [open, setOpen] = useState(false);
     const [botToDelete, setBotToDelete] = useState<IBot>(null);
@@ -66,10 +71,11 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
         const params = {
             page: currentPage,
             size: limit,
-            ...(collectionFilter.length && {
+            ...(collectionState.length && {
                 filter: {
                     in: {
-                        collection: collectionFilter,
+                        collection: collectionState.map((collectionId) =>
+                            mappedBotCollections[collectionId]),
                     },
                 },
             }),
@@ -77,55 +83,56 @@ const Results: FC<ResultsProps> = ({ className, collectionId, ...rest }) => {
         dispatch(botActions.getPage(params));
     };
 
-    useEffect(() => {
-        const pageNotAvailable = page && currentPage >= page.totalPages;
-        if (pageNotAvailable) {
-            setCurrentPage(0);
-            replaceQueryParams({ page: 0, pageSize: limit });
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page]);
-
-    useEffect(() => {
-        handlePageUpdate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, limit, collectionFilter]);
-
-    useEffect(() => {
-        !collectionId && replaceQueryParams({ page: 0, pageSize: limit });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handlePageChange = (newPage: number): void => {
+    const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
-        replaceQueryParams({ page: newPage, pageSize: limit });
     };
 
-    const handleLimitChange = (newLimit: number): void => {
+    const handleLimitChange = (newLimit: number) => {
         setCurrentPage(0);
         setLimit(newLimit);
-        replaceQueryParams({ page: 0, pageSize: newLimit });
     };
 
     const handleRedirect = (botId: number) => {
         router.push(`/app/bots/${botId}/details/logs`);
     };
 
-    const handleFilterCollection = (event, value: string[]) => {
+    const handleFilterCollection = (event, collections: string[]) => {
         setCurrentPage(0);
-        setCollectionFilter(value);
-        replaceQueryParams({ page: 0, pageSize: limit });
+        setCollectionState(collections);
     };
+
+    useEffect(() => {
+        const pageNotAvailable = page && currentPage >= page.totalPages;
+        if (pageNotAvailable) {
+            setCurrentPage(0);
+            replaceQueryParams({
+                page: 0,
+                pageSize: limit,
+                collection: collectionState,
+            });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
+
+    useEffect(() => {
+        handlePageUpdate();
+        replaceQueryParams({
+            page: currentPage,
+            pageSize: limit,
+            collection: collectionState,
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, limit, collectionState, mappedBotCollections]);
 
     return (
         <StyledCard className={clsx(classes.root, className)} {...rest}>
             <div className={classes.filterField}>
                 <Autocomplete
-                    onChange={handleFilterCollection}
                     id="filter-bots-by-collections"
-                    options={botCollections.map((collection) => collection.name)}
-                    getOptionLabel={(collectionNameLabel: string) => collectionNameLabel}
-                    defaultValue={collectionFilter}
+                    options={botCollections?.map(collection => collection.id)}
+                    getOptionLabel={(collectionId) => mappedBotCollections[collectionId]}
+                    value={collectionState}
+                    onChange={handleFilterCollection}
                     renderInput={(params) => (
                         <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
                     )}

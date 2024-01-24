@@ -8,7 +8,6 @@ import If from '#src-app/components/utils/If';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 
-import useQuery from '#src-app/hooks/useQuery';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledContainer, StyledPage } from './BotBrowseView.styles';
@@ -20,10 +19,8 @@ import BotListView from '../BotListView';
 
 const BotBrowseView: VFC = () => {
     const router = useRouter();
-    const { firstValueFrom } = useQuery();
     const tab = router.asPath.split('/').slice(-1)[0].split('?')[0];
     const { translate } = useTranslations();
-    const collectionId = firstValueFrom('collection');
     const hasBotsCollectionTabAccess = useFeatureKey([FeatureKey.BOT_COLLECTION_READ]);
     const hasBotsTabAccess = useFeatureKey([FeatureKey.BOT_READ]);
 
@@ -73,7 +70,7 @@ const BotBrowseView: VFC = () => {
                 </Box>
                 <If
                     condition={tab === BotCollectionTab.COLLECTIONS && hasBotsCollectionTabAccess}
-                    else={<BotListView collectionId={collectionId} />}
+                    else={<BotListView />}
                 >
                     <BotCollectionView />
                 </If>
