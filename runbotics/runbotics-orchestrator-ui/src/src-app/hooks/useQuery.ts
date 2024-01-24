@@ -17,9 +17,24 @@ const useQuery = () => {
         return queryParamValue;
     };
 
+    const allValuesFrom = (param: string) => {
+        const queryParamValue = query[param];
+
+        if (Array.isArray(queryParamValue)) {
+            return queryParamValue;
+        }
+
+        if (typeof queryParamValue === 'string') {
+            return [ queryParamValue ];
+        }
+
+        return queryParamValue;
+    };
+
     return {
         query,
         firstValueFrom,
+        allValuesFrom,
     };
 };
 

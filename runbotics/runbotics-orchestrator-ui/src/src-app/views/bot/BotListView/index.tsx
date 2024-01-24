@@ -8,12 +8,7 @@ import { botCollectionActions } from '#src-app/store/slices/BotCollections';
 
 import Results from './Results';
 
-
-interface BotListViewProps {
-    collectionId?: string;
-}
-
-const BotListView: FC<BotListViewProps> = ({ collectionId }) => {
+const BotListView: FC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,7 +18,7 @@ const BotListView: FC<BotListViewProps> = ({ collectionId }) => {
 
     return (
         <Box mt={3}>
-            <Results collectionId={collectionId} />
+            <Results />
         </Box>
     );
 };
