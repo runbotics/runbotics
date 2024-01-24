@@ -17,6 +17,7 @@ import { Title } from '#src-app/views/utils/FormDialog.styles';
 
 import { HeaderWrapper, ProcessOutputButton } from './ProcessInstanceDetailsHeader.styles';
 import {
+    hasProcessOutputProperty,
     isElementEnabled,
     isProcessInstanceActive,
     isProcessOutputValid,
@@ -40,28 +41,28 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
     const isProcessOutput = useMemo(() =>
         isProcessOutputValid(processInstance) &&
         (isElementEnabled(currentProcessOutputElement) ||
-        processInstance?.isProcessOutput)
+        hasProcessOutputProperty(processInstance?.output))
     , [processInstance, currentProcessOutputElement]);
 
     const processOutput = useMemo(() => {
         if (isProcessOutput) {
             const output: Record<string, unknown> =
-                JSON.parse(processInstance.output)?.output;
+                JSON.parse(processInstance.output)?.processOutput;
 
             if (output === undefined) return null;
 
-            const processOutputVariableValue = Object.values(output)[0];
+            const processOutputValue = Object.values(output)[0];
 
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
-                    return <pre>{JSON.stringify(processOutputVariableValue, null, 2)}</pre>;
+                    return <pre>{JSON.stringify(processOutputValue, null, 2)}</pre>;
                 case ProcessOutputType.HTML:
-                    if (typeof processOutputVariableValue !== 'string') {
+                    if (typeof processOutputValue !== 'string') {
                         return translate('Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType');
                     }
 
                     const parser = new DOMParser();
-                    const parsedHtml = parser.parseFromString(processOutputVariableValue, 'text/html');
+                    const parsedHtml = parser.parseFromString(processOutputValue, 'text/html');
 
                     return <pre>{parsedHtml.documentElement.outerHTML}</pre>;
                 default:

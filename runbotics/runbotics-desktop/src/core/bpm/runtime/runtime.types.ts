@@ -10,6 +10,7 @@ import { ActivityOwner } from '#core/bpm/bpmn.types';
 
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
+    processOutput?: Record<string, unknown>;
 }
 
 export interface IProcessEventData {

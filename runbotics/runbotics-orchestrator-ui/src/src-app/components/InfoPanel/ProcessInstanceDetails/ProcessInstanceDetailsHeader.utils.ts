@@ -1,4 +1,4 @@
-import { ProcessInstanceStatus } from 'runbotics-common';
+import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
 
 import { isValidJson } from '#src-app/views/action/ActionDetails';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
@@ -25,3 +25,13 @@ export const isProcessOutputValid = (value: unknown) =>
     typeof value.output === 'string' &&
     value.output.length &&
     isValidJson(value.output);
+
+export const hasProcessOutputProperty = (output: IProcessInstance['output']) => {
+    if (typeof output !== 'string' || !isValidJson(output)) return false;
+
+    const outputValue: unknown = JSON.parse(output);
+    return typeof outputValue === 'object' &&
+        'processOutput' in outputValue &&
+        typeof outputValue.processOutput === 'object' &&
+        !!Object.values(outputValue.processOutput).length;
+};

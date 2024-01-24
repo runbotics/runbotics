@@ -21,7 +21,6 @@ export interface IProcessInstance {
     triggerData?: EmailTriggerData | UserTriggerData | unknown;
     warning?: boolean;
     callbackUrl?: string;
-    isProcessOutput?: boolean;
 }
 
 export type ProcessInstanceNotification = Pick<IProcessInstance,

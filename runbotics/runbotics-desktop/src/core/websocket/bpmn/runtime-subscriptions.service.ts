@@ -242,8 +242,8 @@ export class RuntimeSubscriptionsService {
 
                     try {
                         processInstance.output = this.sanitizeVariable({
-                            output: event.processInstance.output,
-                            variables: variables,
+                            processOutput: event.processInstance?.processOutput ?? {},
+                            variables,
                         });
                     } catch (e) {
                         this.logger.error('Error preparing output');
@@ -252,9 +252,6 @@ export class RuntimeSubscriptionsService {
                         });
                     }
 
-                    if (event.processInstance.isProcessOutput) {
-                        processInstance.isProcessOutput = event.processInstance.isProcessOutput;
-                    }
                     break;
             }
 

@@ -38,9 +38,6 @@ export class ProcessInstanceEntity implements IProcessInstance {
     @Column()
         warning: boolean;
 
-    @Column({ name: 'is_process_output' })
-        isProcessOutput: boolean;
-
     @Column('jsonb', { nullable: true, name: 'trigger_data' })
         triggerData?: EmailTriggerData | unknown;
 
