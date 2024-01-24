@@ -61,7 +61,7 @@ export class Expressions {
         return templatedString &&
             templatedString.includes('content.output') &&
             context?.content?.output?.length > 0 &&
-            context?.content?.output[0] &&
+            context?.content?.output[0] !== undefined &&
             context?.environment?.output?.variableName;
     }
 
