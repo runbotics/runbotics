@@ -3,7 +3,7 @@ import { RunboticModdleDescriptor } from 'runbotics-common';
 
 import ContextPad from '../extensions/contextPad';
 import BasicModelerModule from '../extensions/customRenderer/Modeler.module';
-import localStorageCopyModule from '../extensions/localStorage';
+import LocalStorageCopyModule from '../extensions/localStorage';
 import modelerPalette from '../extensions/modelerPalette';
 import searchModule from '../extensions/search';
 import ZoomScrollModule from '../extensions/zoomscroll';
@@ -17,7 +17,7 @@ export const getBpmnModelerConfig = (offsetTop: number) => ({
         ZoomScrollModule,
         ContextPad,
         searchModule,
-        localStorageCopyModule
+        LocalStorageCopyModule
     ],
     moddleExtensions: {
         camunda: RunboticModdleDescriptor

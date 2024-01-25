@@ -49,40 +49,37 @@ function createReviver(moddle) {
     };
 };
 
+function localStorageCopy(
+    keyboard, eventBus,
+    moddle, clipboard
+) {
+    // persist into local storage whenever
+    // copy took place
+    eventBus.on('copyPaste.elementsCopied', event => {
+        const { tree } = event;
 
-const localStorageCopy = {
-    __init__: [ 'localStorageCopy' ],
-    localStorageCopy: [ 'type', function(
-        keyboard, eventBus,
-        moddle, clipboard
-    ) {
+        // persist in local storage, encoded as json
+        localStorage.setItem('bpmnClipboard', JSON.stringify(tree));
+    });
 
-        // persist into local storage whenever
-        // copy took place
-        eventBus.on('copyPaste.elementsCopied', event => {
-            const { tree } = event;
+    // intercept global paste keybindings and
+    // inject reified pasted stack
+    keyboard.addListener(2000, _ => {
+        // retrieve from local storage
+        const serializedCopy = localStorage.getItem('bpmnClipboard');
 
-            // persist in local storage, encoded as json
-            localStorage.setItem('bpmnClipboard', JSON.stringify(tree));
-        });
+        if (!serializedCopy) {
+            return;
+        }
 
-        // intercept global paste keybindings and
-        // inject reified pasted stack
-        keyboard.addListener(2000, event => {
-            // retrieve from local storage
-            const serializedCopy = localStorage.getItem('bpmnClipboard');
+        // parse tree, reinstantiating contained objects
+        const parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
 
-            if (!serializedCopy) {
-                return;
-            }
+        // put into clipboard
+        clipboard.set(parsedCopy);
+    });
+}
 
-            // parse tree, reinstantiating contained objects
-            const parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));
-
-            // put into clipboard
-            clipboard.set(parsedCopy);
-        });
-    } ]
-};
+localStorageCopy.$inject = ['keyboard', 'eventBus', 'moddle', 'clipboard'];
 
 export default localStorageCopy;
