@@ -19,7 +19,6 @@ export default class FolderActionHandler extends StatelessActionHandler {
 
     resolvePath(name?: string, path?: string): string {
         const folderPath = path ?? this.serverConfigService.tempFolderPath;
-        this.logger.log(name ? `${folderPath}${pathPackage.sep}${name}` : folderPath)
         return name ? `${folderPath}${pathPackage.sep}${name}` : folderPath;
     }
 
@@ -55,6 +54,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
                 throw new Error(`Directory not found: ${folderPath}`);
             } else if (e.code === 'EACCES' || e.code === 'EPERM') {
                 throw new Error(`Read directory permission denied: ${folderPath}`);
+            } else {
+                throw new Error(`Action could not be performed. ${e}`);
             }
         }
     }

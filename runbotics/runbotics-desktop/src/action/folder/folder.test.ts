@@ -54,17 +54,17 @@ describe('FolderActionHandler', () => {
         expect(serverConfigService).toBeDefined();
     });
 
-    const testSubfoldersArray = ['subfolder1', 'subfolder2', 'subfolder3', 'subfolder4', 'subfolder5', 'subfolder6'];
+    const TEST_SUBFOLDERS_ARRAY = ['subfolder1', 'subfolder2', 'subfolder3', 'subfolder4', 'subfolder5', 'subfolder6'];
 
     const createTestSubfolders = () => {
-        for (let i = 0; i < testSubfoldersArray.length; i++) {
-            fs.mkdirSync(`${cwd}${path.sep}${testFolderName}${path.sep}${testSubfoldersArray[i]}`);
+        for (let i = 0; i < TEST_SUBFOLDERS_ARRAY.length; i++) {
+            fs.mkdirSync(`${cwd}${path.sep}${testFolderName}${path.sep}${TEST_SUBFOLDERS_ARRAY[i]}`);
         }
     };
 
     const removeTestSubfolders = () => {
-        for (let i = 0; i < testSubfoldersArray.length; i++) {
-            const fullPath = `${cwd}${path.sep}${testFolderName}${path.sep}${testSubfoldersArray[i]}`;
+        for (let i = 0; i < TEST_SUBFOLDERS_ARRAY.length; i++) {
+            const fullPath = `${cwd}${path.sep}${testFolderName}${path.sep}${TEST_SUBFOLDERS_ARRAY[i]}`;
             if (fs.existsSync(fullPath)) {
                 fs.rmSync(fullPath, { recursive: true });
             }
@@ -155,7 +155,7 @@ describe('FolderActionHandler', () => {
             createTestSubfolders();
 
             const folderContent = await folderActionHandler.displayFiles(params);
-            expect(folderContent).toEqual(testSubfoldersArray);
+            expect(folderContent).toEqual(TEST_SUBFOLDERS_ARRAY);
 
             removeTestSubfolders();
         });        
@@ -174,7 +174,7 @@ describe('FolderActionHandler', () => {
 
         it('Display empty folder', async () => {
             const params: FolderDisplayFilesActionInput = {
-                name: testSubfoldersArray[0],
+                name: TEST_SUBFOLDERS_ARRAY[0],
                 path: `${cwd}${path.sep}${testFolderName}`,
             };
             createTestSubfolders();
