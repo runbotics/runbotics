@@ -53,6 +53,7 @@ export enum GeneralAction {
     CONSOLE_LOG = 'general.console.log',
     DELAY = 'general.delay',
     START_PROCESS = 'general.startProcess',
+    THROW_ERROR = 'general.throwError',
 }
 
 export enum MailAction {
