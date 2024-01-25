@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="depcikm" id="20240118707651-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="process_output"/>
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM process_output WHERE type = 'HTML'</sqlCheck>
+        </preConditions>
+        <insert tableName="process_output">
+            <column name="type">HTML</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

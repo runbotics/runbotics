@@ -17,6 +17,7 @@
     "Process.Instance.Status.Terminated": "PRZERWANY",
     "Process.Instance.Status.Completed": "UKOŃCZONY",
     "Process.ProcessInstance.Details.Header.Dialog.Title": "Wynik procesu",
+    "Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType": "Wybrany typ wyniku procesu jest niekompatybilny z typem danych do wyświetlenia.",
     "Process.ProcessInstance.Details.Header.Button": "Pokaż wynik",
     "Process.ProcessInstance.Details.Header.Button.Tooltip": "Użyj, aby wyświetlić wynik procesu",
     "Process.ProcessInstanceView.Meta.Title": "Bot",

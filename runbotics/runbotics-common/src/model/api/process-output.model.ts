@@ -1,6 +1,7 @@
 export enum ProcessOutputType {
     JSON = 'JSON',
-    TEXT = 'TEXT'
+    TEXT = 'TEXT',
+    HTML = 'HTML'
 }
 
 export interface ProcessOutput {
