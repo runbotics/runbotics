@@ -14,8 +14,9 @@ export const isElementEnabled = (value: BPMNElement | undefined) =>
     value !== null &&
     typeof value === 'object' &&
     'businessObject' in value &&
+    typeof value.businessObject === 'object' &&
     'disabled' in value.businessObject &&
-    value.businessObject.disabled === false;
+    !value.businessObject.disabled;
 
 export const isProcessOutputValid = (value: unknown) =>
     value !== undefined &&
