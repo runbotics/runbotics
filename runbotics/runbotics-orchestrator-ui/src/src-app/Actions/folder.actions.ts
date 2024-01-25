@@ -47,7 +47,43 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                 },
             }
         }
-    }
+    },
+    'folder.displayFiles': {
+        id: FolderAction.DISPLAY_FILES,
+        label: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Label'),
+        script: FolderAction.DISPLAY_FILES,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Label'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Name'),
+                                type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Path'),
+                                type: 'string',
+                            },
+                        },
+                    }
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    name: undefined,
+                },
+            }
+        }
+    },
 });
 
 export default getFolderActions;
