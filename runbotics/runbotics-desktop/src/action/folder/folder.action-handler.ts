@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { FolderAction } from 'runbotics-common';
-import { FolderActionRequest, FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderDisplayFilesActionOutput } from './folder.types';
+import { FolderActionRequest, FolderDeleteActionInput, FolderDisplayFilesActionInput } from './folder.types';
 import fs from 'fs';
 import pathPackage from 'path';
 import { ServerConfigService } from '#config';
@@ -17,12 +17,16 @@ export default class FolderActionHandler extends StatelessActionHandler {
         super();
     }
 
+    resolvePath(name?: string, path?: string): string {
+        const folderPath = path ?? this.serverConfigService.tempFolderPath;
+        this.logger.log(name ? `${folderPath}${pathPackage.sep}${name}` : folderPath)
+        return name ? `${folderPath}${pathPackage.sep}${name}` : folderPath;
+    }
+
     async deleteFolder(input: FolderDeleteActionInput) {
         const { name, recursive, path } = input;
 
-        const folderPath = path ?
-            `${path}${pathPackage.sep}${name}` :
-            `${this.serverConfigService.tempFolderPath}${pathPackage.sep}${name}`;
+        const folderPath = this.resolvePath(name, path);
 
         try {
             fs.rmdirSync(folderPath, { recursive });
@@ -39,12 +43,10 @@ export default class FolderActionHandler extends StatelessActionHandler {
         }
     }
 
-    async displayFiles(input: FolderDisplayFilesActionInput): Promise<FolderDisplayFilesActionOutput | null> {
+    async displayFiles(input: FolderDisplayFilesActionInput): Promise<string[] | null> {
         const { name, path } = input;
         
-        const folderPath = path ?
-            `${path}${pathPackage.sep}${name}` :
-            `${this.serverConfigService.tempFolderPath}${pathPackage.sep}${name}`;
+        const folderPath = this.resolvePath(name, path);
 
         try {
             return fs.readdirSync(folderPath);

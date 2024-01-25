@@ -70,7 +70,6 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                                 type: 'string',
                             },
                         },
-                        required: ['name']
                     }
                 }
             },
