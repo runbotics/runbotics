@@ -58,7 +58,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
             this.logger.log(`Gathering worklogs for dates collection: ${input.dates.join(',')}`);
         }
 
-        const jiraUser = await getJiraUser<ServerJiraUser>(input);
+        const jiraUser = await getJiraUser<ServerJiraUser>({ input, isServer: true });
         const { issues } = await getUserIssueWorklogs<ServerJiraUser>(jiraUser.name, input);
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
 

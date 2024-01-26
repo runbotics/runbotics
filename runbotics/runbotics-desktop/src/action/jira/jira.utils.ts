@@ -98,19 +98,25 @@ export const getBasicAuthHeader = (data: Pick<GetWorklogBase, 'passwordEnv' | 'u
     };
 };
 
+interface GetJiraUserParams {
+    input: GetWorklogBase;
+    isServer?: boolean;
+}
+
 /**
  * @throws when the specified user is not found
  */
-export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>(
-    input: GetWorklogBase
-) => {
+export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
+    input, isServer,
+}: GetJiraUserParams) => {
     const { data } = await externalAxios.get<T[]>(
         `${process.env[input.originEnv]}/rest/api/2/user/search`,
         {
             params: {
                 maxResults: 10,
                 startAt: 0,
-                query: input.email,
+
+                [isServer ? 'username' : 'query']: input.email,
             },
             headers: getBasicAuthHeader(input),
             maxRedirects: 0,
