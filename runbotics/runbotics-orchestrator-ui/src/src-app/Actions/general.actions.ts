@@ -153,6 +153,37 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'general.throwError': {
+        id: GeneralAction.THROW_ERROR,
+        label: translate('Process.Details.Modeler.Actions.General.ThrowError.Label'),
+        script: GeneralAction.THROW_ERROR,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            message: {
+                                title: translate('Process.Details.Modeler.Actions.General.ThrowError.Message'),
+                                type: 'string'
+                            }
+                        }
+                    }
+                }
+            },
+            formData: {
+                input: {
+                    message: undefined
+                }
+            }, 
+            uiSchema: {
+                'ui:order': ['input'],
+            }
+        }
+    }
 });
 
 export default getGeneralActions;
