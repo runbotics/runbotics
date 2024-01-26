@@ -15,6 +15,7 @@ import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
+import ProcessCollectionList from '../../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 
 const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
@@ -39,7 +40,8 @@ const ProcessList: VFC = () => {
     }, [processesPage]);
 
     return (
-        <Box display="flex" flexDirection="column" gap="1.5rem">
+        <Box display="flex" flexDirection="column" gap="1.5rem"> 
+            <ProcessCollectionList />
             <ProcessListHeader
                 search={search}
                 onSearchChange={handleSearch}

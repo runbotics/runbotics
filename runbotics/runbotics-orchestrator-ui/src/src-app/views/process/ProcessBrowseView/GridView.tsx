@@ -33,6 +33,7 @@ const GridView: VFC = () => {
     return (
         <>
             <TileGrid className={classes.cardsWrapper}>
+
                 {(processesPage?.content ?? []).map((process) => (
                     <ProcessTile key={process.id} process={process} />
                 ))}
