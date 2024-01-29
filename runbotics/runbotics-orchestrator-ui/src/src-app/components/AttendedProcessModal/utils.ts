@@ -22,8 +22,5 @@ export const defaultForm = `{
             "output"
         ]
     },
-    "formData": {
-        "input": null,
-        "output": null
-    }
+    "formData": {}
 }`;

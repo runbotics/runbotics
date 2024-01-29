@@ -1,19 +1,23 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.GlobalVariable;
+import com.runbotics.domain.Process;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.service.GlobalVariableService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.GlobalVariableDTO;
 import com.runbotics.service.mapper.GlobalVariableMapper;
-import java.time.ZonedDateTime;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link GlobalVariable}.
@@ -86,5 +90,23 @@ public class GlobalVariableServiceImpl implements GlobalVariableService {
     public void delete(Long id) {
         log.debug("Request to delete GlobalVariable : {}", id);
         globalVariableRepository.deleteById(id);
+    }
+
+    @Override
+    public List<String> getProcessNamesAssociatedWithGlobalVariable(Long id) {
+        return globalVariableRepository.getAssociatedProcesses(id).stream()
+            .map(Process::getName)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GlobalVariable> findByIds(List<Long> globalVariableIds) {
+        return globalVariableRepository.findAllById(globalVariableIds);
+    }
+
+    public Page<GlobalVariableDTO> getByRequester(Pageable pageable, Long id) {
+        log.debug("Request to get GlobalVariables by user");
+        return globalVariableRepository.findAllByCreatorId(pageable, id)
+            .map(globalVariableMapper::toDto);
     }
 }

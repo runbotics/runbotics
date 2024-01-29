@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
 
-import { IProcess, Tag } from 'runbotics-common';
+import { IProcess, Tag, NotificationProcess, IUser } from 'runbotics-common';
 
 
 import { RootState } from '#src-app/store';
@@ -11,7 +11,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 
 import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
 
-import { StartProcessResponse } from './Process.state';
+import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
@@ -93,7 +93,14 @@ export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValu
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateDiagram = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'definition'>, { rejectValue: any }>(
+export const updateProcessOutputType = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'outputType'>, { rejectValue: any }>(
+    'processes/output-type',
+    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/output-type`, process)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data)),
+);
+
+export const updateDiagram = createAsyncThunk<IProcess, UpdateDiagramRequest, { rejectValue: any }>(
     'processes/updateDiagram',
     (process, { rejectWithValue }) => Axios.patch<IProcess>(`/api/processes/${process.id}/diagram`, process)
         .then((response) => response.data)
@@ -146,5 +153,28 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
 export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
     'tags/getByName',
     (params) => Axios.get<Tag[]>(buildPageURL(params, '/api/tags'))
+        .then((response) => response.data)
+);
+
+export const subscribeProcessNotifications = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
+    'processes/subscribeProcessNotifications',
+    (userProcess) => Axios.post<NotificationProcess>('/api/process-notifications', userProcess)
+        .then((response) => response.data)
+);
+
+export const unsubscribeProcessNotifications = createAsyncThunk<void, NotificationProcess['id']>(
+    'processes/unsubscribeProcessNotifications',
+    (notificationId) => Axios.delete(`/api/process-notifications/${notificationId}`)
+);
+
+export const getProcessSubscriptionInfo = createAsyncThunk<NotificationProcess[], IProcess['id']>(
+    'processes/getProcessSubscriptionInfo',
+    (processId) => Axios.get<NotificationProcess[]>(`/api/processes/${processId}/notifications`)
+        .then((response) => response.data)
+);
+
+export const getProcessSubscriptionInfoByProcessIdAndUserId = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
+    'processes/getProcessSubscriptionInfoByProcessIdAndUserId',
+    ({ processId, userId }) => Axios.get<NotificationProcess>(`/api/process-notifications?processId=${processId}&userId=${userId}`)
         .then((response) => response.data)
 );

@@ -11,7 +11,7 @@ import {
     IBotSystem,
 } from 'runbotics-common';
 
-const relations = ['user', 'system', 'collection'];
+const relations = ['user', 'system', 'collection', 'subscribers', 'collection.users'];
 
 @Injectable()
 export class BotService {
@@ -77,6 +77,28 @@ export class BotService {
                 guest: DefaultCollections.GUEST,
             })
             .getMany();
+    }
+
+    async updateConnectedBotStatus(botId: IBot['id']) {
+        const statusCondition =
+            'bot.status = :disconnected';
+
+        const botIdCondition =
+            'bot.id = :botId';
+
+        await this.botRepository
+            .createQueryBuilder('bot')
+            .update()
+            .set({
+                status: BotStatus.CONNECTED,
+            })
+            .setParameters({
+                botId,
+                disconnected: BotStatus.DISCONNECTED,
+            })
+            .where(botIdCondition)
+            .andWhere(statusCondition)
+            .execute();
     }
 
     save(bot: IBot) {

@@ -10,8 +10,10 @@ export class BotSchedulerService {
 
     private readonly logger = new Logger(BotSchedulerService.name);
 
-    constructor(private readonly botService: BotService,
-                private readonly uiGateway: UiGateway) {}
+    constructor(
+        private readonly botService: BotService,
+        private readonly uiGateway: UiGateway,
+    ) {}
 
     async getBotStatusForUser(user: IUser) {
         this.logger.log(`Getting bot status for user ${user.login}`);

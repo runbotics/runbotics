@@ -25,7 +25,7 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
     public asyncInit = async () => {
         const setupAxiosInterceptors = (onUnauthenticated: any) => {
             const onRequestSuccess = async (config: any) => {
-                const token = await this.storageService.getItem('token');
+                const token = this.storageService.getValue('token');
                 if (!config.headers.Authorization && token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
@@ -56,7 +56,7 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
         try {
             const method = input.method ?? 'GET';
             if (['PUT', 'POST', 'PATCH'].includes(method)) {
-                body = JSON.parse(input.body);
+                body = typeof input.body === 'object' ? input.body : JSON.parse(input.body);
             }
             if (input.headers['Content-Type'] && input.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
                 const qs = await import('qs');

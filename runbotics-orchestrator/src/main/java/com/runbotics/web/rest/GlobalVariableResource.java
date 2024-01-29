@@ -1,10 +1,12 @@
 package com.runbotics.web.rest;
 
+import com.runbotics.domain.User;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.GlobalVariableQueryService;
 import com.runbotics.service.GlobalVariableService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.GlobalVariableCriteria;
 import com.runbotics.service.dto.GlobalVariableDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -47,14 +49,18 @@ public class GlobalVariableResource {
 
     private final GlobalVariableQueryService globalVariableQueryService;
 
+    private final UserService userService;
+
     public GlobalVariableResource(
         GlobalVariableService globalVariableService,
         GlobalVariableRepository globalVariableRepository,
-        GlobalVariableQueryService globalVariableQueryService
+        GlobalVariableQueryService globalVariableQueryService,
+        UserService userService
     ) {
         this.globalVariableService = globalVariableService;
         this.globalVariableRepository = globalVariableRepository;
         this.globalVariableQueryService = globalVariableQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -162,7 +168,13 @@ public class GlobalVariableResource {
     @GetMapping("/global-variables")
     public ResponseEntity<List<GlobalVariableDTO>> getAllGlobalVariables(GlobalVariableCriteria criteria, Pageable pageable) {
         log.debug("REST request to get GlobalVariables by criteria: {}", criteria);
-        Page<GlobalVariableDTO> page = globalVariableQueryService.findByCriteria(criteria, pageable);
+        User requester = userService.getUserWithAuthorities().get();
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
+
+        Page<GlobalVariableDTO> page = hasRequesterRoleAdmin
+            ? globalVariableQueryService.findByCriteria(criteria, pageable)
+            : globalVariableService.getByRequester(pageable, requester.getId());
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -186,7 +198,10 @@ public class GlobalVariableResource {
      * @param id the id of the globalVariableDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the globalVariableDTO, or with status {@code 404 (Not Found)}.
      */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_READ + "')")
+    @PreAuthorize(
+        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.GLOBAL_VARIABLE_READ + "')" +
+        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
+    )
     @GetMapping("/global-variables/{id}")
     public ResponseEntity<GlobalVariableDTO> getGlobalVariable(@PathVariable Long id) {
         log.debug("REST request to get GlobalVariable : {}", id);
@@ -195,7 +210,7 @@ public class GlobalVariableResource {
     }
 
     /**
-     * {@code DELETE  /global-variables/:id} : delete the "id" globalVariable.
+     * {@code DELETE  /global-variables/:id} : delete the "id" globalVariable. GlobalVariable couldn't be associated with any Process.
      *
      * @param id the id of the globalVariableDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
@@ -205,12 +220,18 @@ public class GlobalVariableResource {
         "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isGlobalVariableOwner(#id))"
     )
     @DeleteMapping("/global-variables/{id}")
-    public ResponseEntity<Void> deleteGlobalVariable(@PathVariable Long id) {
+    public ResponseEntity<List<String>> deleteGlobalVariable(@PathVariable Long id) {
         log.debug("REST request to delete GlobalVariable : {}", id);
-        globalVariableService.delete(id);
+        List<String> associatedProcesses = globalVariableService.getProcessNamesAssociatedWithGlobalVariable(id);
+        if (associatedProcesses.isEmpty()) {
+            globalVariableService.delete(id);
+            return ResponseEntity
+                .noContent()
+                .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+                .build();
+        }
         return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
+            .badRequest()
+            .body(associatedProcesses);
     }
 }

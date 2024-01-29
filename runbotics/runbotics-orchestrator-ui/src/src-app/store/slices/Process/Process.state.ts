@@ -1,4 +1,4 @@
-import { IProcess, IProcessInstance } from 'runbotics-common';
+import { IProcess, IProcessInstance, NotificationProcess } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
@@ -32,6 +32,7 @@ export interface ModelerState {
     variables: Variable[];
     isSaveDisabled: boolean;
     selectedElement?: BPMNElement;
+    currentProcessOutputElement?: BPMNElement;
     selectedAction?: IBpmnAction;
     passedInVariables?: string[];
     commandStack: CommandStackInfo;
@@ -44,6 +45,8 @@ export interface ProcessState {
         loading: LoadingType;
         currentRequestId: any;
         error: any;
+        processSubscriptions: NotificationProcess[];
+        currentProcessSubscription: NotificationProcess;
     };
     modeler: ModelerState;
     all: {
@@ -52,6 +55,12 @@ export interface ProcessState {
         ids: string[];
         page: Page<IProcess> | null;
     };
+}
+
+export interface UpdateDiagramRequest {
+    id?: number;
+    definition?: string | null;
+    globalVariableIds?: string[];
 }
 
 export type StartProcessResponse = Pick<

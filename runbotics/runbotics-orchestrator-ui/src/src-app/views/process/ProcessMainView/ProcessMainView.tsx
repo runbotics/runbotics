@@ -13,6 +13,7 @@ import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
+import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
 import ProcessMainViewManager from './ProcessMainView.manager';
@@ -63,6 +64,10 @@ const ProcessMainView: FC = () => {
     const handleMainTabsChange = (processTab: ProcessTab) => {
         router.push({ pathname: `/app/processes/${id}/${processTab}` });
     };
+
+    useEffect(() => () => {
+        dispatch(processInstanceActions.resetActive());
+    }, []);
 
     return (
         <ProcessInternalPage title={translate('Process.MainView.Meta.Title')} fullWidth>

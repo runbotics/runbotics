@@ -16,6 +16,7 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
+    "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Process triggerable icon",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Play icon",
     "Component.Tile.Process.Header.Alt.SquareIcon": "Square icon",
     "Component.Tile.Process.Header.Tooltip.RunProcess": "Run process",
@@ -161,11 +162,18 @@
     "Component.Cron.Locale.AltMonths.November": "NOV",
     "Component.Cron.Locale.AltMonths.December": "DEC",
 
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Save action",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title": "Attendance form: ",
     "Component.AttendedProcessFormModal.AttendedProcessModal.Title": "Input variables for",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label": "Pick a widget",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text": "Copy widget",
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.CopyMessage": "Widget copied!",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Success": "Successfully added {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Submit.Failed": "Failed to add {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Success": "Successfully deleted {{ name }} attended form",
     "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Failed": "Failed to delete {{ name }} attended form",
-    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Attendance is not defined for this process yet"
+    "Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip": "Attendance is not defined for this process yet",
+
+    "Component.NotificationTable.View.Header": "Subscribers",
+    "Component.NotificationTable.View.SearchBarPlaceholder": "Search",
+    "Component.NotificationTable.Results.Error": "No subscribers found"
 }

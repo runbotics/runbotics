@@ -6,9 +6,11 @@ import {
 
 import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
 import { StartProcessMessageBody } from '#core/websocket/listeners/process.listener.types';
+import { ActivityOwner } from '#core/bpm/bpmn.types';
 
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
+    processOutput?: Record<string, unknown>;
 }
 
 export interface IProcessEventData {
@@ -25,6 +27,8 @@ export interface IActivityEventData {
 }
 
 export interface DesktopTask extends BpmnExecutionEventMessageContent {
+    name?: string;
+    sourceId?: string;
     input?: Record<string, string> & {
         script: string;
     };
@@ -36,11 +40,13 @@ export interface DesktopTask extends BpmnExecutionEventMessageContent {
 export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnvironment {
     runbotic?: {
         disabled: boolean;
+        processOutput: boolean;
     };
 }
 
 export interface IProcessParams {
     variables: Record<string, any>;
+    callbackUrl?: string;
 }
 
 export interface IStartProcessInstance extends IProcessParams, Omit<StartProcessMessageBody, 'processId' | 'input'> {
@@ -68,10 +74,14 @@ export interface BpmnExecutionEventMessageContentError {
 
 export interface BpmnExecutionEventMessageExtendedContent extends BpmnExecutionEventMessageContent {
     error?: BpmnExecutionEventMessageContentError;
+    isSequenceFlow: boolean;
+    sequenceId: string;
+    sourceId: string;
 }
 
 export interface BpmnExecutionEventMessageExtendedApi extends BpmnExecutionEventMessageApi {
     readonly content: BpmnExecutionEventMessageExtendedContent;
+    readonly owner: ActivityOwner;
 }
 
 export interface IBpmnEngineEvent<T> {

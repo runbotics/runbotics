@@ -2,13 +2,11 @@ package com.runbotics.service;
 
 import com.runbotics.domain.*;
 import com.runbotics.repository.BotCollectionRepository;
-import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.criteria.JoinType;
 
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-import tech.jhipster.service.filter.StringFilter;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,55 +48,11 @@ public class BotCollectionQueryService extends QueryService<BotCollection> {
     }
 
     @Transactional(readOnly = true)
-    public Page<BotCollectionDTO> findByCriteria(BotCollectionCriteria criteria, User currentUser, Pageable page) {
-
-
-        String username = currentUser.getLogin();
-        Long id = currentUser.getId();
-        boolean isAdmin = currentUser.getAuthorities().toString().contains(AuthoritiesConstants.ADMIN);
-
-        log.debug("find by criteria : {}, page: {}", criteria, page);
-        if (criteria.getPublicBotsIncluded() != null) {
-            return botCollectionRepository
-                .findDistinctByPublicBotsIncludedAndCreatedByLoginOrUsers_Login(
-                    criteria.getPublicBotsIncluded().getEquals(),
-                    username,
-                    username,
-                    page
-                )
-                .map(botCollectionMapper::toDto);
-        }
-        if (criteria.getCreatedByName() != null) {
-            return botCollectionRepository
-                .findDistinctByCreatedByLoginContains(criteria.getCreatedByName().getContains(), page)
-                .map(botCollectionMapper::toDto);
-        }
-
-        if (criteria.getName() != null) {
-            return botCollectionRepository
-                .findAllUserCollectionsByNames(id, criteria.getName().getContains(), page)
-                .map(botCollectionMapper::toDto);
-        }
-
-        if (isAdmin) {
-            return botCollectionRepository
-                .findAll(createSpecification(criteria), page)
-                .map(botCollectionMapper::toDto);
-        } else {
-            return botCollectionRepository
-                .findAllUserCollections(id, page)
-                .map(botCollectionMapper::toDto);
-        }
-
-    }
-
-    @Transactional(readOnly = true)
     public long countByCriteria(BotCollectionCriteria criteria) {
         log.debug("count by criteria : {}", criteria);
         final Specification<BotCollection> specification = createSpecification(criteria);
         return botCollectionRepository.count(specification);
     }
-
 
     protected Specification<BotCollection> createSpecification(BotCollectionCriteria criteria) {
         Specification<BotCollection> specification = Specification.where(null);
@@ -125,6 +78,15 @@ public class BotCollectionQueryService extends QueryService<BotCollection> {
                         buildSpecification(
                             criteria.getCreatedBy(),
                             root -> root.join(BotCollection_.createdBy, JoinType.LEFT).get(User_.id)
+                        )
+                    );
+            }
+            if (criteria.getCreatedByName() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getCreatedByName(),
+                            root -> root.join(BotCollection_.createdBy, JoinType.LEFT).get(User_.email)
                         )
                     );
             }

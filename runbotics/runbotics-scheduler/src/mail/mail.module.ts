@@ -4,6 +4,8 @@ import { MailService } from './mail.service';
 import { UserModule } from '#/database/user/user.module';
 import { Logger } from '#/utils/logger';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { BotModule } from '#/database/bot/bot.module';
+import { ProcessModule } from '#/database/process/process.module';
 
 @Module({
     imports: [
@@ -27,6 +29,9 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
         }),
         UserModule,
         Logger,
+        BotModule,
+        ProcessModule,
+        UserModule,
     ],
     providers: [MailService],
     exports: [MailService],

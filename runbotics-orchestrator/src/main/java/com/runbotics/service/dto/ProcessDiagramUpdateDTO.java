@@ -4,6 +4,7 @@ import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class ProcessDiagramUpdateDTO implements Serializable {
@@ -15,6 +16,8 @@ public class ProcessDiagramUpdateDTO implements Serializable {
     @NotBlank
     @NotNull
     private String definition;
+
+    private List<String> globalVariableIds;
 
     public ProcessDiagramUpdateDTO() {
     }
@@ -35,6 +38,14 @@ public class ProcessDiagramUpdateDTO implements Serializable {
         this.definition = definition;
     }
 
+    public List<String> getGlobalVariableIds() {
+        return globalVariableIds;
+    }
+
+    public void setGlobalVariableIds(List<String> globalVariableIds) {
+        this.globalVariableIds = globalVariableIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,7 +56,7 @@ public class ProcessDiagramUpdateDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, definition);
+        return Objects.hash(id, definition, globalVariableIds);
     }
 
     @Override
@@ -53,6 +64,7 @@ public class ProcessDiagramUpdateDTO implements Serializable {
         return "ProcessDiagramUpdateDTO{" +
             "id=" + id +
             ", definition='" + definition + '\'' +
+            ", globalVariableIds='" + globalVariableIds + '\'' +
             '}';
     }
 }

@@ -1,0 +1,15 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="gasiorowskaa" id="20231128188433-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_USER', 'PROCESS_IS_ATTENDED_READ'),
+            ('ROLE_USER', 'PROCESS_IS_ATTENDED_EDIT')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

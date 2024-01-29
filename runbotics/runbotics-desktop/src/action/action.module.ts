@@ -13,7 +13,8 @@ import FileActionHandler from './file';
 import GeneralActionHandler from './general';
 import GoogleActionHandler from './google';
 import ImportActionHandler from './import';
-import JiraActionHandler from './jira';
+import JiraCloudActionHandler from './jira/jira-cloud';
+import JiraServerActionHandler from './jira/jira-server';
 import LoopActionHandler from './loop';
 import MailActionHandler from './mail';
 import { MicrosoftModule } from './microsoft';
@@ -29,6 +30,7 @@ import { MicrosoftGraphService } from './microsoft/microsoft-graph';
 import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
 import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
+import FolderActionHandler from './folder/folder.action-handler';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -41,7 +43,8 @@ const ALL_ACTION_HANDLERS = [
     GeneralActionHandler,
     GoogleActionHandler,
     ImportActionHandler,
-    JiraActionHandler,
+    JiraCloudActionHandler,
+    JiraServerActionHandler,
     LoopActionHandler,
     MailActionHandler,
     JavaScriptActionHandler,
@@ -56,6 +59,7 @@ const ALL_ACTION_HANDLERS = [
     DesktopActionHandler,
     VisualBasicActionHandler,
     ImageActionHandler,
+    FolderActionHandler,
 ];
 
 @Module({
@@ -67,4 +71,4 @@ const ALL_ACTION_HANDLERS = [
     providers: ALL_ACTION_HANDLERS,
     exports: ALL_ACTION_HANDLERS,
 })
-export class ActionModule {}
+export class ActionModule { }

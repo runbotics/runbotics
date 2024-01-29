@@ -27,6 +27,7 @@ const getExcelActions: () => Record<string, IBpmnAction> = () => ({
     [ExcelAction.SET_CELLS]: excelActions.getActionSetCells(),
     [ExcelAction.WORKSHEET_EXISTS]: excelActions.getActionWorksheetExists(),
     [ExcelAction.EXPORT_TO_CSV]: excelActions.getActionExportToCsv(),
+    [ExcelAction.EXPORT_HTML_TABLE]: excelActions.getActionExportHtmlTable(),
 });
 
 export default getExcelActions;

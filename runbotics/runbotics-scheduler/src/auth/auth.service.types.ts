@@ -4,6 +4,7 @@ export interface MutableBotParams {
     collection: IBotCollection;
     system: IBotSystem;
     version: string;
+    user: IUser;
 }
 
 export interface RegisterNewBotParams extends MutableBotParams {

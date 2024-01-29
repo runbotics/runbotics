@@ -7,7 +7,8 @@ import path from 'path';
 import ImportActionHandler from '#action/import';
 import MailActionHandler from '#action/mail';
 import LoopActionHandler from '#action/loop';
-import JIRAActionHandler from '#action/jira';
+import JiraCloudActionHandler from '#action/jira/jira-cloud';
+import JiraServerActionHandler from '#action/jira/jira-server';
 import BeeOfficeActionHandler from '#action/beeoffice';
 import FileActionHandler from '#action/file';
 import VariablesActionHandler from '#action/variable';
@@ -22,6 +23,7 @@ import BrowserActionHandler from '#action/browser';
 import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
 import DesktopActionHandler from '#action/desktop';
+import FolderActionHandler from '#action/folder';
 import VisualBasicActionHandler from '#action/visual-basic';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
@@ -59,7 +61,8 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly generalActionHandler: GeneralActionHandler,
         private readonly googleActionHandler: GoogleActionHandler,
         private readonly importActionHandler: ImportActionHandler,
-        private readonly jiraActionHandler: JIRAActionHandler,
+        private readonly jiraCloudActionHandler: JiraCloudActionHandler,
+        private readonly jiraServerActionHandler: JiraServerActionHandler,
         private readonly loopActionHandler: LoopActionHandler,
         private readonly mailActionHandler: MailActionHandler,
         private readonly javaScriptActionHandler: JavaScriptActionHandler,
@@ -69,6 +72,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly desktopActionHandler: DesktopActionHandler,
         private readonly visualBasicActionHandler: VisualBasicActionHandler,
         private readonly imageActionHandler: ImageActionHandler,
+        private readonly folderActionHandler: FolderActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -81,7 +85,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('general', generalActionHandler)
             .set('google', googleActionHandler)
             .set('import', importActionHandler)
-            .set('jira', jiraActionHandler)
+            .set('jiraCloud', jiraCloudActionHandler)
+            .set('jiraServer', jiraServerActionHandler)
             .set('loop', loopActionHandler)
             .set('mail', mailActionHandler)
             .set('javascript', javaScriptActionHandler)
@@ -91,7 +96,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('variables', variableActionHandler)
             .set('desktop', desktopActionHandler)
             .set('visualBasic', visualBasicActionHandler)
-            .set('image', imageActionHandler);
+            .set('image', imageActionHandler)
+            .set('folder', folderActionHandler)
     }
 
     async onModuleInit() {

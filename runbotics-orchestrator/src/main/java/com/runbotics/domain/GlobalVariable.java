@@ -1,7 +1,11 @@
 package com.runbotics.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 
 /**
@@ -39,6 +43,10 @@ public class GlobalVariable implements Serializable {
     @ManyToOne
     private User user;
 
+    @ManyToMany(mappedBy = "globalVariables")
+    @JsonIgnore
+    private Set<Process> processes = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -68,6 +76,10 @@ public class GlobalVariable implements Serializable {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public Set<Process> getProcesses() {
+        return this.processes;
     }
 
     public GlobalVariable description(String description) {
@@ -129,6 +141,10 @@ public class GlobalVariable implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setProcesses(Set<Process> processes) {
+        this.processes = processes;
     }
 
     public User getCreator() {

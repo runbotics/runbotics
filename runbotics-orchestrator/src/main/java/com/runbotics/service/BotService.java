@@ -1,5 +1,7 @@
 package com.runbotics.service;
 
+import com.runbotics.domain.User;
+import com.runbotics.service.criteria.BotCriteria;
 import com.runbotics.service.dto.BotDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,5 +55,5 @@ public interface BotService {
 
     List<BotDTO> saveAll(List<BotDTO> bots);
 
-    Page<BotDTO> getBotsWithCollection(Pageable pageable, List<String> collectionsNames, String login);
+    Page<BotDTO> getBotPageForUser(BotCriteria criteria, Pageable page, User user);
 }

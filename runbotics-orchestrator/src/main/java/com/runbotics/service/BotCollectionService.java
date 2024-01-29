@@ -1,6 +1,8 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.BotCollection;
+import com.runbotics.domain.User;
+import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +20,15 @@ public interface BotCollectionService {
 
     BotCollection getGuestCollection();
 
+    List<BotCollectionDTO> findAll();
+
     Page<BotCollectionDTO> findAll(Pageable pageable);
 
     Optional<BotCollectionDTO> findOne(UUID id);
 
     void delete(UUID id);
 
-    List<BotCollectionDTO> findAllForUser(String username);
+    List<BotCollectionDTO> getAllForUser(User user);
 
-    Page<BotCollectionDTO> findPageForUser(String username, Pageable pageable);
+    Page<BotCollectionDTO> getPageForUser(BotCollectionCriteria criteria, Pageable pageable, User user);
 }

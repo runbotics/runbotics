@@ -1,8 +1,15 @@
-import { Injectable, LoggerService, OnModuleInit, Optional } from '@nestjs/common';
+import { Injectable, LoggerService, Optional } from '@nestjs/common';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import { ServerConfigService } from '#config';
 import { getEnvValue } from '#utils/envReader';
+
+export enum LogLevel {
+    DEBUG = 'debug',
+    VERBOSE = 'verbose',
+    INFO = 'info',
+    WARN = 'warn',
+    ERROR = 'error'
+}
 
 const LOG_LEVEL_VALUES: Record<LogLevel, number> = {
     debug: 4,
@@ -12,13 +19,46 @@ const LOG_LEVEL_VALUES: Record<LogLevel, number> = {
     error: 0,
 };
 
-export declare type LogLevel = 'info' | 'error' | 'warn' | 'debug' | 'verbose';
-
 @Injectable()
-export class RunboticsLogger implements LoggerService, OnModuleInit {
+export class RunboticsLogger implements LoggerService {
     private static lastTimestamp?: number;
-    protected static winstonLogger = RunboticsLogger.createWinstonLogger('info');
+    private static logsFileEnabled: boolean;
+    private static logLevel: LogLevel;
+    protected static winstonLogger; // handler for files if files are allowed
     protected static internalConsole: any = RunboticsLogger.createInternalConsole();
+
+    constructor(
+        @Optional() protected context?: string,
+        @Optional() private readonly isTimestampEnabled = false
+    ) {
+        if (RunboticsLogger.logsFileEnabled === undefined)
+            RunboticsLogger.logsFileEnabled = this.setLogsFile();
+
+        if (RunboticsLogger.logLevel === undefined)
+            RunboticsLogger.logLevel = this.setLogLevel();
+
+        if (RunboticsLogger.winstonLogger === undefined)
+            RunboticsLogger.winstonLogger = RunboticsLogger.createWinstonLogger();
+    }
+
+    private setLogsFile() {
+        const logsFileEnabled = getEnvValue('RUNBOTICS_LOGGER_FILE_MODE');
+        if (!logsFileEnabled || logsFileEnabled === 'false' ) {
+            return false; // logs in file not enabled by default
+        } else {
+            return true;
+        }
+    }
+
+    private setLogLevel(): LogLevel {
+        const logLevel = getEnvValue('RUNBOTICS_LOGGER_LEVEL');
+        if (!logLevel || !Object.keys(LOG_LEVEL_VALUES).includes(logLevel)) {
+            return LogLevel.INFO; // default LogLevel value
+        } else {
+            return logLevel as LogLevel;
+        }
+    }
+
     private static createInternalConsole() {
         const internalConsole = {
             info: console.info.bind(console),
@@ -29,25 +69,28 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         };
 
         console.log = function (message?: any, ...optionalParams: any[]) {
-            RunboticsLogger.print('info', [message, ...optionalParams], 'RunboticsLogger');
+            RunboticsLogger.print(LogLevel.INFO, [message, ...optionalParams], 'RunboticsLogger');
         };
         console.info = function (message?: any, ...optionalParams: any[]) {
-            RunboticsLogger.print('info', [message, ...optionalParams], 'RunboticsLogger');
+            RunboticsLogger.print(LogLevel.INFO, [message, ...optionalParams], 'RunboticsLogger');
         };
         console.error = function (message?: any, ...optionalParams: any[]) {
-            RunboticsLogger.print('error', [message, ...optionalParams], 'RunboticsLogger');
+            RunboticsLogger.print(LogLevel.INFO, [message, ...optionalParams], 'RunboticsLogger');
         };
 
         return internalConsole;
     }
-    private static createWinstonLogger(level: string) {
+
+    private static createWinstonLogger() {
+        if (!RunboticsLogger.logsFileEnabled) return undefined;
+
         const logger = winston.createLogger({
             levels: LOG_LEVEL_VALUES,
             format: winston.format.simple(),
             transports: [
                 new DailyRotateFile({
                     dirname: 'logs',
-                    level: level,
+                    level: RunboticsLogger.logLevel,
                     filename: 'application-%DATE%.log',
                     datePattern: 'YYYY-MM-DD-HH',
                     zippedArchive: true,
@@ -60,45 +103,28 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
         return logger;
     }
 
-    constructor(
-        @Optional() protected context?: string, 
-        @Optional() private readonly isTimestampEnabled = false
-    ) {}
-
-    onModuleInit() {
-        let logLevel = getEnvValue('RUNBOTICS_LOGGER_LEVEL');
-        if (!logLevel) {
-            console.log('No log level found, back to default: info');
-            logLevel = 'info';
-        } else {
-            console.log('Log level from env: ' + logLevel);
-        }
-
-        RunboticsLogger.winstonLogger = RunboticsLogger.createWinstonLogger(logLevel);
-    }
-
     get module() {
         return this.context ? this.context : 'Nest.JS';
     }
 
     log(...data: any[]) {
-        RunboticsLogger.print('info', data, this.module, true);
+        RunboticsLogger.print(LogLevel.INFO, data, this.module, true);
     }
 
     error(...data: any[]) {
-        RunboticsLogger.print('error', data, this.module, true);
+        RunboticsLogger.print(LogLevel.ERROR, data, this.module, true);
     }
 
     warn(...data: any[]) {
-        RunboticsLogger.print('warn', data, this.module, true);
+        RunboticsLogger.print(LogLevel.WARN, data, this.module, true);
     }
 
     debug(...data: any[]) {
-        RunboticsLogger.print('debug', data, this.module, true);
+        RunboticsLogger.print(LogLevel.DEBUG, data, this.module, true);
     }
 
     verbose(...data: any[]) {
-        RunboticsLogger.print('verbose', data, this.module, true);
+        RunboticsLogger.print(LogLevel.VERBOSE, data, this.module, true);
     }
 
     static getTimestamp() {
@@ -116,61 +142,42 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
     public static print(type: LogLevel, data: any[], context = '', isTimeDiffEnabled = true) {
         let color;
         switch (type) {
-            case 'error':
+            case LogLevel.ERROR:
                 color = clc.red;
                 break;
-            case 'debug':
+            case LogLevel.DEBUG:
                 color = clc.magentaBright;
                 break;
-            case 'info':
+            case LogLevel.INFO:
                 color = clc.green;
                 break;
-            case 'warn':
+            case LogLevel.WARN:
                 color = clc.yellow;
                 break;
-            case 'verbose':
+            case LogLevel.VERBOSE:
                 color = clc.cyanBright;
                 break;
         }
 
-        const pidMessage = color(`[Nest] ${process.pid}   - `);
-        const contextMessage = context ? color(`[${context}] `) : '';
+        const pidMessage = `[Nest] ${process.pid}   - `;
+        const colorPidMessage = color(`[Nest] ${process.pid}   - `);
+        const contextMessage = context ? `[${context}] ` : '';
+        const colorContextMessage = context ? color(`[${context}] `) : '';
         const timestampDiff = this.updateAndGetTimestampDiff(isTimeDiffEnabled);
         const [firstLog, ...rest] = data;
         const timestamp = RunboticsLogger.getTimestamp();
         // this.winstonLogger.log(type == 'error' ? 'error': 'info',  `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest)
 
-        switch (getEnvValue('RUNBOTICS_LOGGER')) {
-            case 'winston':
-                this.winstonLogger.log(type, `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest);
-                RunboticsLogger.internalConsole[type](
-                    `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-            case 'electron':
-                if (!this.isLevelEnabled(type)) {
-                    return;
-                }
-                RunboticsLogger.internalConsole.info(
-                    `${type}: ${pidMessage}${timestamp}   ${contextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-            default:
-                if (!this.isLevelEnabled(type)) {
-                    return;
-                }
+        if (!this.isLevelEnabled(type)) return;
 
-                RunboticsLogger.internalConsole[type](
-                    `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog,
-                    ...rest,
-                    `${timestampDiff}`,
-                );
-                break;
-        }
+        RunboticsLogger.internalConsole[type](
+            `${colorPidMessage}${timestamp}   ${colorContextMessage} ` + firstLog,
+            ...rest,
+            `${timestampDiff}`,
+        );
+
+        if (RunboticsLogger.logsFileEnabled)
+            this.winstonLogger.log(type, `${pidMessage}${timestamp}   ${contextMessage} ` + firstLog, rest);
     }
 
     private static updateAndGetTimestampDiff(isTimeDiffEnabled?: boolean): string {
@@ -188,28 +195,10 @@ export class RunboticsLogger implements LoggerService, OnModuleInit {
     }
 
     static isLevelEnabled(level: LogLevel): boolean {
-        // const logLevels = RunboticsLogger.logLevels;
-        // return isLogLevelEnabled(level, logLevels);
-        return true;
+        const highestLevelValue = LOG_LEVEL_VALUES[RunboticsLogger.logLevel];
+        const targetLevelValue = LOG_LEVEL_VALUES[level];
+        return targetLevelValue <= highestLevelValue;
     }
-}
-
-/**
- * Checks if target level is enabled.
- * @param targetLevel target level
- * @param logLevels array of enabled log levels
- */
-export function isLogLevelEnabled(targetLevel: LogLevel, logLevels: LogLevel[] | undefined): boolean {
-    if (!logLevels || (Array.isArray(logLevels) && logLevels?.length === 0)) {
-        return false;
-    }
-    if (logLevels.includes(targetLevel)) {
-        return true;
-    }
-    const highestLogLevelValue = logLevels.map((level) => LOG_LEVEL_VALUES[level]).sort((a, b) => b - a)?.[0];
-
-    const targetLevelValue = LOG_LEVEL_VALUES[targetLevel];
-    return targetLevelValue >= highestLogLevelValue;
 }
 
 type ColorTextFn = (text: string) => string;

@@ -4,6 +4,8 @@ import { Repository, UpdateResult } from 'typeorm';
 import { GuestEntity } from './guest.entity';
 import { Guest } from 'runbotics-common';
 
+const relations = ['user'];
+
 @Injectable()
 export class GuestService {
     constructor(
@@ -12,22 +14,22 @@ export class GuestService {
     ) { }
 
     async findByUserId(userId: number): Promise<Guest> {
-        return this.guestRepository.findOne({ where: { userId } });
+        return this.guestRepository.findOne({ where: { user: { id: userId } }, relations });
     }
 
     async update(newGuest: Guest): Promise<UpdateResult> {
-        return this.guestRepository.update(newGuest.ip, newGuest);
+        return this.guestRepository.update(newGuest.ipHash, newGuest);
     }
 
     async setExecutionsCount(userId: number, newCount: number): Promise<UpdateResult> {
-        return this.guestRepository.update({ userId }, { executionsCount: newCount });
+        return this.guestRepository.update({ user: { id: userId } }, { executionsCount: newCount });
     }
 
     async incrementExecutionsCount(userId: number): Promise<UpdateResult> {
-        return this.guestRepository.increment({ userId }, 'executionsCount', 1);
+        return this.guestRepository.increment({ user: { id: userId } }, 'executionsCount', 1);
     }
 
     async decrementExecutionsCount(userId: number): Promise<UpdateResult> {
-        return this.guestRepository.decrement({ userId }, 'executionsCount', 1);
+        return this.guestRepository.decrement({ user: { id: userId } }, 'executionsCount', 1);
     }
 }

@@ -72,6 +72,15 @@ const excelActionsTranslations = {
     'Process.Details.Modeler.Actions.Excel.RunMacro.Name.Title': 'Macro name',
     'Process.Details.Modeler.Actions.Excel.RunMacro.Label': 'Run Macro',
     'Process.Details.Modeler.Actions.Excel.RunMacro.FunctionParams': 'Macro Parameters',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Label': 'Export HTML table',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange': 'Cell range',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.CellRange.Info': 'Cell range to crate html table, e.g. "A123:B456".',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.RowLevel': 'Row level',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.RowLevel.Info': 'For drop-down list tables, it specifies the level of data expansion in the target HTML table. The higher the number, the lower the level of table rows, e.g. "123"',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow': 'Table header',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.HeaderRow.Info': 'Row selected from the range, which will be displayed as table header, e.g. "123". If not provided, the first row from the range is selected.',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output': 'HTML table',
+    'Process.Details.Modeler.Actions.Excel.ExportHtmlTable.Output.Info': 'HTML table returned in type string',
 };
 
 

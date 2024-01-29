@@ -12,7 +12,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { botCollectionSelector } from '#src-app/store/slices/BotCollections';
 
-import { Wrapper } from './BotComponent.styles';
+import { StyledLabel, Wrapper } from './BotComponent.styles';
 
 
 
@@ -44,7 +44,9 @@ const BotCollectionComponent: VFC<BotCollectionProps> = ({
         <If condition={hasReadBotCollectionAccess}>
             <Wrapper>
                 <PrecisionManufacturingIcon />
-                {`${translate('Process.Run.BotCollection')}: `}
+                <StyledLabel>
+                    {`${translate('Process.Run.BotCollection')}: `}
+                </StyledLabel>
                 <Select
                     style={{ minWidth: '8rem', height: '1.75rem' }}
                     SelectDisplayProps={{

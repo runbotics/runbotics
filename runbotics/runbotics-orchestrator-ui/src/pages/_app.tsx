@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import moment from 'moment';
-import { default as NextApp, AppProps as PageProps } from 'next/app';
+import { AppContext, default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
 
 import { I18nextProvider } from 'react-i18next';
@@ -82,7 +82,7 @@ function App(props: AppProps) {
     );
 }
 
-App.getInitialProps = async (context) => {
+App.getInitialProps = async (context: AppContext) => {
     const pageProps = await NextApp.getInitialProps(context);
 
     return {

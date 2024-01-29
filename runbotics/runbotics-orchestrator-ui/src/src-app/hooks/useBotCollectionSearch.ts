@@ -8,9 +8,9 @@ import useQuery from './useQuery';
 const DEBOUNCE_TIME = 250;
 
 const useBotCollectionSearch = () => {
-    const query = useQuery();
-    const searchFromUrl = query.get('search');
-    const searchFieldFromUrl = query.get('searchField');
+    const { firstValueFrom } = useQuery();
+    const searchFromUrl = firstValueFrom('search');
+    const searchFieldFromUrl = firstValueFrom('searchField');
     const [search, setSearch] = useState(searchFromUrl || '');
     const [searchField, setSearchField] = useState(searchFieldFromUrl || '');
 

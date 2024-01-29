@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from 'axios';
-import { IBot } from 'runbotics-common';
+import { IBot, IUser, NotificationBot } from 'runbotics-common';
 
 import { IProcess } from '#src-app/types/model/process.model';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
@@ -38,4 +38,27 @@ export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: numb
     'bots/:id/logs',
     ({ id, lines }) => Axios.get<{ logs: string[] }>(`/scheduler/bots/${id}/logs?lines=${lines ?? 100}`)
         .then((response) => response.data.logs),
+);
+
+export const subscribeBotNotifications = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
+    'bot/subscribeBotNotifications',
+    (userBot) => Axios.post<NotificationBot>('/api/bot-notifications', userBot)
+        .then((response) => response.data)
+);
+
+export const unsubscribeBotNotifications = createAsyncThunk<void, NotificationBot['id']>(
+    'bot/unsubscribeBotNotifications',
+    (notificationId) => Axios.delete(`/api/bot-notifications/${notificationId}`)
+);
+
+export const getBotSubscriptionInfo = createAsyncThunk<NotificationBot[], IBot['id']>(
+    'bot/getBotSubscriptionInfo',
+    (botId) => Axios.get<NotificationBot[]>(`/api/bots/${botId}/notifications`)
+        .then((response) => response.data)
+);
+
+export const getBotSubscriptionInfoByBotIdAndUserId = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
+    'bot/getBotSubscriptionInfoByBotIdAndUserId',
+    ({ botId, userId }) => Axios.get<NotificationBot>(`/api/bot-notifications?botId=${botId}&userId=${userId}`)
+        .then((response) => response.data)
 );

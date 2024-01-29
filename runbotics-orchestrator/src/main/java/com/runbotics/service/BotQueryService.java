@@ -58,10 +58,13 @@ public class BotQueryService extends QueryService<Bot> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<BotDTO> findByCriteria(BotCriteria criteria, Pageable page, String login) {
+    public Page<BotDTO> findByCriteria(BotCriteria criteria, Pageable page) {
         if (criteria.getCollection() != null) {
             log.debug("find by criteria with collections filter : {}, page: {}", criteria, page);
-            return this.botService.getBotsWithCollection(page, criteria.getCollection().getIn(), login);
+            return this.botRepository
+                .findAllByCollectionNames(
+                    page, criteria.getCollection().getIn()
+                ).map(botMapper::toDto);
         }
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Bot> specification = createSpecification(criteria);

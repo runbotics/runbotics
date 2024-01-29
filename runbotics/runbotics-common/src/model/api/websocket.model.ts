@@ -5,6 +5,7 @@ export enum BotWsMessage {
     PROCESS_INSTANCE_EVENT = 'process-instance-event',
     PROCESS_INSTANCE_LOOP_EVENT = "process-instance-loop-event",
     PROCESS_INSTANCE = 'process-instance',
+    KEEP_ALIVE = 'keep-alive',
     LOG = "log",
 }
 

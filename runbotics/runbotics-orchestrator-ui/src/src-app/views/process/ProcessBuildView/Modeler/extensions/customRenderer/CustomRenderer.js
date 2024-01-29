@@ -18,13 +18,15 @@ import store from "../../../../../../store";
 import internalBpmnActions from "../../../../../../Actions";
 import { translate, checkIfKeyExists } from "#src-app/hooks/useTranslations";
 import { capitalizeFirstLetter } from "#src-app/utils/text";
+import { lightTheme } from "#src-app/theme/light";
 
 const HIGH_PRIORITY = 1500,
     TASK_BORDER_RADIUS = 5,
     COLOR_RED = "#ff5e5e",
     COLOR_GREY = "#e0e0e0",
     COLOR_DEFAULT = "#bbbbbb",
-    COLOR_BLACK = "#000000"
+    COLOR_BLACK = "#000000",
+    COLOR_ORANGE_SECONDARY = lightTheme.palette.secondary.main
 
 export default class CustomRenderer extends BaseRenderer {
     constructor(eventBus, bpmnRenderer) {
@@ -75,6 +77,18 @@ export default class CustomRenderer extends BaseRenderer {
             y: height / 2,
         });
 
+        var actionName = svgCreate("text");
+
+        svgAttr(actionName, {
+            fill: '#b3b3b3',
+            transform: `translate(${transformX}, ${transformY})`,
+            textAnchor: "middle",
+            dominantBaseline: "middle",
+            fontWeight: 500,
+            x: width / 2 - 75,
+            y: (height + 45) / 2,
+        });
+
         const actionId = label.actionId;
 
         if (actionId) {
@@ -101,13 +115,25 @@ export default class CustomRenderer extends BaseRenderer {
             );
 
             svgAppend(parentNode, text);
+
+            if (label.title !== '' && !label.actionId.startsWith('external.')) {
+                svgAppend(
+                    actionName,
+                    document.createTextNode(
+                        translatedLabel || label.actionId
+                    )
+                )
+
+                svgAppend(parentNode, actionName);
+            }
         }
 
     }
     pickColor(businessObject) {
-        const { disabled, validationError } = businessObject;
+        const { disabled, validationError, processOutput } = businessObject;
         if (disabled) return COLOR_GREY;
         if (validationError) return COLOR_RED;
+        if (processOutput) return COLOR_ORANGE_SECONDARY;
         return COLOR_DEFAULT;
     }
     pickStrokeColor(businessObject) {

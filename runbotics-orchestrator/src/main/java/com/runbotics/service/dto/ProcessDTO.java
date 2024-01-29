@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.BotCollection;
 import com.runbotics.domain.BotSystem;
 import com.runbotics.domain.Process;
+import com.runbotics.domain.ProcessOutput;
+
+import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * A DTO for the {@link Process} entity.
@@ -69,6 +72,12 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private Set<TagDTO> tags;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private Set<GlobalVariableDTO> globalVariables;
+
+    @JsonView(ProcessDTOViews.DefaultView.class)
+    private ProcessOutput outputType;
 
     public Long getId() {
         return id;
@@ -206,6 +215,22 @@ public class ProcessDTO implements Serializable {
         this.tags = tags;
     }
 
+    public Set<GlobalVariableDTO> getGlobalVariables() {
+        return globalVariables;
+    }
+
+    public void setGlobalVariables(Set<GlobalVariableDTO> globalVariables) {
+        this.globalVariables = globalVariables;
+    }
+
+    public ProcessOutput getOutputType() {
+        return outputType;
+    }
+
+    public void setOutputType(ProcessOutput outputType) {
+        this.outputType = outputType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -248,6 +273,7 @@ public class ProcessDTO implements Serializable {
             ", schedules=" + schedules +
             ", editor=" + editor +
             ", tags=" + tags +
+            ", outputType=" + outputType +
             '}';
     }
 }

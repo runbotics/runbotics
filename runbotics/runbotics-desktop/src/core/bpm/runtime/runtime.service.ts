@@ -20,8 +20,10 @@ import {
     RunboticModdleDescriptor,
     IProcessInstance,
     IProcess,
+    BpmnElementType,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 import { EventEmitter } from 'events';
 import { mkdirSync, rmSync } from 'fs';
 
@@ -31,7 +33,7 @@ import { Camunda } from '../CamundaExtension';
 import { customServices } from '../CustomServices';
 import { DesktopRunnerService } from '../desktop-runner';
 import { FieldResolver } from '../FieldResolver';
-import { IActivityOwner, IEnvironment } from '../bpmn.types';
+import { ActivityOwner, BpmnElement, Environment, OutboundSequence } from '../bpmn.types';
 import {
     DesktopTask,
     IActivityEventData,
@@ -39,11 +41,14 @@ import {
     IProcessEventData,
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
-    BpmnProcessInstance,
+    BpmnExecutionEventMessageExtendedApi,
+    BpmnProcessInstance, BpmnExecutionEventMessageExtendedContent,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
 import { ServerConfigService } from '#config';
+import { StorageService } from '#config';
+import LoopSubProcess from '#core/bpm/LoopSubProcessBehaviour';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -60,7 +65,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         private desktopRunnerService: DesktopRunnerService,
         private readonly loopHandlerService: LoopHandlerService,
         private readonly serverConfigService: ServerConfigService,
-    ) {}
+        private readonly storageService: StorageService,
+    ) { }
 
     onApplicationBootstrap() {
         this.monitor();
@@ -115,7 +121,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     public getRuntimeStatus() {
         const processInstancesCount = Object.keys(this.processInstances).length;
         const enginesCount = Object.keys(this.engines).length;
-    
+
         return { processInstancesCount, enginesCount };
     }
 
@@ -124,9 +130,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             const { processInstancesCount, enginesCount } = this.getRuntimeStatus();
 
             this.logger.warn(`Process instances: ${processInstancesCount} Engines: ${enginesCount}`);
-        }, 100000);
+        }, 60000);
     }
-    
+
     public startProcessInstance = async (
         request: IStartProcessInstance
     ): Promise<string> => {
@@ -136,7 +142,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...request,
             id: processInstanceId,
             status: ProcessInstanceStatus.INITIALIZING,
+            created: dayjs().toISOString(),
             ...(request.userId && { user: { id: request.userId } }),
+            ...(request.callbackUrl && { callbackUrl: request.callbackUrl }),
         };
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
@@ -184,8 +192,12 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             }
         );
 
-        listener.on('activity.start', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+        listener.on('activity.start', (api: BpmnExecutionEventMessageExtendedApi) => {
+            if ((api.environment as Environment).runbotic?.disabled) return;
+
+            if ((api.environment as Environment).runbotic?.processOutput) {
+                engine.execution.environment.output.BPMNElementId = api.id;
+            }
 
             if (this.loopHandlerService.shouldSkipElement(api)) return;
 
@@ -194,6 +206,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     api.executionId,
                     this.loopHandlerService.getIteratorFromElement(api)
                 );
+            }
+
+            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) {
+                prepareGatewayToFlowProcess(api);
+                return;
             }
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.start`);
@@ -208,11 +225,14 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             });
         });
 
-        listener.on('activity.end', (api: BpmnExecutionEventMessageApi) => {
-            if ((api.environment as IEnvironment).runbotic?.disabled) return;
+        listener.on('activity.end', (api: BpmnExecutionEventMessageExtendedApi) => {
+            if ((api.environment as Environment).runbotic?.disabled) return;
 
             this.logger.log(`${getActivityLogPrefix(api)} activity.end `);
+
             if (this.loopHandlerService.shouldSkipElement(api)) return;
+
+            if (api.content.type === BpmnElementType.EXCLUSIVE_GATEWAY) return;
 
             if (!this.processInstances[processInstance.id]) {
                 this.activityEventBus.publish({
@@ -236,7 +256,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             });
         });
 
-        listener.on('activity.stop', (api: BpmnExecutionEventMessageApi) => {
+        listener.on('activity.stop', (api: BpmnExecutionEventMessageExtendedApi) => {
             this.logger.log(`${getActivityLogPrefix(api)} activity.stop`);
 
             this.activityEventBus.publish({
@@ -246,7 +266,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             });
         });
 
-        listener.on('activity.error', (api: BpmnExecutionEventMessageApi) => {
+        listener.on('activity.error', (api: BpmnExecutionEventMessageExtendedApi) => {
             this.logger.error(`${getActivityLogPrefix(api)} activity.error`);
 
             this.activityEventBus.publish({
@@ -254,6 +274,16 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 eventType: ProcessInstanceEventStatus.ERRORED,
                 activity: api,
             });
+        });
+
+        listener.on('flow.take', (api: BpmnExecutionEventMessageExtendedApi) => {
+            if (this.isSequenceFlowAfterGateway(api?.content) && !this.isSequenceWithoutExpression(api.owner)) {
+                this.activityEventBus.publish({
+                    processInstance,
+                    eventType: ProcessInstanceEventStatus.COMPLETED,
+                    activity: api,
+                });
+            }
         });
 
         // @ts-ignore
@@ -275,6 +305,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 const processInstance = {
                     ...this.processInstances[processInstanceId],
                     status: ProcessInstanceStatus.ERRORED,
+                    error: error.message,
                 };
 
                 // TODO need to fine real output
@@ -336,7 +367,28 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 };
                 processInstance.variables =
                     execution.definitions[0]?.environment.variables;
+
+                const BPMNElementId =
+                    execution.environment.output.BPMNElementId;
+                if (BPMNElementId) {
+                    const BPMNElement =
+                        execution.definitions[0]?.getElementById(BPMNElementId) as BpmnElement;
+                    const processOutputName = BPMNElement
+                        .behaviour
+                        .extensionElements
+                        .values[0]
+                        .outputParameters[0]
+                        .value;
+
+                    processInstance.processOutput = {
+                        [processOutputName]: execution.environment.output[processOutputName],
+                    };
+
+                    delete execution.environment.output['BPMNElementId'];
+                }
+
                 processInstance.output = execution.environment.output;
+
                 this.processInstances[processInstanceId] = processInstance;
 
                 setTimeout(() => {
@@ -371,10 +423,25 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             }
         });
 
-        const getActivityLogPrefix = (api: BpmnExecutionEventMessageApi) => {
+        const prepareGatewayToFlowProcess = (api: BpmnExecutionEventMessageExtendedApi) => {
+            if (this.getSequencesWithoutExpression(api.owner as ActivityOwner).length === 0) {
+                this.saveGatewayNameInCache(api);
+            } else {
+                this.activityEventBus.publish({
+                    processInstance,
+                    eventType: ProcessInstanceEventStatus.ERRORED,
+                    activity: api,
+                    iteratorName: this.loopHandlerService.getIteratorNameById(
+                        api.content.parent.executionId
+                    ),
+                });
+            }
+        };
+
+        const getActivityLogPrefix = (api: BpmnExecutionEventMessageExtendedApi) => {
             const activityType =
                 (api.content as DesktopTask)?.input?.script ?? api.content.type;
-            const activityLabel = (api.owner as IActivityOwner).behaviour.label;
+            const activityLabel = (api.owner as ActivityOwner).behaviour.label;
 
             const baseLogPrefix = `[${processInstanceId}] [${api.executionId}] [${activityType}]`;
 
@@ -420,6 +487,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         // passed to Camunda, helps store output variables in the scope of a single process
         const processEnvironment = {};
 
+        const typeResolver = (activityTypes) => {
+            activityTypes['bpmn:SubProcess'] = LoopSubProcess;
+            return activityTypes;
+        };
+
         const engine = Engine({
             name: process.name,
             source: process.definition,
@@ -434,6 +506,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             expressions: {
                 resolveExpression: Expressions.resolveExpression,
             },
+            typeResolver,
         });
 
         this.engines[processInstanceId] = engine;
@@ -473,7 +546,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     )) as DesktopTask['input'];
                     const executionId = input.content.executionId;
                     const runboticsExecutionEnvironment: RunBoticsExecutionEnvironment =
-                    executionContext.environment;
+                        executionContext.environment;
 
                     if (runboticsExecutionEnvironment.runbotic?.disabled) {
                         this.logger.warn(
@@ -494,8 +567,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                             input: desktopTask.input,
                             processInstanceId,
                             rootProcessInstanceId:
-                            this.processInstances[processInstanceId]
-                                .rootProcessInstanceId,
+                                this.processInstances[processInstanceId]
+                                    .rootProcessInstanceId,
                             userId: this.processInstances[processInstanceId].user
                                 ?.id,
                             executionContext,
@@ -554,4 +627,26 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         // globalVariables[input.variable] = input.value;
         definition.environment.assignVariables(globalVariables);
     }
+
+    public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound
+        .filter(outbound => this.hasOutputSequenceWithoutExpression(outbound))
+        .map(outbound => outbound.behaviour.name ?? outbound.behaviour.id);
+
+    private hasOutputSequenceWithoutExpression = (outbound: OutboundSequence): boolean => !outbound?.isDefault &&
+        !outbound?.behaviour?.conditionExpression?.body?.trim();
+
+    public isSequenceWithoutExpression = (owner: ActivityOwner): boolean => !owner?.isDefault &&
+        !owner?.behaviour?.conditionExpression?.body?.trim();
+
+    private saveGatewayNameInCache = (api: BpmnExecutionEventMessageExtendedApi) => {
+        const gatewayName = api.name ?? api.id;
+        this.storageService.setValue(api.id, gatewayName);
+    };
+
+    private isSequenceFlowAfterGateway = (content: BpmnExecutionEventMessageExtendedContent) => (
+        content &&
+        content.type === BpmnElementType.SEQUENCE_FLOW &&
+        content.isSequenceFlow &&
+        content.sourceId.includes('Gateway_')
+    );
 }

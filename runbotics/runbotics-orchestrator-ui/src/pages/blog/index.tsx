@@ -2,10 +2,7 @@ import { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import {
-    getBlogMainCache,
-    recreateCache
-} from '#contentful/blog-main';
+import { getBlogMainCache, isCached, recreateCache } from '#contentful/blog-main';
 
 import {
     BlogPost,
@@ -45,21 +42,22 @@ const BlogPage: VFC<Props> = ({ posts, categories, tags, page, featuredPost }) =
 
 export default BlogPage;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query, res, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, res }) => {
+    const language = locale as Language;
+
+    if (!isCached(language)) {
+        await recreateCache();
+    } else {
+        res.setHeader('X-Cache', 'HIT');
+    }
+
+    const cache = getBlogMainCache(language);
+
     const metadata: MetadataTags = {
         title: 'RunBotics | Blog',
         description: 'RunBotics - Blog',
         image: BlogBg.src,
     };
-
-    let cache = getBlogMainCache(locale as Language);
-
-    if (!cache) {
-        cache = await recreateCache(locale as Language);
-
-    } else {
-        res.setHeader('X-Cache', 'HIT');
-    }
 
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);

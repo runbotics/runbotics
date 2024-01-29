@@ -9,17 +9,20 @@ import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
 import getFileActions from '#src-app/Actions/file.actions';
+import getFolderActions from '#src-app/Actions/folder.actions';
 import getGeneralActions from '#src-app/Actions/general.actions';
 import getGoogleSheetsActions from '#src-app/Actions/googleSheets.actions';
 import getImageActions from '#src-app/Actions/image.actions';
 import getJavascriptActions from '#src-app/Actions/javascript.actions';
-import getJiraActions from '#src-app/Actions/jira.actions';
+import getJiraCloudActions from '#src-app/Actions/jira-cloud.actions';
+import getJiraServerActions from '#src-app/Actions/jira-server.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
@@ -91,17 +94,23 @@ const useInternalActionsGroups = (): Record<
             ),
             items: Object.values(getGoogleSheetsActions())
         },
-        jira: {
-            label: translate(
-                'Process.Details.Modeler.ActionsGroup.Jira'
-            ),
-            items: Object.values(getJiraActions())
+        jiraCloud: {
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraCloud'),
+            items: Object.values(getJiraCloudActions())
+        },
+        jiraServer: {
+            label: translate('Process.Details.Modeler.ActionsGroup.JiraServer'),
+            items: Object.values(getJiraServerActions())
         },
         file: {
             label: translate(
                 'Process.Details.Modeler.ActionsGroup.File'
             ),
             items: Object.values(getFileActions())
+        },
+        folder: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Folder'),
+            items: Object.values(getFolderActions())
         },
         image: {
             label: translate('Process.Details.Modeler.ActionsGroup.Image'),
@@ -156,7 +165,9 @@ const useInternalActionsGroups = (): Record<
             items: Object.values(getApplicationActions())
         },
         visualBasic: {
-            label: 'Visual Basic',
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.VisualBasic'
+            ),
             items: Object.values(getVisualBasicActions())
         },
         external: {

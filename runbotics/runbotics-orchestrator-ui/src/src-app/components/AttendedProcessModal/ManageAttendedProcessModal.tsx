@@ -10,7 +10,12 @@ import {
     Grid,
     LinearProgress,
     Tooltip,
-    Typography
+    Typography,
+    Select,
+    MenuItem,
+    InputLabel,
+    FormControl,
+    SelectChangeEvent
 } from '@mui/material';
 import {
     FormProps,
@@ -21,9 +26,10 @@ import {
 } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
-import { IProcess } from 'runbotics-common';
+import { IProcess, FeatureKey } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
@@ -35,6 +41,7 @@ import ErrorBoundary from '../utils/ErrorBoundary';
 
 import If from '../utils/If';
 
+const WIDGET_NAME_MAX_LENGTH = 320;
 
 interface AdminModalProps {
     process: IProcess;
@@ -57,15 +64,6 @@ const schema: JSONSchema7 = {
     required: ['form']
 };
 
-const uiSchema: UiSchema = {
-    form: {
-        'ui:widget': 'EditorWidget',
-        'ui:options': {
-            language: 'json'
-        }
-    }
-};
-
 function isJsonValid(str) {
     try {
         JSON.parse(str);
@@ -75,6 +73,13 @@ function isJsonValid(str) {
     return true;
 }
 
+const selectInputStyle = {
+    width: `${WIDGET_NAME_MAX_LENGTH}px`,
+    marginRight: '20px'
+};
+
+
+// eslint-disable-next-line max-lines-per-function
 const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     open,
     setOpen,
@@ -90,6 +95,21 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
     const [live, setLive] = useState<any>();
     const [loading, setLoading] = useState(false);
     const isDeleteDisabled = !process?.executionInfo;
+
+    const { DatePickerWidget, FileDropzoneWidget } = customWidgets;
+    const filteredCustomWidgets = { DatePickerWidget, FileDropzoneWidget };
+    const [selectedWidget, setSelectedWidget] = useState('');
+    const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
+
+    const uiSchema: UiSchema = {
+        form: {
+            'ui:widget': 'EditorWidget',
+            'ui:options': {
+                language: 'json',
+                readonly: !hasEditProcessAttendAccess
+            }
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -110,6 +130,24 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
         setDraft(e.formData);
     };
 
+    const handleSelectChange = (e: SelectChangeEvent<string>) => {
+        setSelectedWidget(e.target.value);
+    };
+
+    const copyWidgetToClipboard = (e) => {
+        const copyObject = {
+            '<field name>': {
+                'ui:widget': selectedWidget
+            }
+        };
+
+        navigator.clipboard.writeText(JSON.stringify(copyObject).slice(1, -1));
+        e.target.innerText = translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.CopyMessage');
+        setTimeout(() => {
+            e.target.innerText = translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text');
+        }, 3000);
+    };
+
     const deleteButton = (
         <Button
             color="primary"
@@ -117,8 +155,18 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                 onDelete();
                 setOpen(false);
             }}
-            disabled={isDeleteDisabled}>
+            disabled={isDeleteDisabled}
+        >
             {translate('Common.Delete')}
+        </Button>
+    );
+
+    const cancelButton = (
+        <Button
+            color="primary"
+            onClick={() => setOpen(false)}
+        >
+            {translate('Common.Cancel')}
         </Button>
     );
 
@@ -128,10 +176,10 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
             onClose={() => setOpen(false)}
             maxWidth="xl"
             fullWidth>
-            <DialogTitle>
+            <DialogTitle fontSize={20}>
                 {translate(
                     'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Title'
-                )}{' '}
+                )}
                 {process.name}
             </DialogTitle>
             <DialogContent>
@@ -175,30 +223,62 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
                         )}
                     </Grid>
                 </Grid>
+                <FormControl
+                    sx={{ flexDirection: 'row', alignItems: 'center', marginTop: '5px' }}
+                >
+                    <InputLabel
+                        sx={selectInputStyle}
+                    >
+                        {translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label')}
+                    </InputLabel>
+                    <Select
+                        variant='outlined'
+                        label={translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Label')}
+                        sx={selectInputStyle}
+                        value={selectedWidget}
+                        onChange={handleSelectChange}
+                    >
+                        {Object.keys(filteredCustomWidgets).map(widget =>
+                            <MenuItem
+                                key={widget}
+                                value={widget}
+                            >
+                                {widget}
+                            </MenuItem>
+                        )}
+                    </Select>
+                    <Button
+                        variant='contained'
+                        disabled={!selectedWidget}
+                        onClick={copyWidgetToClipboard}
+                    >
+                        {translate('Component.AttendedProcessFormModal.ManageAttendedProcessModal.Select.Widget.Button.Text')}
+                    </Button>
+                </FormControl>
             </DialogContent>
             <DialogActions>
-                <If condition={isDeleteDisabled} else={deleteButton}>
-                    <Tooltip
-                        title={translate(
-                            'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip'
-                        )}>
-                        <span>{deleteButton}</span>
-                    </Tooltip>
+                <If condition={hasEditProcessAttendAccess} else={cancelButton}>
+                    <If condition={isDeleteDisabled} else={deleteButton}>
+                        <Tooltip
+                            title={translate(
+                                'Component.AttendedProcessFormModal.ManageAttendedProcessModal.Delete.Tooltip'
+                            )}>
+                            <span>{deleteButton}</span>
+                        </Tooltip>
+                    </If>
+                    {cancelButton}
+                    <Button
+                        type="submit"
+                        disabled={loading}
+                        variant="contained"
+                        color="primary"
+                        autoFocus
+                        onClick={() => {
+                            submitFormRef.current.click();
+                        }}>
+                        {translate('Common.Save')}
+                    </Button>
                 </If>
-                <Button color="primary" onClick={() => setOpen(false)}>
-                    {translate('Common.Cancel')}
-                </Button>
-                <Button
-                    type="submit"
-                    disabled={loading}
-                    variant="contained"
-                    color="primary"
-                    autoFocus
-                    onClick={() => {
-                        submitFormRef.current.click();
-                    }}>
-                    {translate('Common.Save')}
-                </Button>
             </DialogActions>
         </Dialog>
     );

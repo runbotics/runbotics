@@ -219,6 +219,9 @@ jobs:
       - name: Install dependencies
         run: ${{ env.RUSH }} install -t .
 
+      - name: Execute Unit test
+        run: $RUSHX test
+
       - name: Build
         run: ${{ env.RUSH }} rebuild -t . --verbose
 

@@ -15,7 +15,14 @@ import { Logger } from '#/utils/logger';
 import { StartProcessRequest, StartProcessResponse } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
-    IProcess, WsMessage, ScheduledProcess, InstantProcess, ProcessInput, TriggerEvent, Role,
+    IProcess,
+    WsMessage,
+    ScheduledProcess,
+    InstantProcess,
+    ProcessInput,
+    TriggerEvent,
+    Role,
+    JobData,
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
@@ -27,13 +34,13 @@ export class QueueService implements OnModuleInit {
     private readonly logger = new Logger(QueueService.name);
 
     constructor(
-        @InjectQueue('scheduler') private readonly processQueue: Queue,
+        @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
         private readonly processService: ProcessService,
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
         private readonly serverConfigService: ServerConfigService,
-    ) {}
+    ) { }
 
     async onModuleInit() {
         await this.initializeQueue();
@@ -97,7 +104,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log(`Job with id: ${id} successfully deleted`);
     }
 
-    async deleteQueueJobsBySchedule(id: string) {
+    async deleteQueueJobsBySchedule(id: JobData['id']) {
         const jobs = await this.processQueue.getJobs(['delayed', 'waiting', 'active', 'paused'])
             .then(jobs => jobs.filter(job => job.data.id === id));
 
@@ -175,14 +182,15 @@ export class QueueService implements OnModuleInit {
     private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
 
-        if (!input?.variables || Object.keys(input.variables).length === 0) {
+        const requiredVariables = getVariablesFromSchema(process.executionInfo, true);
+        if (!requiredVariables.length) return;
+        if (!input?.variables) {
             const err = 'You haven\'t provided variables for attended process';
             this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
             throw new BadRequestException(err);
         }
 
         const passedVariables = input.variables;
-        const requiredVariables = getVariablesFromSchema(JSON.parse(process.executionInfo).schema, true);
         const missingVariables = difference(requiredVariables, Object.keys(passedVariables));
         if (missingVariables.length > 0) {
             const err = `You haven't provided variables for attended process: ${missingVariables.join(', ')}`;
@@ -213,7 +221,7 @@ export class QueueService implements OnModuleInit {
             return;
         }
 
-        await this.deleteQueueJobsBySchedule(id.toString());
+        await this.deleteQueueJobsBySchedule(id);
 
         await this.processQueue.removeRepeatableByKey(scheduledJob.key);
         this.uiGateway.server.emit(WsMessage.REMOVE_SCHEDULE_PROCESS, scheduledJob);
@@ -221,7 +229,7 @@ export class QueueService implements OnModuleInit {
     }
 
     private async deleteAllJobs() {
-        const jobs = await this.processQueue.getJobs(['active', 'delayed','paused', 'waiting']);
+        const jobs = await this.processQueue.getJobs(['active', 'delayed', 'paused', 'waiting']);
         await Promise.all(jobs.map(job => job.remove()));
     }
 

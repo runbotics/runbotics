@@ -9,11 +9,13 @@ import getCsvActions from './csv.actions';
 import getDesktopActions from './desktop.actions';
 import getExcelActions from './excel.actions';
 import getFileActions from './file.actions';
+import getFolderActions from './folder.actions';
 import getGeneralActions from './general.actions';
 import getGoogleSheetsActions from './googleSheets.actions';
 import getImageActions from './image.actions';
 import getJavascriptActions from './javascript.actions';
-import getJiraActions from './jira.actions';
+import getJiraCloudActions from './jira-cloud.actions';
+import getJiraServerActions from './jira-server.actions';
 import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
 import getPowerPointActions from './powerpoint.actions';
@@ -30,6 +32,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getGeneralActions(),
     ...getVariablesActions(),
     ...getFileActions(),
+    ...getFolderActions(),
     ...getCsvActions(),
     ...getCloudExcelActions(),
     ...getCloudFileActions(),
@@ -39,7 +42,8 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getMailActions(),
     ...getAsanaActions(),
     ...getGoogleSheetsActions(),
-    ...getJiraActions(),
+    ...getJiraCloudActions(),
+    ...getJiraServerActions(),
     ...getApiActions(),
     ...getExcelActions(),
     ...getDesktopActions(),

@@ -30,6 +30,14 @@ export class Expressions {
         expressionFnContext
     ) {
         Expressions.initialize();
+
+        if (Expressions.isOutputVariableToSave(templatedString, context)) {
+            context.environment.variables[`${context.environment.output?.variableName}`] = context.content.output[0];
+        } else if (context.environment?.variables?.content?.type === 'bpmn:SubProcess') {
+            const elementVariableName = context.environment.variables?.content?.input?.elementVariable;
+            context.environment.variables[elementVariableName] = context.environment.variables?.content?.[elementVariableName];
+        }
+
         let jexlResult = Expressions.tryResolveJexlExpression(
             templatedString,
             context,
@@ -46,8 +54,15 @@ export class Expressions {
         } else {
             result = jexlResult.result;
         }
-
         return result;
+    }
+
+    private static isOutputVariableToSave(templatedString, context) {
+        return templatedString &&
+            templatedString.includes('content.output') &&
+            context?.content?.output?.length > 0 &&
+            context?.content?.output[0] !== undefined &&
+            context?.environment?.output?.variableName;
     }
 
     private static tryResolveJexlExpression(
@@ -80,13 +95,9 @@ export class Expressions {
 
             try {
                 const parsedProperty = JSON.parse(property);
-                if (this.checkIsCollection(parsedProperty)) {
-                    response.result = parsedProperty;
-                } else {
-                    response.result = property;
-                }
+                response.result = parsedProperty;
             } catch (error) {
-                response.result = property;
+                response.result = property === 'undefined' ? undefined : property;
             }
 
             if (property === "true") {
@@ -132,7 +143,7 @@ export class Expressions {
                 expressionFnContext
             );
             if (expressionMatch.input === expressionMatch[0]) {
-                return contextValue ?? String(contextValue);
+                return contextValue;
             }
 
             result = result.replace(
