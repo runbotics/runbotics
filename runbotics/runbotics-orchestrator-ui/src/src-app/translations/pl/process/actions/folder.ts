@@ -8,6 +8,12 @@ const folderActionsTranslations: typeof englishFolderActionsTranslations = {
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Label': 'Wyświetl pliki',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path': 'Ścieżka',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name': 'Nazwa',
+    'Process.Details.Modeler.Actions.Folder.Create.Label': 'Stwórz folder',
+    'Process.Details.Modeler.Actions.Folder.Create.Name': 'Nazwa',
+    'Process.Details.Modeler.Actions.Folder.Create.Name.Info': 'Nazwa folderu do utworzenia',
+    'Process.Details.Modeler.Actions.Folder.Create.Output.Info': 'Zapisz ścieżkę do utworzonego folderu jako zmienną',
+    'Process.Details.Modeler.Actions.Folder.Path': 'Ścieżka',
+    'Process.Details.Modeler.Actions.Folder.Path.Info': 'Ścieżka do nadrzędnego folderu w hierarchii plików',
 };
 
 export default folderActionsTranslations;

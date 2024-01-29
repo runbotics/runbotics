@@ -1,4 +1,4 @@
-import { FolderAction } from 'runbotics-common';
+import { FolderAction, ActionRegex } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from './types';
 
@@ -75,6 +75,82 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    name: undefined,
+                },
+            }
+        }
+    },
+    'folder.create': {
+        id: FolderAction.CREATE,
+        label: translate('Process.Details.Modeler.Actions.Folder.Create.Label'),
+        script: FolderAction.CREATE,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Folder.Create.Label'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Create.Name'),
+                                type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Path'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['name', 'path'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Create.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Path.Info'),
+                        },
+                    },
+                },
+                output: {
+                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                    type: 'object',
+                    properties: {
+                        variableName: {
+                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                            type: 'string',
+                        }
+                    },
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Create.Output.Info'),
+                            pattern: ActionRegex.VARIABLE_NAME,
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
