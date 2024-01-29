@@ -25,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -195,19 +194,29 @@ public class BotCollectionResource {
 
     @GetMapping("bot-collection/current-user")
     public ResponseEntity<List<BotCollectionDTO>> getBotCollectionsForCurrentUser() {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("REST request to get all collections for user : {}", currentUsername);
-        List<BotCollectionDTO> botCollectionDTOS = botCollectionService.findAllForUser(currentUsername);
-        return ResponseEntity.ok().body(botCollectionDTOS);
+        User currentUser = userService.getUserWithAuthorities().get();
+        log.debug("REST request to get all collections for user : {}", currentUser.getEmail());
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(currentUser);
+
+        List<BotCollectionDTO> botCollection = hasRequesterRoleAdmin
+            ? botCollectionService.findAll()
+            : botCollectionService.getAllForUser(currentUser);
+
+        return ResponseEntity.ok().body(botCollection);
     }
 
     @GetMapping("bot-collection-page/current-user")
     public ResponseEntity<Page<BotCollectionDTO>> getBotCollectionsPageForCurrentUser(Pageable pageable, BotCollectionCriteria criteria) {
         User currentUser = userService.getUserWithAuthorities().get();
+        log.debug("REST request to get page collections for user : {}", currentUser.getEmail());
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(currentUser);
 
-        log.debug("REST request to get page collections for user : {}", currentUser.getLogin());
-        Page<BotCollectionDTO> botCollectionDTOS = botCollectionQueryService.findByCriteria(criteria,currentUser, pageable);
-        return ResponseEntity.ok().body(botCollectionDTOS);
+        Page<BotCollectionDTO> page = hasRequesterRoleAdmin
+            ? botCollectionQueryService.findByCriteria(criteria, pageable)
+            : botCollectionService.getPageForUser(criteria, pageable, currentUser);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page);
     }
 
     boolean isPublicOrGuest(UUID id){

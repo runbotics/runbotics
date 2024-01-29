@@ -1,41 +1,83 @@
 import React, { VFC } from 'react';
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton, Menu } from '@mui/material';
-import { FeatureKey, IBot } from 'runbotics-common';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography,
+} from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { IBot } from 'runbotics-common';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 
-import If from '#src-app/components/utils/If';
-import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import { useDispatch } from '../../../store';
+import { botActions } from '../../../store/slices/Bot';
 
-import ActionBotButtonDelete from './ActionBotButton.delete';
+interface ActionBotButtonDelete {
+    bot: IBot;
+    open: boolean;
+    setOpen: (state: boolean) => void;
+    onClose: () => void;
+}
 
+const ActionBotButtonDelete: VFC<ActionBotButtonDelete> = ({ bot, open, setOpen, onClose }) => {
+    const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+    const { translate } = useTranslations();
 
-const ActionBotButton: VFC<{ bot: IBot }> = ({ bot }) => {
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const { id, installationId: name } = bot;
-    const hasDeleteBotAccess = useFeatureKey([FeatureKey.BOT_DELETE]);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    const handleSubmit = async () => {
+        setOpen(false);
 
-    const handleClose = () => {
-        setAnchorEl(null);
+        await dispatch(botActions.deleteById({ id }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar(
+                    translate('Bot.Actions.DeletionSuccessMessage', { name }),
+                    {
+                        variant: 'success',
+                    },
+                );
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    translate('Bot.Actions.DeletionFailedMessage', { name }),
+                    {
+                        variant: 'error',
+                    },
+                );
+            })
+            .finally(() => {
+                onClose();
+            });
     };
 
     return (
         <>
-            <IconButton aria-label="settings" onClick={handleClick}>
-                <MoreVertIcon />
-            </IconButton>
-            <Menu id="bot-collection-tile-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
-                <If condition={hasDeleteBotAccess}>
-                    <ActionBotButtonDelete name={name} id={id} />
-                </If>
-            </Menu>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+                <DialogTitle>
+                    {translate('Bot.Actions.Delete.TitleWithName', { name })}
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">
+                        {translate('Bot.Actions.Delete.Confirmation.Question', { name })}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="primary" onClick={() => setOpen(false)}>
+                        {translate('Common.Cancel')}
+                    </Button>
+                    <Button variant="contained" color="primary" autoFocus onClick={handleSubmit}>
+                        {translate('Common.Confirm')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
 
-export default ActionBotButton;
+export default ActionBotButtonDelete;

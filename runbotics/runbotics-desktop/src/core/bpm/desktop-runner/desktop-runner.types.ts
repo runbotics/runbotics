@@ -2,34 +2,36 @@ import { StatefulActionHandler, StatelessActionHandler } from '@runbotics/runbot
 import { Worker } from 'worker_threads';
 
 // helper abstract class implementation type
-export type ActionHandler =  { new(): StatelessActionHandler | StatefulActionHandler };
+export type ActionHandler = { new(): StatelessActionHandler | StatefulActionHandler };
 
 export type ExternalHandlersMap = Map<string, any>;
 
 export type InternalHandlerKey =
-| 'api'
-| 'application'
-| 'asana'
-| 'beeOffice'
-| 'browser'
-| 'csv'
-| 'file'
-| 'general'
-| 'google'
-| 'import'
-| 'jira'
-| 'loop'
-| 'mail'
-| 'javascript'
-| 'typescript'
-| 'sap'
-| 'cloudExcel'
-| 'cloudFile'
-| 'variables'
-| 'excel'
-| 'desktop'
-| 'visualBasic'
-| 'image';
+    | 'api'
+    | 'application'
+    | 'asana'
+    | 'beeOffice'
+    | 'browser'
+    | 'csv'
+    | 'file'
+    | 'general'
+    | 'google'
+    | 'import'
+    | 'jiraCloud'
+    | 'jiraServer'
+    | 'loop'
+    | 'mail'
+    | 'javascript'
+    | 'typescript'
+    | 'sap'
+    | 'cloudExcel'
+    | 'cloudFile'
+    | 'variables'
+    | 'excel'
+    | 'desktop'
+    | 'visualBasic'
+    | 'image'
+    | 'folder';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

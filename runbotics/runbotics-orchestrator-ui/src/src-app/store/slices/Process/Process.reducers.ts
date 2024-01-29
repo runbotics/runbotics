@@ -71,6 +71,13 @@ export const setSelectedElement = (
     state.modeler.selectedElement = action.payload;
 };
 
+export const setCurrentProcessOutputElement = (
+    state: ProcessState,
+    action: PayloadAction<BPMNElement | null>
+) => {
+    state.modeler.currentProcessOutputElement = action.payload;
+};
+
 export const resetSelection = (state: ProcessState) => {
     state.modeler.selectedElement = null;
     state.modeler.selectedAction = null;

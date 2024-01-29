@@ -19,6 +19,10 @@ export type Message =
     | {
           event: BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT;
           payload: IProcessInstanceLoopEvent;
+      }
+    | {
+          event: BotWsMessage.KEEP_ALIVE;
+          payload: null;
       };
 
 @Injectable()

@@ -93,5 +93,6 @@ export const getParentScopes = (scopeTree: Scope, scopeId: string): string[] | n
 export const getParentScopesActionVars = (scopeIds: string[], allActions: ActionVariableObject[]): ActionVariableObject[] =>
     allActions
         .filter(
-            (action) => scopeIds.includes(action.scopeId)
+            (action) => scopeIds.includes(action.scopeId) ||
+                (action.scopeId === 'loop.loop' && scopeIds.includes(action.actionId))
         );

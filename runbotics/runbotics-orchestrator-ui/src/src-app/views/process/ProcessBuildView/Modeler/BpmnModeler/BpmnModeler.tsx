@@ -7,6 +7,7 @@ import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import i18n from 'i18next';
 import { useRouter } from 'next/router';
 import Hotkeys from 'react-hot-keys';
+import { isProcessInstanceActive } from 'runbotics-common';
 
 import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
@@ -25,6 +26,7 @@ import {
     CommandStackInfo,
     processActions,
 } from '#src-app/store/slices/Process';
+import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
 import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
 import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
@@ -84,6 +86,15 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             translate('Process.Modeler.LoseModelerChangesContent')
         );
 
+        const processInstances = useSelector(processInstanceSelector);
+        const { processInstance } = processInstances.active;
+
+        useEffect(() => {
+            if (processInstance && isProcessInstanceActive(processInstance.status)) {
+                setCurrentTab(ProcessBuildTab.RUN_INFO);
+            }
+        }, [processInstance]);
+
         useEffect(() => {
             if (prevLanguage !== i18n.language && modeler) {
                 modeler?._container.remove();
@@ -91,7 +102,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
 
             setPrevLanguage(i18n.language);
 
-            if (!offsetTop) return;
+            if (!offsetTop) return undefined;
 
             const bpmnModeler: BpmnIoModeler = new BpmnIoModeler(
                 getBpmnModelerConfig(offsetTop)
@@ -106,6 +117,12 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             }
 
             setModeler(bpmnModeler);
+
+            return () => {
+                for (const listenerKey in listeners) {
+                    eventBus.off(listenerKey, listeners[listenerKey]);
+                }
+            };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
 
@@ -181,7 +198,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const handleSave = () => {
             recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
             if (isSaveDisabled) return;
-            onSave();
+            onSave(modeler);
             dispatch(processActions.setCommandStack(initialCommandStackInfo));
             dispatch(processActions.setImported(false));
         };

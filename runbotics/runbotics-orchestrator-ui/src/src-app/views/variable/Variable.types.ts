@@ -11,3 +11,8 @@ export enum VariableType {
     LIST = 'LIST',
     BOOLEAN = 'BOOLEAN',
 }
+
+export interface DeleteRejectResponse {
+    type: string;
+    payload: string[];
+}

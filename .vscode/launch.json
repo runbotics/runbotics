@@ -16,6 +16,20 @@
             "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
         },
         {
+            "name": "bot test debug",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "rushx test:debug",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
+        },
+        {
+            "name": "bot test watch",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "rushx test:watch",
+            "cwd": "${workspaceFolder}/runbotics/runbotics-desktop"
+        },
+        {
             "name": "ui debug",
             "type": "node-terminal",
             "request": "launch",

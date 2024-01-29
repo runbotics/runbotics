@@ -11,6 +11,8 @@ export const updateBot = (state: BotState, action: PayloadAction<IBot>) => {
 };
 
 export const deleteBot = (state: BotState, action: PayloadAction<IBot['id']>) => {
-    delete state.bots.page.content[action.payload];
-    delete state.bots.allIds[action.payload];
+    state.bots.page.content = state.bots.page.content
+        .filter(bot => bot.id !== action.payload);
+    state.bots.allIds = state.bots.allIds
+        .filter(botId => botId !== String(action.payload));
 };

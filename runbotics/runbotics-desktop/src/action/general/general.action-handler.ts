@@ -6,31 +6,13 @@ import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
 import getBotSystem from '#utils/botSystem';
+import { ConsoleLogActionInput, ConsoleLogActionOutput, DelayActionInput, DelayActionOutput, StartProcessActionInput, StartProcessActionOutput, ThrowErrorActionInput, ThrowErrorActionOutput } from './general.types';
 
 export type GeneralActionRequest =
 | DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
 | DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
-| DesktopRunRequest<GeneralAction.CONSOLE_LOG, ConsoleLogActionInput>;
-
-// -- action
-export type StartProcessActionInput = {
-    processId: number;
-    variables: Record<string, any>;
-};
-export type StartProcessActionOutput = object;
-
-// -- action
-export type DelayActionInput = {
-    delay: number;
-    unit: 'Milliseconds' | 'Seconds';
-};
-export type DelayActionOutput = object;
-
-// -- action
-export type ConsoleLogActionInput = {
-    variables: Record<string, any>;
-};
-export type ConsoleLogActionOutput = object;
+| DesktopRunRequest<GeneralAction.CONSOLE_LOG, ConsoleLogActionInput>
+| DesktopRunRequest<GeneralAction.THROW_ERROR, ThrowErrorActionInput>;
 
 @Injectable()
 export default class GeneralActionHandler extends StatelessActionHandler {
@@ -114,6 +96,10 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         });
     }
 
+    async throwError(input: ThrowErrorActionInput): Promise<ThrowErrorActionOutput> {
+        throw new Error(input.message);
+    }
+
     run(request: GeneralActionRequest) {
         switch (request.script) {
             case GeneralAction.DELAY:
@@ -122,6 +108,8 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 return this.consoleLog(request.input);
             case GeneralAction.START_PROCESS:
                 return this.startProcess(request);
+            case GeneralAction.THROW_ERROR:
+                return this.throwError(request.input);
             default:
                 throw new Error('Action not found');
         }

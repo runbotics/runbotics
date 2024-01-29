@@ -3,6 +3,7 @@ import { IUser } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
+import { ProcessOutput } from './process-output.model';
 
 export interface IProcess {
     id?: number;
@@ -22,6 +23,8 @@ export interface IProcess {
     botCollection?: IBotCollection | null;
     editor?: IUser | null;
     tags?: Tag[];
+    subscribers?: IUser[];
+    outputType?: ProcessOutput;
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {

@@ -1,14 +1,16 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { Guest } from 'runbotics-common';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Guest, IUser } from 'runbotics-common';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'guest' })
 export class GuestEntity implements Guest {
-    @PrimaryColumn({ name: 'ip', type: 'varchar', length: 100 })
-        ip: string;
+    @PrimaryColumn({ name: 'ip_hash', type: 'varchar', length: 100 })
+    ipHash: string;
 
-    @Column({ name: 'user_id', type: 'bigint'})
-        userId: number;
+    @ManyToOne(() => UserEntity)
+    @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+    user: IUser;
 
     @Column({ name: 'executions_count', type: 'int' })
-        executionsCount: number;
+    executionsCount: number;
 }

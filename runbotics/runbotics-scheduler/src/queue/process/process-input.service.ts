@@ -23,7 +23,7 @@ export class ProcessInputService {
             _.set(variables, path, value);
         });
 
-        const input = { variables };
+        const input = { ...instantProcess.input, variables };
 
         return { ...instantProcess, input };
     }

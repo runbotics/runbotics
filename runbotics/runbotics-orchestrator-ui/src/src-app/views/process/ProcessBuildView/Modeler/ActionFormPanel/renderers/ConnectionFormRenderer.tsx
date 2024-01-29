@@ -4,17 +4,21 @@ import { Box, Grid, Typography } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
+import { IFormData } from '#src-app/Actions/types';
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
+import FlowLabelForm from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/FlowLabelForm';
+
 import JSONSchemaFormRenderer from './JSONSchemaFormRenderer';
-import { IFormData } from '../../../../../../Actions/types';
+
 import {
     BpmnConnectionFactory,
     IBpmnConnection
 } from '../../helpers/elementParameters';
+
 import customWidgets from '../widgets';
 
 const ConnectionFormRenderer = () => {
@@ -78,7 +82,13 @@ const ConnectionFormRenderer = () => {
             <Grid item xs={12}>
                 <Box px={2} pt={1}>
                     <Typography variant="h4" gutterBottom>
-                        {connection.id}
+                        <FlowLabelForm
+                            formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
+                            onSubmit={
+                                (name) => BpmnConnectionFactory.from(modeler).setConnectionName(connection, name)
+                            }
+                            selectedElement={connection}
+                        />
                     </Typography>
                 </Box>
             </Grid>

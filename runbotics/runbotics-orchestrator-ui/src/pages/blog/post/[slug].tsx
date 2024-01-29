@@ -2,13 +2,8 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import {
-    getSinglePostCache,
-    isCacheUpToDate,
-    recreateCache,
-    setSinglePostCache,
-} from '#contentful/blog-main';
-import { getPost } from '#contentful/blog-post';
+import { isCached, recreateCache } from '#contentful/blog-main';
+import { getSinglePostCache } from '#contentful/blog-post';
 import { BlogPost } from '#contentful/common';
 import backupRunBoticsImage from '#public/images/banners/hero-background.png';
 import { Language } from '#src-app/translations/translations';
@@ -27,27 +22,18 @@ interface Params extends Record<string, string> {
     slug: string;
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
-    res,
-    params,
-    locale,
-}) => {
-    let post: BlogPost | undefined;
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, locale, res }) => {
+    const language = locale as Language;
 
-    if (isCacheUpToDate((locale ? locale : 'en') as Language)) {
-        post = getSinglePostCache(locale as Language, params.slug);
-        res.setHeader('X-Cache', 'HIT');
+    if (!isCached(language)) {
+        await recreateCache();
     } else {
-        recreateCache(locale as Language);
+        res.setHeader('X-Cache', 'HIT');
     }
+
+    const post = getSinglePostCache(language, params.slug);
 
     if (!post) {
-        post = await getPost(locale as Language, { slug: params.slug });
-    }
-
-    if (post) {
-        setSinglePostCache(locale as Language, post);
-    } else {
         return {
             notFound: true,
         };

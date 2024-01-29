@@ -7,7 +7,6 @@ import { FormControlLabel, Switch } from '@mui/material';
 
 import { FeatureKey } from 'runbotics-common';
 
-
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -16,7 +15,7 @@ import { useSelector } from '#src-app/store';
 
 import { Wrapper } from './BotComponent.styles';
 
-
+import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 
 interface ProcessAttendedProps {
     isProcessAttended: boolean;
@@ -53,6 +52,9 @@ const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended
                     sx={{ height: '1.75rem' }}
                 />
             </Wrapper>
+            <If condition={hasReadProcessAttendAccess}>
+                <ManageProcessForm />
+            </If>
         </If>
     );
 };

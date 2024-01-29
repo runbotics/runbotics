@@ -13,11 +13,12 @@ export enum ActionRegex {
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+',
-    EXCEL_ROW_NUMBER = '[\\d]+',
+    EXCEL_ROW_NUMBER = '^\\d+$',
     EXCEL_SPLIT_ADDRESS = '[!:]',
     EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
-    EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$'
+    EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
+    EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$'
 }
 
 export enum ACTION_GROUP {
@@ -39,6 +40,7 @@ export enum ACTION_GROUP {
     BEEOFFICE = 'beeoffice',
     SAP = 'sap',
     APPLICATION = 'application',
+    FOLDER = 'folder'
 }
 
 export enum VariableAction {
@@ -51,6 +53,7 @@ export enum GeneralAction {
     CONSOLE_LOG = 'general.console.log',
     DELAY = 'general.delay',
     START_PROCESS = 'general.startProcess',
+    THROW_ERROR = 'general.throwError',
 }
 
 export enum MailAction {
@@ -97,8 +100,12 @@ export enum GoogleAction {
     SHEETS_WRITE = 'google.sheets.write',
 }
 
-export enum JiraAction {
-    GET_LOGGED_WORK_FOR_USER = 'jira.getLoggedWorkForUser',
+export enum JiraCloudAction {
+    GET_USER_WORKLOGS = 'jiraCloud.getUserWorklogs',
+}
+
+export enum JiraServerAction {
+    GET_USER_WORKLOGS = 'jiraServer.getUserWorklogs',
 }
 
 export enum FileAction {
@@ -204,7 +211,8 @@ export enum ExcelAction {
     DELETE_ROWS = 'excel.deleteRows',
     SAVE = 'excel.save',
     CLOSE = 'excel.close',
-    EXPORT_TO_CSV = 'excel.exportToCsv'
+    EXPORT_TO_CSV = 'excel.exportToCsv',
+    EXPORT_HTML_TABLE = 'excel.exportHtmlTable'
 }
 
 export enum DesktopAction {
@@ -228,6 +236,11 @@ export enum ImageAction {
     GRAY_SCALE = 'image.grayscale',
 }
 
+export enum FolderAction {
+    DELETE = 'folder.delete',
+    DISPLAY_FILES = 'folder.displayFiles'
+}
+
 export type AllActionIds =
     | VariableAction
     | GeneralAction
@@ -238,7 +251,8 @@ export type AllActionIds =
     | JavascriptAction
     | AsanaAction
     | GoogleAction
-    | JiraAction
+    | JiraCloudAction
+    | JiraServerAction
     | FileAction
     | CsvAction
     | DesktopOfficeAction
@@ -250,4 +264,5 @@ export type AllActionIds =
     | ExcelAction
     | DesktopAction
     | VisualBasicAction
-    | ImageAction;
+    | ImageAction
+    | FolderAction;

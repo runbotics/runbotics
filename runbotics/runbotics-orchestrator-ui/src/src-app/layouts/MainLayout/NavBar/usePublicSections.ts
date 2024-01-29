@@ -1,5 +1,5 @@
 import CallSplitIcon from '@mui/icons-material/CallSplit';
-import ExtensionIcon from '@mui/icons-material/Extension';
+import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -26,7 +26,7 @@ export const usePublicSections = (): Section[] => {
                 },
                 {
                     title: translate('Nav.Items.Bots'),
-                    icon: ExtensionIcon,
+                    icon: ExtensionOutlinedIcon,
                     href: '/app/bots',
                     authorities: [Role.ROLE_ADMIN],
                     featureKeys: [FeatureKey.BOT_READ],

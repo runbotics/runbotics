@@ -2,6 +2,8 @@ import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box, DialogContent } from '@mui/material';
 
+import BpmnIoModeler from 'bpmn-js/lib/Modeler';
+
 import { saveAs } from 'file-saver';
 
 import moment from 'moment';
@@ -15,7 +17,6 @@ import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSche
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
-import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';
@@ -23,13 +24,14 @@ import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
 
-import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
 
 import BpmnModeler, {
     AdditionalInfo,
     ModelerImperativeHandle,
+    retrieveGlobalVariableIds,
 } from './Modeler/BpmnModeler';
+
 import { StyledCard } from './ProcessBuildView.styled';
 
 const BORDER_SIZE = 2;
@@ -48,13 +50,10 @@ const ProcessBuildView: FC = () => {
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
     const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
 
-    const processInstances = useSelector(processInstanceSelector);
-    const { orchestratorProcessInstanceId } = processInstances.active;
-    useProcessInstanceSocket({ orchestratorProcessInstanceId });
-
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
         hasActionsAccess && dispatch(getActions());
+
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);
@@ -82,13 +81,16 @@ const ProcessBuildView: FC = () => {
         if (node) setOffSet(node.offsetTop + BORDER_SIZE);
     }, []);
 
-    const onSave = async () => {
+    const onSave = async (modeler: BpmnIoModeler) => {
         try {
             const definition = await BpmnModelerRef.current.export();
+            const globalVariableIds = retrieveGlobalVariableIds(modeler);
+
             await dispatch(
                 processActions.updateDiagram({
                     id: process.id,
                     definition,
+                    globalVariableIds,
                 })
             );
 

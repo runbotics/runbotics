@@ -1,5 +1,5 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
-import { DesktopTask, RuntimeService } from '#core/bpm/runtime';
+import { BpmnExecutionEventMessageExtendedApi, DesktopTask, RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import {
     BotWsMessage,
@@ -11,11 +11,12 @@ import {
     BpmnElementType,
     ProcessInstanceStep,
 } from 'runbotics-common';
-import { IActivityOwner } from '#core/bpm/bpmn.types';
+import { ActivityOwner, Behaviour } from '#core/bpm/bpmn.types';
 import dayjs from 'dayjs';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
 import { WebsocketService } from '../websocket.service';
+import { StorageService } from '#config';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
@@ -23,7 +24,8 @@ export class RuntimeSubscriptionsService {
         @Inject(forwardRef(() => WebsocketService))
         private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
-        private readonly loopHandlerService: LoopHandlerService
+        private readonly loopHandlerService: LoopHandlerService,
+        private readonly storageService: StorageService
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -41,9 +43,7 @@ export class RuntimeSubscriptionsService {
                         created: dayjs().toISOString(),
                         processInstance: event.processInstance,
                         executionId: event.activity.executionId,
-                        input: JSON.stringify({
-                            ...desktopTask?.input,
-                        }),
+                        input: this.sanitizeVariable({ ...desktopTask?.input }),
                         status: event.eventType,
                         error: event.activity.content.error?.description,
                         script: desktopTask.input?.script,
@@ -51,7 +51,7 @@ export class RuntimeSubscriptionsService {
 
                 try {
                     const eventBehavior = (
-                        event.activity.owner as IActivityOwner
+                        event.activity.owner as ActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
@@ -83,9 +83,13 @@ export class RuntimeSubscriptionsService {
                             processInstanceEvent.step =
                                 ProcessInstanceStep.START;
                             break;
-                        case BpmnElementType.EXCLUSIVE_GATEWAY:
-                            processInstanceEvent.log = `Gateway: ${event.activity.content.type} ${event.eventType}`;
-                            processInstanceEvent.step = 'Gateway';
+                        case BpmnElementType.SEQUENCE_FLOW:
+                            // eslint-disable-next-line no-case-declarations
+                            const gatewayName = this.storageService.getValue(desktopTask.sourceId);
+                            processInstanceEvent.log = `SequenceFlow (after Gateway): ${event.activity.content.type} ${event.eventType}`;
+                            processInstanceEvent.step = `${gatewayName}: ${desktopTask.name ?? desktopTask.id}`;
+                            processInstanceEvent.executionId = event.activity.content.sequenceId;
+                            this.storageService.removeValue(desktopTask.sourceId);
                             break;
                         case BpmnElementType.SUBPROCESS:
                             //eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -102,6 +106,26 @@ export class RuntimeSubscriptionsService {
                                 processInstanceEvent.step = eventBehavior?.label;
                             } else {
                                 processInstanceEvent.step = 'Loop';
+                            }
+                            break;
+
+                        case BpmnElementType.EXCLUSIVE_GATEWAY:
+                            // eslint-disable-next-line no-case-declarations
+                            const sequencesWithoutExpression = this.runtimeService.getSequencesWithoutExpression(event.activity.owner as ActivityOwner);
+                            // eslint-disable-next-line no-case-declarations
+                            const activityName = event.activity.name ?? event.activity.id;
+                            if (sequencesWithoutExpression.length > 0) {
+                                processInstanceEvent.step = activityName;
+                                processInstanceEvent.error = 'Empty condition in sequence flows: ' + sequencesWithoutExpression.join(', ');
+                            } else {
+                                const errorDescription = event.activity.content.error.description
+                                    .split(' ')
+                                    .slice(1)
+                                    .join(' ');
+                                processInstanceEvent.step = activityName;
+                                processInstanceEvent.error = activityName
+                                    ? `${activityName}: ${errorDescription}`
+                                    : event.activity.content.error.description;
                             }
                             break;
 
@@ -132,9 +156,9 @@ export class RuntimeSubscriptionsService {
                         case ProcessInstanceEventStatus.COMPLETED:
                         case ProcessInstanceEventStatus.STOPPED:
                         case ProcessInstanceEventStatus.ERRORED:
-                            processInstanceEvent.output = JSON.stringify({
-                                ...desktopTask?.output,
-                            });
+                            if (!this.isLoopSubprocess(event.activity, eventBehavior)) {
+                                processInstanceEvent.output = this.sanitizeVariable({ ...desktopTask?.output });
+                            }
                             processInstanceEvent.finished =
                                 dayjs().toISOString();
                             break;
@@ -144,6 +168,7 @@ export class RuntimeSubscriptionsService {
                         this.loopHandlerService.isLoopEvent(event.activity)
                             ? BotWsMessage.PROCESS_INSTANCE_LOOP_EVENT
                             : BotWsMessage.PROCESS_INSTANCE_EVENT;
+
                     //eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     //@ts-ignore
                     const message: Message = {
@@ -172,8 +197,10 @@ export class RuntimeSubscriptionsService {
                 // @ts-ignore
                 status: event.eventType.toString(),
                 updated: dayjs().toISOString(),
+                created: event.processInstance.created,
                 process: {
                     id: Number(event.processInstance.process.id),
+                    name: event.processInstance.process.name,
                 },
                 user: event.processInstance.user,
                 rootProcessInstanceId:
@@ -181,16 +208,17 @@ export class RuntimeSubscriptionsService {
                 trigger: event.processInstance.trigger,
                 triggerData: event.processInstance.triggerData,
                 error: event.processInstance.error,
+                callbackUrl: event.processInstance.callbackUrl,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:
-                    processInstance.created = dayjs().toISOString();
+                    processInstance.created = processInstance.created ?? dayjs().toISOString();
                     break;
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
-                        processInstance.input = JSON.stringify({
-                            variables: event.processInstance.variables,
-                        });
+                        processInstance.input = this.sanitizeVariable(
+                            { variables: event.processInstance.variables }
+                        );
                     } catch (e) {
                         this.logger.error('Error preparing input');
                         processInstance.input = JSON.stringify({
@@ -213,21 +241,17 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = JSON.stringify({
-                            output: event.processInstance.output,
-                            variables: variables,
+                        processInstance.output = this.sanitizeVariable({
+                            processOutput: event.processInstance?.processOutput ?? {},
+                            variables,
                         });
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({
                             result: 'Error preparing output',
                         });
-                    } finally {
-                        if (processInstance.output.length > 10000)
-                            processInstance.output = JSON.stringify({
-                                message: 'Exceeded max length',
-                            });
                     }
+
                     break;
             }
 
@@ -238,5 +262,18 @@ export class RuntimeSubscriptionsService {
 
             this.websocketService.emitMessage(message);
         });
+    }
+
+    private sanitizeVariable(variable: any): string {
+        const variableToCheck: string = JSON.stringify(variable);
+        if (variableToCheck && variableToCheck.length > 100_000)
+            return JSON.stringify(
+                { message: 'Exceeded max length', partialResponse: variableToCheck.slice(0, 100_000)}
+            );
+        return variableToCheck;
+    }
+
+    private isLoopSubprocess(activity: BpmnExecutionEventMessageExtendedApi, eventBehavior: Behaviour): boolean {
+        return BpmnElementType.SUBPROCESS === activity.content.type && eventBehavior.actionId === 'loop.loop';
     }
 }

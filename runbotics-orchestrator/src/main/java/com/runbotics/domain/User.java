@@ -2,6 +2,7 @@ package com.runbotics.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.runbotics.config.Constants;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 
@@ -83,8 +85,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "jhi_user_authority",
-        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
@@ -96,6 +98,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Set<String> getRoles() {
         return new HashSet<String>();
     }

@@ -450,6 +450,13 @@ public class UserService {
             .collect(Collectors.toList());
     }
 
+    public boolean hasAdminRole(User user) {
+        var adminAuthority = new Authority();
+        adminAuthority.setName(AuthoritiesConstants.ADMIN);
+
+        return user.getAuthorities().contains(adminAuthority);
+    }
+
     private void excludeAdminUserDTOFields(AdminUserDTO adminUserDTO) {
         if (adminUserDTO.getImageUrl() != null) {
             throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "imageUrl");

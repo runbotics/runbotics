@@ -15,6 +15,7 @@
     "Variables.ListView.Action.Delete.Dialog.Confirmation": "Czy na pewno chcesz usunąć zmienną globalną <strong>{{ name }}</strong>?",
     "Variables.ListView.Action.Delete.Message.Success": "Pomyślnie usunięto zmienną globalną <strong>{{ name }}</strong>",
     "Variables.ListView.Action.Delete.Message.Error": "Wystąpił błąd podczas usuwania zmiennej globalnej <strong>{{ name }}</strong>",
+    "Variables.ListView.Action.Delete.Message.Processes.Error": "Wystąpił błąd podczas usuwania zmiennej globalnej <strong>{{ name }}</strong>. Procesy <strong>[{{processNames}}]</strong> używają tej zmiennej.",
 
     "Variables.Details.Dialog.New.Title": "Nowa zmienna globalna",
     "Variables.Details.Dialog.Edit.Title": "Edytuj zmienną globalną",

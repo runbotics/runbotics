@@ -7,6 +7,7 @@ export default {
 };
 
 export function Camunda(activity, processEnvironment) {
+    const jexlPattern = /#{(.+?)}/g;
     const { broker, environment, type, behaviour } = activity;
 
     return {
@@ -50,8 +51,10 @@ export function Camunda(activity, processEnvironment) {
         //     // behaviour.Service = ServiceImplementation
         // }
         if (activity.type === 'bpmn:ServiceTask') {
+            const disabled = activity.behaviour.disabled;
             activity.environment.runbotic = {
-                disabled: activity.behaviour.disabled,
+                disabled,
+                ...(!disabled && { processOutput: activity.behaviour.processOutput })
             };
         } else if (activity.type === 'bpmn:BoundaryEvent') {
             // do nothing when boundary event as it clears service task assigned state
@@ -114,6 +117,14 @@ export function Camunda(activity, processEnvironment) {
                 if (data.definition.entries) {
                     data.definition.entries.forEach((entry) => {
                         let key = data.name + '.' + entry.key;
+
+                        const valueKey = jexlPattern.exec(entry.value);
+
+                        if (data.name === 'functionParams' && entry.value === '#{iterator}') {
+                            entry.value = '${iterator}';
+                        } else if (data.name === 'functionParams' && valueKey !== null && entry.value !== '${iterator}') {
+                            entry.value = '${environment.variables.' + valueKey[1] + '}';
+                        }
                         let value = environment.resolveExpression(entry.value, message);
                         lodash.setWith(writeTo, key, value);
                     });

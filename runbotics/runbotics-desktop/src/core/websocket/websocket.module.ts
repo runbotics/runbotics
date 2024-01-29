@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { IoClient, IoClientModule } from 'nestjs-io-client';
+import { IoClientModule } from 'nestjs-io-client';
 import { AuthService } from './auth/auth.service';
 
 import { ConfigModule, ServerConfigService } from '#config';
@@ -31,6 +31,9 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
                     options: {
                         auth: credentials,
                         path: '/ws-bot/',
+                        // transports: [
+                        //     'websocket'
+                        // ]
                     },
                 };
             },
@@ -50,4 +53,4 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
         WebsocketService
     ]
 })
-export class WebsocketModule {}
+export class WebsocketModule { }

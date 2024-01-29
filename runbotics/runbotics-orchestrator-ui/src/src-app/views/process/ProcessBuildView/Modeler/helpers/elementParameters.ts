@@ -63,7 +63,7 @@ export type CamundaInputOutputElement = ExtensionElement & {
 
 export type ExtensionElements = {
     $type: string;
-    values: ExtensionElement[];
+    values: CamundaInputOutputElement[];
 };
 
 export type BusinessObject = {
@@ -72,11 +72,16 @@ export type BusinessObject = {
     actionId: string;
     disabled: boolean;
     runFromHere: boolean;
+    processOutput: boolean;
     label: string;
     extensionElements?: ExtensionElements;
     runbotics?: string;
     validationError?: boolean;
     customValidationError?: boolean;
+};
+
+export type IBpmnGatewayBusinessObject = BusinessObject & {
+    default?: IBpmnConnection;
 };
 
 export type ModdleElement = {
@@ -87,7 +92,7 @@ export type ModdleElement = {
     implementation: string,
     label: string
     flowElements?: ModdleElement[],
-}
+};
 
 export type BPMNElement = {
     id: string;
@@ -100,6 +105,14 @@ export type BPMNElement = {
     attachers?: BPMNElement[];
 };
 
+export interface BPMNElementRegistry {
+    [key: BPMNElement['id']]: {
+        element: BPMNElement;
+        gfx: unknown;
+        secondaryGfx: unknown;
+    }
+}
+
 export type BpmnFormalExpression = {
     $type: 'bpmn:FormalExpression';
     body: string;
@@ -109,9 +122,14 @@ export type ISequenceFlowBusinessObject = {
     $type: 'bpmn:SequenceFlow';
     conditionExpression?: BpmnFormalExpression;
 };
+
 export type IBpmnConnection = BPMNElement & {
     businessObject: ISequenceFlowBusinessObject;
     source?: BPMNElement;
+};
+
+export type IBpmnGateway = BPMNElement & {
+    businessObject: IBpmnGatewayBusinessObject;
 };
 
 export type IBpmnSubProcessBusinessObject = BusinessObject & {
@@ -216,18 +234,21 @@ export class BpmnConnectionFactory {
     private elementFactory: any;
 
     private commandStack: any;
+    private modeling: any;
 
-    constructor(bpmnFactory: any, elementFactory: any, commandStack: any) {
+    constructor(bpmnFactory: any, elementFactory: any, commandStack: any, modeling: any) {
         this.bpmnFactory = bpmnFactory;
         this.elementFactory = elementFactory;
         this.commandStack = commandStack;
+        this.modeling = modeling;
     }
 
     static from(modeler: BpmnModeler) {
         return new BpmnConnectionFactory(
             modeler.get('bpmnFactory'),
             modeler.get('elementFactory'),
-            modeler.get('commandStack')
+            modeler.get('commandStack'),
+            modeler.get('modeling')
         );
     }
 
@@ -245,6 +266,22 @@ export class BpmnConnectionFactory {
             businessObject: connection.businessObject,
             properties: { conditionExpression: FormalExpression },
         });
+    }
+
+    setConnectionColor(connection: IBpmnConnection, color: string) {
+        this.modeling.setColor(connection, { stroke: color });
+    }
+
+    setConnectionName(connection: IBpmnConnection, name: string) {
+        this.modeling.updateProperties(connection, { name });
+    }
+
+    setDefaultConnection(connection: IBpmnConnection, gateway: IBpmnGateway) {
+        this.modeling.updateProperties(gateway, { default: connection });
+    }
+
+    setGatewayName(gateway: IBpmnGateway, name: string) {
+        this.modeling.updateProperties(gateway, { name });
     }
 }
 

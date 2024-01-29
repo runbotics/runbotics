@@ -20,7 +20,18 @@ export interface IProcessInstance {
     trigger?: ITriggerEvent;
     triggerData?: EmailTriggerData | UserTriggerData | unknown;
     warning?: boolean;
+    callbackUrl?: string;
 }
+
+export type ProcessInstanceNotification = Pick<IProcessInstance,
+    'status' |
+    'output' |
+    'process' |
+    'error'
+> & {
+    started?: IProcessInstance['created'];
+    finished?: IProcessInstance['updated'];
+};
 
 export interface EmailTriggerData {
     emailId: string;

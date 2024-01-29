@@ -2,6 +2,7 @@ package com.runbotics.service.dto;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.User;
+
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class AdminUserDTO {
     private Set<String> roles;
 
     private Set<String> featureKeys;
-    
+
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
     }

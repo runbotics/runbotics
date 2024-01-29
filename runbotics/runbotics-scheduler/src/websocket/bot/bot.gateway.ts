@@ -8,32 +8,32 @@ import {
     WebSocketServer,
 
 } from '@nestjs/websockets';
-import { HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpStatus, OnModuleInit, UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
 import { BotLogService } from './bot-log.service';
 import { BotProcessService } from '#/websocket/bot/process-launch/bot-process-instance.service';
-import { BotStatus, BotWsMessage, IBot, IProcessInstance, IProcessInstanceEvent, IProcessInstanceLoopEvent, ProcessInstanceEventStatus, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import {
+    BotStatus, BotWsMessage, IBot,
+    IProcessInstance, IProcessInstanceEvent,
+    IProcessInstanceLoopEvent, ProcessInstanceEventStatus,
+    ProcessInstanceStatus, WsMessage
+} from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
 import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
 import { BotService } from '#/database/bot/bot.service';
-import { BotLifecycleService } from './bot-lifecycle.service';
 import { GuestService } from '#/database/guest/guest.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/database/process/process.service';
 
-type BotId = number;
-type SocketId = string;
-
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
-export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
+export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnModuleInit {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
-    private connections = new Map<BotId, SocketId>();
     @WebSocketServer() server: Server;
-    private CONNECTION_TIMEOUT = 20_000;
+    private CONNECTION_TIMEOUT = 60_000;
 
     constructor(
         private readonly authService: AuthService,
@@ -42,18 +42,16 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly botProcessEventService: BotProcessEventService,
         private readonly uiGateway: UiGateway,
         private readonly botService: BotService,
-        private readonly botLifecycleService: BotLifecycleService,
         private readonly guestService: GuestService,
         private readonly mailService: MailService,
         private readonly processService: ProcessService,
     ) {}
 
-    get connectedBotsCount() {
-        return this.connections.size;
-    }
-
-    getConnectedBotSocketId(botId: number) {
-        return this.connections.get(botId);
+    onModuleInit() {
+        if (this.server && this.server.engine) {
+            this.server.engine.opts.maxHttpBufferSize = 2_000_000;
+            // this.server.engine.opts.transports = ['websocket'];
+        }
     }
 
     async handleConnection(client: Socket) {
@@ -69,7 +67,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
             this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
 
-            this.connections.set(bot.id, client.id);
+            client.join(bot.installationId);
         }
     }
 
@@ -87,9 +85,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         this.logger.log(`Bot disconnected: ${installationId} | ${client.id}`);
 
-        this.connections.delete(bot.id);
-
-        // await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
+        await this.mailService.sendBotDisconnectionNotificationMail(bot, installationId);
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -108,12 +104,6 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         await this.botProcessService.updateProcessInstance(installationId, processInstance);
 
-        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
-            const process = await this.processService.findById(processInstance.process.id);
-
-            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
-        }
-
         if(
             processInstance.status === ProcessInstanceStatus.ERRORED ||
             processInstance.status === ProcessInstanceStatus.TERMINATED
@@ -122,6 +112,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.guestService.decrementExecutionsCount(processInstance.user.id);
             this.logger.log('Restored user\'s executions-count because of process interruption');
         }
+
+        await this.handleProcessInstanceNotification(processInstance);
 
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
@@ -176,6 +168,14 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         this.logger.log(`<= Success: logs from bot ${installationId} saved`);
     }
 
+    @UseGuards(WsBotJwtGuard)
+    @SubscribeMessage(BotWsMessage.KEEP_ALIVE)
+    async processKeepAliveEventListener(
+        @ConnectedSocket() socket: BotAuthSocket,
+    ) {
+        await this.botService.updateConnectedBotStatus(socket.bot.id);
+    }
+
     async updateProcessInstanceEvent(bot: IBot, processInstanceEvent: IProcessInstanceEvent) {
         const installationId = bot.installationId;
         this.logger.log(`=> Updating process-instance-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
@@ -195,10 +195,22 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
     private setConnectionTimeout(client: Socket) {
         return setTimeout(() => {
-            this.logger.log(`Connection timeout reached (${(this.CONNECTION_TIMEOUT / 1_000)}s). Client is disconnecting...`);
+            this.logger.log(`Connection timeout reached (${(this.CONNECTION_TIMEOUT / 1_000)}s). Bot is disconnecting...`);
             if (client) {
-                client.disconnect(true);
+                client.disconnect();
             }
         }, this.CONNECTION_TIMEOUT);
+    }
+
+    private async handleProcessInstanceNotification(processInstance: IProcessInstance) {
+        if (processInstance.status === ProcessInstanceStatus.ERRORED) {
+            const process = await this.processService.findById(processInstance.process.id);
+
+            await this.mailService.sendProcessFailureNotificationMail(process, processInstance);
+        }
+
+        if (processInstance?.callbackUrl) {
+            await this.botProcessService.notifyAboutProcessInstanceStatus(processInstance);
+        }
     }
 }

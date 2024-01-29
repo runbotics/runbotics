@@ -2,10 +2,12 @@ import React, {
     VFC, ChangeEvent,
 } from 'react';
 
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { FormControlLabel, Switch } from '@mui/material';
 
+import Image from 'next/image';
 import { FeatureKey } from 'runbotics-common';
+
+import ProcessTriggerableIcon from '#public/images/icons/process_triggerable.svg';
 
 
 import If from '#src-app/components/utils/If';
@@ -40,7 +42,11 @@ const ProcessTriggerableComponent: VFC<ProcessTriggerableProps> = ({ isProcessTr
     return (
         <If condition={hasReadProcessTriggerAccess}>
             <Wrapper>
-                <PersonOutlinedIcon />
+                <Image
+                    height={24}
+                    src={ProcessTriggerableIcon}
+                    alt={translate('Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon')}
+                />
                 <FormControlLabel
                     control={attendedSwitch}
                     label={translate('Process.Edit.Form.Fields.IsTriggerable.Label')}

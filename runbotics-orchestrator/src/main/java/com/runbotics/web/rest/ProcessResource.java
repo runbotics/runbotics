@@ -9,18 +9,14 @@ import com.runbotics.service.ProcessQueryService;
 import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCriteria;
-import com.runbotics.service.UserService;
 import com.runbotics.service.dto.*;
-import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import com.runbotics.domain.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -189,9 +185,11 @@ public class ProcessResource {
     public ResponseEntity<ProcessDTO> processSetDiagram(
         @PathVariable(value = "id", required = true) final Long id,
         @NotNull @RequestBody @Valid ProcessDiagramUpdateDTO processDiagramDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update diagram in Process: {}", id);
         checkProcessForEdit(id, processDiagramDTO);
+
+        processService.updateGlobalVariables(id, processDiagramDTO.getGlobalVariableIds());
         Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
 
         return ResponseUtil.wrapOrNotFound(
@@ -257,6 +255,22 @@ public class ProcessResource {
         log.debug("REST request to update bot system for the Process : {}, {}", id, processDTO);
         checkProcessForEdit(id, processDTO);
         Optional<ProcessDTO> result = processService.updateBotSystem(processDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDTO.getId().toString())
+        );
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_OUTPUT_TYPE_EDIT + "')")
+    @PatchMapping(value = "/processes/{id}/output-type")
+    public ResponseEntity<ProcessDTO> processSetOutputType(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody @Valid ProcessOutputTypeUpdateDTO processDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update is attended used in Process {} to {}", processDTO, processDTO.getOutputType());
+        checkProcessForEdit(id, processDTO);
+        Optional<ProcessDTO> result = processService.updateOutputType(processDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -342,6 +356,7 @@ public class ProcessResource {
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {
         log.debug("REST request to delete Process : {}", id);
         processService.delete(id);
+        processService.deleteProcessLeftovers();
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
@@ -392,6 +407,20 @@ public class ProcessResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         if (!Objects.equals(id, processTriggerDTO.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!processRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+    }
+
+    private void checkProcessForEdit(long id, ProcessOutputTypeUpdateDTO processOutputTypeUpdateDTO) throws BadRequestAlertException {
+        if (processOutputTypeUpdateDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+
+        if (!Objects.equals(id, processOutputTypeUpdateDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 

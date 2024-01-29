@@ -6,6 +6,8 @@ export enum GlobalVariableType {
     BOOLEAN = 'BOOLEAN'
 }
 
+export type UserDTO = Pick<IUser, 'id' | 'login'>;
+
 export interface IGlobalVariable {
     id: number;
     name: string;
@@ -14,4 +16,5 @@ export interface IGlobalVariable {
     value: string;
     lastModified: string;
     user: IUser;
+    creator?: UserDTO | null;
 }
