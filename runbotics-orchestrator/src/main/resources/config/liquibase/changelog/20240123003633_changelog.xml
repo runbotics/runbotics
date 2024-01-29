@@ -5,54 +5,81 @@
     <property name="uuid_type" value="uuid" dbms="postgresql"/>
     <property name="uuid_function" value="uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)" dbms="postgresql"/>
 
-    <!-- Add collection_id in process table -->
-    <changeSet author="gasiorowskaa" id="20240123003633-1">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="process" columnName="collection_id" />
-            </not>
-        </preConditions>
-        <addColumn tableName="process">
-            <column name="collection_id" type="${uuid_type}">
-                <constraints nullable="true" />
-            </column>
-        </addColumn>
-    </changeSet>
-
     <!-- Process collection table -->
-    <changeSet author="gasiorowskaa" id="20240123003633-2">
+    <changeSet author="jarockis" id="20240123003633-1">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="process_collection"/>
-            </not>
+            <and>
+                <tableExists tableName="jhi_user" />
+                <not>
+                    <tableExists tableName="process_collection"/>
+                </not>
+            </and>
         </preConditions>
 
         <createTable tableName="process_collection">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_process_collection" />
             </column>
-            <colmun name="name" type="varchar(30)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <colmun name="description" type="varchar(200)">
-                <constraints nullable="true" />
-            </column>
-            <colmun name="created" type="timestamp" />
-            <colmun name="updated" type="timestamp" />
-            <column name="created_by" type="varchar(50)">
-                <constraints nullable="true" />
-            </colmun>
-            <colmun name="is_public" type="boolean" valueBoolean="false">
+            <column name="description" type="varchar(255)"></column>
+            <column name="created" type="timestamp" />
+            <column name="updated" type="timestamp" />
+            <column name="created_by" type="bigint"></column>
+            <column name="is_public" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
-            </colmun>
-            <column name="parent_collection_id" type="${uuid_type}">
-                <constraints nullable="true" />
             </column>
+            <column name="parent_id" type="${uuid_type}"></column>
         </createTable>
+
+        <addForeignKeyConstraint
+            baseColumnNames="created_by"
+            baseTableName="process_collection"
+            constraintName="fk_process_collection_created_by"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"
+            onDelete="SET NULL"
+        />
+
+        <addForeignKeyConstraint
+            baseColumnNames="parent_id"
+            baseTableName="process_collection"
+            constraintName="fk_process_collection_parent_id"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <!-- Add collection_id in process table -->
+    <changeSet author="jarockis" id="20240123003633-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process" />
+                <tableExists tableName="process_collection" />
+                <not>
+                    <columnExists tableName="process" columnName="collection_id" />
+                </not>
+            </and>
+        </preConditions>
+        <addColumn tableName="process">
+            <column name="collection_id" type="${uuid_type}"></column>
+        </addColumn>
+
+        <addForeignKeyConstraint
+            baseColumnNames="collection_id"
+            baseTableName="process"
+            constraintName="fk_process_collection_id"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
+
     </changeSet>
 
     <!-- Process collection user table -->
-    <changeSet author="gasiorowskaa" id="20240123003633-3">
+    <changeSet author="jarockis" id="20240123003633-3">
         <preConditions onFail="MARK_RAN">
             <and>
                 <tableExists tableName="jhi_user" />
@@ -74,17 +101,23 @@
 
         <addPrimaryKey columnNames="collection_id,user_id" tableName="process_collection_user" />
 
-        <addForeignKeyConstraint baseColumnNames="collection_id"
-                                 baseTableName="process_collection_user"
-                                 constraintName="fk_process_collection_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="process_collection" />
+        <addForeignKeyConstraint
+            baseColumnNames="collection_id"
+            baseTableName="process_collection_user"
+            constraintName="fk_process_collection_users"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
 
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="process_collection_user"
-                                 constraintName="fk_user_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="jhi_user" />
+        <addForeignKeyConstraint
+            baseColumnNames="user_id"
+            baseTableName="process_collection_user"
+            constraintName="fk_user_id"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"
+            onDelete="CASCADE"
+        />
     </changeSet>
 
 </databaseChangeLog>
