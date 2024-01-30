@@ -15,11 +15,14 @@ describe('FolderActionHandler', () => {
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
-            providers: [FolderActionHandler, ServerConfigService]
+            providers: [
+                FolderActionHandler, 
+                ServerConfigService
+            ],
         })
             .overrideProvider(ServerConfigService)
             .useValue({
-                tempFolderPath
+                tempFolderPath,
             })
             .compile();
         folderActionHandler = module.get(FolderActionHandler);
@@ -84,7 +87,9 @@ describe('FolderActionHandler', () => {
             };
 
             await folderActionHandler.deleteFolder(params);
-            expect(fs.existsSync(`${cwd}${path.sep}${testFolderName}`)).toBeFalsy();
+            expect(
+                fs.existsSync(`${cwd}${path.sep}${testFolderName}`)
+            ).toBeFalsy();
         });
 
         it('Should throw error when removing non-existent folder', async () => {
@@ -95,7 +100,9 @@ describe('FolderActionHandler', () => {
                 recursive: true
             };
 
-            await expect(folderActionHandler.deleteFolder(params)).rejects.toThrowError(`Directory not found: ${cwd}${path.sep}${name}`);
+            await expect(folderActionHandler.deleteFolder(params)).rejects.toThrowError(
+                `Directory not found: ${cwd}${path.sep}${name}`
+            );
         });
 
         it('Should remove empty /temp folder', async () => {
@@ -107,7 +114,9 @@ describe('FolderActionHandler', () => {
 
             await folderActionHandler.deleteFolder(params);
 
-            expect(fs.existsSync(`${tempFolderPath}${path.sep}${testFolderName}`)).toBeFalsy();
+            expect(
+                fs.existsSync(`${tempFolderPath}${path.sep}${testFolderName}`)
+            ).toBeFalsy();
         });
 
         it('Should remove subfolders recursively', async () => {
@@ -120,7 +129,9 @@ describe('FolderActionHandler', () => {
             createTestSubfolders();
 
             await folderActionHandler.deleteFolder(params);
-            expect(fs.existsSync(`${cwd}${path.sep}${testFolderName}`)).toBeFalsy();
+            expect(
+                fs.existsSync(`${cwd}${path.sep}${testFolderName}`)
+            ).toBeFalsy();
 
             removeTestSubfolders();
         });
@@ -134,7 +145,8 @@ describe('FolderActionHandler', () => {
 
             createTestSubfolders();
 
-            await expect(folderActionHandler.deleteFolder(params)).rejects.toThrowError(
+            await expect(
+                folderActionHandler.deleteFolder(params)).rejects.toThrowError(
                 `Cannot remove not empty directory without setting 'recursive' option: ${cwd}`
             );
 
@@ -146,7 +158,7 @@ describe('FolderActionHandler', () => {
         it('Should display content of folder', async () => {
             const params: FolderDisplayFilesActionInput = {
                 name: testFolderName,
-                path: cwd
+                path: cwd,
             };
             createTestSubfolders();
 
@@ -154,22 +166,24 @@ describe('FolderActionHandler', () => {
             expect(folderContent).toEqual(TEST_SUBFOLDERS_ARRAY);
 
             removeTestSubfolders();
-        });
+        });        
 
         it('Should throw error if accessing non-existent folder', async () => {
             const name = 'notExistingFile';
             const params: FolderDisplayFilesActionInput = {
                 name,
-                path: cwd
+                path: cwd,
             };
 
-            await expect(folderActionHandler.displayFiles(params)).rejects.toThrowError(`Directory not found: ${cwd}${path.sep}${name}`);
+            await expect(folderActionHandler.displayFiles(params)).rejects.toThrowError(
+                `Directory not found: ${cwd}${path.sep}${name}`
+            );
         });
 
         it('Display empty folder', async () => {
             const params: FolderDisplayFilesActionInput = {
                 name: TEST_SUBFOLDERS_ARRAY[0],
-                path: `${cwd}${path.sep}${testFolderName}`
+                path: `${cwd}${path.sep}${testFolderName}`,
             };
             createTestSubfolders();
 
@@ -183,7 +197,9 @@ describe('FolderActionHandler', () => {
         it('Display /temp content if path not provided', async () => {
             fs.mkdirSync(`${tempFolderPath}${path.sep}${testFolderName}`, { recursive: true });
 
-            const folderContent = await folderActionHandler.displayFiles({ name: testFolderName });
+            const folderContent = await folderActionHandler.displayFiles(
+                { name: testFolderName }
+            );
 
             expect(Array.isArray(folderContent)).toBeTruthy();
             expect(folderContent).toHaveLength(0);
@@ -196,7 +212,7 @@ describe('FolderActionHandler', () => {
             fs.mkdirSync(`${tempFolderPath}${path.sep}${testFolderName}${path.sep}${folderByPath}`);
 
             const folderContent = await folderActionHandler.displayFiles({
-                path: `${tempFolderPath}${path.sep}${testFolderName}`
+                path: `${tempFolderPath}${path.sep}${testFolderName}`,
             });
 
             expect(Array.isArray(folderContent)).toBeTruthy();

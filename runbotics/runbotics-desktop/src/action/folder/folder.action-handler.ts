@@ -11,7 +11,9 @@ import { RunboticsLogger } from '../../logger';
 export default class FolderActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(FolderActionHandler.name);
 
-    constructor(private readonly serverConfigService: ServerConfigService) {
+    constructor(
+        private readonly serverConfigService: ServerConfigService
+    ) {
         super();
     }
 
@@ -64,7 +66,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
         if (!name) {
             throw new Error('Cannot create directory if name is not provided');
         }
-        
+
         const folderPath = this.resolvePath(name, path);
 
         try {
