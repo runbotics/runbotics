@@ -99,7 +99,7 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="collection_id,user_id" tableName="process_collection_user" primaryKeyName="pk_process_collection_user" />
+        <addPrimaryKey columnNames="collection_id,user_id" tableName="process_collection_user" />
 
         <addForeignKeyConstraint
             baseColumnNames="collection_id"
