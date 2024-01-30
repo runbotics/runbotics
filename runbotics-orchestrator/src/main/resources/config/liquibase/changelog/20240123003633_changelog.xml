@@ -1,0 +1,123 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <!-- Properties -->
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)" dbms="postgresql"/>
+
+    <!-- Process collection table -->
+    <changeSet author="jarockis" id="20240123003633-1">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="jhi_user" />
+                <not>
+                    <tableExists tableName="process_collection"/>
+                </not>
+            </and>
+        </preConditions>
+
+        <createTable tableName="process_collection">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_process_collection" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(255)"></column>
+            <column name="created" type="timestamp" />
+            <column name="updated" type="timestamp" />
+            <column name="created_by" type="bigint"></column>
+            <column name="is_public" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="parent_id" type="${uuid_type}"></column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseColumnNames="created_by"
+            baseTableName="process_collection"
+            constraintName="fk_process_collection_created_by"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"
+            onDelete="SET NULL"
+        />
+
+        <addForeignKeyConstraint
+            baseColumnNames="parent_id"
+            baseTableName="process_collection"
+            constraintName="fk_process_collection_parent_id"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
+    </changeSet>
+
+    <!-- Add collection_id in process table -->
+    <changeSet author="jarockis" id="20240123003633-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="process" />
+                <tableExists tableName="process_collection" />
+                <not>
+                    <columnExists tableName="process" columnName="collection_id" />
+                </not>
+            </and>
+        </preConditions>
+        <addColumn tableName="process">
+            <column name="collection_id" type="${uuid_type}"></column>
+        </addColumn>
+
+        <addForeignKeyConstraint
+            baseColumnNames="collection_id"
+            baseTableName="process"
+            constraintName="fk_process_collection_id"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
+
+    </changeSet>
+
+    <!-- Process collection user table -->
+    <changeSet author="jarockis" id="20240123003633-3">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="jhi_user" />
+                <tableExists tableName="process_collection" />
+                <not>
+                    <tableExists tableName="process_collection_user" />
+                </not>
+            </and>
+        </preConditions>
+
+        <createTable tableName="process_collection_user">
+            <column name="collection_id" type="${uuid_type}">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="collection_id,user_id" tableName="process_collection_user" primaryKeyName="pk_process_collection_user" />
+
+        <addForeignKeyConstraint
+            baseColumnNames="collection_id"
+            baseTableName="process_collection_user"
+            constraintName="fk_process_collection_users"
+            referencedColumnNames="id"
+            referencedTableName="process_collection"
+            onDelete="CASCADE"
+        />
+
+        <addForeignKeyConstraint
+            baseColumnNames="user_id"
+            baseTableName="process_collection_user"
+            constraintName="fk_user_id"
+            referencedColumnNames="id"
+            referencedTableName="jhi_user"
+            onDelete="CASCADE"
+        />
+    </changeSet>
+
+</databaseChangeLog>
