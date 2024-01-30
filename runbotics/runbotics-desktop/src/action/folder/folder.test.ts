@@ -234,13 +234,13 @@ describe('FolderActionHandler', () => {
         });
 
         it('Should throw error if accessing non-existent folder', async () => {
-            const name = 'notExistingFile';
-            const params: FolderDisplayFilesActionInput = {
-                name,
-                path: cwd
+            const path = 'iDontExist';
+            const params: FolderCreateActionInput = {
+                name: 'test',
+                path: path
             };
 
-            await expect(folderActionHandler.displayFiles(params)).rejects.toThrowError(`Directory not found: ${cwd}${path.sep}${name}`);
+            await expect(folderActionHandler.createFolder(params)).rejects.toThrowError(`Directory not found: ${path}`);
         });
 
         it('Should throw error if path is not provided', async () => {
