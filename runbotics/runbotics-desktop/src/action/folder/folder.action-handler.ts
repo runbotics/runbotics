@@ -11,9 +11,7 @@ import { RunboticsLogger } from '../../logger';
 export default class FolderActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(FolderActionHandler.name);
 
-    constructor(
-        private readonly serverConfigService: ServerConfigService,
-    ) {
+    constructor(private readonly serverConfigService: ServerConfigService) {
         super();
     }
 
@@ -44,7 +42,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
 
     async displayFiles(input: FolderDisplayFilesActionInput): Promise<string[] | null> {
         const { name, path } = input;
-        
+
         const folderPath = this.resolvePath(name, path);
 
         try {
@@ -63,6 +61,10 @@ export default class FolderActionHandler extends StatelessActionHandler {
     async createFolder(input: FolderCreateActionInput) {
         const { name, path } = input;
 
+        if (!name) {
+            throw new Error('Cannot create directory if name is not provided');
+        }
+        
         const folderPath = this.resolvePath(name, path);
 
         try {
@@ -71,6 +73,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
         } catch (e) {
             if (e.code === 'ENOENT') {
                 throw new Error(`Directory not found: ${folderPath}`);
+            } else if (e.code === 'EINVAL') {
+                throw new Error('Cannot create directory if path is not provided');
             } else if (e.code === 'EACCES' || e.code === 'EPERM') {
                 throw new Error(`Create directory permission denied: ${folderPath}`);
             } else if (e.code === 'EEXIST') {
