@@ -67,6 +67,10 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot create directory if name is not provided');
         }
 
+        if (!path) {
+            throw new Error('Cannot create directory if path is not provided');
+        }
+
         const folderPath = this.resolvePath(name, path);
 
         try {
@@ -75,8 +79,6 @@ export default class FolderActionHandler extends StatelessActionHandler {
         } catch (e) {
             if (e.code === 'ENOENT') {
                 throw new Error(`Directory not found: ${folderPath}`);
-            } else if (e.code === 'EINVAL') {
-                throw new Error('Cannot create directory if path is not provided');
             } else if (e.code === 'EACCES' || e.code === 'EPERM') {
                 throw new Error(`Create directory permission denied: ${folderPath}`);
             } else if (e.code === 'EEXIST') {
