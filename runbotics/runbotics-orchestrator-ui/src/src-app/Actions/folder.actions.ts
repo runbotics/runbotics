@@ -89,6 +89,12 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
         label: translate('Process.Details.Modeler.Actions.Folder.Create.Label'),
         script: FolderAction.CREATE,
         runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -114,6 +120,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },
@@ -136,29 +143,23 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                     },
                 },
                 output: {
-                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                    type: 'object',
-                    properties: {
-                        variableName: {
-                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                            type: 'string',
-                        }
-                    },
                     variableName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Folder.Create.Output.Info'),
-                            pattern: ActionRegex.VARIABLE_NAME,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
                     path: undefined,
                     name: undefined,
                 },
-            }
-        }
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
     },
 });
 

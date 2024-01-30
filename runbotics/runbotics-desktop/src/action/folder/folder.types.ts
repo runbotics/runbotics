@@ -14,7 +14,7 @@ export type FolderDisplayFilesActionInput = {
 
 export type FolderCreateActionInput = {
     name: string;
-    path?: string;
+    path: string;
 };
 
 export type FolderActionRequest =

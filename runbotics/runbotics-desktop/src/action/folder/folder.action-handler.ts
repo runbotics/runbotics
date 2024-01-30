@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { FolderAction } from 'runbotics-common';
-import { FolderActionRequest, FolderDeleteActionInput, FolderDisplayFilesActionInput } from './folder.types';
+import { FolderActionRequest, FolderCreateActionInput, FolderDeleteActionInput, FolderDisplayFilesActionInput } from './folder.types';
 import fs from 'fs';
 import pathPackage from 'path';
 import { ServerConfigService } from '#config';
@@ -60,12 +60,35 @@ export default class FolderActionHandler extends StatelessActionHandler {
         }
     }
 
+    async createFolder(input: FolderCreateActionInput) {
+        const { name, path } = input;
+
+        const folderPath = this.resolvePath(name, path);
+
+        try {
+            fs.mkdirSync(folderPath);
+            return `${path}\\${name}`;
+        } catch (e) {
+            if (e.code === 'ENOENT') {
+                throw new Error(`Directory not found: ${folderPath}`);
+            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
+                throw new Error(`Create directory permission denied: ${folderPath}`);
+            } else if (e.code === 'EEXIST') {
+                throw new Error('Cannot create directory - folder with this name already exists in the provided folder path');
+            } else {
+                throw new Error(`Directory could not be created. ${e}`);
+            }
+        }
+    }
+
     run(request: FolderActionRequest) {
         switch (request.script) {
             case FolderAction.DELETE:
                 return this.deleteFolder(request.input);
             case FolderAction.DISPLAY_FILES:
                 return this.displayFiles(request.input);
+            case FolderAction.CREATE:
+                return this.createFolder(request.input);
             default:
                 throw new Error('Action not found');
         }
