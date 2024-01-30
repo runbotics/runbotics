@@ -154,6 +154,7 @@ export const getUserIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(
             headers: getBasicAuthHeader(input),
             params: {
                 jql: `${dateCondition} AND worklogAuthor=${author}`,
+                maxResults: 100,
                 fields: '*all,-watches,-votes,-timetracking,-reporter,-progress,-issuerestriction,-issuelinks,-fixVersions,-comment,-attachment,-aggregateprogress,-assignee,-creator,-description,-duedate,-environment,-lastViewed,-resolution,-resolutiondate,-security,-statuscategorychangedate,-subtasks,-versions,-workratio,-timespent,-timeoriginalestimate,-timeestimate,-aggregatetimespent,-aggregatetimeoriginalestimate,-aggregatetimeestimate',
             },
             maxRedirects: 0,
