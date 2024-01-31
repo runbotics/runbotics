@@ -19,8 +19,6 @@ export const CollectionNameWrapper = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
-    font-weight: bolder;
 `;
 
 export const MenuWrapper = styled.div`

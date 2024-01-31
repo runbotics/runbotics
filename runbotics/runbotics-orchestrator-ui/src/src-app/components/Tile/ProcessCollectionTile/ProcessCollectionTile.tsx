@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton, Menu, Tooltip } from '@mui/material';
+import { IconButton, Menu, Tooltip, Typography } from '@mui/material';
 import PrivateIcon from '#public/images/icons/lock.svg';
 import If from '../../utils/If';
 import { CollectionNameWrapper, MenuWrapper, ProcessCollectionTileWrapper } from './ProcessCollectionTile.styles';
@@ -10,6 +10,7 @@ import { MoveCollection } from './MenuItems/MoveCollection';
 import { EditCollection } from './MenuItems/EditCollection';
 import { DeleteCollection } from './MenuItems/DeleteCollection';
 import { StyledIconsBox } from './ProcessCollectionList.style';
+import { translate } from '../../../hooks/useTranslations';
 
 const ProcessCollectionTile: FC<ProcessCollectionTileProps> = (props) => {
     const { id, name, isPublic } = {...props};
@@ -27,12 +28,14 @@ const ProcessCollectionTile: FC<ProcessCollectionTileProps> = (props) => {
     return (
         <ProcessCollectionTileWrapper>
             <Tooltip title={name}>
-                <CollectionNameWrapper>
-                    {name}
-                </CollectionNameWrapper>
+                <Typography fontWeight={'bolder'}>
+                    <CollectionNameWrapper>
+                        {name}
+                    </CollectionNameWrapper>
+                </Typography>
             </Tooltip>
             <If condition={!isPublic}>
-                <Tooltip title='Private collection'>
+                <Tooltip title={translate('Process.Collection.List.IsPrivate.Tooltip')}>
                     <StyledIconsBox color={'grey'}>
                         <Image src={PrivateIcon} alt='Private icon' />
                     </StyledIconsBox>
