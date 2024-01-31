@@ -1,7 +1,9 @@
-import { MenuItem } from '@mui/material';
 import { FC } from 'react';
-import { CollectionId } from '../ProcessCollectionTile.types';
+
+import { MenuItem } from '@mui/material';
+
 import { translate } from '../../../../hooks/useTranslations';
+import { CollectionId } from '../ProcessCollectionTile.types';
 
 export const DeleteCollection: FC<{ id: CollectionId }> = ({ id }) => {
 

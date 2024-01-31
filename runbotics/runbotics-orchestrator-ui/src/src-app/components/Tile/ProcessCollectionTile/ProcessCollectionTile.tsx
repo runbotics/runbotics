@@ -1,16 +1,19 @@
 import React, { FC } from 'react';
-import Image from 'next/image';
+
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu, Tooltip, Typography } from '@mui/material';
+import Image from 'next/image';
+
 import PrivateIcon from '#public/images/icons/lock.svg';
-import If from '../../utils/If';
+
+import { DeleteCollection } from './MenuItems/DeleteCollection';
+import { EditCollection } from './MenuItems/EditCollection';
+import { MoveCollection } from './MenuItems/MoveCollection';
+import { StyledIconsBox } from './ProcessCollectionList.style';
 import { CollectionNameWrapper, MenuWrapper, ProcessCollectionTileWrapper } from './ProcessCollectionTile.styles';
 import { ProcessCollectionTileProps } from './ProcessCollectionTile.types';
-import { MoveCollection } from './MenuItems/MoveCollection';
-import { EditCollection } from './MenuItems/EditCollection';
-import { DeleteCollection } from './MenuItems/DeleteCollection';
-import { StyledIconsBox } from './ProcessCollectionList.style';
 import { translate } from '../../../hooks/useTranslations';
+import If from '../../utils/If';
 
 const ProcessCollectionTile: FC<ProcessCollectionTileProps> = (props) => {
     const { id, name, isPublic } = {...props};

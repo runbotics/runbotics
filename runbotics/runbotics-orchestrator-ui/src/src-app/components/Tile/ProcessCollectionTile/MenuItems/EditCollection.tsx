@@ -1,7 +1,9 @@
-import { MenuItem } from '@mui/material';
 import { FC } from 'react';
-import { ProcessCollectionTileProps } from '../ProcessCollectionTile.types';
+
+import { MenuItem } from '@mui/material';
+
 import { translate } from '../../../../hooks/useTranslations';
+import { ProcessCollectionTileProps } from '../ProcessCollectionTile.types';
 
 export const EditCollection: FC<ProcessCollectionTileProps> = (props) => {
 

@@ -13,9 +13,9 @@ import { useSelector } from '#src-app/store';
 
 import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
+import ProcessCollectionList from '../../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
-import ProcessCollectionList from '../../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 
 const ProcessList: VFC = () => {
     const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);

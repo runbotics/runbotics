@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { Paper, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Paper, Typography } from '@mui/material';
+import styled from 'styled-components';
 
 export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
     &[class*="MuiPaper"] {

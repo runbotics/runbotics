@@ -1,11 +1,13 @@
 import { FC, MouseEvent, useLayoutEffect, useRef, useState } from 'react';
+
 import { Grid } from '@mui/material';
-import If from '../../utils/If';
+
+import { mockupProcessCollection } from './mockupData';
+import { ExpandButtonWrapper } from './ProcessCollectionList.style';
 import ProcessCollectionTile from './ProcessCollectionTile';
 import { CollectionListWrapper, DividerLine, ExpandButton, StyledExpandIcon, StyledTypography } from './ProcessCollectionTile.styles';
 import { translate } from '../../../hooks/useTranslations';
-import { mockupProcessCollection } from './mockupData';
-import { ExpandButtonWrapper } from './ProcessCollectionList.style';
+import If from '../../utils/If';
 
 const ProcessCollectionList: FC = () => {
     const processCollections = mockupProcessCollection; // TODO: get from store after merge
@@ -14,9 +16,7 @@ const ProcessCollectionList: FC = () => {
     const [isCollectionListMultiLine, setIsCollectionListMultiLine] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-    const handleWindowResize = (refTags: HTMLDivElement[]): number => {
-        return refTags.reduce((prevValue, tag) => prevValue + tag.offsetWidth, 0);
-    };
+    const handleWindowResize = (refTags: HTMLDivElement[]): number => refTags.reduce((prevValue, tag) => prevValue + tag.offsetWidth, 0);
 
     const checkCollectionsWidth = (tagsWidthSum: number): void => {
         if (!refCollectionBox.current) {
@@ -55,6 +55,7 @@ const ProcessCollectionList: FC = () => {
                     {processCollections.map(collection => (
                         <ProcessCollectionTile
                             {...collection}
+                            key={collection.id}
                         />
                     ))}
                 </Grid>
@@ -63,7 +64,7 @@ const ProcessCollectionList: FC = () => {
                 <ExpandButtonWrapper>
                     <DividerLine />
                     <ExpandButton $isExpanded={isExpanded} onClick={handleCollectionResize}>
-                        <StyledTypography fontSize={14}>
+                        <StyledTypography fontSize={14} >
                             <If 
                                 condition={isExpanded} 
                                 else={<>{translate('Process.Collection.List.ExpandLabel')}</>}
