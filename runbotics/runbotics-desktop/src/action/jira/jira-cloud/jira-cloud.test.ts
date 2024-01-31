@@ -174,34 +174,18 @@ describe('JiraCloudActionHandler', () => {
             id: '654321',
             key: 'RPA-1',
         };
-        const emptyUserIssuesWorklogs: IssueWorklogResponse<CloudJiraUser> = {
-            expand: 'schema,names',
-            issues: [],
-            maxResults: 100,
-            startAt: 0,
-            total: 0,
-        };
-        const partialUserIssuesWorklogs: IssueWorklogResponse<CloudJiraUser> = {
-            expand: 'schema,names',
-            issues: [{
-                ...jiraIssue, fields: {
-                    ...jiraIssue.fields, worklog: {
-                        ...jiraIssue.fields.worklog,
-                        total: 34,
-                    }
+        const emptyUserIssuesWorklogs: SearchIssue<CloudJiraUser>[] = [];
+        const userIssuesWorklogs: SearchIssue<CloudJiraUser>[] = [jiraIssue];
+        const partialUserIssuesWorklogs: SearchIssue<CloudJiraUser>[] = [{
+            ...jiraIssue,
+            fields: {
+                ...jiraIssue.fields,
+                worklog: {
+                    ...jiraIssue.fields.worklog,
+                    total: 34,
                 }
-            }],
-            maxResults: 100,
-            startAt: 0,
-            total: 1,
-        };
-        const userIssuesWorklogs: IssueWorklogResponse<CloudJiraUser> = {
-            expand: 'schema,names',
-            issues: [jiraIssue],
-            maxResults: 100,
-            startAt: 0,
-            total: 1,
-        };
+            }
+        }];
 
         beforeEach(() => {
             vi.spyOn(jiraUtils, 'getJiraUser').mockResolvedValue(jiraUser);
@@ -244,10 +228,10 @@ describe('JiraCloudActionHandler', () => {
         it('should call getIssueWorklogs', async () => {
             vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(partialUserIssuesWorklogs);
             const getIssueWorklogsSpy = vi.spyOn(jiraUtils, 'getIssueWorklogs').mockResolvedValue({
-                worklogs: userIssuesWorklogs.issues[0].fields.worklog.worklogs,
-                maxResults: userIssuesWorklogs.issues[0].fields.worklog.maxResults,
-                total: userIssuesWorklogs.issues[0].fields.worklog.total,
-                startAt: userIssuesWorklogs.issues[0].fields.worklog.startAt,
+                worklogs: userIssuesWorklogs[0].fields.worklog.worklogs,
+                maxResults: userIssuesWorklogs[0].fields.worklog.maxResults,
+                total: userIssuesWorklogs[0].fields.worklog.total,
+                startAt: userIssuesWorklogs[0].fields.worklog.startAt,
             } satisfies WorklogResponse<CloudJiraUser>);
 
             await jiraCloudActionHandler.getWorklog(getWorklogInputDate);
