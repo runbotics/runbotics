@@ -2,8 +2,9 @@ import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import {
-    GetWorklogBase, GetWorklogInput, IssueWorklogResponse, WorklogCollection, WorklogDay,
-    WorklogOutput, WorklogPeriod, WorklogResponse, WorklogAllowedDateParams, Worklog
+    GetWorklogBase, GetWorklogInput, IssueWorklogResponse, WorklogCollection,
+    WorklogDay, WorklogOutput, WorklogPeriod, WorklogResponse,
+    WorklogAllowedDateParams, Worklog, SearchIssue
 } from './jira.types';
 import { CloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser } from './jira-server/jira-server.types';
@@ -130,7 +131,10 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
     return data[0];
 };
 
-export const getUserIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(
+/**
+ * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-get
+ */
+export const getUserIssueWorklogs = async <T extends CloudJiraUser | ServerJiraUser>(
     author: string, input: GetWorklogInput
 ) => {
     let dateCondition = '';
@@ -147,14 +151,37 @@ export const getUserIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(
             .join(',');
         dateCondition = `worklogDate in (${mappedDates})`;
     }
+    const jql = `${dateCondition} AND worklogAuthor=${author}`;
+    let startAt = 0;
+    const issues: SearchIssue<T>[] = [];
 
+    const response = await searchWorklogsGroupedBy<T>({
+        input, jql, startAt,
+    });
+    startAt = response.maxResults;
+    issues.push(...response.issues);
+
+    while (response.total > startAt) {
+        const response = await searchWorklogsGroupedBy<T>({
+            input, jql, startAt,
+        });
+        issues.push(...response.issues);
+        startAt = response.startAt + response.maxResults;
+    }
+    return issues;
+};
+
+const searchWorklogsGroupedBy = <T extends CloudJiraUser | ServerJiraUser>({
+    input, jql, startAt,
+}) => {
     return externalAxios.get<IssueWorklogResponse<T>>(
         `${process.env[input.originEnv]}/rest/api/2/search`,
         {
             headers: getBasicAuthHeader(input),
             params: {
-                jql: `${dateCondition} AND worklogAuthor=${author}`,
-                maxResults: 100,
+                jql,
+                startAt,
+                maxResults: 100, // 100 is max value
                 fields: '*all,-watches,-votes,-timetracking,-reporter,-progress,-issuerestriction,-issuelinks,-fixVersions,-comment,-attachment,-aggregateprogress,-assignee,-creator,-description,-duedate,-environment,-lastViewed,-resolution,-resolutiondate,-security,-statuscategorychangedate,-subtasks,-versions,-workratio,-timespent,-timeoriginalestimate,-timeestimate,-aggregatetimespent,-aggregatetimeoriginalestimate,-aggregatetimeestimate',
             },
             maxRedirects: 0,
