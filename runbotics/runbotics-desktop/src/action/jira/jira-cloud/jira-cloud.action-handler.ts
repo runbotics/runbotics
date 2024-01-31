@@ -60,7 +60,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         }
 
         const jiraUser = await getJiraUser<CloudJiraUser>({ input });
-        const { issues } = await getUserIssueWorklogs<CloudJiraUser>(jiraUser.accountId, input);
+        const issues = await getUserIssueWorklogs<CloudJiraUser>(jiraUser.accountId, input);
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
 
         const worklogs = (await Promise.all(issues
