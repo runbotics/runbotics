@@ -15,8 +15,7 @@ import { ProcessCollectionTileProps } from './ProcessCollectionTile.types';
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
-const ProcessCollectionTile: FC<ProcessCollectionTileProps> = (props) => {
-    const { id, name, isPublic } = {...props};
+const ProcessCollectionTile: FC<ProcessCollectionTileProps> = ({ id, name, isPublic }) => {
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
 
@@ -50,7 +49,7 @@ const ProcessCollectionTile: FC<ProcessCollectionTileProps> = (props) => {
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
                     <MoveCollection id={id} />
-                    <EditCollection {...props} />
+                    <EditCollection id={id} name={name} isPublic={isPublic} />
                     <DeleteCollection id={id} />
                 </Menu>
             </MenuWrapper>

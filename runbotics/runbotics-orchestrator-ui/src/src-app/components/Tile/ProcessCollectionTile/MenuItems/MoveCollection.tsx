@@ -8,6 +8,8 @@ import { CollectionId } from '../ProcessCollectionTile.types';
 export const MoveCollection: FC<{ id: CollectionId }> = ({ id }) => {
 
     const moveCollection = () => {
+        // TODO: Handle collection directory change
+
         console.log('Move id=' + id);
     };
 

@@ -8,6 +8,8 @@ import { CollectionId } from '../ProcessCollectionTile.types';
 export const DeleteCollection: FC<{ id: CollectionId }> = ({ id }) => {
 
     const deleteCollection = () => {
+        // TODO: Handle collection deletion
+
         console.log('Remove id=' + id);
     };
 

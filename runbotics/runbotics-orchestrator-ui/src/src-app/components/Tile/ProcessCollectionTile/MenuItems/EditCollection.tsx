@@ -8,6 +8,8 @@ import { ProcessCollectionTileProps } from '../ProcessCollectionTile.types';
 export const EditCollection: FC<ProcessCollectionTileProps> = (props) => {
 
     const editCollection = () => {
+        // TODO: Handle collection edition
+
         console.log(props);
     };
 

@@ -2,12 +2,12 @@ import { Box } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import styled from 'styled-components';
 
+import { Color } from '../ProcessTile/ProcessTileFooter/ProcessTileFooter.types';
+
 export const ExpandButtonWrapper = styled.div`
     display: flex;
     flex-direction: row;
 `;
-
-export type Color = 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success' | 'grey';
 
 export const StyledIconsBox = styled(Box)
     <{ color: Color }>(({ theme, color }) => `
