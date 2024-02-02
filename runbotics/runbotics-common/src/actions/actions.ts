@@ -238,7 +238,8 @@ export enum ImageAction {
 
 export enum FolderAction {
     DELETE = 'folder.delete',
-    DISPLAY_FILES = 'folder.displayFiles'
+    DISPLAY_FILES = 'folder.displayFiles',
+    CREATE = 'folder.create'
 }
 
 export type AllActionIds =

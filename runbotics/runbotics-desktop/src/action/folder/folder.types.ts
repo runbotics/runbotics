@@ -12,6 +12,11 @@ export type FolderDisplayFilesActionInput = {
     path?: string;
 };
 
+export type FolderCreateActionInput = {
+    name: string;
+    path: string;
+};
+
 export type FolderActionRequest =
     | DesktopRunRequest<FolderAction.DELETE, FolderDeleteActionInput>
-    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput>;
+    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput> |DesktopRunRequest<FolderAction.CREATE, FolderCreateActionInput>;
