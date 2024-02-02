@@ -1,8 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
+import { IProcessInstanceLoopEvent } from 'runbotics-common';
+
 import { initialState } from './ProcessInstanceEvent.slice';
 import { ProcessInstanceEventState } from './ProcessInstanceEvent.state';
-import { IProcessInstanceLoopEvent } from 'runbotics-common';
 
 export const resetAll = (state: ProcessInstanceEventState) => {
     state.all = initialState.all;
