@@ -1,18 +1,18 @@
 import React, { FC } from 'react';
 
-import { Grid, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import clsx from 'clsx';
 
 
 import { FeatureKey } from 'runbotics-common';
 import styled from 'styled-components';
 
-
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import AddProcess from '../AddProcess';
+import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
 
 
 const PREFIX = 'Header';
@@ -32,6 +32,8 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
+    // const hasAddNewCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]); // goal
+    const hasAddNewCollectionAccess = true; // temp
 
     return (
         <StyledGrid
@@ -48,9 +50,14 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                 </Typography>
             </Grid>
             <Grid item>
-                <If condition={hasProcessAddAccess}>
-                    <AddProcess />
-                </If>
+                <Stack direction="row" spacing={2}>
+                    <If condition={hasProcessAddAccess}>
+                        <AddProcess />
+                    </If>
+                    <If condition={hasAddNewCollectionAccess}>
+                        <AddCollectionButton />
+                    </If>
+                </Stack>
             </Grid>
         </StyledGrid>
     );

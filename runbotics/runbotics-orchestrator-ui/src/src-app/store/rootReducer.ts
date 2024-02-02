@@ -10,6 +10,7 @@ import { botSystemsReducer as botSystem } from './slices/BotSystem';
 import { globalVariableReducer as globalVariable } from './slices/GlobalVariable';
 import { guestsReducer as guests } from './slices/Guests';
 import { processReducer as process } from './slices/Process';
+import { processCollectionReducer as processCollection } from './slices/ProcessCollection';
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
 import { processOutputReducer as processOutput } from './slices/ProcessOutput';
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
     globalVariable,
     guests,
     process,
+    processCollection,
     processInstance,
     processInstanceEvent,
     scheduleProcess,
