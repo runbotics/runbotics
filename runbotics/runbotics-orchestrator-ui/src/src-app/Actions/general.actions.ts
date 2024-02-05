@@ -178,7 +178,7 @@ const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     message: undefined
                 }
-            }, 
+            },
             uiSchema: {
                 'ui:order': ['input'],
             }
