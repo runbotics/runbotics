@@ -22,21 +22,22 @@ export const reduceCrumbs = (
 };
 
 export const updateSingleActiveLoopEvent = (state: ProcessInstanceEventState, action: PayloadAction<IProcessInstanceLoopEvent>) => {
-    if (state.all.nestedEvents[action.payload.loopId]) {
-        if (!state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber]) {
-            state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = [action.payload];
-            return;
-        }
+    if (!state.all.nestedEvents[action.payload.loopId]) return;
 
-        if (state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber].some((loopEvent) => loopEvent.id === action.payload.id)) {
-            state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber]
-                .map((loopEvent) => {
-                    if (loopEvent.id === action.payload.id) return action.payload;
-                    return loopEvent;
-                });
-            return;
-        }
-
-        state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber].push(action.payload);
+    const iteration = state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber];
+    if (!iteration) {
+        state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = [action.payload];
+        return;
     }
+
+    if (iteration.some((loopEvent) => loopEvent.id === action.payload.id)) {
+        state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = iteration
+            .map((loopEvent) => {
+                if (loopEvent.id === action.payload.id) return action.payload;
+                return loopEvent;
+            });
+        return;
+    }
+
+    state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber].push(action.payload);
 };
