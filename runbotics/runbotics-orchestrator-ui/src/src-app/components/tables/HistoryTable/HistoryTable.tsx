@@ -42,10 +42,12 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const { firstValueFrom } = useQuery();
     const pageFromUrl = firstValueFrom('page');
     const pageSizeFromUrl = firstValueFrom('pageSize');
+    const processInstanceIdFromUrl = firstValueFrom('instanceId');
 
     const [panelInfoState, setPanelInfoState] = useState<PanelInfoState>({ show: false });
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
+    const [instanceId, setInstanceId] = useState(processInstanceIdFromUrl);
     const hasProcessInstanceEventReadAccess = useFeatureKey([FeatureKey.PROCESS_INSTANCE_EVENT_READ]);
     const replaceQueryParams = useReplaceQueryParams();
 
@@ -53,13 +55,40 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         const pageNotAvailable = processInstancePage && page >= processInstancePage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            replaceQueryParams({ page, pageSize, tab, id });
+            replaceQueryParams({ page, pageSize, tab, id, instanceId });
+            return;
+        }
+        if (processInstancePage?.number) {
+            setPage(processInstancePage.number);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstancePage]);
 
     useEffect(() => {
-        replaceQueryParams({ page, pageSize, tab, id });
+        replaceQueryParams({ page, pageSize, tab, id, instanceId });
+
+        if (instanceId) {
+            dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance([{
+                size: pageSize,
+                filter: {
+                    equals: {
+                        ...(botId && { botId }),
+                        ...(processId && { processId }),
+                    },
+                },
+            }, instanceId]))
+                .then(unwrapResult)
+                .catch(() => {
+                    enqueueSnackbar(
+                        translate('History.Table.Error.InstancesNotFound'),
+                        { variant: 'error' },
+                    );
+                });
+            setPanelInfoState({ show: true, processInstanceId: instanceId});
+            setInstanceId(null);
+            return;
+        }
+
         dispatch(processInstanceActions.getProcessInstancePage({
             page,
             size: pageSize,

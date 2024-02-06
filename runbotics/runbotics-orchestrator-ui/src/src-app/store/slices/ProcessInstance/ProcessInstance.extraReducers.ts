@@ -13,6 +13,7 @@ import {
     getSubprocesses,
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
+    getProcessInstancePageWithSpecificInstance,
 } from './ProcessInstance.thunks';
 import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
@@ -123,6 +124,17 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.loadingPage = false;
         })
         .addCase(getProcessInstancePage.rejected, (state) => {
+            state.all.loadingPage = false;
+        })
+
+        .addCase(getProcessInstancePageWithSpecificInstance.pending, (state) => {
+          state.all.loadingPage = true;
+        })
+        .addCase(getProcessInstancePageWithSpecificInstance.fulfilled, (state, action) => {
+            state.all.page = action.payload;
+            state.all.loadingPage = false;
+        })
+        .addCase(getProcessInstancePageWithSpecificInstance.rejected, (state) => {
             state.all.loadingPage = false;
         });
 };

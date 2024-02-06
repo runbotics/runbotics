@@ -11,12 +11,13 @@ import com.runbotics.service.dto.ProcessInstanceDTO;
 import com.runbotics.service.mapper.ProcessInstanceMapper;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,33 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
 
         final Specification<ProcessInstance> specification = createSpecification(criteria);
         return processInstanceRepository.findAll(specification, page).map(processInstanceMapper::toDto);
+    }
+
+    /**
+     * Return a {@link Page} of {@link ProcessInstanceDTO} which matches the criteria from the database and also contains enity with provided id.
+     * @param id The id of entity which should appear in the {@link Page} of {@link ProcessInstanceDTO}
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
+     * @return the matching entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<ProcessInstanceDTO> findByCriteriaWithSpecificInstance(UUID id, ProcessInstanceCriteria criteria, Pageable page) {
+        final Specification<ProcessInstance> specification = createSpecification(criteria);
+        List<ProcessInstance> myList = processInstanceRepository.findAll(specification, page.getSort());
+        int index = -1;
+        for (int i = 0; i < myList.size(); i++) {
+            if (myList.get(i).getId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+        int pageNumber = index / page.getPageSize();
+        if (pageNumber < 0) {
+            pageNumber = 0;
+        }
+        Pageable newPageable = PageRequest.of(pageNumber, page.getPageSize(), page.getSort());
+        Page<ProcessInstanceDTO> foundInstances = processInstanceRepository.findAll(specification, newPageable).map(processInstanceMapper::toDto);
+        return foundInstances;
     }
 
     /**
