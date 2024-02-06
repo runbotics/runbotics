@@ -520,6 +520,53 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'beeOffice.createHolidayLeave': {
+        id: BeeOfficeAction.CREATE_HOLIDAY_LEAVE,
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Label'),
+        script: BeeOfficeAction.CREATE_HOLIDAY_LEAVE,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        type: 'object',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        properties: {
+                            employeeId: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId'),
+                                type: 'string'
+                            },
+                            dateFrom: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom'),
+                                type: 'string'
+                            },
+                            dateTo: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo'),
+                                type: 'string'
+                            },
+                            description: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description'),
+                                type: 'string'
+                            }
+                        },
+                        required: ['employeeId', 'dateFrom', 'dateTo']
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    employeeId: undefined,
+                    dateFrom: undefined,
+                    dateTo: undefined,
+                    description: 'xDDD',
+                }
+            },
+        },
+    },
 });
 
 export default getBeeOfficeActions;

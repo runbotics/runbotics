@@ -36,6 +36,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetEmployeeActionInput
     ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
+            // temp: use Miodea api for tests
             `${this.serverConfigService.beeUrl}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
             {
                 headers: {
@@ -212,6 +213,24 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         return response.data;
     }
 
+    async createHolidayLeave(
+        input: BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionInput
+    ): Promise<any> {
+        console.log('createHolidayLeave triggered!')
+
+        const response = await externalAxios.put(
+            `${this.serverConfigService.beeUrl}/api/leaves`, 
+            // todo: use Miodea api: https://beeofficeadm.vm.local/
+            input, {
+            headers: {
+                Authorization: 'Bearer ' + (await this.getBearerToken()),
+            },
+            maxRedirects: 0,
+        });
+
+        return response.data;
+    }
+
     run(request: BeeOfficeTypes.BeeOfficeActionRequest) {
         switch (request.script) {
             case 'beeOffice.createNewTimetableActivity':
@@ -230,6 +249,8 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
                 return this.deleteTimeTableActivity(request.input);
             case 'beeOffice.getActivityGroups':
                 return this.getActivityGroups(request.input);
+            case 'beeOffice.createHolidayLeave':
+                return this.createHolidayLeave(request.input);
             default:
                 throw new Error('Action not found');
         }

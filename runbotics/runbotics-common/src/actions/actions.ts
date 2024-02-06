@@ -163,6 +163,7 @@ export enum BeeOfficeAction {
     DELETE_TIMETABLE_ACTIVITY = 'beeOffice.deleteTimeTableActivity',
     GET_ACTIVITY_GROUPS = 'beeOffice.getActivityGroups',
     GET_ACTIVITIES_BY_URL_PARAMETERS = 'beeOffice.getActivitiesByURLParameters',
+    CREATE_HOLIDAY_LEAVE = 'beeOffice.createHolidayLeave',
 }
 
 export enum SapAction {
