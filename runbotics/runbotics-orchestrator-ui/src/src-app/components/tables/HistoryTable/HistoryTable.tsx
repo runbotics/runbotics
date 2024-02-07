@@ -85,7 +85,6 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                     );
                 });
             setPanelInfoState({ show: true, processInstanceId: instanceId});
-            setInstanceId(null);
             return;
         }
 
@@ -116,6 +115,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     }));
 
     const handleOnClick = async (processInstance: IProcessInstance) => {
+        setInstanceId(null);
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
         if (
             processInstance.status === ProcessInstanceStatus.INITIALIZING ||
@@ -143,6 +143,16 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const handleRerunProcess = () => {
         setPanelInfoState({ show: true });
     };
+
+    const handleSetPage = (page: number) => {
+        setInstanceId(null);
+        setPage(page);
+    };
+
+    const handleSetPageSize = (pageSize: number) => {
+        setInstanceId(null);
+        setPageSize(pageSize);
+    };
     
     const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
 
@@ -156,13 +166,14 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         data={processInstancePage?.content ?? []}
                         totalPages={processInstancePage?.totalPages ?? 1}
                         onRowClick={hasProcessInstanceEventReadAccess ? handleOnClick : undefined}
-                        setPage={setPage}
+                        setPage={handleSetPage}
                         page={page}
                         pageSize={pageSize}
-                        setPageSize={setPageSize}
+                        setPageSize={handleSetPageSize}
                         loading={loadingPage}
                         subRowProperty="subprocesses"
                         singleSelect={hasProcessInstanceEventReadAccess}
+                        instanceId={instanceId}
                     />
                 </Box>
                 <If condition={panelInfoState.show && hasProcessInstanceEventReadAccess}>
