@@ -1,11 +1,11 @@
 import React, { useEffect, VFC } from 'react';
-import { useSnackbar } from 'notistack';
 
 import { Box, CircularProgress } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 
-import { useDispatch, useSelector } from '#src-app/store';
 import { translate } from '#src-app/hooks/useTranslations';
+import { useDispatch, useSelector } from '#src-app/store';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 import ProcessInstanceDetailsHeader from './ProcessInstanceDetailsHeader';

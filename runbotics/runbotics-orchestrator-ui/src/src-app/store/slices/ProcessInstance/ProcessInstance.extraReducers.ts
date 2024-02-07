@@ -128,7 +128,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
         })
 
         .addCase(getProcessInstancePageWithSpecificInstance.pending, (state) => {
-          state.all.loadingPage = true;
+            state.all.loadingPage = true;
         })
         .addCase(getProcessInstancePageWithSpecificInstance.fulfilled, (state, action) => {
             state.all.page = action.payload;

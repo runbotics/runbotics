@@ -76,16 +76,16 @@ const Table = <T extends object>({
     );
 
     const mappedRows = useMemo(() => {
-      if (!instanceId) return rows;
-      return rows.map((row: (Row<T> & { original: { id: string } })) => {
-          if (row.original.id === instanceId) {
-              return {
-                  ...row,
-                  isSelected: true,
-              }
-          }
-          return row;
-      });
+        if (!instanceId) return rows;
+        return rows.map((row: (Row<T> & { original: { id: string } })) => {
+            if (row.original.id === instanceId) {
+                return {
+                    ...row,
+                    isSelected: true,
+                }
+            }
+            return row;
+        });
     }, [rows, instanceId]);
 
 

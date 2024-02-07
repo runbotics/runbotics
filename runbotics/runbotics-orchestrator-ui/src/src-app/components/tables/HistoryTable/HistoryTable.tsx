@@ -144,14 +144,14 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setPanelInfoState({ show: true });
     };
 
-    const handleSetPage = (page: number) => {
+    const handleSetPage = (newPage: number) => {
         setInstanceId(null);
-        setPage(page);
+        setPage(newPage);
     };
 
-    const handleSetPageSize = (pageSize: number) => {
+    const handleSetPageSize = (newPageSize: number) => {
         setInstanceId(null);
-        setPageSize(pageSize);
+        setPageSize(newPageSize);
     };
     
     const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
