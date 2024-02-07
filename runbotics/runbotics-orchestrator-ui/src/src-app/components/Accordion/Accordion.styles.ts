@@ -1,6 +1,7 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material';
-import styled from 'styled-components';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import styled from 'styled-components';
+
 import { StyledExpandProps, StyledHoverProps, StyledIconProps } from './Accordion.types';
 
 export const StyledAccordion = styled(Accordion) <StyledExpandProps>`

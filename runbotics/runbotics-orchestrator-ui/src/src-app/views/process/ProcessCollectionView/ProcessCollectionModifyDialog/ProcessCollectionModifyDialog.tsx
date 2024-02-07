@@ -16,8 +16,8 @@ import { User } from '#src-app/types/user';
 
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { ProcessCollectionModifyDialogProps } from './ProcessCollectionModifyDialog.types';
 import AccessOptions from './AccessOptions/';
+import { ProcessCollectionModifyDialogProps } from './ProcessCollectionModifyDialog.types';
 import { Content, Form, Title } from '../../../utils/FormDialog.styles';
 import { checkTranslationKey, completeCollectionEntity, prepareIncompleteCollectionEntity } from '../ProcessCollection.utils';
 

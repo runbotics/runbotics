@@ -1,12 +1,13 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 
-import { Autocomplete, Box, Switch, TextField, Typography, FormControlLabel } from '@mui/material';
+import { Autocomplete, Box, Switch, TextField, FormControlLabel } from '@mui/material';
 import { IUser } from 'runbotics-common';
 
+import Accordion from '#src-app/components/Accordion';
 import useTranslations from '#src-app/hooks/useTranslations';
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
+
 import { AccessOptionsProps } from './AccessOptions.types';
-import Accordion from '#src-app/components/Accordion';
 
 const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin }) => {
     const { translate } = useTranslations();

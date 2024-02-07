@@ -1,7 +1,9 @@
-import { FC, useState } from "react";
-import { AccordionProps } from "./Accordion.types";
-import { CustomDivider, StyledAccordion, StyledAccordionDetails, StyledAccordionSummary, StyledExpandMoreOutlinedIcon } from "./Accordion.styles";
-import { Box, Typography } from "@mui/material";
+import { FC, useState } from 'react';
+
+import { Box, Typography } from '@mui/material';
+
+import { CustomDivider, StyledAccordion, StyledAccordionDetails, StyledAccordionSummary, StyledExpandMoreOutlinedIcon } from './Accordion.styles';
+import { AccordionProps } from './Accordion.types';
 
 const Accordion: FC<AccordionProps> = ({ title, children }) => {
     const [isExpanded, setIsExpanded] = useState(false);
