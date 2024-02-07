@@ -8,7 +8,7 @@ interface CapitalizeFirstLetterParams {
 export const capitalizeFirstLetter = ({
     text,
     lowerCaseRest = false,
-    delimiter = ' ',
+    delimiter = /\s/,
     join,
 }: CapitalizeFirstLetterParams) =>
     text
