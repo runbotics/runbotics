@@ -1,14 +1,14 @@
 interface CapitalizeFirstLetterParams {
-    text: string, 
-    lowerCaseRest?: boolean, 
-    delimiter?: string | RegExp, 
+    text: string,
+    lowerCaseRest?: boolean,
+    delimiter?: string | RegExp,
     join?: string
 }
 
 export const capitalizeFirstLetter = ({
     text,
     lowerCaseRest = false,
-    delimiter,
+    delimiter = ' ',
     join,
 }: CapitalizeFirstLetterParams) =>
     text

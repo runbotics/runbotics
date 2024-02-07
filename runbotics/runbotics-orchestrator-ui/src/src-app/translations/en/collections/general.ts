@@ -10,6 +10,7 @@ const englishGeneral = {
     'Proces.Collection.Dialog.Modify.Form.Users.Tooltip': 'This users will see the collection and public processes inside it.',
     'Process.Collection.Dialog.Modify.Form.Name.Label': 'Name',
     'Process.Collection.Dialog.Modify.Form.Description.Label': 'Description',
+    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Access'
 };
 
 export default englishGeneral;

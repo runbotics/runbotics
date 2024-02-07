@@ -8,17 +8,16 @@ import { IUser, ProcessCollection, ProcessCollectionKeys, Role } from 'runbotics
 
 import { hasRoleAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
-
 import { useDispatch, useSelector } from '#src-app/store';
-
 import { processCollectionActions } from '#src-app/store/slices/ProcessCollection/ProcessCollection.slice';
 import { usersActions } from '#src-app/store/slices/Users';
-
 import { User } from '#src-app/types/user';
 
 
+import { capitalizeFirstLetter } from '#src-app/utils/text';
+
 import { ProcessCollectionModifyDialogProps } from './ProcessCollectionModifyDialog.types';
-import VisibilityOptions from './VisibilityOptions/VisibilityOptions';
+import AccessOptions from './AccessOptions/';
 import { Content, Form, Title } from '../../../utils/FormDialog.styles';
 import { checkTranslationKey, completeCollectionEntity, prepareIncompleteCollectionEntity } from '../ProcessCollection.utils';
 
@@ -35,7 +34,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
 
     const usersWithoutAdmin = useMemo(() => allUsers.filter((user: IUser) => !hasRoleAccess(user as User, [Role.ROLE_ADMIN])), [allUsers]);
     const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasRoleAccess(currentUser, [Role.ROLE_ADMIN]);
-    ;
+
     useEffect(() => {
         if (isOpen) dispatch(usersActions.getAllLimited());
 
@@ -59,11 +58,11 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
     const handleSubmit = async () => {
         const body = completeCollectionEntity(collectionData);
         const { type: responseType, payload } = await updateCollection(body);
-        const { detail, status } = payload.response.data || {};
+        const { detail, status } = payload?.response?.data || {};
 
         if (responseType === CREATE_COLLECTION_REJECTED_TYPE) {
             const errorKey = payload.response.data.errorKey;
-            const translateKey = `Process.Collection.Dialog.Modify.Form.ErrorMessage.${errorKey}`;
+            const translateKey = `Process.Collection.Dialog.Modify.Form.ErrorMessage.${capitalizeFirstLetter({ text: errorKey })}`;
             const errorMessage =
                 checkTranslationKey(translateKey)
                     ? translate(translateKey)
@@ -102,7 +101,6 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                     <TextField
                         label={translate('Process.Collection.Dialog.Modify.Form.Name.Label')}
                         required
-                        defaultValue={name}
                         disabled={!isOwner}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormPropertyChange('name', e.target.value)}
                         size="small"
@@ -115,7 +113,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                         size="small"
                         fullWidth
                     />
-                    <VisibilityOptions
+                    <AccessOptions
                         collectionData={collectionData}
                         handleChange={handleFormPropertyChange}
                         isOwner={isOwner}

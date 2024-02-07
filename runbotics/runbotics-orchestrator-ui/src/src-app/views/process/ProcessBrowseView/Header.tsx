@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 
 import { Grid, Stack, Typography } from '@mui/material';
 import clsx from 'clsx';
-
-
 import { FeatureKey } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -32,8 +30,7 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
-    // const hasAddNewCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]); // goal
-    const hasAddNewCollectionAccess = true; // temp
+    const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
     return (
         <StyledGrid
@@ -54,7 +51,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                     <If condition={hasProcessAddAccess}>
                         <AddProcess />
                     </If>
-                    <If condition={hasAddNewCollectionAccess}>
+                    <If condition={hasAddCollectionAccess}>
                         <AddCollectionButton />
                     </If>
                 </Stack>

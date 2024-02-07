@@ -14,9 +14,6 @@ export enum FeatureKey {
     // Show "ADD NEW PROCESS" button [ Processes page ]
     PROCESS_ADD = 'PROCESS_ADD',
 
-    // Show "ADD NEW COLLECTION" button [ Processes page -> COLLECTIONS tab ]
-    PROCESS_COLLECTION_ADD = 'PROCESS_COLLECTION_ADD',
-
     // Action "Edit" on process tile -> 3 vertical dots (like: edit name, description, etc.) [ Processes page ]
     PROCESS_EDIT_INFO = 'PROCESS_EDIT_INFO',
 
@@ -158,7 +155,7 @@ export enum FeatureKey {
     // Show "History" page [ History page ]
     HISTORY_READ = 'HISTORY_READ',
 
-    // ???
+    // no uses in runbotics-orchestrator-ui/**/*.ts - can be removed
     BASIC_USER_READ = 'BASIC_USER_READ',
 
     // Access to users page, manage users
@@ -168,7 +165,18 @@ export enum FeatureKey {
     PROCESS_OUTPUT_TYPE_READ = 'PROCESS_OUTPUT_TYPE_READ',
 
     // Allow to edit process output types
-    PROCESS_OUTPUT_TYPE_EDIT = 'PROCESS_OUTPUT_TYPE_EDIT'
+    PROCESS_OUTPUT_TYPE_EDIT = 'PROCESS_OUTPUT_TYPE_EDIT',
+
+    PROCESS_COLLECTION_READ = 'PROCESS_READ',
+
+    // Show "CREATE NEW COLLECTION" button on processes page in COLLECTIONS tab
+    PROCESS_COLLECTION_ADD = 'PROCESS_COLLECTION_ADD',
+
+    // Allow for editing properties of the existing collection (processes page -> COLLECTIONS tab -> 3 vertical dots -> "modify" option)
+    PROCESS_COLLECTION_EDIT = 'PROCESS_COLLECTION_EDIT',
+
+    // Allow to delete collection of processes (processes page -> COLLECTIONS tab -> 3 vertical dots -> "delete" option)
+    PROCESS_COLLECTION_DELETE = 'PROCESS_COLLECTION_DELETE',
 }
 
 export interface IFeatureKey {

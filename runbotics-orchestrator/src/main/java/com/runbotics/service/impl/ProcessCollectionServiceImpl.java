@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
 
-    private final Logger log = LoggerFactory.getLogger(BotServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ProcessCollectionServiceImpl.class);
 
     private final ProcessCollectionRepository processCollectionRepository;
 

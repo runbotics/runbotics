@@ -7,7 +7,7 @@ import { AddCollectionButtonProps } from './AddCollection.types';
 import { translate } from '../../../../hooks/useTranslations';
 import ProcessCollectionModifyDialog from '../ProcessCollectionModifyDialog/ProcessCollectionModifyDialog';
 
-const AddCollectionButton: FC<AddCollectionButtonProps> = ({ collectionData }) => {
+const AddCollectionButton: FC<AddCollectionButtonProps> = ({ collection }) => {
     const [showDialog, setShowDialog] = useState(false);
 
     return (
@@ -27,7 +27,7 @@ const AddCollectionButton: FC<AddCollectionButtonProps> = ({ collectionData }) =
             <ProcessCollectionModifyDialog
                 open={showDialog}
                 onClose={() => setShowDialog(false)}
-                collection={collectionData}
+                collection={collection}
             />
         </>
 

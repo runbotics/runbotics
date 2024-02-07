@@ -6,7 +6,6 @@ export interface CollectionModifyDialogProps {
     onClose: () => void;
 }
 
-
 export interface AddCollectionButtonProps {
-    collectionData: ProcessCollection;
+    collection?: ProcessCollection;
 }

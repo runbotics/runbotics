@@ -134,7 +134,7 @@ public class ProcessCollectionCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return (
-            "BotCollectionCriteria{" +
+            "ProcessCollectionCriteria{" +
             "id=" +
             id +
             ", name=" +

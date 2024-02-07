@@ -1,27 +1,24 @@
-import React, { ChangeEvent, FC } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
-import { AccordionDetails, Autocomplete, Box, Switch, TextField, Typography, FormControlLabel } from '@mui/material';
+import { Autocomplete, Box, Switch, TextField, Typography, FormControlLabel } from '@mui/material';
 import { IUser } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
+import { AccessOptionsProps } from './AccessOptions.types';
+import Accordion from '#src-app/components/Accordion';
 
-import { StyledAccordion, StyledAccordionSummary } from './VisibilityOptions.styles';
-import { VisibilityOptionsProps } from './VisibilityOptions.types';
-
-const VisibilityOptions: FC<VisibilityOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin }) => {
+const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin }) => {
     const { translate } = useTranslations();
 
-    const translationVisibilityKey = collectionData.isPublic ? 'True' : 'False';
+    const isPublicTranslationKey = collectionData.isPublic ? 'True' : 'False';
 
     return (
-        <StyledAccordion>
-            <StyledAccordionSummary expandIcon={<ExpandCircleDownOutlinedIcon />}>
-                <Typography >Visibility options</Typography>
-            </StyledAccordionSummary>
-            <AccordionDetails>
-                <Box display="flex" alignItems="center">
+        <Accordion
+            title={translate('Proces.Collection.Dialog.Modify.Form.Access.Label')}
+        >
+            <Box display="flex" justifyContent="space-between" flexDirection="column" gap={3} width="full">
+                <Box display="flex" alignItems="center" pl={1}>
                     <FormControlLabel
                         control={
                             <Switch
@@ -30,13 +27,13 @@ const VisibilityOptions: FC<VisibilityOptionsProps> = ({ collectionData, handleC
                                 disabled={!isOwner}
                             />
                         }
-                        label={translate(`Proces.Collection.Dialog.Modify.Form.IsPublic.${translationVisibilityKey}`)}
+                        label={translate(`Proces.Collection.Dialog.Modify.Form.IsPublic.${isPublicTranslationKey}`)}
                     />
-                    <InfoButtonTooltip message={translate(`Proces.Collection.Dialog.Modify.Form.IsPublic.${translationVisibilityKey}.Tooltip`)} />
+                    <InfoButtonTooltip message={translate(`Proces.Collection.Dialog.Modify.Form.IsPublic.${isPublicTranslationKey}.Tooltip`)} />
                 </Box>
-                <Box sx={{ width: '100%', paddingTop: '25px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                <Box display="flex" alignItems="center" gap={1} width="full">
                     <Autocomplete
-                        sx={{ width: '100%' }}
+                        fullWidth
                         onChange={(e: ChangeEvent<HTMLInputElement>, value: IUser[]) => handleChange('users', value)}
                         multiple
                         id="process-collection-users-select"
@@ -52,12 +49,14 @@ const VisibilityOptions: FC<VisibilityOptionsProps> = ({ collectionData, handleC
                             <TextField {...params} label={translate('Proces.Collection.Dialog.Modify.Form.Users.Placeholder')} />
                         )}
                     />
-                    <InfoButtonTooltip message={translate('Proces.Collection.Dialog.Modify.Form.Users.Tooltip')} />
+                    <Box sx={{ flexShrink: 0 }}>
+                        <InfoButtonTooltip message={translate('Proces.Collection.Dialog.Modify.Form.Users.Tooltip')} />
+                    </Box>
                 </Box>
-            </AccordionDetails>
-        </StyledAccordion>
+            </Box>
+        </Accordion>
     );
 };
 
 
-export default VisibilityOptions;
+export default AccessOptions;

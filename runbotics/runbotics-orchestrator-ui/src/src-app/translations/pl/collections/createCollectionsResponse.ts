@@ -2,9 +2,9 @@ import englishCreateCollectionsResponse from '#src-app/translations/en/collectio
 
 const createCollectionsResponse: typeof englishCreateCollectionsResponse = {
     'Process.Collection.Dialog.Modify.Form.ErrorMessage.Default': 'Coś poszło nie tak. Szczegóły: {{ detail }} | {{ status }}',
-    'Process.Collection.Dialog.Modify.Form.ErrorMessage.noname': 'Nazwa nie może być pusta',
-    'Process.Collection.Dialog.Modify.Form.ErrorMessage.nameexists': 'W tym katalogu istnieje już kolekcja o tej nazwie',
-    'Process.Collection.Dialog.Modify.Form.ErrorMessage.Error.Http.403':'Nie masz uprawnień do utworzenia kolekcji',
+    'Process.Collection.Dialog.Modify.Form.ErrorMessage.Noname': 'Nazwa nie może być pusta',
+    'Process.Collection.Dialog.Modify.Form.ErrorMessage.Nameexists': 'W tym katalogu istnieje już kolekcja o tej nazwie',
+    'Process.Collection.Dialog.Modify.Form.ErrorMessage.Idexists': 'Wystąpił nieoczekiwany błąd - istnieje już kolekcja o takim id',
     'Process.Collection.Dialog.Create.Success': 'Kolekcja została utworzona pomyślnie',
 };
 
