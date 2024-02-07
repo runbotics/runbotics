@@ -2,19 +2,14 @@ import { JwtAuthGuard } from './jwt.guard';
 import { ROLES_KEY } from '../roles.decorator';
 import { Role } from 'runbotics-common';
 import { ExecutionContext } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from './public.guard';
 import { AuthRequest } from '#/types/auth-request';
 
 export class RoleGuard extends JwtAuthGuard {
 
     async canActivate(context: ExecutionContext) {
         await super.canActivate(context);
-        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
 
-        if (isPublic) {
+        if (super.isPublic(context)) {
             return true;
         }
 
