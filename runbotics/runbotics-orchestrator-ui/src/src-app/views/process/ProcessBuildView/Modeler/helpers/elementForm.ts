@@ -39,7 +39,7 @@ export const getFormData = (
     if (!action) selectedAction = getActionFromElement(selectedElement);
     const { runFromHere, disabled, processOutput } = selectedElement.businessObject;
 
-    const hasOutput = selectedAction.form.schema.properties.output;
+    const hasOutput = selectedAction.form?.schema?.properties?.output;
 
     const defaultParameters = {
         ...selectedAction?.form.formData,
@@ -85,7 +85,7 @@ export const getFormSchema = (
     let selectedAction = action;
     if (!action) selectedAction = getActionFromElement(selectedElement);
 
-    const hasOutput = selectedAction.form.schema.properties.output;
+    const hasOutput = selectedAction.form?.schema?.properties?.output;
 
     const additionalProperties: JSONSchema7['properties'] = {
         disabled: {
@@ -128,7 +128,7 @@ export const getFormUiSchema = (
     let selectedAction = action;
     if (!action) selectedAction = getActionFromElement(selectedElement);
 
-    const hasOutput = selectedAction.form.schema.properties.output;
+    const hasOutput = selectedAction.form?.schema?.properties?.output;
     const cloned = { ...selectedAction.form.uiSchema };
 
     if (cloned['ui:order']) {

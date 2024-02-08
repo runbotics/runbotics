@@ -40,7 +40,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     );
 
     const checkInputMatches = (input: string) => {
-        const variablesRegex = /[#]\{([^{}]*)?/g;
+        const variablesRegex = /[#]\{([^{}]*)\}?/g;
         if (!input) return INPUT_AUTOCOMPLETE_DEFAULT;
 
         const incompleteVariables = [...input.matchAll(variablesRegex)];

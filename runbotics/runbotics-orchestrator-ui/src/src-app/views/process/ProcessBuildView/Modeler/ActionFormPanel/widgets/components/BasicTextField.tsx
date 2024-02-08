@@ -4,7 +4,6 @@ import { AutocompleteRenderInputParams, TextField } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
 import If from '#src-app/components/utils/If';
-import useCustomValidation from '#src-app/hooks/useCustomValidation';
 import useDebounce from '#src-app/hooks/useDebounce';
 import { Variable } from '#src-app/hooks/useOptions';
 

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { AuthModule } from './auth/auth.module';
 import { StorageService } from './utils/storage.service';
 import { Logger } from './utils/logger';
@@ -14,6 +15,7 @@ import { WebsocketModule } from './websocket/websocket.module';
         QueueModule,
         MailTriggerModule,
         WebsocketModule,
+        PrometheusModule.register(),
     ],
     providers: [
         StorageService, Logger

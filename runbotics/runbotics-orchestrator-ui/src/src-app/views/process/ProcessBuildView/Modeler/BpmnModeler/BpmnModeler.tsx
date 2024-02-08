@@ -79,6 +79,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             errors,
             imported,
             customValidationErrors,
+            activeDrag
         } = useSelector((state) => state.process.modeler);
 
         useNavigationLock(
@@ -136,6 +137,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         errors,
                         customValidationErrors,
                         imported,
+                        activeDrag
                     })
                 )
             );

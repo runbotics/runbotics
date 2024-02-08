@@ -66,7 +66,7 @@ const GatewayFormRenderer = () => {
                 }));
             }
         });
-    }
+    };
 
     const setDefaultConnection = (outgoing: IBpmnConnection) => {
         setDefaultFlow(outgoing.id);
