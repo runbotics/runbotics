@@ -8,7 +8,7 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         align-items: center;
         max-width: 350px;
         gap: 8px;
-        padding: 2px 20px;
+        padding: 2px 0 2px 20px;
         background-color: ${theme.palette.grey[200]};
     }
 `);
