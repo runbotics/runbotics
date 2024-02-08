@@ -6,9 +6,11 @@ import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
+
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 import ProcessInstanceDetailsHeader from './ProcessInstanceDetailsHeader';
+
 import ProcessInstanceDetailsTable from './ProcessInstanceDetailsTable';
 
 
