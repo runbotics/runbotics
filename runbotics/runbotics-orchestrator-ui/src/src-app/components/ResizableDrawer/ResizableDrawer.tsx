@@ -30,8 +30,8 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     };
 
     useEffect(() => {
-      setDraggerHeight(drawerRef.current?.getElementsByClassName("MuiGrid-root")[0]?.scrollHeight);
-    }, [drawerRef.current?.getElementsByClassName("MuiGrid-root")[0]?.scrollHeight])
+        setDraggerHeight(drawerRef.current?.getElementsByClassName('MuiGrid-root')[0]?.scrollHeight);
+    }, [drawerRef.current?.getElementsByClassName('MuiGrid-root')[0]?.scrollHeight])
 
     return (
         <Drawer
