@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { Drawer, DrawerProps } from '@mui/material';
 
@@ -14,6 +14,8 @@ import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });
     const [dragmode, setDragmode] = useState(false);
+    const [draggerHeight, setDraggerHeight] = useState<number>();
+    const drawerRef = useRef<HTMLDivElement>(null);
 
     const handleDragStart = () => {
         setDragmode(true);
@@ -26,6 +28,10 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const handleDragEnd = () => {
         setDragmode(false);
     };
+
+    useEffect(() => {
+      setDraggerHeight(drawerRef.current?.getElementsByClassName("MuiGrid-root")[0]?.scrollHeight);
+    }, [drawerRef.current?.getElementsByClassName("MuiGrid-root")[0]?.scrollHeight])
 
     return (
         <Drawer
@@ -49,8 +55,9 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
                     marginLeft: `-${width}px`,
                 },
             ]}
+            ref={drawerRef}
         >
-            <Dragger active={dragmode} onMouseDown={handleDragStart} />
+            <Dragger active={dragmode} onMouseDown={handleDragStart} draggerHeight={draggerHeight} />
             {createPortal(
                 <EventCatcher
                     active={dragmode}

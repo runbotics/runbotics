@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components';
 
-export const Dragger = styled.div<{ active: boolean }>(({ theme, active }) => (`
+export const Dragger = styled.div<{ active: boolean; draggerHeight?: number }>(({ theme, active, draggerHeight }) => (`
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     width: 3px;
+    ${draggerHeight && `height: ${draggerHeight}px;`}
     ${active && css`background-color: ${theme.palette.primary.light}`};
     cursor: ew-resize;
     user-select: ${active ? 'none' : 'all'}; // needed for Firefox to correctly start catching events when EventCatcher activates
