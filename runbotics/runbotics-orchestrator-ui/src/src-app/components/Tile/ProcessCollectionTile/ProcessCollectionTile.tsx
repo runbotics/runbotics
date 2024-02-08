@@ -40,7 +40,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
             <If condition={!isPublic}>
                 <Tooltip title={translate('Process.Collection.List.IsPrivate.Tooltip')}>
                     <StyledIconsBox color={'grey'}>
-                        <Image src={PrivateIcon} alt='Private icon' />
+                        <Image src={PrivateIcon} alt={translate('Process.Collection.List.Alt.PrivateIcon')} />
                     </StyledIconsBox>
                 </Tooltip>
             </If>
@@ -48,7 +48,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                 <IconButton onClick={handleClick}>
                     <MoreVertIcon />
                 </IconButton>
-                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
+                <Menu id="process-collection-actions-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
                     <MoveCollection id={id} />
                     <EditCollection id={id} name={name} isPublic={isPublic} parentId={parentId} />
                     <DeleteCollection id={id} />

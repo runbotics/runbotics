@@ -8,7 +8,8 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         align-items: center;
         max-width: 350px;
         gap: 8px;
-        padding: 2px 0 2px 20px;
+        padding-left: 20px;
+        padding-block: 2px;
         background-color: ${theme.palette.grey[200]};
     }
 `);
@@ -30,7 +31,7 @@ export const CollectionListWrapper = styled.div<{ isExpanded?: boolean }>`
 `;
 
 export const ExpandButton = styled.div
-    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
+    <{ $expanded: boolean; }>(({ theme, $expanded }) => `
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +40,7 @@ export const ExpandButton = styled.div
     padding: 14px;
     margin: 5px 2px;
     border-radius: 10px;
-    background-color: ${$isExpanded ? theme.palette.grey[200] : 'transparent'};
+    background-color: ${$expanded ? theme.palette.grey[200] : 'transparent'};
     &:hover {
         cursor: pointer;
         background-color: ${theme.palette.grey[300]};
@@ -55,10 +56,10 @@ export const StyledTypography = styled(Typography)(({ theme }) => `
 `);
 
 export const StyledExpandIcon = styled(ExpandMoreIcon)
-    <{ $isExpanded: boolean; }>(({ theme, $isExpanded }) => `
+    <{ $expanded: boolean; }>(({ theme, $expanded }) => `
     && {
         color: ${theme.palette.grey[500]};
-        transform: rotate(${$isExpanded ? '-180deg' : '0'});
+        transform: rotate(${$expanded ? '-180deg' : '0'});
         transition: 0.5s;
     }
 `);

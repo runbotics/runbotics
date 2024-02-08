@@ -12,6 +12,8 @@ import { CollectionListWrapper, DividerLine, ExpandButton, StyledExpandIcon, Sty
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
+const PROCESS_COLLECTIONS_GAP = 16;
+
 const ProcessCollectionList: FC = () => {
     const processCollections = useSelector(processCollectionSelector).childrenCollections.list;
 
@@ -19,21 +21,21 @@ const ProcessCollectionList: FC = () => {
     const [isCollectionListMultiLine, setIsCollectionListMultiLine] = useState<boolean>(false);
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
-    const handleWindowResize = (refTags: HTMLDivElement[]): number => refTags.reduce((prevValue, tag) => prevValue + tag.offsetWidth, 0);
+    const handleWindowResize = (refTiles: HTMLDivElement[]): number => refTiles.reduce((prevValue, tile) => prevValue + tile.offsetWidth, 0);
 
-    const checkCollectionsWidth = (tagsWidthSum: number): void => {
+    const checkCollectionsWidth = (tilesWidthSum: number): void => {
         if (!refCollectionBox.current) {
             return;
         }
 
         const collectionsContainerWidth: number = refCollectionBox.current.offsetWidth;
-        const collectionsWithGapsWidth: number = tagsWidthSum + (processCollections.length * 16);
+        const collectionsWithGapsWidth: number = tilesWidthSum + (processCollections.length * PROCESS_COLLECTIONS_GAP);
         setIsCollectionListMultiLine(collectionsWithGapsWidth > collectionsContainerWidth);
     };
 
     useLayoutEffect(() => {
-        const refTags: HTMLDivElement[] = Array.from(refCollectionBox.current.childNodes) as HTMLDivElement[];
-        const collectionsWidthSum: number = handleWindowResize(refTags);
+        const refTiles: HTMLDivElement[] = Array.from(refCollectionBox.current.childNodes) as HTMLDivElement[];
+        const collectionsWidthSum: number = handleWindowResize(refTiles);
         checkCollectionsWidth(collectionsWidthSum);
 
         window.addEventListener('resize', () => {
@@ -67,20 +69,19 @@ const ProcessCollectionList: FC = () => {
             <If condition={isCollectionListMultiLine}>
                 <ExpandButtonWrapper>
                     <DividerLine />
-                    <ExpandButton $isExpanded={isExpanded} onClick={handleCollectionResize}>
+                    <ExpandButton $expanded={isExpanded} onClick={handleCollectionResize}>
                         <StyledTypography fontSize={14} >
                             <If 
                                 condition={isExpanded} 
-                                else={<>{translate('Process.Collection.List.ExpandLabel')}</>}
+                                else={<>{translate('Process.Collection.List.Expand.Label')}</>}
                             >
-                                {translate('Process.Collection.List.CollapseLabel')}
+                                {translate('Process.Collection.List.Collapse.Label')}
                             </If>
                         </StyledTypography>
-                        <StyledExpandIcon $isExpanded={isExpanded}/>
+                        <StyledExpandIcon $expanded={isExpanded}/>
                     </ExpandButton>
                     <DividerLine />
                 </ExpandButtonWrapper>
-
             </If>
         </div>
     );
