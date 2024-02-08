@@ -39,5 +39,8 @@ export const updateSingleActiveLoopEvent = (state: ProcessInstanceEventState, ac
         return;
     }
 
-    state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber].push(action.payload);
+    iteration.push(action.payload);
+    iteration.sort(
+        (a: IProcessInstanceLoopEvent, b: IProcessInstanceLoopEvent) => new Date(a?.created).getTime() - new Date(b?.created).getTime(),
+    );
 };
