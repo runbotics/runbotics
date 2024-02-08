@@ -24,14 +24,14 @@ export const reduceCrumbs = (
 export const updateSingleActiveLoopEvent = (state: ProcessInstanceEventState, action: PayloadAction<IProcessInstanceLoopEvent>) => {
     if (!state.all.nestedEvents[action.payload.loopId]) return;
 
-    const iteration = state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber];
-    if (!iteration) {
+    const iterationEvents = state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber];
+    if (!iterationEvents) {
         state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = [action.payload];
         return;
     }
 
-    if (iteration.some((loopEvent) => loopEvent.id === action.payload.id)) {
-        state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = iteration
+    if (iterationEvents.some((loopEvent) => loopEvent.id === action.payload.id)) {
+        state.all.nestedEvents[action.payload.loopId][action.payload.iterationNumber] = iterationEvents
             .map((loopEvent) => {
                 if (loopEvent.id === action.payload.id) return action.payload;
                 return loopEvent;
@@ -39,8 +39,8 @@ export const updateSingleActiveLoopEvent = (state: ProcessInstanceEventState, ac
         return;
     }
 
-    iteration.push(action.payload);
-    iteration.sort(
+    iterationEvents.push(action.payload);
+    iterationEvents.sort(
         (a: IProcessInstanceLoopEvent, b: IProcessInstanceLoopEvent) => new Date(a?.created).getTime() - new Date(b?.created).getTime(),
     );
 };
