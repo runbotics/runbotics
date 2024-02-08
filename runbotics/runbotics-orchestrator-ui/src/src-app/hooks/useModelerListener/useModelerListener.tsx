@@ -271,6 +271,12 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                 modeler,
             });
         },
+        [ModelerEvent.DRAG_INIT]: () => {
+            dispatch(processActions.setActiveDrag(true));
+        },
+        [ModelerEvent.DRAG_CLEANUP] : () => {
+            dispatch(processActions.setActiveDrag(false));
+        },
     });
 
     return {

@@ -37,6 +37,7 @@ export interface ModelerState {
     passedInVariables?: string[];
     commandStack: CommandStackInfo;
     imported: boolean;
+    activeDrag: boolean;
 }
 
 export interface ProcessState {

@@ -75,6 +75,7 @@ export interface ModelerSyncParams {
     commandStack: CommandStackInfo;
     errors: ModelerError[];
     customValidationErrors: ModelerError[];
+    activeDrag: boolean;
 }
 
 export interface RootEventMap {

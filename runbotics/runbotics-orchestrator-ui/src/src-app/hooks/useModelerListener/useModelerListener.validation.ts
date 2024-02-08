@@ -42,6 +42,7 @@ export const isModelerSync = ({
     commandStack,
     errors,
     customValidationErrors,
+    activeDrag
 }: ModelerSyncParams) => {
     if (!modeler) return false;
     const { _elements } = modeler.get('elementRegistry');
@@ -53,7 +54,9 @@ export const isModelerSync = ({
     if (imported && errors.length === 0 && customValidationErrors.length === 0) {
         return true;
     }
+
     return (
+        !activeDrag &&
         areActivitiesMatched &&
         commandStack.commandStackIdx >= 0 &&
         errors.length === 0 &&
