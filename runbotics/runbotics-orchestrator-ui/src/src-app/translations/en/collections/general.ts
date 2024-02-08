@@ -10,7 +10,14 @@ const englishGeneral = {
     'Proces.Collection.Dialog.Modify.Form.Users.Tooltip': 'This users will see the collection and public processes inside it.',
     'Process.Collection.Dialog.Modify.Form.Name.Label': 'Name',
     'Process.Collection.Dialog.Modify.Form.Description.Label': 'Description',
-    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Access'
+    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Access',
+    'Process.Collection.List.IsPrivate.Tooltip': 'Private collection',
+    'Process.Collection.List.Alt.PrivateIcon': 'Closed padlock icon',
+    'Process.Collection.List.Expand.Label': 'expand',
+    'Process.Collection.List.Collapse.Label': 'collapse',
+    'Process.Collection.Tile.MenuItem.Move': 'Move',
+    'Process.Collection.Tile.MenuItem.Delete': 'Delete',
+    'Process.Collection.Tile.MenuItem.Edit': 'Edit',
 };
 
 export default englishGeneral;
