@@ -2,6 +2,10 @@ import { FC, MouseEvent, useLayoutEffect, useRef, useState } from 'react';
 
 import { Grid } from '@mui/material';
 
+import { useSelector } from '#src-app/store';
+
+import { processCollectionSelector } from '#src-app/store/slices/ProcessCollection';
+
 import { ExpandButtonWrapper } from './ProcessCollectionList.style';
 import ProcessCollectionTile from './ProcessCollectionTile';
 import { CollectionListWrapper, DividerLine, ExpandButton, StyledExpandIcon, StyledTypography } from './ProcessCollectionTile.styles';
@@ -9,7 +13,7 @@ import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
 const ProcessCollectionList: FC = () => {
-    const processCollections = []; // TODO: get from store after backend features merge
+    const processCollections = useSelector(processCollectionSelector).childrenCollections.list;
 
     const refCollectionBox = useRef<HTMLDivElement>();
     const [isCollectionListMultiLine, setIsCollectionListMultiLine] = useState<boolean>(false);

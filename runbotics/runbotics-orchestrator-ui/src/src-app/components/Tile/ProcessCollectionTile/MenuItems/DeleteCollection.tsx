@@ -2,8 +2,9 @@ import { FC } from 'react';
 
 import { MenuItem } from '@mui/material';
 
+import { CollectionId } from 'runbotics-common';
+
 import { translate } from '../../../../hooks/useTranslations';
-import { CollectionId } from '../ProcessCollectionTile.types';
 
 export const DeleteCollection: FC<{ id: CollectionId }> = ({ id }) => {
 

@@ -2,10 +2,11 @@ import { FC } from 'react';
 
 import { MenuItem } from '@mui/material';
 
-import { translate } from '../../../../hooks/useTranslations';
-import { ProcessCollectionTileProps } from '../ProcessCollectionTile.types';
+import { ProcessCollection } from 'runbotics-common';
 
-export const EditCollection: FC<ProcessCollectionTileProps> = (props) => {
+import { translate } from '../../../../hooks/useTranslations';
+
+export const EditCollection: FC<ProcessCollection> = (props) => {
 
     const editCollection = () => {
         // TODO: Handle collection edition
