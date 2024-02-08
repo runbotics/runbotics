@@ -12,7 +12,13 @@ const general: typeof englishGeneral = {
     'Proces.Collection.Dialog.Modify.Form.Users.Tooltip': 'Udostępnij kolekcję oraz znajdujące się w niej publiczne procesy konkretnym użytkownikom.',
     'Process.Collection.Dialog.Modify.Form.Name.Label': 'Nazwa',
     'Process.Collection.Dialog.Modify.Form.Description.Label': 'Opis',
-    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Dostęp'
+    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Dostęp',
+    'Process.Collection.List.IsPrivate.Tooltip': 'Kolekcja prywatna',
+    'Process.Collection.List.ExpandLabel': 'rozwiń',
+    'Process.Collection.List.CollapseLabel': 'zwiń',
+    'Process.Collection.Tile.MenuItem.Move': 'Przenieś',
+    'Process.Collection.Tile.MenuItem.Delete': 'Usuń',
+    'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
 };
 
 export default general;
