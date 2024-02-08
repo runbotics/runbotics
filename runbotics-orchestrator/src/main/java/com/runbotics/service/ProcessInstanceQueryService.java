@@ -119,10 +119,7 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
                 break;
             }
         }
-        int pageNumber = index / page.getPageSize();
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
+        int pageNumber = index < 0 ? 0 : index / page.getPageSize();
         Pageable newPageable = PageRequest.of(pageNumber, page.getPageSize(), page.getSort());
         Page<ProcessInstanceDTO> foundInstances = processInstanceRepository.findAll(specification, newPageable).map(processInstanceMapper::toDto);
         return foundInstances;
