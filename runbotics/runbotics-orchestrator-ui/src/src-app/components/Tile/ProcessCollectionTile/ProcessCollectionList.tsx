@@ -43,7 +43,8 @@ const ProcessCollectionList: FC = () => {
         return () => {
             window.removeEventListener('resize', () => checkCollectionsWidth(collectionsWidthSum));
         };
-    }, []);
+    }, [processCollections]);
+
 
     const handleCollectionResize = (e: MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
