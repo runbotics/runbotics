@@ -112,7 +112,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                                 type: 'string',
                             },
                         },
-                        required: ['name', 'path'],
+                        required: ['name'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),

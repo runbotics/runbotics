@@ -30,15 +30,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
         try {
             fs.rmdirSync(folderPath, { recursive });
         } catch (e) {
-            if (e.code === 'ENOENT') {
-                throw new Error(`Directory not found: ${folderPath}`);
-            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
-                throw new Error(`Remove directory permission denied: ${folderPath}`);
-            } else if (e.code === 'ENOTEMPTY') {
-                throw new Error(`Cannot remove not empty directory without setting 'recursive' option: ${folderPath}`);
-            } else {
-                throw new Error(`Directory could not be removed. ${e}`);
-            }
+            this.handleFolderActionError('Delete folder', e, folderPath);
         }
     }
 
@@ -50,13 +42,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
         try {
             return fs.readdirSync(folderPath);
         } catch (e) {
-            if (e.code === 'ENOENT') {
-                throw new Error(`Directory not found: ${folderPath}`);
-            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
-                throw new Error(`Read directory permission denied: ${folderPath}`);
-            } else {
-                throw new Error(`Action could not be performed. ${e}`);
-            }
+            this.handleFolderActionError('Display files', e, folderPath);
         }
     }
 
@@ -67,25 +53,29 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot create directory if name is not provided');
         }
 
-        if (!path) {
-            throw new Error('Cannot create directory if path is not provided');
-        }
-
         const folderPath = this.resolvePath(name, path);
 
         try {
             fs.mkdirSync(folderPath);
-            return `${path}\\${name}`;
+            return `${path}${pathPackage.sep}${name}`;
         } catch (e) {
-            if (e.code === 'ENOENT') {
-                throw new Error(`Directory not found: ${folderPath}`);
-            } else if (e.code === 'EACCES' || e.code === 'EPERM') {
-                throw new Error(`Create directory permission denied: ${folderPath}`);
-            } else if (e.code === 'EEXIST') {
-                throw new Error('Cannot create directory - folder with this name already exists in the provided folder path');
-            } else {
-                throw new Error(`Directory could not be created. ${e}`);
-            }
+            this.handleFolderActionError('Create folder', e, folderPath);
+        }
+    }
+
+    handleFolderActionError(actionName: string, e: any, folderPath: string) {
+        switch (e.code) {
+            case 'ENOENT':
+                throw new Error(`${actionName}: Directory not found: ${folderPath}`);
+            case 'EACCES':
+            case 'EPERM':
+                throw new Error(`${actionName}: Directory permission denied: ${folderPath}`);
+            case 'EEXIST':
+                throw new Error(`${actionName}: Cannot perform action - folder with this name already exists in the provided folder path`);
+            case 'ENOTEMPTY':
+                throw new Error(`${actionName}: Cannot perform action on empty directory without setting 'recursive' option: ${folderPath}`);
+            default:
+                throw new Error(`${actionName}: Action could not be performed ${e}`);
         }
     }
 

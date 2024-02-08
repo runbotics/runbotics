@@ -19,4 +19,5 @@ export type FolderCreateActionInput = {
 
 export type FolderActionRequest =
     | DesktopRunRequest<FolderAction.DELETE, FolderDeleteActionInput>
-    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput> |DesktopRunRequest<FolderAction.CREATE, FolderCreateActionInput>;
+    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput> 
+    | DesktopRunRequest<FolderAction.CREATE, FolderCreateActionInput>;
