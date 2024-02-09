@@ -1,8 +1,10 @@
 import React, { ChangeEvent, FC } from 'react';
-import { useRouter } from 'next/router';
 
 import { Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
+
 import { FeatureKey } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -10,9 +12,11 @@ import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import useQuery from '../../../hooks/useQuery';
+import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
-import useQuery from '../../../hooks/useQuery';
+
 
 
 const PREFIX = 'Header';
@@ -29,7 +33,9 @@ interface HeaderProps {
     className?: string;
 }
 
-enum ProcesTabs {
+const PROCESS_COLLECTIONS_DEFAULT_PAGE_SIZE = 12;
+
+export enum ProcessesTabs {
     PROCESSES = 'processes',
     COLLECTIONS = 'collections'
 }
@@ -40,13 +46,36 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
     
     const router = useRouter();
-    const currentTab = router.asPath.split('/').slice(-1)[0].split('?')[0];
+    const searchParams = useSearchParams();
     const { firstValueFrom } = useQuery();
-    const collectionId = firstValueFrom('collection') ?? 1;
 
-    const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcesTabs) => {
-        if (value === ProcesTabs.COLLECTIONS) router.push(`/app/processes/collections?collection=${collectionId}`, null, { locale:router.locale });
-        else router.push('/app/processes', null, { locale:router.locale });
+    const currentTab = router.asPath.split('/').slice(-1)[0].split('?')[0];
+
+    const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
+    const pageSize = parseInt(searchParams.get('pageSize')) ?? PROCESS_COLLECTIONS_DEFAULT_PAGE_SIZE;
+    const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS) ?? null;
+
+    const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
+        if (value === ProcessesTabs.COLLECTIONS) {
+            router.replace({ 
+                pathname:  '/app/processes/collections',
+                query: {
+                    collection: collectionId,
+                    locale: router.locale,
+                    pageSize: pageSize, 
+                    page: currentPage
+                }
+            }); 
+        } else {
+            router.replace({ 
+                pathname:  '/app/processes',
+                query: {
+                    locale: router.locale, 
+                    pageSize: pageSize,
+                    page: currentPage
+                }
+            });
+        }
     };
 
     const procesTabs = (
@@ -55,8 +84,16 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             value={currentTab}
             textColor="secondary"
         >
-            <Tab key={ProcesTabs.PROCESSES} value={ProcesTabs.PROCESSES} label={ProcesTabs.PROCESSES} /> 
-            <Tab key={ProcesTabs.COLLECTIONS} value={ProcesTabs.COLLECTIONS} label={ProcesTabs.COLLECTIONS} />
+            <Tab 
+                key={ProcessesTabs.PROCESSES}
+                value={ProcessesTabs.PROCESSES}
+                label={translate('Process.Collection.Navigation.Processes.Label')}
+            /> 
+            <Tab 
+                key={ProcessesTabs.COLLECTIONS}
+                value={ProcessesTabs.COLLECTIONS}
+                label={translate('Process.Collection.Navigation.Collections.Label')}
+            />
         </Tabs>
     );
 
