@@ -48,7 +48,7 @@ public class ProcessCollectionResource {
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
     @GetMapping("process-collection")
     public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
-        List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByParentId(criteria);
+        List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByCriteria(criteria);
 
         if (collections.isEmpty()) {
             return ResponseEntity.notFound().build();

@@ -36,7 +36,7 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         this.userService = userService;
     }
 
-    public List<ProcessCollectionDTO> getCollectionsByParentId(ProcessCollectionCriteria criteria) {
+    public List<ProcessCollectionDTO> getCollectionsByCriteria(ProcessCollectionCriteria criteria) {
         if (criteria.getParentId() != null) {
             return processCollectionMapper.toDto(
                     processCollectionRepository.findAllChildrenCollections(

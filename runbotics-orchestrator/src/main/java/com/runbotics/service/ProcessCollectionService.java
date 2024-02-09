@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ProcessCollectionService {
 
-    List<ProcessCollectionDTO> getCollectionsByParentId(ProcessCollectionCriteria criteria);
+    List<ProcessCollectionDTO> getCollectionsByCriteria(ProcessCollectionCriteria criteria);
     ProcessCollectionDTO save(ProcessCollectionDTO ProcessCollectionDTO);
 }
