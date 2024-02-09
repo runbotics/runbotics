@@ -49,6 +49,10 @@ public class ProcessCollectionResource {
     @GetMapping("process-collection")
     public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
         List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByParentId(criteria);
+
+        if (collections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().body(collections);
     }
 
