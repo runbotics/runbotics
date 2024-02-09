@@ -5,11 +5,14 @@ import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.service.ProcessCollectionService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.service.mapper.ProcessCollectionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,19 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         this.processCollectionRepository = processCollectionRepository;
         this.processCollectionMapper = processCollectionMapper;
         this.userService = userService;
+    }
+
+    public List<ProcessCollectionDTO> getCollectionsByParentId(ProcessCollectionCriteria criteria) {
+        if (criteria.getParentId() != null) {
+            return processCollectionMapper.toDto(
+                    processCollectionRepository.findAllChildrenCollections(
+                        criteria.getParentId().getEquals()
+                    ));
+        }
+
+        return processCollectionMapper.toDto(
+            processCollectionRepository.findAllRootCollections()
+        );
     }
 
     @Override

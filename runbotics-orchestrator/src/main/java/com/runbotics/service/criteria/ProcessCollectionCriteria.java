@@ -24,6 +24,8 @@ public class ProcessCollectionCriteria implements Serializable, Criteria {
 
     private UUIDFilter parentId;
 
+    public ProcessCollectionCriteria() {}
+
     public ProcessCollectionCriteria(ProcessCollectionCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
@@ -32,6 +34,7 @@ public class ProcessCollectionCriteria implements Serializable, Criteria {
         this.updated = other.updated == null ? null : other.updated.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.createdByName = other.createdByName == null ? null : other.createdByName.copy();
+        this.parentId = other.parentId == null ? null : other.parentId.copy();
     }
 
     @Override
@@ -122,7 +125,8 @@ public class ProcessCollectionCriteria implements Serializable, Criteria {
             Objects.equals(created, that.created) &&
             Objects.equals(updated, that.updated) &&
             Objects.equals(createdBy, that.createdBy) &&
-            Objects.equals(createdByName, that.createdByName)
+            Objects.equals(createdByName, that.createdByName) &&
+            Objects.equals(parentId, that.parentId)
         );
     }
 
@@ -147,6 +151,8 @@ public class ProcessCollectionCriteria implements Serializable, Criteria {
             updated +
             ", createdBy=" +
             createdBy +
+            ", parentId=" +
+            parentId +
             '}'
         );
     }

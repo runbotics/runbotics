@@ -45,7 +45,7 @@ public class ProcessCollection implements Serializable {
     @Column(nullable = false)
     private Boolean isPublic;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "process_collection_user",
         joinColumns = { @JoinColumn(name = "collection_id", referencedColumnName = "id") },
