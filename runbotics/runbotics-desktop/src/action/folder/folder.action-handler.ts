@@ -53,7 +53,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot create directory if name is not provided');
         }
 
-        this.checkIfNameIsInvalid(name);
+        this.checkIfNameIsValid(name);
 
         const folderPath = this.resolvePath(name, path);
 
@@ -80,12 +80,10 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot perform action - folder with this name already exists in the provided folder path');
         }
 
-        this.checkIfNameIsInvalid(newName);
+        this.checkIfNameIsValid(newName);
 
         try {
             fs.renameSync(folderPath, newPath);
-            console.log(folderPath);
-            console.log(newPath);
             return newPath;
         } catch (e) {
             this.handleFolderActionError('Rename folder', e, folderPath);
@@ -114,12 +112,14 @@ export default class FolderActionHandler extends StatelessActionHandler {
         return path.substring(0, lastSlashOccuranceIndex); 
     }
 
-    checkIfNameIsInvalid(name: string) {
+    checkIfNameIsValid(name: string) {
         const forbiddenCharacters = new RegExp(ActionRegex.DIRECTORY_NAME_FORBIDDEN_CHARA, 'g');
         
         if (name.match(forbiddenCharacters)) {
             throw new Error('Folder name cannot include the following characters: \\ / : * ? < > |');
         }
+
+        return true;
     }
 
     run(request: FolderActionRequest) {

@@ -353,52 +353,58 @@ describe('FolderActionHandler', () => {
     });
 
     describe('Validate folder name', () => {
-        it('Should throw error when folder name includes illigal character: \\', async() => {
+        it('Should not return anything if name does not have illegal characters', () => {
+            const newName = 'Correct new folder name';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toBeTruthy();
+        });
+
+        it('Should throw error when folder name includes illegal character: \\', () => {
             const newName = '\\';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: /', async() => {
+        it('Should throw error when folder name includes illegal character: /', () => {
             const newName = '/';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: :', async() => {
+        it('Should throw error when folder name includes illegal character: :', () => {
             const newName = ':';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: *', async() => {
+        it('Should throw error when folder name includes illegal character: *', () => {
             const newName = '*';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: ?', async() => {
+        it('Should throw error when folder name includes illegal character: ?', () => {
             const newName = '?';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: <', async() => {
+        it('Should throw error when folder name includes illegal character: <', () => {
             const newName = '<';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: >', async() => {
+        it('Should throw error when folder name includes illegal character: >', () => {
             const newName = '>';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
-        it('Should throw error when folder name includes illigal character: |', async() => {
+        it('Should throw error when folder name includes illegal character: |', () => {
             const newName = '|';
 
-            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
     });
 
