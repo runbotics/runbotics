@@ -18,6 +18,8 @@ const englishGeneral = {
     'Process.Collection.Tile.MenuItem.Move': 'Move',
     'Process.Collection.Tile.MenuItem.Delete': 'Delete',
     'Process.Collection.Tile.MenuItem.Edit': 'Edit',
+    'Process.Collection.Navigation.Processes.Label': 'Processes',
+    'Process.Collection.Navigation.Collections.Label': 'Collections',
 };
 
 export default englishGeneral;
