@@ -13,13 +13,14 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { StyledContainer, StyledPage } from './BotBrowseView.styles';
 import { BotCollectionTab } from '../../../utils/bot-tab';
 
+import { getLastParamOfUrl } from '../../utils/routerUtils';
 import BotCollectionView from '../BotCollectionView';
 
 import BotListView from '../BotListView';
 
 const BotBrowseView: VFC = () => {
     const router = useRouter();
-    const tab = router.asPath.split('/').slice(-1)[0].split('?')[0];
+    const tab = getLastParamOfUrl(router);
     const { translate } = useTranslations();
     const hasBotsCollectionTabAccess = useFeatureKey([FeatureKey.BOT_COLLECTION_READ]);
     const hasBotsTabAccess = useFeatureKey([FeatureKey.BOT_READ]);
