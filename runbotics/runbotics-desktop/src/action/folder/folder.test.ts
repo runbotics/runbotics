@@ -303,13 +303,6 @@ describe('FolderActionHandler', () => {
                 newName: renameTo
             };
 
-            // ${path.sep}oldFolderName
-
-            // createFolder(oldFolderPath);
-
-            console.log('old', oldFolderPath);
-            console.log('new', `${CWD}${path.sep}${renameTo}`);
-
             expect(
                 fs.existsSync(oldFolderPath)
             ).toBeTruthy();
@@ -357,77 +350,57 @@ describe('FolderActionHandler', () => {
 
             await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot perform action - folder with this name already exists in the provided folder path');
         });
+    });
 
+    describe('Validate folder name', () => {
         it('Should throw error when folder name includes illigal character: \\', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '\\'
-            };
+            const newName = '\\';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: /', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '/'
-            };
+            const newName = '/';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: :', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: ':'
-            };
+            const newName = ':';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: *', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '*'
-            };
+            const newName = '*';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: ?', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '?'
-            };
+            const newName = '?';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: <', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '<'
-            };
+            const newName = '<';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: >', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '>'
-            };
+            const newName = '>';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
 
         it('Should throw error when folder name includes illigal character: |', async() => {
-            const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: '|'
-            };
+            const newName = '|';
 
-            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+            expect(() => folderActionHandler.checkIfNameIsInvalid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
         });
     });
+
+
 });
