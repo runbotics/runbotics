@@ -12,6 +12,7 @@ env:
   NODE_VERSION: 18.x
   PNPM_VERSION: 8.7.x
   RUSH: node ../common/scripts/install-run-rush.js
+  RUSHX: node ../common/scripts/install-run-rushx.js
 
 jobs:
   changes-detection:
@@ -33,8 +34,8 @@ jobs:
               - 'runbotics/runbotics-desktop/package.json'
               
   build-bot:
-    needs: changes-detection
-    if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+    # needs: changes-detection
+    # if: ${{ needs.changes-detection.outputs.bot == 'true' }}
     runs-on: windows-latest
 
     defaults:
@@ -63,69 +64,72 @@ jobs:
 
       - name: Build
         run: ${{ env.RUSH }} rebuild -t .
+        
+      - name: Execute Unit test #addet temporarily
+        run: $RUSHX test
 
-      - name: Rush deploy
-        run: |
-          mkdir -p ../common/deploy/runbotics-desktop
-          ${{ env.RUSH }} deploy `
-            --scenario runbotics-desktop `
-            --target-folder ../common/deploy/runbotics-desktop `
-            --overwrite
+      # - name: Rush deploy
+      #   run: |
+      #     mkdir -p ../common/deploy/runbotics-desktop
+      #     ${{ env.RUSH }} deploy `
+      #       --scenario runbotics-desktop `
+      #       --target-folder ../common/deploy/runbotics-desktop `
+      #       --overwrite
 
-      - name: Assign package version
-        uses: nyaa8/package-version@v1
-        with:
-          path: './runbotics/runbotics-desktop/package.json'
+      # - name: Assign package version
+      #   uses: nyaa8/package-version@v1
+      #   with:
+      #     path: './runbotics/runbotics-desktop/package.json'
 
-      - name: Run electron-install script 
-        shell: bash
-        run: |
-            cd ../common/deploy/runbotics-desktop/ &&
-            ./electron-install.sh
+      # - name: Run electron-install script 
+      #   shell: bash
+      #   run: |
+      #       cd ../common/deploy/runbotics-desktop/ &&
+      #       ./electron-install.sh
 
-      - name: Set default sign to false
-        run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
+      # - name: Set default sign to false
+      #   run: |
+      #     cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
+      #     (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
+      #     (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
 
-      - name: Build rb-desktop
-        run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
-          pnpm electron-builder
+      # - name: Build rb-desktop
+      #   run: |
+      #     cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
+      #     pnpm electron-builder
 
-      - name: Sign bot
-        uses: dlemstra/code-sign-action@v1
-        with:
-          certificate: '${{ secrets.CERT_BASE64 }}'
-          password: '${{ secrets.CERT_PASSWORD }}'
-          folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
-          recursive: true
+      # - name: Sign bot
+      #   uses: dlemstra/code-sign-action@v1
+      #   with:
+      #     certificate: '${{ secrets.CERT_BASE64 }}'
+      #     password: '${{ secrets.CERT_PASSWORD }}'
+      #     folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
+      #     recursive: true
 
-      - name: Upload bot artifact
-        id: upload-bot-executable-artifact
-        uses: actions/upload-artifact@v4.0.0
-        with:
-          name: RunBotics-${{ env.PACKAGE_VERSION }}
-          path: |
-            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/
-          if-no-files-found: error
+      # - name: Upload bot artifact
+      #   id: upload-bot-executable-artifact
+      #   uses: actions/upload-artifact@v4.0.0
+      #   with:
+      #     name: RunBotics-${{ env.PACKAGE_VERSION }}
+      #     path: |
+      #       ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/
+      #     if-no-files-found: error
 
-      - name: Create patch notes
-        run: |
-          echo "## Bot version ${{ env.PACKAGE_VERSION }}" >> patch_notes.md
-          echo "## How to Set Up" >> patch_notes.md
-          echo "1. Download the bot executable compressed folder to the machine where you want to execute the processes for your RunBotics web app instance." >> patch_notes.md
-          echo "2. Unzip the file." >> patch_notes.md
-          echo "3. Create a .env file based on the runbotics/runbotics/runbotics-desktop/.env.development example and place it in the top directory of your unzipped folder." >> patch_notes.md
-          echo "4. Fill it with your credentials and settings." >> patch_notes.md
-          echo "5. Run <path/to/your/unzipped/folder>/win-unpacked/RunBotics-<version>.exe" >> patch_notes.md
+      # - name: Create patch notes
+      #   run: |
+      #     echo "## Bot version ${{ env.PACKAGE_VERSION }}" >> patch_notes.md
+      #     echo "## How to Set Up" >> patch_notes.md
+      #     echo "1. Download the bot executable compressed folder to the machine where you want to execute the processes for your RunBotics web app instance." >> patch_notes.md
+      #     echo "2. Unzip the file." >> patch_notes.md
+      #     echo "3. Create a .env file based on the runbotics/runbotics/runbotics-desktop/.env.development example and place it in the top directory of your unzipped folder." >> patch_notes.md
+      #     echo "4. Fill it with your credentials and settings." >> patch_notes.md
+      #     echo "5. Run <path/to/your/unzipped/folder>/win-unpacked/RunBotics-<version>.exe" >> patch_notes.md
 
-      - name: Upload patch notes
-        id: upload-patch-notes-artifact
-        uses: actions/upload-artifact@v4.0.0
-        with:
-          name: patch-notes-${{ env.PACKAGE_VERSION }}
-          path: './runbotics/runbotics-desktop/patch_notes.md'
-          if-no-files-found: error
+      # - name: Upload patch notes
+      #   id: upload-patch-notes-artifact
+      #   uses: actions/upload-artifact@v4.0.0
+      #   with:
+      #     name: patch-notes-${{ env.PACKAGE_VERSION }}
+      #     path: './runbotics/runbotics-desktop/patch_notes.md'
+      #     if-no-files-found: error
 
