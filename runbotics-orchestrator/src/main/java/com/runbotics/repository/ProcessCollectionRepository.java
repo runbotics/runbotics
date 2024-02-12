@@ -37,13 +37,6 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     @Query(value =
         "SELECT pc " +
             "FROM ProcessCollection pc " +
-            "WHERE pc.parentId IS NULL"
-    )
-    List<ProcessCollectionDTO> findAllRootCollections();
-
-    @Query(value =
-        "SELECT pc " +
-            "FROM ProcessCollection pc " +
             "WHERE pc.parentId IS NULL " +
             "AND pc.name = ?1"
     )
