@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { FolderAction } from 'runbotics-common';
-import { FolderActionRequest, FolderCreateActionInput, FolderDeleteActionInput, FolderDisplayFilesActionInput } from './folder.types';
+import { ActionRegex, FolderAction } from 'runbotics-common';
+import { FolderActionRequest, FolderCreateActionInput, FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderRenameActionInput } from './folder.types';
 import fs from 'fs';
 import pathPackage from 'path';
 import { ServerConfigService } from '#config';
@@ -53,6 +53,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot create directory if name is not provided');
         }
 
+        this.checkIfNameIsInvalid(name);
+
         const folderPath = this.resolvePath(name, path);
 
         try {
@@ -60,6 +62,33 @@ export default class FolderActionHandler extends StatelessActionHandler {
             return `${path}${pathPackage.sep}${name}`;
         } catch (e) {
             this.handleFolderActionError('Create folder', e, folderPath);
+        }
+    }
+
+    async renameFolder(input: FolderRenameActionInput) {
+        const { newName, path } = input;
+
+        const folderPath = this.resolvePath('', path);
+        const parentPath = this.extractParentPath(folderPath);
+        const newPath = `${parentPath}${pathPackage.sep}${newName}`;
+
+        if (!newName) {
+            throw new Error('Cannot rename folder if new name is not provided');
+        }
+
+        if (folderPath === newPath) {
+            throw new Error('Cannot perform action - folder with this name already exists in the provided folder path');
+        }
+
+        this.checkIfNameIsInvalid(newName);
+
+        try {
+            fs.renameSync(folderPath, newPath);
+            console.log(folderPath);
+            console.log(newPath);
+            return newPath;
+        } catch (e) {
+            this.handleFolderActionError('Rename folder', e, folderPath);
         }
     }
 
@@ -79,6 +108,20 @@ export default class FolderActionHandler extends StatelessActionHandler {
         }
     }
 
+    extractParentPath(path: string) {
+        const lastSlashOccuranceIndex = path.lastIndexOf('\\');
+
+        return path.substring(0, lastSlashOccuranceIndex); 
+    }
+
+    checkIfNameIsInvalid(name: string) {
+        const forbiddenCharacters = new RegExp(ActionRegex.DIRECTORY_NAME_FORBIDDEN_CHARA, 'g');
+        
+        if (name.match(forbiddenCharacters)) {
+            throw new Error('Folder name cannot include the following characters: \\ / : * ? < > |');
+        }
+    }
+
     run(request: FolderActionRequest) {
         switch (request.script) {
             case FolderAction.DELETE:
@@ -87,6 +130,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
                 return this.displayFiles(request.input);
             case FolderAction.CREATE:
                 return this.createFolder(request.input);
+            case FolderAction.RENAME:
+                return this.renameFolder(request.input);
             default:
                 throw new Error('Action not found');
         }
