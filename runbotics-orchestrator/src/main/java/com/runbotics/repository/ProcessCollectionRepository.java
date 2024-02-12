@@ -12,6 +12,19 @@ import java.util.UUID;
 @Repository
 public interface ProcessCollectionRepository extends JpaRepository<ProcessCollection, UUID>, JpaSpecificationExecutor<ProcessCollection> {
 
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "WHERE pc.parentId = ?1"
+    )
+    List<ProcessCollection> findAllChildrenCollections(UUID parentId);
+
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "WHERE pc.parentId IS NULL"
+    )
+    List<ProcessCollection> findAllRootCollections();
 
     @Query(value =
         "SELECT pc.name " +

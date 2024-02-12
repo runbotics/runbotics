@@ -13,7 +13,6 @@ import { useSelector } from '#src-app/store';
 
 import ProcessListHeader from './Header/ProcessList.header';
 import { DefaultPageSize, ProcessListDisplayMode, LOADING_DEBOUNCE } from './ProcessList.utils';
-import ProcessCollectionList from '../../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 import GridView from '../GridView';
 import ProcessTable from '../ProcessTable/ProcessTable';
 
@@ -41,7 +40,6 @@ const ProcessList: VFC = () => {
 
     return (
         <Box display="flex" flexDirection="column" gap="1.5rem">
-            <ProcessCollectionList />
             <ProcessListHeader
                 search={search}
                 onSearchChange={handleSearch}

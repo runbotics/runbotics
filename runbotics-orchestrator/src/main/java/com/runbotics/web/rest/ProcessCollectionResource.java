@@ -4,6 +4,7 @@ import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.ProcessCollectionService;
+import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -42,6 +43,17 @@ public class ProcessCollectionResource {
         this.processCollectionService = processCollectionService;
         this.processCollectionRepository = processCollectionRepository;
         this.processCollectionQueryService = processCollectionQueryService;
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
+    @GetMapping("process-collection")
+    public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
+        List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByCriteria(criteria);
+
+        if (collections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(collections);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_ADD + "')")
