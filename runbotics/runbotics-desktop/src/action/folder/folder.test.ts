@@ -353,7 +353,7 @@ describe('FolderActionHandler', () => {
     });
 
     describe('Validate folder name', () => {
-        it('Should not return anything if name does not have illegal characters', () => {
+        it('Should return true if name does not have illegal characters', () => {
             const newName = 'Correct new folder name';
 
             expect(() => folderActionHandler.checkIfNameIsValid(newName)).toBeTruthy();
