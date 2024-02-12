@@ -1,6 +1,7 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.ProcessCollection;
+import com.runbotics.service.dto.ProcessCollectionDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -34,11 +35,19 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     List<String> findAllChildrenCollectionNames(UUID parentId);
 
     @Query(value =
-        "SELECT pc.name " +
+        "SELECT pc " +
             "FROM ProcessCollection pc " +
             "WHERE pc.parentId IS NULL"
     )
-    List<String> findAllRootCollectionNames();
+    List<ProcessCollectionDTO> findAllRootCollections();
+
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "WHERE pc.parentId IS NULL " +
+            "AND pc.name = ?1"
+    )
+    List<ProcessCollection> findAllSameNameRootCollections(String name);
 
     @Query(value =
         "SELECT pc.name " +
@@ -46,4 +55,12 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
         "WHERE pc.id = ?1"
     )
     String findParentCollectionName(UUID id);
+
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "WHERE pc.parentId = ?1 AND pc.name = ?2"
+    )
+    List<ProcessCollection> findSiblingWithSameName(UUID parentId, String name);
 }
+
