@@ -12,8 +12,10 @@ import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { DefaultPageSize } from './ProcessList/ProcessList.utils';
 import useQuery from '../../../hooks/useQuery';
 import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
+import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
 
@@ -33,8 +35,6 @@ interface HeaderProps {
     className?: string;
 }
 
-const PROCESS_COLLECTIONS_DEFAULT_PAGE_SIZE = 12;
-
 export enum ProcessesTabs {
     PROCESSES = 'processes',
     COLLECTIONS = 'collections'
@@ -49,10 +49,10 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const searchParams = useSearchParams();
     const { firstValueFrom } = useQuery();
 
-    const currentTab = router.asPath.split('/').slice(-1)[0].split('?')[0];
+    const currentTab = getLastParamOfUrl(router);
 
     const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
-    const pageSize = parseInt(searchParams.get('pageSize')) ?? PROCESS_COLLECTIONS_DEFAULT_PAGE_SIZE;
+    const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
     const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS) ?? null;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {

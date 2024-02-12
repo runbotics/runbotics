@@ -12,7 +12,7 @@ export const ProcessCollectionView = () => {
     return (
         <InternalPage title="Processes Collections">
             <Header />
-            <Box mt={6}>
+            <Box pt={6}>
                 <ProcessCollectionList />
             </Box>
         </InternalPage>
