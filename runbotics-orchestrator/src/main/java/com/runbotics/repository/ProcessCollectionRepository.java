@@ -55,5 +55,20 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
             "WHERE pc.parentId = ?1 AND pc.name = ?2"
     )
     List<ProcessCollection> findSiblingWithSameName(UUID parentId, String name);
+
+    @Query(value =
+        "WITH RECURSIVE bread_crumbs AS ( " +
+            "SELECT pc.*, 1 AS lvl FROM process_collection pc " +
+            "WHERE pc.id = ?1 " +
+            "UNION " +
+            "SELECT pc.*, bc.lvl + 1 FROM bread_crumbs bc " +
+            "JOIN process_collection pc ON pc.id = bc.parent_id " +
+        ") " +
+        "SELECT bc.id, bc.name, bc.description, bc.created, bc.updated, bc.created_by, bc.is_public, bc.parent_id " +
+            "FROM bread_crumbs bc " +
+            "ORDER BY bc.lvl DESC",
+        nativeQuery = true
+    )
+    List<ProcessCollection> findAllCollectionHierarchy(UUID id);
 }
 

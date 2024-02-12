@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,6 +58,13 @@ public class ProcessCollectionResource {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(collections);
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
+    @GetMapping("process-collection-path")
+    public ResponseEntity<List<ProcessCollectionDTO>> getCollectionHierarchy(@RequestParam @Nullable UUID collectionId) {
+        List<ProcessCollectionDTO> result = processCollectionService.getCollectionsByParentHierarchy(collectionId);
+        return ResponseEntity.ok().body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_ADD + "')")
