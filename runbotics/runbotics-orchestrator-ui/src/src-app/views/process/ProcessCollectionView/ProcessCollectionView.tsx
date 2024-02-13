@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import InternalPage from '../../../components/pages/InternalPage';
 import ProcessCollectionList from '../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
+import If from '../../../components/utils/If';
 import LoadingScreen from '../../../components/utils/LoadingScreen';
 import useQuery from '../../../hooks/useQuery';
 import useTranslations from '../../../hooks/useTranslations';
@@ -19,12 +20,11 @@ export const ProcessCollectionView = () => {
     return (
         <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
-            {isLoading ?
-                <LoadingScreen /> : (
-                    <Box pt={6}>
-                        <ProcessCollectionList />
-                    </Box>
-                )}
+            <If condition={!isLoading} else={<LoadingScreen />} >
+                <Box pt={6}>
+                    <ProcessCollectionList />
+                </Box>
+            </If>
         </InternalPage>
     );
 };
