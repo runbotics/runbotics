@@ -311,17 +311,17 @@ describe('FolderActionHandler', () => {
 
             createFolder();
 
-            fs.chmod(oldFolderPath, 0o777, (err) => {
-                if (err) throw err;
-                console.log('Newly created folder permissions changed');
-            });
+            // fs.chmod(oldFolderPath, 0o777, (err) => {
+            //     if (err) throw err;
+            //     console.log('Newly created folder permissions changed');
+            // });
 
-            try {
-                fs.accessSync(oldFolderPath, fs.constants.R_OK | fs.constants.W_OK);
-                console.log('can read/write');
-            } catch (err) {
-                console.error('no access!');
-            }
+            // try {
+            //     fs.accessSync(oldFolderPath, fs.constants.R_OK | fs.constants.W_OK);
+            //     console.log('can read/write');
+            // } catch (err) {
+            //     console.error('no access!');
+            // }
 
             expect(
                 fs.existsSync(oldFolderPath)
