@@ -75,6 +75,12 @@ describe('FolderActionHandler', () => {
         }
     };
 
+    const createFolder = () => {
+        if (!fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)) {
+            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`);
+        }
+    };
+
     const removeFolder = (folderPath: string) => {
         if (fs.existsSync(folderPath)) {
             fs.rmdirSync(folderPath);
@@ -296,18 +302,20 @@ describe('FolderActionHandler', () => {
 
     describe('Rename folder', () => {
         it('Should rename folder to the new name', async() => {
-            const oldFolderPath = `${CWD}${path.sep}${TEST_FOLDER_NAME}`;
+            const oldFolderPath = `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`;
             const renameTo = 'newFolderName';
             const params: FolderRenameActionInput = {
                 path: oldFolderPath,
                 newName: renameTo
             };
 
+            createFolder();
+
             expect(
                 fs.existsSync(oldFolderPath)
             ).toBeTruthy();
             expect(
-                fs.existsSync(`${CWD}${path.sep}${renameTo}`)
+                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
             ).toBeFalsy();
 
             await folderActionHandler.renameFolder(params);
@@ -316,10 +324,10 @@ describe('FolderActionHandler', () => {
                 fs.existsSync(oldFolderPath)
             ).toBeFalsy();
             expect(
-                fs.existsSync(`${CWD}${path.sep}${renameTo}`)
+                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
             ).toBeTruthy();
 
-            removeFolder(`${CWD}${path.sep}${renameTo}`);
+            removeFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);
         });
 
         it('Should throw error when new name is not provided', async() => {
@@ -344,9 +352,11 @@ describe('FolderActionHandler', () => {
 
         it('Should throw error when the folder with provided name already exists', async() => {
             const params: FolderRenameActionInput = {
-                path: TEMP_FOLDER_PATH,
-                newName: 'temp'
+                path: `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`,
+                newName: TEST_FOLDER_NAME
             };
+
+            createFolder();
 
             await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot perform action - folder with this name already exists in the provided folder path');
         });
