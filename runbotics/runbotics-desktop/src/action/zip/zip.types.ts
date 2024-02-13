@@ -2,8 +2,8 @@ import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { ZipAction } from 'runbotics-common';
 
 export type UnzipFileActionInput = {
-    path: string;
     fileName: string;
+    path?: string;
 };
 
 export type ZipActionRequest =

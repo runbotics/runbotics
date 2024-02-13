@@ -17,11 +17,16 @@ export default class ZipActionHandler extends StatelessActionHandler {
         super();
     }
 
+    resolvePath(name: string, path?: string): string {
+        const folderPath = path ?? this.serverConfigService.tempFolderPath;
+        return `${folderPath}${pathPackage.sep}${name}`;
+    }
+
     async unzipFile(input: UnzipFileActionInput) {
         const { path, fileName } = input;
 
         try {
-            const fullPath = `${path}${pathPackage.sep}${fileName}`;
+            const fullPath = this.resolvePath(fileName, path);
             const zip = new AdmZip(`${fullPath}.zip`);
             zip.extractAllTo(fullPath);
         } catch (e) {

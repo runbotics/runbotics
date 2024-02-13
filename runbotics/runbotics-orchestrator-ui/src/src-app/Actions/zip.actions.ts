@@ -21,16 +21,16 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            path: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Unzip.Path'),
-                                type: 'string',
-                            },
                             fileName: {
                                 title: translate('Process.Details.Modeler.Actions.Zip.Unzip.Name'),
                                 type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.Unzip.Path'),
+                                type: 'string',
                             }
                         },
-                        required: ['path', 'fileName']
+                        required: ['fileName']
                     }
                 }
             },
