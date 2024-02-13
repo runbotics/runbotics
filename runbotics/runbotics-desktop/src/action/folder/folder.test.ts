@@ -339,6 +339,15 @@ describe('FolderActionHandler', () => {
             await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot rename folder if new name is not provided');
         });
 
+        it('Should throw error when path to old folder is not provided', async() => {
+            const params: FolderRenameActionInput = {
+                path: undefined,
+                newName: 'newName'
+            };
+
+            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot rename folder if path to the old folder is not provided');
+        });
+
         it('Should throw error when provided folder does not exist', async() => {
             const testDirPath = 'made/up/path/to/directory';
             const testDirName = 'newName';

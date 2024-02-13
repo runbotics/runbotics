@@ -76,6 +76,10 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot rename folder if new name is not provided');
         }
 
+        if (!path) {
+            throw new Error('Cannot rename folder if path to the old folder is not provided');
+        }
+
         if (folderPath === newPath) {
             throw new Error('Cannot perform action - folder with this name already exists in the provided folder path');
         }
@@ -83,7 +87,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
         this.checkIfNameIsValid(newName);
 
         try {
-            fs.renameSync(folderPath, newPath);
+            fs.cpSync(folderPath, newPath, { recursive: true });
+            fs.rmdirSync(folderPath);
             return newPath;
         } catch (e) {
             this.handleFolderActionError('Rename folder', e, folderPath);
