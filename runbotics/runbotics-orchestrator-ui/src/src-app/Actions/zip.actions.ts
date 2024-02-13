@@ -35,11 +35,24 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                 }
             },
             uiSchema: {
-                'ui:order': ['input']
+                'ui:order': ['input'],
+                input: {
+                    fileName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Zip.Unzip.Name.Info'),
+                        }
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Zip.Unzip.Path.Info'),
+                        },
+                    }
+                }
             },
             formData: {
                 input: {
-                    path: undefined
+                    path: undefined,
+                    fileName: undefined
                 }
             }
         }
