@@ -1,14 +1,14 @@
 import englishFolderActionsTranslations from '#src-app/translations/en/process/actions/folder';
 
 const folderActionsTranslations: typeof englishFolderActionsTranslations = {
-    'Process.Details.Modeler.Actions.Folder.Delete.Label': 'Usuń folder',
+    'Process.Details.Modeler.Actions.Folder.Delete.Label': 'Usuń',
     'Process.Details.Modeler.Actions.Folder.Delete.Path': 'Ścieżka',
     'Process.Details.Modeler.Actions.Folder.Delete.Name': 'Nazwa',
     'Process.Details.Modeler.Actions.Folder.Delete.Recursive': 'Rekurencyjnie',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Label': 'Wyświetl pliki',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path': 'Ścieżka',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name': 'Nazwa',
-    'Process.Details.Modeler.Actions.Folder.Create.Label': 'Stwórz folder',
+    'Process.Details.Modeler.Actions.Folder.Create.Label': 'Stwórz',
     'Process.Details.Modeler.Actions.Folder.Create.Name': 'Nazwa',
     'Process.Details.Modeler.Actions.Folder.Create.Name.Info': 'Nazwa folderu do utworzenia',
     'Process.Details.Modeler.Actions.Folder.Create.Output.Info': 'Zapisz ścieżkę do utworzonego folderu jako zmienną',
