@@ -40,11 +40,18 @@ const MainLayout: FC = ({ children }) => {
     const isNavBarVisible = accessedSections[0].items.length > 0;
 
     useAsyncEffect(() => {
+        const menuStatus = localStorage.getItem('menu_shrank');
+        if (menuStatus !== null) {
+            setIsMenuShrank(menuStatus === 'false');
+        } else {
+            setIsMenuShrank(true);
+        }
         setLoaded(true);
     }, []);
 
     const handleMenuShowToggle = () => {
         setIsMenuShrank((prevIsMenuShrank) => !prevIsMenuShrank);
+        localStorage.setItem('menu_shrank', isMenuShrank ? 'true' : 'false');
     };
 
     return (
