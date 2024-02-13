@@ -6,16 +6,18 @@ import InternalPage from '../../../components/pages/InternalPage';
 import ProcessCollectionList from '../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 import LoadingScreen from '../../../components/utils/LoadingScreen';
 import useQuery from '../../../hooks/useQuery';
+import useTranslations from '../../../hooks/useTranslations';
 import { processCollectionSelector } from '../../../store/slices/ProcessCollection';
 import Header, { ProcessesTabs } from '../ProcessBrowseView/Header';
 
 export const ProcessCollectionView = () => {
     const { firstValueFrom } = useQuery();
+    const { translate } = useTranslations();
     const { isLoading } = useSelector(processCollectionSelector).childrenCollections;
     const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS);
 
     return (
-        <InternalPage title="Processes Collections">
+        <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
             {isLoading ?
                 <LoadingScreen /> : (

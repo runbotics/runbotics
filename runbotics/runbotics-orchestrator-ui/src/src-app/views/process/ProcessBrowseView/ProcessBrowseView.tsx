@@ -11,9 +11,11 @@ import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 
 import Header from './Header';
 import ProcessList from './ProcessList';
+import useTranslations from '../../../hooks/useTranslations';
 
 const ProcessBrowseView: VFC = () => {
     const dispatch = useDispatch();
+    const { translate } = useTranslations();
 
     useProcessInstanceMapSocket();
 
@@ -28,7 +30,7 @@ const ProcessBrowseView: VFC = () => {
     }, []);
 
     return (
-        <InternalPage title="Processes">
+        <InternalPage title={translate('Process.Collection.Navigation.Processes.Label')}>
             <Header />
             <Box mt={6}>
                 <ProcessList />
