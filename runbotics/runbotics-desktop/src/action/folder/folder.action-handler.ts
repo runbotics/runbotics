@@ -72,37 +72,6 @@ export default class FolderActionHandler extends StatelessActionHandler {
         const parentPath = this.extractParentPath(folderPath);
         const newPath = `${parentPath}${pathPackage.sep}${newName}`;
 
-        // console.log('folderPath', folderPath);
-        // try {
-        //     fs.accessSync(folderPath, fs.constants.R_OK | fs.constants.W_OK);
-        //     console.log('can read/write');
-        // } catch (err) {
-        //     console.error('no access!');
-        // }
-
-        // try {
-        //     fs.accessSync(folderPath, fs.constants.X_OK);
-        //     console.log('can execute');
-        // } catch (err) {
-        //     console.error('no access!');
-        // }
-
-        // console.log('newPath', newPath);
-        // try {
-        //     fs.accessSync(newPath, fs.constants.R_OK | fs.constants.W_OK);
-        //     console.log('can read/write');
-        // } catch (err) {
-        //     console.error('no access!');
-        // }
-
-        // try {
-        //     fs.accessSync(newPath, fs.constants.X_OK);
-        //     console.log('can execute');
-        // } catch (err) {
-        //     console.error('no access!');
-        // }
-
-
         if (!newName) {
             throw new Error('Cannot rename folder if new name is not provided');
         }

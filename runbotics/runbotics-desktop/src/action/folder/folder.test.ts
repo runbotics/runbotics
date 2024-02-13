@@ -75,13 +75,13 @@ describe('FolderActionHandler', () => {
         }
     };
 
-    const createFolder = () => {
+    const createTestFolder = () => {
         if (!fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)) {
             fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`);
         }
     };
 
-    const removeFolder = (folderPath: string) => {
+    const removeTestFolder = (folderPath: string) => {
         if (fs.existsSync(folderPath)) {
             fs.rmdirSync(folderPath);
         }
@@ -309,19 +309,7 @@ describe('FolderActionHandler', () => {
                 newName: renameTo
             };
 
-            createFolder();
-
-            // fs.chmod(oldFolderPath, 0o777, (err) => {
-            //     if (err) throw err;
-            //     console.log('Newly created folder permissions changed');
-            // });
-
-            // try {
-            //     fs.accessSync(oldFolderPath, fs.constants.R_OK | fs.constants.W_OK);
-            //     console.log('can read/write');
-            // } catch (err) {
-            //     console.error('no access!');
-            // }
+            createTestFolder();
 
             expect(
                 fs.existsSync(oldFolderPath)
@@ -339,7 +327,7 @@ describe('FolderActionHandler', () => {
                 fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
             ).toBeTruthy();
 
-            removeFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);
+            removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);      
         });
 
         it('Should throw error when new name is not provided', async() => {
@@ -377,9 +365,11 @@ describe('FolderActionHandler', () => {
                 newName: TEST_FOLDER_NAME
             };
 
-            createFolder();
+            createTestFolder();
 
             await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot perform action - folder with this name already exists in the provided folder path');
+
+            removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`);
         });
     });
 
