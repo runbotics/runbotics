@@ -68,29 +68,28 @@ export default class FolderActionHandler extends StatelessActionHandler {
     async renameFolder(input: FolderRenameActionInput) {
         const { newName, path } = input;
 
-        const folderPath = this.resolvePath('', path);
-        const parentPath = this.extractParentPath(folderPath);
-        const newPath = `${parentPath}${pathPackage.sep}${newName}`;
+        if (!path) {
+            throw new Error('Cannot rename folder if path to the old folder is not provided');
+        }
 
         if (!newName) {
             throw new Error('Cannot rename folder if new name is not provided');
         }
 
-        if (!path) {
-            throw new Error('Cannot rename folder if path to the old folder is not provided');
-        }
+        const parentPath = this.extractParentPath(path);
+        const newPath = `${parentPath}${pathPackage.sep}${newName}`;
 
-        if (folderPath === newPath || fs.existsSync(newPath)) {
+        if (path === newPath || fs.existsSync(newPath)) {
             throw new Error('Cannot perform action - folder with this name already exists in the provided folder path');
         }
 
         this.checkIfNameIsValid(newName);
 
         try {
-            fs.renameSync(folderPath, newPath);
+            fs.renameSync(path, newPath);
             return newPath;
         } catch (e) {
-            this.handleFolderActionError('Rename folder', e, folderPath);
+            this.handleFolderActionError('Rename folder', e, path);
         }
     }
 
@@ -117,7 +116,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
     }
 
     checkIfNameIsValid(name: string) {
-        const forbiddenCharacters = new RegExp(ActionRegex.DIRECTORY_NAME_FORBIDDEN_CHARA, 'g');
+        const forbiddenCharacters = new RegExp(ActionRegex.DIRECTORY_NAME_FORBIDDEN_CHARACTERS, 'g');
         
         if (name.match(forbiddenCharacters)) {
             throw new Error('Folder name cannot include the following characters: \\ / : * ? < > |');

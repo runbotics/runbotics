@@ -12,6 +12,7 @@ describe('FolderActionHandler', () => {
     const TEST_FOLDER_NAME = 'testFolder';
     const CWD = `${process.cwd()}`;
     const TEMP_FOLDER_PATH = `${process.cwd()}${path.sep}temp`;
+    const FULL_TEST_FOLDER_PATH = `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -76,8 +77,8 @@ describe('FolderActionHandler', () => {
     };
 
     const createTestFolder = () => {
-        if (!fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)) {
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`);
+        if (!fs.existsSync(FULL_TEST_FOLDER_PATH)) {
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH);
         }
     };
 
@@ -119,12 +120,12 @@ describe('FolderActionHandler', () => {
                 name: TEST_FOLDER_NAME,
                 recursive: false
             };
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
 
             await folderActionHandler.deleteFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
         });
 
@@ -204,7 +205,7 @@ describe('FolderActionHandler', () => {
         });
 
         it('Display /temp content if path not provided', async () => {
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
 
             const folderContent = await folderActionHandler.displayFiles(
                 { name: TEST_FOLDER_NAME }
@@ -217,12 +218,12 @@ describe('FolderActionHandler', () => {
         
         it('Name is not provided', async () => {
             const folderByPath = 'folderByPath';
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
             // create subfolder with one element
             fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}${path.sep}${folderByPath}`);
             
             const folderContent = await folderActionHandler.displayFiles({
-                path: `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`,
+                path: FULL_TEST_FOLDER_PATH,
             });
 
             expect(Array.isArray(folderContent)).toBeTruthy();
@@ -272,13 +273,13 @@ describe('FolderActionHandler', () => {
             };
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
 
             await folderActionHandler.createFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeTruthy();
         });
 
@@ -289,21 +290,21 @@ describe('FolderActionHandler', () => {
             };
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
 
             await folderActionHandler.createFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeTruthy();
         });
     });
 
     describe('Rename folder', () => {
         // skipped due to permission error which locally doesn't show - TODO
-        it.skip('Should rename folder to the new name', async() => {
-            const oldFolderPath = `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`;
+        it('Should rename folder to the new name', async() => {
+            const oldFolderPath = FULL_TEST_FOLDER_PATH;
             const renameTo = 'newFolderName';
             const params: FolderRenameActionInput = {
                 path: oldFolderPath,
@@ -319,16 +320,18 @@ describe('FolderActionHandler', () => {
                 fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
             ).toBeFalsy();
 
-            await folderActionHandler.renameFolder(params);
+            await folderActionHandler.renameFolder(params).then(() => {
+                expect(
+                    fs.existsSync(oldFolderPath)
+                ).toBeFalsy();
+                expect(
+                    fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
+                ).toBeTruthy();
+    
+                removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);      
 
-            expect(
-                fs.existsSync(oldFolderPath)
-            ).toBeFalsy();
-            expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
-            ).toBeTruthy();
+            });
 
-            removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);      
         });
 
         it('Should throw error when new name is not provided', async() => {
@@ -361,9 +364,9 @@ describe('FolderActionHandler', () => {
         });
 
         // skipped due to permission error which locally doesn't show - TODO
-        it.skip('Should throw error when the folder with provided name already exists', async() => {
+        it('Should throw error when the folder with provided name already exists', async() => {
             const params: FolderRenameActionInput = {
-                path: `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`,
+                path: FULL_TEST_FOLDER_PATH,
                 newName: TEST_FOLDER_NAME
             };
 
@@ -371,7 +374,7 @@ describe('FolderActionHandler', () => {
 
             await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot perform action - folder with this name already exists in the provided folder path');
 
-            removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`);
+            removeTestFolder(FULL_TEST_FOLDER_PATH);
         });
     });
 
