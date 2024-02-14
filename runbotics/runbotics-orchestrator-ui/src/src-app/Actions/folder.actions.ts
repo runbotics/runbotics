@@ -187,6 +187,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                             newName: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.Rename.NewName'),
                                 type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME
                             },
                         },
                         required: ['path', 'newName'],

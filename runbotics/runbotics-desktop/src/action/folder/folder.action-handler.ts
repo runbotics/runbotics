@@ -116,11 +116,11 @@ export default class FolderActionHandler extends StatelessActionHandler {
     }
 
     checkIfNameIsValid(name: string) {
-        const forbiddenCharacters = new RegExp(ActionRegex.DIRECTORY_NAME_FORBIDDEN_CHARACTERS, 'g');
+        const dirNameValidationRegex = new RegExp(ActionRegex.DIRECTORY_NAME);
         
-        if (name.match(forbiddenCharacters)) {
+        if (!dirNameValidationRegex.test(name)) {
             throw new Error('Folder name cannot include the following characters: \\ / : * ? < > |');
-        }
+        }    
 
         return true;
     }

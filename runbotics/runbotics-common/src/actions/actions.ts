@@ -19,7 +19,7 @@ export enum ActionRegex {
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
     EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
     EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$',
-    DIRECTORY_NAME_FORBIDDEN_CHARACTERS = "[\\\\/?|<>*:]"
+    DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$"
 }
 
 export enum ACTION_GROUP {
