@@ -59,7 +59,7 @@ export default class FolderActionHandler extends StatelessActionHandler {
 
         try {
             fs.mkdirSync(folderPath);
-            return `${path}${pathPackage.sep}${name}`;
+            return `${folderPath}${pathPackage.sep}${name}`;
         } catch (e) {
             this.handleFolderActionError('Create folder', e, folderPath);
         }
