@@ -244,6 +244,10 @@ export enum FolderAction {
     RENAME = 'folder.rename'
 }
 
+export enum ZipAction {
+    UNZIP_FILE = 'zip.unzipFile'
+}
+
 export type AllActionIds =
     | VariableAction
     | GeneralAction
@@ -268,4 +272,5 @@ export type AllActionIds =
     | DesktopAction
     | VisualBasicAction
     | ImageAction
-    | FolderAction;
+    | FolderAction
+    | ZipAction;
