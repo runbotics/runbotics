@@ -18,7 +18,8 @@ export enum ActionRegex {
     EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
     EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
-    EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$'
+    EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$',
+    DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$"
 }
 
 export enum ACTION_GROUP {
@@ -239,7 +240,8 @@ export enum ImageAction {
 export enum FolderAction {
     DELETE = 'folder.delete',
     DISPLAY_FILES = 'folder.displayFiles',
-    CREATE = 'folder.create'
+    CREATE = 'folder.create',
+    RENAME = 'folder.rename'
 }
 
 export type AllActionIds =

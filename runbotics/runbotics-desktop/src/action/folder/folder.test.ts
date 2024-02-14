@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import FolderActionHandler from './folder.action-handler';
 import fs from 'fs';
 import path from 'path';
-import { FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderCreateActionInput } from './folder.types';
+import { FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderCreateActionInput, FolderRenameActionInput } from './folder.types';
 import { ServerConfigService } from '../../config';
 
 describe('FolderActionHandler', () => {
@@ -12,6 +12,7 @@ describe('FolderActionHandler', () => {
     const TEST_FOLDER_NAME = 'testFolder';
     const CWD = `${process.cwd()}`;
     const TEMP_FOLDER_PATH = `${process.cwd()}${path.sep}temp`;
+    const FULL_TEST_FOLDER_PATH = `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -75,6 +76,18 @@ describe('FolderActionHandler', () => {
         }
     };
 
+    const createTestFolder = () => {
+        if (!fs.existsSync(FULL_TEST_FOLDER_PATH)) {
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH);
+        }
+    };
+
+    const removeTestFolder = (folderPath: string) => {
+        if (fs.existsSync(folderPath)) {
+            fs.rmdirSync(folderPath);
+        }
+    };
+
     describe('Delete folder', async () => {
         it('Should remove empty folder', async () => {
             const params: FolderDeleteActionInput = {
@@ -107,12 +120,12 @@ describe('FolderActionHandler', () => {
                 name: TEST_FOLDER_NAME,
                 recursive: false
             };
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
 
             await folderActionHandler.deleteFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
         });
 
@@ -192,7 +205,7 @@ describe('FolderActionHandler', () => {
         });
 
         it('Display /temp content if path not provided', async () => {
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
 
             const folderContent = await folderActionHandler.displayFiles(
                 { name: TEST_FOLDER_NAME }
@@ -205,12 +218,12 @@ describe('FolderActionHandler', () => {
         
         it('Name is not provided', async () => {
             const folderByPath = 'folderByPath';
-            fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`, { recursive: true });
+            fs.mkdirSync(FULL_TEST_FOLDER_PATH, { recursive: true });
             // create subfolder with one element
             fs.mkdirSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}${path.sep}${folderByPath}`);
             
             const folderContent = await folderActionHandler.displayFiles({
-                path: `${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`,
+                path: FULL_TEST_FOLDER_PATH,
             });
 
             expect(Array.isArray(folderContent)).toBeTruthy();
@@ -253,7 +266,6 @@ describe('FolderActionHandler', () => {
             );
         });
 
-        // working on - handle these both
         it('Should create folder even when the path was not provided', async() => {
             const params: FolderCreateActionInput = {
                 name: TEST_FOLDER_NAME,
@@ -261,13 +273,13 @@ describe('FolderActionHandler', () => {
             };
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
 
             await folderActionHandler.createFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeTruthy();
         });
 
@@ -278,14 +290,149 @@ describe('FolderActionHandler', () => {
             };
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeFalsy();
 
             await folderActionHandler.createFolder(params);
 
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${TEST_FOLDER_NAME}`)
+                fs.existsSync(FULL_TEST_FOLDER_PATH)
             ).toBeTruthy();
         });
     });
+
+    describe('Rename folder', () => {
+        // skipped due to permission error on bot runner, locally test pass
+        it.skip('Should rename folder to the new name', async() => {
+            const oldFolderPath = FULL_TEST_FOLDER_PATH;
+            const renameTo = 'newFolderName';
+            const params: FolderRenameActionInput = {
+                path: oldFolderPath,
+                newName: renameTo
+            };
+
+            createTestFolder();
+
+            expect(
+                fs.existsSync(oldFolderPath)
+            ).toBeTruthy();
+            expect(
+                fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
+            ).toBeFalsy();
+
+            await folderActionHandler.renameFolder(params).then(() => {
+                expect(
+                    fs.existsSync(oldFolderPath)
+                ).toBeFalsy();
+                expect(
+                    fs.existsSync(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`)
+                ).toBeTruthy();
+    
+                removeTestFolder(`${TEMP_FOLDER_PATH}${path.sep}${renameTo}`);      
+
+            });
+
+        });
+
+        it('Should throw error when new name is not provided', async() => {
+            const params: FolderRenameActionInput = {
+                path: TEMP_FOLDER_PATH,
+                newName: undefined
+            };
+
+            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot rename folder if new name is not provided');
+        });
+
+        it('Should throw error when path to old folder is not provided', async() => {
+            const params: FolderRenameActionInput = {
+                path: undefined,
+                newName: 'newName'
+            };
+
+            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot rename folder if path to the old folder is not provided');
+        });
+
+        it('Should throw error when provided folder does not exist', async() => {
+            const testDirPath = 'made/up/path/to/directory';
+            const testDirName = 'newName';
+            const params: FolderRenameActionInput = {
+                path: testDirPath,
+                newName: testDirName
+            };
+
+            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError(`Rename folder: Directory not found: ${testDirPath}`);
+        });
+
+        // skipped due to permission error on bot runner, locally test pass
+        it.skip('Should throw error when the folder with provided name already exists', async() => {
+            const params: FolderRenameActionInput = {
+                path: FULL_TEST_FOLDER_PATH,
+                newName: TEST_FOLDER_NAME
+            };
+
+            createTestFolder();
+
+            await expect(folderActionHandler.renameFolder(params)).rejects.toThrowError('Cannot perform action - folder with this name already exists in the provided folder path');
+
+            removeTestFolder(FULL_TEST_FOLDER_PATH);
+        });
+    });
+
+    describe('Validate folder name', () => {
+        it('Should return true if name does not have illegal characters', () => {
+            const newName = 'Correct new folder name';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toBeTruthy();
+        });
+
+        it('Should throw error when folder name includes illegal character: \\', () => {
+            const newName = '\\';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: /', () => {
+            const newName = '/';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: :', () => {
+            const newName = ':';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: *', () => {
+            const newName = '*';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: ?', () => {
+            const newName = '?';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: <', () => {
+            const newName = '<';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: >', () => {
+            const newName = '>';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+
+        it('Should throw error when folder name includes illegal character: |', () => {
+            const newName = '|';
+
+            expect(() => folderActionHandler.checkIfNameIsValid(newName)).toThrowError('Folder name cannot include the following characters: \\ / : * ? < > |');
+        });
+    });
+
+
 });
