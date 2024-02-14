@@ -106,6 +106,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                             name: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.Create.Name'),
                                 type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME,
                             },
                             path: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.Path'),
@@ -120,7 +121,6 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },
