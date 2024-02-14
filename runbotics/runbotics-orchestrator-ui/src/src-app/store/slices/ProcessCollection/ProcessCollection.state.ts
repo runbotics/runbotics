@@ -13,4 +13,5 @@ export interface ProcessCollectionState {
         isLoading: boolean;
         list: ProcessCollection[];
     }
+    pathCollections: ProcessCollection[];
 }

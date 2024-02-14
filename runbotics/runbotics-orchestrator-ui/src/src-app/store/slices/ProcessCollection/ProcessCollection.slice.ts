@@ -15,7 +15,8 @@ const initialState: ProcessCollectionState = {
     childrenCollections: {
         isLoading: false,
         list: [],
-    }
+    },
+    pathCollections: []
 };
 
 export const slice = createSlice({

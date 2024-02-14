@@ -44,7 +44,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
-    
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { firstValueFrom } = useQuery();
@@ -57,18 +57,20 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
         if (value === ProcessesTabs.COLLECTIONS) {
-            router.replace({ 
+            router.replace({
                 pathname:  '/app/processes/collections',
                 query: {
-                    collection: collectionId,
-                    pageSize: pageSize, 
+                    collectionId,
+                    locale: router.locale,
+                    pageSize: pageSize,
                     page: currentPage
                 }
-            }); 
+            });
         } else {
-            router.replace({ 
+            router.replace({
                 pathname:  '/app/processes',
                 query: {
+                    locale: router.locale,
                     pageSize: pageSize,
                     page: currentPage
                 }
@@ -82,12 +84,12 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             value={currentTab}
             textColor="secondary"
         >
-            <Tab 
+            <Tab
                 key={ProcessesTabs.PROCESSES}
                 value={ProcessesTabs.PROCESSES}
                 label={translate('Process.Collection.Navigation.Processes.Label')}
-            /> 
-            <Tab 
+            />
+            <Tab
                 key={ProcessesTabs.COLLECTIONS}
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}

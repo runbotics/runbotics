@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
-
 import { useSelector } from 'react-redux';
+
+import ProcessCollectionPath from '#src-app/components/Tile/ProcessCollectionTile/ProcessCollectionPath';
+import useProcessCollection from '#src-app/hooks/useProcessCollection';
 
 import InternalPage from '../../../components/pages/InternalPage';
 import ProcessCollectionList from '../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
@@ -17,9 +19,14 @@ export const ProcessCollectionView = () => {
     const { isLoading } = useSelector(processCollectionSelector).childrenCollections;
     const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS);
 
+    const { currentCollectionId, breadcrumbs } = useProcessCollection();
     return (
         <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
+            <ProcessCollectionPath
+                breadcrumbs={breadcrumbs}
+                currentCollectionId={currentCollectionId}
+            />
             <If condition={!isLoading} else={<LoadingScreen />} >
                 <Box pt={6}>
                     <ProcessCollectionList />
