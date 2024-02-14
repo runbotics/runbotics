@@ -8,30 +8,27 @@ import InternalPage from '../../../components/pages/InternalPage';
 import ProcessCollectionList from '../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 import If from '../../../components/utils/If';
 import LoadingScreen from '../../../components/utils/LoadingScreen';
-import useQuery from '../../../hooks/useQuery';
 import useTranslations from '../../../hooks/useTranslations';
 import { processCollectionSelector } from '../../../store/slices/ProcessCollection';
-import Header, { ProcessesTabs } from '../ProcessBrowseView/Header';
+import Header from '../ProcessBrowseView/Header';
 
 export const ProcessCollectionView = () => {
-    const { firstValueFrom } = useQuery();
     const { translate } = useTranslations();
     const { isLoading } = useSelector(processCollectionSelector).childrenCollections;
-    const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS);
 
     const { currentCollectionId, breadcrumbs } = useProcessCollection();
     return (
         <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
-            <ProcessCollectionPath
-                breadcrumbs={breadcrumbs}
-                currentCollectionId={currentCollectionId}
-            />
-            <If condition={!isLoading} else={<LoadingScreen />} >
-                <Box pt={6}>
+            <Box pt={2}>
+                <ProcessCollectionPath
+                    breadcrumbs={breadcrumbs}
+                    currentCollectionId={currentCollectionId}
+                />
+                <If condition={!isLoading} else={<LoadingScreen />} >
                     <ProcessCollectionList />
-                </Box>
-            </If>
+                </If>
+            </Box>
         </InternalPage>
     );
 };
