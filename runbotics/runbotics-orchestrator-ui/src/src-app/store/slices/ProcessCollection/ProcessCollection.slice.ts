@@ -16,7 +16,12 @@ const initialState: ProcessCollectionState = {
         isLoading: false,
         list: [],
     },
-    pathCollections: []
+    active: {
+        ancestors: {
+            isLoading: false,
+            list: []
+        }
+    }
 };
 
 export const slice = createSlice({

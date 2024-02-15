@@ -1,16 +1,13 @@
 import { FC } from 'react';
 
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { Box, Breadcrumbs, Typography } from '@mui/material';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useTheme } from 'styled-components';
 
-import homeIcon from '#public/images/icons/home.svg';
 import { CollectionBreadcrumb } from '#src-app/hooks/useProcessCollection';
-import useTranslations from '#src-app/hooks/useTranslations';
 
 import { HomeBox, StyledLink } from './ProcessCollectionPath.styles';
-
-const ACTIVE_ICON_COLOR_FILTER = 'invert(72%) sepia(41%) saturate(3394%) hue-rotate(356deg) brightness(101%) contrast(94%)';
 
 interface ProcessCollectionPathProps {
     breadcrumbs: CollectionBreadcrumb[];
@@ -21,7 +18,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
     breadcrumbs, currentCollectionId
 }) => {
     const router = useRouter();
-    const { translate } = useTranslations();
+    const theme = useTheme();
 
     const isRootFolder = breadcrumbs.length === 0;
 
@@ -38,19 +35,13 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                     }}
                 >
                     <HomeBox>
-                        <Image
-                            src={homeIcon}
-                            alt='home icon'
-                            width='20'
-                            height='20'
-                            style={isRootFolder ? { filter: ACTIVE_ICON_COLOR_FILTER } : {}}
+                        <HomeOutlinedIcon
+                            sx={{
+                                color: isRootFolder
+                                    ? theme.palette.secondary.main
+                                    : theme.palette.common.black
+                            }}
                         />
-                        <Typography
-                            variant='body2'
-                            color={isRootFolder ? 'secondary' : 'black'}
-                        >
-                            {translate('Process.Collection.Path.Home')}
-                        </Typography>
                     </HomeBox>
                 </StyledLink>
                 {breadcrumbs.map((breadcrumb) => (
@@ -66,7 +57,11 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                     >
                         <Typography
                             variant='body2'
-                            color={breadcrumb.collectionId === currentCollectionId ? 'secondary' : 'black'}
+                            sx={{
+                                color: breadcrumb.collectionId === currentCollectionId
+                                    ? theme.palette.secondary.main
+                                    : theme.palette.common.black
+                            }}
                         >
                             {breadcrumb.name}
                         </Typography>

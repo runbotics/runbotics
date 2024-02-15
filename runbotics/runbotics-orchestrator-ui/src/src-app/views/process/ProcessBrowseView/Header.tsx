@@ -61,7 +61,6 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                 pathname:  '/app/processes/collections',
                 query: {
                     collectionId,
-                    locale: router.locale,
                     pageSize: pageSize,
                     page: currentPage
                 }
@@ -70,7 +69,6 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             router.replace({
                 pathname:  '/app/processes',
                 query: {
-                    locale: router.locale,
                     pageSize: pageSize,
                     page: currentPage
                 }

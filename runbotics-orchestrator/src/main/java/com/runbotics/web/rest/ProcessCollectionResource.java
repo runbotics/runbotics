@@ -61,9 +61,9 @@ public class ProcessCollectionResource {
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
-    @GetMapping("process-collection-path")
-    public ResponseEntity<List<ProcessCollectionDTO>> getCollectionHierarchy(@RequestParam @Nullable UUID collectionId) {
-        List<ProcessCollectionDTO> result = processCollectionService.getCollectionsByParentHierarchy(collectionId);
+    @GetMapping("process-collection/active/ancestors")
+    public ResponseEntity<List<ProcessCollectionDTO>> getAllAncestors(@RequestParam @Nullable UUID collectionId) {
+        List<ProcessCollectionDTO> result = processCollectionService.getCollectionAllAncestors(collectionId);
         return ResponseEntity.ok().body(result);
     }
 

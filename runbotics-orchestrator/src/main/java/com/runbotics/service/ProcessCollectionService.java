@@ -10,7 +10,7 @@ public interface ProcessCollectionService {
 
     List<ProcessCollectionDTO> getCollectionsByCriteria(ProcessCollectionCriteria criteria);
 
-    List<ProcessCollectionDTO> getCollectionsByParentHierarchy(UUID collectionId);
+    List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId);
 
     ProcessCollectionDTO save(ProcessCollectionDTO ProcessCollectionDTO);
 }

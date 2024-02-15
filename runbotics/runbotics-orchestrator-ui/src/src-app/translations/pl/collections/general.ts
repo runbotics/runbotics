@@ -22,7 +22,7 @@ const general: typeof englishGeneral = {
     'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
     'Process.Collection.Navigation.Processes.Label': 'Procesy',
     'Process.Collection.Navigation.Collections.Label': 'Zbiory',
-    'Process.Collection.Path.Home': 'Dom',
+    'Process.Collection.Ancestors.Error': 'Nieoczekiwany błąd - nie można załadować nawigacji',
 };
 
 export default general;

@@ -8,8 +8,8 @@ export const StyledLink = styled(Link)`
 
 export const HomeBox = styled(Box)`
     display: flex;
-    min-height: 24px;
     align-items: center;
+    min-height: 24px;
 
     gap: 6px;
 `;

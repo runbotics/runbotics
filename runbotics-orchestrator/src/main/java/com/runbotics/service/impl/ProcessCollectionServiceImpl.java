@@ -51,13 +51,13 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         );
     }
 
-    public List<ProcessCollectionDTO> getCollectionsByParentHierarchy(UUID collectionId) {
+    public List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId) {
         if (collectionId == null) {
             return new ArrayList<>();
         }
 
         return processCollectionMapper.toDto(
-            processCollectionRepository.findAllCollectionHierarchy(collectionId)
+            processCollectionRepository.findAllAncestors(collectionId)
         );
     }
 

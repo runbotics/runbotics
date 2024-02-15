@@ -69,6 +69,6 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
             "ORDER BY bc.lvl DESC",
         nativeQuery = true
     )
-    List<ProcessCollection> findAllCollectionHierarchy(UUID id);
+    List<ProcessCollection> findAllAncestors(UUID id);
 }
 
