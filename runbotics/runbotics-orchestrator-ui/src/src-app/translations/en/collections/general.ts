@@ -20,6 +20,7 @@ const englishGeneral = {
     'Process.Collection.Tile.MenuItem.Edit': 'Edit',
     'Process.Collection.Navigation.Processes.Label': 'Processes',
     'Process.Collection.Navigation.Collections.Label': 'Collections',
+    'Process.Collection.Ancestors.Error': 'Unexpected error - could not load navigation',
 };
 
 export default englishGeneral;

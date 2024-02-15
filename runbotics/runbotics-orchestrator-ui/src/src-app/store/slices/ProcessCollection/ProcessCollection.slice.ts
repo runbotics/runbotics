@@ -15,6 +15,12 @@ const initialState: ProcessCollectionState = {
     childrenCollections: {
         isLoading: false,
         list: [],
+    },
+    active: {
+        ancestors: {
+            isLoading: false,
+            list: []
+        }
     }
 };
 

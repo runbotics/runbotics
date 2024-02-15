@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { ProcessCollectionState } from './ProcessCollection.state';
-import { createOne } from './ProcessCollection.thunks';
+import { createOne, getAncestors } from './ProcessCollection.thunks';
 
 const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<ProcessCollectionState>) => {
     builder
@@ -16,6 +16,19 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
         })
         .addCase(createOne.rejected, (state) => {
             state.childrenCollections.isLoading = false;
+        })
+
+        // GET PATH
+        .addCase(getAncestors.pending, (state) => {
+            state.active.ancestors.isLoading = true;
+        })
+        .addCase(getAncestors.fulfilled, (state, action) => {
+            state.active.ancestors.list = [...action.payload];
+            state.active.ancestors.isLoading = false;
+        })
+        .addCase(getAncestors.rejected, (state) => {
+            state.active.ancestors.isLoading = false;
+            state.active.ancestors.list = [];
         });
 };
 

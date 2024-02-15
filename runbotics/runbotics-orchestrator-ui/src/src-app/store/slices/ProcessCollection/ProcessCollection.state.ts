@@ -13,4 +13,10 @@ export interface ProcessCollectionState {
         isLoading: boolean;
         list: ProcessCollection[];
     }
+    active: {
+        ancestors: {
+            isLoading: boolean;
+            list: ProcessCollection[];
+        }
+    }
 }
