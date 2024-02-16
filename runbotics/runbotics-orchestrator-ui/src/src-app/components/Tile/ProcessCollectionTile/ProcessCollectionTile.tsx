@@ -50,7 +50,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                     </Tooltip>
                     <If condition={!isPublic}>
                         <Tooltip title={translate('Process.Collection.List.IsPrivate.Tooltip')}>
-                            <StyledIconsBox color={'grey'}>
+                            <StyledIconsBox bgColor='grey'>
                                 <Image src={PrivateIcon} alt={translate('Process.Collection.List.Alt.PrivateIcon')} />
                             </StyledIconsBox>
                         </Tooltip>
