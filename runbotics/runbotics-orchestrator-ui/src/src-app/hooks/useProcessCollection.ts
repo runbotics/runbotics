@@ -42,7 +42,16 @@ const useProcessCollection = () => {
             });
     };
 
+    const getAllChildrenCollections = (colId) => {
+        const params = colId !== null ? {
+            filter: { equals: { parentId: colId } }
+        } : {};
+
+        dispatch(processCollectionActions.getAll(params));
+    };
+
     useEffect(() => {
+        getAllChildrenCollections(collectionId);
         getCollectionPath();
     }, [collectionId]);
 

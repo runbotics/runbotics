@@ -1,5 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Paper, Typography } from '@mui/material';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
@@ -7,8 +8,6 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         display: flex;
         align-items: center;
         max-width: 350px;
-        gap: 8px;
-        padding-left: 20px;
         padding-block: 2px;
         background-color: ${theme.palette.grey[200]};
     }
@@ -21,9 +20,24 @@ export const CollectionNameWrapper = styled.div`
     text-overflow: ellipsis;
 `;
 
+export const ContextWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 20px;
+`;
+
 export const MenuWrapper = styled.div`
     margin-left: auto;
 `;
+
+export const StyledLink = styled(Link)`
+    display: flex;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+`;
+
 
 export const CollectionListWrapper = styled.div<{ isExpanded?: boolean }>`
     height: ${({ isExpanded }) => isExpanded ? '100%' : '50px'};
