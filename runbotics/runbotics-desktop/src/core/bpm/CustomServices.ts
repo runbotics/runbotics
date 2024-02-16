@@ -45,29 +45,45 @@ export const customServices: Record<string, Function> = {
     isBlank: (value: any) => {
         return (isEmpty(value) && !isNumber(value)) || isNaN(value);
     },
-    push: (array: any[], newElement: any) => {
+    push: (array: any, newElement: any) => {
+        if (!Array.isArray(array)) {
+            throw new Error('First argument is not array!');
+        }
         if (!array) {
             return [newElement];
         }
         return array.concat([newElement]);
     },
-    concat: (arg1: any, arg2: any) => {
+    concat: (arg1: any[], arg2: any[]) => {
+        if (!Array.isArray(arg1)) {
+            throw new Error('First argument is not array!');
+        } else if (!Array.isArray(arg2)) {
+            throw new Error('Second argument is not array!');
+        }
         const array1 = arg1 ? arg1 : [];
         const array2 = arg2 ? arg2 : [];
-
         return [...array1, ...array2];
     },
     split: (arg1: string, splitter: string) => {
+        if (!arg1) {
+            throw new Error('Lack of argument to split!');
+        }
         return arg1.split(splitter);
     },
     splitAndPick: (arg1: string, splitter: string, pick: number) => {
+        if (!arg1) {
+            throw new Error('Lack of argument to split!');
+        }
         return arg1.split(splitter)[pick];
     },
-    parseJson: (json: any) => {
+    parseJson: (json: string) => {
+        if (typeof json !== 'string') {
+            throw new Error('Argument to parse has to be string!');
+        }
         return JSON.parse(json);
     },
-    getCurrentDate: () => {
-        return moment().format('YYYY-MM-DD');
+    getCurrentDate: (format?: string) => {
+        return format && typeof format == 'string' ? moment().format(format) : moment().format('YYYY-MM-DD');
     },
     getPreviousWorkday: () => {
         const workday = moment();
@@ -88,7 +104,7 @@ export const customServices: Record<string, Function> = {
         while (firstDate.day() % 6 == 0) {
             firstDate = firstDate.add(1, 'day');
         }
-        return format ? firstDate.format(format) : firstDate;
+        return format && typeof format == 'string' ? firstDate.format(format) : firstDate;
     },
     getLastWorkingDayOfCurrentMonth: (format?: string) => {
         return customServices.getLastWorkingDayOfFutureMonth(0, format);
@@ -99,7 +115,7 @@ export const customServices: Record<string, Function> = {
         while (firstDate.day() % 6 == 0) {
             firstDate = firstDate.subtract(1, 'day');
         }
-        return format ? firstDate.format(format) : firstDate;
+        return format && typeof format == 'string' ? firstDate.format(format) : firstDate;
     },
     objFromArray: (arr: any[], key = 'id') => {
         return arr.reduce((accumulator, current) => {

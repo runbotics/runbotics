@@ -30,7 +30,7 @@ const SERVICES = [
     'split(arg1, splitter)',
     'splitAndPick(arg1, splitter, pick)',
     'parseJson(json)',
-    'getCurrentDate()',
+    'getCurrentDate(format?)',
     'getPreviousWorkday()',
     'getFirstWorkingDayOfCurrentMonth(format?)',
     'getFirstWorkingDayOfFutureMonth(monthNumber, format?)',

@@ -588,6 +588,17 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                             `[${processInstanceId}] [${executionId}] [${script}] Error running desktop action`,
                             (e as Error)?.message
                         );
+                        this.purgeEngine(processInstanceId);
+                        const processInstance = this.processInstances[processInstanceId];
+                        this.processEventBus.publish({
+                            processInstanceId: processInstanceId,
+                            eventType: ProcessInstanceStatus.ERRORED,
+                            processInstance: {
+                                ...processInstance,
+                                status: ProcessInstanceStatus.ERRORED,
+                                error: `Inputs in next step: ${(e as Error)?.message}`,
+                            },
+                        });
                         callback(new Error((e as Error)?.message));
                     }
                 },
