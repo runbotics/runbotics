@@ -1,7 +1,7 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.ProcessCollection;
-import com.runbotics.service.dto.ProcessCollectionDTO;
+import com.runbotics.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +12,38 @@ import java.util.UUID;
 
 @Repository
 public interface ProcessCollectionRepository extends JpaRepository<ProcessCollection, UUID>, JpaSpecificationExecutor<ProcessCollection> {
+
+    @Query(value =
+        "SELECT COUNT(*) FROM ProcessCollection pc WHERE pc.id = ?1"
+    )
+    int countCollectionById(UUID id);
+
+    @Query(value =
+        "SELECT COUNT(*) " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.id = ?1 AND " +
+            "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+    )
+    int countAvailableCollectionById(UUID id, User user);
+
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.parentId = ?1 AND " +
+            "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+    )
+    List<ProcessCollection> findAvailableChildrenCollections(UUID parentId, User user);
+
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.parentId IS NULL AND " +
+            "(pc.isPublic = true OR pc.createdBy = ?1 OR u = ?1)"
+    )
+    List<ProcessCollection> findAvailableRootCollections(User user);
 
     @Query(value =
         "SELECT pc " +

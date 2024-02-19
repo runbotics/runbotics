@@ -1,14 +1,16 @@
 package com.runbotics.service;
 
-import com.runbotics.service.criteria.ProcessCollectionCriteria;
+import com.runbotics.domain.User;
 import com.runbotics.service.dto.ProcessCollectionDTO;
-
 import java.util.List;
 import java.util.UUID;
 
 public interface ProcessCollectionService {
 
-    List<ProcessCollectionDTO> getCollectionsByCriteria(ProcessCollectionCriteria criteria);
+    void checkCollectionAvailability(UUID collectionId, User user);
+    List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user);
+
+    List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user);
 
     List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId);
 

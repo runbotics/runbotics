@@ -1,10 +1,12 @@
 package com.runbotics.web.rest;
 
 import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.ProcessCollectionService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
@@ -36,28 +38,57 @@ public class ProcessCollectionResource {
     private final ProcessCollectionQueryService processCollectionQueryService;
 
     private final ProcessCollectionRepository processCollectionRepository;
+
+    private final UserService userService;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     public ProcessCollectionResource(
         ProcessCollectionService processCollectionService,
         ProcessCollectionQueryService processCollectionQueryService,
-        ProcessCollectionRepository processCollectionRepository
+        ProcessCollectionRepository processCollectionRepository,
+        UserService userService
     ) {
         this.processCollectionService = processCollectionService;
         this.processCollectionRepository = processCollectionRepository;
         this.processCollectionQueryService = processCollectionQueryService;
+        this.userService = userService;
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
+    @GetMapping("process-collection/access")
+    public ResponseEntity getCollectionAccess(ProcessCollectionCriteria criteria) {
+        User requester = userService.getUserWithAuthorities().get();
+
+        if (criteria.getParentId() != null) {
+            processCollectionService.checkCollectionAvailability(
+                criteria.getParentId().getEquals(), requester
+            );
+        }
+
+        return ResponseEntity.accepted().build();
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
     @GetMapping("process-collection")
     public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
-        List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByCriteria(criteria);
+        User requester = userService.getUserWithAuthorities().get();
+        boolean hasUserAccessEveryCollection = requester.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_EVERY);
 
-        if (collections.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        List<ProcessCollectionDTO> result;
+        if (criteria.getParentId() != null) {
+            processCollectionService.checkCollectionAvailability(
+                criteria.getParentId().getEquals(), requester
+            );
+
+            result = processCollectionService.getChildrenCollectionsByParent(
+                criteria.getParentId().getEquals(), requester);
+        } else {
+            result = processCollectionService.getChildrenCollectionsByRoot(requester);
         }
-        return ResponseEntity.ok().body(collections);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")

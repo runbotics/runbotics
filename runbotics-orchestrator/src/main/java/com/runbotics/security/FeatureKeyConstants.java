@@ -69,6 +69,7 @@ public final class FeatureKeyConstants {
     public static final String PROCESS_COLLECTION_ADD = "PROCESS_COLLECTION_ADD";
     public static final String PROCESS_COLLECTION_EDIT = "PROCESS_COLLECTION_EDIT";
     public static final String PROCESS_COLLECTION_DELETE = "PROCESS_COLLECTION_DELETE";
+    public static final String PROCESS_COLLECTION_EVERY = "PROCESS_COLLECTION_EVERY";
 
     FeatureKeyConstants() {}
 }
