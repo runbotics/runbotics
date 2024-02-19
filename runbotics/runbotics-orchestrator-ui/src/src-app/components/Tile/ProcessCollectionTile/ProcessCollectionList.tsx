@@ -55,7 +55,7 @@ const ProcessCollectionList: FC = () => {
     };
 
     const sortedCollections = useMemo(() => {
-        const collectionsClone = structuredClone(processCollections)
+        const collectionsClone = structuredClone(processCollections);
         return collectionsClone.length < 1 ?
             collectionsClone :
             collectionsClone.sort((collection1, collection2) => collection1.name.localeCompare(collection2.name));
@@ -67,11 +67,11 @@ const ProcessCollectionList: FC = () => {
                 <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={2} p={1}>
                     {sortedCollections
                         .map(collection => (
-                        <ProcessCollectionTile
-                            {...collection}
-                            key={collection.id}
-                        />
-                    ))}
+                            <ProcessCollectionTile
+                                {...collection}
+                                key={collection.id}
+                            />
+                        ))}
                 </Grid>
             </CollectionListWrapper>
             <If condition={isCollectionListMultiLine}>
