@@ -112,15 +112,15 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
     @Transactional(readOnly = true)
     public Page<ProcessInstanceDTO> findByCriteriaWithSpecificInstance(UUID id, ProcessInstanceCriteria criteria, Pageable page) {
         final Specification<ProcessInstance> specification = createSpecification(criteria);
-        List<ProcessInstance> myList = processInstanceRepository.findAll(specification, page.getSort());
-        int index = -1;
-        for (int i = 0; i < myList.size(); i++) {
-            if (myList.get(i).getId().equals(id)) {
-                index = i;
-                break;
-            }
+        List<ProcessInstance> processInstances = processInstanceRepository.findAll(specification, page.getSort());
+        int indexOfSpecificProcessInstance = -1;
+        for (ProcessInstance processInstance : processInstances) {
+          if (processInstance.getId().equals(id)) {
+              indexOfSpecificProcessInstance = processInstances.indexOf(processInstance);
+              break;
+          }
         }
-        int pageNumber = index < 0 ? 0 : index / page.getPageSize();
+        int pageNumber = indexOfSpecificProcessInstance < 0 ? 0 : indexOfSpecificProcessInstance / page.getPageSize();
         Pageable newPageable = PageRequest.of(pageNumber, page.getPageSize(), page.getSort());
         Page<ProcessInstanceDTO> foundInstances = processInstanceRepository.findAll(specification, newPageable).map(processInstanceMapper::toDto);
         return foundInstances;

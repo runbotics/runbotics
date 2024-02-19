@@ -71,30 +71,17 @@ public class ProcessInstanceResource {
      *
      * @param pageable the pagination information.
      * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processInstances in body.
+     * @param instanceId the optional param with id of searched for process instance in a page.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processInstances in body. If instanceId is present processInstances returned contain specific instance.
      */
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
     @GetMapping("/process-instances-page")
-    public ResponseEntity<Page<ProcessInstanceDTO>> getProcessInstancesPage(ProcessInstanceCriteria criteria, Pageable pageable) {
+    public ResponseEntity<Page<ProcessInstanceDTO>> getProcessInstancesPage(ProcessInstanceCriteria criteria, Pageable pageable, @RequestParam Optional<UUID> instanceId) {
         log.debug("REST request to get ProcessInstances page by criteria: {}", criteria);
-        Page<ProcessInstanceDTO> page = processInstanceQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page);
-    }
-
-        /**
-     * {@code GET  /process-instances-page-with-specific-instance} : get processInstances page.
-     *
-     * @param itemId the id of searched for process instance in a page
-     * @param pageable the pagination information.
-     * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processInstances with specific instance in the body or first page of process instances.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
-    @GetMapping("/process-instances-page-with-specific-instance/{itemId}")
-    public ResponseEntity<Page<ProcessInstanceDTO>> getProcessInstancesPageWithSpecificInstance(@PathVariable UUID itemId, ProcessInstanceCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get ProcessInstances page with specific instance id: {} by criteria: {}", itemId, criteria);
-        Page<ProcessInstanceDTO> page = processInstanceQueryService.findByCriteriaWithSpecificInstance(itemId, criteria, pageable);
+        Page<ProcessInstanceDTO> page = (
+            instanceId.isPresent()
+                ? processInstanceQueryService.findByCriteriaWithSpecificInstance(instanceId.get(), criteria, pageable)
+                : processInstanceQueryService.findByCriteria(criteria, pageable));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);
     }

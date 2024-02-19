@@ -13,12 +13,6 @@ const processInstancePageURL = (params: PageRequestParams<ProcessInstanceRequest
     .params(params)
     .build();
 
-const processInstancePageWithSpecifcInstanceURL = (params: PageRequestParams<ProcessInstanceRequestCriteria>, id: string) => URLBuilder
-    .url(`/api/process-instances-page-with-specific-instance/${id}`)
-    .param('sort', 'created,desc')
-    .params(params)
-    .build();
-
 export const getAll = createAsyncThunk<IProcessInstance[]>(
     'processInstances/getAll',
     () => Axios.get<IProcessInstance[]>('/api/process-instances')
@@ -80,10 +74,10 @@ export const getProcessInstancePage = createAsyncThunk<
 
 export const getProcessInstancePageWithSpecificInstance = createAsyncThunk<
     Page<IProcessInstance>,
-    [PageRequestParams<ProcessInstanceRequestCriteria>, string]
+    PageRequestParams<ProcessInstanceRequestCriteria> & { instanceId: string }
 >(
     'processInstances/getProcessInstancePageWithSpecificInstance',
-    ([params, instanceId]) => Axios.get<Page<IProcessInstance>>(processInstancePageWithSpecifcInstanceURL(params, instanceId))
+    (params) => Axios.get<Page<IProcessInstance>>(processInstancePageURL(params))
         .then((response) => response.data),
 );
 

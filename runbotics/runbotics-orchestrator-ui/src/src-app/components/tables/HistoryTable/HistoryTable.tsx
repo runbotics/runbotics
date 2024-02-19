@@ -68,15 +68,16 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         replaceQueryParams({ page, pageSize, tab, id, instanceId });
 
         if (instanceId) {
-            dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance([{
+            dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance({
                 size: pageSize,
+                instanceId,
                 filter: {
                     equals: {
                         ...(botId && { botId }),
                         ...(processId && { processId }),
                     },
                 },
-            }, instanceId]))
+            }))
                 .then(unwrapResult)
                 .catch(() => {
                     enqueueSnackbar(
