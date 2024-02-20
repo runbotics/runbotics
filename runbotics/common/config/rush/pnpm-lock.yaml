@@ -62,6 +62,9 @@ importers:
       '@stomp/stompjs':
         specifier: ^6.1.0
         version: 6.1.2
+      adm-zip:
+        specifier: ~0.5.10
+        version: 0.5.10
       arch:
         specifier: ^2.1.1
         version: 2.2.0
@@ -6549,6 +6552,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /adm-zip@0.5.10:
+    resolution: {integrity: sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}

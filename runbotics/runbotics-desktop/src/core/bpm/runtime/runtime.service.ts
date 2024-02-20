@@ -532,7 +532,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     private createEngineExecutionServices = (
         processInstanceId: string
     ): BpmnEngineExecuteOptions['services'] => ({
-        ...customServices,
+        ...this.createCustomServices(processInstanceId),
         desktop:
             (input: any) =>
                 async (
@@ -592,6 +592,31 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     }
                 },
     });
+
+    private createCustomServices = (processInstanceId: string) => Object.entries(customServices)
+        .reduce((acc, [serviceName, serviceFunction]) => {
+            acc[serviceName] = (arg0?: any, arg1?: any, arg2?: any) => {
+                try {
+                    return serviceFunction(arg0, arg1, arg2);
+                } catch (e) {
+                    this.purgeEngine(processInstanceId);
+                    const errorMsg = `Error in custom service [${serviceName}]: ${(e as Error)?.message}`;
+                    this.logger.error(`[${processInstanceId}] ${errorMsg}`);
+                    const processInstance = this.processInstances[processInstanceId];
+                    this.processEventBus.publish({
+                        processInstanceId: processInstanceId,
+                        eventType: ProcessInstanceStatus.ERRORED,
+                        processInstance: {
+                            ...processInstance,
+                            status: ProcessInstanceStatus.ERRORED,
+                            error: errorMsg,
+                        },
+                    });
+                    throw new Error((e as Error)?.message);
+                }
+            };
+            return acc;
+        }, {});
 
     public terminateProcessInstance = async (
         processInstanceId: string

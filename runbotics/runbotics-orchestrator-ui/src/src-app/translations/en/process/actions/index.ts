@@ -7,6 +7,7 @@ import imageActionsTranslations from './image';
 import jiraCloudActionsTranslations from './jiraCloud';
 import jiraServerActionsTranslations from './jiraServer';
 import microsoftTranslations from './microsoft';
+import zipActionsTranslations from './zip';
 
 const processActionsTranslations = {
     ...commonActionsTranslations,
@@ -18,6 +19,7 @@ const processActionsTranslations = {
     ...jiraCloudActionsTranslations,
     ...jiraServerActionsTranslations,
     ...folderActionsTranslations,
+    ...zipActionsTranslations,
 };
 
 export default processActionsTranslations;

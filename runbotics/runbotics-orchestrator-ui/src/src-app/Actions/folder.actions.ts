@@ -106,6 +106,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                             name: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.Create.Name'),
                                 type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME,
                             },
                             path: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.Path'),
@@ -120,7 +121,6 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                         properties: {
                             variableName: {
                                 title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                             },
@@ -154,6 +154,83 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                 input: {
                     path: undefined,
                     name: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
+    'folder.rename': {
+        id: FolderAction.RENAME,
+        label: translate('Process.Details.Modeler.Actions.Folder.Rename.Label'),
+        script: FolderAction.RENAME,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Folder.Rename.Label'),
+                        type: 'object',
+                        properties: {
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Path'),
+                                type: 'string',
+                            },
+                            newName: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Rename.NewName'),
+                                type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME
+                            },
+                        },
+                        required: ['path', 'newName'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Rename.Path.Info'),
+                        },
+                    },
+                    newName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Rename.NewName.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Rename.Output.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    newName: undefined,
                 },
                 output: {
                     variableName: undefined,
