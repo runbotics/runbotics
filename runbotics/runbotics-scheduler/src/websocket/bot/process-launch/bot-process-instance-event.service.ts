@@ -15,6 +15,7 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceEventEntity } from '#/database/process-instance-event/process-instance-event.entity';
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
+import { ProcessInstanceLoopEventService } from '#/database/process-instance-loop-event/process-instance-loop-event.service';
 import { Injectable } from '@nestjs/common';
 import { isInstanceInterrupted } from './bot-process-instance.service.utils';
 
@@ -37,6 +38,7 @@ export class BotProcessEventService {
 
     constructor(
         private readonly processInstanceEventService: ProcessInstanceEventService,
+        private readonly processInstanceLoopEventService: ProcessInstanceLoopEventService,
         private readonly connection: Connection,
         private readonly uiGateway: UiGateway,
     ) {}
@@ -206,21 +208,20 @@ export class BotProcessEventService {
             await this.updateProcessInstance(queryRunner, processInstanceEvent, processInstance);
             await queryRunner.commitTransaction();
 
-            // const updatedProcessInstanceEvent =
-            //     await this.processInstanceLoopEventService.findByExecutionId(
-            //         queryRunner,
-            //         processInstanceEvent.executionId
-            //     );
-            // Currently we don't want to send loop events to the UI
-            // if (
-            //     updatedProcessInstanceEvent.processInstance
-            //         .rootProcessInstanceId === null
-            // ) {
-            //     this.uiGateway.server.emit(
-            //         WsMessage.PROCESS_INSTANCE_EVENT,
-            //         updatedProcessInstanceEvent
-            //     );
-            // }
+            const updatedProcessInstanceEvent =
+                await this.processInstanceLoopEventService.findByExecutionId(
+                    queryRunner,
+                    processInstanceEvent.executionId
+                );
+            if (
+                updatedProcessInstanceEvent.processInstance
+                    .rootProcessInstanceId === null
+            ) {
+                this.uiGateway.server.emit(
+                    WsMessage.PROCESS_INSTANCE_LOOP_EVENT,
+                    updatedProcessInstanceEvent,
+                );
+            }
         } catch (err: unknown) {
             this.logger.error(
                 'Process instance event update error: rollback',

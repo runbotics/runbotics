@@ -23,6 +23,7 @@ import getSapActions from './sap.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
 import getVisualBasicActions from './visualBasic.actions';
+import getZipActions from './zip.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),
@@ -49,6 +50,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getDesktopActions(),
     ...getVisualBasicActions(),
     ...getImageActions(),
+    ...getZipActions(),
 };
 
 export default internalBpmnActions;

@@ -14,6 +14,7 @@ const actionsGroupsTranslations: typeof englishActionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.JiraServer': 'Jira Server',
     'Process.Details.Modeler.ActionsGroup.File': 'Plik',
     'Process.Details.Modeler.ActionsGroup.Folder': 'Folder',
+    'Process.Details.Modeler.ActionsGroup.Zip': 'Zip',
     'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
     'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
     'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
