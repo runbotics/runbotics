@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 
 import { Drawer, DrawerProps } from '@mui/material';
 
@@ -14,7 +14,6 @@ import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });
     const [dragmode, setDragmode] = useState(false);
-    const [draggerHeight, setDraggerHeight] = useState<number>();
     const drawerRef = useRef<HTMLDivElement>(null);
 
     const handleDragStart = () => {
@@ -29,16 +28,6 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
         setDragmode(false);
     };
 
-    useEffect(() => {
-        const changeDraggerHeight = () => {
-            const drawerScrollHeight = drawerRef.current?.getElementsByClassName('MuiGrid-root')[0]?.scrollHeight;
-            setDraggerHeight(drawerScrollHeight);
-        }
-        changeDraggerHeight();
-
-        window.addEventListener('resize', changeDraggerHeight);
-        return () => window.removeEventListener('resize', changeDraggerHeight);
-    }, [drawerRef.current?.getElementsByClassName('MuiGrid-root')[0]?.scrollHeight]);
 
     return (
         <Drawer
@@ -50,6 +39,8 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
                 sx: {
                     transition: 'none',
                     position: 'relative',
+                    height: 'unset',
+                    minHeight: '100%',
                 },
             }}
             sx={[
@@ -64,7 +55,7 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
             ]}
             ref={drawerRef}
         >
-            <Dragger active={dragmode} onMouseDown={handleDragStart} draggerHeight={draggerHeight} />
+            <Dragger active={dragmode} onMouseDown={handleDragStart} />
             {createPortal(
                 <EventCatcher
                     active={dragmode}
