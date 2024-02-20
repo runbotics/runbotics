@@ -1,18 +1,22 @@
 import { FC } from 'react';
 
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { FeatureKey, Role } from 'runbotics-common';
+import { COLLECTION_ID_PARAM, FeatureKey, Role } from 'runbotics-common';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
+import { processCollectionActions } from '#src-app/store/slices/ProcessCollection';
+import { ROOT_PROCESS_COLLECTION_ID } from '#src-app/views/process/ProcessCollectionView/ProcessCollection.utils';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess, hasRoleAccess } from '../utils/Secured';
 
 const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
+const processCollectionRegex = /\/app\/processes\/collections/;
 
 interface AuthGuardParams {
     Component: FC,
@@ -34,6 +38,7 @@ export const withAuthGuard = ({
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
     const isAuthenticated = isInitialized && isBrowser && isAuthed;
+    const collectionId: string = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
 
     if (!isAuthenticated) {
         router.replace('/');
@@ -59,8 +64,20 @@ export const withAuthGuard = ({
             return <LoadingScreen />;
         }
 
+        if (processCollectionRegex.test(router.asPath)) {
+            const params = collectionId !== null ? {
+                filter: { equals: { parentId: collectionId } }
+            } : {};
+
+            dispatch(processCollectionActions.getWithAccess(params))
+                .then(unwrapResult)
+                .catch(() => {
+                    router.replace('/404');
+                });
+        }
+
         if (
-            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options) 
+            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options)
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
