@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { Drawer, DrawerProps } from '@mui/material';
 
@@ -14,7 +14,6 @@ import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });
     const [dragmode, setDragmode] = useState(false);
-    const drawerRef = useRef<HTMLDivElement>(null);
 
     const handleDragStart = () => {
         setDragmode(true);
@@ -27,7 +26,6 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const handleDragEnd = () => {
         setDragmode(false);
     };
-
 
     return (
         <Drawer
@@ -53,7 +51,6 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
                     marginLeft: `-${width}px`,
                 },
             ]}
-            ref={drawerRef}
         >
             <Dragger active={dragmode} onMouseDown={handleDragStart} />
             {createPortal(
