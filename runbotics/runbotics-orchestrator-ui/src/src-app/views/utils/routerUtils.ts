@@ -9,3 +9,5 @@ export const replaceQueryParams = (queryParams: Record<string, any>, router: Nex
     }, {} as Record<string, any>);
     router.replace({ pathname: router.pathname, query: filteredQueryParams });
 };
+
+export const getLastParamOfUrl = (router: NextRouter) => router.asPath.split('/').slice(-1)[0].split('?')[0];

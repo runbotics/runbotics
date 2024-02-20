@@ -20,3 +20,4 @@ export * from './api/tag.model';
 export * from './api/notification-process.model';
 export * from './api/notification-bot.model';
 export * from './api/process-output.model';
+export * from './api/process-collection.model';

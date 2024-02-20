@@ -12,6 +12,7 @@ import CsvActionHandler from './csv';
 import FileActionHandler from './file';
 import GeneralActionHandler from './general';
 import GoogleActionHandler from './google';
+import ZipActionHandler from './zip';
 import ImportActionHandler from './import';
 import JiraCloudActionHandler from './jira/jira-cloud';
 import JiraServerActionHandler from './jira/jira-server';
@@ -60,6 +61,7 @@ const ALL_ACTION_HANDLERS = [
     VisualBasicActionHandler,
     ImageActionHandler,
     FolderActionHandler,
+    ZipActionHandler,
 ];
 
 @Module({

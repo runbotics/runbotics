@@ -19,11 +19,13 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
     ) { }
 
     async handleConnection(client: AuthSocket) {
-        this.logger.log(`Client ${client.id} is trying to establish connection`);
-
-        const user = await this.authService.validateWebsocketConnection(client);
-
-        this.logger.log(`Client connected: ${user.login} | ${client.id}`);
+        try {
+            this.logger.log(`Client ${client.id} is trying to establish connection`);
+            const user = await this.authService.validateWebsocketConnection(client);
+            this.logger.log(`Client connected: ${user.login} | ${client.id}`);
+        } catch (error) {
+            this.logger.error(`Client ${client.id} failed to connect`, error);
+        }
     }
 
     handleDisconnect(client: AuthSocket) {

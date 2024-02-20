@@ -181,3 +181,7 @@ export const setOptions = (state: ProcessState, action: PayloadAction<Options>) 
 export const setVariables = (state: ProcessState, action: PayloadAction<Variable[]>) => {
     state.modeler.variables = action.payload;
 };
+
+export const setActiveDrag = (state: ProcessState, action: PayloadAction<boolean>) => {
+    state.modeler.activeDrag = action.payload;
+};

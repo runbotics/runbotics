@@ -22,6 +22,7 @@ import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
+import getZipActions from '#src-app/Actions/zip.actions';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -112,6 +113,10 @@ const useInternalActionsGroups = (): Record<
             label: translate('Process.Details.Modeler.ActionsGroup.Folder'),
             items: Object.values(getFolderActions())
         },
+        zip: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Zip'),
+            items: Object.values(getZipActions())
+        },
         image: {
             label: translate('Process.Details.Modeler.ActionsGroup.Image'),
             items: Object.values(getImageActions()),
@@ -175,7 +180,7 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.External'
             ),
             items: []
-        }
+        },
     };
 };
 
