@@ -26,10 +26,6 @@ const themes = {
     [ThemeType.LIGHT]: lightTheme,
 };
 
-export interface CustomThemeOptions extends ThemeOptions {
-    customShadow?: Record<string, string>
-}
-
 const createTheme = (config: ThemeConfig, language: string): Theme => {
     const themeOptions = themes[config.theme];
 
