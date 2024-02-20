@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Paper, CardActionArea, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import Link from 'next/link';
 import styled from 'styled-components';
 
@@ -12,15 +12,14 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         background-color: ${theme.palette.grey[200]};
         box-shadow: ${theme.shadows[5]};
 
-        &:hover {
-            background-color: ${theme.palette.grey[300]};
+        && { 
+            transition: background-color 500ms ease; 
+            &:hover { 
+                background-color: ${theme.palette.grey[500]}; 
+            }
         }
     }
 `);
-
-export const ActionAreaWrapper = styled(CardActionArea)`
-    display: flex;
-`;
 
 export const CollectionNameWrapper = styled.div`
     max-width: 230px;
@@ -46,7 +45,6 @@ export const StyledLink = styled(Link)`
     text-decoration: none;
     color: inherit;
 `;
-
 
 export const CollectionListWrapper = styled.div<{ isExpanded?: boolean }>`
     height: ${({ isExpanded }) => isExpanded ? '100%' : '64px'};

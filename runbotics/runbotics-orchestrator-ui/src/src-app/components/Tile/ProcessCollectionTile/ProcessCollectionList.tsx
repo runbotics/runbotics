@@ -8,7 +8,7 @@ import { processCollectionSelector } from '#src-app/store/slices/ProcessCollecti
 
 import { ExpandButtonWrapper } from './ProcessCollectionList.style';
 import ProcessCollectionTile from './ProcessCollectionTile';
-import { ActionAreaWrapper, CollectionListWrapper, DividerLine, ExpandButton, StyledExpandIcon, StyledTypography } from './ProcessCollectionTile.styles';
+import { CollectionListWrapper, DividerLine, ExpandButton, StyledExpandIcon, StyledTypography } from './ProcessCollectionTile.styles';
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
@@ -62,7 +62,7 @@ const ProcessCollectionList: FC = () => {
     }, [processCollections]);
 
     return (
-        <ActionAreaWrapper>
+        <div>
             <CollectionListWrapper isExpanded={isExpanded}>
                 <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={2} p={1}>
                     {sortedCollections
@@ -91,7 +91,7 @@ const ProcessCollectionList: FC = () => {
                     <DividerLine />
                 </ExpandButtonWrapper>
             </If>
-        </ActionAreaWrapper>
+        </div>
     );
 };
 
