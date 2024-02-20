@@ -1,9 +1,9 @@
-import { blueGrey } from '@mui/material/colors';
-import { ThemeOptions } from '@mui/material/styles';
+import { blueGrey, grey } from '@mui/material/colors';
 
+import { CustomThemeOptions } from '.';
 import { softShadows } from './shadows';
 
-export const lightTheme: ThemeOptions = {
+export const lightTheme: CustomThemeOptions = {
     components: {
         MuiInputBase: {
             styleOverrides: {
@@ -48,4 +48,7 @@ export const lightTheme: ThemeOptions = {
         },
     },
     shadows: softShadows,
+    customShadow: {
+        card: `0 0.25rem 0.5rem 0 ${grey[400]}`,
+    }
 };

@@ -12,13 +12,13 @@ const Wrapper = styled(Card)<TileProps>(({ theme }) => `
     min-height: 13.125rem;
 
     && {
-        box-shadow: 0 0.25rem 0.5rem 0 ${theme.palette.grey[400]};
+        box-shadow: ${theme.shadows[5]};
     }
 
     &:hover {
         ${({ hoverstyles }) =>
         hoverstyles &&
-            `box-shadow: 0 .25rem 1rem 0 ${theme.palette.grey[400]}`};
+            `box-shadow: ${theme.shadows[10]}`};
     }
 `);
 

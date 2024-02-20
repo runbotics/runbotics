@@ -10,7 +10,7 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         max-width: 350px;
         padding-block: 2px;
         background-color: ${theme.palette.grey[200]};
-        box-shadow: 0 0.25rem 0.5rem 0 ${theme.palette.grey[400]};
+        box-shadow: ${theme.shadows[5]};
 
         &:hover {
             background-color: ${theme.palette.grey[300]};
