@@ -37,6 +37,8 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
                 sx: {
                     transition: 'none',
                     position: 'relative',
+                    height: 'unset',
+                    minHeight: '100%',
                 },
             }}
             sx={[
