@@ -10,6 +10,14 @@ export const ProcessCollectionTileWrapper = styled(Paper)(({ theme }) => `
         max-width: 350px;
         padding-block: 2px;
         background-color: ${theme.palette.grey[200]};
+        box-shadow: ${theme.shadows[5]};
+
+        && { 
+            transition: background-color 500ms ease; 
+            &:hover { 
+                background-color: ${theme.palette.grey[500]}; 
+            }
+        }
     }
 `);
 
@@ -38,9 +46,8 @@ export const StyledLink = styled(Link)`
     color: inherit;
 `;
 
-
 export const CollectionListWrapper = styled.div<{ isExpanded?: boolean }>`
-    height: ${({ isExpanded }) => isExpanded ? '100%' : '50px'};
+    height: ${({ isExpanded }) => isExpanded ? '100%' : '64px'};
     overflow: hidden;
 `;
 

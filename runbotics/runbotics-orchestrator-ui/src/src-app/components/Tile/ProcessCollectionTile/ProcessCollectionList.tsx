@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useLayoutEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { Grid } from '@mui/material';
 
@@ -54,16 +54,24 @@ const ProcessCollectionList: FC = () => {
         setIsExpanded(!isExpanded);
     };
 
+    const sortedCollections = useMemo(() => {
+        const collectionsClone = structuredClone(processCollections);
+        return collectionsClone.length < 1 ?
+            collectionsClone :
+            collectionsClone.sort((collection1, collection2) => collection1.name.localeCompare(collection2.name));
+    }, [processCollections]);
+
     return (
         <div>
             <CollectionListWrapper isExpanded={isExpanded}>
-                <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={1}>
-                    {processCollections.map(collection => (
-                        <ProcessCollectionTile
-                            {...collection}
-                            key={collection.id}
-                        />
-                    ))}
+                <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={2} p={1}>
+                    {sortedCollections
+                        .map(collection => (
+                            <ProcessCollectionTile
+                                {...collection}
+                                key={collection.id}
+                            />
+                        ))}
                 </Grid>
             </CollectionListWrapper>
             <If condition={isCollectionListMultiLine}>
