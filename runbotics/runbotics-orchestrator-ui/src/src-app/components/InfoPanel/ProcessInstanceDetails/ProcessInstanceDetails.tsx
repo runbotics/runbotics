@@ -1,7 +1,10 @@
 import React, { useEffect, VFC } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 
+import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
@@ -14,10 +17,12 @@ import ProcessInstanceDetailsTable from './ProcessInstanceDetailsTable';
 
 interface ProcessInstanceDetailsProps {
     processInstanceId: string;
+    onClose?: () => void;
 }
 
-const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInstanceId }) => {
+const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInstanceId, onClose }) => {
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     const processInstanceState = useSelector(processInstanceSelector);
@@ -32,7 +37,17 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
         : processInstanceState.active.processInstance;
 
     useEffect(() => {
-        if (processInstanceId) dispatch(processInstanceActions.getProcessInstance({ processInstanceId }));
+        if (processInstanceId) {
+            dispatch(processInstanceActions.getProcessInstance({ processInstanceId }))
+                .then(unwrapResult)
+                .catch(() => {
+                    onClose?.();
+                    enqueueSnackbar(
+                        translate('History.Table.Error.ProcessInstanceNotFound'),
+                        { variant: 'error' },
+                    );
+                });
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);

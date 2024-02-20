@@ -72,6 +72,15 @@ export const getProcessInstancePage = createAsyncThunk<
         .then((response) => response.data),
 );
 
+export const getProcessInstancePageWithSpecificInstance = createAsyncThunk<
+    Page<IProcessInstance>,
+    PageRequestParams<ProcessInstanceRequestCriteria> & { instanceId: string }
+>(
+    'processInstances/getProcessInstancePageWithSpecificInstance',
+    (params) => Axios.get<Page<IProcessInstance>>(processInstancePageURL(params))
+        .then((response) => response.data),
+);
+
 export const stopProcessInstance = createAsyncThunk<void, { processInstanceId: string }>(
     'processInstances/stopProcess',
     async ({ processInstanceId }) => {
