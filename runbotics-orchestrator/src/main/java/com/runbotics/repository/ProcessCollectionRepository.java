@@ -28,6 +28,15 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     int countAvailableCollectionsById(UUID id, User user);
 
     @Query(value =
+        "SELECT COUNT(*) " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.id IN ?1 AND " +
+            "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+    )
+    int countAvailableCollectionsByIds(List<UUID> ids, User user);
+
+    @Query(value =
         "SELECT pc " +
             "FROM ProcessCollection pc " +
             "LEFT JOIN pc.users u " +
