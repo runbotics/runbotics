@@ -67,6 +67,8 @@ public class ProcessCollectionResource {
             );
         }
 
+        // Endpoint will return 204 status without content if user has access,
+        // otherwise error status code will be thrown
         return ResponseEntity.accepted().build();
     }
 
