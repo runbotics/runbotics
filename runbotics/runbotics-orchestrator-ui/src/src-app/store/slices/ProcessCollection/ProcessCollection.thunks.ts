@@ -17,11 +17,12 @@ const buildCollectionURL = (params: PageRequestParams, url: string) => URLBuilde
     .params(params)
     .build();
 
-export const getWithAccess = createAsyncThunk<void, PageRequestParams>(
+export const getWithAccess = createAsyncThunk<void, PageRequestParams, { rejectValue: any }>(
     'processCollection/getWithAccess',
-    (params) =>
+    (params, { rejectWithValue }) =>
         axios.get(buildCollectionURL(params, '/api/process-collection/access'))
             .then((response) => response.data)
+            .catch((error) => rejectWithValue(error))
 );
 
 export const getAll = createAsyncThunk<ProcessCollection[], PageRequestParams, { rejectValue: any }>(

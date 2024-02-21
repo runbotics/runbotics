@@ -58,7 +58,7 @@ public class ProcessCollectionResource {
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
     @GetMapping("process-collection/access")
-    public ResponseEntity getCollectionAccess(ProcessCollectionCriteria criteria) {
+    public ResponseEntity<Void> getCollectionAccess(ProcessCollectionCriteria criteria) {
         User requester = userService.getUserWithAuthorities().get();
 
         if (criteria.getParentId() != null) {
@@ -74,21 +74,19 @@ public class ProcessCollectionResource {
     @GetMapping("process-collection")
     public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
         User requester = userService.getUserWithAuthorities().get();
-        boolean hasUserAccessEveryCollection = requester.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_EVERY);
 
-        List<ProcessCollectionDTO> result;
         if (criteria.getParentId() != null) {
             processCollectionService.checkCollectionAvailability(
                 criteria.getParentId().getEquals(), requester
             );
 
-            result = processCollectionService.getChildrenCollectionsByParent(
+            List<ProcessCollectionDTO> result = processCollectionService.getChildrenCollectionsByParent(
                 criteria.getParentId().getEquals(), requester);
+            return ResponseEntity.ok().body(result);
         } else {
-            result = processCollectionService.getChildrenCollectionsByRoot(requester);
+            List<ProcessCollectionDTO> result = processCollectionService.getChildrenCollectionsByRoot(requester);
+            return ResponseEntity.ok().body(result);
         }
-
-        return ResponseEntity.ok().body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")

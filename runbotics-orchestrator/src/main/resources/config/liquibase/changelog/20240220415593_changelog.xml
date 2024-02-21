@@ -6,7 +6,7 @@
         </preConditions>
         <sql>
             INSERT INTO feature_key(name) VALUES
-            ('PROCESS_COLLECTION_EVERY')
+            ('PROCESS_COLLECTION_ALL_ACCESS')
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>
@@ -16,7 +16,7 @@
         </preConditions>
         <sql>
             INSERT INTO authority_feature_key(authority, feature_key) VALUES
-            ('ROLE_ADMIN', 'PROCESS_COLLECTION_EVERY')
+            ('ROLE_ADMIN', 'PROCESS_COLLECTION_ALL_ACCESS')
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>

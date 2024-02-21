@@ -41,13 +41,13 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public void checkCollectionAvailability(UUID collectionId, User user) {
-        if (processCollectionRepository.countCollectionById(collectionId) == 0) {
+        if (processCollectionRepository.countCollectionsById(collectionId) == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find process collection");
         }
 
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_EVERY);
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
         if (!hasUserAccessEveryCollection) {
-            boolean isCollectionAvailable = processCollectionRepository.countAvailableCollectionById(collectionId, user) != 0;
+            boolean isCollectionAvailable = !(processCollectionRepository.countAvailableCollectionsById(collectionId, user) == 0);
             if (!isCollectionAvailable) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
             }
@@ -55,7 +55,7 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user) {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_EVERY);
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
             return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
@@ -65,7 +65,7 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_EVERY);
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
             return processCollectionMapper.toDto(

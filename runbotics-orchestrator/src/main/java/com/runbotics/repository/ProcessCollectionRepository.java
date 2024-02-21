@@ -16,7 +16,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     @Query(value =
         "SELECT COUNT(*) FROM ProcessCollection pc WHERE pc.id = ?1"
     )
-    int countCollectionById(UUID id);
+    int countCollectionsById(UUID id);
 
     @Query(value =
         "SELECT COUNT(*) " +
@@ -25,7 +25,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
             "WHERE pc.id = ?1 AND " +
             "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
     )
-    int countAvailableCollectionById(UUID id, User user);
+    int countAvailableCollectionsById(UUID id, User user);
 
     @Query(value =
         "SELECT pc " +
