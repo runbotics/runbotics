@@ -1,6 +1,6 @@
 import { IUser } from "./user.model";
 
-export type CollectionId = string;
+export type CollectionId = string | null;
 export type CollectionName = string;
 
 export interface ProcessCollection {

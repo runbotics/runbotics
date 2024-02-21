@@ -1,22 +1,29 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { MenuItem } from '@mui/material';
 
-import { ProcessCollection } from 'runbotics-common';
+import ProcessCollectionModifyDialog from '#src-app/views/process/ProcessCollectionView/ProcessCollectionModifyDialog/ProcessCollectionModifyDialog';
 
+import { EditCollectionProps } from './MenuItems.types';
 import { translate } from '../../../../hooks/useTranslations';
 
-export const EditCollection: FC<ProcessCollection> = (props) => {
+export const EditCollection: FC<EditCollectionProps> = ({ collection, onClose }) => {
+    const [showDialog, setShowDialog] = useState<boolean>(false);
 
-    const editCollection = () => {
-        // TODO: Handle collection edition
+    const onEdit = () => {
+        setShowDialog(true);
+    };
 
-        console.log(props);
+    const onEditDialogClose = () => {
+        setShowDialog(false);
     };
 
     return (
-        <MenuItem onClick={editCollection}>
-            {translate('Process.Collection.Tile.MenuItem.Edit')}
-        </MenuItem>
+        <>
+            <MenuItem onClick={onEdit}>
+                {translate('Process.Collection.Tile.MenuItem.Edit')}
+            </MenuItem>
+            <ProcessCollectionModifyDialog collection={collection} open={showDialog} onClose={onEditDialogClose} />
+        </>
     );
 };

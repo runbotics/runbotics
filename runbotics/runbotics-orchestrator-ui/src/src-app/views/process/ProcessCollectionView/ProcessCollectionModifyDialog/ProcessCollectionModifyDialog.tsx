@@ -2,7 +2,6 @@
 import { FC, useState, useEffect, ChangeEvent, useMemo } from 'react';
 
 import { Button, Dialog, DialogActions, TextField } from '@mui/material';
-
 import { useSnackbar } from 'notistack';
 import { IUser, ProcessCollection, ProcessCollectionKeys, Role } from 'runbotics-common';
 
@@ -12,8 +11,6 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processCollectionActions } from '#src-app/store/slices/ProcessCollection/ProcessCollection.slice';
 import { usersActions } from '#src-app/store/slices/Users';
 import { User } from '#src-app/types/user';
-
-
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions/';
@@ -23,11 +20,13 @@ import { checkTranslationKey, completeCollectionEntity, prepareIncompleteCollect
 
 
 const CREATE_COLLECTION_REJECTED_TYPE = 'processCollection/createCollection/rejected';
+const UPDATE_COLLECTION_REJECTED_TYPE = 'processCollection/createCollection/{id}/rejected';
 
 const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({ open: isOpen, onClose, collection }) => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
+    const isUpdated = Boolean(collection);
 
     const { all: allUsers } = useSelector((state) => state.users);
     const { user: currentUser } = useSelector((state) => state.auth);
@@ -49,30 +48,32 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
         setCollectionData(initialCollectionData);
     };
 
-    const updateCollection = (body) =>
-    // if (collection) return dispatch(processCollectionActions.updateOne({ id: collection.id, body }));
-
-        dispatch(processCollectionActions.createOne({ body }))
-    ;
+    const updateCollection = (body) => collection
+        ? dispatch(processCollectionActions.updateOne({ id: collection.id, body }))
+        : dispatch(processCollectionActions.createOne({ body }));
 
     const handleSubmit = async () => {
         const body = completeCollectionEntity(collectionData);
         const { type: responseType, payload } = await updateCollection(body);
-        const { detail, status } = payload?.response?.data || {};
+        const { detail, status, errorKey } = payload?.response?.data || {};
 
-        if (responseType === CREATE_COLLECTION_REJECTED_TYPE) {
-            const errorKey = payload.response.data.errorKey;
-            const translateKey = `Process.Collection.Dialog.Modify.Form.ErrorMessage.${capitalizeFirstLetter({ text: errorKey })}`;
+        if (responseType === CREATE_COLLECTION_REJECTED_TYPE || responseType === UPDATE_COLLECTION_REJECTED_TYPE) {
+            const translationPrefix = 'Process.Collection.Dialog.Modify.Form.ErrorMessage';
+            const translateKey = `${translationPrefix}.${errorKey ? capitalizeFirstLetter({ text: errorKey }) : ''}`;
             const errorMessage =
                 checkTranslationKey(translateKey)
                     ? translate(translateKey)
-                    : translate('Process.Collection.Dialog.Modify.Form.ErrorMessage.Default', { detail, status });
+                    : translate(`${translationPrefix}.Default`, { detail, status });
             enqueueSnackbar((errorMessage), {
                 variant: 'error',
                 autoHideDuration: 15000,
             });
         } else {
-            enqueueSnackbar(translate('Process.Collection.Dialog.Create.Success'), {
+            const successMessage = isUpdated
+                ? translate('Process.Collection.Dialog.Update.Success')
+                : translate('Process.Collection.Dialog.Create.Success');
+
+            enqueueSnackbar((successMessage), {
                 variant: 'success',
                 autoHideDuration: 5000,
             });
@@ -96,13 +97,14 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
             }}
         >
             <Title>{translate(`Process.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}</Title>
-            <Content>
+            <Content sx={{ overflowX: 'hidden' }}>
                 <Form>
                     <TextField
                         label={translate('Process.Collection.Dialog.Modify.Form.Name.Label')}
                         required
                         disabled={!isOwner}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormPropertyChange('name', e.target.value)}
+                        value={collectionData.name}
                         size="small"
                         fullWidth
                     />
@@ -111,6 +113,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                         disabled={!isOwner}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormPropertyChange('description', e.target.value)}
                         size="small"
+                        value={collectionData.description}
                         fullWidth
                     />
                     <AccessOptions
@@ -118,6 +121,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                         handleChange={handleFormPropertyChange}
                         isOwner={isOwner}
                         usersWithoutAdmin={usersWithoutAdmin}
+                        isOpen={isOpen}
                     />
                 </Form>
             </Content>

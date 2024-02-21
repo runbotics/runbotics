@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@mui/x-tree-view": "^6.17.0"
+  }
+}

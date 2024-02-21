@@ -5,4 +5,5 @@ export interface AccessOptionsProps {
     handleChange: (property: ProcessCollectionKeys, newValue: ProcessCollectionValues ) => void;
     isOwner: boolean;
     usersWithoutAdmin: IUser[];
+    isOpen: boolean;
 }

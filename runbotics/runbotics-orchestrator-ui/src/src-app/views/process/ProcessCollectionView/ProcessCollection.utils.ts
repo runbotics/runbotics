@@ -25,6 +25,7 @@ export const prepareIncompleteCollectionEntity = (
     isPublic: collection ? collection.isPublic : INITIAL_VALUES.isPublic,
     users: collection ? collection.users : INITIAL_VALUES.users,
     createdBy: collection ? collection.createdBy : createdBy,
+    created: collection ? collection.created : null,
 });
 
 export const completeCollectionEntity = (incompleteCollection: ProcessCollection): ProcessCollection => ({

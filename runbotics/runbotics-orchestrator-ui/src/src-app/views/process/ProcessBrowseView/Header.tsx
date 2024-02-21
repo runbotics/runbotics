@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC } from 'react';
 
-import { Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Grid, Stack, Tab, Tabs } from '@mui/material';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -18,8 +18,6 @@ import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.ut
 import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
-
-
 
 const PREFIX = 'Header';
 
@@ -44,7 +42,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
-    
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { firstValueFrom } = useQuery();
@@ -57,20 +55,20 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
         if (value === ProcessesTabs.COLLECTIONS) {
-            router.replace({ 
+            router.replace({
                 pathname:  '/app/processes/collections',
                 query: {
                     collection: collectionId,
                     locale: router.locale,
-                    pageSize: pageSize, 
+                    pageSize: pageSize,
                     page: currentPage
                 }
-            }); 
+            });
         } else {
-            router.replace({ 
+            router.replace({
                 pathname:  '/app/processes',
                 query: {
-                    locale: router.locale, 
+                    locale: router.locale,
                     pageSize: pageSize,
                     page: currentPage
                 }
@@ -84,12 +82,12 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             value={currentTab}
             textColor="secondary"
         >
-            <Tab 
+            <Tab
                 key={ProcessesTabs.PROCESSES}
                 value={ProcessesTabs.PROCESSES}
                 label={translate('Process.Collection.Navigation.Processes.Label')}
-            /> 
-            <Tab 
+            />
+            <Tab
                 key={ProcessesTabs.COLLECTIONS}
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}
@@ -108,11 +106,6 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 {procesTabs}
-            </Grid>
-            <Grid item>
-                <Typography variant="h3" color="textPrimary">
-                    {translate('Process.List.Header.Solutions')}
-                </Typography>
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>

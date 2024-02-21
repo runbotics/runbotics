@@ -15,7 +15,11 @@ const initialState: ProcessCollectionState = {
     childrenCollections: {
         isLoading: false,
         list: [],
-    }
+    },
+    allUserAccessible: {
+        isLoading: false,
+        list: [],
+    },
 };
 
 export const slice = createSlice({

@@ -13,4 +13,8 @@ export interface ProcessCollectionState {
         isLoading: boolean;
         list: ProcessCollection[];
     }
+    allUserAccessible: {
+        isLoading: boolean;
+        list: ProcessCollection[];
+    }
 }

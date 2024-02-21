@@ -5,7 +5,7 @@ const general: typeof englishGeneral = {
     'Process.Collection.Dialog.Modify.Edit.Title': 'Edytuj kolekcję',
     'Process.Collection.Add.Button': 'Dodaj nową kolekcję',
     'Proces.Collection.Dialog.Modify.Form.IsPublic.True': 'Publiczna',
-    'Proces.Collection.Dialog.Modify.Form.IsPublic.True.Tooltip': 'Ta kolekcja oraz jej zawartość (nie licząć prywatnych procesów) jest widoczna dla każdego.',
+    'Proces.Collection.Dialog.Modify.Form.IsPublic.True.Tooltip': 'Ta kolekcja oraz jej zawartość (nie licząc prywatnych procesów) jest widoczna dla każdego.',
     'Proces.Collection.Dialog.Modify.Form.IsPublic.False': 'Prywatna',
     'Proces.Collection.Dialog.Modify.Form.IsPublic.False.Tooltip': 'Ta kolekcja oraz jej zawartość jest widoczna tylko dla ciebie oraz osób, którym ją udostępniasz.',
     'Proces.Collection.Dialog.Modify.Form.Users.Placeholder': 'Użytkownicy',
@@ -22,6 +22,14 @@ const general: typeof englishGeneral = {
     'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
     'Process.Collection.Navigation.Processes.Label': 'Procesy',
     'Process.Collection.Navigation.Collections.Label': 'Zbiory',
+    'Process.Collection.Structure.Title': 'Lokalizacja',
+    'Process.Collection.Structure.Title.Info': 'Wybierz zbiór, w którym ma się znaleźć obecna kolekcja',
+    'Process.Collection.Structure.Icon.Private.Tooltip': 'Prywatna',
+    'Process.Collection.Structure.Icon.Users.Tooltip': 'Udostępniona wybranym użytkownikom',
+    'Process.Collection.Structure.Icon.Public.Tooltip': 'Publiczna',
+    'Process.Collection.Structure.Icon.Home.Tooltip': 'Nadrzędny zbiór',
+    'Process.Collection.Structure.NoCollections': 'Nowy zbiór zostanie utworzony w',
+    'Process.Collection.Structure.Root': 'Pałac',
 };
 
 export default general;

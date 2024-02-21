@@ -1,11 +1,11 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { ProcessCollectionState } from './ProcessCollection.state';
-import { createOne } from './ProcessCollection.thunks';
+import { createOne, getAllAccessible } from './ProcessCollection.thunks';
 
 const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<ProcessCollectionState>) => {
     builder
-        // CREATE ONE
+        // POST one
         .addCase(createOne.pending, (state) => {
             state.childrenCollections.isLoading = true;
         })
@@ -16,6 +16,18 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
         })
         .addCase(createOne.rejected, (state) => {
             state.childrenCollections.isLoading = false;
+        })
+        // GET user accessible
+        .addCase(getAllAccessible.pending, (state) => {
+            state.allUserAccessible.isLoading = true;
+        })
+        .addCase(getAllAccessible.fulfilled, (state, action) => {
+            state.allUserAccessible.isLoading = false;
+            state.allUserAccessible.list = [...action.payload];
+        })
+        .addCase(getAllAccessible.rejected, (state, action) => {
+            state.allUserAccessible.isLoading = false;
+            state.allUserAccessible.list = [];
         });
 };
 
