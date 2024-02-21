@@ -12,15 +12,23 @@ const buildCollectionPathURL = (collectionId) => URLBuilder
     .param('collectionId', collectionId)
     .build();
 
-const buildAllCollectionURL = (params: PageRequestParams, url: string) => URLBuilder
+const buildCollectionURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
     .params(params)
     .build();
 
+export const getWithAccess = createAsyncThunk<void, PageRequestParams, { rejectValue: any }>(
+    'processCollection/getWithAccess',
+    (params, { rejectWithValue }) =>
+        axios.get(buildCollectionURL(params, '/api/process-collection/access'))
+            .then((response) => response.data)
+            .catch((error) => rejectWithValue(error))
+);
+
 export const getAll = createAsyncThunk<ProcessCollection[], PageRequestParams, { rejectValue: any }>(
     'processCollection/getAll',
     (params, { rejectWithValue }) =>
-        axios.get(buildAllCollectionURL(params, '/api/process-collection'))
+        axios.get(buildCollectionURL(params, '/api/process-collection'))
             .then((response) => response.data)
             .catch((error) => rejectWithValue(error))
 );
@@ -41,6 +49,7 @@ export const getAncestors = createAsyncThunk<ProcessCollection[], string>(
 );
 
 const processCollectionThunks = {
+    getWithAccess,
     getAll,
     createOne,
     getAncestors

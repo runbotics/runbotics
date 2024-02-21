@@ -3,14 +3,16 @@ package com.runbotics.service.impl;
 import com.runbotics.domain.ProcessCollection;
 import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
+import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionService;
 import com.runbotics.service.UserService;
-import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.service.mapper.ProcessCollectionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +40,45 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         this.userService = userService;
     }
 
-    public List<ProcessCollectionDTO> getCollectionsByCriteria(ProcessCollectionCriteria criteria) {
-        if (criteria.getParentId() != null) {
+    public void checkCollectionAvailability(UUID collectionId, User user) {
+        if (processCollectionRepository.countCollectionsById(collectionId) == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find process collection");
+        }
+
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        if (!hasUserAccessEveryCollection) {
+            boolean isCollectionAvailable = !(processCollectionRepository.countAvailableCollectionsById(collectionId, user) == 0);
+            if (!isCollectionAvailable) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
+            }
+        }
+    }
+
+    public List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user) {
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+
+        if (hasUserAccessEveryCollection) {
+            return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
+        }
+
+        return processCollectionMapper.toDto(processCollectionRepository.findAvailableRootCollections(user));
+    }
+
+    public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+
+        if (hasUserAccessEveryCollection) {
             return processCollectionMapper.toDto(
-                    processCollectionRepository.findAllChildrenCollections(
-                        criteria.getParentId().getEquals()
-                    ));
+                processCollectionRepository.findAllChildrenCollections(
+                    parentId
+                )
+            );
         }
 
         return processCollectionMapper.toDto(
-            processCollectionRepository.findAllRootCollections()
+            processCollectionRepository.findAvailableChildrenCollections(
+                parentId, user
+            )
         );
     }
 

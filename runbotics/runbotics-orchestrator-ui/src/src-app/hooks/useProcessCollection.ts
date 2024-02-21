@@ -46,13 +46,16 @@ const useProcessCollection = () => {
         const params = colId !== null ? {
             filter: { equals: { parentId: colId } }
         } : {};
-
-        dispatch(processCollectionActions.getAll(params));
+        return dispatch(processCollectionActions.getAll(params));
     };
 
     useEffect(() => {
-        getAllChildrenCollections(collectionId);
-        getCollectionPath();
+        getAllChildrenCollections(collectionId)
+            .unwrap()
+            .then(() => {
+                getCollectionPath();
+            })
+            .catch(() => {});
     }, [collectionId]);
 
     return ({
