@@ -148,17 +148,6 @@ const ProcessConfigureView: VFC = () => {
         await handleGetProcessSubscribers();
     }
 
-    const attendedBox = (
-        <Box>
-            <AttendancePaper>
-                <ProcessAttendedComponent
-                    isProcessAttended={attended}
-                    onAttendedChange={handleAttendanceChange}
-                />
-            </AttendancePaper>
-        </Box>
-    );
-
     return (
         <ContainerWrapper>
             <Container>
@@ -186,11 +175,14 @@ const ProcessConfigureView: VFC = () => {
                         />
                     </StyledPaper>
                 </Box>
-                <If condition={isScheduled} else={attendedBox}>
-                    <Tooltip title={translate('Process.Configure.Attended.Schedule.Message')} placement="top">
-                        {attendedBox}
-                    </Tooltip>
-                </If>
+                <Box>
+                    <AttendancePaper>
+                        <ProcessAttendedComponent
+                            isProcessAttended={attended}
+                            onAttendedChange={handleAttendanceChange}
+                        />
+                    </AttendancePaper>
+                </Box>
                 <Box>
                     <StyledPaper>
                         <ProcessTriggerableComponent

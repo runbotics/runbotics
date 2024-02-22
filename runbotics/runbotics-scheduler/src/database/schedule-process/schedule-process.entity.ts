@@ -21,4 +21,6 @@ export class ScheduleProcessEntity implements IScheduleProcess {
     @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
         user: IUser;
 
+    @Column({ name: 'input_variables' })
+        inputVariables: string;
 }

@@ -102,6 +102,11 @@ export class SchedulerProcessor {
         }
 
         const process = await this.processService.findById(job.data.process.id);
+
+        if ((Boolean(job.data.input.variables) && !process.isAttended) || (!job.data.input.variables && process.isAttended)) {
+            throw new Error('This process is attended without variables or it\'s not attended process with set variables');
+        }
+
         this.logger.log(
             `[Q Process] Starting process "${process.name}" | JobID: `,
             job.id

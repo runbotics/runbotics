@@ -9,6 +9,7 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
+import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
 
 
 const ManageProcessForm: VFC = () => {
@@ -16,10 +17,15 @@ const ManageProcessForm: VFC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const { process } = useSelector((state) => state.process.draft);
-    const isScheduled = process?.schedules?.length > 0;
+    const { schedules } = useSelector(scheduleProcessSelector);
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
+
+    // eslint-disable-next-line require-await
+    const removeSchedulesWithOldInputVariables = async () => schedules
+        .filter(schedule => Boolean(schedule.inputVariables))
+        .forEach(schedule => dispatch(scheduleProcessActions.removeScheduledProcess({ scheduleProcessId: schedule.id })));
 
     const handleSubmit = async (executionInfoSchema: string) => {
         await dispatch(processActions.partialUpdateProcess({ id: process.id, executionInfo: executionInfoSchema }))
@@ -33,6 +39,7 @@ const ManageProcessForm: VFC = () => {
                         variant: 'success',
                     },
                 );
+                removeSchedulesWithOldInputVariables();
                 closeModal();
             })
             .catch(() => {
@@ -59,6 +66,7 @@ const ManageProcessForm: VFC = () => {
                         variant: 'success',
                     },
                 );
+                removeSchedulesWithOldInputVariables();
                 closeModal();
             })
             .catch(() => {
@@ -85,7 +93,7 @@ const ManageProcessForm: VFC = () => {
                     onDelete={handleDelete}
                 />
             </If>
-            <Button color="secondary" variant="text" onClick={openModal} disabled={isScheduled}>
+            <Button color="secondary" variant="text" onClick={openModal} disabled={!process.isAttended}>
                 {translate('Process.Run.ManageProcessForm')}
             </Button>
         </>

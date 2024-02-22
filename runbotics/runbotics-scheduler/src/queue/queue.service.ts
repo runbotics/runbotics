@@ -158,6 +158,7 @@ export class QueueService implements OnModuleInit {
                     ...process,
                     trigger: { name: TriggerEvent.SCHEDULER },
                     triggerData: { userEmail: process.user.email },
+                    input: { variables: JSON.parse(process.inputVariables) }
                 }))
         );
         this.logger.log(`Created ${scheduledProcesses.length} schedule(s)`);

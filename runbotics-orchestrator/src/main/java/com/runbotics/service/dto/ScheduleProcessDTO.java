@@ -1,5 +1,7 @@
 package com.runbotics.service.dto;
 
+import liquibase.pro.packaged.S;
+
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,6 +19,8 @@ public class ScheduleProcessDTO implements Serializable {
     private ProcessDTO process;
 
     private UserDTO user;
+
+    private String inputVariables;
 
     public Long getId() {
         return id;
@@ -50,6 +54,14 @@ public class ScheduleProcessDTO implements Serializable {
         this.user = user;
     }
 
+    public String getInputVariables() {
+        return inputVariables;
+    }
+
+    public void setInputVariables(String inputVariables) {
+        this.inputVariables = inputVariables;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -78,6 +90,7 @@ public class ScheduleProcessDTO implements Serializable {
             "id=" + getId() +
             ", cron='" + getCron() + "'" +
             ", process=" + getProcess() +
+            ", inputVariables=" + getInputVariables() +
             "}";
     }
 }

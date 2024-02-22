@@ -33,6 +33,9 @@ public class ScheduleProcess implements Serializable {
     @NotNull
     private User user;
 
+    @Column(name = "input_variables")
+    private String inputVariables;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -81,6 +84,14 @@ public class ScheduleProcess implements Serializable {
         this.user = user;
     }
 
+    public String getInputVariables() {
+        return inputVariables;
+    }
+
+    public void setInputVariables(String inputVariables) {
+        this.inputVariables = inputVariables;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -106,6 +117,7 @@ public class ScheduleProcess implements Serializable {
         return "ScheduleProcess{" +
             "id=" + getId() +
             ", cron='" + getCron() + "'" +
+            ", inputVariables='" + getInputVariables() + "'" +
             "}";
     }
 }

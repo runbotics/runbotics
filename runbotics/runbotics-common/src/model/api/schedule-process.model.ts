@@ -6,4 +6,5 @@ export interface IScheduleProcess {
     cron?: string;
     process?: IProcess | null;
     user?: IUser;
+    inputVariables?: string;
 }

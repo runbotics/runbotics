@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, DialogActions, Paper, Tooltip } from '@mui/material';
@@ -7,6 +7,7 @@ import { Controller, ControllerProps, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import * as yup from 'yup';
 
+import AttendedProcessModal from '#src-app/components/AttendedProcessModal/AttendedProcessModal';
 import Cron from '#src-app/components/cron';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -42,6 +43,7 @@ const StyledBox = styled(Box)(
 
 const scheduleProcessSchema = yup.object().shape({
     cron: yup.string().required(),
+    inputVariables: yup.string().notRequired(),
 });
 
 interface ScheduleProcessProps {
@@ -58,11 +60,17 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         resolver: yupResolver(scheduleProcessSchema),
         defaultValues: {
             cron: '0 * * * * *',
+            inputVariables: '',
         },
     });
     const { translate } = useTranslations();
     const { isAttended } = useSelector(currentProcessSelector);
     const currentLocale = useCurrentLocale();
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [cron, setCron] = useState('0 * * * * *');
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
 
     const renderCronComponent = (props: Parameters<ControllerProps['render']>[number]) => {
         const splitted = _.split(props.field.value, ' ');
@@ -71,11 +79,21 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         return (
             <Cron
                 value={cron5Digit}
-                setValue={(cron) => props.field.onChange(`${splitted[0]} ${cron}`)}
+                setValue={(cronValue) => {
+                    setCron(`${splitted[0]} ${cronValue}`);
+                    props.field.onChange(`${splitted[0]} ${cronValue}`);
+                }}
                 locale={currentLocale}
-                disabled={isAttended}
             />
         );
+    };
+
+    const handleRunAttendedProcess = (variables: Record<string, any>) => {
+        closeModal();
+        onProcessScheduler({
+            cron,
+            variables: JSON.stringify(variables),
+        });
     };
 
     useEffect(() => {
@@ -85,7 +103,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
 
     const { process } = useSelector((state) => state.process.draft);
     const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection || isAttended;
-    const tooltipMessage = isAttended ? translate('Process.Schedule.Tooltip.Attended') : translate('Common.Schedule');
+    const tooltipMessage = isAttended ? translate('Process.Run.ScheduleAttended.Message') : translate('Common.Schedule');
 
     const submitButton = (
         <SubmitButton
@@ -98,28 +116,45 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         </SubmitButton>
     );
 
+    const submitWithFormButton = (
+        <div>
+            <AttendedProcessModal
+                open={modalOpen}
+                process={process}
+                setOpen={setModalOpen}
+                onSubmit={handleRunAttendedProcess}
+            />
+            <Button color="primary" variant="contained" onClick={openModal} disabled={!process.isAttended}>
+                {translate('Process.Run.ScheduleAttended.Button')}
+            </Button>
+        </div>
+    );
+
     return (
         <Box>
             <Paper elevation={1}>
-                <form onSubmit={handleSubmit(onProcessScheduler)}>
-                    <DialogActions>
-                        <StyledBox display="flex" gap="0.5rem" alignContent="center">
-                            <Controller
-                                name="cron"
-                                control={control}
-                                render={renderCronComponent}
-                            />
-                            <If condition={isSubmitButtonDisabled} else={submitButton}>
-                                <Tooltip
-                                    title={tooltipMessage}
-                                    placement="top"
-                                >
-                                    <span>{submitButton}</span>
-                                </Tooltip>
-                            </If>
-                        </StyledBox>
-                    </DialogActions>
-                </form>
+                <StyledBox display="flex" gap="0.5rem" alignContent="center">
+                    <form onSubmit={handleSubmit(onProcessScheduler)}>
+                        <DialogActions>
+                            <StyledBox display="flex" gap="0.5rem" alignContent="center">
+                                <Controller
+                                    name="cron"
+                                    control={control}
+                                    render={renderCronComponent}
+                                />
+                                <If condition={isSubmitButtonDisabled} else={submitButton}>
+                                    <Tooltip
+                                        title={tooltipMessage}
+                                        placement="top"
+                                    >
+                                        <span>{submitButton}</span>
+                                    </Tooltip>
+                                </If>
+                            </StyledBox>
+                        </DialogActions>
+                    </form>
+                    {submitWithFormButton}
+                </StyledBox>
             </Paper>
         </Box>
     );
