@@ -15,7 +15,7 @@ import If from '../../utils/If';
 const PROCESS_COLLECTIONS_GAP = 16;
 
 const ProcessCollectionList: FC = () => {
-    const processCollections = useSelector(processCollectionSelector).childrenCollections.list;
+    const processCollections = useSelector(processCollectionSelector).active.childrenCollections;
 
     const refCollectionBox = useRef<HTMLDivElement>();
     const [isCollectionListMultiLine, setIsCollectionListMultiLine] = useState<boolean>(false);
@@ -79,8 +79,8 @@ const ProcessCollectionList: FC = () => {
                     <DividerLine />
                     <ExpandButton $expanded={isExpanded} onClick={handleCollectionResize}>
                         <StyledTypography fontSize={14} >
-                            <If 
-                                condition={isExpanded} 
+                            <If
+                                condition={isExpanded}
                                 else={<>{translate('Process.Collection.List.Expand.Label')}</>}
                             >
                                 {translate('Process.Collection.List.Collapse.Label')}

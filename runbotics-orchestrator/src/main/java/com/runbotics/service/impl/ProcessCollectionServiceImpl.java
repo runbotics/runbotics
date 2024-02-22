@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -63,7 +64,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
             return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
         }
 
-        return processCollectionMapper.toDto(processCollectionRepository.findAvailableRootCollections(user));
+        Set<ProcessCollection> result = processCollectionRepository.findAvailableRootCollections(user);
+        return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
@@ -77,11 +79,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
             );
         }
 
-        return processCollectionMapper.toDto(
-            processCollectionRepository.findAvailableChildrenCollections(
-                parentId, user
-            )
-        );
+        Set<ProcessCollection> result =processCollectionRepository.findAvailableChildrenCollections(parentId, user);
+        return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
     public List<ProcessCollectionDTO> getCollectionAllAncestors(

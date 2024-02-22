@@ -14,23 +14,18 @@ import Header from '../ProcessBrowseView/Header';
 
 export const ProcessCollectionView = () => {
     const { translate } = useTranslations();
-    const {
-        childrenCollections: { isLoading: isCollectionListLoading },
-        active: { ancestors: { isLoading: isAncestorListLoading } }
-    } = useSelector(processCollectionSelector);
+    const { active: { isLoading } } = useSelector(processCollectionSelector);
 
     const { currentCollectionId, breadcrumbs } = useProcessCollection();
     return (
         <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
             <Box pt={2}>
-                <If condition={!isAncestorListLoading} else={<LoadingScreen />} >
+                <If condition={!isLoading} else={<LoadingScreen />} >
                     <ProcessCollectionPath
                         breadcrumbs={breadcrumbs}
                         currentCollectionId={currentCollectionId}
                     />
-                </If>
-                <If condition={!isCollectionListLoading} else={<LoadingScreen />} >
                     <ProcessCollectionList />
                 </If>
             </Box>

@@ -5,12 +5,7 @@ import { ProcessCollection } from 'runbotics-common';
 import { PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
-import { CollectionCreateParams } from './ProcessCollection.types';
-
-const buildCollectionPathURL = (collectionId) => URLBuilder
-    .url('/api/process-collection/active/ancestors')
-    .param('collectionId', collectionId)
-    .build();
+import { CollectionCreateParams, ProcessCollectionPack } from './ProcessCollection.types';
 
 const buildCollectionURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
@@ -25,8 +20,8 @@ export const getWithAccess = createAsyncThunk<void, PageRequestParams, { rejectV
             .catch((error) => rejectWithValue(error))
 );
 
-export const getAll = createAsyncThunk<ProcessCollection[], PageRequestParams, { rejectValue: any }>(
-    'processCollection/getAll',
+export const getAllWithAncestors = createAsyncThunk<ProcessCollectionPack, PageRequestParams, { rejectValue: any }>(
+    'processCollection/getAllWithAncestors',
     (params, { rejectWithValue }) =>
         axios.get(buildCollectionURL(params, '/api/process-collection'))
             .then((response) => response.data)
@@ -41,18 +36,10 @@ export const createOne = createAsyncThunk<ProcessCollection, CollectionCreatePar
             .catch(error => rejectWithValue(error))
 );
 
-export const getAncestors = createAsyncThunk<ProcessCollection[], string>(
-    'processCollection/getAncestors',
-    (collectionId) =>
-        axios.get(buildCollectionPathURL(collectionId))
-            .then((response) => response.data)
-);
-
 const processCollectionThunks = {
     getWithAccess,
-    getAll,
+    getAllWithAncestors,
     createOne,
-    getAncestors
 };
 
 export default processCollectionThunks;
