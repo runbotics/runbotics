@@ -49,6 +49,10 @@ const StyledContainer = styled(Container)(({ theme }) => ({
         padding: '1rem !important',
     },
 
+    [`& .${classes.cardContent}.disabled`]: {
+        backgroundColor: theme.palette.tag.action,
+    },
+
     [`& .${classes.typography}`]: {
         display: 'flex',
         marginLeft: theme.spacing(2),
@@ -126,7 +130,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
             <Box display="flex" flexDirection="column" gap="0.5rem">
                 {schedules.map((schedule) => (
                     <Card key={schedule.id} className={classes.card}>
-                        <CardContent className={classes.cardContent}>
+                        <CardContent classes={{ root: clsx(classes.cardContent, { 'disabled': isNotRunableSchedule(schedule) }) }}>
                             <Box display="flex" alignItems="center">
                                 <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
                                     <SvgIcon fontSize="small">

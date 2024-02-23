@@ -62,8 +62,6 @@
     "Process.Run.BotSystem": "Bot System",
     "Process.Run.BotCollection": "Bot Collection",
     "Process.Run.ManageProcessForm": "ATTENDANCE FORM",
-    "Process.Run.ScheduleAttended.Button": "Schedule with form",
-    "Process.Run.ScheduleAttended.Message": "Schedule attended processes requires attendance form.",
     "Process.MainView.Link.RunBoticsTutorial": "RunBotics Tutorial",
     "Process.MainView.Tabs.Build.Title": "Build",
     "Process.MainView.Tabs.Run.Title": "Run",

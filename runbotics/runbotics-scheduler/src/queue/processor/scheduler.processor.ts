@@ -11,13 +11,7 @@ import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
-import {
-    BotStatus,
-    IBot,
-    IBotCollection,
-    IBotSystem,
-    WsMessage,
-} from 'runbotics-common';
+import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
@@ -102,11 +96,12 @@ export class SchedulerProcessor {
         }
 
         const process = await this.processService.findById(job.data.process.id);
-
-        if ((Boolean(job.data.input.variables) && !process.isAttended) || (!job.data.input.variables && process.isAttended)) {
-            throw new Error('This process is attended without variables or it\'s not attended process with set variables');
+        if (this.isIncorrectJobForProcessType(job, process)) {
+            this.logger.warn(
+                `[Q Process] Process "${process.name}" has scheduled with/without input variables for other type of process.`
+            );
+            return null;
         }
-
         this.logger.log(
             `[Q Process] Starting process "${process.name}" | JobID: `,
             job.id
@@ -176,5 +171,9 @@ export class SchedulerProcessor {
                 err
             );
         }
+    }
+
+    private isIncorrectJobForProcessType(job: Job, process: IProcess) {
+        return (Boolean(job.data.input.variables) && !process.isAttended) || (!job.data.input.variables && process.isAttended);
     }
 }

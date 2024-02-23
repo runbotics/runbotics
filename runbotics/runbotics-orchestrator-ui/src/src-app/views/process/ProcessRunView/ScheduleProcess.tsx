@@ -21,8 +21,9 @@ import { useSelector } from '../../../store';
 const SubmitButton = styled(Button)(
     ({ theme }) => `
     && {
-        padding-left: ${theme.spacing(8)};
-        padding-right: ${theme.spacing(8)};
+        margin-right: ${theme.spacing(1)};
+        padding-left: ${theme.spacing(7)};
+        padding-right: ${theme.spacing(7)};
         color: ${theme.palette.common.white};
     }
 `,
@@ -89,6 +90,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     };
 
     const handleRunAttendedProcess = (variables: Record<string, any>) => {
+        reset();
         closeModal();
         onProcessScheduler({
             cron,
@@ -102,8 +104,7 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     }, [isSubmitSuccessful]);
 
     const { process } = useSelector((state) => state.process.draft);
-    const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection || isAttended;
-    const tooltipMessage = isAttended ? translate('Process.Run.ScheduleAttended.Message') : translate('Common.Schedule');
+    const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
 
     const submitButton = (
         <SubmitButton
@@ -124,16 +125,16 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 setOpen={setModalOpen}
                 onSubmit={handleRunAttendedProcess}
             />
-            <Button color="primary" variant="contained" onClick={openModal} disabled={!process.isAttended}>
-                {translate('Process.Run.ScheduleAttended.Button')}
-            </Button>
+            <SubmitButton color="primary" variant="contained" onClick={openModal} disabled={isSubmitButtonDisabled}>
+                {translate('Common.Schedule')}
+            </SubmitButton>
         </div>
     );
 
     return (
         <Box>
             <Paper elevation={1}>
-                <StyledBox display="flex" gap="0.5rem" alignContent="center">
+                <StyledBox display="flex" alignContent="center">
                     <form onSubmit={handleSubmit(onProcessScheduler)}>
                         <DialogActions>
                             <StyledBox display="flex" gap="0.5rem" alignContent="center">
@@ -142,18 +143,15 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                                     control={control}
                                     render={renderCronComponent}
                                 />
-                                <If condition={isSubmitButtonDisabled} else={submitButton}>
-                                    <Tooltip
-                                        title={tooltipMessage}
-                                        placement="top"
-                                    >
-                                        <span>{submitButton}</span>
-                                    </Tooltip>
+                                <If condition={!isAttended}>
+                                    <div>{submitButton}</div>
                                 </If>
                             </StyledBox>
                         </DialogActions>
                     </form>
-                    {submitWithFormButton}
+                    <If condition={isAttended}>
+                        {submitWithFormButton}
+                    </If>
                 </StyledBox>
             </Paper>
         </Box>
