@@ -6,6 +6,7 @@ import { IProcessInstance } from './process-instance.model';
 export interface ProcessInput {
     variables: Record<string, any>;
     callbackUrl?: string;
+    timeout?: number;
 }
 
 export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
@@ -15,6 +16,7 @@ export interface InstantProcess extends Trigger {
     user?: IUser;
     input?: ProcessInput;
     isActive?: boolean;
+    clientId?: string;
 }
 
 export interface ScheduledProcess extends InstantProcess {
