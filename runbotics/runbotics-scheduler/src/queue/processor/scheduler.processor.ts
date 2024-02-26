@@ -3,6 +3,7 @@ import {
     OnQueueCompleted,
     OnQueueError,
     OnQueueFailed,
+    OnQueueRemoved,
     OnQueueWaiting,
     Process,
     Processor,
@@ -169,7 +170,7 @@ export class SchedulerProcessor {
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
 
-        const processInstanceIdentifier =
+        const { orchestratorProcessInstanceId } =
             await this.processSchedulerService.startProcess(job.data, bot);
 
         await this.botGateway.setBotStatusBusy(bot);
@@ -178,6 +179,6 @@ export class SchedulerProcessor {
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
             job.id
         );
-        return processInstanceIdentifier;
+        return { orchestratorProcessInstanceId };
     }
 }
