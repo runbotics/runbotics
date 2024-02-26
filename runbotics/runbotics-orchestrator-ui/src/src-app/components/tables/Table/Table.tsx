@@ -82,7 +82,7 @@ const Table = <T extends object>({
                 return {
                     ...row,
                     isSelected: true,
-                }
+                };
             }
             return row;
         });
