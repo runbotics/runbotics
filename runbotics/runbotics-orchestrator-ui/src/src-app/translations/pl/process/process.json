@@ -53,7 +53,7 @@
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
     "Process.Schedule.Tooltip.PickBotAndCollection": "Wybierz system botów i kolekcję",
-    "Process.Schedule.Tooltip.Attended": "Nie można ustawić harmonogramu dla nadzorowanego bota",
+    "Process.Schedule.Tooltip.Attended": "Nie można ustawić harmonogramu bez formularza danych wejściowych",
     "Process.Schedule.Cron.HumanReadable": "Uruchom: {{cron}}",
     "Process.Schedule.Cron.At": "o",
     "Process.Schedule.Title": "Harmonogramy",

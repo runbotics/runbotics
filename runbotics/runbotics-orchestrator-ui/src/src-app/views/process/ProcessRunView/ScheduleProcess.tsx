@@ -105,6 +105,8 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
 
     const { process } = useSelector((state) => state.process.draft);
     const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
+    const isSubmitFormButtonDisabled = isSubmitButtonDisabled || !process.executionInfo;
+
 
     const submitButton = (
         <SubmitButton
@@ -113,6 +115,12 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
             variant="contained"
             color="primary"
         >
+            {translate('Common.Schedule')}
+        </SubmitButton>
+    );
+    
+    const submitFormButton = (
+        <SubmitButton color="primary" variant="contained" onClick={openModal} disabled={isSubmitFormButtonDisabled}>
             {translate('Common.Schedule')}
         </SubmitButton>
     );
@@ -125,9 +133,14 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                 setOpen={setModalOpen}
                 onSubmit={handleRunAttendedProcess}
             />
-            <SubmitButton color="primary" variant="contained" onClick={openModal} disabled={isSubmitButtonDisabled}>
-                {translate('Common.Schedule')}
-            </SubmitButton>
+            <If condition={!process.executionInfo} else={submitFormButton}>
+                <Tooltip
+                    title={translate('Process.Schedule.Tooltip.Attended')}
+                    placement="top"
+                >
+                    <span>{submitFormButton}</span>
+                </Tooltip>
+            </If>
         </div>
     );
 
