@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,9 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         this.userService = userService;
     }
 
-    public void checkCollectionAvailability(UUID collectionId, User user) {
+    public void checkCollectionAvailability(
+        UUID collectionId, User user
+    ) throws ResponseStatusException {
         if (processCollectionRepository.countCollectionsById(collectionId) == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find process collection");
         }
@@ -61,7 +64,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
             return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
         }
 
-        return processCollectionMapper.toDto(processCollectionRepository.findAvailableRootCollections(user));
+        Set<ProcessCollection> result = processCollectionRepository.findAvailableRootCollections(user);
+        return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
@@ -75,21 +79,28 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
             );
         }
 
-        return processCollectionMapper.toDto(
-            processCollectionRepository.findAvailableChildrenCollections(
-                parentId, user
-            )
-        );
+        Set<ProcessCollection> result =processCollectionRepository.findAvailableChildrenCollections(parentId, user);
+        return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
-    public List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId) {
-        if (collectionId == null) {
-            return new ArrayList<>();
+    public List<ProcessCollectionDTO> getCollectionAllAncestors(
+        UUID collectionId, User user
+    ) throws ResponseStatusException {
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+
+        List<ProcessCollection> breadcrumbs = processCollectionRepository.findAllAncestors(collectionId);
+        if (!hasUserAccessEveryCollection) {
+              int accessibleCollectionsCount = processCollectionRepository.countAvailableCollectionsByIds(
+                  breadcrumbs.stream().map(ProcessCollection::getId).collect(Collectors.toList()),
+                  user
+              );
+
+              if (accessibleCollectionsCount != breadcrumbs.size()) {
+                  throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
+              }
         }
 
-        return processCollectionMapper.toDto(
-            processCollectionRepository.findAllAncestors(collectionId)
-        );
+        return processCollectionMapper.toDto(breadcrumbs);
     }
 
     @Override

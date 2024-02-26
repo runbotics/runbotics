@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -19,7 +20,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     int countCollectionsById(UUID id);
 
     @Query(value =
-        "SELECT COUNT(*) " +
+        "SELECT COUNT(DISTINCT pc.id) " +
             "FROM ProcessCollection pc " +
             "LEFT JOIN pc.users u " +
             "WHERE pc.id = ?1 AND " +
@@ -28,13 +29,22 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     int countAvailableCollectionsById(UUID id, User user);
 
     @Query(value =
+        "SELECT COUNT(DISTINCT pc.id) " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.id IN ?1 AND " +
+            "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+    )
+    int countAvailableCollectionsByIds(List<UUID> ids, User user);
+
+    @Query(value =
         "SELECT pc " +
             "FROM ProcessCollection pc " +
             "LEFT JOIN pc.users u " +
             "WHERE pc.parentId = ?1 AND " +
             "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
     )
-    List<ProcessCollection> findAvailableChildrenCollections(UUID parentId, User user);
+    Set<ProcessCollection> findAvailableChildrenCollections(UUID parentId, User user);
 
     @Query(value =
         "SELECT pc " +
@@ -43,7 +53,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
             "WHERE pc.parentId IS NULL AND " +
             "(pc.isPublic = true OR pc.createdBy = ?1 OR u = ?1)"
     )
-    List<ProcessCollection> findAvailableRootCollections(User user);
+    Set<ProcessCollection> findAvailableRootCollections(User user);
 
     @Query(value =
         "SELECT pc " +

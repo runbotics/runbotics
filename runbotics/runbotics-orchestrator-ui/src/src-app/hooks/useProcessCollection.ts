@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
-import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
 import { COLLECTION_ID_PARAM, CollectionId, ProcessCollection } from 'runbotics-common';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { processCollectionActions, processCollectionSelector } from '#src-app/store/slices/ProcessCollection';
 import { ROOT_PROCESS_COLLECTION_ID } from '#src-app/views/process/ProcessCollectionView/ProcessCollection.utils';
 
-import useTranslations from './useTranslations';
 
 export interface CollectionBreadcrumb {
     name: string;
@@ -24,38 +23,26 @@ const getBreadcrumbs = (pathCollections: ProcessCollection[]): CollectionBreadcr
 const getCollectionOwner = (collectionId: CollectionId) => true; // todo
 
 const useProcessCollection = () => {
+    const router = useRouter();
     const dispatch = useDispatch();
-    const { translate } = useTranslations();
-    const { enqueueSnackbar } = useSnackbar();
     const collectionId: string = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
-    const { active: { ancestors: { list: collectionAncestors } } } = useSelector(processCollectionSelector);
+    const { active: { ancestors: collectionAncestors } } = useSelector(processCollectionSelector);
     const breadcrumbs = getBreadcrumbs(collectionAncestors);
     const isOwner = getCollectionOwner(collectionId);
 
-    const getCollectionPath = () => {
-        dispatch(processCollectionActions.getAncestors(collectionId)).unwrap()
-            .catch(() => {
-                enqueueSnackbar(
-                    translate('Process.Collection.Ancestors.Error'),
-                    { variant: 'error'}
-                );
-            });
-    };
-
-    const getAllChildrenCollections = (colId) => {
+    const getAllCollections = (colId) => {
         const params = colId !== null ? {
             filter: { equals: { parentId: colId } }
         } : {};
-        return dispatch(processCollectionActions.getAll(params));
+        return dispatch(processCollectionActions.getAllWithAncestors(params));
     };
 
     useEffect(() => {
-        getAllChildrenCollections(collectionId)
+        getAllCollections(collectionId)
             .unwrap()
-            .then(() => {
-                getCollectionPath();
-            })
-            .catch(() => {});
+            .catch(() => {
+                router.replace('/404');
+            });
     }, [collectionId]);
 
     return ({
