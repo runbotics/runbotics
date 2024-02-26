@@ -1,12 +1,15 @@
 package com.runbotics.web.rest;
 
 import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.ProcessCollectionService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
+import com.runbotics.service.dto.ProcessCollectionPackDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +19,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,35 +39,71 @@ public class ProcessCollectionResource {
     private final ProcessCollectionQueryService processCollectionQueryService;
 
     private final ProcessCollectionRepository processCollectionRepository;
+
+    private final UserService userService;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     public ProcessCollectionResource(
         ProcessCollectionService processCollectionService,
         ProcessCollectionQueryService processCollectionQueryService,
-        ProcessCollectionRepository processCollectionRepository
+        ProcessCollectionRepository processCollectionRepository,
+        UserService userService
     ) {
         this.processCollectionService = processCollectionService;
         this.processCollectionRepository = processCollectionRepository;
         this.processCollectionQueryService = processCollectionQueryService;
+        this.userService = userService;
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
+    @GetMapping("process-collection/access")
+    public ResponseEntity<Void> getCollectionAccess(ProcessCollectionCriteria criteria) {
+        User requester = userService.getUserWithAuthorities().get();
+
+        if (criteria.getParentId() != null) {
+            processCollectionService.checkCollectionAvailability(
+                criteria.getParentId().getEquals(), requester
+            );
+        }
+
+        // Endpoint will return 204 status without content if user has access,
+        // otherwise error status code will be thrown
+        return ResponseEntity.accepted().build();
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
     @GetMapping("process-collection")
-    public ResponseEntity<List<ProcessCollectionDTO>> getAllCollections(ProcessCollectionCriteria criteria) {
-        List<ProcessCollectionDTO> collections = processCollectionService.getCollectionsByCriteria(criteria);
+    public ResponseEntity<ProcessCollectionPackDTO> getAllCollections(ProcessCollectionCriteria criteria) {
+        User requester = userService.getUserWithAuthorities().get();
 
-        if (collections.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (criteria.getParentId() != null) {
+            processCollectionService.checkCollectionAvailability(
+                criteria.getParentId().getEquals(), requester
+            );
+
+            List<ProcessCollectionDTO> breadcrumbs = processCollectionService.getCollectionAllAncestors(
+                criteria.getParentId().getEquals(), requester
+            );
+            List<ProcessCollectionDTO> childrenCollections = processCollectionService.getChildrenCollectionsByParent(
+                criteria.getParentId().getEquals(), requester);
+
+            ProcessCollectionPackDTO packedResponse = new ProcessCollectionPackDTO(
+                childrenCollections, breadcrumbs
+            );
+
+            return ResponseEntity.ok().body(packedResponse);
+        } else {
+            List<ProcessCollectionDTO> breadcrumbs = new ArrayList<>();
+            List<ProcessCollectionDTO> childrenCollections = processCollectionService.getChildrenCollectionsByRoot(requester);
+
+            ProcessCollectionPackDTO packedResponse = new ProcessCollectionPackDTO(
+                childrenCollections, breadcrumbs
+            );
+
+            return ResponseEntity.ok().body(packedResponse);
         }
-        return ResponseEntity.ok().body(collections);
-    }
-
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
-    @GetMapping("process-collection/active/ancestors")
-    public ResponseEntity<List<ProcessCollectionDTO>> getAllAncestors(@RequestParam @Nullable UUID collectionId) {
-        List<ProcessCollectionDTO> result = processCollectionService.getCollectionAllAncestors(collectionId);
-        return ResponseEntity.ok().body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_ADD + "')")

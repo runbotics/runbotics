@@ -12,7 +12,7 @@ import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
 import { AccessUtility, hasFeatureKeyAccess, hasRoleAccess } from '../utils/Secured';
 
-const buildViewRegex = /\/app\/processes\/[0-9]+\/build$/;
+const BUILD_VIEW_REGEX = /\/app\/processes\/[0-9]+\/build$/;
 
 interface AuthGuardParams {
     Component: FC,
@@ -40,7 +40,7 @@ export const withAuthGuard = ({
     }
 
     if (isAuthenticated) {
-        if (user.roles.includes(Role.ROLE_GUEST) && !buildViewRegex.test(router.asPath)) {
+        if (user.roles.includes(Role.ROLE_GUEST) && !BUILD_VIEW_REGEX.test(router.asPath)) {
             if (draft.process?.id) {
                 router.replace(`/app/processes/${draft.process.id}/build`);
             } else {
@@ -60,7 +60,7 @@ export const withAuthGuard = ({
         }
 
         if (
-            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options) 
+            hasFeatureKeyAccess(user, featureKeys ? featureKeys : [], options)
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
