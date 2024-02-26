@@ -35,7 +35,7 @@ export class TriggerController {
             });
             this.logger.log(`<= Process ${processId} successfully started`);
 
-            return response;
+            return response.id;
         } catch (err: any) {
             this.logger.error(`<= Process ${processId} failed to start`);
             throw new HttpException({

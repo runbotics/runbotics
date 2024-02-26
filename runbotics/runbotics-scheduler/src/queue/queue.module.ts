@@ -23,6 +23,8 @@ import { SchedulerController } from './scheduler/scheduler.controller';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
 import { ProcessGuestService } from './process/process-guest.service';
+import { ProcessWebsocketService } from './process/process-websocket.service';
+import { MessagingService } from './messaging/messaging.service';
 
 @Module({
     imports: [
@@ -55,9 +57,10 @@ import { ProcessGuestService } from './process/process-guest.service';
     ],
     providers: [
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
-        ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService,
+        ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService, ProcessWebsocketService,
+        MessagingService,
     ],
-    exports: [ QueueService, ProcessFileService ],
+    exports: [ QueueService, ProcessFileService, ProcessWebsocketService ],
 })
 export class QueueModule {
 }
