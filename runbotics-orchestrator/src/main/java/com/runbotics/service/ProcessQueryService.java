@@ -157,6 +157,56 @@ public class ProcessQueryService extends QueryService<Process> {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProcessDTO> findBySearchFieldAndCollection(ProcessCriteria criteria, Pageable page, User user) {
+        log.debug("Request to get processes by page using search field: {} and criteria: {}", criteria, page);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(user);
+        Map<String, String> specification = this.createCustomSearchSpecification(criteria);
+
+        if (hasRequesterRoleAdmin) {
+            if (criteria.getCollectionId() != null) {
+                return processRepository
+                    .findBySearchAndCollectionForAdmin(
+                        specification.get(PROCESS_NAME),
+                        specification.get(PROCESS_TAG_NAME),
+                        specification.get(PROCESS_CREATED_BY_NAME),
+                        criteria.getCollectionId().getEquals(),
+                        page
+                    ).map(processMapper::toDto);
+            }
+
+            return processRepository
+                .findBySearchWithoutCollectionForAdmin(
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                ).map(processMapper::toDto);
+
+        } else {
+            if (criteria.getCollectionId() != null) {
+                return processRepository
+                    .findBySearchAndCollectionForUser(
+                        user.getId(),
+                        specification.get(PROCESS_NAME),
+                        specification.get(PROCESS_TAG_NAME),
+                        specification.get(PROCESS_CREATED_BY_NAME),
+                        criteria.getCollectionId().getEquals(),
+                        page
+                    ).map(processMapper::toDto);
+            }
+
+            return processRepository
+                .findBySearchWithoutCollectionForUser(
+                    user.getId(),
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                ).map(processMapper::toDto);
+        }
+    }
+
     /**
      * Return the number of matching entities in the database.
      *
