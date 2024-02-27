@@ -119,8 +119,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
         </div>
     );
     
-    const isNotRunableSchedule = (schedule: IScheduleProcess) => (Boolean(schedule.inputVariables) && !process.isAttended) || 
-        (!schedule.inputVariables && process.isAttended);
+    const isNotRunableSchedule = (schedule: IScheduleProcess) => !schedule.inputVariables && process.isAttended;
 
     return (
         <StyledContainer maxWidth={false} sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

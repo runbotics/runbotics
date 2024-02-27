@@ -19,6 +19,7 @@ import { ProcessInstanceSchedulerService } from '../process-instance/process-ins
 import { SchedulerService } from '../scheduler/scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -99,19 +100,14 @@ export class SchedulerProcessor {
 
         const process = await this.processService.findById(job.data.process.id);
         if (!isScheduledProcess(job.data)) {
-            return await this.runProcess(process, job);
-        } else {
-            this.queueService.handleAttendedProcess(process, job.data.input)
-                .then(async () => {
-                    return await this.runProcess(process, job);
-                })
-                .catch((err) => {
-                    this.logger.warn(
-                        `[Q Process] Process "${process.name}" has scheduled with/without input variables for other type of process. ${err.message}`
-                    );
-                    return null;
-                })
+            return this.runProcess(process, job);
         }
+        await this.queueService.handleAttendedProcess(process, job.data.input)
+            .then(() => this.runProcess(process, job))
+            .catch((err) => {
+                this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
+                throw new BadRequestException(err);
+            });
     }
 
     @OnQueueActive()
