@@ -9,7 +9,7 @@ import {
 } from '@nestjs/bull';
 import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
-import { Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
+import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
 import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
@@ -18,6 +18,7 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { SchedulerService } from '../scheduler/scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
+import { QueueService } from '#/queue/queue.service';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -30,7 +31,8 @@ export class SchedulerProcessor {
         private readonly uiGateway: UiGateway,
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
-        private readonly schedulerService: SchedulerService
+        private readonly schedulerService: SchedulerService,
+        private readonly queueService: QueueService
     ) {}
 
     private isAnyBotConnected = (availableBots: IBot[]): boolean =>
@@ -96,36 +98,20 @@ export class SchedulerProcessor {
         }
 
         const process = await this.processService.findById(job.data.process.id);
-        if (this.isIncorrectJobForProcessType(job, process)) {
-            this.logger.warn(
-                `[Q Process] Process "${process.name}" has scheduled with/without input variables for other type of process.`
-            );
-            return null;
+        if (!isScheduledProcess(job.data)) {
+            return await this.runProcess(process, job);
+        } else {
+            this.queueService.handleAttendedProcess(process, job.data.input)
+                .then(async () => {
+                    return await this.runProcess(process, job);
+                })
+                .catch((err) => {
+                    this.logger.warn(
+                        `[Q Process] Process "${process.name}" has scheduled with/without input variables for other type of process. ${err.message}`
+                    );
+                    return null;
+                })
         }
-        this.logger.log(
-            `[Q Process] Starting process "${process.name}" | JobID: `,
-            job.id
-        );
-
-        const bot = await this.checkBotAvailability(
-            process.botCollection,
-            process.system,
-            job
-        ).catch((err) => Promise.reject(new Error(err)));
-
-        this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
-
-        const processInstanceIdentifier =
-            await this.processSchedulerService.startProcess(job.data, bot);
-
-        await this.botGateway.setBotStatusBusy(bot);
-
-        this.logger.log(
-            `[Q Process] Process "${process.name}" freed the queue | JobID: `,
-            job.id
-        );
-
-        return processInstanceIdentifier;
     }
 
     @OnQueueActive()
@@ -173,7 +159,30 @@ export class SchedulerProcessor {
         }
     }
 
-    private isIncorrectJobForProcessType(job: Job, process: IProcess) {
-        return (Boolean(job.data.input.variables) && !process.isAttended) || (!job.data.input.variables && process.isAttended);
+
+    private async runProcess(process: IProcess, job: Job) {
+        this.logger.log(
+            `[Q Process] Starting process "${process.name}" | JobID: `,
+            job.id
+        );
+
+        const bot = await this.checkBotAvailability(
+            process.botCollection,
+            process.system,
+            job
+        ).catch((err) => Promise.reject(new Error(err)));
+
+        this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
+
+        const processInstanceIdentifier =
+            await this.processSchedulerService.startProcess(job.data, bot);
+
+        await this.botGateway.setBotStatusBusy(bot);
+
+        this.logger.log(
+            `[Q Process] Process "${process.name}" freed the queue | JobID: `,
+            job.id
+        );
+        return processInstanceIdentifier;
     }
 }

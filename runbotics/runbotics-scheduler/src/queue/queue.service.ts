@@ -63,8 +63,7 @@ export class QueueService implements OnModuleInit {
                 this.uiGateway.server.emit(WsMessage.ADD_SCHEDULE_PROCESS, scheduledProcess);
                 this.logger.log(`Process: "${scheduledProcess.process.name}":${scheduledProcess.process.id} successfully scheduled | scheduleID: ${scheduledProcess.id}`);
             })
-            .catch(err => this.logger
-                .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
+            .catch(err => this.logger.error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
     }
 
     async createInstantJob(params: StartProcessRequest) {
@@ -180,8 +179,14 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Cleared staled job(s)');
     }
 
-    private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
-        if (!process.isAttended) return;
+    async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
+        if (!process.isAttended && !input.variables) return;
+
+        if (!process.isAttended && input.variables) {
+            const err = 'You have provided variables for non attended process';
+            this.logger.error(`Failed to add new instant job for process "${process.name}". ${err}`);
+            throw new BadRequestException(err);
+        }
 
         const requiredVariables = getVariablesFromSchema(process.executionInfo, true);
         if (!requiredVariables.length) return;

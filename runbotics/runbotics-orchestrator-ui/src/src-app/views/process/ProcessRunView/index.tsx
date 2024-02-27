@@ -62,7 +62,7 @@ const ProcessRunView: FC = () => {
             process: {
                 id: processId,
             },
-            inputVariables: data.variables
+            inputVariables: data.inputVariables
         }));
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };

@@ -57,11 +57,12 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         handleSubmit,
         reset,
         formState: { isSubmitting, isSubmitSuccessful },
+        setValue,
     } = useForm({
         resolver: yupResolver(scheduleProcessSchema),
         defaultValues: {
             cron: '0 * * * * *',
-            inputVariables: '',
+            inputVariables: null,
         },
     });
     const { translate } = useTranslations();
@@ -69,7 +70,6 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     const currentLocale = useCurrentLocale();
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [cron, setCron] = useState('0 * * * * *');
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
@@ -80,22 +80,16 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
         return (
             <Cron
                 value={cron5Digit}
-                setValue={(cronValue) => {
-                    setCron(`${splitted[0]} ${cronValue}`);
-                    props.field.onChange(`${splitted[0]} ${cronValue}`);
-                }}
+                setValue={(cron) => props.field.onChange(`${splitted[0]} ${cron}`)}
                 locale={currentLocale}
             />
         );
     };
 
     const handleRunAttendedProcess = (variables: Record<string, any>) => {
+        setValue('inputVariables', JSON.stringify(variables));
         reset();
         closeModal();
-        onProcessScheduler({
-            cron,
-            variables: JSON.stringify(variables),
-        });
     };
 
     useEffect(() => {
@@ -106,7 +100,6 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
     const { process } = useSelector((state) => state.process.draft);
     const isSubmitButtonDisabled = isSubmitting || !process.system || !process.botCollection;
     const isSubmitFormButtonDisabled = isSubmitButtonDisabled || !process.executionInfo;
-
 
     const submitButton = (
         <SubmitButton
@@ -156,15 +149,12 @@ const ScheduleProcess: FC<ScheduleProcessProps> = ({ onProcessScheduler }) => {
                                     control={control}
                                     render={renderCronComponent}
                                 />
-                                <If condition={!isAttended}>
+                                <If condition={!isAttended} else={submitWithFormButton}>
                                     <div>{submitButton}</div>
                                 </If>
                             </StyledBox>
                         </DialogActions>
                     </form>
-                    <If condition={isAttended}>
-                        {submitWithFormButton}
-                    </If>
                 </StyledBox>
             </Paper>
         </Box>

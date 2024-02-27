@@ -10,7 +10,6 @@ import NotificationSwitchComponent from '#src-app/components/tables/Notification
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
 import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
-import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -39,7 +38,6 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
     const { draft: { process, processSubscriptions, currentProcessSubscription }, all: { loading } } = useSelector(processSelector);
-    const isScheduled = process?.schedules?.length > 0;
     const { id } = useRouter().query;
     const processId = Number(id);
 
