@@ -23,8 +23,8 @@ export const StyledTreeItemRoot = styled(TreeItem)<StyledTreeItemRootProps>`
       background-color: transparent;
       color: ${({ theme }) => theme.palette.primary.main};
       &:hover {
-        background-color: ${({ haschildren, theme }) =>
-        haschildren ? theme.palette.action.hover : 'transparent'};
+        background-color: ${({ $haschildren, theme }) =>
+        $haschildren ? theme.palette.action.hover : 'transparent'};
       }
     }
   }
