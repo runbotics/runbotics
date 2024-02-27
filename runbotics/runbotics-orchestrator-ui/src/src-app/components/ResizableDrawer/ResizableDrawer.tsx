@@ -10,7 +10,6 @@ import useWrappedState from '#src-app/hooks/useWrappedState';
 import { Dragger, EventCatcher } from './ResizableDrawer.styled';
 import { DRAWER_WIDTH, MAX_DRAWER_WIDTH, MIN_DRAWER_WIDTH } from '../InfoPanel';
 
-
 const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
     const [width, setWidth] = useWrappedState(DRAWER_WIDTH, { min: MIN_DRAWER_WIDTH, max: MAX_DRAWER_WIDTH });
     const [dragmode, setDragmode] = useState(false);
@@ -52,16 +51,18 @@ const ResizableDrawer: FC<DrawerProps> = ({ children, open, ...other }) => {
                 },
             ]}
         >
-            <Dragger active={dragmode} onMouseDown={handleDragStart} />
-            {createPortal(
-                <EventCatcher
-                    active={dragmode}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleDragEnd}
-                />,
-                document.body,
-            )}
-            {children}
+            <>
+                <Dragger active={dragmode} onMouseDown={handleDragStart} />
+                {createPortal(
+                    <EventCatcher
+                        active={dragmode}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleDragEnd}
+                    />,
+                    document.body,
+                )}
+                {children}
+            </>
         </Drawer>
     );
 };

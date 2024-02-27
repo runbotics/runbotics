@@ -14,9 +14,13 @@ const initialState: ProcessCollectionState = {
     },
     active: {
         isLoading: false,
-        ancestors: [],
         childrenCollections: [],
-    }
+        ancestors: []
+    },
+    allUserAccessible: {
+        isLoading: false,
+        list: [],
+    },
 };
 
 export const slice = createSlice({

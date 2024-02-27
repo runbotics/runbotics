@@ -13,5 +13,9 @@ export interface ProcessCollectionState {
         isLoading: boolean;
         ancestors: ProcessCollection[];
         childrenCollections: ProcessCollection[];
+    },
+    allUserAccessible: {
+        isLoading: boolean;
+        list: ProcessCollection[];
     }
 }

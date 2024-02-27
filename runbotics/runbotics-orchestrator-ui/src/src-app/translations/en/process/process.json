@@ -522,7 +522,6 @@
     "Process.Details.Modeler.Extensions.Tasks.CustomPalette.StartProcess.Name": "Provide example name",
     "Process.Details.Modeler.Extensions.Tasks.CustomPalette.StartThread": "Start Thread",
     "Process.Details.Modeler.Extensions.Tasks.CustomPalette.EndThread": "End Thread",
-    "Process.List.Header.Solutions": "See the latest solutions",
     "Process.List.Header.Showing": "Showing {{ count }} processes",
     "Process.List.Search": "Search",
     "Process.List.Table.Header.Name": "Name",

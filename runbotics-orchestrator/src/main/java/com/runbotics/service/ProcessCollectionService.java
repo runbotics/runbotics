@@ -1,5 +1,7 @@
 package com.runbotics.service;
 
+import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.User;
 import com.runbotics.domain.User;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import java.util.List;
@@ -15,4 +17,5 @@ public interface ProcessCollectionService {
     List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId, User user);
 
     ProcessCollectionDTO save(ProcessCollectionDTO ProcessCollectionDTO);
+    List<ProcessCollectionDTO> getUserAccessible(User user);
 }

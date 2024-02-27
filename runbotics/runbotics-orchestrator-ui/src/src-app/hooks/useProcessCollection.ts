@@ -2,12 +2,10 @@ import { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { COLLECTION_ID_PARAM, CollectionId, ProcessCollection } from 'runbotics-common';
+import { COLLECTION_ID_PARAM, ProcessCollection, ROOT_PROCESS_COLLECTION_ID } from 'runbotics-common';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { processCollectionActions, processCollectionSelector } from '#src-app/store/slices/ProcessCollection';
-import { ROOT_PROCESS_COLLECTION_ID } from '#src-app/views/process/ProcessCollectionView/ProcessCollection.utils';
-
 
 export interface CollectionBreadcrumb {
     name: string;
@@ -20,15 +18,12 @@ const getBreadcrumbs = (pathCollections: ProcessCollection[]): CollectionBreadcr
         collectionId: collection.id
     }));
 
-const getCollectionOwner = (collectionId: CollectionId) => true; // todo
-
 const useProcessCollection = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const collectionId: string = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
     const { active: { ancestors: collectionAncestors } } = useSelector(processCollectionSelector);
     const breadcrumbs = getBreadcrumbs(collectionAncestors);
-    const isOwner = getCollectionOwner(collectionId);
+    const collectionId: string = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
 
     const getAllCollections = (colId) => {
         const params = colId !== null ? {
@@ -43,12 +38,12 @@ const useProcessCollection = () => {
             .catch(() => {
                 router.replace('/404');
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [collectionId]);
 
     return ({
         currentCollectionId: collectionId,
         breadcrumbs,
-        isOwner
     });
 };
 
