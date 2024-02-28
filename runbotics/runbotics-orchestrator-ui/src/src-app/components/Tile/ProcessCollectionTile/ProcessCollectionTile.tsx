@@ -63,7 +63,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
                 </IconButton>
                 <Menu id="process-collection-actions-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
                     <EditCollection collection={collection} onClose={handleClose} />
-                    <DeleteCollection id={id} />
+                    <DeleteCollection id={id} name={name} />
                 </Menu>
             </MenuWrapper>
         </ProcessCollectionTileWrapper>
