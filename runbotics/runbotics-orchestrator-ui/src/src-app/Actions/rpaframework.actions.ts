@@ -240,7 +240,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                                 title: translate('Process.Details.Modeler.Actions.RpaFramework.WaitForElement.Output'),
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
-                                default: 'outputElement'
+                                default: 'awaitedElement'
                             },
                         },
                     },
