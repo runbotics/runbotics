@@ -5,7 +5,7 @@ import { ProcessCollection } from 'runbotics-common';
 import { PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
-import { CollectionCreateParams, CollectionUpdateParams, ProcessCollectionPack } from './ProcessCollection.types';
+import { CollectionCreateParams, CollectionDeleteParams, CollectionUpdateParams, ProcessCollectionPack } from './ProcessCollection.types';
 
 const buildCollectionURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
@@ -51,11 +51,20 @@ export const updateOne = createAsyncThunk<ProcessCollection, CollectionUpdatePar
             .catch(error => rejectWithValue(error))
 );
 
+export const deleteOne = createAsyncThunk<ProcessCollection, CollectionDeleteParams, { rejectValue: any }>(
+    'processCollection/deleteCollection/{id}',
+    ({ id }, { rejectWithValue }) =>
+        axios.delete<ProcessCollection>(`/api/process-collection/${id}`)
+            .then((response) => response.data)
+            .catch(error => rejectWithValue(error))
+);
+
 const processCollectionThunks = {
     getWithAccess,
     getAllWithAncestors,
     createOne,
     updateOne,
+    deleteOne,
     getAllAccessible
 };
 

@@ -13,6 +13,7 @@ import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.service.dto.ProcessCollectionPackDTO;
+import com.runbotics.service.exception.CollectionAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,5 +194,19 @@ public class ProcessCollectionResource {
             .ok()
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .body(updated);
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_DELETE + "')")
+    @DeleteMapping("process-collection/{id}")
+    public ResponseEntity<Void> deleteProcessCollection(@PathVariable UUID id) {
+        log.debug("REST request to delete ProcessCollection : {}", id);
+        User user = userService.getUserWithAuthorities().get();
+
+        processCollectionService.delete(id, user);
+
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

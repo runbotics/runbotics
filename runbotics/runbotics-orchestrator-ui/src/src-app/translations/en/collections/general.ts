@@ -17,6 +17,8 @@ const englishGeneral = {
     'Process.Collection.List.Collapse.Label': 'collapse',
     'Process.Collection.Tile.MenuItem.Move': 'Move',
     'Process.Collection.Tile.MenuItem.Delete': 'Delete',
+    'Process.Collection.Tile.MenuItem.Delete.Success': 'Collection "{{ name }}" successfully deleted',
+    'Process.Collection.Tile.MenuItem.Delete.Fail': 'You don\'t have permission to delete collection "{{ name }}"',
     'Process.Collection.Tile.MenuItem.Edit': 'Edit',
     'Process.Collection.Navigation.Processes.Label': 'Processes',
     'Process.Collection.Navigation.Collections.Label': 'Collections',

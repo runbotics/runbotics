@@ -19,6 +19,8 @@ const general: typeof englishGeneral = {
     'Process.Collection.List.Collapse.Label': 'zwiń',
     'Process.Collection.Tile.MenuItem.Move': 'Przenieś',
     'Process.Collection.Tile.MenuItem.Delete': 'Usuń',
+    'Process.Collection.Tile.MenuItem.Delete.Success': 'Pomyślnie usunięto zbiór "{{ name }}"',
+    'Process.Collection.Tile.MenuItem.Delete.Fail': 'Nie masz uprawnień do usunięcia zbioru "{{ name }}"',
     'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
     'Process.Collection.Navigation.Processes.Label': 'Procesy',
     'Process.Collection.Navigation.Collections.Label': 'Zbiory',

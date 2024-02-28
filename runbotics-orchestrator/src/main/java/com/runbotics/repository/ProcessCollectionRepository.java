@@ -123,4 +123,14 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
             "pc.createdBy = ?1 OR u = ?1"
     )
     List<ProcessCollection> findAllUserAccessible(User user);
+    @Query(value =
+        "SELECT pc " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.id = ?2 AND " +
+                "(pc.isPublic = true OR " +
+                "pc.createdBy = ?1 OR " +
+                "u = ?1)"
+    )
+    List<ProcessCollection> findUserAccessibleById(User user, UUID id);
 }

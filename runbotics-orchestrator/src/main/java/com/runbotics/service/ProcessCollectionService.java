@@ -17,5 +17,8 @@ public interface ProcessCollectionService {
     List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId, User user);
 
     ProcessCollectionDTO save(ProcessCollectionDTO ProcessCollectionDTO);
+
     List<ProcessCollectionDTO> getUserAccessible(User user);
+
+    void delete(UUID collectionId, User user);
 }
