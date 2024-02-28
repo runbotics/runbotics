@@ -7,10 +7,13 @@ import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessCollectionDTO;
+import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.mapper.ProcessCollectionMapper;
+import org.hibernate.Criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
@@ -27,6 +31,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
 
     private final ProcessCollectionRepository processCollectionRepository;
 
+    private final ProcessCollectionQueryService processCollectionQueryService;
+
     private final ProcessCollectionMapper processCollectionMapper;
 
     private final UserService userService;
@@ -34,10 +40,12 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     public ProcessCollectionServiceImpl(
         ProcessCollectionRepository processCollectionRepository,
         ProcessCollectionMapper processCollectionMapper,
-        UserService userService
+        UserService userService,
+        ProcessCollectionQueryService processCollectionQueryService
     ) {
         this.processCollectionRepository = processCollectionRepository;
         this.processCollectionMapper = processCollectionMapper;
+        this.processCollectionQueryService = processCollectionQueryService;
         this.userService = userService;
     }
 
@@ -118,5 +126,14 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         );
         processCollection = processCollectionRepository.save(processCollection);
         return processCollectionMapper.toDto(processCollection);
+    }
+
+    @Override
+    public List<ProcessCollectionDTO> getUserAccessible(User user) {
+        User currentUser = userService.getUserWithAuthorities().get();
+
+        List<ProcessCollection> userAccessible = processCollectionRepository.findAllUserAccessible(currentUser);
+        log.debug("userAccessible: {}", userAccessible);
+        return processCollectionMapper.toDto(userAccessible);
     }
 }

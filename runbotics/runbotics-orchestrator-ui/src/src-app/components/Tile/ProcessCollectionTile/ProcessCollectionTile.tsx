@@ -11,14 +11,14 @@ import PrivateIcon from '#public/images/icons/lock.svg';
 
 import { DeleteCollection } from './MenuItems/DeleteCollection';
 import { EditCollection } from './MenuItems/EditCollection';
-import { MoveCollection } from './MenuItems/MoveCollection';
 import { StyledIconsBox } from './ProcessCollectionList.style';
 import { CollectionNameWrapper, ContextWrapper, MenuWrapper, ProcessCollectionTileWrapper, StyledLink } from './ProcessCollectionTile.styles';
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
-const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, parentId }) => {
+const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
     const router = useRouter();
+    const { id, name, isPublic } = collection;
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,7 +50,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                     </Tooltip>
                     <If condition={!isPublic}>
                         <Tooltip title={translate('Process.Collection.List.IsPrivate.Tooltip')}>
-                            <StyledIconsBox bgColor='grey'>
+                            <StyledIconsBox $bgcolor='grey'>
                                 <Image src={PrivateIcon} alt={translate('Process.Collection.List.Alt.PrivateIcon')} />
                             </StyledIconsBox>
                         </Tooltip>
@@ -62,8 +62,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                     <MoreVertIcon />
                 </IconButton>
                 <Menu id="process-collection-actions-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-                    <MoveCollection id={id} />
-                    <EditCollection id={id} name={name} isPublic={isPublic} parentId={parentId} />
+                    <EditCollection collection={collection} onClose={handleClose} />
                     <DeleteCollection id={id} />
                 </Menu>
             </MenuWrapper>

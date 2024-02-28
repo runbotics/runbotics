@@ -1,9 +1,7 @@
 import moment from 'moment';
-import { IUser, ProcessCollection } from 'runbotics-common';
+import { CollectionId, IUser, ProcessCollection, ROOT_PROCESS_COLLECTION_ID } from 'runbotics-common';
 
 import processCollectionTranslations from '#src-app/translations/en/collections';
-
-export const ROOT_PROCESS_COLLECTION_ID = null;
 
 const INITIAL_VALUES: ProcessCollection = {
     id: null,
@@ -16,15 +14,17 @@ const INITIAL_VALUES: ProcessCollection = {
 
 export const prepareIncompleteCollectionEntity = (
     createdBy: IUser,
+    currentCollectionId: CollectionId,
     collection?: ProcessCollection,
 ): ProcessCollection => ({
     id: collection ? collection.id : INITIAL_VALUES.id,
-    parentId: collection ? collection.parentId : INITIAL_VALUES.parentId,
+    parentId: collection?.parentId || currentCollectionId || INITIAL_VALUES.parentId,
     name: collection ? collection.name : INITIAL_VALUES.name,
     description: collection ? collection.description : INITIAL_VALUES.description,
     isPublic: collection ? collection.isPublic : INITIAL_VALUES.isPublic,
     users: collection ? collection.users : INITIAL_VALUES.users,
     createdBy: collection ? collection.createdBy : createdBy,
+    created: collection ? collection.created : null,
 });
 
 export const completeCollectionEntity = (incompleteCollection: ProcessCollection): ProcessCollection => ({

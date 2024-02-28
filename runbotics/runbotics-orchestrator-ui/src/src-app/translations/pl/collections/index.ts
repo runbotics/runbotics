@@ -1,9 +1,9 @@
-import createCollectionResponse from './createCollectionsResponse';
 import general from './general';
+import processCollectionResponse from './processCollectionResponse';
 
 const processCollectionTranslations = {
     ...general,
-    ...createCollectionResponse,
+    ...processCollectionResponse,
 };
 
 export default processCollectionTranslations;

@@ -2,10 +2,13 @@ package com.runbotics.web.rest;
 
 import com.runbotics.domain.ProcessCollection;
 import com.runbotics.domain.User;
+import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.ProcessCollectionService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.ProcessCollectionCriteria;
 import com.runbotics.service.dto.ProcessCollectionDTO;
@@ -14,6 +17,7 @@ import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,9 +44,9 @@ public class ProcessCollectionResource {
     private final ProcessCollectionService processCollectionService;
     private final ProcessCollectionQueryService processCollectionQueryService;
 
-    private final ProcessCollectionRepository processCollectionRepository;
-
     private final UserService userService;
+
+    private final ProcessCollectionRepository processCollectionRepository;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -106,6 +112,15 @@ public class ProcessCollectionResource {
         }
     }
 
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_READ + "')")
+    @GetMapping("process-collection/user-accessible")
+    public ResponseEntity<List<ProcessCollectionDTO>> getAllUserAccessibleHierarchy() {
+        User currentUser = userService.getUserWithAuthorities().get();
+        List<ProcessCollectionDTO> accessibleCollectionsHierarchy = processCollectionService.getUserAccessible(currentUser);
+
+        return ResponseEntity.ok().body(accessibleCollectionsHierarchy);
+    }
+
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_COLLECTION_ADD + "')")
     @PostMapping("process-collection")
     public ResponseEntity<ProcessCollectionDTO> createProcessCollection(@Valid @RequestBody ProcessCollectionDTO processCollectionDTO)
@@ -114,6 +129,7 @@ public class ProcessCollectionResource {
 
         UUID parentId = processCollectionDTO.getParentId();
         String name = processCollectionDTO.getName();
+
         boolean isNameAvailable = parentId != null
             ? processCollectionRepository.findSiblingWithSameName(parentId, name).size() == 0
             : processCollectionRepository.findAllSameNameRootCollections(name).size() == 0;
