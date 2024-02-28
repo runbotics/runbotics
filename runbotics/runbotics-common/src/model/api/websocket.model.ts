@@ -25,5 +25,6 @@ export enum WsMessage {
     PROCESS_REMOVED = 'process-removed',
     PROCESS_COMPLETED = 'process-completed',
     PROCESS_FAILED = 'process-failed',
-    PROCESS_QUEUE_UPDATE = 'process-queue-update'
+    PROCESS_QUEUE_UPDATE = 'process-queue-update',
+    TERMINATE_JOB = 'terminate-job'
 }

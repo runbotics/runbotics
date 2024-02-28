@@ -12,7 +12,7 @@ import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
-import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, WsMessage, ProcessQueueMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
@@ -21,6 +21,7 @@ import { SchedulerService } from '../scheduler/scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
 import { BadRequestException } from '@nestjs/common';
+import { MessagingService } from '../messaging/messaging.service';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -34,6 +35,7 @@ export class SchedulerProcessor {
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
         private readonly schedulerService: SchedulerService,
+        private readonly messagingService: MessagingService,
         private readonly queueService: QueueService
     ) {}
 
@@ -66,6 +68,8 @@ export class SchedulerProcessor {
             WsMessage.ADD_WAITING_SCHEDULE,
             jobWithProcessAndActive
         );
+        this.logger.log(`[Q Active] Job ${job.id} is active`);
+        job.data.input?.timeout && this.queueService.clearQueueTimer(job.id);
     }
 
     @OnQueueWaiting()
@@ -76,14 +80,34 @@ export class SchedulerProcessor {
         });
     }
 
+    @OnQueueRemoved()
+    onRemove(job: Job) {
+        this.logger.log(`[Q Removed] Job ${job.id} is removed from queue`);
+        this.messagingService.emitProcessQueueUpdate(job.id);
+        const removedPayload: ProcessQueueMessage[WsMessage.PROCESS_REMOVED] = {
+            jobId: job.id,
+            processId: job.data.process?.id,
+        };
+        this.messagingService.sendSpecificJobMessage(WsMessage.PROCESS_REMOVED, removedPayload, job.data.clientId, job.data.input?.callbackUrl);
+    }
+
     @OnQueueCompleted()
     onComplete(job: Job) {
+        this.logger.log(`[Q Completed] Job ${job.id} is completed`);
+        this.messagingService.emitProcessQueueUpdate(job.id);
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
     }
 
     @OnQueueFailed()
     onFailed(job: Job, err: Error) {
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+        this.messagingService.emitProcessQueueUpdate(job.id);
+        const failedPayload: ProcessQueueMessage[WsMessage.PROCESS_FAILED] = {
+            jobId: job.id,
+            processId: job.data.process?.id,
+            message: err.message,
+        };
+        this.messagingService.sendSpecificJobMessage(WsMessage.PROCESS_FAILED, failedPayload, job.data.clientId, job.data.input?.callbackUrl);
         this.logger.error(
             `[Q Fail] Job "${job.data.process.name}" failed`,
             err
@@ -157,6 +181,11 @@ export class SchedulerProcessor {
     }
 
     private async runProcess(process: IProcess, job: Job) {
+        const processingPayload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING] = {
+            jobId: job.id,
+            processId: job.data.process?.id,
+        };
+        this.messagingService.sendSpecificJobMessage(WsMessage.PROCESS_PROCESSING, processingPayload, job.data.clientId, job.data.input?.callbackUrl);
         this.logger.log(
             `[Q Process] Starting process "${process.name}" | JobID: `,
             job.id
@@ -179,6 +208,14 @@ export class SchedulerProcessor {
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
             job.id
         );
+
+        const completedPayload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED] = {
+            jobId: job.id,
+            processId: job.data.process?.id,
+            orchestratorProcessInstanceId,
+        };
+        this.messagingService.sendSpecificJobMessage(WsMessage.PROCESS_COMPLETED, completedPayload, job.data.clientId, job.data.input?.callbackUrl);
+
         return { orchestratorProcessInstanceId };
     }
 }

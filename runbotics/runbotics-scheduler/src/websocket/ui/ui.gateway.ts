@@ -16,6 +16,7 @@ import { ProcessWebsocketService } from '#/queue/process/process-websocket.servi
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { UseGuards } from '@nestjs/common';
 import { WsFeatureKeyGuard } from '#/auth/guards/ws-featureKey.guard';
+import { JobId } from 'bull';
 
 @WebSocketGateway({ path: '/ws-ui', cors: { origin: '*' } })
 export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -65,14 +66,36 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
             const payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING] = {
               jobId,
               jobIndex,
-            }
-            this.emitToClient(client.id, WsMessage.PROCESS_WAITING, payload)
+              processId,
+            };
+            this.emitToClient(client.id, WsMessage.PROCESS_WAITING, payload);
         } catch (err: any) {
             this.logger.log(`Emitting process start error`);
             const payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED] = {
               message: err?.message ?? 'Internal server error',
-            }
+              processId,
+            };
             this.emitToClient(client.id, WsMessage.PROCESS_FAILED, payload);
+        }
+    }
+
+    @SubscribeMessage(WsMessage.TERMINATE_JOB)
+    @UseGuards(WsFeatureKeyGuard)
+    @FeatureKeys(FeatureKey.PROCESS_START)
+    async handleTerminateProcess(
+        @ConnectedSocket() client: AuthSocket,
+        @MessageBody('jobId') jobId: JobId
+    ) {
+        this.logger.log(`Trying to terminate job: ${jobId}`);
+        try {
+            await this.processWebsocketService.terminateJob(client, jobId);
+        } catch (err: any) {
+            this.logger.log(`Emitting job terminate error`);
+            const payload: ProcessQueueMessage[WsMessage.TERMINATE_JOB] = {
+                jobId,
+                message: err?.message ?? `Cannot delete job from the queue`,
+            };
+            client.emit(client.id, WsMessage.TERMINATE_JOB, payload);
         }
     }
 }

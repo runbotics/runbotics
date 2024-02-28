@@ -1,12 +1,11 @@
-import { FC, useRef, useState, useEffect } from 'react';
+import { FC, useRef, useState, useEffect, useContext } from 'react';
 
 import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
+import { FeatureKey, ProcessQueueMessage, WsMessage, isProcessInstanceActive } from 'runbotics-common';
 
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
@@ -18,7 +17,7 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
-import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
+import { Job, processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 import { ProcessTab } from '#src-app/utils/process-tab';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
@@ -30,6 +29,8 @@ import ProcessTileContent from './ProcessTileContent';
 import ProcessTileFooter from './ProcessTileFooter';
 import ProcessTileTagList from './ProcessTileTagList';
 import Tile from '..';
+import { SocketContext } from '#src-app/providers/Socket.provider';
+import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
@@ -41,6 +42,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
     const refProcessTileContent = useRef<HTMLDivElement>();
 
+    const socket = useContext(SocketContext);
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
@@ -49,6 +51,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const [isProcessActive, setIsProcessActive] = useState(
         processInstance && isProcessInstanceActive(processInstance.status)
     );
+    const [job, setJob] = useState<Job>(null);
 
     const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
     const [isAttendedModalVisible, setIsAttendedModalVisible] = useState(false);
@@ -58,41 +61,55 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         else router.push(buildProcessUrl(process, ProcessTab.RUN));
     };
 
-    const handleProcessRun = (executionInfo?: Record<string, any>) => {
-        dispatch(processActions.startProcess({
+    const handleRun = (executionInfo?: Record<string, any>) => {
+        socket.emit(WsMessage.START_PROCESS, {
             processId: process.id,
             ...((isProcessAttended) && {
                 executionInfo,
+            }),
+        });
+        setIsProcessActive(true);
+    }
+
+    const handleWaiting = (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
+        if (payload.processId !== process.id) return;
+        setJob({ ...payload, isProcessing: false, errorMessage: null });
+    };
+
+    const handleProcessing = (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        setJob(prev => ({ ...prev, isProcessing: true }));
+    };
+
+    const handleCompleted = (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        dispatch(
+            processInstanceActions.updateOrchestratorProcessInstanceIdMap({
+                processId: process.id,
+                orchestratorProcessInstanceId: payload.orchestratorProcessInstanceId,
             })
-        }))
-            .then(unwrapResult)
-            .then((response) => {
-                dispatch(
-                    processInstanceActions.updateOrchestratorProcessInstanceIdMap({
-                        processId: process.id,
-                        orchestratorProcessInstanceId: response.orchestratorProcessInstanceId,
-                    })
-                );
-
-                setIsProcessActive(true);
-            })
-            .catch((error) => {
-                const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
-                const message = error.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
-                const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-                const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
-
-                const errorMessage = checkIfKeyExists(translationKey)
-                    ? translate(translationKey)
-                    : message;
-                enqueueSnackbar(
-                    errorMessage,
-                    { variant: 'error' }
-                );
-            });
-
+        );
+        setJob(null);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
+
+    const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
+        const message = payload.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
+        const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+        const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+
+        const errorMessage = checkIfKeyExists(translationKey)
+            ? translate(translationKey)
+            : message;
+        enqueueSnackbar(
+            errorMessage,
+            { variant: 'error' }
+        );
+        setJob(null);
+        if (isProcessAttended) setIsAttendedModalVisible(false);
+    }
 
     const handleProcessTerminate = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
@@ -123,7 +140,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             setIsAttendedModalVisible(true);
         }
         else {
-            handleProcessRun();
+            handleRun();
         }
     };
 
@@ -133,13 +150,24 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         );
     }, [processInstance]);
 
+    useStartProcessQueueSocket({
+        onWaiting: handleWaiting,
+        onProcessing: handleProcessing,
+        onCompleted: handleCompleted,
+        onFailed: handleFailed,
+        onRemoved: (payload) => handleFailed(payload as ProcessQueueMessage[WsMessage.PROCESS_FAILED]),
+        onQueueUpdate: () => {},
+        job,
+        loading: isProcessActive,
+    });
+
     return (
         <Tile>
             <AttendedProcessModal
                 process={process}
                 open={isAttendedModalVisible}
                 setOpen={setIsAttendedModalVisible}
-                onSubmit={handleProcessRun}
+                onSubmit={handleRun}
             />
             <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader

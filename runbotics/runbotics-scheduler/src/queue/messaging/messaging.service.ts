@@ -7,11 +7,12 @@ import { JobId } from 'bull';
 @Injectable()
 export class MessagingService {
     constructor(
-      private readonly uiGateway: UiGateway,
+        private readonly uiGateway: UiGateway,
     ) {}
 
     public async emitProcessQueueUpdate(jobId: JobId) {
-      this.uiGateway.server.emit(WsMessage.PROCESS_QUEUE_UPDATE, { jobId });
+        const payload: ProcessQueueMessage[WsMessage.PROCESS_QUEUE_UPDATE] = { jobId };
+        this.uiGateway.server.emit(WsMessage.PROCESS_QUEUE_UPDATE, payload);
     }
 
     public async sendSpecificJobMessage<T extends keyof ProcessQueueMessage>(event: T, data: ProcessQueueMessage[T], clientId?: string, callbackUrl?: string) {

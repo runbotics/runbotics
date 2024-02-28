@@ -94,6 +94,15 @@ export class QueueService implements OnModuleInit {
         if (input?.timeout) {
             const timer = setTimeout(async () => {
                 this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
+                const jobStateFlags = await Promise.all([
+                    job.isActive(),
+                    job.isCompleted(),
+                    job.isFailed(),
+                    job.isDelayed(),
+                    job.isPaused(),
+                    job.isStuck(),
+                ]);
+                if (jobStateFlags.some((flag) => flag)) return;
                 await job.remove();
             }, input.timeout);
         
@@ -250,7 +259,7 @@ export class QueueService implements OnModuleInit {
         await Promise.all(jobs.map(job => job.remove()));
     }
 
-    async getPosition(jobId) {
+    async getPosition(jobId: JobId) {
         const activeJobs = await this.processQueue.getActive();
         if (activeJobs.find((j) => j.id === jobId)) {
           return 0;
@@ -262,6 +271,10 @@ export class QueueService implements OnModuleInit {
           return foundJobIndex;
         }
         return foundJobIndex + 1;
+    }
+
+    async getJobById(jobId: JobId) {
+      return this.processQueue.getJob(jobId);
     }
 
 }
