@@ -14,7 +14,7 @@ import {
     IBot,
     IUser,
     IBotCollection,
-    IBotSystem,
+    IBotSystem, Role,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
@@ -35,7 +35,7 @@ export class BotEntity implements IBot {
     @Column({ name: 'last_connected', transformer: dateTransformer, type: 'varchar' })
     lastConnected: string;
 
-    @Column({ type: 'enum' })
+    @Column({ enum: BotStatus, type: 'enum' })
     status: BotStatus;
 
     @Column({ type: 'varchar' })
