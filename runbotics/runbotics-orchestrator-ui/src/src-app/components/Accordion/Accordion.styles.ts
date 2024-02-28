@@ -32,7 +32,7 @@ export const StyledAccordionSummary = styled(AccordionSummary)`
 `;
 
 export const StyledAccordionDetails = styled(AccordionDetails)<StyledExpandProps>`
-    opacity: ${({ expanded }) => expanded ? 1 : 0};
+    opacity: ${({ $expanded }) => $expanded ? 1 : 0};
 
     transition: opacity 300ms ease;
 `;
@@ -53,7 +53,7 @@ export const CustomDivider = styled.div<StyledHoverProps>`
 
         display: block;
 
-        width: ${({ hovered }) => hovered ? '100%' : 0};
+        width: ${({ $hovered }) => $hovered ? '100%' : 0};
         height: 1px;
 
         transition: width 200ms ease;
@@ -66,7 +66,7 @@ export const StyledExpandMoreOutlinedIcon = styled(ExpandMoreOutlinedIcon)<Style
     && {
         transition: transform 200ms ease, color 300ms ease-out;
 
-        color: ${({ theme, hovered }) => hovered ? theme.palette.primary.main : theme.palette.divider};
-        transform: rotate(${(props) => (props.expanded ? '180deg' : '0deg')});
+        color: ${({ theme, $hovered }) => $hovered ? theme.palette.primary.main : theme.palette.divider};
+        transform: rotate(${({ $expanded }) => ($expanded ? '180deg' : '0deg')});
     }
 `;

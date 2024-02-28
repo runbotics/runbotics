@@ -10,7 +10,7 @@ import { translate } from '../hooks/useTranslations';
 const getZipActions: () => Record<string, IBpmnAction> = () => ({
     'zip.unzipFile': {
         id: ZipAction.UNZIP_FILE,
-        label: translate('Process.Details.Modeler.Actions.Zip.Unzip.Label'),
+        label: translate('Process.Details.Modeler.Actions.Zip.UnzipFile.Label'),
         script: ZipAction.UNZIP_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {

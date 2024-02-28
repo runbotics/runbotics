@@ -63,8 +63,8 @@ const ProcessCollectionList: FC = () => {
 
     return (
         <div>
-            <CollectionListWrapper isExpanded={isExpanded}>
-                <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={2} p={1}>
+            <CollectionListWrapper $expanded={isExpanded}>
+                <Grid ref={refCollectionBox} container columnGap={2} rowGap={2} p={1}>
                     {sortedCollections
                         .map(collection => (
                             <ProcessCollectionTile

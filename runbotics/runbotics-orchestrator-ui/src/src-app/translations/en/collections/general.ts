@@ -21,6 +21,14 @@ const englishGeneral = {
     'Process.Collection.Navigation.Processes.Label': 'Processes',
     'Process.Collection.Navigation.Collections.Label': 'Collections',
     'Process.Collection.Ancestors.Error': 'Unexpected error - could not load navigation',
+    'Process.Collection.Structure.Title': 'Location',
+    'Process.Collection.Structure.Title.Info': 'Choose the collection in which the current collection should be located',
+    'Process.Collection.Structure.Icon.Private.Tooltip': 'Private',
+    'Process.Collection.Structure.Icon.Users.Tooltip': 'Shared with specific users',
+    'Process.Collection.Structure.Icon.Public.Tooltip': 'Public',
+    'Process.Collection.Structure.Icon.Home.Tooltip': 'The root collection',
+    'Process.Collection.Structure.NoCollections': 'New collection will be created in',
+    'Process.Collection.Structure.Root': 'Home',
 };
 
 export default englishGeneral;

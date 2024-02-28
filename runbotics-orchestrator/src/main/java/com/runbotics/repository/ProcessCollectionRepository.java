@@ -2,6 +2,8 @@ package com.runbotics.repository;
 
 import com.runbotics.domain.ProcessCollection;
 import com.runbotics.domain.User;
+import com.runbotics.domain.User;
+import com.runbotics.service.dto.ProcessCollectionDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -38,7 +40,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     int countAvailableCollectionsByIds(List<UUID> ids, User user);
 
     @Query(value =
-        "SELECT pc " +
+        "SELECT DISTINCT pc " +
             "FROM ProcessCollection pc " +
             "LEFT JOIN pc.users u " +
             "WHERE pc.parentId = ?1 AND " +
@@ -47,7 +49,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     Set<ProcessCollection> findAvailableChildrenCollections(UUID parentId, User user);
 
     @Query(value =
-        "SELECT pc " +
+        "SELECT DISTINCT pc " +
             "FROM ProcessCollection pc " +
             "LEFT JOIN pc.users u " +
             "WHERE pc.parentId IS NULL AND " +
@@ -70,7 +72,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     List<ProcessCollection> findAllRootCollections();
 
     @Query(value =
-        "SELECT pc.name " +
+        "SELECT pc " +
             "FROM ProcessCollection pc " +
             "WHERE pc.parentId = ?1"
     )
@@ -112,5 +114,13 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
         nativeQuery = true
     )
     List<ProcessCollection> findAllAncestors(UUID id);
-}
 
+    @Query(value =
+        "SELECT DISTINCT pc " +
+            "FROM ProcessCollection pc " +
+            "LEFT JOIN pc.users u " +
+            "WHERE pc.isPublic = true OR " +
+            "pc.createdBy = ?1 OR u = ?1"
+    )
+    List<ProcessCollection> findAllUserAccessible(User user);
+}

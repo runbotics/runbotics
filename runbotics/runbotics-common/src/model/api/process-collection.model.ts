@@ -1,6 +1,7 @@
 import { IUser } from "./user.model";
 
-export type CollectionId = string;
+export const ROOT_PROCESS_COLLECTION_ID: null = null;
+export type CollectionId = string | typeof ROOT_PROCESS_COLLECTION_ID;
 export type CollectionName = string;
 
 export interface ProcessCollection {

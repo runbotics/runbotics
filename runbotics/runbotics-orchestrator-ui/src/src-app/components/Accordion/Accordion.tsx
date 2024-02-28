@@ -14,18 +14,18 @@ const Accordion: FC<AccordionProps> = ({ title, children }) => {
     };
 
     return (
-        <StyledAccordion expanded={isExpanded} onChange={toggleExpand()}>
+        <StyledAccordion $expanded={isExpanded} onChange={toggleExpand()}>
             <StyledAccordionSummary
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <Box display="flex" alignItems="center" width="100%" gap={2}>
                     <Typography variant="body1">{title}</Typography>
-                    <CustomDivider hovered={isHovered} />
-                    <StyledExpandMoreOutlinedIcon expanded={isExpanded} hovered={isHovered} />
+                    <CustomDivider $hovered={isHovered} />
+                    <StyledExpandMoreOutlinedIcon $expanded={isExpanded} $hovered={isHovered} />
                 </Box>
             </StyledAccordionSummary>
-            <StyledAccordionDetails expanded={isExpanded}>
+            <StyledAccordionDetails $expanded={isExpanded}>
                 {children}
             </StyledAccordionDetails>
         </StyledAccordion>
