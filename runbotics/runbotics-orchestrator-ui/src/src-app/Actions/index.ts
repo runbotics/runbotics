@@ -19,6 +19,7 @@ import getJiraServerActions from './jira-server.actions';
 import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
 import getPowerPointActions from './powerpoint.actions';
+import getRpaFrameworkActions from './rpaframework.actions';
 import getSapActions from './sap.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
@@ -51,6 +52,7 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getVisualBasicActions(),
     ...getImageActions(),
     ...getZipActions(),
+    ...getRpaFrameworkActions(),
 };
 
 export default internalBpmnActions;

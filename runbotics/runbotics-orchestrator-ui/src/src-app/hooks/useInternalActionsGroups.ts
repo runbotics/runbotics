@@ -19,6 +19,7 @@ import getJiraServerActions from '#src-app/Actions/jira-server.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
+import getRpaFrameworkActions from '#src-app/Actions/rpaframework.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
@@ -82,6 +83,12 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.Desktop'
             ),
             items: Object.values(getDesktopActions())
+        },
+        rpaframework: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.RpaFramework'
+            ),
+            items: Object.values(getRpaFrameworkActions())
         },
         asana: {
             label: translate(
