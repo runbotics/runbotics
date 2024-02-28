@@ -5,15 +5,22 @@
     "Component.GenericMoreOptions.MoreOptions": "More options",
 
     "Component.BotProcessRunner.Warning": "Looking for a bot",
+    "Component.BotProcessRunner.Warning.CreatingJob": "Creating a job for bot",
     "Component.BotProcessRunner.Error": "All bots are busy",
+    "Component.BotProcessRunner.Error.RemovedJob": "Job timed out",
     "Component.BotProcessRunner.Error.AllBotsAreDisconnected": "All bots are disconnected",
     "Component.BotProcessRunner.Error.ServersAreOverloaded": "Our servers are overloaded, please try again later",
+    "Component.BotProcessRunner.Error.RemovedJob.ServersAreOverloaded": "Our servers are overloaded, please try again later",
     "Component.BotProcessRunner.Error.GuestRunLimitExceeded": "You have reached your daily limit. Create an account or come back tomorrow.",
     "Component.BotProcessRunner.Tooltip.Title.ProcessRunning": "Process is running",
     "Component.BotProcessRunner.Tooltip.Title.LookingForBot": "Looking for a bot",
     "Component.BotProcessRunner.Run": "RUN",
     "Component.BotProcessRunner.Terminate": "ABORT",
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
+
+    "Component.ProcessQueueDetails.Error": "Processing failed. Error message:",
+    "Component.ProcessQueueDetails.Processing": "Job is being processed, searching for a bot.",
+    "Component.ProcessQueueDetails.Queue": "Job created successfully. Waiting for processing. Place in queue:",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Process triggerable icon",

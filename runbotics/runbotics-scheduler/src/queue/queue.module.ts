@@ -53,7 +53,7 @@ import { MessagingService } from './messaging/messaging.service';
         }),
     ],
     controllers: [
-        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
+        SchedulerController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
     ],
     providers: [
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,

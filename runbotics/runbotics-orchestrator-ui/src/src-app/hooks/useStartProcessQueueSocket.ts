@@ -3,6 +3,7 @@ import { useContext, useEffect } from 'react';
 import { ProcessQueueMessage, WsMessage } from 'runbotics-common';
 
 import { SocketContext } from '#src-app/providers/Socket.provider';
+import { Job } from '#src-app/store/slices/ProcessInstance/ProcessInstance.state';
 
 interface UseStartProcessQueueSocketParams {
   onWaiting: (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => void;
@@ -11,40 +12,41 @@ interface UseStartProcessQueueSocketParams {
   onFailed: (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => void;
   onRemoved: (payload: ProcessQueueMessage[WsMessage.PROCESS_REMOVED]) => void;
   onQueueUpdate: (payload: ProcessQueueMessage[WsMessage.PROCESS_QUEUE_UPDATE]) => void;
+  job: Job,
+  loading: boolean;
 }
 
 export const useStartProcessQueueSocket = ({
-    onWaiting, onProcessing, onCompleted, onFailed, onRemoved, onQueueUpdate
+    onWaiting, onProcessing, onCompleted, onFailed, onRemoved, onQueueUpdate, job, loading,
 }: UseStartProcessQueueSocketParams) => {
     const socket = useContext(SocketContext);
 
     useEffect(() => {
         socket.on(WsMessage.PROCESS_WAITING, (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
-            onWaiting(payload);
+            loading && onWaiting(payload);
         });
 
         socket.on(WsMessage.PROCESS_PROCESSING, (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
-            onProcessing(payload);
+            loading && onProcessing(payload);
         });
 
         socket.on(WsMessage.PROCESS_COMPLETED, (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
-            onCompleted(payload);
+            loading && onCompleted(payload);
         });
 
         socket.on(WsMessage.PROCESS_FAILED, (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
-            onFailed(payload);
+            loading && onFailed(payload);
         });
 
         socket.on(WsMessage.PROCESS_REMOVED, (payload: ProcessQueueMessage[WsMessage.PROCESS_REMOVED]) => {
-            onRemoved(payload);
+            loading && onRemoved(payload);
         });
 
         socket.on(WsMessage.PROCESS_QUEUE_UPDATE, (payload: ProcessQueueMessage[WsMessage.PROCESS_QUEUE_UPDATE]) => {
-            onQueueUpdate(payload);
+            loading && onQueueUpdate(payload);
         })
 
         return () => {
-
             socket.off(WsMessage.PROCESS_WAITING);
             socket.off(WsMessage.PROCESS_PROCESSING);
             socket.off(WsMessage.PROCESS_COMPLETED);
@@ -52,7 +54,7 @@ export const useStartProcessQueueSocket = ({
             socket.off(WsMessage.PROCESS_REMOVED);
             socket.off(WsMessage.PROCESS_QUEUE_UPDATE);
         };
-    }, [socket]);
+    }, [socket, job, loading]);
 };
 
 export default useStartProcessQueueSocket;

@@ -11,6 +11,7 @@ import ProcessEventBreadcrumbs from './ProcessEventBreadcrumbs';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
 import If from '../utils/If';
+import ProcessQueueDetails from './ProcessQueueDetails/ProcessQueueDetails';
 
 interface InfoPanelProps {
     processInstanceId?: string;
@@ -58,6 +59,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                     overflowX: 'hidden',
                 }}
             >
+                <ProcessQueueDetails />
                 <ProcessInstanceDetails processInstanceId={processInstanceId} onClose={onClose}/>
                 <ProcessInstanceEventsDetails
                     processInstanceId={processInstanceId}
