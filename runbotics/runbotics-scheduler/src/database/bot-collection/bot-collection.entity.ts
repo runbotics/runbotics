@@ -18,19 +18,19 @@ export class BotCollectionEntity implements IBotCollection {
     @PrimaryGeneratedColumn('uuid')
         id: string;
 
-    @Column({ unique: true })
+    @Column({ unique: true, type: 'varchar' })
         name: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
         description: string;
 
-    @Column({ name: 'public_bots_included' })
+    @Column({ name: 'public_bots_included', type: 'boolean' })
         publicBotsIncluded: boolean;
 
-    @Column({ transformer: dateTransformer })
+    @Column({ transformer: dateTransformer, type: 'varchar' })
         created: string;
 
-    @Column({ transformer: dateTransformer })
+    @Column({ transformer: dateTransformer, type: 'varchar' })
         updated: string;
 
     @ManyToOne(() => UserEntity)
