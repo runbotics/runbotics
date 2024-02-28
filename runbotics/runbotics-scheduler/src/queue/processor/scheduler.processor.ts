@@ -36,6 +36,69 @@ export class SchedulerProcessor {
         private readonly queueService: QueueService
     ) {}
 
+    @Process({ concurrency: 1 })
+    async process(job: Job) {
+        if (!job.data) {
+            throw new Error('Job data is empty');
+        }
+
+        const process = await this.processService.findById(job.data.process.id);
+        if (!isScheduledProcess(job.data)) {
+            return this.runProcess(process, job);
+        }
+        return await this.queueService.handleAttendedProcess(process, job.data.input)
+            .then(() => this.runProcess(process, job))
+            .catch((err) => {
+                this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
+                throw new BadRequestException(err);
+            });
+    }
+
+    @OnQueueActive()
+    async onActive(job: Job) {
+        const process = await this.processService.findById(
+            Number(job.data.process.id)
+        );
+        const jobWithProcessAndActive = job;
+        jobWithProcessAndActive.data = { ...job.data, isActive: true, process };
+        this.uiGateway.server.emit(
+            WsMessage.ADD_WAITING_SCHEDULE,
+            jobWithProcessAndActive
+        );
+    }
+
+    @OnQueueWaiting()
+    async onWaiting(jobId: Job['id']) {
+        this.schedulerService.getJobById(jobId).then((job) => {
+            this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
+            this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
+        });
+    }
+
+    @OnQueueCompleted()
+    onComplete(job: Job) {
+        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+    }
+
+    @OnQueueFailed()
+    onFailed(job: Job, err: Error) {
+        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+        this.logger.error(
+            `[Q Fail] Job "${job.data.process.name}" failed`,
+            err
+        );
+    }
+
+    @OnQueueError({ name: 'scheduler' })
+    async onError(job: Job, err: Error) {
+        if (job.data) {
+            this.logger.error(
+                `[Q Error] Job '${job.data.process.name}' crashed`,
+                err
+            );
+        }
+    }
+
     private isAnyBotConnected = (availableBots: IBot[]): boolean =>
         availableBots.length !== 0;
 
@@ -91,70 +154,6 @@ export class SchedulerProcessor {
         );
         return Promise.reject(errorMessage);
     }
-
-    @Process({ concurrency: 1 })
-    async process(job: Job) {
-        if (!job.data) {
-            throw new Error('Job data is empty');
-        }
-
-        const process = await this.processService.findById(job.data.process.id);
-        if (!isScheduledProcess(job.data)) {
-            return this.runProcess(process, job);
-        }
-        await this.queueService.handleAttendedProcess(process, job.data.input)
-            .then(() => this.runProcess(process, job))
-            .catch((err) => {
-                this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
-                throw new BadRequestException(err);
-            });
-    }
-
-    @OnQueueActive()
-    async onActive(job: Job) {
-        const process = await this.processService.findById(
-            Number(job.data.process.id)
-        );
-        const jobWithProcessAndActive = job;
-        jobWithProcessAndActive.data = { ...job.data, isActive: true, process };
-        this.uiGateway.server.emit(
-            WsMessage.ADD_WAITING_SCHEDULE,
-            jobWithProcessAndActive
-        );
-    }
-
-    @OnQueueWaiting()
-    async onWaiting(jobId: Job['id']) {
-        this.schedulerService.getJobById(jobId).then((job) => {
-            this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
-            this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
-        });
-    }
-
-    @OnQueueCompleted()
-    onComplete(job: Job) {
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-    }
-
-    @OnQueueFailed()
-    onFailed(job: Job, err: Error) {
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-        this.logger.error(
-            `[Q Fail] Job "${job.data.process.name}" failed`,
-            err
-        );
-    }
-
-    @OnQueueError({ name: 'scheduler' })
-    async onError(job: Job, err: Error) {
-        if (job.data) {
-            this.logger.error(
-                `[Q Error] Job '${job.data.process.name}' crashed`,
-                err
-            );
-        }
-    }
-
 
     private async runProcess(process: IProcess, job: Job) {
         this.logger.log(

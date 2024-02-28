@@ -26,19 +26,19 @@ export class BotEntity implements IBot {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ transformer: dateTransformer })
+    @Column({ transformer: dateTransformer, type: 'varchar' })
     created: string;
 
-    @Column({ name: 'installation_id', unique: true })
+    @Column({ name: 'installation_id', unique: true, type: 'varchar' })
     installationId: string;
 
-    @Column({ name: 'last_connected', transformer: dateTransformer })
+    @Column({ name: 'last_connected', transformer: dateTransformer, type: 'varchar' })
     lastConnected: string;
 
-    @Column()
+    @Column({ type: 'enum' })
     status: BotStatus;
 
-    @Column()
+    @Column({ type: 'varchar' })
     version: string;
 
     @ManyToOne(() => BotSystemEntity)
