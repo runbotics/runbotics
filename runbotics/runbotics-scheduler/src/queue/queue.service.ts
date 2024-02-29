@@ -12,7 +12,7 @@ import { Job, Queue, JobId } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidateProcessAccessProps } from '#/types/scheduled-process';
 import { Logger } from '#/utils/logger';
-import { StartProcessRequest, StartProcessResponse } from '#/types';
+import { StartProcessRequest } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
     IProcess,

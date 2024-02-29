@@ -14,7 +14,6 @@ import { ProcessInstanceController } from './process-instance/process-instance.c
 import { ProcessInstanceSchedulerService } from './process-instance/process-instance.scheduler.service';
 import { ProcessFileService } from './process/process-file.service';
 import { ProcessSchedulerService } from './process/process-scheduler.service';
-import { ProcessController } from './process/process.controller';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { QueueService } from './queue.service';
 

@@ -70,7 +70,7 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
             };
             this.emitToClient(client.id, WsMessage.PROCESS_WAITING, payload);
         } catch (err: any) {
-            this.logger.log(`Emitting process start error`);
+            this.logger.log('Emitting process start error');
             const payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED] = {
               message: err?.message ?? 'Internal server error',
               processId,
@@ -90,10 +90,10 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
         try {
             await this.processWebsocketService.terminateJob(client, jobId);
         } catch (err: any) {
-            this.logger.log(`Emitting job terminate error`);
+            this.logger.log('Emitting job terminate error');
             const payload: ProcessQueueMessage[WsMessage.TERMINATE_JOB] = {
                 jobId,
-                message: err?.message ?? `Cannot delete job from the queue`,
+                message: err?.message ?? 'Cannot delete job from the queue',
             };
             client.emit(client.id, WsMessage.TERMINATE_JOB, payload);
         }
