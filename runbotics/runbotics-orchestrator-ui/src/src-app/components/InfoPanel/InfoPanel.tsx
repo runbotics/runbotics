@@ -10,8 +10,8 @@ import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstan
 import ProcessEventBreadcrumbs from './ProcessEventBreadcrumbs';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
-import If from '../utils/If';
 import ProcessQueueDetails from './ProcessQueueDetails/ProcessQueueDetails';
+import If from '../utils/If';
 
 interface InfoPanelProps {
     processInstanceId?: string;

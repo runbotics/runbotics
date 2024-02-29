@@ -14,9 +14,10 @@ import { AttendedProcessModal } from '#src-app/components/AttendedProcessModal';
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
-import { processActions } from '#src-app/store/slices/Process';
 import { Job, processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 import { ProcessTab } from '#src-app/utils/process-tab';
@@ -29,8 +30,6 @@ import ProcessTileContent from './ProcessTileContent';
 import ProcessTileFooter from './ProcessTileFooter';
 import ProcessTileTagList from './ProcessTileTagList';
 import Tile from '..';
-import { SocketContext } from '#src-app/providers/Socket.provider';
-import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
@@ -69,7 +68,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                 executionInfo,
             }),
         });
-    }
+    };
 
     const handleWaiting = (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
         if (payload.processId !== process.id) return;
@@ -112,7 +111,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         setJob(null);
         setIsRan(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
-    }
+    };
 
     const handleProcessTerminate = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();

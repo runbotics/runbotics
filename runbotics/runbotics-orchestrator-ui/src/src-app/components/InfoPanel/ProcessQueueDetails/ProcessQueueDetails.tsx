@@ -1,25 +1,30 @@
+import React from 'react';
+
+import { Box, Alert, Typography } from '@mui/material';
+
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
-import { Box, Alert, Typography } from '@mui/material';
-import React from 'react'
+
 
 const ProcessQueueDetails = () => {
     const job = useSelector((state) => state.processInstance.active.job);
     const { translate } = useTranslations();
 
-    if (job?.errorMessage) return (
-        <Box display="flex" flexDirection="column" padding="0.625rem" gap="1rem">
-            <Alert variant='filled' severity='error'>
-                <Typography
-                    variant="body1"
-                    sx={{ textAlign: 'center' }}
-                >
-                    {`${translate('Component.ProcessQueueDetails.Error')} ${job.errorMessage}`}
-                </Typography>
-            </Alert>
-        </Box>
-    );
+    if (job?.errorMessage) {
+        return (
+            <Box display="flex" flexDirection="column" padding="0.625rem" gap="1rem">
+                <Alert variant='filled' severity='error'>
+                    <Typography
+                        variant="body1"
+                        sx={{ textAlign: 'center' }}
+                    >
+                        {`${translate('Component.ProcessQueueDetails.Error')} ${job.errorMessage}`}
+                    </Typography>
+                </Alert>
+            </Box>
+        );
+    }
 
     if (!job || !job.jobId) return null;
 
@@ -44,6 +49,6 @@ const ProcessQueueDetails = () => {
             </Alert>
         </Box>
     );
-}
+};
 
-export default ProcessQueueDetails
+export default ProcessQueueDetails;

@@ -1,9 +1,8 @@
-import { FC, useEffect, useState, useMemo, MouseEvent, useContext, useCallback } from 'react';
+import { FC, useEffect, useState, useMemo, MouseEvent, useContext } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -22,7 +21,9 @@ import styled from 'styled-components';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
 import {
@@ -38,8 +39,6 @@ import { isJsonValid } from '#src-app/utils/utils';
 
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
-import { SocketContext } from '#src-app/providers/Socket.provider';
-import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 
 const JOB_CREATING_TOAST_KEY = 'job-creating-toast';
 

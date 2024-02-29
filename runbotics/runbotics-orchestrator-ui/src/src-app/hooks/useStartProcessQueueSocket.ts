@@ -44,7 +44,7 @@ export const useStartProcessQueueSocket = ({
 
         socket.on(WsMessage.PROCESS_QUEUE_UPDATE, (payload: ProcessQueueMessage[WsMessage.PROCESS_QUEUE_UPDATE]) => {
             loading && onQueueUpdate(payload);
-        })
+        });
 
         return () => {
             socket.off(WsMessage.PROCESS_WAITING);
@@ -54,6 +54,7 @@ export const useStartProcessQueueSocket = ({
             socket.off(WsMessage.PROCESS_REMOVED);
             socket.off(WsMessage.PROCESS_QUEUE_UPDATE);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, job, loading]);
 };
 
