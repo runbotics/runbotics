@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import { SnackbarProvider as NotistackSnackbarProvider } from 'notistack';
 
-const SnackbarProvider: FC = ({ children }) => (
+const SnackbarProvider: FC<{ children: ReactNode | ReactNode[] }> = ({ children }) => (
     <NotistackSnackbarProvider
         dense
         disableWindowBlurListener

@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useLayoutEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { Grid } from '@mui/material';
 
@@ -15,7 +15,7 @@ import If from '../../utils/If';
 const PROCESS_COLLECTIONS_GAP = 16;
 
 const ProcessCollectionList: FC = () => {
-    const processCollections = useSelector(processCollectionSelector).childrenCollections.list;
+    const processCollections = useSelector(processCollectionSelector).active.childrenCollections;
 
     const refCollectionBox = useRef<HTMLDivElement>();
     const [isCollectionListMultiLine, setIsCollectionListMultiLine] = useState<boolean>(false);
@@ -54,16 +54,24 @@ const ProcessCollectionList: FC = () => {
         setIsExpanded(!isExpanded);
     };
 
+    const sortedCollections = useMemo(() => {
+        const collectionsClone = structuredClone(processCollections);
+        return collectionsClone.length < 1 ?
+            collectionsClone :
+            collectionsClone.sort((collection1, collection2) => collection1.name.localeCompare(collection2.name));
+    }, [processCollections]);
+
     return (
         <div>
-            <CollectionListWrapper isExpanded={isExpanded}>
-                <Grid ref={refCollectionBox} container xs={12} columnGap={2} rowGap={1}>
-                    {processCollections.map(collection => (
-                        <ProcessCollectionTile
-                            {...collection}
-                            key={collection.id}
-                        />
-                    ))}
+            <CollectionListWrapper $expanded={isExpanded}>
+                <Grid ref={refCollectionBox} container columnGap={2} rowGap={2} p={1}>
+                    {sortedCollections
+                        .map(collection => (
+                            <ProcessCollectionTile
+                                {...collection}
+                                key={collection.id}
+                            />
+                        ))}
                 </Grid>
             </CollectionListWrapper>
             <If condition={isCollectionListMultiLine}>
@@ -71,8 +79,8 @@ const ProcessCollectionList: FC = () => {
                     <DividerLine />
                     <ExpandButton $expanded={isExpanded} onClick={handleCollectionResize}>
                         <StyledTypography fontSize={14} >
-                            <If 
-                                condition={isExpanded} 
+                            <If
+                                condition={isExpanded}
                                 else={<>{translate('Process.Collection.List.Expand.Label')}</>}
                             >
                                 {translate('Process.Collection.List.Collapse.Label')}

@@ -1,13 +1,9 @@
-export interface StyledProps {
-    hovered: boolean;
-}
-
 export interface StyledHoverProps {
-    hovered: boolean;
+    $hovered: boolean;
 }
 
 export interface StyledExpandProps {
-    expanded: boolean;
+    $expanded: boolean;
 }
 
 export type StyledIconProps = StyledHoverProps & StyledExpandProps;

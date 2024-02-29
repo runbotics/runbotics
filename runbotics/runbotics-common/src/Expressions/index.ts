@@ -8,6 +8,8 @@ function _interopRequireDefault(obj) {
 const isExpressionPattern = /^\${(.+?)}$/;
 const expressionPattern = /\${(.+?)}/;
 const jexlPattern = /#{(.+?)}/g;
+const jexlServicePattern = /#{(.+?)\((.*)\)}/;
+const digitPattern = /^-?\d+(\.?\d+)?$/;
 
 export class Expressions {
     public static isInitialized = false;
@@ -30,12 +32,13 @@ export class Expressions {
         expressionFnContext
     ) {
         Expressions.initialize();
-
         if (Expressions.isOutputVariableToSave(templatedString, context)) {
             context.environment.variables[`${context.environment.output?.variableName}`] = context.content.output[0];
         } else if (context.environment?.variables?.content?.type === 'bpmn:SubProcess') {
             const elementVariableName = context.environment.variables?.content?.input?.elementVariable;
             context.environment.variables[elementVariableName] = context.environment.variables?.content?.[elementVariableName];
+        } else if (jexlServicePattern.test(templatedString)) {
+            templatedString = Expressions.getFullServiceMethodCall(templatedString, context, expressionFnContext);
         }
 
         let jexlResult = Expressions.tryResolveJexlExpression(
@@ -63,6 +66,30 @@ export class Expressions {
             context?.content?.output?.length > 0 &&
             context?.content?.output[0] !== undefined &&
             context?.environment?.output?.variableName;
+    }
+
+    private static getFullServiceMethodCall(templatedString, context, expressionFnContext) {
+        const extractedMethod = jexlServicePattern.exec(templatedString);
+        const methodName = extractedMethod[1];
+        const args = extractedMethod[2].trim().split(",");
+
+        const mappedArgs = args.map((arg) => {
+            const trimmedArg = arg.trim();
+            if (jexlServicePattern.test(trimmedArg)) {
+                return Expressions.resolveExpression(trimmedArg, context, expressionFnContext);
+            } else if (Expressions.isVariableArgument(trimmedArg)) {
+                return 'environment.variables.' + trimmedArg;
+            }
+            return trimmedArg;
+        });
+        return '${environment.services.' + methodName + '(' + mappedArgs.join(',') + ')}';
+    }
+
+    private static isVariableArgument(arg) {
+        return arg !== 'true' && arg !== 'false'
+            && !digitPattern.test(arg)
+            && !arg.includes('"') && !arg.includes('\'')
+            && !arg.includes("environment.variables");
     }
 
     private static tryResolveJexlExpression(

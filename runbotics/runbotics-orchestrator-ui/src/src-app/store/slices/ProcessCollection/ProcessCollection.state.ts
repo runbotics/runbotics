@@ -9,7 +9,12 @@ export interface ProcessCollectionState {
         list: IProcess[];
         byPage: Page<IProcess>;
     }
-    childrenCollections: {
+    active: {
+        isLoading: boolean;
+        ancestors: ProcessCollection[];
+        childrenCollections: ProcessCollection[];
+    },
+    allUserAccessible: {
         isLoading: boolean;
         list: ProcessCollection[];
     }

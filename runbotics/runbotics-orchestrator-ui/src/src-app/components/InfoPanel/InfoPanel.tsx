@@ -58,7 +58,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                     overflowX: 'hidden',
                 }}
             >
-                <ProcessInstanceDetails processInstanceId={processInstanceId} />
+                <ProcessInstanceDetails processInstanceId={processInstanceId} onClose={onClose}/>
                 <ProcessInstanceEventsDetails
                     processInstanceId={processInstanceId}
                 />

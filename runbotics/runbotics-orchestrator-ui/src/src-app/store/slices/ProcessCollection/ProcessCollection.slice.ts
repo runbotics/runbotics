@@ -12,10 +12,15 @@ const initialState: ProcessCollectionState = {
         list: [],
         byPage: null,
     },
-    childrenCollections: {
+    active: {
+        isLoading: false,
+        childrenCollections: [],
+        ancestors: []
+    },
+    allUserAccessible: {
         isLoading: false,
         list: [],
-    }
+    },
 };
 
 export const slice = createSlice({

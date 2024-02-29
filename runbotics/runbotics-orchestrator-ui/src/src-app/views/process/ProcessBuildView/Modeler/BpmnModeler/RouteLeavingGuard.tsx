@@ -6,8 +6,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import LeavePrompt from './LeavePrompt';
 
-
-
 interface Props {
     when?: boolean | undefined;
     navigate: (path: string) => void;
