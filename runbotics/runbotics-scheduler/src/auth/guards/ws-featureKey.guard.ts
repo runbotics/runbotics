@@ -7,8 +7,10 @@ import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class WsFeatureKeyGuard implements CanActivate {
-    @Inject() readonly reflector: Reflector;
-    constructor(private authService: AuthService) { }
+    constructor(
+        private reflector: Reflector,
+        private authService: AuthService
+    ) { }
 
     async canActivate(context: ExecutionContext) {
         const client = context.switchToWs().getClient<Socket>();

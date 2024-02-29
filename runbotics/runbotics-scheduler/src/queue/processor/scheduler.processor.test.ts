@@ -144,6 +144,11 @@ describe('SchedulerProcessor', () => {
                     emit: vi.fn()
                 }
             })
+            .overrideProvider(MessagingService)
+            .useValue({
+                sendSpecificJobMessage: vi.fn(),
+                emitProcessQueueUpdate: vi.fn()
+            })
             .compile();
 
         // schedulerProcessor = moduleRef.get(SchedulerProcessor); //todo: use it instead of constructor
@@ -169,14 +174,14 @@ describe('SchedulerProcessor', () => {
         });
 
         it('should run process if it\'s not scheduled process', async () => {
-            const result = await schedulerProcessor.process(JOB);
-            expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
+            await schedulerProcessor.process(JOB);
+            expect(messagingService.sendSpecificJobMessage).toHaveBeenCalledTimes(2);
         });
 
         it('should run process if it\'s scheduled process', async () => {
             vi.spyOn(queueService, 'handleAttendedProcess');
-            const result = await schedulerProcessor.process(SCHEDULED_JOB);
-            expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
+            await schedulerProcessor.process(SCHEDULED_JOB);
+            expect(messagingService.sendSpecificJobMessage).toHaveBeenCalledTimes(2);
         });
 
         it('should not run process if it\'s attended process hasn\'t got required variables', async () => {
