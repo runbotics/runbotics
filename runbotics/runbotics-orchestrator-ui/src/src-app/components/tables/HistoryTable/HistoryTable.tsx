@@ -138,7 +138,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     };
 
     useEffect(() => {
-      replaceQueryParams({ page, pageSize, tab, id, instanceId });
+        replaceQueryParams({ page, pageSize, tab, id, instanceId });
     }, [instanceId])
 
     const handleCloseButton = () => {
