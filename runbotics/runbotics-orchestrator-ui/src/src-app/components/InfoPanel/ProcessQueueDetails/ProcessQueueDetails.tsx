@@ -1,7 +1,7 @@
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
-import { Box, Typography } from '@mui/material';
+import { Box, Alert, Typography } from '@mui/material';
 import React from 'react'
 
 const ProcessQueueDetails = () => {
@@ -10,12 +10,14 @@ const ProcessQueueDetails = () => {
 
     if (job?.errorMessage) return (
         <Box display="flex" flexDirection="column" padding="0.625rem" gap="1rem">
-            <Typography
-                variant="body1"
-                sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}
-            >
-                {`${translate('Component.ProcessQueueDetails.Error')} ${job.errorMessage}`}
-            </Typography>
+            <Alert variant='filled' severity='error'>
+                <Typography
+                    variant="body1"
+                    sx={{ textAlign: 'center' }}
+                >
+                    {`${translate('Component.ProcessQueueDetails.Error')} ${job.errorMessage}`}
+                </Typography>
+            </Alert>
         </Box>
     );
 
@@ -23,21 +25,23 @@ const ProcessQueueDetails = () => {
 
     return (
         <Box display="flex" flexDirection="column" padding="0.625rem" gap="1rem">
-            <If condition={!job.isProcessing} else={(
-                <Typography
-                    variant="body1"
-                    sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}
-                >
-                    {translate('Component.ProcessQueueDetails.Processing')}
-                </Typography>
-            )}>
-                <Typography
-                    variant="body1"
-                    sx={{ pt: (theme) => theme.spacing(4), textAlign: 'center' }}
-                >
-                    {`${translate('Component.ProcessQueueDetails.Queue')} ${job.jobIndex}`}
-                </Typography>
-            </If>
+            <Alert variant='filled' severity='warning'>
+                <If condition={job.isProcessing || job.jobIndex === 0} else={(
+                    <Typography
+                        variant="body1"
+                        sx={{ textAlign: 'center' }}
+                    >
+                        {`${translate('Component.ProcessQueueDetails.Queue')} ${job.jobIndex}`}
+                    </Typography>
+                )}>
+                    <Typography
+                        variant="body1"
+                        sx={{ textAlign: 'center' }}
+                    >
+                        {translate('Component.ProcessQueueDetails.Processing')}
+                    </Typography>
+                </If>
+            </Alert>
         </Box>
     );
 }

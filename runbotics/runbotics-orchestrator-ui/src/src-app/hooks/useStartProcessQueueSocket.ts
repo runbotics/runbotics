@@ -12,7 +12,7 @@ interface UseStartProcessQueueSocketParams {
   onFailed: (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => void;
   onRemoved: (payload: ProcessQueueMessage[WsMessage.PROCESS_REMOVED]) => void;
   onQueueUpdate: (payload: ProcessQueueMessage[WsMessage.PROCESS_QUEUE_UPDATE]) => void;
-  job: Job,
+  job: Job | null,
   loading: boolean;
 }
 

@@ -169,12 +169,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleProcessing = (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
-      if (payload.jobId !== job?.jobId) return;
-      dispatch(processInstanceActions.updateJobIsProcessing(true));
+        if (payload.jobId !== job?.jobId) return;
+        dispatch(processInstanceActions.updateJobIsProcessing(true));
     };
 
     const handleCompleted = (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
-        if (payload.jobId !== job?.jobId) return;
+        if (payload.processId !== process.id) return;
         dispatch(
             processInstanceActions.updateOrchestratorProcessInstanceId(
                 payload.orchestratorProcessInstanceId

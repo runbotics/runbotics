@@ -51,6 +51,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const [isProcessActive, setIsProcessActive] = useState(
         processInstance && isProcessInstanceActive(processInstance.status)
     );
+    const [isRan, setIsRan] = useState(false);
     const [job, setJob] = useState<Job>(null);
 
     const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
@@ -68,12 +69,12 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                 executionInfo,
             }),
         });
-        setIsProcessActive(true);
     }
 
     const handleWaiting = (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
         if (payload.processId !== process.id) return;
         setJob({ ...payload, isProcessing: false, errorMessage: null });
+        setIsRan(true);
     };
 
     const handleProcessing = (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
@@ -90,6 +91,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             })
         );
         setJob(null);
+        setIsRan(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
@@ -108,6 +110,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             { variant: 'error' }
         );
         setJob(null);
+        setIsRan(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     }
 
@@ -158,7 +161,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         onRemoved: (payload) => handleFailed(payload as ProcessQueueMessage[WsMessage.PROCESS_FAILED]),
         onQueueUpdate: () => {},
         job,
-        loading: isProcessActive,
+        loading: isRan || isProcessActive,
     });
 
     return (
@@ -173,7 +176,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                 <CardHeader
                     avatar={
                         <If
-                            condition={isProcessActive}
+                            condition={isProcessActive || isRan}
                             else={
                                 <RunBox
                                     onClick={handleRunButtonClick}
@@ -188,7 +191,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                             }
                         >
                             <RunBox
-                                onClick={handleProcessTerminate}
+                                onClick={(e) => { isProcessActive && handleProcessTerminate(e); }}
                             >
                                 <Tooltip title={translate('Component.Tile.Process.Header.Tooltip.AbortProcess')}>
                                     <Image
