@@ -25,7 +25,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Desktop': 'Desktop',
     'Process.Details.Modeler.ActionsGroup.Image': 'Image',
     'Process.Details.Modeler.ActionsGroup.External': 'External',
-    'Process.Details.Modeler.ActionsGroup.RpaFramework': 'RPA Framework',
+    'Process.Details.Modeler.ActionsGroup.Windows': 'Windows',
 };
 
 export default actionsGroupsTranslations;

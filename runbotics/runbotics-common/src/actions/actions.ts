@@ -229,16 +229,16 @@ export enum DesktopAction {
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
 }
 
-export enum RpaFrameworkAction {
-    IS_WINDOW_OPEN = 'rpaFramework.isWindowOpen',
-    GET_ELEMENT = 'rpaFramework.getElement',
-    LIST_WINDOWS = 'rpaFramework.listWindows',
-    MOUSE_CLICK = 'rpaFramework.mouseClick',
-    WAIT_FOR_ELEMENT = 'rpaFramework.waitForElement',
-    PRESS_KEYS = 'rpaFramework.pressKeys',
-    SEND_KEYS = 'rpaFramework.sendKeys',
-    MINIMIZE_WINDOW = 'rpaFramework.minimizeWindow',
-    MAXIMIZE_WINDOW = 'rpaFramework.maximizeWindow',
+export enum WindowsAction {
+    IS_WINDOW_OPEN = 'windows.isWindowOpen',
+    GET_ELEMENT = 'windows.getElement',
+    LIST_WINDOWS = 'windows.listWindows',
+    MOUSE_CLICK = 'windows.mouseClick',
+    WAIT_FOR_ELEMENT = 'windows.waitForElement',
+    PRESS_KEYS = 'windows.pressKeys',
+    SEND_KEYS = 'windows.sendKeys',
+    MINIMIZE_WINDOW = 'windows.minimizeWindow',
+    MAXIMIZE_WINDOW = 'windows.maximizeWindow',
 }
 
 export enum VisualBasicAction {

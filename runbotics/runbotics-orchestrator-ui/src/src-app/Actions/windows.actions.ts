@@ -1,17 +1,17 @@
-import { ActionRegex, RpaFrameworkAction } from 'runbotics-common';
+import { ActionRegex, WindowsAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-type GetRpaFrameworkActions = () => Record<string, IBpmnAction>;
+type GetWindowsActions = () => Record<string, IBpmnAction>;
 
 // eslint-disable-next-line max-lines-per-function
-const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
-    [RpaFrameworkAction.IS_WINDOW_OPEN]: {
-        id: RpaFrameworkAction.IS_WINDOW_OPEN,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.IsWindowOpen.Label'),
-        script: RpaFrameworkAction.IS_WINDOW_OPEN,
+const getWindowsActions: GetWindowsActions = () => ({
+    [WindowsAction.IS_WINDOW_OPEN]: {
+        id: WindowsAction.IS_WINDOW_OPEN,
+        label: translate('Process.Details.Modeler.Actions.Windows.IsWindowOpen.Label'),
+        script: WindowsAction.IS_WINDOW_OPEN,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -28,7 +28,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             }
                         },
@@ -53,7 +53,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                 },
@@ -61,10 +61,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         },
     },
-    [RpaFrameworkAction.GET_ELEMENT]: {
-        id: RpaFrameworkAction.GET_ELEMENT,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.GetElement.Label'),
-        script: RpaFrameworkAction.GET_ELEMENT,
+    [WindowsAction.GET_ELEMENT]: {
+        id: WindowsAction.GET_ELEMENT,
+        label: translate('Process.Details.Modeler.Actions.Windows.GetElement.Label'),
+        script: WindowsAction.GET_ELEMENT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -81,11 +81,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                         },
@@ -96,7 +96,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.GetElement.Output'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.GetElement.Output'),
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                                 default: 'outputElement'
@@ -110,12 +110,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                 },
@@ -123,10 +123,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.LIST_WINDOWS]: {
-        id: RpaFrameworkAction.LIST_WINDOWS,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.ListWindows.Label'),
-        script: RpaFrameworkAction.LIST_WINDOWS,
+    [WindowsAction.LIST_WINDOWS]: {
+        id: WindowsAction.LIST_WINDOWS,
+        label: translate('Process.Details.Modeler.Actions.Windows.ListWindows.Label'),
+        script: WindowsAction.LIST_WINDOWS,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -143,7 +143,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.ListWindows.Output'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.ListWindows.Output'),
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                                 default: 'outputWindowsList'
@@ -158,10 +158,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.MOUSE_CLICK]: {
-        id: RpaFrameworkAction.MOUSE_CLICK,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.MouseClick.Label'),
-        script: RpaFrameworkAction.MOUSE_CLICK,
+    [WindowsAction.MOUSE_CLICK]: {
+        id: WindowsAction.MOUSE_CLICK,
+        label: translate('Process.Details.Modeler.Actions.Windows.MouseClick.Label'),
+        script: WindowsAction.MOUSE_CLICK,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -172,11 +172,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                         },
@@ -189,12 +189,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                 },
@@ -202,10 +202,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.WAIT_FOR_ELEMENT]: {
-        id: RpaFrameworkAction.WAIT_FOR_ELEMENT,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.WaitForElement.Label'),
-        script: RpaFrameworkAction.WAIT_FOR_ELEMENT,
+    [WindowsAction.WAIT_FOR_ELEMENT]: {
+        id: WindowsAction.WAIT_FOR_ELEMENT,
+        label: translate('Process.Details.Modeler.Actions.Windows.WaitForElement.Label'),
+        script: WindowsAction.WAIT_FOR_ELEMENT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
             assignVariables: true,
@@ -222,11 +222,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                         },
@@ -237,7 +237,7 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             variableName: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.WaitForElement.Output'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.WaitForElement.Output'),
                                 type: 'string',
                                 pattern: ActionRegex.VARIABLE_NAME,
                                 default: 'awaitedElement'
@@ -251,12 +251,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                 },
@@ -264,10 +264,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.PRESS_KEYS]: {
-        id: RpaFrameworkAction.PRESS_KEYS,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.PressKeys.Label'),
-        script: RpaFrameworkAction.PRESS_KEYS,
+    [WindowsAction.PRESS_KEYS]: {
+        id: WindowsAction.PRESS_KEYS,
+        label: translate('Process.Details.Modeler.Actions.Windows.PressKeys.Label'),
+        script: WindowsAction.PRESS_KEYS,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -278,11 +278,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             keys: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.PressKeys.Keys'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.PressKeys.Keys'),
                                 type: 'string',
                             },
                         },
@@ -295,12 +295,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     keys: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.PressKeys.Keys.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.PressKeys.Keys.Info'),
                         }
                     },
                 },
@@ -308,10 +308,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.SEND_KEYS]: {
-        id: RpaFrameworkAction.SEND_KEYS,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.SendKeys.Label'),
-        script: RpaFrameworkAction.SEND_KEYS,
+    [WindowsAction.SEND_KEYS]: {
+        id: WindowsAction.SEND_KEYS,
+        label: translate('Process.Details.Modeler.Actions.Windows.SendKeys.Label'),
+        script: WindowsAction.SEND_KEYS,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -322,19 +322,19 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                             keys: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.SendKeys.Keys'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.SendKeys.Keys'),
                                 type: 'string',
                             },
                             sendEnter: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.SendKeys.SendEnter'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.SendKeys.SendEnter'),
                                 type: 'boolean',
                                 default: false
                             },
@@ -348,22 +348,22 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                     keys: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.SendKeys.Keys.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.SendKeys.Keys.Info'),
                         }
                     },
                     sendEnter: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.SendKeys.SendEnter.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.SendKeys.SendEnter.Info'),
                         }
                     },
                 },
@@ -371,10 +371,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.MINIMIZE_WINDOW]: {
-        id: RpaFrameworkAction.MINIMIZE_WINDOW,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.MinimizeWindow.Label'),
-        script: RpaFrameworkAction.MINIMIZE_WINDOW,
+    [WindowsAction.MINIMIZE_WINDOW]: {
+        id: WindowsAction.MINIMIZE_WINDOW,
+        label: translate('Process.Details.Modeler.Actions.Windows.MinimizeWindow.Label'),
+        script: WindowsAction.MINIMIZE_WINDOW,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -385,11 +385,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                         },
@@ -402,12 +402,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                 },
@@ -415,10 +415,10 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
             formData: {},
         }
     },
-    [RpaFrameworkAction.MAXIMIZE_WINDOW]: {
-        id: RpaFrameworkAction.MAXIMIZE_WINDOW,
-        label: translate('Process.Details.Modeler.Actions.RpaFramework.MaximizeWindow.Label'),
-        script: RpaFrameworkAction.MAXIMIZE_WINDOW,
+    [WindowsAction.MAXIMIZE_WINDOW]: {
+        id: WindowsAction.MAXIMIZE_WINDOW,
+        label: translate('Process.Details.Modeler.Actions.Windows.MaximizeWindow.Label'),
+        script: WindowsAction.MAXIMIZE_WINDOW,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
             schema: {
@@ -429,11 +429,11 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                         type: 'object',
                         properties: {
                             windowTitle: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle'),
                                 type: 'string',
                             },
                             locator: {
-                                title: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator'),
+                                title: translate('Process.Details.Modeler.Actions.Windows.Common.Locator'),
                                 type: 'string',
                             },
                         },
@@ -446,12 +446,12 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
                 input: {
                     windowTitle: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.WindowTitle.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.WindowTitle.Info'),
                         }
                     },
                     locator: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.RpaFramework.Common.Locator.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Windows.Common.Locator.Info'),
                         }
                     },
                 },
@@ -461,4 +461,4 @@ const getRpaFrameworkActions: GetRpaFrameworkActions = () => ({
     },
 });
 
-export default getRpaFrameworkActions;
+export default getWindowsActions;
