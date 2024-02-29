@@ -116,7 +116,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     }));
 
     const handleOnClick = async (processInstance: IProcessInstance) => {
-        setInstanceId(null);
+        setInstanceId(processInstance.id);
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
         if (
             processInstance.status === ProcessInstanceStatus.INITIALIZING ||
@@ -136,6 +136,10 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             dispatch(processInstanceActions.resetActive());
         }
     };
+
+    useEffect(() => {
+      replaceQueryParams({ page, pageSize, tab, id, instanceId });
+    }, [instanceId])
 
     const handleCloseButton = () => {
         setPanelInfoState({ show: false });
