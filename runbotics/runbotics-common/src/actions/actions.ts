@@ -245,8 +245,8 @@ export enum FolderAction {
 }
 
 export enum ZipAction {
-    UNZIP_FILE = 'zip.unzipFile',
-    ZIP_FILE = 'zip.zipFile'
+    UNZIP_FILE = 'zip.unzip',
+    ZIP_FILE = 'zip.zip'
 }
 
 export type AllActionIds =

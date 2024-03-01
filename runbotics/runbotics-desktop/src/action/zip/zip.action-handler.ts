@@ -43,29 +43,45 @@ export default class ZipActionHandler extends StatelessActionHandler {
             );
         }
 
-        const { parentPath, pathToZipFolder } = this.getNewFolderPath(fileName, path);
+        const { pathToZipFolder } = this.getNewFolderPath(fileName, path);
+
+        if (fs.existsSync(`${pathToZipFolder}.zip`)) {
+            throw new Error('Zip file with this name already exists');
+        }
 
         try {
             const zip = new AdmZip();
-            // const content = fs.readdirSync(parentPath);
-            zip.addLocalFolder(pathToZipFolder);
-            zip.writeZip(`${pathToZipFolder}`);
+
+            zip.addLocalFolder(path);
+            zip.writeZip(`${pathToZipFolder}.zip`);
+            
+            return pathToZipFolder;
         } catch (e) {
-            throw new Error(`Create archived zip failes with error: ${e}`);
+            this.handleError(e.code, ZipAction.ZIP_FILE);
         }
     }
 
-    getNewFolderPath(newName: string, path: string) {
+    private getNewFolderPath(newName: string, path: string) {
         if (!newName) {
-            return {parentPath: path, pathToZipFolder: path};
+            return { pathToZipFolder: path };
         }
 
         const lastSlashOccuranceIndex = path.lastIndexOf(pathPackage.sep);
         const parentPath = `${path.substring(0, lastSlashOccuranceIndex)}`;
 
-        const pathToZipFolder = `${parentPath}}${pathPackage.sep}${newName}`;
+        const pathToZipFolder = `${parentPath}${pathPackage.sep}${newName}`;
 
-        return { parentPath, pathToZipFolder }; 
+        return { pathToZipFolder }; 
+    }
+
+    private handleError(error: string, actionName: ZipAction) {
+        console.log(error);
+        switch (error) {
+            case 'EBUSY':
+                throw new Error(`${actionName} action: File with this name already exists.`);
+            default:
+                throw new Error(`${actionName} action failed with error: ${error}`);
+        }
     }
 
     run(request: ZipActionRequest) {

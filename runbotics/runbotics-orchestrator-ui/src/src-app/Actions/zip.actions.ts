@@ -6,9 +6,9 @@ import { translate } from '../hooks/useTranslations';
 
 // eslint-disable-next-line max-lines-per-function
 const getZipActions: () => Record<string, IBpmnAction> = () => ({
-    'zip.unzipFile': {
+    [ZipAction.UNZIP_FILE]: {
         id: ZipAction.UNZIP_FILE,
-        label: translate('Process.Details.Modeler.Actions.Zip.UnzipFile.Label'),
+        label: translate('Process.Details.Modeler.Actions.Zip.Unzip.Label'),
         script: ZipAction.UNZIP_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -55,7 +55,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             }
         }
     },
-    'zip.zipFile': {
+    [ZipAction.ZIP_FILE]: {
         id: ZipAction.ZIP_FILE,
         label: translate('Process.Details.Modeler.Actions.Zip.Zip.Label'),
         script: ZipAction.ZIP_FILE,
