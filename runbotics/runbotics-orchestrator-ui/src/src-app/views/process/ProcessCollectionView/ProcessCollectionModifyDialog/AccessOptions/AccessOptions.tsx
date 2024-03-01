@@ -55,7 +55,7 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                         <InfoButtonTooltip message={translate('Proces.Collection.Dialog.Modify.Form.Users.Tooltip')} />
                     </Box>
                 </Box>
-                <LocationOptions isModifyDialogOpen={isModifyDialogOpen} handleChange={handleChange} parentId={collectionData.parentId} />
+                <LocationOptions editedCollectionId={collectionData.id} isModifyDialogOpen={isModifyDialogOpen} handleChange={handleChange} parentId={collectionData.parentId} />
             </Box>
         </Accordion>
     );

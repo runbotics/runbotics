@@ -8,26 +8,27 @@ import styled from 'styled-components';
 import { StyledTreeItemRootProps } from './CustomTreeItem.types';
 
 export const StyledTreeItemRoot = styled(TreeItem)<StyledTreeItemRootProps>`
-  color: ${({ theme }) => theme.palette.text.primary};
-  & .${treeItemClasses.content} {
-    transition: all 250ms ease;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 100px;
-    &:hover {
-      background-color: ${({ theme }) => theme.palette.action.hover};
-    }
-    &.Mui-focused,
-    &.Mui-selected,
-    &.Mui-selected.Mui-focused {
-      background-color: transparent;
-      color: ${({ theme }) => theme.palette.primary.main};
+  ${({ theme, $selectable, $haschildren }) => `
+    color: ${$selectable ? theme.palette.text.primary : theme.palette.text.disabled};
+    & .${treeItemClasses.content} {
+      transition: all 250ms ease;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-radius: 100px;
       &:hover {
-        background-color: ${({ $haschildren, theme }) =>
-        $haschildren ? theme.palette.action.hover : 'transparent'};
+        background-color: ${$selectable || $haschildren ? theme.palette.action.hover : 'transparent'};
+      }
+      &.Mui-focused,
+      &.Mui-selected,
+      &.Mui-selected.Mui-focused {
+        background-color: transparent;
+        color: ${$selectable ? theme.palette.primary.main : theme.palette.text.disabled};
+        &:hover {
+          background-color: ${$haschildren ? theme.palette.action.hover : 'transparent'};
+        }
       }
     }
-  }
+  `}
 `;
 
 export const StyledCollectionName = styled(Typography)`

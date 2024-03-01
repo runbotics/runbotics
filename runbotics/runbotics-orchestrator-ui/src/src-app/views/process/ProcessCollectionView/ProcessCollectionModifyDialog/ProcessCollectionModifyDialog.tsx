@@ -91,7 +91,6 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
             clearForm();
         }
     };
-
     const handleFormPropertyChange = <Key extends ProcessCollectionKeys>(
         propertyName: Key,
         value: ProcessCollection[Key]

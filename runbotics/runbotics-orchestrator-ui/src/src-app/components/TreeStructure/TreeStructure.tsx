@@ -25,12 +25,15 @@ const TreeStructure: FC<TreeStructureProps> = ({ currentNodeChildren, defaultIco
             labelText={node.name}
             labelIcon={node.icon || defaultIcon}
             $haschildren={Array.isArray(node.children)}
+            $selectable={node.selectable ?? true}
+            disabled={!node.selectable}
         >
             {Array.isArray(node.children)
                 ? node.children.map((childNode) => renderNodes(childNode))
                 : null}
         </CustomTreeItem>
     );
+
     return (
         <TreeView
             aria-label="process-collections-structure"

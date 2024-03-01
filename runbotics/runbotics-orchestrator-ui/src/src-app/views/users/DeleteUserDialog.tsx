@@ -1,11 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { LoadingButton } from '@mui/lab';
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
     Typography,
     List,
     ListItem,
@@ -16,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from 'runbotics-common';
 import styled from 'styled-components';
 
-import If from '#src-app/components/utils/If';
+import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
@@ -28,11 +23,6 @@ const StyledList = styled(List)`
         list-style-type: disc;
         list-style-position: inside;
     }
-`;
-
-const StyledButton = styled(Button)`
-    width: 80px;
-    height: 40px;
 `;
 
 interface DeleteUserDialogProps {
@@ -90,44 +80,31 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     useEffect(() => { open && setUsersData(getSelectedUsers); }, [open]);
 
     return (
-        <If condition={open}>
-            <Dialog
-                open
-                fullWidth
-                maxWidth="sm"
-            >
-                <DialogContent>
-                    <Typography variant='h4'>
-                        {translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
+        <CustomDialog
+            isOpen={open}
+            onClose={onClose}
+            title={translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
+            confirmButtonOprions={{
+                label: translate('Users.Actions.Modals.DeleteModal.Button.Delete'),
+                onClick: handleSubmit,
+                isLoading: userDelete.loading,
+            }}
+            cancelButtonOptions={{
+                label: translate('Users.Actions.Modals.DeleteModal.Button.Cancel'),
+                onClick: onClose,
+                isDisabled: userDelete.loading,
+            }}
+        >
+            <StyledList>
+                {usersData.map((user) => (
+                    <Typography key={user.id}>
+                        <ListItem sx={{ display: 'list-item' }}>
+                            {user.email}
+                        </ListItem>
                     </Typography>
-                    <StyledList>
-                        {usersData.map((user) => (
-                            <Typography key={user.id}>
-                                <ListItem sx={{ display: 'list-item' }}>
-                                    {user.email}
-                                </ListItem>
-                            </Typography>
-                        ))}
-                    </StyledList>
-                </DialogContent>
-                <DialogActions>
-                    <StyledButton
-                        color='primary'
-                        onClick={onClose}
-                        disabled={userDelete.loading}
-                    >
-                        {translate('Users.Actions.Modals.DeleteModal.Button.Cancel')}
-                    </StyledButton>
-                    <LoadingButton
-                        variant='contained'
-                        loading={userDelete.loading}
-                        onClick={handleSubmit}
-                    >
-                        {translate('Users.Actions.Modals.DeleteModal.Button.Delete')}
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
-        </If>
+                ))}
+            </StyledList>
+        </CustomDialog>
     );
 };
 
