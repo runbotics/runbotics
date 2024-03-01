@@ -15,7 +15,7 @@ import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/A
 import { LocationOptionsProps, ProcessCollectionHierarchy } from './LocationOptions.types';
 import { ABSTRACT_ROOT_COLLECTION_ID, accessTooltipIcon, getHierarchicalStructure } from './LocationOptions.utils';
 
-const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleChange, parentId = null, editedCollectionId }) => {
+const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleChange, isOwner, parentId = null, editedCollectionId }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { allUserAccessible: { isLoading, list: allUserAccessible } } = useSelector(state => state.processCollection);
@@ -32,7 +32,7 @@ const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleC
         parentId: null,
         children: userAccessibleHierarchy,
         icon: accessTooltipIcon.home,
-        selectable: true,
+        selectable: isOwner,
     };
 
     const setSelected = (selected: CollectionId[] | CollectionId) => {

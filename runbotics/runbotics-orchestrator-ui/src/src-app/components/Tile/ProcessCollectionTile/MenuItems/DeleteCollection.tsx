@@ -24,21 +24,21 @@ export const DeleteCollection: FC<DeleteCollectionProps> = ({ id, name }) => {
         setIsDialogOpen(false);
     };
 
-    const closeDialog = () => {
-        setIsDialogOpen(false);
+    const toggleDialog = () => {
+        setIsDialogOpen(prevState => !prevState);
     };
 
     return (
         <>
-            <MenuItem onClick={() => { setIsDialogOpen(true); }}>
+            <MenuItem onClick={toggleDialog}>
                 {translate('Process.Collection.Tile.MenuItem.Delete')}
             </MenuItem>
             <CustomDialog
                 isOpen={isDialogOpen}
                 title={translate('Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name })}
-                onClose={closeDialog}
-                confirmButtonOprions={{ onClick: handleDelete }}
-                cancelButtonOptions={{ onClick: closeDialog }}
+                onClose={toggleDialog}
+                confirmButtonOptions={{ onClick: handleDelete }}
+                cancelButtonOptions={{ onClick: toggleDialog }}
             />
         </>
     );

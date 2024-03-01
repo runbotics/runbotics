@@ -121,7 +121,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     public ProcessCollectionDTO save(ProcessCollectionDTO processCollectionDTO) {
         log.debug("Request to save ProcessCollectionDTO : {}", processCollectionDTO);
         ProcessCollection processCollection = processCollectionMapper.toEntity(processCollectionDTO);
-        processCollection.setCreatedBy(userService.getUserWithAuthorities().get());
+        Optional<User> createdBy = userService.getUserWithAuthoritiesByLogin(processCollectionDTO.getCreatedBy().getLogin());
+        processCollection.setCreatedBy(createdBy.isPresent() ? createdBy.get() : userService.getUserWithAuthorities().get());
         processCollection.setUsers(
             processCollection
                 .getUsers()

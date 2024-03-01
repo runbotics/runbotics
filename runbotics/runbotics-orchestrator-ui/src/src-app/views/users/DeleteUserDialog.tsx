@@ -84,7 +84,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
             isOpen={open}
             onClose={onClose}
             title={translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
-            confirmButtonOprions={{
+            confirmButtonOptions={{
                 label: translate('Users.Actions.Modals.DeleteModal.Button.Delete'),
                 onClick: handleSubmit,
                 isLoading: userDelete.loading,

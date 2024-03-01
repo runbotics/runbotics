@@ -5,6 +5,7 @@ export interface LocationOptionsProps {
     isModifyDialogOpen: boolean;
     handleChange: (property: ProcessCollectionKeys, newValue: ProcessCollectionValues ) => void;
     editedCollectionId: string;
+    isOwner: boolean;
     parentId?: string;
 }
 

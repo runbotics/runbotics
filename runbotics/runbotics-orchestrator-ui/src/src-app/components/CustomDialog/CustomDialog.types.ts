@@ -3,7 +3,7 @@ export interface CustomDialogProps {
     onClose: () => void;
     title: string;
     children?: React.ReactNode;
-    confirmButtonOprions?: DialogButton;
+    confirmButtonOptions?: DialogButton;
     cancelButtonOptions?: DialogButton;
 }
 

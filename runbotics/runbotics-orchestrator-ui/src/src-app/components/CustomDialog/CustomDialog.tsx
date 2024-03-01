@@ -7,7 +7,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { CustomDialogProps } from './CustomDialog.types';
 import DialogButton from './DialogButton';
 
-const CustomDialog: FC<CustomDialogProps> = ({ isOpen, onClose, title, children, confirmButtonOprions, cancelButtonOptions }) => (
+const CustomDialog: FC<CustomDialogProps> = ({ isOpen, onClose, title, children, confirmButtonOptions: confirmButtonOprions, cancelButtonOptions }) => (
     <Dialog
         open={isOpen}
         onClose={onClose}

@@ -1,11 +1,12 @@
 
 import { FC, useState, useEffect, ChangeEvent, useMemo } from 'react';
 
-import { Button, Dialog, DialogActions, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { COLLECTION_ID_PARAM, IUser, ProcessCollection, ProcessCollectionKeys, ROOT_PROCESS_COLLECTION_ID, Role } from 'runbotics-common';
 
+import CustomDialog from '#src-app/components/CustomDialog';
 import { hasRoleAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -16,7 +17,7 @@ import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions/';
 import { ProcessCollectionModifyDialogProps } from './ProcessCollectionModifyDialog.types';
-import { Content, Form, Title } from '../../../utils/FormDialog.styles';
+import { Content, Form } from '../../../utils/FormDialog.styles';
 import { checkTranslationKey, completeCollectionEntity, prepareIncompleteCollectionEntity } from '../ProcessCollection.utils';
 
 const CREATE_COLLECTION_REJECTED_TYPE = 'processCollection/createCollection/rejected';
@@ -58,7 +59,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
     };
 
     const updateCollection = (body) => collection
-        ? dispatch(processCollectionActions.updateOne({ id: collection.id, body, parentId: currentCollectionId}))
+        ? dispatch(processCollectionActions.updateOne({ id: body.id, body, parentId: currentCollectionId}))
         : dispatch(processCollectionActions.createOne({ body, parentId: currentCollectionId }));
 
     const handleSubmit = async () => {
@@ -91,20 +92,31 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
             clearForm();
         }
     };
+
     const handleFormPropertyChange = <Key extends ProcessCollectionKeys>(
         propertyName: Key,
         value: ProcessCollection[Key]
     ) => setCollectionData({ ...collectionData, [propertyName]: value });
 
+    const closeDialog = () => {
+        onClose();
+        setTimeout(() => clearForm(), 1000);
+    };
+
     return (
-        <Dialog
-            open={isOpen}
-            onClose={() => {
-                onClose();
-                setTimeout(() => clearForm(), 500);
+        <CustomDialog
+            isOpen={isOpen}
+            onClose={closeDialog}
+            title={translate(`Process.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
+            confirmButtonOptions={{
+                label: translate('Common.Save'),
+                onClick: handleSubmit,
+                isDisabled: !isOwner,
+            }}
+            cancelButtonOptions={{
+                onClick: closeDialog,
             }}
         >
-            <Title>{translate(`Process.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}</Title>
             <Content sx={{ overflowX: 'hidden' }}>
                 <Form>
                     <TextField
@@ -133,21 +145,8 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                     />
                 </Form>
             </Content>
-            <DialogActions>
-                <Button
-                    color="primary"
-                    onClick={() => {
-                        onClose();
-                        setTimeout(() => clearForm(), 500);
-                    }}
-                >
-                    {translate('Common.Cancel')}
-                </Button>
-                <Button type="submit" variant="contained" color="primary" autoFocus onClick={() => handleSubmit()}>
-                    {translate('Common.Save')}
-                </Button>
-            </DialogActions>
-        </Dialog>
+        </CustomDialog>
+
     );
 };
 
