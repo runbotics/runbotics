@@ -15,3 +15,7 @@ export interface ProcessCollectionPack {
     childrenCollections: ProcessCollection[];
     breadcrumbs: ProcessCollection[];
 }
+
+export interface CollectionDeleteParams {
+    id: string;
+}

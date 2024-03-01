@@ -4,7 +4,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { ROOT_PROCESS_COLLECTION_ID } from 'runbotics-common';
 
 import { ProcessCollectionState } from './ProcessCollection.state';
-import { getAllWithAncestors, createOne, getAllAccessible, updateOne } from './ProcessCollection.thunks';
+import { getAllWithAncestors, createOne, getAllAccessible, updateOne, deleteOne } from './ProcessCollection.thunks';
 
 const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<ProcessCollectionState>) => {
     builder
@@ -64,9 +64,22 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
             state.allUserAccessible.isLoading = false;
             state.allUserAccessible.list = [...action.payload];
         })
-        .addCase(getAllAccessible.rejected, (state, action) => {
+        .addCase(getAllAccessible.rejected, (state, _action) => {
             state.allUserAccessible.isLoading = false;
             state.allUserAccessible.list = [];
+        })
+
+        // DELETE collection
+        .addCase(deleteOne.pending, (state) => {
+            state.active.isLoading = true;
+        })
+        .addCase(deleteOne.fulfilled, (state, action) => {
+            state.active.isLoading = false;
+            const deletedCollectionId = action.meta.arg.id;
+            state.active.childrenCollections = state.active.childrenCollections.filter((collection) => collection.id !== deletedCollectionId);
+        })
+        .addCase(deleteOne.rejected, (state) => {
+            state.active.isLoading = false;
         });
 };
 

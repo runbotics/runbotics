@@ -9,20 +9,14 @@ import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessCollectionDTO;
 import com.runbotics.service.ProcessCollectionQueryService;
 import com.runbotics.service.mapper.ProcessCollectionMapper;
-import org.hibernate.Criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
@@ -109,6 +103,18 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
         }
 
         return processCollectionMapper.toDto(breadcrumbs);
+    }
+
+    @Override
+    public void delete(UUID id, User user) {
+        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        boolean hasCollectionAccess = hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
+
+        if (!hasCollectionAccess) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
+        }
+
+        processCollectionRepository.deleteById(id);
     }
 
     @Override
