@@ -1,7 +1,11 @@
+interface ObjectArray {
+    key: string;
+    value: any[];
+}
 
 export const truncateObject = (obj: any, maxLength: number, path: string[] = [], totalArraysCount = 0): any => {
     const truncatedObj: any = {};
-    const arrays: { key: string, value: any[] }[] = [];
+    const arraysToTruncate: ObjectArray[] = [];
 
     // Objects copying & arrays collecting
     for (const key of Object.keys(obj)) {
@@ -10,7 +14,7 @@ export const truncateObject = (obj: any, maxLength: number, path: string[] = [],
 
         if (newLength <= maxLength) {
             if (Array.isArray(obj[key])) {
-                arrays.push({ key, value: obj[key] });
+                arraysToTruncate.push({ key, value: obj[key] });
                 totalArraysCount++;
             } else if (typeof obj[key] === 'object') {
                 truncatedObj[key] = truncateObject(obj[key], maxLength, newPath, totalArraysCount);
@@ -25,10 +29,10 @@ export const truncateObject = (obj: any, maxLength: number, path: string[] = [],
     // Allocation of space for each collected array
     let remainingSpace = maxLength - JSON.stringify(truncatedObj).length;
     let allArraysLength = 0;
-    for (const array of arrays) {
+    for (const array of arraysToTruncate) {
         allArraysLength += JSON.stringify(array.value).length;
     }
-    for (const { key, value } of arrays) {
+    for (const { key, value } of arraysToTruncate) {
         const allocatedSpace = Math.floor(JSON.stringify(value).length / allArraysLength * (remainingSpace / totalArraysCount));
         // Trimming of the array
         const lastCurlyBraceIndex = findLastIndexOfCurlyBrace(JSON.stringify(obj[key]), allocatedSpace);
@@ -40,7 +44,6 @@ export const truncateObject = (obj: any, maxLength: number, path: string[] = [],
             slicedArray = addClosingCurlyBraces(slicedArray, diff);
             slicedArray += ']'; // Append closing square bracket
         }
-        console.log(slicedArray);
         truncatedObj[key] = JSON.parse(slicedArray);
         remainingSpace -= slicedArray.length;
     }
