@@ -17,6 +17,7 @@ import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
 import { WebsocketService } from '../websocket.service';
 import { StorageService } from '#config';
+import { truncateObject } from '#utils/truncator';
 
 @Injectable()
 export class RuntimeSubscriptionsService {
@@ -43,7 +44,7 @@ export class RuntimeSubscriptionsService {
                         created: dayjs().toISOString(),
                         processInstance: event.processInstance,
                         executionId: event.activity.executionId,
-                        input: this.sanitizeVariable({ ...desktopTask?.input }),
+                        input: this.sanitizeObject({ ...desktopTask?.input }),
                         status: event.eventType,
                         error: event.activity.content.error?.description,
                         script: desktopTask.input?.script,
@@ -157,7 +158,7 @@ export class RuntimeSubscriptionsService {
                         case ProcessInstanceEventStatus.STOPPED:
                         case ProcessInstanceEventStatus.ERRORED:
                             if (!this.isLoopSubprocess(event.activity, eventBehavior)) {
-                                processInstanceEvent.output = this.sanitizeVariable({ ...desktopTask?.output });
+                                processInstanceEvent.output = this.sanitizeObject({ ...desktopTask?.output });
                             }
                             processInstanceEvent.finished =
                                 dayjs().toISOString();
@@ -216,7 +217,7 @@ export class RuntimeSubscriptionsService {
                     break;
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
-                        processInstance.input = this.sanitizeVariable(
+                        processInstance.input = this.sanitizeObject(
                             { variables: event.processInstance.variables }
                         );
                     } catch (e) {
@@ -241,7 +242,7 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = this.sanitizeVariable({
+                        processInstance.output = this.sanitizeObject({
                             processOutput: event.processInstance?.processOutput ?? {},
                             variables,
                         });
@@ -264,13 +265,15 @@ export class RuntimeSubscriptionsService {
         });
     }
 
-    private sanitizeVariable(variable: any): string {
-        const variableToCheck: string = JSON.stringify(variable);
-        if (variableToCheck && variableToCheck.length > 100_000)
-            return JSON.stringify(
-                { message: 'Exceeded max length', partialResponse: variableToCheck.slice(0, 100_000)}
-            );
-        return variableToCheck;
+    private sanitizeObject(objectValue: any): any {
+        const maxLength = 250_000;
+        if (JSON.stringify(objectValue).length > maxLength) {
+            return {
+                message: 'Exceeded max length',
+                partialResponse: truncateObject(objectValue, maxLength),
+            };
+        }
+        return objectValue;
     }
 
     private isLoopSubprocess(activity: BpmnExecutionEventMessageExtendedApi, eventBehavior: Behaviour): boolean {
