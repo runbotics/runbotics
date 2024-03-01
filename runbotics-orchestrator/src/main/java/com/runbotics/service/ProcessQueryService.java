@@ -46,6 +46,8 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final UserService userService;
 
+    private final ProcessCollectionService processCollectionService;
+
     private final String PROCESS_NAME = "name";
 
     private final String PROCESS_TAG_NAME = "tagName";
@@ -56,12 +58,14 @@ public class ProcessQueryService extends QueryService<Process> {
         ProcessRepository processRepository,
         ProcessMapper processMapper,
         ScheduleProcessRepository scheduleProcessRepository,
-        UserService userService
+        UserService userService,
+        ProcessCollectionService processCollectionService
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.scheduleProcessRepository = scheduleProcessRepository;
         this.userService = userService;
+        this.processCollectionService = processCollectionService;
     }
 
     /**
@@ -185,6 +189,14 @@ public class ProcessQueryService extends QueryService<Process> {
 
         } else {
             if (criteria.getCollectionId() != null) {
+                processCollectionService.checkCollectionAvailability(
+                    criteria.getCollectionId().getEquals(), user
+                );
+
+                processCollectionService.checkAndGetCollectionAllAncestors(
+                    criteria.getCollectionId().getEquals(), user
+                );
+
                 return processRepository
                     .findBySearchAndCollectionForUser(
                         user.getId(),

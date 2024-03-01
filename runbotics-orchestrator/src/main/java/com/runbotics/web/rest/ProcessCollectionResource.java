@@ -90,7 +90,7 @@ public class ProcessCollectionResource {
                 criteria.getParentId().getEquals(), requester
             );
 
-            List<ProcessCollectionDTO> breadcrumbs = processCollectionService.getCollectionAllAncestors(
+            List<ProcessCollectionDTO> breadcrumbs = processCollectionService.checkAndGetCollectionAllAncestors(
                 criteria.getParentId().getEquals(), requester
             );
             List<ProcessCollectionDTO> childrenCollections = processCollectionService.getChildrenCollectionsByParent(
