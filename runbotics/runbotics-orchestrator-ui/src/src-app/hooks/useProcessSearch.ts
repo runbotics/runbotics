@@ -50,7 +50,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             })
                         },
                         equals: {
-                            collectionId
+                            ...(collectionId !== null && { collectionId })
                         }
                     },
                 })

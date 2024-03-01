@@ -54,7 +54,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                             })
                         },
                         equals: {
-                            collectionId
+                            ...(collectionId !== null && { collectionId })
                         }
                     },
                 })
