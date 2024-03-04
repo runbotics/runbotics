@@ -25,13 +25,17 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
     async unzipFile(input: UnzipFileActionInput) {
         const { path, fileName } = input;
+        const fullPath = this.resolvePath(fileName, path);
+    
+        if (this.fileExists(fullPath)) {
+            throw new Error('File/folder with this name already exists');
+        }
 
         try {
-            const fullPath = this.resolvePath(fileName, path);
             const zip = new AdmZip(`${fullPath}.zip`);
             zip.extractAllTo(fullPath);
         } catch (e) {
-            throw new Error(`Archive unzip failed with error: ${e}`);
+            this.handleError('Unzip archive', e.code);
         }
     }
 
@@ -39,46 +43,56 @@ export default class ZipActionHandler extends StatelessActionHandler {
         const { path, fileName } = input;
 
         if (!path) {
-            throw new Error('Path to a folder is mandatory'
-            );
+            throw new Error('Path to a folder is mandatory');
         }
 
-        const { pathToZipFolder } = this.getNewFolderPath(fileName, path);
+        const pathToZip = this.getNewFolderPath(fileName, path);
 
-        if (fs.existsSync(`${pathToZipFolder}.zip`)) {
+        if (this.fileExists(pathToZip)) {
             throw new Error('Zip file with this name already exists');
         }
 
         try {
             const zip = new AdmZip();
-
             zip.addLocalFolder(path);
-            zip.writeZip(`${pathToZipFolder}.zip`);
-            
-            return pathToZipFolder;
+            zip.writeZip(`${pathToZip}.zip`);
+
+            return pathToZip;
         } catch (e) {
-            this.handleError(e.code, ZipAction.ZIP_FILE);
+            this.handleError('Create archive', e.code);
         }
     }
 
     private getNewFolderPath(newName: string, path: string) {
         if (!newName) {
-            return { pathToZipFolder: path };
+            return path;
         }
 
         const lastSlashOccuranceIndex = path.lastIndexOf(pathPackage.sep);
         const parentPath = `${path.substring(0, lastSlashOccuranceIndex)}`;
 
-        const pathToZipFolder = `${parentPath}${pathPackage.sep}${newName}`;
+        const pathToZip = `${parentPath}${pathPackage.sep}${newName}`;
 
-        return { pathToZipFolder }; 
+        return pathToZip;
     }
 
-    private handleError(error: string, actionName: ZipAction) {
-        console.log(error);
+    private fileExists(path: string): boolean {
+        if (fs.existsSync(`${path}`)) {
+            return true;
+        }
+        return false;
+    }
+
+    private handleError(actionName: string, error: string) {
+        console.log('error code', error);
         switch (error) {
             case 'EBUSY':
                 throw new Error(`${actionName} action: File with this name already exists.`);
+            case 'ENOENT':
+                throw new Error(`${actionName}: Directory not found.`);
+            case 'EACCES':
+            case 'EPERM':
+                throw new Error(`${actionName}: Directory permission denied`);
             default:
                 throw new Error(`${actionName} action failed with error: ${error}`);
         }
