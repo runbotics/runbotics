@@ -46,9 +46,10 @@ export const StyledLink = styled(Link)`
     color: inherit;
 `;
 
-export const CollectionListWrapper = styled.div<{ $expanded: boolean }>`
-    height: ${({ $expanded }) => $expanded ? '100%' : '64px'};
+export const CollectionListWrapper = styled.div<{ $expanded: boolean, $maxHeight: number }>`
+    height: ${({ $expanded, $maxHeight }) => $expanded ? `${$maxHeight}px` : '64px'};
     overflow: hidden;
+    transition: 0.4s;
 `;
 
 export const ExpandButton = styled.div

@@ -63,7 +63,7 @@ const ProcessCollectionList: FC = () => {
 
     return (
         <div>
-            <CollectionListWrapper $expanded={isExpanded}>
+            <CollectionListWrapper $expanded={isExpanded} $maxHeight={refCollectionBox?.current?.offsetHeight ?? 0}>
                 <Grid ref={refCollectionBox} container columnGap={2} rowGap={2} p={1}>
                     {sortedCollections
                         .map(collection => (
