@@ -135,7 +135,7 @@ public class ProcessQueryService extends QueryService<Process> {
 
     @Transactional(readOnly = true)
     public Page<ProcessDTO> findBySearchField(ProcessCriteria criteria, Pageable page, User user) {
-        log.debug("Request to get processes by page using search field: {} and criteria: {}", criteria, page);
+        log.debug("Request to get processes by page: {} using criteria: {}", page, criteria);
         boolean hasRequesterRoleAdmin = userService.hasAdminRole(user);
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 
@@ -163,7 +163,7 @@ public class ProcessQueryService extends QueryService<Process> {
 
     @Transactional(readOnly = true)
     public Page<ProcessDTO> findBySearchFieldAndCollection(ProcessCriteria criteria, Pageable page, User user) {
-        log.debug("Request to get processes by page using search field: {} and criteria: {}", criteria, page);
+        log.debug("Request to get processes by page: {} using criteria: {}", page, criteria);
         boolean hasRequesterRoleAdmin = userService.hasAdminRole(user);
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 

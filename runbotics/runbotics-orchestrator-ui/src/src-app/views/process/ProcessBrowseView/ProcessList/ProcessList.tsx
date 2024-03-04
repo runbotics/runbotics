@@ -57,7 +57,7 @@ const ProcessList: VFC = () => {
                         mode === ProcessListDisplayMode.GRID ? DefaultPageSize.GRID : DefaultPageSize.TABLE;
                     setPageSize(newPageSize);
                     if (mode) setDisplayMode(mode);
-                    replaceQueryParams({page, pageSize: newPageSize, search, searchField });
+                    replaceQueryParams({ page, pageSize: newPageSize, search, searchField });
                     clearSearch();
                 }}
             />
