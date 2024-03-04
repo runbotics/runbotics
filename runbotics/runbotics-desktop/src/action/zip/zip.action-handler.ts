@@ -48,7 +48,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
         const pathToZip = this.getNewFolderPath(fileName, path);
 
-        if (this.fileExists(pathToZip)) {
+        if (this.fileExists(`${pathToZip}.zip`)) {
             throw new Error('Zip file with this name already exists');
         }
 
@@ -84,7 +84,6 @@ export default class ZipActionHandler extends StatelessActionHandler {
     }
 
     private handleError(actionName: string, error: string) {
-        console.log('error code', error);
         switch (error) {
             case 'EBUSY':
                 throw new Error(`${actionName} action: File with this name already exists.`);
