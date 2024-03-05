@@ -126,7 +126,7 @@ describe('FolderActionHandler', () => {
             };
 
             await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
-                'Path to a folder is mandatory'
+                'Path to a file/folder is mandatory'
             );
         });
 
