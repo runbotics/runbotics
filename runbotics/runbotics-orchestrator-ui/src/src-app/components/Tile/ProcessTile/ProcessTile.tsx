@@ -50,7 +50,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const [isProcessActive, setIsProcessActive] = useState(
         processInstance && isProcessInstanceActive(processInstance.status)
     );
-    const [isRan, setIsRan] = useState(false);
+    const [isRunning, setIsRunning] = useState(false);
     const [job, setJob] = useState<Job>(null);
 
     const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
@@ -73,7 +73,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const handleWaiting = (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
         if (payload.processId !== process.id) return;
         setJob({ ...payload, isProcessing: false, errorMessage: null });
-        setIsRan(true);
+        setIsRunning(true);
     };
 
     const handleProcessing = (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
@@ -90,16 +90,16 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             })
         );
         setJob(null);
-        setIsRan(false);
+        setIsRunning(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
     const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
         if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
-        const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
-        const message = payload.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
-        const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-        const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+        const translationKeyPrefix = 'Component.Tile.Process.Instance.Error';
+        const message = payload.message ?? translate(translationKeyPrefix);
+        const translationKeyFromMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+        const translationKey = `${translationKeyPrefix}.${translationKeyFromMessage}`;
 
         const errorMessage = checkIfKeyExists(translationKey)
             ? translate(translationKey)
@@ -109,7 +109,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             { variant: 'error' }
         );
         setJob(null);
-        setIsRan(false);
+        setIsRunning(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
@@ -160,7 +160,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         onRemoved: (payload) => handleFailed(payload as ProcessQueueMessage[WsMessage.PROCESS_FAILED]),
         onQueueUpdate: () => {},
         job,
-        loading: isRan || isProcessActive,
+        loading: isRunning || isProcessActive,
     });
 
     return (
@@ -175,7 +175,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                 <CardHeader
                     avatar={
                         <If
-                            condition={isProcessActive || isRan}
+                            condition={isProcessActive || isRunning}
                             else={
                                 <RunBox
                                     onClick={handleRunButtonClick}

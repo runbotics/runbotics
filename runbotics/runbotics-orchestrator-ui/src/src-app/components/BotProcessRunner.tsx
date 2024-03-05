@@ -196,22 +196,22 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
         if (payload.jobId !== job?.jobId) return;
         onRunClick?.();
-        setStarted(false); 
+        setStarted(false);
         const translationKeyPrefix = 'Component.BotProcessRunner.Error';
-        const guestMessage = 'ServersAreOverloaded';
+        const defaultGuestTranslationKey = 'ServersOverloaded';
 
-        const basicErrorMessage =
+        const defaultErrorMessage =
             isGuest
-                ? translate(`${translationKeyPrefix}.${guestMessage}`)
+                ? translate(`${translationKeyPrefix}.${defaultGuestTranslationKey}`)
                 : translate(translationKeyPrefix);
 
-        const message = payload?.message ?? basicErrorMessage;
-        const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+        const message = payload?.message ?? defaultErrorMessage;
+        const translationKeyFromMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
 
         const translationKey =
-            (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
-                ? `${translationKeyPrefix}.${guestMessage}`
-                : `${translationKeyPrefix}.${capitalizeMessage}`;
+            (isGuest && translationKeyFromMessage === 'AllBotsAreDisconnected')
+                ? `${translationKeyPrefix}.${defaultGuestTranslationKey}`
+                : `${translationKeyPrefix}.${translationKeyFromMessage}`;
 
         const errorMessage = checkIfKeyExists(translationKey)
             ? translate(translationKey)
@@ -224,25 +224,25 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleRemoved = (payload: ProcessQueueMessage[WsMessage.PROCESS_REMOVED]) => {
         if (payload.jobId !== job?.jobId) return;
-        setStarted(false); 
+        setStarted(false);
         const translationKeyPrefix = 'Component.BotProcessRunner.Error.RemovedJob';
-        const guestMessage = 'ServersAreOverloaded';
+        const defaultGuestTranslationKey = 'ServersOverloaded';
 
-        const basicErrorMessage =
+        const defaultErrorMessage =
             isGuest
-                ? translate(`${translationKeyPrefix}.${guestMessage}`)
+                ? translate(`${translationKeyPrefix}.${defaultGuestTranslationKey}`)
                 : translate(translationKeyPrefix);
 
-        const capitalizeMessage = capitalizeFirstLetter({ text: basicErrorMessage, delimiter: ' ' });
+        const translationKeyFromMessage = capitalizeFirstLetter({ text: defaultErrorMessage, delimiter: ' ' });
 
         const translationKey =
-            (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
-                ? `${translationKeyPrefix}.${guestMessage}`
-                : `${translationKeyPrefix}.${capitalizeMessage}`;
+            (isGuest && translationKeyFromMessage === 'AllBotsAreDisconnected')
+                ? `${translationKeyPrefix}.${defaultGuestTranslationKey}`
+                : `${translationKeyPrefix}.${translationKeyFromMessage}`;
 
         const errorMessage = checkIfKeyExists(translationKey)
             ? translate(translationKey)
-            : basicErrorMessage;
+            : defaultErrorMessage;
         recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
         setSubmitting(false);
         setLoading(false);
