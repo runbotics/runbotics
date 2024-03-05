@@ -9,7 +9,6 @@ describe('FolderActionHandler', () => {
     let zipActionHandler: ZipActionHandler;
     let serverConfigService: ServerConfigService;
 
-    const CWD = `${process.cwd()}`;
     const TEST_FOLDER_NAME = 'temp';
     const TEMP_FOLDER_PATH = `${process.cwd()}${path.sep}temp`;
     const FOLDER_TO_UNZIP_NAME = 'unzipThis';
@@ -35,17 +34,21 @@ describe('FolderActionHandler', () => {
         if (!fs.existsSync(TEMP_FOLDER_PATH)) {
             fs.mkdirSync(TEMP_FOLDER_PATH, { recursive: true });
         }
+
+        if (fs.existsSync(`${ZIP_TESTING_FOLDER}.zip`)) {
+            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
+        }
     });
 
     afterEach(async () => {
         if (fs.existsSync(ZIP_TESTING_FOLDER)) {
             fs.rmSync(ZIP_TESTING_FOLDER, { recursive: true });
-            // fs.rmdirSync();
         }
 
         if (fs.existsSync(`${TEMP_FOLDER_PATH}.zip`)) {
             fs.rmSync(`${TEMP_FOLDER_PATH}.zip`, { recursive: true });
         }
+
     });
 
     afterAll(async () => {
@@ -141,9 +144,6 @@ describe('FolderActionHandler', () => {
     });
 
     describe('Unzip archive', async() => {
-        // const FOLDER_TO_UNZIP_NAME = 'unzipThis';
-        // const ZIP_TESTING_FOLDER = `${TEMP_FOLDER_PATH}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
-
         it('Should unzip files when path is not provided', async() => {
             const params: UnzipFileActionInput = {
                 fileName: FOLDER_TO_UNZIP_NAME,
@@ -151,13 +151,12 @@ describe('FolderActionHandler', () => {
             };
 
             await createTestZip(undefined, ZIP_TESTING_FOLDER);
-            fs.rmdirSync(ZIP_TESTING_FOLDER);
+            removeTestFolder(ZIP_TESTING_FOLDER);
             
             await zipActionHandler.unzipFile(params);
             expect(
                 fs.existsSync(`${TEMP_FOLDER_PATH}`)
             ).toBeTruthy();
-            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
         });
 
         it('Should unzip zip folder when all parameters are provided', async() => {
@@ -167,13 +166,12 @@ describe('FolderActionHandler', () => {
             };
 
             await createTestZip(undefined, ZIP_TESTING_FOLDER);
-            fs.rmdirSync(ZIP_TESTING_FOLDER);
+            removeTestFolder(ZIP_TESTING_FOLDER);
 
             await zipActionHandler.unzipFile(params);
             expect(
                 fs.existsSync(`${TEMP_FOLDER_PATH}`)
             ).toBeTruthy();
-            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
         });
 
         it('Should throw error when fileName is not provided', async() => {
