@@ -26,6 +26,10 @@ export default class ZipActionHandler extends StatelessActionHandler {
     async unzipFile(input: UnzipFileActionInput) {
         const { path, fileName } = input;
         const fullPath = this.resolvePath(fileName, path);
+
+        if (!fileName) {
+            throw new Error('File name is mandatory');
+        }
     
         if (this.fileExists(fullPath)) {
             throw new Error('File/folder with this name already exists');
@@ -47,7 +51,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
         }
 
         const pathToZip = this.getNewFolderPath(fileName, path);
-
+        
         if (this.fileExists(`${pathToZip}.zip`)) {
             throw new Error('Zip file with this name already exists');
         }

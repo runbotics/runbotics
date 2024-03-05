@@ -3,15 +3,17 @@ import fs from 'fs';
 import path from 'path';
 import ZipActionHandler from './zip.action-handler';
 import { ServerConfigService } from '../../config';
-import { ZipFileActionInput } from './zip.types';
+import { UnzipFileActionInput, ZipFileActionInput } from './zip.types';
 
 describe('FolderActionHandler', () => {
     let zipActionHandler: ZipActionHandler;
     let serverConfigService: ServerConfigService;
 
+    const CWD = `${process.cwd()}`;
     const TEST_FOLDER_NAME = 'temp';
     const TEMP_FOLDER_PATH = `${process.cwd()}${path.sep}temp`;
-    const CWD = `${process.cwd()}`;
+    const FOLDER_TO_UNZIP_NAME = 'unzipThis';
+    const ZIP_TESTING_FOLDER = `${TEMP_FOLDER_PATH}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -36,8 +38,9 @@ describe('FolderActionHandler', () => {
     });
 
     afterEach(async () => {
-        if (fs.existsSync(TEMP_FOLDER_PATH)) {
-            fs.rmSync(TEMP_FOLDER_PATH, { recursive: true });
+        if (fs.existsSync(ZIP_TESTING_FOLDER)) {
+            fs.rmSync(ZIP_TESTING_FOLDER, { recursive: true });
+            // fs.rmdirSync();
         }
 
         if (fs.existsSync(`${TEMP_FOLDER_PATH}.zip`)) {
@@ -47,9 +50,34 @@ describe('FolderActionHandler', () => {
 
     afterAll(async () => {
         if (fs.existsSync(serverConfigService.tempFolderPath)) {
-            fs.rmSync(serverConfigService.tempFolderPath);
+            fs.rmdirSync(serverConfigService.tempFolderPath, { recursive: true });
+        }
+
+        if (fs.existsSync(ZIP_TESTING_FOLDER)) {
+            fs.rmdirSync(ZIP_TESTING_FOLDER);
+        }
+
+        if (fs.existsSync(TEMP_FOLDER_PATH)) {
+            fs.rmdirSync(TEMP_FOLDER_PATH, { recursive: true });
         }
     });
+
+    const createTestFolder = (folderPath: string) => {
+        if (!fs.existsSync(folderPath)) {
+            fs.mkdirSync(folderPath, { recursive: true });
+        }
+    };
+
+    const createTestZip = async (fileName: string, path: string) => {
+        createTestFolder(path);
+        zipActionHandler.zipFile({fileName, path});
+    };
+
+    const removeTestFolder = (folderPath: string) => {
+        if (fs.existsSync(folderPath)) {
+            fs.rmSync(folderPath, { recursive: true });
+        }
+    };
 
     it('should be defined', () => {
         expect(zipActionHandler).toBeDefined();
@@ -58,7 +86,6 @@ describe('FolderActionHandler', () => {
 
     describe('Create archive', async() => {
         it('Should create zip folder when fileName is not provided', async() => {
-            console.log('TEMP_FOLDER_PATH', TEMP_FOLDER_PATH);
             const params: ZipFileActionInput = {
                 fileName: undefined,
                 path: TEMP_FOLDER_PATH
@@ -71,15 +98,22 @@ describe('FolderActionHandler', () => {
         });
 
         it('Should create zip folder when all parameters are provided', async() => {
+            const zipName = 'zipArchiveName';
+            const zipPath = `${TEMP_FOLDER_PATH}${path.sep}${zipName}`;
             const params: ZipFileActionInput = {
-                fileName: TEST_FOLDER_NAME,
-                path: TEMP_FOLDER_PATH
+                fileName: zipName,
+                path: zipPath
             };
 
+            createTestFolder(zipPath);
+            createTestFolder(`${zipPath}${path.sep}${zipName}`);
             await zipActionHandler.zipFile(params);
             expect(
-                fs.existsSync(`${TEMP_FOLDER_PATH}.zip`)
+                fs.existsSync(`${zipPath}.zip`)
             ).toBeTruthy();
+            removeTestFolder(`${zipPath}${path.sep}${zipName}`);
+            removeTestFolder(`${zipPath}`);
+            removeTestFolder(`${zipPath}.zip`);
         });
 
         it('Should throw error when path is not provided', async() => {
@@ -102,6 +136,67 @@ describe('FolderActionHandler', () => {
             await zipActionHandler.zipFile(params);
             await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
                 'Zip file with this name already exists'
+            );
+        });
+    });
+
+    describe('Unzip archive', async() => {
+        // const FOLDER_TO_UNZIP_NAME = 'unzipThis';
+        // const ZIP_TESTING_FOLDER = `${TEMP_FOLDER_PATH}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
+
+        it('Should unzip files when path is not provided', async() => {
+            const params: UnzipFileActionInput = {
+                fileName: FOLDER_TO_UNZIP_NAME,
+                path: undefined
+            };
+
+            await createTestZip(undefined, ZIP_TESTING_FOLDER);
+            fs.rmdirSync(ZIP_TESTING_FOLDER);
+            
+            await zipActionHandler.unzipFile(params);
+            expect(
+                fs.existsSync(`${TEMP_FOLDER_PATH}`)
+            ).toBeTruthy();
+            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
+        });
+
+        it('Should unzip zip folder when all parameters are provided', async() => {
+            const params: UnzipFileActionInput = {
+                fileName: FOLDER_TO_UNZIP_NAME,
+                path: TEMP_FOLDER_PATH
+            };
+
+            await createTestZip(undefined, ZIP_TESTING_FOLDER);
+            fs.rmdirSync(ZIP_TESTING_FOLDER);
+
+            await zipActionHandler.unzipFile(params);
+            expect(
+                fs.existsSync(`${TEMP_FOLDER_PATH}`)
+            ).toBeTruthy();
+            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
+        });
+
+        it('Should throw error when fileName is not provided', async() => {
+            const params: UnzipFileActionInput = {
+                fileName: undefined,
+                path: TEMP_FOLDER_PATH
+            };
+
+            await expect(zipActionHandler.unzipFile(params)).rejects.toThrowError(
+                'File name is mandatory'
+            );
+        });
+
+        it('Should throw error when zip file already exists', async() => {
+            const params: UnzipFileActionInput = {
+                fileName: FOLDER_TO_UNZIP_NAME,
+                path: TEMP_FOLDER_PATH
+            };
+
+            await createTestZip(undefined, ZIP_TESTING_FOLDER);
+
+            await expect(zipActionHandler.unzipFile(params)).rejects.toThrowError(
+                'File/folder with this name already exists'
             );
         });
     });
