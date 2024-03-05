@@ -47,7 +47,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
         const { path, fileName } = input;
 
         if (!path) {
-            throw new Error('Path to a folder is mandatory');
+            throw new Error('Path to a file/folder is mandatory');
         }
 
         const pathToZip = this.getNewFolderPath(fileName, path);
@@ -74,7 +74,6 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
         const lastSlashOccuranceIndex = path.lastIndexOf(pathPackage.sep);
         const parentPath = `${path.substring(0, lastSlashOccuranceIndex)}`;
-
         const pathToZip = `${parentPath}${pathPackage.sep}${newName}`;
 
         return pathToZip;
