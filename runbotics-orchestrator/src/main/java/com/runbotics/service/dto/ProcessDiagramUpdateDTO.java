@@ -19,6 +19,8 @@ public class ProcessDiagramUpdateDTO implements Serializable {
 
     private List<String> globalVariableIds;
 
+    private String executionInfo;
+
     public ProcessDiagramUpdateDTO() {
     }
 
@@ -46,17 +48,25 @@ public class ProcessDiagramUpdateDTO implements Serializable {
         this.globalVariableIds = globalVariableIds;
     }
 
+    public String getExecutionInfo() {
+        return executionInfo;
+    }
+
+    public void setExecutionInfo(String executionInfo) {
+        this.executionInfo = executionInfo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ProcessDiagramUpdateDTO)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         ProcessDiagramUpdateDTO that = (ProcessDiagramUpdateDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(definition, that.definition);
+        return Objects.equals(id, that.id) && Objects.equals(definition, that.definition) && Objects.equals(globalVariableIds, that.globalVariableIds) && Objects.equals(executionInfo, that.executionInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, definition, globalVariableIds);
+        return Objects.hash(id, definition, globalVariableIds, executionInfo);
     }
 
     @Override
@@ -64,7 +74,8 @@ public class ProcessDiagramUpdateDTO implements Serializable {
         return "ProcessDiagramUpdateDTO{" +
             "id=" + id +
             ", definition='" + definition + '\'' +
-            ", globalVariableIds='" + globalVariableIds + '\'' +
+            ", globalVariableIds=" + globalVariableIds +
+            ", executionInfo='" + executionInfo + '\'' +
             '}';
     }
 }

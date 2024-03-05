@@ -62,6 +62,7 @@ export interface UpdateDiagramRequest {
     id?: number;
     definition?: string | null;
     globalVariableIds?: string[];
+    executionInfo?: string | null;
 }
 
 export type StartProcessResponse = Pick<
