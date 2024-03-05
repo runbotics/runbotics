@@ -116,7 +116,8 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     }));
 
     const handleOnClick = async (processInstance: IProcessInstance) => {
-        setInstanceId(null);
+        setInstanceId(processInstance.id);
+        replaceQueryParams({ page, pageSize, tab, id, instanceId: processInstance.id });
         setPanelInfoState({ show: true, processInstanceId: processInstance.id });
         if (
             processInstance.status === ProcessInstanceStatus.INITIALIZING ||

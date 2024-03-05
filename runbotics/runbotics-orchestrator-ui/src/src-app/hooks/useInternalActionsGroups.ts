@@ -22,6 +22,7 @@ import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
+import getWindowsActions from '#src-app/Actions/windows.actions';
 import getZipActions from '#src-app/Actions/zip.actions';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -82,6 +83,12 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.Desktop'
             ),
             items: Object.values(getDesktopActions())
+        },
+        windows: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.Windows'
+            ),
+            items: Object.values(getWindowsActions())
         },
         asana: {
             label: translate(

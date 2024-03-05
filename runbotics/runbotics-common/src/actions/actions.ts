@@ -229,6 +229,18 @@ export enum DesktopAction {
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
 }
 
+export enum WindowsAction {
+    IS_WINDOW_OPEN = 'windows.isWindowOpen',
+    GET_ELEMENT = 'windows.getElement',
+    LIST_WINDOWS = 'windows.listWindows',
+    MOUSE_CLICK = 'windows.mouseClick',
+    WAIT_FOR_ELEMENT = 'windows.waitForElement',
+    PRESS_KEYS = 'windows.pressKeys',
+    SEND_KEYS = 'windows.sendKeys',
+    MINIMIZE_WINDOW = 'windows.minimizeWindow',
+    MAXIMIZE_WINDOW = 'windows.maximizeWindow',
+}
+
 export enum VisualBasicAction {
     RUN_SCRIPT = 'visualBasic.runScript',
 }
