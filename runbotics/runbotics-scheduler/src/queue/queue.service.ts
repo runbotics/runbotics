@@ -91,6 +91,7 @@ export class QueueService implements OnModuleInit {
                 );
                 return Promise.reject(err);
             });
+
         if (input?.timeout) {
             const timer = setTimeout(async () => {
                 this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
@@ -102,10 +103,12 @@ export class QueueService implements OnModuleInit {
                     job.isPaused(),
                     job.isStuck(),
                 ]);
+
                 if (jobStateFlags.some((flag) => flag)) return;
+
                 await job.remove();
             }, input.timeout);
-        
+
             this.queueWaitingTimers.set(job.id, timer);
         }
 

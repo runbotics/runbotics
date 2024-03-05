@@ -8,6 +8,7 @@ import { GuestService } from '#/database/guest/guest.service';
 import { AuthService } from '#/auth/auth.service';
 import { AuthSocket } from '#/types';
 import { Job, JobId } from 'bull';
+import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
 
 @Injectable()
 export class ProcessWebsocketService {
@@ -26,7 +27,7 @@ export class ProcessWebsocketService {
         const user = await this.authService.validateWebsocketConnection(client);
         const userId = user.id;
         const isUserGuest = this.processGuestService.getIsGuest(user.authorities);
-        const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : null;
+        const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : 0;
         try {
             this.logger.log(`Checking if user (${userId}) is a guest and can start process ${processId}`);
             await this.processGuestService.checkCanStartProcess(user);
@@ -54,18 +55,17 @@ export class ProcessWebsocketService {
             this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
 
             return { jobId: response.id, jobIndex };
-        } catch (err: any) {
+        } catch (err) {
             this.logger.error(`<= Process ${processId} failed to start`);
-            
+
             if(isUserGuest) {
                 await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
                 this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
             }
 
-            throw new HttpException({
-                message: err?.message ?? 'Internal server error',
-                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
-            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
         }
     }
 
@@ -87,18 +87,17 @@ export class ProcessWebsocketService {
 
             await this.guestService.decrementExecutionsCount(userId);
             this.logger.log(`Decremented user's (${userId}) executions-count to ${initialExecutionsCount - 1}`);
-        } catch (err: any) {
+        } catch (err) {
             this.logger.error(`<= Job ${jobId} failed to be removed`);
-            
+
             if  (isUserGuest) {
                 await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
                 this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
             }
 
-            throw new HttpException({
-                message: err?.message ?? 'Internal server error',
-                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
-            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
         }
     }
 }
