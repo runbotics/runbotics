@@ -141,6 +141,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
+                    existingProcess.setExecutionInfo(processDiagramDTO.getExecutionInfo());
                     existingProcess.setUpdated(ZonedDateTime.now());
                     existingProcess.setEditor(requester);
                     return existingProcess;

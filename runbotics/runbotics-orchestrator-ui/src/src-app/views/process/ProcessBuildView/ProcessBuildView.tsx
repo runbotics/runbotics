@@ -91,6 +91,7 @@ const ProcessBuildView: FC = () => {
                     id: process.id,
                     definition,
                     globalVariableIds,
+                    executionInfo: process.executionInfo
                 })
             );
 
