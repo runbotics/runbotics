@@ -29,7 +29,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
             throw new Error('File name is mandatory');
         }
 
-        if (this.fileExists(fullPath)) {
+        if (fs.existsSync(fullPath)) {
             throw new Error('File/folder with this name already exists');
         }
 
@@ -52,7 +52,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
         const pathToZip = this.getNewFolderPath(fileName, path);
 
-        if (this.fileExists(`${pathToZip}.zip`)) {
+        if (fs.existsSync(`${pathToZip}.zip`)) {
             throw new Error('Zip file with this name already exists');
         }
 
@@ -84,13 +84,6 @@ export default class ZipActionHandler extends StatelessActionHandler {
     private isDirectory(path: string) {
         const stat = fs.lstatSync(path);
         return stat.isDirectory();
-    }
-
-    private fileExists(path: string): boolean {
-        if (fs.existsSync(`${path}`)) {
-            return true;
-        }
-        return false;
     }
 
     private handleError(actionName: string, error: string) {

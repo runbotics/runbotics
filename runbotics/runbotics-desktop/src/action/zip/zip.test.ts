@@ -88,7 +88,7 @@ describe('FolderActionHandler', () => {
     });
 
     describe('Create archive', async() => {
-        it('Should create zip folder when fileName is not provided', async() => {
+        it('Should create zip folder when fileName is not provided, new archive name is extracted from path', async() => {
             const params: ZipFileActionInput = {
                 fileName: undefined,
                 path: TEMP_FOLDER_PATH
