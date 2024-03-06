@@ -73,7 +73,7 @@ describe('FolderActionHandler', () => {
 
     const createTestZip = async (fileName: string, path: string) => {
         createTestFolder(path);
-        zipActionHandler.zipFile({fileName, path});
+        zipActionHandler.zipFile({ fileName, path });
     };
 
     const removeTestFolder = (folderPath: string) => {
@@ -159,7 +159,7 @@ describe('FolderActionHandler', () => {
             ).toBeTruthy();
         });
 
-        it('Should unzip zip folder when all parameters are provided', async() => {
+        it('Should unzip archive when all parameters are provided', async() => {
             const params: UnzipFileActionInput = {
                 fileName: FOLDER_TO_UNZIP_NAME,
                 path: TEMP_FOLDER_PATH

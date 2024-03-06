@@ -12,9 +12,7 @@ import fs from 'fs';
 export default class ZipActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(ZipActionHandler.name);
 
-    constructor(
-        private readonly serverConfigService: ServerConfigService,
-    ) {
+    constructor(private readonly serverConfigService: ServerConfigService) {
         super();
     }
 
@@ -30,7 +28,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
         if (!fileName) {
             throw new Error('File name is mandatory');
         }
-    
+
         if (this.fileExists(fullPath)) {
             throw new Error('File/folder with this name already exists');
         }
@@ -50,17 +48,23 @@ export default class ZipActionHandler extends StatelessActionHandler {
             throw new Error('Path to a file/folder is mandatory');
         }
 
+        const isDirectory = this.isDirectory(path);
+
         const pathToZip = this.getNewFolderPath(fileName, path);
-        
+
         if (this.fileExists(`${pathToZip}.zip`)) {
             throw new Error('Zip file with this name already exists');
         }
 
         try {
             const zip = new AdmZip();
-            zip.addLocalFolder(path);
-            zip.writeZip(`${pathToZip}.zip`);
+            if (isDirectory) {
+                zip.addLocalFolder(path);
+            } else {
+                zip.addLocalFile(path);
+            }
 
+            zip.writeZip(`${pathToZip}.zip`);
             return pathToZip;
         } catch (e) {
             this.handleError('Create archive', e.code);
@@ -68,15 +72,18 @@ export default class ZipActionHandler extends StatelessActionHandler {
     }
 
     private getNewFolderPath(newName: string, path: string) {
+        const { dir, name } = pathPackage.parse(path);
+
         if (!newName) {
-            return path;
+            return `${dir}${pathPackage.sep}${name}`;
         }
 
-        const lastSlashOccuranceIndex = path.lastIndexOf(pathPackage.sep);
-        const parentPath = `${path.substring(0, lastSlashOccuranceIndex)}`;
-        const pathToZip = `${parentPath}${pathPackage.sep}${newName}`;
+        return `${dir}${pathPackage.sep}${newName}`;
+    }
 
-        return pathToZip;
+    private isDirectory(path: string) {
+        const stat = fs.lstatSync(path);
+        return stat.isDirectory();
     }
 
     private fileExists(path: string): boolean {

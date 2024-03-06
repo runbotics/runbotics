@@ -7,8 +7,8 @@ const zipTranslations: typeof englishZipTranslations  = {
     'Process.Details.Modeler.Actions.Zip.Unzip.Path.Info': 'Ścieżka do folderu zawierającego plik zip, np. "C:\\Users\\User\\Documents".',
     'Process.Details.Modeler.Actions.Zip.Unzip.Name.Info': 'Nazwa pliku (bez rozszerzenia), np. "zippedArchive".',
     'Process.Details.Modeler.Actions.Zip.Zip.Label': 'Stwórz archiwum',
-    'Process.Details.Modeler.Actions.Zip.Zip.Path.Info': 'Ścieżka do folderu, który ma zostać zarchiwizowany, np. "C:\\Users\\User\\Documents\\folderDoArchiwizacji',
-    'Process.Details.Modeler.Actions.Zip.Zip.Name.Info': 'Nazwa pod którą ma zostać utworzony zip. Domyślnie będzie to nazwa folderu podanego do archiwizacji.',
+    'Process.Details.Modeler.Actions.Zip.Zip.Path.Info': 'Ścieżka do folderu lub pliku (wraz z rozszerzeniem), który ma zostać zarchiwizowany, np. "C:\\Users\\User\\Documents\\folderDoArchiwizacji',
+    'Process.Details.Modeler.Actions.Zip.Zip.Name.Info': 'Nazwa pod którą ma zostać utworzony zip. Domyślnie będzie to nazwa folderu lub pliku podanego do archiwizacji.',
     'Process.Details.Modeler.Actions.Zip.Zip.Output.Info': 'Ścieżka do zarchiwizowanego folderu'
 };
 
