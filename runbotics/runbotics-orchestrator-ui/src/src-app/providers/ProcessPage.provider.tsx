@@ -12,6 +12,7 @@ interface ProcessPageProps {
     setPageSize: Dispatch<SetStateAction<number>>;
     page: number;
     setPage: Dispatch<SetStateAction<number>>;
+    collectionId: string | null;
 }
 
 interface ProcessPageContextValues {
@@ -33,30 +34,52 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     setPageSize,
     page,
     setPage,
+    collectionId
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
 
     useUpdateEffect(() => {
-        dispatch(
-            processActions.getProcessesPage({
-                page,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(search.trim() && {
-                            name: search.trim(),
-                            createdByName: search.trim(),
-                            tagName: search.trim()
-                        })
+        if (collectionId !== undefined) {
+            dispatch(
+                processActions.getProcessesPageByCollection({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim(),
+                            })
+                        },
+                        equals: {
+                            ...(collectionId !== null && { collectionId })
+                        }
                     },
-                },
-            }),
-        );
+                })
+            );
+        } else {
+            dispatch(
+                processActions.getProcessesPage({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim()
+                            })
+                        },
+                    },
+                }),
+            );
+        }
     }, [page]);
 
     const handleGridPageChange = (event: MouseEvent<HTMLElement>, currentPage: number) => {
-        replaceQueryParams({ page: currentPage - 1, pageSize, search, searchField });
+        replaceQueryParams({ collectionId, page: currentPage - 1, pageSize, search, searchField });
         setPage(currentPage - 1);
     };
 
@@ -66,7 +89,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     };
 
     const handlePageSizeChange = (currentPageSize: number) => {
-        replaceQueryParams({ page, pageSize: currentPageSize, search, searchField });
+        replaceQueryParams({ collectionId, page, pageSize: currentPageSize, search, searchField });
         setPageSize(currentPageSize);
     };
 

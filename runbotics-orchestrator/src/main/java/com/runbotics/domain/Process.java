@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.BatchSize;
-
 import org.hibernate.annotations.Type;
 
 /**
@@ -83,8 +81,8 @@ public class Process implements Serializable {
     @ManyToMany
     @JoinTable(
         name = "tag_process",
-        joinColumns = {@JoinColumn(name = "process_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")}
+        joinColumns = { @JoinColumn(name = "process_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "tag_id", referencedColumnName = "id") }
     )
     @BatchSize(size = 20)
     private Set<Tag> tags = new HashSet<>();
@@ -93,12 +91,17 @@ public class Process implements Serializable {
     @JoinTable(
         name = "process_global_variable",
         joinColumns = @JoinColumn(name = "process_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id"))
+        inverseJoinColumns = @JoinColumn(name = "global_variable_id", referencedColumnName = "id")
+    )
     private Set<GlobalVariable> globalVariables = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "output_type", referencedColumnName = "type")
     private ProcessOutput outputType;
+
+    @ManyToOne
+    @JoinColumn(name = "collection_id")
+    private ProcessCollection collectionId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -330,6 +333,14 @@ public class Process implements Serializable {
         this.outputType = outputType;
     }
 
+    public ProcessCollection getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(ProcessCollection processCollection) {
+        this.collectionId = processCollection;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -372,6 +383,7 @@ public class Process implements Serializable {
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
+            ", collectionId=" + collectionId +
             '}';
     }
 }

@@ -46,6 +46,8 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final UserService userService;
 
+    private final ProcessCollectionService processCollectionService;
+
     private final String PROCESS_NAME = "name";
 
     private final String PROCESS_TAG_NAME = "tagName";
@@ -56,12 +58,14 @@ public class ProcessQueryService extends QueryService<Process> {
         ProcessRepository processRepository,
         ProcessMapper processMapper,
         ScheduleProcessRepository scheduleProcessRepository,
-        UserService userService
+        UserService userService,
+        ProcessCollectionService processCollectionService
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.scheduleProcessRepository = scheduleProcessRepository;
         this.userService = userService;
+        this.processCollectionService = processCollectionService;
     }
 
     /**
@@ -131,7 +135,7 @@ public class ProcessQueryService extends QueryService<Process> {
 
     @Transactional(readOnly = true)
     public Page<ProcessDTO> findBySearchField(ProcessCriteria criteria, Pageable page, User user) {
-        log.debug("Request to get processes by page using search field: {} and criteria: {}", criteria, page);
+        log.debug("Request to get processes by page: {} using criteria: {}", page, criteria);
         boolean hasRequesterRoleAdmin = userService.hasAdminRole(user);
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 
@@ -147,6 +151,63 @@ public class ProcessQueryService extends QueryService<Process> {
         } else {
             return processRepository
                 .findBySearchForUser(
+                    user.getId(),
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                )
+                .map(processMapper::toDto);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProcessDTO> findBySearchFieldAndCollection(ProcessCriteria criteria, Pageable page, User user) {
+        log.debug("Request to get processes by page: {} using criteria: {}", page, criteria);
+        boolean hasRequesterRoleAdmin = userService.hasAdminRole(user);
+        Map<String, String> specification = this.createCustomSearchSpecification(criteria);
+
+        if (hasRequesterRoleAdmin) {
+            if (criteria.getCollectionId() != null) {
+                return processRepository
+                    .findBySearchAndCollectionForAdmin(
+                        specification.get(PROCESS_NAME),
+                        specification.get(PROCESS_TAG_NAME),
+                        specification.get(PROCESS_CREATED_BY_NAME),
+                        criteria.getCollectionId().getEquals(),
+                        page
+                    )
+                    .map(processMapper::toDto);
+            }
+
+            return processRepository
+                .findBySearchWithoutCollectionForAdmin(
+                    specification.get(PROCESS_NAME),
+                    specification.get(PROCESS_TAG_NAME),
+                    specification.get(PROCESS_CREATED_BY_NAME),
+                    page
+                )
+                .map(processMapper::toDto);
+        } else {
+            if (criteria.getCollectionId() != null) {
+                processCollectionService.checkCollectionAvailability(criteria.getCollectionId().getEquals(), user);
+
+                processCollectionService.checkAndGetCollectionAllAncestors(criteria.getCollectionId().getEquals(), user);
+
+                return processRepository
+                    .findBySearchAndCollectionForUser(
+                        user.getId(),
+                        specification.get(PROCESS_NAME),
+                        specification.get(PROCESS_TAG_NAME),
+                        specification.get(PROCESS_CREATED_BY_NAME),
+                        criteria.getCollectionId().getEquals(),
+                        page
+                    )
+                    .map(processMapper::toDto);
+            }
+
+            return processRepository
+                .findBySearchWithoutCollectionForUser(
                     user.getId(),
                     specification.get(PROCESS_NAME),
                     specification.get(PROCESS_TAG_NAME),
@@ -228,31 +289,17 @@ public class ProcessQueryService extends QueryService<Process> {
             return processes;
         }
 
-        return processes
-            .stream()
-            .filter(
-                process -> !guestIds.contains(process.getCreatedBy().getId())
-                )
-            .collect(Collectors.toList());
+        return processes.stream().filter(process -> !guestIds.contains(process.getCreatedBy().getId())).collect(Collectors.toList());
     }
 
     private Map<String, String> createCustomSearchSpecification(ProcessCriteria criteria) {
         Map<String, String> specification = new HashMap<>();
 
-        specification.put(
-            PROCESS_NAME,
-            criteria.getName() != null ? criteria.getName().getContains() : ""
-        );
+        specification.put(PROCESS_NAME, criteria.getName() != null ? criteria.getName().getContains() : "");
 
-        specification.put(
-            PROCESS_CREATED_BY_NAME,
-            criteria.getCreatedByName() != null ? criteria.getCreatedByName().getContains() : ""
-        );
+        specification.put(PROCESS_CREATED_BY_NAME, criteria.getCreatedByName() != null ? criteria.getCreatedByName().getContains() : "");
 
-        specification.put(
-            PROCESS_TAG_NAME,
-            criteria.getTagName() != null ? criteria.getTagName().getContains() : ""
-        );
+        specification.put(PROCESS_TAG_NAME, criteria.getTagName() != null ? criteria.getTagName().getContains() : "");
 
         return specification;
     }

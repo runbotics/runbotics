@@ -13,7 +13,7 @@ public interface ProcessCollectionService {
 
     List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user);
 
-    List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId, User user);
+    List<ProcessCollectionDTO> checkAndGetCollectionAllAncestors(UUID collectionId, User user);
 
     ProcessCollectionDTO save(ProcessCollectionDTO ProcessCollectionDTO);
 

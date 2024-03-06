@@ -78,7 +78,7 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
         return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
-    public List<ProcessCollectionDTO> getCollectionAllAncestors(UUID collectionId, User user) throws ResponseStatusException {
+    public List<ProcessCollectionDTO> checkAndGetCollectionAllAncestors(UUID collectionId, User user) throws ResponseStatusException {
         boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         List<ProcessCollection> breadcrumbs = processCollectionRepository.findAllAncestors(collectionId);

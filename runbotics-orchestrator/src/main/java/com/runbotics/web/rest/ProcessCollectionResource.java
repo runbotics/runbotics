@@ -85,7 +85,7 @@ public class ProcessCollectionResource {
         if (criteria.getParentId() != null) {
             processCollectionService.checkCollectionAvailability(criteria.getParentId().getEquals(), requester);
 
-            List<ProcessCollectionDTO> breadcrumbs = processCollectionService.getCollectionAllAncestors(
+            List<ProcessCollectionDTO> breadcrumbs = processCollectionService.checkAndGetCollectionAllAncestors(
                 criteria.getParentId().getEquals(),
                 requester
             );

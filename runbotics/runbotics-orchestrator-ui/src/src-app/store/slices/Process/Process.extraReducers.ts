@@ -16,9 +16,11 @@ import {
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessSubscriptionInfoByProcessIdAndUserId
+    getProcessSubscriptionInfoByProcessIdAndUserId,
+    getProcessesPageByCollection
 } from './Process.thunks';
 
+// eslint-disable-next-line max-lines-per-function
 const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState>) => {
     builder
         // GET ALL
@@ -43,6 +45,18 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
         .addCase(getProcessesPage.rejected, (state) => {
+            state.all.loading = false;
+        })
+
+        // GET PAGE BY COLLECTIONS
+        .addCase(getProcessesPageByCollection.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getProcessesPageByCollection.fulfilled, (state, action) => {
+            state.all.page = action.payload;
+            state.all.loading = false;
+        })
+        .addCase(getProcessesPageByCollection.rejected, (state) => {
             state.all.loading = false;
         })
 

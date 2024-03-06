@@ -13,7 +13,7 @@ import useDebounce from './useDebounce';
 
 const DEBOUNCE_TIME = 250;
 
-const useProcessSearch = (pageSize = 12, page = 0) => {
+const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const searchFromUrl = searchParams.get('search');
@@ -27,6 +27,7 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
 
     useEffect(() => {
         replaceQueryParams({
+            collectionId,
             page,
             pageSize,
             search,
@@ -34,23 +35,45 @@ const useProcessSearch = (pageSize = 12, page = 0) => {
             id: router.query.id,
             tab: router.query.tab,
         });
-        dispatch(
-            processActions.getProcessesPage({
-                page,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(debouncedValue.trim() && {
-                            name: debouncedValue.trim(),
-                            createdByName: debouncedValue.trim(),
-                            tagName: debouncedValue.trim()
-                        })
+
+        if (collectionId !== undefined) {
+            dispatch(
+                processActions.getProcessesPageByCollection({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim(),
+                            })
+                        },
+                        equals: {
+                            ...(collectionId !== null && { collectionId })
+                        }
                     },
-                },
-            })
-        );
+                })
+            );
+        } else {
+            dispatch(
+                processActions.getProcessesPage({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(debouncedValue.trim() && {
+                                name: debouncedValue.trim(),
+                                createdByName: debouncedValue.trim(),
+                                tagName: debouncedValue.trim()
+                            })
+                        },
+                    },
+                })
+            );
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue, pageSize, searchField]);
+    }, [debouncedValue, pageSize, searchField, collectionId]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchField('name');
