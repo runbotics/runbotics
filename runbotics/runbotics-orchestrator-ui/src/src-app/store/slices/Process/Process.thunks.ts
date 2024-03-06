@@ -17,6 +17,9 @@ import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
 
+const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
+    .url('/api/processes-page-collection').param('sort', 'updated,desc').params(params).build();
+
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
     .params(params)
@@ -141,6 +144,11 @@ export const getProcesses = createAsyncThunk<IProcess[]>('processes/getAll', () 
 export const getProcessesPage = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
     'processes/getPage',
     (params) => Axios.get<Page<IProcess>>(processPageURL(params)).then((response) => response.data),
+);
+
+export const getProcessesPageByCollection = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
+    'processes/getPageByCollection',
+    (params) => Axios.get<Page<IProcess>>(processPageByCollectionURL(params)).then((response) => response.data)
 );
 
 export const deleteProcess = createAsyncThunk<void, { processId: number }>(

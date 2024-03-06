@@ -316,6 +316,24 @@ public class ProcessResource {
     }
 
     /**
+     * {@code GET  /processes-page-collection} : get page of the processes in collection.
+     *
+     * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processes in body.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_LIST_READ + "')")
+    @GetMapping("/processes-page-collection")
+    public ResponseEntity<Page<ProcessDTO>> getAllProcessesByPageInCollection(ProcessCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Processes by criteria: {}", criteria);
+
+        User requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
+        Page<ProcessDTO> page = processQueryService.findBySearchFieldAndCollection(criteria, pageable, requester);
+        HttpHeaders header = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(header).body(page);
+    }
+
+    /**
      * {@code GET  /processes/count} : count all the processes.
      *
      * @param criteria the criteria which the requested entities should match.

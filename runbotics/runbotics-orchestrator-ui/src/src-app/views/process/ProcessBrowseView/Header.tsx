@@ -13,7 +13,6 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-import useQuery from '../../../hooks/useQuery';
 import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
 import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
@@ -46,20 +45,17 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { firstValueFrom } = useQuery();
 
     const currentTab = getLastParamOfUrl(router);
 
     const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
     const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
-    const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS) ?? null;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
         if (value === ProcessesTabs.COLLECTIONS) {
             router.replace({
                 pathname: '/app/processes/collections',
                 query: {
-                    collectionId,
                     pageSize: pageSize,
                     page: currentPage
                 }

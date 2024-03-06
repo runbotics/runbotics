@@ -169,6 +169,9 @@ export enum FeatureKey {
 
     PROCESS_COLLECTION_READ = 'PROCESS_READ',
 
+    // Read/write access to every collection
+    PROCESS_COLLECTION_ALL_ACCESS = 'PROCESS_COLLECTION_ALL_ACCESS',
+
     // Show "CREATE NEW COLLECTION" button on processes page in COLLECTIONS tab
     PROCESS_COLLECTION_ADD = 'PROCESS_COLLECTION_ADD',
 
