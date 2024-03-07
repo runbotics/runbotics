@@ -22,8 +22,8 @@ import {
     isProcessInstanceActive,
     isProcessOutputValid,
 } from './ProcessInstanceDetailsHeader.utils';
-import { translate } from '../../../hooks/useTranslations';
 import useAuth from '../../../hooks/useAuth';
+import { translate } from '../../../hooks/useTranslations';
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
