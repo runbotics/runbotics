@@ -4,7 +4,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, Grid, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { IProcessInstance, ProcessOutputType, Role } from 'runbotics-common';
+import { IProcessInstance, ProcessOutputType } from 'runbotics-common';
 
 import Label from '#src-app/components/Label';
 import If from '#src-app/components/utils/If';
@@ -22,7 +22,6 @@ import {
     isProcessInstanceActive,
     isProcessOutputValid,
 } from './ProcessInstanceDetailsHeader.utils';
-import useAuth from '../../../hooks/useAuth';
 import { translate } from '../../../hooks/useTranslations';
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
@@ -36,9 +35,6 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
     const { modeler: { currentProcessOutputElement }, draft: { process } } = useSelector(
         state => state.process
     );
-
-    const { user } = useAuth();
-    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
 
     const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
     
@@ -56,10 +52,6 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
             if (output === undefined) return null;
 
             const processOutputValue = Object.values(output)[0];
-        
-            if (isGuest) {
-                return <TextOutputWrapper>{JSON.stringify(processOutputValue, null, 2)}</TextOutputWrapper>;
-            }
 
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
@@ -79,7 +71,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
         }
         return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ isProcessOutput, processInstance.output, process.outputType, isGuest ]);
+    }, [ isProcessOutput, processInstance.output, process.outputType ]);
 
     return (
         <Grid container spacing={2}>
