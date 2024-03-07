@@ -7,8 +7,9 @@ export type UnzipFileActionInput = {
 };
 
 export type ZipFileActionInput = {
-    fileName?: string;
-    path: string;
+    fileName: string;
+    path?: string;
+    zipName?: string
 };
 
 export type ZipActionRequest =

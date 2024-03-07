@@ -74,17 +74,22 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            path: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Path'),
-                                type: 'string',
-                            },
                             fileName: {
                                 title: translate('Process.Details.Modeler.Actions.Zip.Zip.Name'),
                                 type: 'string',
                                 pattern: ActionRegex.DIRECTORY_NAME
-                            },  
+                            }, 
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.Path'),
+                                type: 'string',
+                            },
+                            zipName: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.Zip.ZipName'),
+                                type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME
+                            }, 
                         },
-                        required: ['path']
+                        required: ['fileName']
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -102,16 +107,22 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    
+                    fileName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.Name.Info'),
+                        }
+                    },
                     path: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Zip.Zip.Path.Info'),
                         },
                     },
-                    fileName: {
+                    zipName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.Name.Info'),
-                        }
-                    }                    
+                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.ZipName.Info'),
+                        },
+                    },                    
                 },
                 output: {
                     variableName: {
@@ -123,8 +134,9 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
+                    fileName: undefined,
                     path: undefined,
-                    fileName: undefined
+                    zipName: undefined
                 },
                 output: {
                     variableName: undefined,

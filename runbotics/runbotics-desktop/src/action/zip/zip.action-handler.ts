@@ -42,30 +42,28 @@ export default class ZipActionHandler extends StatelessActionHandler {
     }
 
     async zipFile(input: ZipFileActionInput) {
-        const { path, fileName } = input;
+        const { fileName, path, zipName } = input;
 
-        if (!path) {
-            throw new Error('Path to a file/folder is mandatory');
+        if (!fileName) {
+            throw new Error('File name is mandatory');
         }
-
-        const isDirectory = this.isDirectory(path);
-
-        const pathToZip = this.getNewFolderPath(fileName, path);
-
-        if (fs.existsSync(`${pathToZip}.zip`)) {
-            throw new Error('Zip file with this name already exists');
-        }
-
+        
         try {
+            const fullPathToZip = this.resolvePath(fileName, path);
+            const isDirectory = this.isDirectory(fullPathToZip);
+            const pathToZip = this.getNewFolderPath(zipName, fullPathToZip);
+    
+            if (fs.existsSync(`${pathToZip}.zip`)) throw {code: 'EBUSY'};
+
             const zip = new AdmZip();
             if (isDirectory) {
-                zip.addLocalFolder(path);
+                zip.addLocalFolder(fullPathToZip);
             } else {
-                zip.addLocalFile(path);
+                zip.addLocalFile(fullPathToZip);
             }
 
             zip.writeZip(`${pathToZip}.zip`);
-            return pathToZip;
+            return `${pathToZip}.zip`;
         } catch (e) {
             this.handleError('Create archive', e.code);
         }
@@ -91,7 +89,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
             case 'EBUSY':
                 throw new Error(`${actionName} action: File with this name already exists.`);
             case 'ENOENT':
-                throw new Error(`${actionName}: Directory not found.`);
+                throw new Error(`${actionName}: no such file or directory`);
             case 'EACCES':
             case 'EPERM':
                 throw new Error(`${actionName}: Directory permission denied`);
