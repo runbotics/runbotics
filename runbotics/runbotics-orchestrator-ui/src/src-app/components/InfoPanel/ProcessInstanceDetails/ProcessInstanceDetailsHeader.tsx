@@ -4,7 +4,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, Grid, IconButton, LinearProgress, Tooltip, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { IProcessInstance, ProcessOutputType } from 'runbotics-common';
+import { IProcessInstance, ProcessOutputType, Role } from 'runbotics-common';
 
 import Label from '#src-app/components/Label';
 import If from '#src-app/components/utils/If';
@@ -15,7 +15,7 @@ import { formatTimeDiff } from '#src-app/utils/utils';
 
 import { Title } from '#src-app/views/utils/FormDialog.styles';
 
-import { HeaderWrapper, ProcessOutputButton } from './ProcessInstanceDetailsHeader.styles';
+import { HeaderWrapper, ProcessOutputButton, TextOutputWrapper } from './ProcessInstanceDetailsHeader.styles';
 import {
     hasProcessOutputProperty,
     isElementEnabled,
@@ -23,6 +23,7 @@ import {
     isProcessOutputValid,
 } from './ProcessInstanceDetailsHeader.utils';
 import { translate } from '../../../hooks/useTranslations';
+import useAuth from '../../../hooks/useAuth';
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false });
 
@@ -36,8 +37,11 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
         state => state.process
     );
 
-    const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
+    const { user } = useAuth();
+    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
 
+    const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
+    
     const isProcessOutput = useMemo(() =>
         isProcessOutputValid(processInstance) &&
         (isElementEnabled(currentProcessOutputElement) ||
@@ -52,10 +56,14 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
             if (output === undefined) return null;
 
             const processOutputValue = Object.values(output)[0];
+        
+            if (isGuest) {
+                return <TextOutputWrapper>{JSON.stringify(processOutputValue, null, 2)}</TextOutputWrapper>;
+            }
 
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
-                    return <pre>{JSON.stringify(processOutputValue, null, 2)}</pre>;
+                    return <TextOutputWrapper>{JSON.stringify(processOutputValue, null, 2)}</TextOutputWrapper>;
                 case ProcessOutputType.HTML:
                     if (typeof processOutputValue !== 'string') {
                         return translate('Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType');
@@ -71,7 +79,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
         }
         return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ isProcessOutput, processInstance.output, process.outputType ]);
+    }, [ isProcessOutput, processInstance.output, process.outputType, isGuest ]);
 
     return (
         <Grid container spacing={2}>
