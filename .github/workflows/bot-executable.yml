@@ -12,6 +12,7 @@ env:
   NODE_VERSION: 18.x
   PNPM_VERSION: 8.7.x
   RUSH: node ../common/scripts/install-run-rush.js
+  RUSHX: node ../common/scripts/install-run-rushx.js
 
 jobs:
   changes-detection:
@@ -60,6 +61,9 @@ jobs:
 
       - name: Install dependencies
         run:  ${{ env.RUSH }} install -t .
+
+      - name: Execute Unit test
+        run: ${{ env.RUSHX }} test
 
       - name: Build
         run: ${{ env.RUSH }} rebuild -t .
