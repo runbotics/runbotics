@@ -37,7 +37,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
     );
 
     const formattedStatus = capitalizeFirstLetter({ text: processInstance.status, lowerCaseRest: true, delimiter: /_| / });
-    
+
     const isProcessOutput = useMemo(() =>
         isProcessOutputValid(processInstance) &&
         (isElementEnabled(currentProcessOutputElement) ||
