@@ -1,12 +1,12 @@
 name: Build bot executable file
 
-on:
-  push:
-    branches:
-      - 'develop'
-      - 'master'
-      - 'release/**'
-      - 'hotfix/**'
+# on:
+#   push:
+#     branches:
+#       - 'develop'
+#       - 'master'
+#       - 'release/**'
+#       - 'hotfix/**'
 
 env:
   NODE_VERSION: 18.x
