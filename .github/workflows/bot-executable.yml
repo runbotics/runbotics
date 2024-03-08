@@ -1,7 +1,7 @@
 name: Build bot executable file
 
-# on:
-#   push:
+on: 
+  push:
 #     branches:
 #       - 'develop'
 #       - 'master'
